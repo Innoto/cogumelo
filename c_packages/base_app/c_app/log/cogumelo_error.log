@@ -1,0 +1,805 @@
+[13-01-22 16:08:25] [127.0.0.1] [Session ] Class abstractTableCol doesn't exist on C_ClassLoader::$fileindex
+[13-01-22 16:45:50] [127.0.0.1] [Session ] Class examplfeTable doesn't exist on C_ClassLoader::$fileindex
+[13-01-22 16:46:03] [127.0.0.1] [Session ] Class examplfeTable doesn't exist on C_ClassLoader::$fileindex
+[13-01-22 16:54:55] [127.0.0.1] [Session ] Class abstractTgable doesn't exist on C_ClassLoader::$fileindex
+[13-01-22 20:25:12] [127.0.0.1] [Session ] Module Path not found when loading 'Admin'; path=/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/Modules/Admin
+[13-01-22 20:25:12] [127.0.0.1] [Session ] Module Class Loader not found for 'Admin' Module
+[13-01-22 20:25:12] [127.0.0.1] [Session ] Module Core Class not found for 'Admin' Module
+[13-01-22 20:45:30] [127.0.0.1] [Session ] Module Path not found when loading 'Admin'; path=/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/Modules/Admin
+[13-01-22 20:45:30] [127.0.0.1] [Session ] Module Class Loader not found for 'Admin' Module
+[13-01-22 20:45:30] [127.0.0.1] [Session ] Module Core Class not found for 'Admin' Module
+[13-01-22 20:48:16] [127.0.0.1] [Session ] Module Path not found when loading 'Admin'; path=/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/Modules/Admin
+[13-01-22 20:48:16] [127.0.0.1] [Session ] Module Class Loader not found for 'Admin' Module
+[13-01-22 20:48:16] [127.0.0.1] [Session ] Module Core Class not found for 'Admin' Module
+[13-01-22 20:50:30] [127.0.0.1] [Session ] Class adminVO doesn't exist on appClassLoader::$fileindex
+[13-01-22 20:51:41] [127.0.0.1] [Session ] Class userAdminVO doesn't exist on appClassLoader::$fileindex
+[13-01-22 20:51:54] [127.0.0.1] [Session ] Class UserAdminVO doesn't exist on appClassLoader::$fileindex
+[13-01-23 01:03:06] [127.0.0.1] [Session ] Class Table doesn't exist on C_ClassLoader::$fileindex
+[13-01-23 01:23:51] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::
+[13-01-23 01:24:36] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::
+[13-01-23 01:25:22] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::VO
+[13-01-23 01:26:12] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-01-23 01:30:25] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-01-23 01:31:12] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-01-23 02:08:32] [127.0.0.1] [Session ] Module Path not found when loading 'Admin'; path=/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/Modules/Admin
+[13-01-23 02:08:32] [127.0.0.1] [Session ] Module Class Loader not found for 'Admin' Module
+[13-01-23 02:08:32] [127.0.0.1] [Session ] Module Core Class not found for 'Admin' Module
+[13-02-06 23:52:19] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-06 23:52:19] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 13:52:24] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 13:52:24] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 13:52:40] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 13:52:40] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 13:52:42] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 13:52:42] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 13:52:47] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 13:52:47] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 13:52:56] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 13:52:56] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 13:53:34] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 13:53:34] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 13:53:39] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 13:53:39] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 13:55:48] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 13:55:48] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 13:57:09] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 13:57:09] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 14:03:29] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 14:03:29] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 14:03:42] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 14:03:42] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 14:15:12] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 14:15:12] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 14:18:49] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 14:18:49] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 15:19:46] [127.0.0.1] [Session ] Module Class Loader not found for 'app' Module
+[13-02-10 15:19:46] [127.0.0.1] [Session ] Module Core Class not found for 'app' Module
+[13-02-10 15:42:07] [127.0.0.1] [Session ] C_RequestManager::Action(): Unable to include file 'Public/tabla.inc'. Expected location: 'Controllers/Actions/'. include_path=.:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/
+[13-02-10 15:45:04] [127.0.0.1] [Session ] C_RequestManager::Action(): Unable to include file 'Public/tabla.inc'. Expected location: 'Controllers/Actions/'. include_path=.:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/
+[13-02-10 16:38:42] [127.0.0.1] [Session ] C_RequestManager::Action(): Unable to include file 'Public/tabla.inc'. Expected location: 'Controllers/Actions/'. include_path=.:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/
+[13-02-10 16:53:10] [127.0.0.1] [Session ] C_RequestManager::Action(): Unable to include file 'Public/tabla.inc'. Expected location: 'Controllers/Actions/'. include_path=.:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/
+[13-02-10 17:37:14] [127.0.0.1] [Session ] C_RequestManager::Action(): Unable to include file 'Public/tabla.inc'. Expected location: 'Controllers/Actions/'. include_path=.:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/
+[13-02-10 17:40:34] [127.0.0.1] [Session ] C_RequestManager::Action(): Unable to include file 'Public/tabla.inc'. Expected location: 'Controllers/Actions/'. include_path=.:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/
+[13-02-10 17:43:29] [127.0.0.1] [Session ] C_RequestManager::Action(): Unable to include file 'Public/tabla.inc'. Expected location: 'Controllers/Actions/'. include_path=.:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/
+[13-02-10 18:01:05] [127.0.0.1] [Session ] C_RequestManager::Action(): Unable to include file 'Public/tabla.inc'. Expected location: 'Controllers/Actions/'. include_path=.:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk:/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/
+[13-02-28 00:52:02] [127.0.0.1] [Session ] Access denied for user 'www-data'@'localhost' (using password: YES)
+[13-02-28 00:52:21] [127.0.0.1] [Session ] Unknown database 'canada'
+[13-02-28 01:24:43] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-06 21:21:42] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-06 21:23:46] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-06 21:29:09] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-06 21:30:00] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-06 21:48:32] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-06 22:44:37] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:28:59] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:33:29] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:33:32] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:34:17] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:34:45] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:35:27] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:41:10] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:41:34] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:42:02] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:43:29] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:43:30] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:43:48] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:43:49] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:44:02] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:44:39] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:46:20] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:46:56] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:47:26] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:47:53] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:48:14] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:48:29] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 20:48:39] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-15 21:02:14] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 14:05:28] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 14:06:07] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 14:06:41] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 14:07:35] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 14:26:49] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 14:51:11] [127.0.0.1] [Session ] MysqlDAO.listItems():  MYSQL QUERY: SELECT * FROM useradmin
+[13-03-16 14:51:11] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 14:51:29] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 15:07:56] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 15:36:49] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 15:40:57] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 15:54:49] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 15:54:51] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 16:02:53] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 16:02:53] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 16:02:53] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 16:04:00] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 16:04:00] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 16:04:00] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 16:32:18] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 16:32:18] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 16:32:18] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 16:44:45] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 16:44:45] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 16:44:45] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 17:06:33] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 17:06:33] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 17:06:33] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 17:16:53] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 17:16:53] [127.0.0.1] [Session ] key 'id' doesn't exist in VO::Useradmin
+[13-03-16 17:16:53] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 17:20:48] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 17:22:45] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 17:27:18] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 17:28:24] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 17:28:25] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 17:29:02] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 17:32:32] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 17:34:20] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 18:04:11] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 18:43:15] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 18:48:19] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 18:48:20] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:07:21] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:07:49] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:08:33] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:10:53] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:12:11] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:12:59] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:12:59] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:13:33] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:14:13] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:15:38] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:18:56] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:21:02] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:22:03] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:22:17] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:23:49] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:31:16] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:38:00] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:43:12] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:43:31] [127.0.0.1] [Session ] : Table 'test.usderadmin' doesn't exist MYSQL QUERY: SELECT * FROM usderadmin
+[13-03-16 19:43:31] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:44:14] [127.0.0.1] [Session ] : Table 'test.usderadmin' doesn't exist MYSQL QUERY: SELECT * FROM usderadmin
+[13-03-16 19:44:14] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:44:15] [127.0.0.1] [Session ] : Table 'test.usderadmin' doesn't exist MYSQL QUERY: SELECT * FROM usderadmin
+[13-03-16 19:44:15] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:44:50] [127.0.0.1] [Session ] : Table 'test.usderadmin' doesn't exist MYSQL QUERY: SELECT * FROM usderadmin
+[13-03-16 19:44:50] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:46:10] [127.0.0.1] [Session ] MysqlDAO.listItems(): Table 'test.usderadmin' doesn't exist MYSQL QUERY: SELECT * FROM usderadmin
+[13-03-16 19:46:10] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:47:32] [127.0.0.1] [Session ] : MYSQL QUERY ERROR on MysqlDAO.listItems(): Table 'test.usderadmin' doesn't exist
+[13-03-16 19:47:32] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:48:46] [127.0.0.1] [Session ] : MYSQL QUERY ERROR on MysqlDAO.listItems(): Table 'test.usderadmin' doesn't exist
+[13-03-16 19:48:46] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:49:02] [127.0.0.1] [Session ] : MYSQL QUERY ERROR on MysqlDAO.listItems(): Table 'test.usderadmin' doesn't exist
+[13-03-16 19:49:02] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:49:20] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:50:55] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:56:01] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:56:29] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:57:20] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:57:52] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:58:37] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:58:48] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:59:12] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 19:59:34] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:00:29] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:00:30] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:01:18] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:01:28] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:02:39] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:34:14] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:34:51] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:44:00] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:44:27] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:44:37] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:44:43] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:44:51] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:44:57] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 20:51:53] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 21:09:50] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 21:10:57] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 21:11:31] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 21:12:26] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 21:12:42] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 21:12:58] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 21:15:27] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 21:15:38] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 21:15:44] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 21:15:54] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:28:09] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:37:12] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:38:24] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:38:48] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:39:18] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:39:32] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:39:55] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:40:59] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:41:36] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:42:43] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:42:53] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:43:04] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:43:15] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:43:43] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:43:44] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:43:58] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:46:40] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:47:05] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:47:40] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:48:54] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:49:56] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:51:10] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 22:52:30] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 23:05:28] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-03-16 23:05:28] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 23:06:28] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-03-16 23:06:28] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 23:07:15] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-03-16 23:07:15] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-03-16 23:14:46] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listCount
+[13-03-17 00:16:04] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Find
+[13-03-17 00:35:18] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:36:48] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:37:02] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:37:04] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:37:33] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:37:48] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:39:11] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:39:14] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:41:59] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:43:40] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:43:44] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 00:43:53] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Delete
+[13-03-17 20:15:40] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',,,,)' at line 1
+[13-03-17 20:15:40] [127.0.0.1] [Session ] MysqlDAO::createYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',,,,)' at line 1 QUERY: INSERT INTO `useradmin` (`id`,`login`,`passwd`,`name`,`extended_data`,`time_lastlogin`) VALUES(,,,,,);
+[13-03-17 20:23:20] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',,,,)' at line 1
+[13-03-17 20:23:20] [127.0.0.1] [Session ] MysqlDAO::createYou have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',,,,)' at line 1 QUERY: 
+[13-03-17 20:31:04] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Query was empty
+[13-03-17 20:31:04] [127.0.0.1] [Session ] MysqlDAO::createQuery was empty QUERY: 
+[13-03-17 20:32:04] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Query was empty
+[13-03-17 20:32:04] [127.0.0.1] [Session ] MysqlDAO::createQuery was empty QUERY: 
+[13-03-17 20:32:29] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Query was empty
+[13-03-17 20:32:39] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Query was empty
+[13-03-17 20:32:39] [127.0.0.1] [Session ] MysqlDAO::createQuery was empty QUERY: 
+[13-03-17 20:33:00] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Query was empty
+[13-03-17 20:33:00] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 20:35:02] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Query was empty
+[13-03-17 20:35:02] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 20:35:28] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Query was empty
+[13-03-17 20:35:39] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Query was empty
+[13-03-17 20:35:39] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 20:36:21] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Query was empty
+[13-03-17 20:36:21] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 20:44:49] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Unknown column 'extended_data' in 'field list'
+[13-03-17 20:44:49] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 21:10:07] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Unknown column 'extended_data' in 'field list'
+[13-03-17 21:10:07] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 21:58:41] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Unknown column 'extended_data' in 'field list'
+[13-03-17 21:58:41] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:09:30] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:09:55] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:20:49] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:21:15] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listCount
+[13-03-17 22:21:15] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Find
+[13-03-17 22:21:15] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Find
+[13-03-17 22:21:15] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:23:32] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:24:20] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:24:54] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:25:02] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:26:14] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:26:14] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:26:14] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:27:20] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:27:20] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:27:20] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:27:38] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:27:38] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:27:38] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:27:51] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:27:51] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:27:51] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:30:03] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:30:03] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:30:03] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:30:23] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:30:23] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:30:23] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:30:40] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:30:40] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:30:40] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:30:59] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:30:59] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:30:59] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:31:37] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:31:37] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:31:37] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:41:44] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:41:44] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:41:44] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:43:45] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:43:45] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:43:45] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:44:20] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:44:20] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): No data supplied for parameters in prepared statement
+[13-03-17 22:44:20] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:45:09] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:46:18] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:46:18] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): 
+[13-03-17 22:46:18] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:46:50] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:46:50] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): 
+[13-03-17 22:46:50] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:46:51] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:46:51] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Duplicate entry 'admin' for key 'login'
+[13-03-17 22:46:51] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:48:24] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:48:24] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Duplicate entry 'admin' for key 'login'
+[13-03-17 22:48:24] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:50:06] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:50:06] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Duplicate entry 'admin' for key 'login'
+[13-03-17 22:50:06] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:50:07] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:50:07] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Duplicate entry 'admin' for key 'login'
+[13-03-17 22:50:07] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:52:33] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.delete(): 
+[13-03-17 22:52:34] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Duplicate entry 'admin' for key 'login'
+[13-03-17 22:52:34] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:56:27] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Column count doesn't match value count at row 1
+[13-03-17 22:56:27] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:56:44] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): Column count doesn't match value count at row 1
+[13-03-17 22:56:44] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:57:26] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): 
+[13-03-17 22:57:26] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 22:57:47] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): 
+[13-03-17 22:57:47] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:02:01] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): 
+[13-03-17 23:02:01] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:08:09] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:08:09] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:09:56] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:09:56] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:10:05] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): 
+[13-03-17 23:10:05] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:13:55] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:13:55] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:14:15] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:14:15] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:14:16] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:14:16] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:14:39] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:14:39] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:15:05] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): 
+[13-03-17 23:15:05] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:15:06] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.create(): 
+[13-03-17 23:15:06] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:16:27] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:16:41] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:17:01] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:17:01] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:17:17] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:18:33] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:18:33] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:18:35] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:18:35] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:18:44] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:19:30] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:19:30] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:19:39] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:20:37] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:20:37] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:22:26] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:22:26] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:23:08] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:23:08] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:24:34] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:24:34] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:25:07] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:25:07] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:26:24] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:26:24] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:26:25] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry 'a' for key 'login'
+[13-03-17 23:26:25] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-03-17 23:38:28] [127.0.0.1] [Session ] all VO Must have declared an $this::$tableName
+[13-03-17 23:39:38] [127.0.0.1] [Session ] useradminVO Must have an self::$cols array (See Cogumelo documentation)
+[13-03-17 23:40:28] [127.0.0.1] [Session ] useradminVO Must be declared at least one primary key in $this::$cools array (See Cogumelo documentation)
+[13-03-20 11:42:33] [127.0.0.1] [Session ] Acess error on view DevView
+[13-03-20 11:45:40] [127.0.0.1] [Session ] Acess error on view DevView
+[13-03-20 11:45:46] [127.0.0.1] [Session ] Must Be developer machine to enter on this site
+[13-03-20 11:45:46] [127.0.0.1] [Session ] Acess error on view DevView
+[13-03-20 11:50:06] [127.0.0.1] [Session ] Acess error on view DevView
+[13-03-20 11:50:09] [127.0.0.1] [Session ] Acess error on view DevView
+[13-03-20 11:53:51] [127.0.0.1] [Session ] Acess error on view DevView
+[13-03-20 11:53:56] [127.0.0.1] [Session ] Acess error on view DevView
+[13-03-20 12:04:27] [127.0.0.1] [Session ] 
+[13-03-20 12:05:29] [127.0.0.1] [Session ] Error including code from file_path
+[13-03-20 12:05:47] [127.0.0.1] [Session ] Error including code from /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/classes/controllers/data/FomVOtoDBController.inc
+[13-03-20 12:06:33] [127.0.0.1] [Session ] PHP File not found/home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/classes/controllers/data/FomVOtoDBController.inc
+[13-03-20 12:06:44] [127.0.0.1] [Session ] PHP File not found : /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/classes/controllers/data/FomVOtoDBController.inc
+[13-03-20 12:08:32] [127.0.0.1] [Session ] PHP File not found : /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../c_app/classes/controllers/data/FomVOtoDBController.inc
+[13-03-22 00:16:30] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.createTable(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's dev module'' at line 6
+[13-03-22 00:16:56] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createTable(): Table 'useradmin' already exists
+[13-03-22 00:35:21] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createTable(): Table 'useradmin' already exists
+[13-03-22 00:36:26] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.dropTable(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '[IF EXISTS]  useradmin' at line 1
+[13-03-22 00:36:26] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createTable(): Table 'useradmin' already exists
+[13-04-02 17:20:29] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:20:29] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:20:29] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:20:29] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:20:29] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:20:29] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:20:42] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:20:42] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:20:42] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:20:42] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:20:42] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:20:42] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:21:08] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:21:08] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:21:08] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:21:08] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:21:08] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:21:08] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:21:12] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:21:12] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:21:12] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:21:12] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:21:12] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:21:12] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:21:21] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:21:21] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:21:21] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:21:21] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:21:21] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:21:21] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:28:35] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:28:35] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:28:35] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:28:35] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:28:35] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:28:35] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:28:35] [127.0.0.1] [Session ] Acess error on view Adminview
+[13-04-02 17:34:18] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:34:18] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:34:18] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:34:18] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:34:18] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:34:18] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:34:18] [127.0.0.1] [Session ] Acess error on view Adminview
+[13-04-02 17:40:34] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:40:34] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:40:34] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:40:34] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:40:34] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:40:34] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:40:34] [127.0.0.1] [Session ] Acess error on view Adminview
+[13-04-02 17:40:57] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:40:57] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:40:57] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:40:57] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:40:57] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:40:57] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:40:57] [127.0.0.1] [Session ] Acess error on view Adminview
+[13-04-02 17:41:50] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:41:50] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:41:50] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:41:50] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:41:50] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:41:50] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:41:50] [127.0.0.1] [Session ] Acess error on view Adminview
+[13-04-02 17:41:51] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:41:51] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:41:51] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:41:51] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:41:51] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:41:51] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:41:51] [127.0.0.1] [Session ] Acess error on view Adminview
+[13-04-02 17:41:59] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:41:59] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:41:59] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:41:59] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:41:59] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:41:59] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:42:02] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:42:02] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:42:02] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:42:02] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:42:02] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:42:02] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:46:14] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:46:14] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:46:14] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:46:14] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:46:14] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:46:14] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:46:14] [127.0.0.1] [Session ] Acess error on view Adminview
+[13-04-02 17:53:32] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:53:32] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:53:32] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:53:32] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:53:32] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:53:32] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:53:42] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:53:42] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:53:42] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:53:42] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:53:42] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:53:42] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:54:04] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:54:04] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:54:04] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:54:04] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:54:04] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:54:04] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:54:18] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:54:18] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:54:18] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:54:18] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:54:18] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:54:18] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:55:23] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:55:23] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:55:23] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:55:23] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:55:23] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:55:23] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:55:33] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:55:33] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:55:33] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:55:33] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:55:33] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:55:33] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:55:35] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:55:35] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:55:35] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:55:35] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:55:35] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:55:35] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:56:11] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:56:11] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:56:11] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:56:11] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:56:11] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:56:11] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:56:55] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:56:55] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:56:55] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:56:55] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:56:55] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:56:55] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 17:57:22] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 17:57:22] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 17:57:22] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 17:57:22] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 17:57:22] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 17:57:22] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 18:00:24] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 18:00:24] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 18:00:24] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 18:00:24] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 18:00:24] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 18:00:24] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 18:00:47] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 18:00:47] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 18:00:47] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 18:00:47] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 18:00:47] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 18:00:47] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 18:01:00] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 18:01:00] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 18:01:00] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 18:01:00] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 18:01:00] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 18:01:00] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 18:01:14] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 18:01:14] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 18:01:14] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 18:01:14] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 18:01:14] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 18:01:14] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 18:02:41] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 18:02:41] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 18:02:41] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 18:02:41] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 18:02:41] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 18:02:41] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-02 18:02:50] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-02 18:02:50] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-02 18:02:50] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-02 18:02:50] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-02 18:02:50] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-02 18:02:50] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 10:24:50] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 10:24:50] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 10:24:50] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 10:24:50] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 10:24:50] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 10:24:50] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 10:31:56] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 10:31:56] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 10:31:56] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 10:31:56] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 10:31:56] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 10:31:56] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 10:32:24] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 10:32:24] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 10:32:24] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 10:32:24] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 10:32:24] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 10:32:24] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 11:12:16] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 11:12:16] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 11:12:16] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 11:12:16] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 11:12:16] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 11:12:16] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 11:12:16] [127.0.0.1] [Session ] PHP File not found : /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../../../c_classes/c_model/AutoFacade.inc
+[13-04-03 11:13:23] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 11:13:23] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 11:13:23] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 11:13:23] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 11:13:23] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 11:13:23] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 11:13:23] [127.0.0.1] [Session ] PHP File not found : /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../../../c_classes/c_model/AutoFacade.inc
+[13-04-03 11:15:33] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 11:15:33] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 11:15:33] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 11:15:33] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 11:15:33] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 11:15:33] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 11:16:28] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 11:16:28] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 11:16:28] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 11:16:28] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 11:16:28] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 11:16:28] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 11:19:21] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 11:19:21] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 11:19:21] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 11:19:21] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 11:19:21] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 11:19:21] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 11:22:07] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 11:22:07] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 11:22:07] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 11:22:07] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 11:22:07] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 11:22:07] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 11:39:05] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 11:39:05] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 11:39:05] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 11:39:05] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 11:39:05] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 11:39:05] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-03 11:39:47] [127.0.0.1] [Session ] Module 'setlang' not found.
+[13-04-03 11:39:47] [127.0.0.1] [Session ] Module 'mediaserver' not found.
+[13-04-03 11:39:47] [127.0.0.1] [Session ] Module 'user' not found.
+[13-04-03 11:39:47] [127.0.0.1] [Session ] Module 'forms' not found.
+[13-04-03 11:39:47] [127.0.0.1] [Session ] Module 'admin' not found.
+[13-04-03 11:39:47] [127.0.0.1] [Session ] Module 'devel' not found.
+[13-04-04 14:01:41] [127.0.0.1] [Session ] Module named as (nonmoduleo) is not enabled. Add it to $C_ENABLED_MODULES array
+[13-04-04 14:01:41] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:02:41] [127.0.0.1] [Session ] Module named as (nonmoduleo) is not enabled. Add it to $C_ENABLED_MODULES array
+[13-04-04 14:02:41] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:03:23] [127.0.0.1] [Session ] Module named as (nonmoduleo) is not enabled. Add it to $C_ENABLED_MODULES array
+[13-04-04 14:03:23] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:03:49] [127.0.0.1] [Session ] Module named as (nonmoduleo) is not enabled. Add it to $C_ENABLED_MODULES array
+[13-04-04 14:03:49] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:04:15] [127.0.0.1] [Session ] Module named as (nonmoduleo) is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 14:04:15] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:04:39] [127.0.0.1] [Session ] Module 'nonmoduleo' not found.
+[13-04-04 14:04:39] [127.0.0.1] [Session ] Module named as (nonmoduleo) is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 14:04:39] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:05:37] [127.0.0.1] [Session ] Module 'nonmoduleo' not found.
+[13-04-04 14:05:37] [127.0.0.1] [Session ] Module named as (nonmoduleo) is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 14:05:37] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:06:35] [127.0.0.1] [Session ] Module 'nonmoduleo' not found.
+[13-04-04 14:06:35] [127.0.0.1] [Session ] template file: tpl_path not found into module (nonmoduleo) 
+[13-04-04 14:06:35] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:06:58] [127.0.0.1] [Session ] Module 'nonmoduleo' not found.
+[13-04-04 14:06:58] [127.0.0.1] [Session ] template file: testpage.tpl not found into module (nonmoduleo) 
+[13-04-04 14:06:58] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:07:59] [127.0.0.1] [Session ] Module 'nonmoduleo' not found.
+[13-04-04 14:07:59] [127.0.0.1] [Session ] template file: 'testpage.tpl'' not found into module 'nonmoduleo' 
+[13-04-04 14:07:59] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:08:10] [127.0.0.1] [Session ] Module 'nonmoduleo' not found.
+[13-04-04 14:08:10] [127.0.0.1] [Session ] template file: 'testpage.tpl'' not found into module 'nonmoduleo' 
+[13-04-04 14:08:10] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:09:18] [127.0.0.1] [Session ] Module 'nonmoduleo' not found.
+[13-04-04 14:09:18] [127.0.0.1] [Session ] template file: 'testpage.tpl'' not found into module 'nonmoduleo' 
+[13-04-04 14:09:18] [127.0.0.1] [Session ] No tpl file defined
+[13-04-04 14:10:07] [127.0.0.1] [Session ] Module 'nonmoduleo' not found.
+[13-04-04 14:30:50] [127.0.0.1] [Session ] Module 'nonmoduleo' not found.
+[13-04-04 16:21:06] [127.0.0.1] [Session ] RequestController::readPatternAction error. No valid pattern = ''
+[13-04-04 16:21:09] [127.0.0.1] [Session ] RequestController::readPatternAction error. No valid pattern = ''
+[13-04-04 17:10:49] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:10:51] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:11:32] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:15:20] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:15:23] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:15:23] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:37:33] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:37:34] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:37:35] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:37:42] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:38:14] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:38:16] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:38:16] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:38:23] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 17:38:26] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 18:06:55] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 18:07:29] [127.0.0.1] [Session ] Module named as "modulo" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-04 18:14:22] [127.0.0.1] [Session ] Media type not found img
+[13-04-04 18:15:10] [127.0.0.1] [Session ] Media type not found img
+[13-04-04 18:15:15] [127.0.0.1] [Session ] Media type not found img
+[13-04-04 18:15:46] [127.0.0.1] [Session ] Media type not found img
+[13-04-04 18:16:17] [127.0.0.1] [Session ] Media type not found img
+[13-04-04 18:16:34] [127.0.0.1] [Session ] Media type not found img
+[13-04-04 18:17:52] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates//ola.css
+[13-04-04 18:22:29] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates//ola.css
+[13-04-04 18:23:17] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates//ola.css
+[13-04-04 18:24:34] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates//ola.css
+[13-04-04 18:25:22] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/ola.css
+[13-04-04 18:25:25] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/ola.css
+[13-04-04 18:26:27] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/cssola.css
+[13-04-04 18:26:29] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/cssola.css
+[13-04-04 18:26:30] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/cssola.css
+[13-04-04 18:37:35] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates//css/ola.csss
+[13-04-04 18:37:41] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates//css/ola.csss
+[13-04-04 18:37:58] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/cssola.csss
+[13-04-04 18:38:26] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/cssola.csss/
+[13-04-04 18:39:23] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates//css/ola.csss
+[13-04-04 18:39:26] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates//css/ola.csss
+[13-04-04 18:48:43] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates//css/ola.js
+[13-04-05 10:33:25] [127.0.0.1] [Session ] Mediaserver received empty request
+[13-04-05 10:33:28] [127.0.0.1] [Session ] Module named as "" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-05 11:27:43] [127.0.0.1] [Session ] Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-05 11:27:59] [127.0.0.1] [Session ] file: '/img/ola.jpg'' not found
+[13-04-05 11:38:43] [127.0.0.1] [Session ] Mediaserver received empty request
+[13-04-05 11:39:39] [127.0.0.1] [Session ] Mediaserver receives empty request
+[13-04-05 11:48:48] [127.0.0.1] [Session ] No tpl file defined
+[13-04-05 11:54:07] [127.0.0.1] [Session ] No tpl file defined
+[13-04-05 11:54:12] [127.0.0.1] [Session ] No tpl file defined
+[13-04-05 11:56:10] [127.0.0.1] [Session ] Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-05 11:57:25] [127.0.0.1] [Session ] Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-05 12:33:59] [127.0.0.1] [Session ] Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-05 14:09:11] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../../../c_modules/testmoduletemplates/test.tpl
+[13-04-05 14:09:15] [127.0.0.1] [Session ] template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../../../c_modules/testmoduletemplates/test.tpl
+[13-04-05 14:16:47] [127.0.0.1] [Session ] Template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../../../c_modules/testmoduletemplates/test.tpl
+[13-04-05 14:17:45] [127.0.0.1] [Session ] Template not found: /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../../../c_modules/testmoduletemplates/test.tpl
+[13-04-05 14:18:26] [127.0.0.1] [Session ] Template file: 'test.tpl'' not found into module 'testmodule' 
+[13-04-05 14:18:26] [127.0.0.1] [Session ] Template: no tpl file defined
+[13-04-05 14:26:05] [127.0.0.1] [Session ] Template file: 'test.tpl'' not found into module 'testmodule' 
+[13-04-05 14:26:05] [127.0.0.1] [Session ] Template: no tpl file defined
+[13-04-10 10:18:01] [127.0.0.1] [Session ] Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-10 10:18:08] [127.0.0.1] [Session ] Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-10 10:37:48] [127.0.0.1] [Session ] Cannot create cache file into MINIMIFY_CACHE_PATH for file /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/css/ola.css
+[13-04-10 10:39:39] [127.0.0.1] [Session ] Cannot create cache file into MINIMIFY_CACHE_PATH for file /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/css/ola.css
+[13-04-10 10:40:49] [127.0.0.1] [Session ] Cannot create cache file into MINIMIFY_CACHE_PATH for file /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/css/ola.css
+[13-04-10 10:41:52] [127.0.0.1] [Session ] Cannot create cache file into MINIMIFY_CACHE_PATH for file /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/css/ola.css
+[13-04-10 10:43:43] [127.0.0.1] [Session ] Cannot create cache file into tmp/minimify/ for file /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/css/ola.css
+[13-04-10 10:44:02] [127.0.0.1] [Session ] Cannot create cache file into /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/tmp/minimify/ for file /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/css/ola.css
+[13-04-10 10:45:26] [127.0.0.1] [Session ] Cannot create cache file into /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/tmp/minimify for file /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/css/ola.css
+[13-04-10 10:46:08] [127.0.0.1] [Session ] Cannot create cache file into /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/tmp/minimify for file /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/css/ola.css
+[13-04-10 10:47:49] [127.0.0.1] [Session ] Cannot create cache file into /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/tmp/minimify for file /home/pblanco/Desarrollo/cogumelo_gcode/branches/1.0a/c_packages/base_app/httpdocs/../c_app/templates/css/ola.css
+[13-04-10 10:54:53] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-04-10 10:55:19] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-04-10 10:55:34] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-04-10 10:55:57] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-04-10 10:56:10] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-04-10 10:56:13] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-04-10 10:56:41] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-04-10 10:57:11] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-04-10 11:03:25] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-04-10 12:48:37] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-04-10 15:48:03] [127.0.0.1] [Session ] ModuleController: Module named as "testmodule.inc" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-10 15:48:03] [127.0.0.1] [Session ] PHP File 'controllers/ola'  not found in module : testmodule
+[13-04-10 15:48:50] [127.0.0.1] [Session ] ModuleController: 'controllers/ola'' not found into module 'testmodule' 
+[13-04-10 15:48:50] [127.0.0.1] [Session ] PHP File 'controllers/ola'  not found in module : testmodule
+[13-04-10 15:49:00] [127.0.0.1] [Session ] ModuleController: 'controllers/ola.inc'' not found into module 'testmodule' 
+[13-04-10 15:49:00] [127.0.0.1] [Session ] PHP File 'controllers/ola'  not found in module : testmodule
+[13-04-10 15:49:24] [127.0.0.1] [Session ] ModuleController: 'controllers/ola.inc'' not found into module 'testmodule' 
+[13-04-10 15:49:24] [127.0.0.1] [Session ] PHP File 'controllers/ola'  not found in module : testmodule
+[13-04-10 17:34:44] [127.0.0.1] [Session ] Mediaserver receives empty request
+[13-04-10 17:54:26] [127.0.0.1] [Session ] ModuleController: Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-10 17:55:33] [127.0.0.1] [Session ] ModuleController: Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-10 17:56:43] [127.0.0.1] [Session ] ModuleController: Module named as "testmodule" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-04-10 18:01:08] [127.0.0.1] [Session ] ModuleController: 'templatesola.css'' not found into module 'testmodule' 
