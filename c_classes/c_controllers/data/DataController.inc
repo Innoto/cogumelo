@@ -39,7 +39,6 @@ abstract class DataController {
 	//	Constructor 
 	//
 	function __construct($filters = false, $range = false, $order = false) {
-		if($range == )
 		$this->setRange($range);
 		$this->setFilters($order);
 		$this->setOrder($filters);
@@ -52,7 +51,7 @@ abstract class DataController {
 
 	// range
 	function setRange($range){
-		$this->range = $range
+		$this->range = $range;
 	}
 
 	// filters

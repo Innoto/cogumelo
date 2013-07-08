@@ -95,7 +95,7 @@ Class VO
 	function delete() {
 		if($this->controller_obj){
 	
-			$this->controller_obj->delete($this)
+			$this->controller_obj->delete($this);
 		}
 		else{
 			Cogumelo::error('No controller_object defined for VO '.get_called_class() );
