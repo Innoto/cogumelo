@@ -28,7 +28,7 @@ define('SITE_PATH', getcwd().'/../c_app/');
 // cogumelo core Location
 set_include_path('.:'.SITE_PATH);
 
-if ( $_HOSTS['remote_host'] == '127.0.0.1' ) {
+if ( $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ) {
 	require_once("conf/setup.dev.inc"); 
 }
 else {
