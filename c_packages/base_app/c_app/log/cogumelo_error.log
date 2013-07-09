@@ -803,3 +803,9 @@
 [13-04-10 17:55:33] [127.0.0.1] [Session ] ModuleController: Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
 [13-04-10 17:56:43] [127.0.0.1] [Session ] ModuleController: Module named as "testmodule" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
 [13-04-10 18:01:08] [127.0.0.1] [Session ] ModuleController: 'templatesola.css'' not found into module 'testmodule' 
+[13-07-09 10:25:32] [127.0.0.1] [Session ] Must be developer machine to enter on this site
+[13-07-09 10:45:57] [127.0.0.1] [Session ] ModuleController: Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-07-09 10:45:57] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-07-09 10:48:13] [127.0.0.1] [Session ] Mediaserver receives empty request
+[13-07-09 10:50:11] [127.0.0.1] [Session ] ModuleController: Module named as "mod" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array
+[13-07-09 10:50:11] [127.0.0.1] [Session ] Mediaserver couldn't load 

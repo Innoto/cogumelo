@@ -42,7 +42,7 @@ class ModuleController
 			Cogumelo::error("Module '".$module_name. "' not found.");
 		}
 		else {
-
+echo "aser";
 			$mod_path = $this->module_paths[$module_name];
 
 			require_once($mod_path.'/'.$module_name.'.inc');
