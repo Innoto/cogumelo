@@ -53,7 +53,8 @@ class CogumeloClass extends Singleton
         // modules
         $this->modules = new ModuleController( $url_path );
         $url_path_after_modules = $this->modules->getLeftUrl();
-        
+
+
         // main request controller
         self::load('c_controllers/request/RequestController');
         $this->request = new RequestController($this->url_patterns, $url_path_after_modules );

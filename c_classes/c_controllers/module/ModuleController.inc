@@ -9,6 +9,7 @@ class ModuleController
 	var $module_paths = array();
 
 	function __construct($url_path) {
+
 		$this->url_path = $url_path;
 		$this->setModules();
 		foreach($this->module_paths as $mp_id => $mp) {
@@ -42,17 +43,19 @@ class ModuleController
 			Cogumelo::error("Module '".$module_name. "' not found.");
 		}
 		else {
-echo "aser";
 			$mod_path = $this->module_paths[$module_name];
 
 			require_once($mod_path.'/'.$module_name.'.inc');
 			$modulo = new $module_name();
 
+
     		$this->request = new RequestController($modulo->url_patterns, $this->url_path,  $mod_path );
+
 
 			$this->url_path = $this->request->getLeftoeverUrl();
 
-			Cogumelo::debug("Module load ".$module_name);
+			Cogumelo::debug("Module loaded: ".$module_name);
+			
 		}
 	}
 

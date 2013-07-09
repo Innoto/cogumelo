@@ -45,15 +45,19 @@ class RequestController
 
 	function exec()
 	{
+
 		foreach($this->url_patterns as $url_pattern_key => $url_pattern_action){
 
 			if(preg_match( $url_pattern_key, $this->url_path, $m_url) ) {
-
 				if(array_key_exists(1, $m_url)) {
 					$this->readPatternAction($m_url[1], $url_pattern_action);
 				}
 				else {
 					$this->readPatternAction("", $url_pattern_action);
+				}
+
+				if(array_key_exists(2, $m_url)){
+					$this->leftover_url = $m_url[2];
 				}
 				return;
 			} 
@@ -63,9 +67,10 @@ class RequestController
 		if( $this->is_last_request ){ 
 			self::Redirect(SITE_URL_CURRENT.'404');
 		}
-		else {
+		else{
 			$this->leftover_url = $this->url_path;
 		}
+
 
 
 
@@ -73,16 +78,16 @@ class RequestController
 	
 	private function readPatternAction($url_path, $url_pattern_action){
 
+
 		if(preg_match('^(redirect:)(.*)^', $url_pattern_action, $m)){
 			self::redirect($m[2]);
 		}	
-		else if(preg_match('^(view:)(.*)^', $url_pattern_action, $m)){
-			$this->leftover_url = "";
-			$this->view($url_path ,$m[2]);
-			exit;
-		}
 		else if(preg_match('^(noendview:)(.*)^', $url_pattern_action, $m)){
 			$this->leftover_url = $url_path;
+			$this->view($url_path ,$m[2]);
+		}
+		else if(preg_match('^(view:)(.*)^', $url_pattern_action, $m)){
+			$this->leftover_url = "";
 			$this->view($url_path ,$m[2]);
 		}
 		else {
