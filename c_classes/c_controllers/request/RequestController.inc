@@ -89,6 +89,7 @@ class RequestController
 		else if(preg_match('^(view:)(.*)^', $url_pattern_action, $m)){
 			$this->leftover_url = "";
 			$this->view($url_path ,$m[2]);
+			exit;
 		}
 		else {
 			Cogumelo::error(__METHOD__." error. No valid pattern = '$matched'");
