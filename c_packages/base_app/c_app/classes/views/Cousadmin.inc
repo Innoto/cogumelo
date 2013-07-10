@@ -30,10 +30,16 @@ class Cousadmin extends View
 	}
 
 
+	function mostra_cousa($url = false) {
+
+	var_dump($this->cousacontrol->find($url) );
+
+	}
+
 	function crea() {
 
 		$novacousa = array('name'=> 'Cousa Adams', 'fingers' => 5,'hobby' => 'tocar o piano');
-		
+
 		$this->cousacontrol->create($novacousa);
 
 		echo "Creado nova entrada para cousa";

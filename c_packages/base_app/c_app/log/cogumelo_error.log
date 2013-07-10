@@ -861,3 +861,5 @@
 [13-07-10 20:27:23] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
 [13-07-10 20:27:26] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
 [13-07-10 20:28:14] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 20:46:56] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.find(): No data supplied for parameters in prepared statement
+[13-07-10 20:46:56] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Find
