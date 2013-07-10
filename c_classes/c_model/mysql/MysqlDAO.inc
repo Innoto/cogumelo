@@ -20,6 +20,7 @@ USA.
 */
 
 Cogumelo::load('c_model/DAO');
+Cogumelo::load('c_model/mysql/MysqlDAOResult');
 
 class MysqlDAO extends DAO
 {
@@ -201,8 +202,10 @@ class MysqlDAO extends DAO
 		// order string
 		$orderSTR = ($order)? $this->orderByString($order): "";
 
+
 		// range string
-		$rangeSTR = ($range != array() && is_array($range))? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
+				$rangeSTR = ($range != array() && is_array($range) )? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
+
 
 	
 		// SQL Query
@@ -212,14 +215,7 @@ class MysqlDAO extends DAO
 
 		if( $res = $this->execSQL($connection,$strSQL, $whereArray['values']) )
 		{
-			var_dump($res->num_rows);
-
-			if($res->num_rows != 0) {
-				return new MysqlDAOResult( $this->VO , $res);
-			}
-			else {
-				return null;
-			}
+			return new MysqlDAOResult( $this->VO , $res);
 		}
 		else
 		{

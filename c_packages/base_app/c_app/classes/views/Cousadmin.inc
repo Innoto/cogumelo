@@ -28,6 +28,7 @@ class Cousadmin extends View
 	function crea() {
 
 		$novacousa = array('name'=> 'Cousa Adams', 'fingers' => 5,'hobby' => 'tocar o piano');
+		$this->cousacontrol->create($novacousa);
 
 		echo "Creado nova entrada para cousa";
 	}

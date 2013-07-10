@@ -9,8 +9,13 @@ class MysqlDAOResult extends DAOResult {
 	var $VO;
 
 
-	function __construct($voObj, $resutl) {
-		$this->resutl = $resutl;
+	function __construct($voObj, $result) {
+		$this->result = $result;
+
+//mysqli_stmt_get_result($this->result);
+		//$res = $this->result->get_result();
+		var_dump($res->fetch_assoc());
+		exit;
 	}
 
 
@@ -21,7 +26,7 @@ class MysqlDAOResult extends DAOResult {
 
 
 	// resturn an VO array with all the result rows
-	abstract function fetchAll() {
+	function fetchAll() {
 		$list = array();
 
 		while( $row = $this->mysql_result->fetch() ) {
@@ -34,7 +39,7 @@ class MysqlDAOResult extends DAOResult {
 	}
 
 	// count total numer of query result
-	abstract function count() {
+	function count() {
 		return 	$this->resutl->count();
 	}
 
