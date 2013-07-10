@@ -21,7 +21,7 @@ class Cousadmin extends View
 
 
 	function lista() {
-		var_dump($this->cousacontrol->listCount());
+		var_dump($this->cousacontrol->listItems());
 	}
 
 

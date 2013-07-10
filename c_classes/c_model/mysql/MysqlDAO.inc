@@ -201,10 +201,8 @@ class MysqlDAO extends DAO
 		// order string
 		$orderSTR = ($order)? $this->orderByString($order): "";
 
-
 		// range string
-		if($range != array() && is_array($range))
-			$rangeSTR = sprintf(" LIMIT %s, %s ", $range[0], $range[1]);
+		$rangeSTR = ($range != array() && is_array($range))? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
 
 	
 		// SQL Query
