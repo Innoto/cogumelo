@@ -49,6 +49,13 @@ class MysqlConnection extends Connection
 		Cogumelo::log("mySQLi: Connection closed");
 	}
 
+
+
+	// close connection onn destroy
+	function __destruct() {
+       $this->close();
+   	}
+
 }
 
 ?>

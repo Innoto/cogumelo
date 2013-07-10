@@ -81,13 +81,7 @@ class MysqlDAO extends DAO
 
 
 		    if($stmt->error == ''){
-		    	if($result) {
-		    		$result = $stmt->get_result();
-		    		return $result;
-		    	}
-		    	else {
-		    		return true;
-		    	}
+		    	return $stmt;
 		    }
 			else {
 				Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$stmt->error);
@@ -186,7 +180,7 @@ class MysqlDAO extends DAO
 				return( $DAOres->fetch());
 			}
 			else {
-				return false;
+				return null;
 			}
 		}
 		else {
@@ -217,13 +211,16 @@ class MysqlDAO extends DAO
 		$VO = new $this->VO();
 		$strSQL = "SELECT * FROM `" . $VO::$tableName . "` ".$whereArray['string'].$orderSTR.$rangeSTR.";";
 
+
 		if( $res = $this->execSQL($connection,$strSQL, $whereArray['values']) )
 		{
+			var_dump($res->num_rows);
+
 			if($res->num_rows != 0) {
 				return new MysqlDAOResult( $this->VO , $res);
 			}
 			else {
-				return array();
+				return null;
 			}
 		}
 		else
@@ -250,13 +247,9 @@ class MysqlDAO extends DAO
 
 
 		if( $res = $this->execSQL($connection,$StrSQL, $whereArray['values']) )	{
-			if($res->num_rows != 0){
-				$num = mysqli_fetch_assoc($res);
-				return  $num['count(*)'];
-			}
-			else {
-				return false;
-			}
+				$res->bind_result($num_res);
+				$res->fetch();
+				return $num_res;
 		}
 		else {
 			return false;

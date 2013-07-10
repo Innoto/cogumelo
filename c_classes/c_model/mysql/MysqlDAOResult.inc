@@ -38,11 +38,6 @@ class MysqlDAOResult extends DAOResult {
 		return 	$this->resutl->count();
 	}
 
-	// free database query
-	abstract function free() {
-		return 	$this->resutl->free();
-	}
-
 
 	//
 	// Creates an VO from a query result;
@@ -60,5 +55,10 @@ class MysqlDAOResult extends DAOResult {
 		return $newObj;
 	}
 
+
+
+	function __destroy() {
+		$this->result->close();
+	}
 
 }
