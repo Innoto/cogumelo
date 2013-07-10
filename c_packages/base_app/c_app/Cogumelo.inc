@@ -11,8 +11,10 @@ class Cogumelo extends CogumeloClass
 	
 	protected function setUrlPatterns(){
 		return  array(
+			'#^cousa/crear$#' => 'view:Cousadmin::crea',
+			'#^cousa$#' => 'view:Cousadmin::lista',
 
-			'#^admin(.*)$#' => 'view:Adminview::metodo',
+			'#^admin\/?(.*)$#' => 'view:Adminview::metodo',
 			'#^dev$#' => 'view:DevView::main',
 			'#^404$#' => 'view:Adminview::page404',
 			// default views

@@ -79,9 +79,10 @@ class MysqlDAO extends DAO
 			}
 		    $stmt->execute();
 
-			$result = $stmt->get_result();
+
 		    if($stmt->error == ''){
 		    	if($result) {
+		    		$result = $stmt->get_result();
 		    		return $result;
 		    	}
 		    	else {
@@ -132,18 +133,20 @@ class MysqlDAO extends DAO
 		$where_str = "";
 		$val_array = array();
 
-		foreach($filters as $fkey => $filter_val) {
-			if( array_key_exists($fkey, $this->filters) ) {
-				$fstr = " AND ".$this->filters[$fkey];
-				$var_count = substr_count( $fstr , "?");
-				for($c=0; $c < $var_count; $c++) {
-					$val_array[] = $filter_val;
-				}
-				$where_str.=$fstr; 
 
+		if($filters) {
+			foreach($filters as $fkey => $filter_val) {
+				if( array_key_exists($fkey, $this->filters) ) {
+					$fstr = " AND ".$this->filters[$fkey];
+					$var_count = substr_count( $fstr , "?");
+					for($c=0; $c < $var_count; $c++) {
+						$val_array[] = $filter_val;
+					}
+					$where_str.=$fstr; 
+
+				}
 			}
 		}
-
 
 		return array(
 				'string' => "WHERE true".$where_str,
@@ -179,7 +182,8 @@ class MysqlDAO extends DAO
 	
 		if( $res = $this->execSQL($connection, $strSQL, array($search)) ) {
 			if($res->num_rows != 0) {
-				return new MysqlDAOResult( $this->VO , $res);
+				$DAOres  = new MysqlDAOResult( $this->VO , $res);
+				return( $DAOres->fetch());
 			}
 			else {
 				return false;
@@ -203,8 +207,9 @@ class MysqlDAO extends DAO
 		// order string
 		$orderSTR = ($order)? $this->orderByString($order): "";
 
+
 		// range string
-		if(is_array($range))
+		if($range != array() && is_array($range))
 			$rangeSTR = sprintf(" LIMIT %s, %s ", $range[0], $range[1]);
 
 	
@@ -212,11 +217,10 @@ class MysqlDAO extends DAO
 		$VO = new $this->VO();
 		$strSQL = "SELECT * FROM `" . $VO::$tableName . "` ".$whereArray['string'].$orderSTR.$rangeSTR.";";
 
-
 		if( $res = $this->execSQL($connection,$strSQL, $whereArray['values']) )
 		{
 			if($res->num_rows != 0) {
-				return  $this->VOArrayGenerator($res);
+				return new MysqlDAOResult( $this->VO , $res);
 			}
 			else {
 				return array();
@@ -292,7 +296,7 @@ class MysqlDAO extends DAO
 			$VOobj->setter($VOobj->getFirstPrimarykeyId(), $connection->insert_id);
 
 			// find row with insert id and return VO
-			return $this->find($connection, $connection->insert_id);
+			return $VOobj;
 		}
 		else {
 			return false;

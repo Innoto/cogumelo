@@ -815,3 +815,41 @@
 [13-07-09 21:07:30] [127.0.0.1] [Session ] ModuleController: 'i18nGetLang.inc'' not found into module 'i18nGetLang' 
 [13-07-09 21:07:30] [127.0.0.1] [Session ] Module not found: i18nGetLang
 [13-07-09 21:07:30] [127.0.0.1] [Session ] Module 'i18nGetLang' not found.
+[13-07-10 13:05:22] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-07-10 13:05:22] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:05:50] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-07-10 13:05:50] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:07:03] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-07-10 13:07:03] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:11:42] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-07-10 13:11:42] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:11:44] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-07-10 13:11:44] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:14:36] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-07-10 13:14:36] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:15:38] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-07-10 13:15:38] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:18:18] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-07-10 13:18:18] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:19:17] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-07-10 13:19:17] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:19:37] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1
+[13-07-10 13:19:37] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:20:15] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): Table 'test.cousa' doesn't exist
+[13-07-10 13:20:15] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-10 13:30:21] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:30:56] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:47:35] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:47:36] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:48:00] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:50:47] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:51:01] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:51:02] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:51:03] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:52:31] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:52:55] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:55:18] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:55:27] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:55:31] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:55:32] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-10 13:55:33] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create

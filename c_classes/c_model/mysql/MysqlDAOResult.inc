@@ -16,7 +16,7 @@ class MysqlDAOResult extends DAOResult {
 
 	// fetch just one result
 	function fetch() {
-		$this->resutl->fetch()
+		return $this->VOGenerator( $this->resutl->fetch() );
 	}
 
 
@@ -24,7 +24,8 @@ class MysqlDAOResult extends DAOResult {
 	abstract function fetchAll() {
 		$list = array();
 
-		while( $rowVO = $this->VOGenerator( $this->mysql_result->fetch()) ) {
+		while( $row = $this->mysql_result->fetch() ) {
+			$rowVO = $this->VOGenerator( $row);
 			$list[ $rowVO->getter($rowVO->getFirstPrimarykeyId()) ] = $rowVO;
 		}
 		

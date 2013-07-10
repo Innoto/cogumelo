@@ -9,6 +9,6 @@ class i18nGetLang extends Module
 	}
 
 	var $url_patterns = array(
-		'/^(es\/?)(.*)/' => 'noendview:GetLangView::setlang',
+		'/^(es\/?)(.*)/' => 'noendview:GetLang::setlang',
 	);
 }
