@@ -5,23 +5,26 @@ Cogumelo::load('c_model/DAOResult');
 
 class MysqlDAOResult extends DAOResult {
 
-	var $resutl;
+	var $result;
 	var $VO;
 
 
 	function __construct($voObj, $result) {
+		$this->VO = $voObj;
 		$this->result = $result;
-
-//mysqli_stmt_get_result($this->result);
-		//$res = $this->result->get_result();
-		var_dump($res->fetch_assoc());
-		exit;
 	}
 
 
 	// fetch just one result
 	function fetch() {
-		return $this->VOGenerator( $this->resutl->fetch() );
+		$row = $this->result->fetch_assoc();
+
+		if($row)
+			$ret_obj = $this->VOGenerator( $row );
+		else
+			$ret_obj = false;
+
+		return $ret_obj;
 	}
 
 
@@ -47,17 +50,10 @@ class MysqlDAOResult extends DAOResult {
 	//
 	// Creates an VO from a query result;
 	// Returns: Obj/false
-	function VOGenerator($res) // antes utilizaba & na variable res
+	function VOGenerator($row) // antes utilizaba & na variable res
 	{
-		// IMPORTANTE: Avanza cursor en $res !!!
-		$newObj = false;
-		if( $row = mysqli_fetch_assoc($res) ) {
-			$comando = '$newObj = new $this->VO($row);';
+		return new $this->VO($row);
 
-			eval($comando);
-		}
-	
-		return $newObj;
 	}
 
 

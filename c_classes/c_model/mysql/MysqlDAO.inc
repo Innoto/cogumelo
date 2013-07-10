@@ -82,17 +82,26 @@ class MysqlDAO extends DAO
 
 
 		    if($stmt->error == ''){
-		    	return $stmt;
+		    	if($ret = $stmt->get_result()){
+		    		$ret_data = $ret;
+		    	}
+		    	else{
+		    		$ret_data = true;
+		    	}
 		    }
 			else {
 				Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$stmt->error);
-				return false;
+				$ret_data = false;
 			}
 		}
 		else {
 			Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connection->error);
-			return false;
+
+			$ret_data = false;
 		}
+
+
+		return $ret_data;
 	}
 
 
@@ -277,13 +286,14 @@ class MysqlDAO extends DAO
 		}
 
 		$strSQL = "INSERT INTO `".$VOobj::$tableName."` (".$campos.") VALUES(".substr($answrs,1).");";
-		
+
+
 		if($res = $this->execSQL($connection, $strSQL, $valArray)) {
 
 			$VOobj->setter($VOobj->getFirstPrimarykeyId(), $connection->insert_id);
 
-			// find row with insert id and return VO
 			return $VOobj;
+
 		}
 		else {
 			return false;

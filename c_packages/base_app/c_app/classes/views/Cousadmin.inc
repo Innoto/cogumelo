@@ -21,13 +21,19 @@ class Cousadmin extends View
 
 
 	function lista() {
-		var_dump($this->cousacontrol->listItems());
+		$cousas = $this->cousacontrol->listItems();
+
+		while($cou = $cousas->fetch()) {
+			echo "<br>";
+			var_dump($cou);
+		}
 	}
 
 
 	function crea() {
 
 		$novacousa = array('name'=> 'Cousa Adams', 'fingers' => 5,'hobby' => 'tocar o piano');
+		
 		$this->cousacontrol->create($novacousa);
 
 		echo "Creado nova entrada para cousa";
