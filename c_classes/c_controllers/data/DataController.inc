@@ -84,7 +84,7 @@ abstract class DataController {
 	{
 
 		Cogumelo::debug( "Called listItems on ".get_called_class() );
-		$data = $this->data->listItems($this->filter, $this->range, $this->order);
+		$data = $this->data->listItems($this->filters, $this->range, $this->order);
 
 		return $data;
 	}
@@ -97,7 +97,7 @@ abstract class DataController {
 
 
 		Cogumelo::debug( "Called listCount on ".get_called_class() );
-		$data = $this->data->listCount($this->filter);
+		$data = $this->data->listCount($this->filters);
 
 		return $data;
 	}
