@@ -28,9 +28,21 @@ class DAO
 {
 	public static function factory($entity)
 	{
-		$class = 'model/'. DB_ENGINE . '/'. ucfirst(DB_ENGINE) .$entity.'DAO';
+		
 
-		Cogumelo::load($class);
+		$classpath = 'model/'. DB_ENGINE . '/'. ucfirst(DB_ENGINE) .$entity.'DAO';
+
+		// check if entity is in module or is in main project
+		//if() {
+			eval($modulo.'::load("'. $classpath .'");');
+		/*}
+		else
+		{
+			Cogumelo::load($classpath);
+		}
+		exit;
+*/
+
 
 		$dao_obj = ucfirst(DB_ENGINE).$entity;
 
