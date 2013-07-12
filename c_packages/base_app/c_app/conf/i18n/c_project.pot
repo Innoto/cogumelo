@@ -17,106 +17,106 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:27
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:27
 msgid "Debe introducir texto en el campo [field_name]"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:28
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:28
 msgid "El campo [field_name] debe contener un nombre de archivo válido"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:29
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:29
 msgid ""
 "El campo [field_name] debe contener una URL válida (La URL debe empezar por "
 "\"http://\")"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:30
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:30
 msgid "El campo [field_name] debe contener un número entero"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:31
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:31
 msgid "El valor '[field_value]' del campo [field_name] no es un número entero"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:32
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:32
 msgid "El campo [field_name] debe contener un número"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:33
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:33
 msgid ""
 "El campo [field_name] solo puede contener números o una coma para separar "
 "decimales"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:34
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:34
 msgid "El campo [field_name] debe contener una fecha válida"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:35
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:35
 msgid "En el campo [field_name] debe haber un archivo válido"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:36
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:36
 msgid "El campo [field_name] debe contener una dirección de email válida"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:37
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:37
 msgid "El campo [field_name] debe coincidir con la expresión '[option_value]'"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:38
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:38
 msgid "El campo [field_name] debe ser un DNI válido"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:39
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:39
 msgid "El campo [field_name] debe ser un NIF válido"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:42
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:42
 msgid "El campo [field_name] es obligatorio"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:43
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:43
 msgid "El campo [field_name] debe tener como máximo [option_value] caracteres"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:44
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:44
 msgid "El campo [field_name] debe tener como mínimo [option_value] caracteres"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:45
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:45
 msgid ""
 "El valor '[field_value]' del campo [field_name] no puede ser mayor a "
 "[option_value]"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:46
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:46
 msgid ""
 "El valor '[field_value]' del campo [field_name] no puede ser menor a "
 "[option_value]"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:47
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:47
 msgid ""
 "El campo [field_name] no puede tener asignados más de [option_value] elemento"
 "(s)"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:48
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:48
 msgid ""
 "El campo [field_name] no puede tener asignados menos de [option_value] "
 "elemento(s)"
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.inc:49
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Classes/Controllers/Validation/QuickForm.php:49
 msgid ""
 "El campo [field_name] debe contener una fecha válida con el formato "
 "\"[option_value]\""
 msgstr ""
 
-#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Packages/AdminModule/c_app/Controllers/Actions/Admin/doUseradminLogin.inc:56
-#: ../c_app/./Controllers/Actions/Admin/doUseradminLogin.inc:56
+#: /home/pablinho/Desarrollo/trunk_proxectos/testing/httpdocs/../../cogumelo_trunk/./Packages/AdminModule/c_app/Controllers/Actions/Admin/doUseradminLogin.php:56
+#: ../c_app/./Controllers/Actions/Admin/doUseradminLogin.php:56
 msgid "Usuario o contraseña incorrectos"
 msgstr ""
 

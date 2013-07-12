@@ -46,8 +46,8 @@ class MediaserverView extends View
 		}
 
 
-		if( substr($path, -4) == '.tpl' || substr($path, -4) == '.php' || substr($path, -4) == '.inc' ) {
-			Cogumelo::error('Somebody try to load, but not allowed to serve .tpl .php or .inc files ');
+		if( substr($path, -4) == '.tpl' || substr($path, -4) == '.php' || substr($path, -4) == '.php' ) {
+			Cogumelo::error('Somebody try to load, but not allowed to serve .tpl .php or .php files ');
 			RequestController::redirect(SITE_URL_CURRENT.'/404');
 		}
 		else {

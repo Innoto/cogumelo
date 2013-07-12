@@ -29,13 +29,13 @@ define('SITE_PATH', getcwd().'/../c_app/');
 set_include_path('.:'.SITE_PATH);
 
 if ( $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ) {
-	require_once("conf/setup.dev.inc"); 
+	require_once("conf/setup.dev.php"); 
 }
 else {
-	require_once("conf/setup.final.inc"); 
+	require_once("conf/setup.final.php"); 
 }
-require_once(COGUMELO_LOCATION."/c_classes/CogumeloClass.inc");
-require_once(SITE_PATH."/Cogumelo.inc");
+require_once(COGUMELO_LOCATION."/c_classes/CogumeloClass.php");
+require_once(SITE_PATH."/Cogumelo.php");
 
 global $_C;
 $_C =Cogumelo::get();

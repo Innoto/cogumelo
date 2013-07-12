@@ -1,6 +1,6 @@
 <?php 
 
-require_once(COGUMELO_LOCATION."/c_classes/c_controllers/request/RequestController.inc");
+require_once(COGUMELO_LOCATION."/c_classes/c_controllers/request/RequestController.php");
 
 class ModuleController
 {
@@ -26,8 +26,8 @@ class ModuleController
 		}
 
 		foreach ($C_ENABLED_MODULES as $module_name) {
-			if( $module_main_class = self::getRealFilePath($module_name.'.inc' ,$module_name) ) {
-				$this->module_paths[$module_name] = dirname($module_main_class); // get module.inc container
+			if( $module_main_class = self::getRealFilePath($module_name.'.php' ,$module_name) ) {
+				$this->module_paths[$module_name] = dirname($module_main_class); // get module.php container
 			}
 			else {
 				$this->module_paths[$module_name] = false;
@@ -45,7 +45,7 @@ class ModuleController
 		else {
 			$mod_path = $this->module_paths[$module_name];
 
-			require_once($mod_path.'/'.$module_name.'.inc');
+			require_once($mod_path.'/'.$module_name.'.php');
 			$modulo = new $module_name();
 
 
@@ -87,7 +87,7 @@ class ModuleController
 				}
 			}
 			else {
-				Cogumelo::error('ModuleController: Module named as "'.$module.'" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array' );
+				Cogumelo::error('ModuleController: Module named as "'.$module.'" is not enabled. Add it to $C_ENABLED_MODULES setup.php array' );
 			}
 		}
 		return false;

@@ -109,7 +109,7 @@ class RequestController
 		$classname = $m[1];
 		$methodname = $m[2]; 
 		// require class script from views folder
-		include( $this->include_base_path .'/classes/views/'. $classname.'.inc' );
+		include( $this->include_base_path .'/classes/views/'. $classname.'.php' );
 		
 		eval('$current_view = new '.$classname.'( $this->include_base_path );');		
 		

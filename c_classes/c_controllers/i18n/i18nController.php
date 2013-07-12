@@ -56,7 +56,7 @@ class C_i18n {
 			return;
 		else if($_SERVER["REMOTE_ADDR"] == "127.0.0.1")
 		{
-			shell_exec('find '.COGUMELO_LOCATION.'/. ../c_app/. -iname "*.inc" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code utf-8 -d c_project -o ../c_app/i18n/c_project.pot -L PHP');
+			shell_exec('find '.COGUMELO_LOCATION.'/. ../c_app/. -iname "*.php" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code utf-8 -d c_project -o ../c_app/i18n/c_project.pot -L PHP');
 				
 			foreach(explode(',', 'gl,es,en') as $lng) {
 				shell_exec('msgmerge -U ../c_app/i18n/c_project_'.$lng.'.po ../c_app/i18n/c_project.pot');

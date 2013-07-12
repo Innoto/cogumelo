@@ -19,8 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 USA.
 */
 
-require_once(COGUMELO_LOCATION."/c_classes/c_controllers/utils/Singleton.inc");
-require_once(COGUMELO_LOCATION."/c_classes/c_controllers/module/ModuleController.inc");
+require_once(COGUMELO_LOCATION."/c_classes/c_controllers/utils/Singleton.php");
+require_once(COGUMELO_LOCATION."/c_classes/c_controllers/module/ModuleController.php");
 
 class CogumeloClass extends Singleton
 {
@@ -72,7 +72,7 @@ class CogumeloClass extends Singleton
       }
       else
       if(preg_match('#^c_#', $classname)){ 
-        $filename =  $classname . '.inc';
+        $filename =  $classname . '.php';
         $file_path = COGUMELO_LOCATION.'/c_classes/'.$filename;
       }
       else
@@ -80,7 +80,7 @@ class CogumeloClass extends Singleton
         $file_path = SITE_PATH.$classname;
       }
       else { 
-        $filename =  $classname . '.inc';
+        $filename =  $classname . '.php';
         $file_path = SITE_PATH. 'classes/'. $filename;
       }
 

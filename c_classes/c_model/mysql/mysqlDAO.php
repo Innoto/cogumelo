@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 USA.
 */
 
-Cogumelo::load('c_model/DAO')
+Cogumelo::load('c_model/DAO');
 
 class MysqlDAO extends DAO
 {

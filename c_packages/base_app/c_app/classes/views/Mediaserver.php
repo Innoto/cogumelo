@@ -31,7 +31,7 @@ class Mediaserver extends View
 			$this->serveContent(str_replace($url_exp.'/', '', $url_path), $url_exp[1]);
 		}
 		else {
-			Cogumelo::error('Module named as "'.$url_exp[1].'" is not enabled. Add it to $C_ENABLED_MODULES setup.inc array' );
+			Cogumelo::error('Module named as "'.$url_exp[1].'" is not enabled. Add it to $C_ENABLED_MODULES setup.php array' );
 			RequestController::redirect(SITE_URL_CURRENT.'/404');
 		}
 	}
@@ -42,8 +42,8 @@ class Mediaserver extends View
 			$this->serveJS($path, $module);
 		}
 		else
-		if( substr($path, -4) == '.tpl' || substr($path, -4) == '.php' || substr($path, -4) == '.inc' ) {
-			Cogumelo::error('Mediaserver module not allowed to serve .tpl .php or .inc files ');
+		if( substr($path, -4) == '.tpl' || substr($path, -4) == '.php' || substr($path, -4) == '.php' ) {
+			Cogumelo::error('Mediaserver module not allowed to serve .tpl .php or .php files ');
 			RequestController::redirect(SITE_URL_CURRENT.'/404');
 		}
 		else {

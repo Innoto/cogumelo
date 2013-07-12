@@ -57,7 +57,7 @@ class  FromVOtoDBController extends DataController
 		if ($handle = opendir($dir)) {
 		    while (false !== ($file = readdir($handle))) {
 		        if ($file != "." && $file != "..") {
-		        	if(substr($file, -6) == 'VO.inc'){
+		        	if(substr($file, -6) == 'VO.php'){
 		        		require_once($dir.$file);
 		            	$vos[] = substr($file, 0,-4) ;
 		            }
