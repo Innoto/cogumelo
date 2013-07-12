@@ -5,7 +5,6 @@ Class VO
 {
 
 	var $attributes=array();
-	var $controller_obj = false;
 
 
 	function __construct(array $datarray){
@@ -87,29 +86,7 @@ Class VO
 	}
 
 
-	///
-	//	delete and update methods
-	//
 
-
-	function delete() {
-		if($this->controller_obj){
-	
-			$this->controller_obj->delete($this);
-		}
-		else{
-			Cogumelo::error('No controller_object defined for VO '.get_called_class() );
-		}
-	}
-
-	function update() {
-		if($this->controller_obj){
-			$this->controller_obj->update($this);
-		}
-		else{
-			Cogumelo::error('No controller_object defined for VO '.get_called_class() );
-		}
-	}
 
 }
 

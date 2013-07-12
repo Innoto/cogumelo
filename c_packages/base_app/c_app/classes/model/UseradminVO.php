@@ -43,7 +43,6 @@ class UseradminVO extends VO
 	function __construct($datarray = array())
 	{
 		parent::__construct($datarray);
-		$this->controller_obj = new UseradminController();
 	}
 	
 
