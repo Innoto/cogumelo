@@ -1,7 +1,7 @@
 <?
 
 Cogumelo::load('c_controllers/data/DataController');
-
+testmodule::load('model/CousaVO');
 
 //
 // Cousa Controller Class

@@ -4,7 +4,6 @@
 
 
 Cogumelo::load('c_model/mysql/MysqlDAO');
-Cogumelo::load('model/CousaVO');
 
 //
 //	Mysql cousa DAO
