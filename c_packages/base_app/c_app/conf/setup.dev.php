@@ -83,7 +83,7 @@ define("ERRORS", true); 		// Set Debug mode to display errors on screen (only fo
 //
 
 global $DEVEL_ALLOWED_HOSTS;
-$DEVEL_ALLOWED_HOSTS = array('10.77.1.200', '55.7.8.7');
+$DEVEL_ALLOWED_HOSTS = array('127.0.0.1','10.77.1.200', '55.7.8.7');
 define("DEVEL_PASSWORD", 'develpassword'); 	
 
 //
