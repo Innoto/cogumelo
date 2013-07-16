@@ -23,7 +23,7 @@
     body{margin: 0px; padding: 0px; color:#444; font-family: 'Share Tech Mono', sans-serif !important; background:#E7E7E8;}
     #header{
       background:#333334;
-      height:80px;
+      height:70px;
       position: fixed;
       top:0px;
       z-index: 10000;
@@ -50,6 +50,7 @@
       vertical-align: middle;
     }
     #options_header_menu li a{ color:#E7E7E8; text-decoration: none;}
+    #infosetup_link{ background: url('/media/img/infosetup.png') right no-repeat;}
     #deBugs_link{ background: url('/media/img/deBugs.png') right no-repeat;}
     #logs_link{ background: url('/media/img/logs.png') right no-repeat;}
     #dbsql_link{ background: url('/media/img/database.png') right no-repeat;}
@@ -98,27 +99,35 @@
   <img id="logo" src="/media/img/cogumelo_logo.png" >
   <h1>DEVEL</h1>
   <ul id="options_header_menu">
+    <li id ="infosetup_link"><a onclick="hideContainer(); $('#infosetup_container').show();" href="#infosetup">Infosetup</a></li>
     <li id ="deBugs_link"><a onclick="hideContainer(); $('#debug_container').show();" href="#deBugs">deBugs</a></li>
     <li id ="logs_link"><a onclick="hideContainer(); $('#logs_tabs').show();" href="#logs">Logs</a></li>
     <li id ="dbsql_link"><a onclick="hideContainer(); $('#dbsql_container').show();"  href="#dbsql">DB SQL</a></li>
   </ul>
 </div>
 <div id="main">
+  <!-- ****************************************************************************************************************  -->
+  <!-- ****************************************************************************************************************  -->
   <div id="logs_tabs" class="container">
     <ul>
-      {foreach key=key item=name_log from=$list_file_logs}
-    
-      <li><a href="#{$name_log}">{$name_log}</a></li>
-
+      {foreach key=key item=name_log from=$list_file_logs}    
+        <li><a href="#{$name_log}">{$name_log}</a></li>
       {/foreach}
     </ul>
-    {foreach key=key item=name_log from=$list_file_logs}
-    
-    <div id="{$name_log}" class="container_log"></div>
-
+    {foreach key=key item=name_log from=$list_file_logs}    
+      <div id="{$name_log}" class="container_log"></div>
     {/foreach}
   </div>
+  <!-- ****************************************************************************************************************  -->
+  <!-- ****************************************************************************************************************  -->
   <div id="debug_container" class="container"></div>
+  <!-- ****************************************************************************************************************  -->
+  <!-- ****************************************************************************************************************  -->
+  <div id="infosetup_container" class="container">
+    
+  </div>
+  <!-- ****************************************************************************************************************  -->
+  <!-- ****************************************************************************************************************  -->
   <div id="dbsql_container" class="container" style="display:none;">
     <div class="columnL">
       <p>
