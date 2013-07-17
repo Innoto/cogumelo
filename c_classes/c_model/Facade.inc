@@ -15,9 +15,9 @@ class Facade
 	var $connection;
 	var $dao;
 	
-	function __construct($entity)
+	function __construct($entity, $module=false)
 	{		
-		$this->dao = DAO::Factory($entity);
+		$this->dao = DAO::Factory($entity, $module);
 	}
 	
 	public function openConnection()

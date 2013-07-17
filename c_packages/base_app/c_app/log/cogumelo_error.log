@@ -863,3 +863,9 @@
 [13-07-10 20:28:14] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
 [13-07-10 20:46:56] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.find(): No data supplied for parameters in prepared statement
 [13-07-10 20:46:56] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Find
+[13-07-16 22:21:51] [127.0.0.1] [Session ] Mediaserver receives empty request
+[13-07-16 22:59:43] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-07-16 23:00:23] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-07-17 22:23:23] [127.0.0.1] [Session ] Must be developer machine to enter on this site
+[13-07-17 22:23:28] [127.0.0.1] [Session ] Must be developer machine to enter on this site
+[13-07-17 22:26:34] [127.0.0.1] [Session ] Mediaserver receives empty request
