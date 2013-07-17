@@ -1,7 +1,7 @@
 body{margin: 0px; padding: 0px; color:#444; font-family: 'Share Tech Mono', sans-serif !important; background:#E7E7E8;}
     #header{
       background:#333334;
-      height:80px;
+      height:70px;
       position: fixed;
       top:0px;
       z-index: 10000;
@@ -28,11 +28,12 @@ body{margin: 0px; padding: 0px; color:#444; font-family: 'Share Tech Mono', sans
       vertical-align: middle;
     }
     #options_header_menu li a{ color:#E7E7E8; text-decoration: none;}
-    #deBugs_link{ background: url('/media/img/deBugs.png') right no-repeat;}
-    #logs_link{ background: url('/media/img/logs.png') right no-repeat;}
-    #dbsql_link{ background: url('/media/img/database.png') right no-repeat;}
+    #infosetup_link{ background: url('/media/module/devel/img/infosetup.png') right no-repeat;}
+    #deBugs_link{ background: url('/media/module/devel/img/deBugs.png') right no-repeat;}
+    #logs_link{ background: url('/media/module/devel/img/logs.png') right no-repeat;}
+    #dbsql_link{ background: url('/media/module/devel/img/database.png') right no-repeat;}
     #logs_tabs{ font-family: 'Share Tech Mono', sans-serif !important; font-size: 0.9em; background: green;}
-    #logs_tabs .container_log{ min-height: 480px; color:green; background:#000 url('/media/img/cogumelo_logo_mini.png') right bottom no-repeat;}
+    #logs_tabs .container_log{ min-height: 480px; color:green; background:#000 url('/media/module/devel/img/cogumelo_logo_mini.png') right bottom no-repeat;}
     #logs_tabs ul{background: green; border:0px;}
     #logs_tabs li{background: #005200; border:0px;}
     #logs_tabs li.ui-tabs-active{ margin:0px 5px; background: #fff;}
@@ -60,9 +61,22 @@ body{margin: 0px; padding: 0px; color:#444; font-family: 'Share Tech Mono', sans
     #dbsql_container .columnL legend{ font-size: 28px;}
     #dbsql_container .columnR input{ width:90%; margin-left: 20px; padding: 10px; font-family: 'Share Tech Mono', sans-serif !important;}
     #dbsql_container .options_container_SQL{ text-align: center; height: 65px;}
-    #execute{ width:182px; height: 65px; border:0px; background: url('/media/img/exec_button2.png') no-repeat; cursor: pointer; color:#fff; font-size: 16px; font-family: 'Share Tech Mono', sans-serif !important;
+    #execute{ width:182px; height: 65px; border:0px; background: url('/media/module/devel/img/exec_button2.png') no-repeat; cursor: pointer; color:#fff; font-size: 16px; font-family: 'Share Tech Mono', sans-serif !important;
     margin-left: auto; margin-right: auto;}
+
+
+    /*InfoSetup*/
+    #infosetup_container table{ margin: 20px auto; max-width: 960px; }
+    #infosetup_container table thead tr{ background: #333; color:#E7E7E8; }
+    #infosetup_container table tr{ border: 2px solid #333334;}
+      #infosetup_container table td{ padding: 10px 15px; text-align: center; }
+      #infosetup_container table td.td_option{  background: #FCFCFC; }
+      #infosetup_container table td.td_dev{ background: #D4D4D4; }
+      #infosetup_container table td.td_fnl{ background: #A9A9A9; }
+
+
+    /*End InfoSetup*/
+
 
     hr{ border:1px solid #D6D6D6; }
     .cll_container{ color: white;}
-  

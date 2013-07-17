@@ -1,7 +1,7 @@
 <?php
 /*
-Cogumelo v0.3 - Innoto S.L.
-Copyright (C) 2012 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@map-experience.com>
+Cogumelo v0.2 - Innoto S.L.
+Copyright (C) 2010 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@map-experience.com>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -19,24 +19,19 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 USA.
 */
 
+//
+// Connection Superclass
+//
 
+abstract class Connection
+{
+	public static function factory($devel_data = false)
+	{
 
-
-// Project location
-define('SITE_PATH', getcwd().'/../c_app/');
-
-// cogumelo core Location
-set_include_path('.:'.SITE_PATH);
-
-if ( $_SERVER['REMOTE_ADDR'] == '127.0.0.1' ) {
-	require_once("conf/setup.dev.php"); 
+		$class = 'c_model/'. DB_ENGINE . '/'. ucfirst(DB_ENGINE) ."Connection";
+		Cogumelo::load($class);
+		
+		$dbObj = ucfirst(DB_ENGINE)."Connection";
+		return new $dbObj($devel_data);
+	}
 }
-else {
-	require_once("conf/setup.final.php"); 
-}
-require_once(COGUMELO_LOCATION."/c_classes/CogumeloClass.php");
-require_once(SITE_PATH."/Cogumelo.php");
-
-global $_C;
-$_C =Cogumelo::get();
-$_C->exec();

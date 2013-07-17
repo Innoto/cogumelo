@@ -1,5 +1,5 @@
 #!/bin/bash 
-
+## atención este script non funciona apra esta versión de cogumelo. 
 
 if [ -z "$1" ]; then
 	OPCION="help"
