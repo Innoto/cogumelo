@@ -84,6 +84,20 @@ class DevelView extends View
     }
 
 
+    function create_db_tables(){
+      $fvotdbcontrol = new FromVOtoDBController();
+
+      header("Content-Type: application/json"); //return only JSON data
+      echo json_encode(array('response' => $fvotdbcontrol->createTables() ));
+    }
+    
+    function get_sql_tables(){
+      $fvotdbcontrol = new FromVOtoDBController();
+
+      header("Content-Type: application/json"); //return only JSON data
+      echo json_encode($fvotdbcontrol->getTablesSQL() );
+    }
+
 }
 
 

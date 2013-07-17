@@ -1260,3 +1260,13 @@
 [13-07-17 14:00:53] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Access denied for user ''@'localhost' to database 'tost' - CREATE DATABASE tost
 [13-07-17 14:00:53] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Access denied for user ''@'localhost' to database 'tost' - \n\n					GRANT \n						SELECT, \n						INSERT, \n						UPDATE, \n						DELETE, \n						CREATE, \n						DROP, \n						INDEX, \n						ALTER, \n						CREATE TEMPORARY TABLES, \n						LOCK TABLES, \n						CREATE VIEW, \n						SHOW VIEW \n					ON tost.* \n					TO 'root'@'localhost' IDENTIFIED BY 'q7w8e9r' 
 [13-07-17 14:00:53] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: createSchemaDB
+[13-07-17 14:05:36] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Access denied for user 'bb'@'localhost' to database 'bb' - \n\n					GRANT \n						SELECT, \n						INSERT, \n						UPDATE, \n						DELETE, \n						CREATE, \n						DROP, \n						INDEX, \n						ALTER, \n						CREATE TEMPORARY TABLES, \n						LOCK TABLES, \n						CREATE VIEW, \n						SHOW VIEW \n					ON bb.* \n					TO 'bb'@'localhost' IDENTIFIED BY '111111' 
+[13-07-17 14:05:36] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: createSchemaDB
+[13-07-17 14:08:03] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): Table 'test.cousa' doesn't exist - SELECT * FROM `cousa` WHERE true;
+[13-07-17 14:08:03] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-17 14:09:28] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): Table 'test.cousa' doesn't exist - SELECT * FROM `cousa` WHERE true;
+[13-07-17 14:09:28] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-17 14:18:54] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): Table 'test.cousa' doesn't exist - SELECT * FROM `cousa` WHERE true;
+[13-07-17 14:18:54] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-17 14:18:55] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): Table 'test.cousa' doesn't exist - SELECT * FROM `cousa` WHERE true;
+[13-07-17 14:18:55] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
