@@ -33,22 +33,14 @@ class DAO
 		$classpath = 'model/'. DB_ENGINE . '/'. ucfirst(DB_ENGINE) .$entity.'DAO';
 
 		// check if entity is in module or is in main project
-<<<<<<< HEAD:c_classes/c_model/DAO.inc
-		if($module !== false) {
-			eval($modulo.'::load("'. $classpath .'");');
-=======
 		if($module) {
 			eval($module.'::load("'. $classpath .'");');
->>>>>>> de57d6fdb32e874ec9249552d369e62ff6222f8e:c_classes/c_model/DAO.php
 		}
 		else
 		{
 			Cogumelo::load($classpath);
 		}
-<<<<<<< HEAD:c_classes/c_model/DAO.inc
-=======
 
->>>>>>> de57d6fdb32e874ec9249552d369e62ff6222f8e:c_classes/c_model/DAO.php
 
 
 		$dao_obj = ucfirst(DB_ENGINE).$entity;
