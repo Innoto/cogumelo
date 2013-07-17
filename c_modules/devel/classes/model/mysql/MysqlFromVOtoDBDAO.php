@@ -33,8 +33,8 @@ class MysqlFromVOtoDBDAO extends MysqlDAO
 
 	function createSchemaDB($connection){
 
-		$strSQL0 = "DROP SCHEMA IF EXISTS ". DB_NAME ;
-		$strSQL1 = "CREATE SCHEMA ". DB_NAME ;
+		$strSQL0 = "DROP DATABASE IF EXISTS ". DB_NAME ;
+		$strSQL1 = "CREATE DATABASE ". DB_NAME ;
 		$strSQL2 = "
 
 					GRANT 

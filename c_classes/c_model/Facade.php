@@ -35,7 +35,7 @@ class Facade
 	public function develMode($user, $password) {
 		$this->develMode['DB_USER'] = $user;
 		$this->develMode['DB_PASSWORD'] = $password;
-		$this->develMode['DB_NAME'] = 'mysql';
+		//$this->develMode['DB_NAME'] = 'mysql';
 	}
 
 	function __call($name, $args){

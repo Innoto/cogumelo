@@ -13,10 +13,13 @@ class  FromVOtoDBController extends DataController
 	var $voClasses = array();
 
 
-	function __construct($usuario, $password)
+	function __construct($usuario=false, $password = false)
 	{	
 		$this->data = new Facade("FromVOtoDB", "devel");
-		$this->data->develMode($usuario, $password);
+
+		if($usuario) {
+			$this->data->develMode($usuario, $password);
+		}
 	}
 
 	
