@@ -86,6 +86,20 @@
     #execute{ width:182px; height: 65px; border:0px; background: url('/media/img/exec_button2.png') no-repeat; cursor: pointer; color:#fff; font-size: 16px; font-family: 'Share Tech Mono', sans-serif !important;
     margin-left: auto; margin-right: auto;}
 
+
+    /*InfoSetup*/
+    #infosetup_container table{ margin: 20px auto; max-width: 960px; }
+    #infosetup_container table thead tr{ background: #333; color:#E7E7E8; }
+    #infosetup_container table tr{ border: 2px solid #333334;}
+      #infosetup_container table td{ padding: 10px 15px; text-align: center; }
+      #infosetup_container table td.td_option{  background: #FCFCFC; }
+      #infosetup_container table td.td_dev{ background: #D4D4D4; }
+      #infosetup_container table td.td_fnl{ background: #A9A9A9; }
+
+
+    /*End InfoSetup*/
+
+
     hr{ border:1px solid #D6D6D6; }
     .cll_container{ color: white;}
   </style>
@@ -123,8 +137,230 @@
   <div id="debug_container" class="container"></div>
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
-  <div id="infosetup_container" class="container">
-    
+  <div id="infosetup_container" class="container" style="display:none;">
+    <table>
+      <thead>
+        <tr>
+          <th>Options</th>
+          <th>setup.dev</th>
+          <th>setup.final</th>
+        </tr>
+      </thead>
+      <tr>
+        <td class="td_option">Lorem ipsum dolor sit ame</td>
+        <td class="td_dev">Ut non </td>
+        <td class="td_fnl">viverra suscipit.</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">STNF</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">Lorem ipsum dolor sit ame</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">Lorem ipsum dolor sit ame</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">viverra suscipit.</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">ASsasddasdjsdISDA</td>
+        <td class="td_dev">false</td>
+        <td class="td_fnl">true</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Mauris</td>
+        <td class="td_dev">0</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Aenean lobortis lorem</td>
+        <td class="td_dev">Ut non </td>
+        <td class="td_fnl">Ut non </td>
+      </tr>
+      
+      <tr>
+        <td class="td_option">STNF</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">Lorem ipsum dolor sit ame</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">Lorem ipsum dolor sit ame</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">viverra suscipit.</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">ASsasddasdjsdISDA</td>
+        <td class="td_dev">false</td>
+        <td class="td_fnl">true</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Mauris</td>
+        <td class="td_dev">0</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Aenean lobortis lorem</td>
+        <td class="td_dev">Ut non </td>
+        <td class="td_fnl">Ut non </td>
+      </tr>
+      <tr>
+        <td class="td_option">STNF</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl"> Lorem ipsum dolor sit ame Lorem ipsum dolor sit ame Lorem ipsum dolor sit ame v Lorem ipsum dolor sit ame Lorem ipsum dolor sit ame Lorem ipsum dolor sit ame</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">Lorem ipsum dolor sit ame</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">viverra suscipit.</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">ASsasddasdjsdISDA</td>
+        <td class="td_dev">false</td>
+        <td class="td_fnl">true</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Mauris</td>
+        <td class="td_dev">0</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">STNF</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">Lorem ipsum dolor sit ame</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">Lorem ipsum dolor sit ame</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">viverra suscipit.</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">ASsasddasdjsdISDA</td>
+        <td class="td_dev">false</td>
+        <td class="td_fnl">true</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Mauris</td>
+        <td class="td_dev">0</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Aenean lobortis lorem</td>
+        <td class="td_dev">Ut non </td>
+        <td class="td_fnl">Ut non </td>
+      </tr>
+      
+      <tr>
+        <td class="td_option">STNF</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">Lorem ipsum dolor sit ame</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">Lorem ipsum dolor sit ame</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">viverra suscipit.</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">ASsasddasdjsdISDA</td>
+        <td class="td_dev">false</td>
+        <td class="td_fnl">true</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Mauris</td>
+        <td class="td_dev">0</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Aenean lobortis lorem</td>
+        <td class="td_dev">Ut non </td>
+        <td class="td_fnl">Ut non </td>
+      </tr>
+      <tr>
+        <td class="td_option">STNF</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">Lorem ipsum dolor sit ame</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">Lorem ipsum dolor sit ame</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">viverra suscipit.</td>
+        <td class="td_dev">viverra suscipit.</td>
+        <td class="td_fnl">viverra suscipit.</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">ASsasddasdjsdISDA</td>
+        <td class="td_dev">false</td>
+        <td class="td_fnl">true</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Mauris</td>
+        <td class="td_dev">0</td>
+        <td class="td_fnl">1</td>
+      </tr>
+
+      <tr>
+        <td class="td_option">Aenean lobortis lorem</td>
+        <td class="td_dev">Ut non </td>
+        <td class="td_fnl">Ut non </td>
+      </tr>
+
+    </table>
   </div>
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->

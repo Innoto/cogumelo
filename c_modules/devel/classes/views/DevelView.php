@@ -32,6 +32,7 @@ class DevelView extends View
 
   function main($url_path=''){
     $this->logs();       
+    $this->infosetup();
         
     $this->template->setTpl("develpage.tpl", "devel");
     $this->template->addJs('js/devel.js', 'devel');
@@ -49,7 +50,7 @@ class DevelView extends View
         $list_file_logs = str_replace(".log", "", $list_file_logs);
         $this->template->assign("list_file_logs" , $list_file_logs);
     }
-    function read_logs(){
+    function read_logs(){ //LLamada a Ajax para buscar mas lineas
 
       $readerlogcontrol = new LogReaderController();
       $content_logs = $readerlogcontrol->read_logs();
@@ -61,6 +62,11 @@ class DevelView extends View
 
     }
     function dbsql( ){
+
+    }
+    function infosetup(){
+      print_r(SITE_PATH);
+      print_r(SITE_URL_CURRENT);
 
     }
     
