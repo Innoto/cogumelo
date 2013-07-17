@@ -24,7 +24,7 @@
 </head>
 <body>
 <div id="header">
-  <img id="logo" src="/media/img/cogumelo_logo.png" >
+  <img id="logo" src="/media/module/devel/img/cogumelo_logo.png" >
   <h1>DEVEL</h1>
   <ul id="options_header_menu">
     <li id ="infosetup_link"><a onclick="hideContainer(); $('#infosetup_container').show();" href="#infosetup">Infosetup</a></li>
