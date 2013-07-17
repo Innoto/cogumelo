@@ -16,7 +16,7 @@ class MysqlFromVOtoDBDAO extends MysqlDAO
 		'DATETIME' => 'DATETIME',
 		'BOOLEAN' => 'BIT',
 		'CHAR' => 'CHAR',
-		'VARCHR' => 'VARCHAR',
+		'VARCHAR' => 'VARCHAR',
 		'TEXT' => 'TEXT',
 		'LONGTEXT' => 'LONGTEXT',
 
@@ -36,7 +36,6 @@ class MysqlFromVOtoDBDAO extends MysqlDAO
 		$strSQL0 = "DROP DATABASE IF EXISTS ". DB_NAME ;
 		$strSQL1 = "CREATE DATABASE ". DB_NAME ;
 		$strSQL2 = "
-
 					GRANT 
 						SELECT, 
 						INSERT, 
@@ -56,8 +55,6 @@ class MysqlFromVOtoDBDAO extends MysqlDAO
 		$this->execSQL($connection, $strSQL0, array() );
 		$this->execSQL($connection, $strSQL1, array() );
 		return $this->execSQL($connection, $strSQL2, array() );
-
-
 	}
 
 	function dropTable($connection, $vo_name) {
