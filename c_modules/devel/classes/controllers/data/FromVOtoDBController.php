@@ -48,13 +48,13 @@ class  FromVOtoDBController extends DataController
 		$voarray = array();
 
 		// VOs iinto application
-		$voarray = array_merge($voarray, $this->scanVOs($voarray = array_merge($voarray, $this->scanVOs( SITE_PATH.'classes/model/') ))) ; // scan app model dir
+		$voarray = $voarray = array_merge($voarray, $this->scanVOs( SITE_PATH.'classes/model/') ) ; // scan app model dir
 
 		// VOs from Module
 		global $C_ENABLED_MODULES;
 		foreach($C_ENABLED_MODULES as $modulename) {
-			$this->scanVOs(COGUMELO_LOCATION.'c_modules/'.$modulename.'/classes/model/');
-			//$this->scanVOs($modulename);
+			$this->scanVOs( COGUMELO_LOCATION.'c_modules/'.$modulename.'/classes/model/');
+			$this->scanVOs( SITE_PATH.'../modules/'.$modulename.'/classes/model/');
 		}
 
 		return $voarray;
@@ -63,7 +63,6 @@ class  FromVOtoDBController extends DataController
 	function scanVOs($dir) {
 		$vos = array();
 
-		var_dump($dir);
 
 		if(!file_exists($dir))
 			return;
