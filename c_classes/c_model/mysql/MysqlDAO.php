@@ -90,12 +90,12 @@ class MysqlDAO extends DAO
 		    	}
 		    }
 			else {
-				Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$stmt->error);
+				Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$stmt->error.' - '.$sql);
 				$ret_data = false;
 			}
 		}
 		else {
-			Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connection->error);
+			Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connection->error.' - '.$sql);
 
 			$ret_data = false;
 		}

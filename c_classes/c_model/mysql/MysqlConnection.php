@@ -29,9 +29,15 @@ class MysqlConnection extends Connection
 {
 	var $db;
 	
-	function __construct(){
+	function __construct($devel_data){
 
-		@$this->db = new mysqli(DB_HOSTNAME ,DB_USER , DB_PASSWORD, DB_NAME,  DB_PORT);
+		if($devel_data) {
+			@$this->db = new mysqli(DB_HOSTNAME , $devel_data['DB_USER'] , $devel_data['DB_PASSWORD'], $devel_data['DB_NAME'],  DB_PORT);
+		}
+		else {
+			@$this->db = new mysqli(DB_HOSTNAME ,DB_USER , DB_PASSWORD, DB_NAME,  DB_PORT);
+		}
+
 
 		if ($this->db->connect_error)
 			Cogumelo::error(mysqli_connect_error());

@@ -882,3 +882,347 @@
 [13-07-17 10:21:08] [127.0.0.1] [Session ] Mediaserver couldn't load 
 [13-07-17 10:21:08] [127.0.0.1] [Session ] Mediaserver couldn't load 
 [13-07-17 10:21:08] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-07-17 12:13:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:13:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:14:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:14:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:15:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:15:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:16:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:16:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:17:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:17:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:18:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:18:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:19:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:19:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:20:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:20:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:21:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:21:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:22:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:22:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:23:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:23:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:24:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:24:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:25:55] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:25:55] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:00] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:00] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:05] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:05] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:10] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:10] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:15] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:15] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:20] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:20] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:25] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:25] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:30] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:30] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:35] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:35] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:40] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:40] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:45] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:45] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:26:50] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:26:50] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:41:47] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:41:47] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:42:27] [127.0.0.1] [Session ] ModuleController: 'classes/controllers/data/FromVOtoDBControlloer.php'' not found into module 'devel' 
+[13-07-17 12:42:27] [127.0.0.1] [Session ] PHP File 'controllers/data/FromVOtoDBControlloer'  not found in module : devel
+[13-07-17 12:53:42] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Query was empty
+[13-07-17 12:53:42] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: createSchemaDB
+[13-07-17 12:56:27] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Query was empty
+[13-07-17 12:56:27] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: createSchemaDB
+[13-07-17 12:59:48] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Query was empty - 
+[13-07-17 12:59:48] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: createSchemaDB
+[13-07-17 13:01:08] [127.0.0.1] [Session ] Unknown database 'testong'
+[13-07-17 13:01:08] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.createSchemaDB():  - GRANT \n						SELECT, \n						INSERT, \n						UPDATE, \n						DELETE, \n						CREATE, \n						DROP, \n						INDEX, \n						ALTER, \n						CREATE TEMPORARY TABLES, \n						LOCK TABLES, \n						CREATE VIEW, \n						SHOW VIEW \n					ON testong.* \n					TO 'root'@'localhost' IDENTIFIED BY 'q7w8e9r' 
+[13-07-17 13:01:08] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: createSchemaDB
+[13-07-17 13:26:16] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Access denied for user ''@'localhost' to database 'testong' - GRANT \n						SELECT, \n						INSERT, \n						UPDATE, \n						DELETE, \n						CREATE, \n						DROP, \n						INDEX, \n						ALTER, \n						CREATE TEMPORARY TABLES, \n						LOCK TABLES, \n						CREATE VIEW, \n						SHOW VIEW \n					ON testong.* \n					TO 'root'@'localhost' IDENTIFIED BY 'q7w8e9r' 
+[13-07-17 13:26:16] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: createSchemaDB
+[13-07-17 13:31:33] [127.0.0.1] [Session ] Unknown database 'sdf'
+[13-07-17 13:31:33] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.createSchemaDB():  - GRANT \n						SELECT, \n						INSERT, \n						UPDATE, \n						DELETE, \n						CREATE, \n						DROP, \n						INDEX, \n						ALTER, \n						CREATE TEMPORARY TABLES, \n						LOCK TABLES, \n						CREATE VIEW, \n						SHOW VIEW \n					ON testong.* \n					TO 'root'@'localhost' IDENTIFIED BY 'q7w8e9r' 
+[13-07-17 13:31:33] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: createSchemaDB
+[13-07-17 13:33:41] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'GRANT \n						SELECT, \n						INSERT, \n						UPDATE, \n						DELETE, \n						CREATE,' at line 2 - \n					CREATE SCHEMA testong;\n					GRANT \n						SELECT, \n						INSERT, \n						UPDATE, \n						DELETE, \n						CREATE, \n						DROP, \n						INDEX, \n						ALTER, \n						CREATE TEMPORARY TABLES, \n						LOCK TABLES, \n						CREATE VIEW, \n						SHOW VIEW \n					ON testong.* \n					TO 'root'@'localhost' IDENTIFIED BY 'q7w8e9r' 
+[13-07-17 13:33:41] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: createSchemaDB
+[13-07-17 13:35:48] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Can't create database 'testong'; database exists - CREATE SCHEMA testong
+[13-07-17 13:35:52] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Can't create database 'testong'; database exists - CREATE SCHEMA testong
+[13-07-17 13:38:04] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF EXISTS' at line 1 - DROP DATABASE testong IF EXISTS
+[13-07-17 13:38:05] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'IF EXISTS' at line 1 - DROP DATABASE testong IF EXISTS
+[13-07-17 13:38:05] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Can't create database 'testong'; database exists - CREATE SCHEMA testong
+[13-07-17 13:39:22] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'EXISTStestong' at line 1 - DROP DATABASE IF EXISTStestong
+[13-07-17 13:39:22] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlFromVOtoDBDAO.createSchemaDB(): Can't create database 'testong'; database exists - CREATE SCHEMA testong
+[13-07-17 13:40:12] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): Table 'testong.cousa' doesn't exist - SELECT * FROM `cousa` WHERE true;
+[13-07-17 13:40:12] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
+[13-07-17 13:40:41] [127.0.0.1] [Session ] Access denied for user 'blabla'@'localhost' (using password: YES)
+[13-07-17 13:40:41] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems():  - SELECT * FROM `cousa` WHERE true;
+[13-07-17 13:40:41] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems

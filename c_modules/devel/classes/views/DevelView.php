@@ -2,7 +2,7 @@
 
 Cogumelo::load('c_view/View');
 devel::load('controllers/LogReaderController');
-
+devel::load('controllers/data/FromVOtoDBController');
 
 
 class DevelView extends View
@@ -43,7 +43,9 @@ class DevelView extends View
   }
     
 
-
+    //
+    // actions Logs
+    //
     function logs( ){
         $list_file_logs_path = glob(SITE_PATH."log/*.log");
         $list_file_logs = str_replace(SITE_PATH."log/", "", $list_file_logs_path);
@@ -61,15 +63,27 @@ class DevelView extends View
     function debugs( ){
 
     }
-    function dbsql( ){
 
-    }
     function infosetup(){
       print_r(SITE_PATH);
       print_r(SITE_URL_CURRENT);
 
     }
-    
+
+    //
+    // Actions base de datos
+    //
+    function create_db_scheme(){
+      
+      //$_POST = $_GET; // solo para pruebas con get simulando POST
+
+      $fvotdbcontrol = new FromVOtoDBController($_POST['u'], $_POST['p']);
+
+      header("Content-Type: application/json"); //return only JSON data
+      echo json_encode(array('response' => $fvotdbcontrol->createSchemaDB() ));
+    }
+
+
 }
 
 

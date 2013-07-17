@@ -13,14 +13,12 @@ class  FromVOtoDBController extends DataController
 	var $voClasses = array();
 
 
-	function __construct()
+	function __construct($usuario, $password)
 	{	
-		$this->data = new Facade("FromVOtoDB");
+		$this->data = new Facade("FromVOtoDB", "devel");
+		$this->data->develMode($usuario, $password);
 	}
 
-	function getLogTails(){
-
-	}
 	
 	function createTables(){
 
@@ -46,7 +44,11 @@ class  FromVOtoDBController extends DataController
 
 	function listVOs() {
 		$voarray = array();
+
+		// VOs iinto application
 		$voarray = array_merge($voarray, $this->scanVOs(SITE_PATH.'classes/model/')); // scan app model dir
+
+		// VOs from Module
 
 		return $voarray;
 
@@ -66,6 +68,11 @@ class  FromVOtoDBController extends DataController
 		    closedir($handle);
 		}
 		return $vos;
+	}
+
+
+	function createSchemaDB() {
+		return $this->data->createSchemaDB();
 	}
 
 }

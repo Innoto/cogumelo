@@ -31,11 +31,33 @@ class MysqlFromVOtoDBDAO extends MysqlDAO
 		'GEOMETRYCOLLECTION' => 'GEOMETRYCOLLECTION'
 	);
 
-	function createSchemaDB($connection, $superuser, $password){
-		$connection->change_user( $superuser, $password, "mysql");
-		// create user
-		// create database
-		// user permissions on database!
+	function createSchemaDB($connection){
+
+		$strSQL0 = "DROP SCHEMA IF EXISTS ". DB_NAME ;
+		$strSQL1 = "CREATE SCHEMA ". DB_NAME ;
+		$strSQL2 = "
+
+					GRANT 
+						SELECT, 
+						INSERT, 
+						UPDATE, 
+						DELETE, 
+						CREATE, 
+						DROP, 
+						INDEX, 
+						ALTER, 
+						CREATE TEMPORARY TABLES, 
+						LOCK TABLES, 
+						CREATE VIEW, 
+						SHOW VIEW 
+					ON ". DB_NAME .".* 
+					TO '". DB_USER ."'@'localhost' IDENTIFIED BY '". DB_PASSWORD ."' ";
+
+		$this->execSQL($connection, $strSQL0, array() );
+		$this->execSQL($connection, $strSQL1, array() );
+		return $this->execSQL($connection, $strSQL2, array() );
+
+
 	}
 
 	function dropTable($connection, $vo_name) {
@@ -71,6 +93,6 @@ class MysqlFromVOtoDBDAO extends MysqlDAO
 		$strSQL = "CREATE TABLE ".$VO::$tableName." (\n".implode(" ,\n", $lines).' '.$primarykeys_str.')'." ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Generated with love and Cogumelo`s dev module';";
 		
 				return $strSQL;
-			}
+	}
 		
 }

@@ -14,8 +14,8 @@ define('COGUMELO_LOCATION', getcwd().'/../../..');
 define('DB_ENGINE', 	'mysql'); //supported Engines: ('mysql', '')
 define("DB_HOSTNAME" ,	"localhost");
 define("DB_PORT",		"3306");
-define("DB_USER" , 		"root");
-define("DB_PASSWORD", 	"q7w8e9r");
+define("DB_USER" , 		"blabla");
+define("DB_PASSWORD", 	"111111");
 define("DB_NAME",		"test");
 
 //

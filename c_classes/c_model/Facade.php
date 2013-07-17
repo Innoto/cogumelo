@@ -14,6 +14,7 @@ class Facade
 	var $connectioncontrol;
 	var $connection;
 	var $dao;
+	var $develMode = false;
 	
 	function __construct($entity, $module = false)
 	{		
@@ -22,13 +23,19 @@ class Facade
 	
 	public function openConnection()
 	{
-		$this->connectioncontrol = Connection::Factory();
+		$this->connectioncontrol = Connection::Factory($this->develMode);
 		$this->connection = $this->connectioncontrol->db;
 	}
 	
 	public function closeConnection()
 	{
 		$this->connectioncontrol->Close();
+	}
+
+	public function develMode($user, $password) {
+		$this->develMode['DB_USER'] = $user;
+		$this->develMode['DB_PASSWORD'] = $password;
+		$this->develMode['DB_NAME'] = 'mysql';
 	}
 
 	function __call($name, $args){
