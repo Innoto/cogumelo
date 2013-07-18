@@ -75,7 +75,7 @@ class DevelView extends View
     //
     function create_db_scheme(){
       
-      //$_POST = $_GET; // solo para pruebas con get simulando POST
+      $_POST['u'] ="root"; $_POST['p'] = "q7w8e9r"; // solo para pruebas  simulando POST
 
       $fvotdbcontrol = new FromVOtoDBController($_POST['u'], $_POST['p']);
 
@@ -86,7 +86,7 @@ class DevelView extends View
 
     function create_db_tables(){
 
-      //$_POST = $_GET; // solo para pruebas con get simulando POST
+      $_POST['u'] ="root"; $_POST['p'] = "q7w8e9r"; // solo para pruebas simulando POST
 
       $fvotdbcontrol = new FromVOtoDBController($_POST['u'], $_POST['p'], DB_NAME);
 
@@ -95,7 +95,11 @@ class DevelView extends View
     }
     
     function get_sql_tables(){
-      $fvotdbcontrol = new FromVOtoDBController();
+
+      $_POST['u'] ="root"; $_POST['p'] = "q7w8e9r"; // solo para pruebas simulando POST
+
+
+      $fvotdbcontrol = new FromVOtoDBController($_POST['u'], $_POST['p']);
 
       header("Content-Type: application/json"); //return only JSON data
       echo json_encode($fvotdbcontrol->getTablesSQL() );

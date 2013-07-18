@@ -3,6 +3,7 @@
 
 Cogumelo::load('c_view/View');
 Cogumelo::load('controllers/data/CousaController');
+Cogumelo::load('c_view/Table');
 
 
 class Cousadmin extends View
@@ -21,12 +22,31 @@ class Cousadmin extends View
 
 
 	function lista() {
-		$cousas = $this->cousacontrol->listItems();
+		//$cousas = $this->cousacontrol->listItems();
 
-		while($cou = $cousas->fetch()) {
+
+		$FAKE_POST = array('cogumelo_table' =>
+				'{"ilters":[],"range":[1,20], "method":false}' );
+
+		$tabla = new Table($FAKE_POST);
+
+		// set col names
+		$tabla->setCol('id', 'Id');
+		$tabla->setCol('name', 'Nome da cousa');
+		$tabla->setCol('fingers', "Númerod de dedos");
+
+
+		$tabla->allowMethods(array('delete'));
+		// print table json
+		$tabla->return_table_json($this->cousacontrol);
+
+
+/*		while($cou = $cousas->fetch()) {
 			echo "<br>";
 			var_dump($cou);
 		}
+*/
+
 	}
 
 

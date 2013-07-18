@@ -38,13 +38,13 @@ class Table
 	* @param string $col_name  col name, we can use function T() to translate that. if false it gets the VO's col description.
 	* @return void
 	*/
-	function addCol($col_id, $col_name = false) {
+	function setCol($col_id, $col_name = false) {
 		$this->cols_def[$col_id] = array('name' => $col_name, 'rule' => false); 
 	}
 
 
 	/*
-	* @param string $col_id id of col added with addCol method0
+	* @param string $col_id id of col added with setCol method0
 	* @param mixed $regexp the regular expression to match col's row value
 	* @param string $action is the result that we want to provide when 
 	*  variable $value matches (Usually a text). Can be too an operation with other cols
@@ -56,13 +56,10 @@ class Table
 
 
 	/*
-	* @param string $col_id id of col added with addCol method0
-	* @param mixed $regexp the regular expression to match col's row value
-	* @param string $action is the result that we want to provide when 
-	*  variable $value matches (Usually a text). Can be too an operation with other cols
+	* @param string $allow_methods array of method names allowed in this table view
 	* @return void
 	*/
-	function allowCommands( $allow_methods = array() ) {
+	function allowMethods( $allow_methods = array() ) {
 		$this->allow_methods = $allow_methods;
 	}
 
@@ -71,12 +68,12 @@ class Table
 	* @param object $control: is the data controller
 	* @return string JSON with table
 	*/
-	function return_table_data($control) {
+	function return_table_json($control) {
 
 		// if is executing a method ( like delete or update) and have permissions to do it
-		if($this->client_data->command && array_key_exists( $this->client_data->command->name, $this->allow_methods ))
+		if($this->client_data->method && array_key_exists( $this->client_data->method->name, $this->allow_methods ))
 		{
-			eval( '$control->'. $this->client_data->command->name. '('.$this->client_data->command->value.')');
+			eval( '$control->'. $this->client_data->method->name. '('.$this->client_data->method->value.')');
 		}
 
 
@@ -87,7 +84,7 @@ class Table
 		// printing json table...
     	header("Content-Type: application/json"); //return only JSON data
     	echo "{";
-    	echo "'total_table_rows':" . $lista->count($this->client_data->filters_common) . ","; // only assign common filters
+    	echo "'total_table_rows':" . $control->listCount($this->client_data->filters_common) . ","; // only assign common filters
     	echo "'cols_def':".json_encode($this->cols_def).",";
 		while( $rowVO = $lista->fetch() ) {
 			// dump rowVO into row

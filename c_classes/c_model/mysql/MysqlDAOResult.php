@@ -43,7 +43,7 @@ class MysqlDAOResult extends DAOResult {
 
 	// count total numer of query result
 	function count() {
-		return 	$this->resutl->count();
+		return 	$this->result->count();
 	}
 
 
