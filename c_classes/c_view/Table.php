@@ -39,7 +39,7 @@ class Table
 	* @return void
 	*/
 	function setCol($col_id, $col_name = false) {
-		$this->cols_def[$col_id] = array('name' => $col_name, 'rule' => false); 
+		$this->cols_def[$col_id] = array('name' => $col_name, 'rules' => array() ); 
 	}
 
 
@@ -51,7 +51,7 @@ class Table
 	* @return void
 	*/
 	function colRule($col_id, $regexp, $code) {
-		$this->cols_def[$col_id]['rule'] = array('regexp' => $regexp, 'code' => $code );
+		$this->cols_def[$col_id]['rules'][] = array('regexp' => $regexp, 'code' => $code );
 	}
 
 
@@ -87,7 +87,7 @@ class Table
     	echo "'total_table_rows':" . $control->listCount($this->client_data->filters_common) . ","; // only assign common filters
     	echo "'cols_def':".json_encode($this->cols_def).",";
 
-		while( $rowVO = $lista->fetch() ) {
+		while( $rowVO = $lista->fetch() ){
 			// dump rowVO into row
 			$row = array();
 
@@ -97,10 +97,14 @@ class Table
 			}
 			
 			// modify row value if have colRules
-			foreach($this->cols_def as $col_def_key => $col_def){
+			foreach($this->cols_def as $col_def_key => $col_def) {
 				// if have rules and matches with regexp
-				if($col_def['rule'] && preg_match( $col_def['rule']['regexp'], $row[$col_def_key] )) {
-					eval('$row[$col_def_key]] = '.$col_def->rule->code.';');
+				if($col_def['rules'] != array() ) {
+					foreach($col_def['rules'] as $rule){
+						if(preg_match( $rule['regexp'], $row[$col_def_key])) {
+							eval('$row[$col_def_key]] = '.$col_def->rule->code.';');
+						}
+					}
 				}
 			}
 
