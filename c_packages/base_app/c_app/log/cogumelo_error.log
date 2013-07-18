@@ -1333,3 +1333,9 @@
 [13-07-18 18:31:34] [127.0.0.1] [Session ] Unknown database 'tost'
 [13-07-18 18:31:34] [127.0.0.1] [Session ] Unknown database 'tost'
 [13-07-18 18:31:34] [127.0.0.1] [Session ] Unknown database 'tost'
+[13-07-18 19:36:57] [127.0.0.1] [Session ] ModuleController: 'client_essential.php'' not found into module 'client_essential' 
+[13-07-18 19:36:57] [127.0.0.1] [Session ] Module not found: client_essential
+[13-07-18 19:36:57] [127.0.0.1] [Session ] Module 'client_essential' not found.
+[13-07-18 19:37:15] [127.0.0.1] [Session ] ModuleController: 'client_essential.php'' not found into module 'client_essential' 
+[13-07-18 19:37:15] [127.0.0.1] [Session ] Module not found: client_essential
+[13-07-18 19:37:15] [127.0.0.1] [Session ] Module 'client_essential' not found.
