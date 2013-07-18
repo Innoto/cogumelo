@@ -1279,3 +1279,9 @@
 [13-07-17 14:18:55] [127.0.0.1] [Session ] MYSQL QUERY ERROR on MysqlDAO.listItems(): Table 'test.cousa' doesn't exist - SELECT * FROM `cousa` WHERE true;
 [13-07-17 14:18:55] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: listItems
 >>>>>>> de57d6fdb32e874ec9249552d369e62ff6222f8e
+[13-07-18 13:38:32] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry '0' for key 'PRIMARY' - INSERT INTO `cousa` (`name`,`fingers`,`hobby`) VALUES( ?, ?, ?);
+[13-07-18 13:38:32] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-18 13:38:49] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry '0' for key 'PRIMARY' - INSERT INTO `cousa` (`name`,`fingers`,`hobby`) VALUES( ?, ?, ?);
+[13-07-18 13:38:49] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
+[13-07-18 13:47:29] [127.0.0.1] [Session ] MYSQL STMT ERROR on MysqlDAO.create(): Duplicate entry '0' for key 'PRIMARY' - INSERT INTO `cousa` (`name`,`fingers`,`hobby`) VALUES( ?, ?, ?);
+[13-07-18 13:47:29] [127.0.0.1] [Session ] TRANSACTION NOT COMPLETED: Create
