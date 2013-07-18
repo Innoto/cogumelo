@@ -86,6 +86,7 @@ class Table
     	echo "{";
     	echo "'total_table_rows':" . $control->listCount($this->client_data->filters_common) . ","; // only assign common filters
     	echo "'cols_def':".json_encode($this->cols_def).",";
+
 		while( $rowVO = $lista->fetch() ) {
 			// dump rowVO into row
 			$row = array();

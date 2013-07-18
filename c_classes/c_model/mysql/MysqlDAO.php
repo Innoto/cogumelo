@@ -246,13 +246,14 @@ class MysqlDAO extends DAO
 	
 		// SQL Query
 		$VO = new $this->VO();
-		$StrSQL = "SELECT count(*) FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
+		$StrSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
 
 
 		if( $res = $this->execSQL($connection,$StrSQL, $whereArray['values']) )	{
-				$res->bind_result($num_res);
-				$res->fetch();
-				return $num_res;
+
+				//$res->fetch_assoc();
+				$row = $res->fetch_assoc();
+				return $row['number_elements'];
 		}
 		else {
 			return false;
