@@ -90,16 +90,16 @@ class Table
 		while( $rowVO = $lista->fetch() ) {
 			// dump rowVO into row
 			$row = array();
+
 			foreach($this->cols_def as $col_def_key => $col_def){
-				$row[col_def_key] = $rowVO->getter($col_def_key);
+				$row[$col_def_key] = $rowVO->getter($col_def_key);
 
 			}
 			
 			// modify row value if have colRules
 			foreach($this->cols_def as $col_def_key => $col_def){
-
 				// if have rules and matches with regexp
-				if($col_def->rule && preg_match( $col_def->rule->regexp, $row[$col_def_key] )) {
+				if($col_def['rule'] && preg_match( $col_def['rule']['regexp'], $row[$col_def_key] )) {
 					eval('$row[$col_def_key]] = '.$col_def->rule->code.';');
 				}
 			}
