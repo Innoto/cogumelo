@@ -13,17 +13,24 @@
 
 class Table
 {
-	public $post_data;
-	public $cols = array();
-	public $col_opts = array();
+
+	/*
+	*	$client_data must have this structure
+	*	'filters_common' = array('tab'=>1),
+	*   'filters' => array('search' => 'Xan o a curva'),
+	*	'range' => array(10,20)
+	*/
+	var $client_data = array();
+	var $cols_def = array();
+	var $allow_methods = array();
 	
 
 	/*
 	*  @param array $data  generally is the full $_POST data variable
 	*/
-	function __construct($data)
+	function __construct($postdata)
 	{
-
+		$this->client_data = json_decode($postdata['cogumelo_table']);
 	}
 
 	/*
@@ -32,59 +39,77 @@ class Table
 	* @return void
 	*/
 	function addCol($col_id, $col_name = false) {
-
+		$this->cols_def[$col_id] = array('name' => $col_name, 'rule' => false); 
 	}
 
 
 	/*
 	* @param string $col_id id of col added with addCol method0
-	* @param mixed $value the regular expression to match col's row value
-	* @param string $transform is the result that we want to provide when 
+	* @param mixed $regexp the regular expression to match col's row value
+	* @param string $action is the result that we want to provide when 
 	*  variable $value matches (Usually a text). Can be too an operation with other cols
 	* @return void
 	*/
-	function colOpt($col_id, $value, $transform) {
-
-	}
-
-
-
-	/*
-	* @return array filters
-	*/
-	function getFilters() {
-
-	}
-
-	/*
-	* @return array range
-	*/
-	function getRange() {
-
-	}
-
-	/*
-	* @return array order
-	*/
-	function getOrder() {
-
+	function colRule($col_id, $regexp, $code) {
+		$this->cols_def[$col_id]['rule'] = array('regexp' => $regexp, 'code' => $code );
 	}
 
 
 	/*
-	* @param object $control: id of col added with addCol method0
-	* @param mixed $value the regular expression to match col's row value
-	* @param string $transform is the result that we want to provide when 
+	* @param string $col_id id of col added with addCol method0
+	* @param mixed $regexp the regular expression to match col's row value
+	* @param string $action is the result that we want to provide when 
 	*  variable $value matches (Usually a text). Can be too an operation with other cols
 	* @return void
+	*/
+	function allowCommands( $allow_methods = array() ) {
+		$this->allow_methods = $allow_methods;
+	}
+
+
+	/*
+	* @param object $control: is the data controller
+	* @return string JSON with table
 	*/
 	function return_table_data($control) {
 
-		// is executing a command (delete or update)
+		// if is executing a method ( like delete or update) and have permissions to do it
+		if($this->client_data->command && array_key_exists( $this->client_data->command->name, $this->allow_methods ))
+		{
+			eval( '$control->'. $this->client_data->command->name. '('.$this->client_data->command->value.')');
+		}
 
 
+		// doing a query to the controller
+		$lista = $control->listItems( array_merge($this->client_data->filters_common, $this->client_data->filters) , $this->client_data->range, $this->client_data->order);
+
+
+		// printing json table...
     	header("Content-Type: application/json"); //return only JSON data
- 		echo json_encode($control->listItems() );
+    	echo "{";
+    	echo "'total_table_rows':" . $lista->count($this->client_data->filters_common) . ","; // only assign common filters
+    	echo "'cols_def':".json_encode($this->cols_def).",";
+		while( $rowVO = $lista->fetch() ) {
+			// dump rowVO into row
+			$row = array();
+			foreach($this->cols_def as $col_def_key => $col_def){
+				$row[col_def_key] = $rowVO->getter($col_def_key);
+
+			}
+			
+			// modify row value if have colRules
+			foreach($this->cols_def as $col_def_key => $col_def){
+
+				// if have rules and matches with regexp
+				if($col_def->rule && preg_match( $col_def->rule->regexp, $row[$col_def_key] )) {
+					eval('$row[$col_def_key]] = '.$col_def->rule->code.';');
+				}
+			}
+
+			echo json_encode($row); 
+
+		}
+		echo "}";
 	}
 
 

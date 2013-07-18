@@ -38,31 +38,10 @@ abstract class DataController {
 	//
 	//	Constructor 
 	//
-	function __construct($filters = false, $range = false, $order = false) {
-		$this->setRange($range);
-		$this->setFilters($order);
-		$this->setOrder($filters);
+	function __construct() {
+
 	}
 
-
-	//
-	//	Set initial parameters
-	//
-
-	// range
-	function setRange($range){
-		$this->range = $range;
-	}
-
-	// filters
-	function setFilters($filters) {
-		$this->filters = $filters;
-	}
-
-	// order
-	function setOrder($order) {
-		$this->order = $order;
-	}
 
 
 	//
@@ -80,11 +59,11 @@ abstract class DataController {
 	//
 	// auto list method
 	//
-	function listItems()
+	function listItems($filters = false, $range = false, $order = false)
 	{
 
 		Cogumelo::debug( "Called listItems on ".get_called_class() );
-		$data = $this->data->listItems($this->filters, $this->range, $this->order);
+		$data = $this->data->listItems($filters, $range, $order);
 
 		return $data;
 	}
@@ -92,12 +71,12 @@ abstract class DataController {
 	//
 	// auto count method
 	//
-	function listCount()
+	function listCount($filters = false)
 	{
 
 
 		Cogumelo::debug( "Called listCount on ".get_called_class() );
-		$data = $this->data->listCount($this->filters);
+		$data = $this->data->listCount($filters);
 
 		return $data;
 	}
