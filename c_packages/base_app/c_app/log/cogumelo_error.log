@@ -1339,3 +1339,21 @@
 [13-07-18 19:37:15] [127.0.0.1] [Session ] ModuleController: 'client_essential.php'' not found into module 'client_essential' 
 [13-07-18 19:37:15] [127.0.0.1] [Session ] Module not found: client_essential
 [13-07-18 19:37:15] [127.0.0.1] [Session ] Module 'client_essential' not found.
+[13-07-18 22:27:23] [127.0.0.1] [Session ] ModuleController: 'client_essentials.php'' not found into module 'client_essentials' 
+[13-07-18 22:27:23] [127.0.0.1] [Session ] Module not found: client_essentials
+[13-07-18 22:27:23] [127.0.0.1] [Session ] Module 'client_essentials' not found.
+[13-07-18 22:28:11] [127.0.0.1] [Session ] ModuleController: 'client_essentials.php'' not found into module 'client_essentials' 
+[13-07-18 22:28:11] [127.0.0.1] [Session ] Module not found: client_essentials
+[13-07-18 22:28:11] [127.0.0.1] [Session ] Module 'client_essentials' not found.
+[13-07-18 22:28:12] [127.0.0.1] [Session ] ModuleController: 'client_essentials.php'' not found into module 'client_essentials' 
+[13-07-18 22:28:12] [127.0.0.1] [Session ] Module not found: client_essentials
+[13-07-18 22:28:12] [127.0.0.1] [Session ] Module 'client_essentials' not found.
+[13-07-18 22:28:16] [127.0.0.1] [Session ] ModuleController: 'client_essentials.php'' not found into module 'client_essentials' 
+[13-07-18 22:28:16] [127.0.0.1] [Session ] Module not found: client_essentials
+[13-07-18 22:28:16] [127.0.0.1] [Session ] Module 'client_essentials' not found.
+[13-07-18 22:29:49] [127.0.0.1] [Session ] ModuleController: 'client_essentials.php'' not found into module 'client_essentials' 
+[13-07-18 22:29:49] [127.0.0.1] [Session ] Module not found: client_essentials
+[13-07-18 22:29:49] [127.0.0.1] [Session ] Module 'client_essentials' not found.
+[13-07-18 22:29:50] [127.0.0.1] [Session ] ModuleController: 'client_essentials.php'' not found into module 'client_essentials' 
+[13-07-18 22:29:50] [127.0.0.1] [Session ] Module not found: client_essentials
+[13-07-18 22:29:50] [127.0.0.1] [Session ] Module 'client_essentials' not found.

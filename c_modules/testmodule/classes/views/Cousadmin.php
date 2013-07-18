@@ -23,6 +23,40 @@ class Cousadmin extends View
 
 	function lista() {
 
+
+
+	}
+
+
+
+
+	//
+	// Actions
+	//
+
+	function mostra_cousa($url = false) {
+
+	var_dump($this->cousacontrol->find($url) );
+
+	}
+
+	function crea() {
+
+		$novacousa = array('name'=> 'Cousa Adams', 'fingers' => 5,'hobby' => 'tocar o piano');
+
+		$this->cousacontrol->create($novacousa);
+
+		echo "Creado nova entrada para cousa";
+	}
+
+
+	// 
+	//	Tablas
+	//
+
+
+	function cousa_tabla() {
+
 		$FAKE_POST = array('cogumelo_table' =>
 				'{"filters_common":[],"filters":[],"range":[1,20], "order":[], "method":false}' );
 
@@ -40,19 +74,5 @@ class Cousadmin extends View
 	}
 
 
-	function mostra_cousa($url = false) {
-
-	var_dump($this->cousacontrol->find($url) );
-
-	}
-
-	function crea() {
-
-		$novacousa = array('name'=> 'Cousa Adams', 'fingers' => 5,'hobby' => 'tocar o piano');
-
-		$this->cousacontrol->create($novacousa);
-
-		echo "Creado nova entrada para cousa";
-	}
 }
 
