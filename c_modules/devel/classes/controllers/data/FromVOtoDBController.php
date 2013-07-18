@@ -12,12 +12,12 @@ class  FromVOtoDBController extends DataController
 	var $voClasses = array();
 
 
-	function __construct($usuario=false, $password = false)
+	function __construct($usuario=false, $password = false, $DB = false)
 	{	
 		$this->data = new Facade("FromVOtoDB", "devel");
 
 		if($usuario) {
-			$this->data->develMode($usuario, $password);
+			$this->data->develMode($usuario, $password, $DB);
 		}
 	}
 
@@ -26,7 +26,7 @@ class  FromVOtoDBController extends DataController
 
 		$returnStrArray = array();
 		foreach($this->listVOs() as $vo) {
-			$this->data->dropTable($vo);
+			$returnStrArray[] = $this->data->dropTable($vo);
 			$returnStrArray[] = $this->data->createTable($vo);
 		}
 
@@ -37,7 +37,7 @@ class  FromVOtoDBController extends DataController
 	function getTablesSQL(){
 		$returnStrArray = array();
 		foreach($this->listVOs() as $vo) {
-			$returnStrArray[] = $this->data->dropTable($vo);
+			$returnStrArray[] = $this->data->getDropSQL($vo);
 			$returnStrArray[] = $this->data->getTableSQL($vo);
 		}
 

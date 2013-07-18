@@ -33,6 +33,8 @@ class MysqlFromVOtoDBDAO extends MysqlDAO
 
 	function createSchemaDB($connection){
 
+		$resultado =  array();
+
 		$strSQL0 = "DROP DATABASE IF EXISTS ". DB_NAME ;
 		$strSQL1 = "CREATE DATABASE ". DB_NAME ;
 		$strSQL2 = "
@@ -41,34 +43,41 @@ class MysqlFromVOtoDBDAO extends MysqlDAO
 						INSERT, 
 						UPDATE, 
 						DELETE, 
-						CREATE, 
-						DROP, 
 						INDEX, 
-						ALTER, 
-						CREATE TEMPORARY TABLES, 
 						LOCK TABLES, 
 						CREATE VIEW, 
 						SHOW VIEW 
 					ON ". DB_NAME .".* 
 					TO '". DB_USER ."'@'localhost' IDENTIFIED BY '". DB_PASSWORD ."' ";
 
-		$this->execSQL($connection, $strSQL0, array() );
-		$this->execSQL($connection, $strSQL1, array() );
-		return $this->execSQL($connection, $strSQL2, array() );
+		$resultado[] = $this->execSQL($connection, $strSQL0, array() );
+		$resultado[] = $this->execSQL($connection, $strSQL1, array() );
+		$resultado[] = $this->execSQL($connection, $strSQL2, array() );
+
+		return $resultado;
 	}
 
+
+
 	function dropTable($connection, $vo_name) {
-		$vo= new $vo_name();
-
-		$strSQL = $this->getTableSQL($connection, $vo_name);
-		$this->execSQL($connection, "DROP TABLE IF EXISTS  ".$vo::$tableName.";" , array() );
-
+		$this->execSQL($connection, $this->getDropSQL($connection, $vo_name) , array() );
 	}
 
 	function createTable($connection, $vo_name) {
 
 		$strSQL = $this->getTableSQL($connection, $vo_name);
 		$this->execSQL($connection, $strSQL, array() );
+
+	}
+
+
+	// Sql generation methods
+
+	function getDropSQL($connection, $vo_name) {
+		$vo= new $vo_name();
+
+		$strSQL = $this->getTableSQL($connection, $vo_name);
+		return "DROP TABLE IF EXISTS  ".$vo::$tableName.";";
 
 	}
 
@@ -89,7 +98,7 @@ class MysqlFromVOtoDBDAO extends MysqlDAO
 		$primarykeys_str = (sizeof($primarykeys)>0)? ', PRIMARY KEY  USING BTREE (`'.implode(',',$primarykeys).'`)' : '';
 		$strSQL = "CREATE TABLE ".$VO::$tableName." (\n".implode(" ,\n", $lines).' '.$primarykeys_str.')'." ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Generated with love and Cogumelo`s dev module';";
 		
-				return $strSQL;
+		return $strSQL;
 	}
 		
 }

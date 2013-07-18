@@ -85,7 +85,10 @@ class DevelView extends View
 
 
     function create_db_tables(){
-      $fvotdbcontrol = new FromVOtoDBController();
+
+      //$_POST = $_GET; // solo para pruebas con get simulando POST
+
+      $fvotdbcontrol = new FromVOtoDBController($_POST['u'], $_POST['p'], DB_NAME);
 
       header("Content-Type: application/json"); //return only JSON data
       echo json_encode(array('response' => $fvotdbcontrol->createTables() ));

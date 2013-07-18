@@ -33,10 +33,10 @@ class Facade
 		$this->connectioncontrol->Close();
 	}
 
-	public function develMode($user, $password) {
+	public function develMode($user, $password, $DB) {
 		$this->develMode['DB_USER'] = $user;
 		$this->develMode['DB_PASSWORD'] = $password;
-		//$this->develMode['DB_NAME'] = 'mysql';
+		$this->develMode['DB_NAME'] = $DB;
 	}
 
 	function __call($name, $args){
