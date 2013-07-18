@@ -1357,3 +1357,11 @@
 [13-07-18 22:29:50] [127.0.0.1] [Session ] ModuleController: 'client_essentials.php'' not found into module 'client_essentials' 
 [13-07-18 22:29:50] [127.0.0.1] [Session ] Module not found: client_essentials
 [13-07-18 22:29:50] [127.0.0.1] [Session ] Module 'client_essentials' not found.
+[13-07-18 22:57:50] [127.0.0.1] [Session ] ModuleController: 'templates/cousadmin.tpl'' not found into module 'testmodule' 
+[13-07-18 22:57:50] [127.0.0.1] [Session ] Template: no tpl file defined
+[13-07-18 23:02:56] [127.0.0.1] [Session ] ModuleController: 'templates/lib/cogumelo.table'' not found into module 'client_essentials' 
+[13-07-18 23:02:56] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-07-18 23:02:58] [127.0.0.1] [Session ] ModuleController: 'templates/lib/cogumelo.table'' not found into module 'client_essentials' 
+[13-07-18 23:02:58] [127.0.0.1] [Session ] Mediaserver couldn't load 
+[13-07-18 23:03:22] [127.0.0.1] [Session ] ModuleController: 'templates/lib/cogumelo.table.js'' not found into module 'client_essentials' 
+[13-07-18 23:03:22] [127.0.0.1] [Session ] Mediaserver couldn't load 
