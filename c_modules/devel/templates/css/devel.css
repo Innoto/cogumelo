@@ -59,11 +59,15 @@ body{margin: 0px; padding: 0px; color:#444; font-family: 'Share Tech Mono', sans
     #dbsql_container .columnL #infoSQL{ padding: 10px; height:100%; max-height: 300px; overflow: auto; }
     #dbsql_container .columnL fieldset{border:3px solid #D6D6D6;}
     #dbsql_container .columnL legend{ font-size: 28px;}
-    #dbsql_container .columnR input{ width:90%; margin-left: 20px; padding: 10px; font-family: 'Share Tech Mono', sans-serif !important;}
+    #dbsql_container .columnR input{ 
+      width:90%;
+      margin-left:20px;
+      padding:10px;
+      font-family: 'Share Tech Mono', sans-serif !important;
+      cursor: pointer;
+    }
     #dbsql_container .options_container_SQL{ text-align: center; height: 65px;}
-    #execute{ width:182px; height: 65px; border:0px; background: url('/media/module/devel/img/exec_button2.png') no-repeat; cursor: pointer; color:#fff; font-size: 16px; font-family: 'Share Tech Mono', sans-serif !important;
-    margin-left: auto; margin-right: auto;}
-
+    
 
     /*InfoSetup*/
     #infosetup_container table{ margin: 20px auto; max-width: 960px; }
