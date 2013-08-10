@@ -6,7 +6,7 @@ This page will serve to post the essential and aditional needs of this framework
 ### Essential needs:
 * Modular system [OK]
 * Model View Controller [OK]
-* DB Caché
+* DB Caché with <http://memcached.org/>
 
 ### Aditional needs:
 * Devel utilities module  [OK]
