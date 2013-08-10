@@ -1,9 +1,19 @@
 ## COGUMELO 1.0a
-Is a simple PHP5 framework created by <http://innoto.es>. It`s under alpha devel version. 
-This page will serve to write the esential and aditional needs of this framework.
+Is a simple PHP5 framework created by <http://innoto.es> under GPL v2. It`s under alpha version. 
+This page will serve to post the essential and aditional needs of this framework.
 
 
-### Esential needs:
-
+### Essential needs:
+* Modular system [OK]
+* Model View Controller [OK]
+* DB Caché
 
 ### Aditional needs:
+* Devel utilities module  [OK]
+* Validation
+ * Auto Forms
+ * Easy file uploads 
+* Ajax Tables
+* Users Modules
+* Admin panel
+
