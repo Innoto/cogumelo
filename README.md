@@ -10,10 +10,10 @@ This page will serve to post the essential and aditional needs of this framework
 
 ### Aditional needs:
 * Devel utilities module  [OK]
-* Validation
- * Auto Forms
- * Easy file uploads 
 * Ajax Tables
-* Users Modules
-* Admin panel
+* Forms
+ * Validation 
+ * Auto Form writing
+ * Easy file uploads 
+* Users and Admin panel Modules
 
