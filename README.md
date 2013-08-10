@@ -1,2 +1,9 @@
 ## COGUMELO 1.0a
-Framework used by <http://innoto.es>
+Is a simple PHP5 framework created by <http://innoto.es>. It`s under alpha devel version. 
+This page will serve to write the esential and aditional needs of this framework.
+
+
+### Esential needs:
+
+
+### Aditional needs:
