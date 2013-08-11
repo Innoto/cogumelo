@@ -31,12 +31,14 @@ class DevelView extends View
   }
 
   function main($url_path=''){
-    $this->logs();       
-    $this->infosetup();
-        
     $this->template->setTpl("develpage.tpl", "devel");
     $this->template->addJs('js/devel.js', 'devel');
     $this->template->addCss('css/devel.css', 'devel');
+    $this->logs();       
+    $this->infosetup();
+    $this->DBSQL();
+        
+    
 
     $this->template->exec();
 
@@ -65,44 +67,40 @@ class DevelView extends View
     }
 
     function infosetup(){
-      print_r(SITE_PATH);
-      print_r(SITE_URL_CURRENT);
-
+      print ".";
+      //print_r(SITE_PATH);
+      //print_r(SITE_URL_CURRENT);
     }
+
+    function DBSQL(){
+     $data_sql = $this->get_sql_tables();
+     $this->template->assign("data_sql" , $data_sql);
+    }
+
+
+
+
+
 
     //
     // Actions base de datos
     //
-    function create_db_scheme(){
-      
-      $_POST['u'] ="root"; $_POST['p'] = "q7w8e9r"; // solo para pruebas  simulando POST
-
+    function create_db_scheme(){      
       $fvotdbcontrol = new FromVOtoDBController($_POST['u'], $_POST['p']);
-
       header("Content-Type: application/json"); //return only JSON data
       echo json_encode(array('response' => $fvotdbcontrol->createSchemaDB() ));
     }
 
 
     function create_db_tables(){
-
-      $_POST['u'] ="root"; $_POST['p'] = "q7w8e9r"; // solo para pruebas simulando POST
-
-      $fvotdbcontrol = new FromVOtoDBController($_POST['u'], $_POST['p'], DB_NAME);
-
+      $fvotdbcontrol = new FromVOtoDBController();
       header("Content-Type: application/json"); //return only JSON data
       echo json_encode(array('response' => $fvotdbcontrol->createTables() ));
     }
     
     function get_sql_tables(){
-
-      $_POST['u'] ="root"; $_POST['p'] = "q7w8e9r"; // solo para pruebas simulando POST
-
-
-      $fvotdbcontrol = new FromVOtoDBController($_POST['u'], $_POST['p']);
-
-      header("Content-Type: application/json"); //return only JSON data
-      echo json_encode($fvotdbcontrol->getTablesSQL() );
+      $fvotdbcontrol = new FromVOtoDBController();
+      return ($fvotdbcontrol->getTablesSQL() );
     }
 
 }

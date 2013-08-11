@@ -14,9 +14,15 @@ define('COGUMELO_LOCATION', getcwd().'/../../..');
 define('DB_ENGINE', 	'mysql'); //supported Engines: ('mysql', '')
 define("DB_HOSTNAME" ,	"localhost");
 define("DB_PORT",		"3306");
+<<<<<<< HEAD
 define("DB_USER" , 		"soinuevo");
 define("DB_PASSWORD", 	"111111");
 define("DB_NAME",		"tost");
+=======
+define("DB_USER" , 		"base_app");
+define("DB_PASSWORD", 	"q7w8e9r");
+define("DB_NAME",		"test");
+>>>>>>> e389ae6a6ffcdc7d8213d20ad38b97c262e5365b
 
 //
 //	Url settings

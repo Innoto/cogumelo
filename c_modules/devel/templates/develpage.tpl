@@ -282,79 +282,21 @@
     <div class="columnL">
       <p>
         <label for="user_root">User</label>
-        <input name="user_root" id="user_root" type="text" />
+        <input name="user_root" id="user_root" type="text" value="root" />
         <label for="user_pass">Pass</label>
-        <input name="user_pass" id="user_pass" type="text" />
+        <input name="user_pass" id="user_pass" type="text" value="1234" />
       </p>
       <fieldset>
       <legend>SQL</legend>
-      <div id="infoSQL">
-          CREATE TABLE sample.taceledger (
-          `runno` INT(10) unsigned not null default '0',
-          `doc_no` DECIMAL(6,0) unsigned NOT null ,
-          `doc_date` DATE,
-          `gl` DECIMAL(4,0) unsigned not null ,
-          `slcode` VARCHAR(6) not null ,
-          `tr` VARCHAR(1) not null ,
-          `cr_db` VARCHAR(1) not null,
-          `amount` DECIMAL(13,2)unsigned not null ,
-          `revcode` DECIMAL(4,0)unsigned not null ,
-          `narration` VARCHAR(30)unsigned not null,
-          `cramt` DECIMAL(13,2) unsigned not null,
-          `indi` VARCHAR(1)not null ,
-          `dbamt` DECIMAL(13,2) unsigned not null,
-          `acctype` VARCHAR(1) unsigned not null,
-          PRIMARY KEY (`runno`)
-          )ENGINE=InnoDB;
-
-          CREATE TABLE sample.taceledger (
-          `runno` INT(10) unsigned not null default '0',
-          `doc_no` DECIMAL(6,0) unsigned NOT null ,
-          `doc_date` DATE,
-          `gl` DECIMAL(4,0) unsigned not null ,
-          `slcode` VARCHAR(6) not null ,
-          `tr` VARCHAR(1) not null ,
-          `cr_db` VARCHAR(1) not null,
-          `amount` DECIMAL(13,2)unsigned not null ,
-          `revcode` DECIMAL(4,0)unsigned not null ,
-          `narration` VARCHAR(30)unsigned not null,
-          `cramt` DECIMAL(13,2) unsigned not null,
-          `indi` VARCHAR(1)not null ,
-          `dbamt` DECIMAL(13,2) unsigned not null,
-          `acctype` VARCHAR(1) unsigned not null,
-          PRIMARY KEY (`runno`)
-          )ENGINE=InnoDB;
-
-          CREATE TABLE sample.taceledger (
-          `runno` INT(10) unsigned not null default '0',
-          `doc_no` DECIMAL(6,0) unsigned NOT null ,
-          `doc_date` DATE,
-          `gl` DECIMAL(4,0) unsigned not null ,
-          `slcode` VARCHAR(6) not null ,
-          `tr` VARCHAR(1) not null ,
-          `cr_db` VARCHAR(1) not null,
-          `amount` DECIMAL(13,2)unsigned not null ,
-          `revcode` DECIMAL(4,0)unsigned not null ,
-          `narration` VARCHAR(30)unsigned not null,
-          `cramt` DECIMAL(13,2) unsigned not null,
-          `indi` VARCHAR(1)not null ,
-          `dbamt` DECIMAL(13,2) unsigned not null,
-          `acctype` VARCHAR(1) unsigned not null,
-          PRIMARY KEY (`runno`)
-          )ENGINE=InnoDB;
-      </div>
+      <div id="infoSQL">{foreach $data_sql as $item}{$item} <hr /> {/foreach}</div>
     </fieldset>
     </div>
-    <div class="columnR">
+    <div class="columnR ">
       <p><input type="button" value="CREATE DB AND USER DB" id="create_db" name="create_db" /></p>
       <p><input type="button" value="CREATE TABLE" id="create_table" name="create_table" /></p>
-      <p><input type="button" value="CREATE CONTENT" id="create_content" name="create_content" /><p>
+      <p><input disabled type="button" value="CREATE CONTENT" id="create_content" name="create_content" /><p>
     </div>
     <hr style="clear:both;">
-    <div class="options_container_SQL">
-      <input type="button" value="EXEC" id="execute" name="execute" />
-    </div>
-    
   </div>
 </div> 
  

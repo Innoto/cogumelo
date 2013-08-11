@@ -13,4 +13,6 @@ class devel extends Module
     '#^devel/create_db_tables$#' => 'view:DevelView::create_db_tables',
     '#^devel/get_sql_tables$#' => 'view:DevelView::get_sql_tables'
   );
+
+  
 }
