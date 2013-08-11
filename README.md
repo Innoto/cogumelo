@@ -13,7 +13,7 @@ This page will serve to post the essential and aditional needs of this framework
 * Ajax Tables
 * Forms
  * Validation 
- * Auto Form writing
- * Easy file uploads 
+ * Auto Form generating
+ * Easy file uploads without page reloads
 * Users and Admin panel Modules
 
