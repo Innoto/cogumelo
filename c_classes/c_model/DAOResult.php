@@ -13,7 +13,6 @@ class DAOResult {
   abstract function destroy();
 
 
-
   function cache_fetch() {
 
     $ret_obj = false;
@@ -26,7 +25,7 @@ class DAOResult {
     }
 
     return $ret_obj;
-
+  
   }
 
   function cache_fetchAll() {
