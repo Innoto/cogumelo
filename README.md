@@ -17,3 +17,14 @@ This page will serve to post the essential and aditional needs of this framework
  * Easy file uploads without page reloads
 * Users and Admin panel Modules
 
+### Dependences:
+* Server side
+  * Apache2 
+   * mod-rewrite
+  * PHP 5.3
+  * Mysql
+   * php5-mysqlnd (for mysql prepared statments)
+  * Smarty
+  * Memcached
+
+
