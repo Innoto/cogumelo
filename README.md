@@ -19,9 +19,11 @@ This page will serve to post the essential and aditional needs of this framework
 
 ### Dependences:
 * Server side
+  * Apache2 
+   * mod-rewrite
   * PHP 5.3
   * Mysql
-  * php5-mysqlnd (for mysql prepared statments)
+   * php5-mysqlnd (for mysql prepared statments)
   * Smarty
   * Memcached
 
