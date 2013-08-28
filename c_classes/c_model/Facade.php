@@ -25,7 +25,6 @@ class Facade
 	public function openConnection()
 	{
 		$this->connectioncontrol = Connection::Factory($this->develMode);
-		$this->connection = $this->connectioncontrol->db;
 	}
 	
 	public function closeConnection()
@@ -49,7 +48,7 @@ class Facade
 
 		Cogumelo::debug("TRANSACTION START: ".$name);
 		$this->OpenConnection();
-		eval('$data = $this->dao->'.$name. '($this->connection'. $args_str . '); ');
+		eval('$data = $this->dao->'.$name. '($this->connectioncontrol'. $args_str . '); ');
 		$this->CloseConnection();
 		if($data !== false) Cogumelo::debug("TRANSACTION COMPLETED: ".$name);
 		else Cogumelo::error("TRANSACTION NOT COMPLETED: ".$name);

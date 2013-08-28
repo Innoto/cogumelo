@@ -27,18 +27,26 @@ Cogumelo::load('c_model/Connection');
 
 class MysqlConnection extends Connection
 {
-	var $db;
+	var $db = false;
 	
 	function __construct(){
+	}
 
-		@$this->db = new mysqli(DB_HOSTNAME ,DB_USER , DB_PASSWORD, DB_NAME,  DB_PORT);
 
-		if ($this->db->connect_error)
-			Cogumelo::error(mysqli_connect_error());
-		else
-			Cogumelo::log("mySQLi: Connection Stablished to ".DB_HOSTNAME);
-		
-		@mysqli_query($this->db ,"START TRANSACTION;");
+	/*
+	 *	Only starts the db connection if doesn't exist 
+	 */
+	function start() {
+		if($this->db == false) {
+			@$this->db = new mysqli(DB_HOSTNAME ,DB_USER , DB_PASSWORD, DB_NAME,  DB_PORT);
+
+			if ($this->db->connect_error)
+				Cogumelo::error(mysqli_connect_error());
+			else
+				Cogumelo::log("mySQLi: Connection Stablished to ".DB_HOSTNAME);
+			
+			@mysqli_query($this->db ,"START TRANSACTION;");
+		}
 	}
 	
 	function close()

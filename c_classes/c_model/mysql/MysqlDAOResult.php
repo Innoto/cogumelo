@@ -7,22 +7,32 @@ class MysqlDAOResult extends DAOResult {
 
 	var $result;
 	var $VO;
+	var $cache = false;
 
 
-	function __construct($voObj, $result) {
+	function __construct($voObj, $result, $is_cached_result = false) {
 		$this->VO = $voObj;
 		$this->result = $result;
+		if( $is_cached_result ) {
+			$this->cache = $result;
+		}
 	}
 
 
 	// fetch just one result
 	function fetch() {
-		$row = $this->result->fetch_assoc();
 
-		if($row)
-			$ret_obj = $this->VOGenerator( $row );
-		else
-			$ret_obj = false;
+		if($this->cache){ // is cached query ?
+			$ret_obj = $this->cache_fetch();
+		}
+		else {
+			$row = $this->result->fetch_assoc();
+
+			if($row)
+				$ret_obj = $this->VOGenerator( $row );
+			else
+				$ret_obj = false;
+		}
 
 		return $ret_obj;
 	}
@@ -30,11 +40,18 @@ class MysqlDAOResult extends DAOResult {
 
 	// resturn an VO array with all the result rows
 	function fetchAll() {
-		$list = array();
 
-		while( $row = $this->mysql_result->fetch() ) {
-			$rowVO = $this->VOGenerator( $row);
-			$list[ $rowVO->getter($rowVO->getFirstPrimarykeyId()) ] = $rowVO;
+		if($this->cache){ // is cached query ?
+				$list = $this->cache_fetchAll();
+		}
+		else {
+
+				$list = array();
+
+				while( $row = $this->mysql_result->fetch() ) {
+					$rowVO = $this->VOGenerator( $row);
+					$list[ $rowVO->getter($rowVO->getFirstPrimarykeyId()) ] = $rowVO;
+				}
 		}
 		
 		return $list;
@@ -43,7 +60,15 @@ class MysqlDAOResult extends DAOResult {
 
 	// count total numer of query result
 	function count() {
-		return 	$this->result->count();
+
+		if($this->cache){ // is cached query ?
+			$ret = $this->cache_count();
+		}
+		else {
+			$ret = $this->result->count();
+		}
+
+		return $ret;
 	}
 
 
@@ -56,7 +81,14 @@ class MysqlDAOResult extends DAOResult {
 
 	}
 
+	function fetchAll_RAW() {
+		$list = array();
 
+		while( $row = $this->mysql_result->fetch() ) {
+			$list[] = $rowVO;
+		}
+		
+		return $list;	}
 
 	function __destroy() {
 		$this->result->close();

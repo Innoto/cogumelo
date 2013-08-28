@@ -55,15 +55,17 @@ class MysqlDAO extends DAO
 	//
 	// Execute a SQL query command
 	//
-	function execSQL($connection, $sql, $val_array = array())
+	function execSQL(&$connectionControl, $sql, $val_array = array())
 	{
+
+		$connectionControl->start();
 
 		// obtaining debug data
 		$d = debug_backtrace();
 		$caller_method = $d[1]['class'].'.'.$d[1]['function'].'()';
 
  		//set prepare sql
-		$stmt = $connection->prepare( $sql ); 
+		$stmt = $connectionControl->prepare( $sql ); 
 
 		if( $stmt ) {  //set prepare sql
 
@@ -95,7 +97,7 @@ class MysqlDAO extends DAO
 			}
 		}
 		else {
-			Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connection->error.' - '.$sql);
+			Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connectionControl->db->error.' - '.$sql);
 
 			$ret_data = false;
 		}
@@ -124,9 +126,6 @@ class MysqlDAO extends DAO
 		return $return_str;
 	}
 
-	
-
-	
 
 
 	//
@@ -173,7 +172,7 @@ class MysqlDAO extends DAO
 	//
 	//	Generic Find by key
 	//
-	function find($connection, $search, $key = false)
+	function find(&$connectionControl, $search, $key = false, $cache)
 	{
 		$VO = new $this->VO();
 
@@ -184,7 +183,7 @@ class MysqlDAO extends DAO
 		// SQL Query
 		$strSQL = "SELECT * FROM `" . $VO::$tableName . "` WHERE `".$key."` = ?;";
 	
-		if( $res = $this->execSQL($connection, $strSQL, array($search)) ) {
+		if( $res = $this->execSQL($connectionControl, $strSQL, array($search)) ) {
 			if($res->num_rows != 0) {
 				$DAOres  = new MysqlDAOResult( $this->VO , $res);
 				return( $DAOres->fetch());
@@ -202,7 +201,7 @@ class MysqlDAO extends DAO
 	//	Generic listItems
 	//
 	//	Return: array [array_list, number_of_rows]
-	function listItems($connection, $filters, $range, $order)
+	function listItems(&$connectionControl, $filters, $range, $order, $cache = false)
 	{
 
 		// where string and vars
@@ -222,15 +221,27 @@ class MysqlDAO extends DAO
 		$strSQL = "SELECT * FROM `" . $VO::$tableName . "` ".$whereArray['string'].$orderSTR.$rangeSTR.";";
 
 
-		if( $res = $this->execSQL($connection,$strSQL, $whereArray['values']) )
+		if ( $cache && DB_ALLOW_CACHE  )
 		{
-			return new MysqlDAOResult( $this->VO , $res);
+			if($cache_data = DAOCache::getCache($strSQL, $whereArray['values']) )
+				$daoresult = newMysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
+			else{
+				$this->execSQL($connectionControl,$strSQL, $whereArray['values']);
+				$daoresult = new MysqlDAOResult( $this->VO , $res);
+				DAOCache::setCache($strSQL, $whereArray['values'] , $daoresult->fetchAll_RAW() );
+			}
 		}
 		else
 		{
-			return false;
+			if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']))
+				$daoresult = new MysqlDAOResult( $this->VO , $res);
+			else
+				$daoresult = false;
 		}
-		
+
+		return $daoresult;
+
+
 	}
 
 
@@ -238,7 +249,7 @@ class MysqlDAO extends DAO
 	//	Generic listCount
 	//
 	//	Return: array [array_list, number_of_rows]
-	function listCount($connection, $filters)
+	function listCount(&$connectionControl, $filters)
 	{
 
 		// where string and vars
@@ -249,7 +260,7 @@ class MysqlDAO extends DAO
 		$StrSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
 
 
-		if( $res = $this->execSQL($connection,$StrSQL, $whereArray['values']) )	{
+		if( $res = $this->execSQL($connectionControl,$StrSQL, $whereArray['values']) )	{
 
 				//$res->fetch_assoc();
 				$row = $res->fetch_assoc();
@@ -264,7 +275,7 @@ class MysqlDAO extends DAO
 	//
 	//	Generic Create
 	//
-	function create($connection, $VOobj) 
+	function create(&$connectionControl, $VOobj) 
 	{
 
 		$cols = array();
@@ -289,9 +300,9 @@ class MysqlDAO extends DAO
 		$strSQL = "INSERT INTO `".$VOobj::$tableName."` (".$campos.") VALUES(".substr($answrs,1).");";
 
 
-		if($res = $this->execSQL($connection, $strSQL, $valArray)) {
+		if($res = $this->execSQL($connectionControl, $strSQL, $valArray)) {
 
-			$VOobj->setter($VOobj->getFirstPrimarykeyId(), $connection->insert_id);
+			$VOobj->setter($VOobj->getFirstPrimarykeyId(), $connectionControl->db>insert_id);
 
 			return $VOobj;
 
@@ -304,7 +315,7 @@ class MysqlDAO extends DAO
 	//
 	//  Generic Update
 	// return: Vo updated from DB
-	function update($connection, $VOobj)
+	function update(&$connectionControl, $VOobj)
 	{
 
 		// primary key value
@@ -326,7 +337,7 @@ class MysqlDAO extends DAO
 
 		$strSQL = "UPDATE `".$VOobj::$tableName."` SET (".substr($setvalues,3)." WHERE ".$VOobj->getFirstPrimarykeyId()."= ? ;";
 		
-		if($res = $this->execSQL($connection, $strSQL, $valArray)) {
+		if($res = $this->execSQL($connectionControl, $strSQL, $valArray)) {
 			return $VOobj;
 		}
 		else {
@@ -337,14 +348,14 @@ class MysqlDAO extends DAO
 	//
 	//	Generic Deletev
 	// 
-	function delete($connection, $pkeyIdValue)
+	function delete(&$connectionControl, $pkeyIdValue)
 	{
 
 		$VO = new $this->VO();
 		// SQL Query
 		$strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$VO->getFirstPrimarykeyId()."` = ?;";
 
-		if( $this->execSQL($connection, $strSQL, array($pkeyIdValue)) ){
+		if( $this->execSQL($connectionControl, $strSQL, array($pkeyIdValue)) ){
 			return $true;
 		}
 		else {
