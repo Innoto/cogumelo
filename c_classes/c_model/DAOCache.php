@@ -18,7 +18,10 @@ class DAOCache {
   function __construct() {
     $this->mc = new Memcached();
     
-    $this->mc->addServer("localhost", 11211);
+    global $MEMCACHED_HOST_ARRAY;
+    foreach( $MEMCACHED_HOST_ARRAY as $host) {
+      $this->mc->addServer($host['host'], $host['port']);
+    }
 
   }
 
