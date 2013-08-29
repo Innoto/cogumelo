@@ -13,15 +13,9 @@ abstract class DAOResult {
 
 
   function cache_fetch() {
-
-    $ret_obj = false;
-    $c_count = 0;
-
-    foreach($this->cache as $cached_row) {
-      if($c_count == $this->cache_fetch_index) {
-        $ret_obj = $this->VOGenerator($cached_row);
-      }
-    }
+    $ret_obj = $this->VOGenerator( $this->cache[$this->cache_fetch_index] );
+    //$ret_obj = $this->cache[$this->cache_fetch_index] ;
+    $this->cache_fetch_index++;
 
     return $ret_obj;
   

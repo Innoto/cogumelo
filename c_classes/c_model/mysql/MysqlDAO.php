@@ -20,7 +20,9 @@ USA.
 */
 
 Cogumelo::load('c_model/DAO');
+Cogumelo::load('c_model/DAOCache');
 Cogumelo::load('c_model/mysql/MysqlDAOResult');
+
 
 class MysqlDAO extends DAO
 {
@@ -212,7 +214,7 @@ class MysqlDAO extends DAO
 
 
 		// range string
-				$rangeSTR = ($range != array() && is_array($range) )? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
+		$rangeSTR = ($range != array() && is_array($range) )? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
 
 
 	
@@ -223,16 +225,23 @@ class MysqlDAO extends DAO
 
 		if ( $cache && DB_ALLOW_CACHE  )
 		{
-			if($cache_data = DAOCache::getCache($strSQL, $whereArray['values']) )
-				$daoresult = newMysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
+			$queryId = md5($strSQL.serialize($whereArray['values']));
+			$cached =  new DAOCache();
+
+			if($cache_data = $cached->getCache($queryId)  ) {
+echo $queryId." : cacheada";
+				$queryID = $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
+			}
 			else{
-				$this->execSQL($connectionControl,$strSQL, $whereArray['values']);
+echo $queryId." : non cacheada, cacheando...";
+				$res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']);
 				$daoresult = new MysqlDAOResult( $this->VO , $res);
-				DAOCache::setCache($strSQL, $whereArray['values'] , $daoresult->fetchAll_RAW() );
+				$cached->setCache( $queryId , $daoresult->fetchAll_RAW() );
 			}
 		}
 		else
 		{
+echo "traballando sen caché";
 			if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']))
 				$daoresult = new MysqlDAOResult( $this->VO , $res);
 			else

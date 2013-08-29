@@ -48,7 +48,7 @@ class MysqlDAOResult extends DAOResult {
 
 				$list = array();
 
-				while( $row = $this->mysql_result->fetch() ) {
+				while( $row = $this->result->fetch_assoc() ) {
 					$rowVO = $this->VOGenerator( $row);
 					$list[ $rowVO->getter($rowVO->getFirstPrimarykeyId()) ] = $rowVO;
 				}
@@ -84,8 +84,8 @@ class MysqlDAOResult extends DAOResult {
 	function fetchAll_RAW() {
 		$list = array();
 
-		while( $row = $this->mysql_result->fetch() ) {
-			$list[] = $rowVO;
+		while( $row = $this->result->fetch_assoc() ) {
+			$list[] = $row;
 		}
 		
 		return $list;	}

@@ -59,11 +59,11 @@ abstract class DataController {
 	//
 	// auto list method
 	//
-	function listItems($filters = false, $range = false, $order = false)
+	function listItems($filters = false, $range = false, $order = false, $cache = false)
 	{
 
 		Cogumelo::debug( "Called listItems on ".get_called_class() );
-		$data = $this->data->listItems($filters, $range, $order);
+		$data = $this->data->listItems($filters, $range, $order, $cache);
 
 		return $data;
 	}

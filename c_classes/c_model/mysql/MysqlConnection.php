@@ -58,7 +58,8 @@ class MysqlConnection extends Connection
 			$this->stmt->close();
 
 		// close mysqli
-		$this->db->close();
+		if($this->db)
+			$this->db->close();
 
 		Cogumelo::log("mySQLi: Connection closed");
 	}

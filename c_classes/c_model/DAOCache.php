@@ -13,16 +13,21 @@
 class DAOCache {
 
 
-  static function ini() {
+  var $mc = false;
+
+  function __construct() {
+    $this->mc = new Memcached();
     
+    $this->mc->addServer("localhost", 11211);
+
   }
 
   /*
   * @param string $query is the query string
   * @param array $variables the variables for the query prepared statment
   */
-  function getCache($query, $variables){
-    self::ini();
+  function getCache($query){
+    return $this->mc->get( $query); 
   }
 
 
@@ -30,8 +35,8 @@ class DAOCache {
   * @param string $query is the query string
   * @param array $variables the variables for the query prepared statment
   */
-  function setCache($query, $variables){
-    self::ini();
+  function setCache($query, $data){
+    return $this->mc->set( $query, $data); 
   }
 
 }

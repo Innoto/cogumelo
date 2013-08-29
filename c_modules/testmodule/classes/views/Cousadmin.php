@@ -22,7 +22,7 @@ class Cousadmin extends View
 
 
 	function lista() {
-		$cousas = $this->cousacontrol->listItems();
+		$cousas = $this->cousacontrol->listItems(false, false, false, true);
 
 		while($cou = $cousas->fetch()) {
 			echo "<br>";
