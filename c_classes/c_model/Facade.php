@@ -27,11 +27,6 @@ class Facade
 		$this->connectioncontrol = Connection::Factory($this->develMode);
 	}
 	
-	public function closeConnection()
-	{
-		$this->connectioncontrol->close();
-	}
-
 	public function develMode($user, $password, $DB) {
 		$this->develMode['DB_USER'] = $user;
 		$this->develMode['DB_PASSWORD'] = $password;
@@ -49,7 +44,8 @@ class Facade
 		Cogumelo::debug("TRANSACTION START: ".$name);
 		$this->OpenConnection();
 		eval('$data = $this->dao->'.$name. '($this->connectioncontrol'. $args_str . '); ');
-		$this->CloseConnection();
+		//$this->connectioncontrol->stmt->close();
+		//$this->connectioncontrol->close();
 		if($data !== false) Cogumelo::debug("TRANSACTION COMPLETED: ".$name);
 		else Cogumelo::error("TRANSACTION NOT COMPLETED: ".$name);
 		return $data;

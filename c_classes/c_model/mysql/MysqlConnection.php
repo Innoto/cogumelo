@@ -28,7 +28,8 @@ Cogumelo::load('c_model/Connection');
 class MysqlConnection extends Connection
 {
 	var $db = false;
-	
+	var $stmt = false;
+
 	function __construct(){
 
 	}
@@ -52,7 +53,12 @@ class MysqlConnection extends Connection
 	
 	function close()
 	{
-		 //$this->db->Close();
+		// close stmt if exist
+		if($this->stmt)
+			$this->stmt->close();
+
+		// close mysqli
+		$this->db->close();
 
 		Cogumelo::log("mySQLi: Connection closed");
 	}

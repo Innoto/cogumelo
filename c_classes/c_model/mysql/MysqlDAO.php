@@ -65,9 +65,9 @@ class MysqlDAO extends DAO
 		$caller_method = $d[1]['class'].'.'.$d[1]['function'].'()';
 
  		//set prepare sql
-		$stmt = $connectionControl->db->prepare( $sql ); 
+		$connectionControl->stmt = $connectionControl->db->prepare( $sql ); 
 
-		if( $stmt ) {  //set prepare sql
+		if( $connectionControl->stmt ) {  //set prepare sql
 
 			$bind_vars_type = $this->getPrepareTypes($val_array);
 			$bind_vars_str = "";
@@ -78,13 +78,13 @@ class MysqlDAO extends DAO
 
 			// bind params
 			if($bind_vars_type != "") {
-				eval('$stmt->bind_param("'. $bind_vars_type .'"'. $bind_vars_str .');');
+				eval('$connectionControl->stmt->bind_param("'. $bind_vars_type .'"'. $bind_vars_str .');');
 			}
-		    $stmt->execute();
+		    $connectionControl->stmt->execute();
 
 
-		    if($stmt->error == ''){
-		    	if($ret = $stmt->get_result()){
+		    if($connectionControl->stmt->error == ''){
+		    	if($ret = $connectionControl->stmt->get_result()){
 		    		$ret_data = $ret;
 		    	}
 		    	else{
@@ -95,13 +95,13 @@ class MysqlDAO extends DAO
 				Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$stmt->error.' - '.$sql);
 				$ret_data = false;
 			}
+
 		}
 		else {
 			Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connectionControl->db->error.' - '.$sql);
 
 			$ret_data = false;
 		}
-
 
 		return $ret_data;
 	}
@@ -302,7 +302,7 @@ class MysqlDAO extends DAO
 
 		if($res = $this->execSQL($connectionControl, $strSQL, $valArray)) {
 
-			$VOobj->setter($VOobj->getFirstPrimarykeyId(), $connectionControl->db>insert_id);
+			$VOobj->setter($VOobj->getFirstPrimarykeyId(), $connectionControl->db->insert_id);
 
 			return $VOobj;
 
