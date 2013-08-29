@@ -229,19 +229,24 @@ class MysqlDAO extends DAO
 			$cached =  new DAOCache();
 
 			if($cache_data = $cached->getCache($queryId)  ) {
-echo $queryId." : cacheada";
+				// With cache, serving cache ...
 				$queryID = $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
 			}
 			else{
-echo $queryId." : non cacheada, cacheando...";
-				$res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']);
-				$daoresult = new MysqlDAOResult( $this->VO , $res);
-				$cached->setCache( $queryId , $daoresult->fetchAll_RAW() );
+				
+				// With cache, but not cached yet. Caching ...
+				if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values'])) {
+					$daoresult = new MysqlDAOResult( $this->VO , $res);
+					$cached->setCache($queryId, $daoresult->fetchAll_RAW() );
+				}
+				else{
+					$daoresult = false;
+				}
 			}
 		}
 		else
 		{
-echo "traballando sen caché";
+			//	Without cache!
 			if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']))
 				$daoresult = new MysqlDAOResult( $this->VO , $res);
 			else

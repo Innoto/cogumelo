@@ -10,7 +10,7 @@ abstract class DAOResult {
 	abstract function count();
 	abstract function VOGenerator($res);
   abstract function fetchAll_RAW();
-
+  abstract function reset_fetch();
 
   function cache_fetch() {
     $ret_obj = $this->VOGenerator( $this->cache[$this->cache_fetch_index] );

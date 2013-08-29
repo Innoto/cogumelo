@@ -53,6 +53,8 @@ class MysqlDAOResult extends DAOResult {
 					$list[ $rowVO->getter($rowVO->getFirstPrimarykeyId()) ] = $rowVO;
 				}
 		}
+
+		$this->reset_fetch();
 		
 		return $list;
 		
@@ -82,16 +84,24 @@ class MysqlDAOResult extends DAOResult {
 	}
 
 	function fetchAll_RAW() {
+
+				//$this->reset_fetch();
 		$list = array();
 
 		while( $row = $this->result->fetch_assoc() ) {
 			$list[] = $row;
 		}
 		
-		return $list;	}
+		$this->reset_fetch();
 
-	function __destroy() {
-		$this->result->close();
+		return $list;	
 	}
+
+	function reset_fetch() {
+		 //return mysql_data_seek($this->result ,0);
+		 $this->result->data_seek(0);
+
+	}
+
 
 }
