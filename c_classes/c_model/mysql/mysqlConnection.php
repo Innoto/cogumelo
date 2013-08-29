@@ -30,13 +30,15 @@ class MysqlConnection extends Connection
 	var $db = false;
 	
 	function __construct(){
+
+		echo "blablablamysql ";
 	}
 
 
 	/*
 	 *	Only starts the db connection if doesn't exist 
 	 */
-	function start() {
+	function ini() {
 		if($this->db == false) {
 			@$this->db = new mysqli(DB_HOSTNAME ,DB_USER , DB_PASSWORD, DB_NAME,  DB_PORT);
 

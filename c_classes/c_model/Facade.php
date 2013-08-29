@@ -29,7 +29,7 @@ class Facade
 	
 	public function closeConnection()
 	{
-		$this->connectioncontrol->Close();
+		$this->connectioncontrol->close();
 	}
 
 	public function develMode($user, $password, $DB) {

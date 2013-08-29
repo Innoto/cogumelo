@@ -58,14 +58,14 @@ class MysqlDAO extends DAO
 	function execSQL(&$connectionControl, $sql, $val_array = array())
 	{
 
-		$connectionControl->start();
+		$connectionControl->connect();
 
 		// obtaining debug data
 		$d = debug_backtrace();
 		$caller_method = $d[1]['class'].'.'.$d[1]['function'].'()';
 
  		//set prepare sql
-		$stmt = $connectionControl->prepare( $sql ); 
+		$stmt = $connectionControl->db->prepare( $sql ); 
 
 		if( $stmt ) {  //set prepare sql
 

@@ -1,7 +1,7 @@
 <?php
 
 
-class DAOResult {
+abstract class DAOResult {
 
   var $cache_fetch_index = 0;
 
@@ -10,7 +10,6 @@ class DAOResult {
 	abstract function count();
 	abstract function VOGenerator($res);
   abstract function fetchAll_RAW();
-  abstract function destroy();
 
 
   function cache_fetch() {
