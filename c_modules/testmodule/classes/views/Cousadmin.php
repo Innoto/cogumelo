@@ -22,8 +22,13 @@ class Cousadmin extends View
 
 
 	function lista() {
+		$cousas = $this->cousacontrol->listItems();
 
-
+		while($cou = $cousas->fetch()) {
+			echo "<br>";
+			var_dump($cou);
+		}
+/*
 	    $this->template->setTpl("cousadmin.tpl", "testmodule");
 
 	    $this->template->addJs('vendor_lib/jQuery.js', 'client_essentials');
@@ -31,6 +36,7 @@ class Cousadmin extends View
 	    $this->template->addJs('vendor_lib/jquery.address.js', 'client_essentials');
 	   	$this->template->addJs('lib/cogumelo.table.js', 'client_essentials');
 	    $this->template->exec();
+	*/
 		}
 
 

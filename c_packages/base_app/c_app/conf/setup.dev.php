@@ -17,7 +17,7 @@ define("DB_PORT",		"3306");
 define("DB_USER" , 		"root");
 define("DB_PASSWORD", 	"q7w8e9r");
 define("DB_NAME",		"test");
-define("DB_ALLOW_CACHE", false);
+define("DB_ALLOW_CACHE", true);
 
 //
 //	Url settings

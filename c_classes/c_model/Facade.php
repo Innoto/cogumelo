@@ -44,8 +44,7 @@ class Facade
 		Cogumelo::debug("TRANSACTION START: ".$name);
 		$this->OpenConnection();
 		eval('$data = $this->dao->'.$name. '($this->connectioncontrol'. $args_str . '); ');
-		//$this->connectioncontrol->stmt->close();
-		//$this->connectioncontrol->close();
+
 		if($data !== false) Cogumelo::debug("TRANSACTION COMPLETED: ".$name);
 		else Cogumelo::error("TRANSACTION NOT COMPLETED: ".$name);
 		return $data;
