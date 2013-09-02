@@ -188,18 +188,10 @@ class MysqlDAO extends DAO
 	
 
 
-
-
-	 /****************************
-	*******************************
-		GENERIC ENTITY METHODS
-	*******************************
-	 *****************************/
-/*
 	//
 	//	Generic Find by key
 	//
-	function find(&$connectionControl, $search, $key = false, $cache)
+	function find(&$connectionControl, $search, $key = false, $cache = false)
 	{
 		$VO = new $this->VO();
 
@@ -207,23 +199,16 @@ class MysqlDAO extends DAO
 			$key = $VO->getFirstPrimarykeyId();
 		}
 
-		// SQL Query
-		$strSQL = "SELECT * FROM `" . $VO::$tableName . "` WHERE `".$key."` = ?;";
-	
-		if( $res = $this->execSQL($connectionControl, $strSQL, array($search)) ) {
-			if($res->num_rows != 0) {
-				$DAOres  = new MysqlDAOResult( $this->VO , $res);
-				return( $DAOres->fetch());
-			}
-			else {
-				return null;
-			}
+		$filter = array($key => $search);
+
+		if($res = $this->listItems($connectionControl, $filter, false, false, $cache) ) {
+			return $res->fetch();
 		}
-		else {
+		else 
 			return false;
-		}
+			
 	}
-*/
+
 	//
 	//	Generic listItems
 	//
