@@ -20,7 +20,7 @@ define("DB_NAME",		"test");
 
 // allow cache with memcached
 define("DB_ALLOW_CACHE", true); 
-require_once(SITE_PATH.'/c_app/memcached.setup.php');  //memcached options
+require_once(SITE_PATH.'/conf/memcached.setup.php');  //memcached options
 
 
 //

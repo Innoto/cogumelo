@@ -140,16 +140,41 @@ class MysqlDAO extends DAO
 
 
 		if($filters) {
+
+			$VO = new $this->VO();
+
+
 			foreach($filters as $fkey => $filter_val) {
+
 				if( array_key_exists($fkey, $this->filters) ) {
 					$fstr = " AND ".$this->filters[$fkey];
+				}
+				else if(array_key_exists($fkey, $VO::$cols) ) {
+					$fstr = " AND ".$VO::$tableName.".".$fkey." = ?";
+				}
+				else { 
+					Cogumelo::error( $fkey." not found on wherearray or into (".$this->VO.") VO. Omiting..." );
+				}
+
+				// where string
+				$where_str.=$fstr; 
+
+
+				// dump value or array value into $values array
+				if( is_array($filter_val) ) {
+					foreach($filter_val as $val) {
+						$val_array[] = $val;
+					}
+				}
+				else {
 					$var_count = substr_count( $fstr , "?");
 					for($c=0; $c < $var_count; $c++) {
 						$val_array[] = $filter_val;
 					}
-					$where_str.=$fstr; 
-
 				}
+			
+
+
 			}
 		}
 
@@ -170,7 +195,7 @@ class MysqlDAO extends DAO
 		GENERIC ENTITY METHODS
 	*******************************
 	 *****************************/
-
+/*
 	//
 	//	Generic Find by key
 	//
@@ -198,7 +223,7 @@ class MysqlDAO extends DAO
 			return false;
 		}
 	}
-
+*/
 	//
 	//	Generic listItems
 	//
