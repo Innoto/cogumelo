@@ -26,5 +26,6 @@ This page will serve to post the essential and aditional needs of this framework
    * php5-mysqlnd (for mysql prepared statments)
   * Smarty
   * Memcached
+  * php5-memcached
 
 
