@@ -64,12 +64,12 @@ class Mediaserver extends View
 			$ful_path_file = SITE_PATH.'templates/'.$file_path;
 		}
 		else
-		if( file_exists(SITE_PATH.'/modules/'.$module.'/templates/'.$file_path) ) { //check if exist on app module
-			$ful_path_file = SITE_PATH.'/modules/'.$module.'/templates/'.$file_path;
+		if( file_exists(SITE_PATH.'/modules/'.$module.'/classes/view/templates/'.$file_path) ) { //check if exist on app module
+			$ful_path_file = SITE_PATH.'/modules/'.$module.'/classes/view/templates/'.$file_path;
 		}
 		else
-		if( file_exists( COGUMELO_LOCATION.'/modules/'.$module.'/templates/'.$file_path ) ) { //check if exist on core module
-			$ful_path_file = COGUMELO_LOCATION.'/modules/'.$module.'/templates/'.$file_path;
+		if( file_exists( COGUMELO_LOCATION.'/modules/'.$module.'classes/view//templates/'.$file_path ) ) { //check if exist on core module
+			$ful_path_file = COGUMELO_LOCATION.'/modules/'.$module.'classes/view/templates/'.$file_path;
 		}
 		else {
 			Cogumelo::error("file: '".$file_path."'' not found" );
