@@ -3,7 +3,7 @@ Is a simple PHP5 framework created by <http://innoto.es> under GPL v2. It`s unde
 This page will serve to post the essential and aditional needs of this framework.
 
 
-We recomend to look carefully the [Framework dependences](https://github.com/pablinhob/cogumelo/wiki/Overview#wiki-dependendes)
+We recomend to look carefully the [Framework dependences](https://github.com/pablinhob/cogumelo/wiki/Overview#wiki-dependences)
 
 
 ### Essential needs:
