@@ -9,7 +9,7 @@ We recomend to look carefully the [Framework dependences](wiki/Overview##wiki-de
 ### Essential needs:
 * Modular system [OK]
 * Model View Controller [OK]
-* DB Caché with <http://memcached.org/>
+* DB Caché with <http://memcached.org/> [OK]
 
 ### Aditional needs:
 * Devel utilities module  [OK]
