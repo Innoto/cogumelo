@@ -7,17 +7,17 @@ We recomend to look carefully the [Framework dependences](wiki/Overview##wiki-de
 
 
 ### Essential needs:
-* Modular system [OK]
-* Model View Controller [OK]
-* DB Caché with <http://memcached.org/> [OK]
+* [OK] Modular system 
+* [OK] Model View Controller
+* [OK] DB Caché with <http://memcached.org/> 
 
 ### Aditional needs:
-* Devel utilities module  [OK]
-* Ajax Tables
-* Forms
- * Validation 
- * Auto Form generating
- * Easy file uploads without page reloads
-* Users and Admin panel Modules
+* [NOT READY] Devel utilities module
+* [NOT READY] Ajax Tables
+* [NOT READY] Forms
+ - Validation 
+ - Auto Form generating
+ - Easy file uploads without page reloads
+* [NOT READY] Users and Admin panel Modules
 
 
