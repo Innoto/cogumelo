@@ -1,6 +1,6 @@
 <?php 
 
-require_once(COGUMELO_LOCATION."/c_classes/c_controllers/request/RequestController.php");
+require_once(COGUMELO_LOCATION."/c_classes/c_controller/RequestController.php");
 
 class ModuleController
 {

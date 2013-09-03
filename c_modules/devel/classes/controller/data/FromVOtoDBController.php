@@ -1,6 +1,6 @@
 <?php
 
-Cogumelo::load('c_controllers/data/DataController');
+Cogumelo::load('c_controllerDataController');
 
 
 //

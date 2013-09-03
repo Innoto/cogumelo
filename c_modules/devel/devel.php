@@ -1,6 +1,6 @@
 <?php
 
-Cogumelo::load("c_controllers/module/Module");
+Cogumelo::load("c_controller/Module");
 
 class devel extends Module
 {

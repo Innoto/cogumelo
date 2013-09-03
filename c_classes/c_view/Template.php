@@ -67,7 +67,7 @@ Class Template extends Smarty
 	}
 
 	function setTpl($file_name, $module = false) {
-		$this->tpl = ModuleController::getRealFilePath('templates/'.$file_name, $module );
+		$this->tpl = ModuleController::getRealFilePath('classes/view/templates/'.$file_name, $module );
 	}
 
 
