@@ -6,6 +6,7 @@ This page will serve to post the essential and aditional needs of this framework
 We recomend to look carefully the [Framework dependences](https://github.com/pablinhob/cogumelo/wiki/Overview#wiki-dependences)
 
 
+
 ### Essential needs:
 * [OK] Modular system 
 * [OK] Model View Controller
