@@ -1,7 +1,7 @@
 <?php
 
 Cogumelo::load('c_view/View');
-Cogumelo::load('controllers/data/FromVOtoDBController');
+Cogumelo::load('controller/FromVOtoDBController');
 
 
 class DevView extends View

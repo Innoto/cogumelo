@@ -2,7 +2,7 @@
 
 
 Cogumelo::load('c_view/View');
-Cogumelo::load('controllers/data/UseradminController');
+Cogumelo::load('controller/UseradminController');
 
 
 class Adminview extends View

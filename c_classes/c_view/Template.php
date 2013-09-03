@@ -22,7 +22,7 @@ USA.
 Cogumelo::load('c_vendor/Smarty/libs/Smarty.class.php');
 Cogumelo::load('c_vendor/jsmin/jsmin.php');
 Cogumelo::load('c_vendor/cssmin/cssmin.php');
-Cogumelo::load('c_controllers/module/ModuleController');
+Cogumelo::load('c_controller/ModuleController');
 
 //
 //	Template Class (Extends smarty library)

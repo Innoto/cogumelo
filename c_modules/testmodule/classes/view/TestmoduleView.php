@@ -1,7 +1,7 @@
 <?php
 
 Cogumelo::load('c_view/View');
-testmodule::load('controllers/ola');
+
 class TestmoduleView extends View
 {
 

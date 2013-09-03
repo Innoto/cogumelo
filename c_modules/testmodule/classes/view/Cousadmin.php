@@ -3,7 +3,7 @@
 
 Cogumelo::load('c_view/View');
 Cogumelo::load('c_view/Table');
-testmodule::load('controllers/data/CousaController');
+testmodule::load('controller/CousaController');
 
 
 class Cousadmin extends View

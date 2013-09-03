@@ -26,8 +26,8 @@ abstract class MailController
 	
 	function __construct()
 	{
-		Cogumelo::Load('Template');
-		Cogumelo::Load('MailSender');
+		Cogumelo::Load('c_view/Template');
+		Cogumelo::Load('c_controller/MailSender');
 		
 		$this->templatecontrol = new Template();
 		$this->mailSender = new MailSender();

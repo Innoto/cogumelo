@@ -1,5 +1,5 @@
 <?
-Cogumelo::load("c_controllers/module/Module");
+Cogumelo::load("c_controller/Module");
 
 class i18nGetLang extends Module
 {

@@ -2,7 +2,7 @@
 
 
 Cogumelo::load('c_view/View');
-Cogumelo::load('controllers/data/CousaController');
+Cogumelo::load('controller/CousaController');
 Cogumelo::load('c_view/Table');
 
 

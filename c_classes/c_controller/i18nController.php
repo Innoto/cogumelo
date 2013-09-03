@@ -1,5 +1,5 @@
 <?php
-C_ClassLoader::Load('Gettext');
+C_ClassLoader::Load('c_vendor/gettext/gettext.php');
 
 class C_i18n {
 	

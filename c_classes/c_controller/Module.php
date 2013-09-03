@@ -1,6 +1,6 @@
 <?php
 
-Cogumelo::load('c_controllers/module/ModuleController');
+Cogumelo::load('c_controllers/ModuleController');
 
 class Module 
 {

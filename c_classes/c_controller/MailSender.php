@@ -25,7 +25,7 @@ Class MailSender
 	
 	function __construct()
 	{
-		Cogumelo::Load('PHPMailer');
+		Cogumelo::Load('c_vendor/PHPMailer/class.phpmailer.php');
 		$this->phpmailer = new PHPMailer();
 		
 		//$this->phpmailer->IsSMTP();	

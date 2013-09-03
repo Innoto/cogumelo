@@ -1,8 +1,8 @@
 <?php
 
 Cogumelo::load('c_view/View');
-devel::load('controllers/LogReaderController');
-devel::load('controllers/data/FromVOtoDBController');
+devel::load('controller/LogReaderController');
+devel::load('controller/FromVOtoDBController');
 
 
 class DevelView extends View
