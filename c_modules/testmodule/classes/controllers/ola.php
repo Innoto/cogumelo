@@ -1,4 +1,0 @@
-<?php
-
-
-echo "ola ola";
