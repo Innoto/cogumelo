@@ -41,7 +41,7 @@ class MediaserverView extends View
 
 	function serveContent($path, $module=false){
 
-		if(! $real_file_path = ModuleController::getRealFilePath('templates/'.$path, $module ) ) {
+		if(! $real_file_path = ModuleController::getRealFilePath('classes/view/templates/'.$path, $module ) ) {
 			//RequestController::redirect(SITE_URL_CURRENT.'/404');
 		}
 
