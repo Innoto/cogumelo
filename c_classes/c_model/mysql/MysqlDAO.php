@@ -19,8 +19,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 USA.
 */
 
+Cogumelo::load('c_controller/Cache');
 Cogumelo::load('c_model/DAO');
-Cogumelo::load('c_model/DAOCache');
 Cogumelo::load('c_model/mysql/MysqlDAOResult');
 
 
@@ -236,7 +236,7 @@ class MysqlDAO extends DAO
 		if ( $cache && DB_ALLOW_CACHE  )
 		{
 			$queryId = md5($strSQL.serialize($whereArray['values']));
-			$cached =  new DAOCache();
+			$cached =  new Cache();
 
 			if($cache_data = $cached->getCache($queryId)  ) {
 				// With cache, serving cache ...

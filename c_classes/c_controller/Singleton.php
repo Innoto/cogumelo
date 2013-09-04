@@ -19,19 +19,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 USA.
 */
 
-/*
- * Authcode Generator
- */
 
-function getAuthcode($n)
+abstract class Singleton
 {
-    $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $string = ”;    
+	private static $instance = false;
+	
+    protected function __construct() {}
+    final private function __clone() {}
 
-    for ($p = 0; $p < $n; $p++) {
-        $string .= $characters[mt_rand(0, strlen($characters))];
+    protected static function getInstance($class)
+    {
+		if(self::$instance === false){
+			self::$instance =  new $class;
+		}
+
+		return self::$instance;
     }
-
-    return $string;
- }
-?>
+}

@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 USA.
 */
 
-require_once(COGUMELO_LOCATION."/c_classes/c_controller/utils/Singleton.php");
+require_once(COGUMELO_LOCATION."/c_classes/c_controller/Singleton.php");
 require_once(COGUMELO_LOCATION."/c_classes/c_controller/ModuleController.php");
 
 class CogumeloClass extends Singleton

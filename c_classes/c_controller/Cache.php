@@ -2,7 +2,7 @@
 
 
 /**
-* DAOCache Class
+* Cache Class
 *
 * This class encapsulates the memcached library
 *
@@ -10,7 +10,7 @@
 */
 
 
-class DAOCache {
+class Cache {
 
 
   var $mc = false;
