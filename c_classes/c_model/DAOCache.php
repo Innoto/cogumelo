@@ -39,7 +39,7 @@ class DAOCache {
   * @param array $variables the variables for the query prepared statment
   */
   function setCache($query, $data){
-    return $this->mc->set( $query, $data); 
+    return $this->mc->set( $query, $data, MEMCACHED_EXPIRATION_TIME); 
   }
 
 }
