@@ -51,8 +51,8 @@ abstract class DataController {
 
 
   /*
-  * @param mixed $adresses are string of array of strings with recipient of mail sent
-  * @param string $subject is the subject of the mail
+  * @param mixed $id identifier
+  * @param string $key vo key to set at id (false is VO primary key)
   */
 	function find($id, $key=false) 
 	{
@@ -63,9 +63,14 @@ abstract class DataController {
 	}
 	
 	
-	//
-	// auto list method
-	//
+  /*
+  *	List items from table
+  *
+  * @param array $filters array of filters
+  * @param array $range two element array with result range ex. array(0,100)
+  * @param array $order order for query 
+  * @apram boolean $cache true means cache is enabled
+  */
 	function listItems($filters = false, $range = false, $order = false, $cache = false)
 	{
 
@@ -75,12 +80,14 @@ abstract class DataController {
 		return $data;
 	}
 
-	//
-	// auto count method
-	//
+
+  /*
+  *	Count items from table
+  *
+  * @param array $filters array of filters
+	*/
 	function listCount($filters = false)
 	{
-
 
 		Cogumelo::debug( "Called listCount on ".get_called_class() );
 		$data = $this->data->listCount($filters);
@@ -89,9 +96,11 @@ abstract class DataController {
 	}
 
 	
-	//
-	//	auto create  method
-	//	$data can be (array) or (object)
+  /*
+  *	create item
+  *
+  * @param mixed $data can be (array) or (VO object)
+  */
 	function create($data)
 	{
 		Cogumelo::debug( "Called create on ".get_called_class() );
@@ -105,9 +114,11 @@ abstract class DataController {
 	}
 	
 	
-    //
-	//	auto update method
-	//	data can be array or VO object
+  /*
+  *	update item 
+  *
+  * @param mixed $data can be array or VO object
+  */
 	function update($data)		
 	{
 		Cogumelo::debug( "Called update on ".get_called_class() );
@@ -120,9 +131,11 @@ abstract class DataController {
 	}
 
 
-	//
-	//	auto delete method
-	//
+  /*
+  *	delete item 
+  *
+  * @param mixed $id must be primary key of VO
+  */
 	function delete($id)
 	{
 		Cogumelo::debug( "Called delete on ".get_called_class()." with id=".$id );
