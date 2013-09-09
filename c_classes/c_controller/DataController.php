@@ -1,7 +1,8 @@
 <?php
+
 /*
-Cogumelo v1.0 - Innoto S.L.
-Copyright (C) 2013 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@map-experience.com>
+Cogumelo v1.0a - Innoto S.L.
+Copyright (C) 2013 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@innoto.es>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,13 +18,22 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 USA.
+
 */
+
+
+
+/**
+* DataController Class
+*
+* abstract DataController class
+*
+* @author: pablinhob
+*/
+
 
 Cogumelo::load("c_model/Facade");
 
-//
-// abstract DataController class
-//
 
 abstract class DataController {
 
@@ -35,18 +45,15 @@ abstract class DataController {
 	private $filters = array();
 
 
-	//
-	//	Constructor 
-	//
 	function __construct() {
 
 	}
 
 
-
-	//
-	//	auto find method
-	//
+  /*
+  * @param mixed $adresses are string of array of strings with recipient of mail sent
+  * @param string $subject is the subject of the mail
+  */
 	function find($id, $key=false) 
 	{
 		Cogumelo::debug( "Called find on ".get_called_class()." with id=". $id);
