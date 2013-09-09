@@ -1,7 +1,7 @@
 <?php
 /*
-Cogumelo v0.2 - Innoto S.L.
-Copyright (C) 2010 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@map-experience.com>
+Cogumelo v1.0a - Innoto S.L.
+Copyright (C) 2013 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@innoto.es>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,6 +17,17 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 USA.
+
+*/
+
+
+
+/**
+* MailController Class
+*
+* An interface to use Mailcontroller with smarty template library as in the rest of the views
+*
+* @author: pablinhob
 */
 
 abstract class MailController 
@@ -33,7 +44,11 @@ abstract class MailController
 		$this->mailSender = new MailSender();
 	}
 	
-	// parse template with variables 
+
+  /*
+  * @param string $template tpl file path
+  * @param array template variables array
+  */
 	function parseMail($template, $vars) {
 		
 		foreach($vars as $varkey => $variable)

@@ -1,7 +1,7 @@
 <?php
 /*
-Cogumelo v0.2 - Innoto S.L.
-Copyright (C) 2010 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@map-experience.com>
+Cogumelo v1.0a - Innoto S.L.
+Copyright (C) 2013 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@innoto.es>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,6 +17,16 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 USA.
+
+*/
+
+
+/**
+* Singleton Class
+*
+* A singleton class to make cogumelo main object run as singleton
+*
+* @author: pablinhob
 */
 
 

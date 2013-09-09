@@ -1,4 +1,12 @@
 <?php
+
+/*
+	
+	Esta clase non funciona ainda!
+	
+*/
+
+
 C_ClassLoader::Load('c_vendor/gettext/gettext.php');
 
 class C_i18n {

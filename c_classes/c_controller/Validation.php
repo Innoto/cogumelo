@@ -1,6 +1,13 @@
 <?php
 
 
+/*
+	
+	Esta clase non funciona ainda!
+	
+*/
+
+
 class Validation {
 
 

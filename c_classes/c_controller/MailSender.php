@@ -1,7 +1,7 @@
 <?php
 /*
-Cogumelo v0.2 - Innoto S.L.
-Copyright (C) 2010 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@map-experience.com>
+Cogumelo v1.0a - Innoto S.L.
+Copyright (C) 2013 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@innoto.es>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -17,7 +17,21 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
 USA.
+
 */
+
+
+
+/**
+* MailSender Class
+*
+* Mail sender encapsulates the original phpmailer library to make less difficult it's use
+*
+* @author: pablinhob
+*/
+
+Cogumelo::Load('c_vendor/PHPMailer/class.phpmailer.php');
+
 
 Class MailSender 
 {
@@ -25,7 +39,6 @@ Class MailSender
 	
 	function __construct()
 	{
-		Cogumelo::Load('c_vendor/PHPMailer/class.phpmailer.php');
 		$this->phpmailer = new PHPMailer();
 		
 		//$this->phpmailer->IsSMTP();	
@@ -39,7 +52,15 @@ Class MailSender
 
 	}
 
-	
+
+  /*
+  * @param mixed $adresses are string of array of strings with recipient of mail sent
+  * @param string $subject is the subject of the mail
+  * @param string $body of the e-mail
+  * @prarm mixed $files string or array of strings of filepaths
+  * @param string $from_name sender name. Default is specified in conf.
+  * @param string $from_maiol sender e-mail. Default especified in conf.
+  */
 	function send($adresses, $subject='', $body='', $files = false, $from_name = SYS_MAIL_FROM_NAME, $from_mail = SYS_MAIL_FROM_EMAIL)
 	{
 		// If $adresses is an array of adresses include all into mail
