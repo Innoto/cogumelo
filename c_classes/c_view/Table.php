@@ -14,16 +14,11 @@
 class Table
 {
 
-	/*
-	*	$client_data must have this structure
-	*	'filters_common' = array('tab'=>1),
-	*   'filters' => array('search' => 'Xan o a curva'),
-	*	'range' => array(10,20)
-	*/
+
 	var $client_data = array();
 	var $cols_def = array();
 	var $allow_methods = array();
-	
+	var $filters = array('tabs' => false, 'filters' => false);
 
 	/*
 	*  @param array $data  generally is the full $_POST data variable
@@ -34,8 +29,10 @@ class Table
 	}
 
 	/*
+	*	Set table col
+	*
 	* @param string $col_id id of col in VO
-	* @param string $col_name  col name, we can use function T() to translate that. if false it gets the VO's col description.
+	* @param string $col_name. if false it gets the VO's col description.
 	* @return void
 	*/
 	function setCol($col_id, $col_name = false) {
@@ -44,22 +41,53 @@ class Table
 
 
 	/*
+	*	Set col Rules
+	*
 	* @param string $col_id id of col added with setCol method0
 	* @param mixed $regexp the regular expression to match col's row value
-	* @param string $action is the result that we want to provide when 
+	* @param string $final_content is the result that we want to provide when 
 	*  variable $value matches (Usually a text). Can be too an operation with other cols
 	* @return void
 	*/
-	function colRule($col_id, $regexp, $code) {
-		$this->cols_def[$col_id]['rules'][] = array('regexp' => $regexp, 'code' => $code );
+	function colRule($col_id, $regexp, $final_content) {
+		if(array_key_exists($col_id, $this->cols_def)) {
+			$this->cols_def[$col_id]['rules'][] = array('regexp' => $regexp, 'final_content' => $final_content );
+		}
+		else {
+			Cogumelo::error('Col id "'.$col_id.'" not found in table, can`t add col rule');
+		}
+	}
+
+	/*
+	*	Set tabs
+	*
+	* @param string $tabs_key
+	* @param array $tabs
+	* @return void
+	*/
+	function setTabs($tabs_key ,$tabs) {
+		$this->filters['tabs'] = array('tabs_key' => $tabs_key, 'tabs' => $tabs);
 	}
 
 
 	/*
+	*	Set filters array
+	*
+	* @param array $filters 
+	* @return void
+	*/
+	function setFilters( $filters ) {
+		$this->filters['filters'] = $filters;
+	}
+
+
+	/*
+	*	Data methods to allow in table
+	*
 	* @param string $allow_methods array of method names allowed in this table view
 	* @return void
 	*/
-	function allowMethods( $allow_methods = array() ) {
+	function allowMethods( $allow_methods ) {
 		$this->allow_methods = $allow_methods;
 	}
 
@@ -82,18 +110,18 @@ class Table
 
 
 		// printing json table...
-    	header("Content-Type: application/json"); //return only JSON data
-    	echo "{";
-    	echo "'total_table_rows':" . $control->listCount($this->client_data->filters_common) . ","; // only assign common filters
-    	echo "'cols_def':".json_encode($this->cols_def).",";
 
-		while( $rowVO = $lista->fetch() ){
+    header("Content-Type: application/json"); //return only JSON data
+   	echo "{";
+   	echo "'total_table_rows':" . $control->listCount($this->client_data->filters_common) . ","; // only assign common filters
+   	echo "'cols_def':".json_encode($this->cols_def).",";
+
+		while( $rowVO = $lista->fetch() ) {
 			// dump rowVO into row
 			$row = array();
 
 			foreach($this->cols_def as $col_def_key => $col_def){
 				$row[$col_def_key] = $rowVO->getter($col_def_key);
-
 			}
 			
 			// modify row value if have colRules
