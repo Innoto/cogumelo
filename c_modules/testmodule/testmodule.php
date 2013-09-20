@@ -9,6 +9,8 @@ class testmodule extends Module
 					'#^cousa/mostrar\/?(.*)$#' => 'view:Cousadmin::mostra_cousa',
 			'#^cousa/crear$#' => 'view:Cousadmin::crea',
 			'#^cousa$#' => 'view:Cousadmin::lista',
+      '#^tabla$#' => 'view:Cousadmin::cousa_tabla',
 		'#^testmodule#' => 'view:TestmoduleView::inicio',
+    
 	);
 }

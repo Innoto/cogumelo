@@ -18,7 +18,9 @@ class Table
 	var $client_data = array();
 	var $cols_def = array();
 	var $allow_methods = array();
-	var $filters = array('tabs' => false, 'filters' => false);
+	var $tabs = array();
+	var $current_tab = false;
+	var $filters = array();
 
 	/*
 	*  @param array $data  generally is the full $_POST data variable
@@ -66,7 +68,7 @@ class Table
 	* @return void
 	*/
 	function setTabs($tabs_key ,$tabs) {
-		$this->filters['tabs'] = array('tabs_key' => $tabs_key, 'tabs' => $tabs);
+		$this->tabs = array('tabs_key' => $tabs_key, 'tabs' => $tabs);
 	}
 
 
@@ -106,7 +108,7 @@ class Table
 
 
 		// doing a query to the controller
-		$lista = $control->listItems( array_merge($this->client_data->filters_common, $this->client_data->filters) , $this->client_data->range, $this->client_data->order);
+		$lista = $control->listItems( $this->client_data->filters , $this->client_data->range, $this->client_data->order);
 
 
 		// printing json table...
@@ -116,28 +118,30 @@ class Table
    	echo "'total_table_rows':" . $control->listCount($this->client_data->filters_common) . ","; // only assign common filters
    	echo "'cols_def':".json_encode($this->cols_def).",";
 
-		while( $rowVO = $lista->fetch() ) {
-			// dump rowVO into row
-			$row = array();
+   	if($lista != false) {
+			while( $rowVO = $lista->fetch() ) {
+				// dump rowVO into row
+				$row = array();
 
-			foreach($this->cols_def as $col_def_key => $col_def){
-				$row[$col_def_key] = $rowVO->getter($col_def_key);
-			}
-			
-			// modify row value if have colRules
-			foreach($this->cols_def as $col_def_key => $col_def) {
-				// if have rules and matches with regexp
-				if($col_def['rules'] != array() ) {
-					foreach($col_def['rules'] as $rule){
-						if(preg_match( $rule['regexp'], $row[$col_def_key])) {
-							eval('$row[$col_def_key]] = '.$col_def->rule->code.';');
+				foreach($this->cols_def as $col_def_key => $col_def){
+					$row[$col_def_key] = $rowVO->getter($col_def_key);
+				}
+				
+				// modify row value if have colRules
+				foreach($this->cols_def as $col_def_key => $col_def) {
+					// if have rules and matches with regexp
+					if($col_def['rules'] != array() ) {
+						foreach($col_def['rules'] as $rule){
+							if(preg_match( $rule['regexp'], $row[$col_def_key])) {
+								eval('$row[$col_def_key]] = '.$col_def->rule->code.';');
+							}
 						}
 					}
 				}
+
+
+				echo json_encode($row); 
 			}
-
-			echo json_encode($row); 
-
 		}
 		echo "}";
 	}

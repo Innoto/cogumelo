@@ -69,8 +69,7 @@ class Cousadmin extends View
 
 	function cousa_tabla() {
 
-		$FAKE_POST = array('cogumelo_table' => '{"filters":[],"range":[1,20], "order":[], "method":false}' );
-
+		$FAKE_POST = array('cogumelo_table' => '{"filters":[],"range":[0,20], "order":[], "method":false}' );
 
 
 		// creamos obxecto taboa pasandolle o POST
@@ -108,16 +107,14 @@ class Cousadmin extends View
 		$tabla->setCol('name', 'Nome da cousa');
 		$tabla->setCol('fingers', "Númerod de dedos");
 		$tabla->setCol('nivel', "Nivel");
-
-
-		// establecer reglas a campo concreto con expresions regulares
-		$this->colRule('nivel', '^[8..10]%', 'Usuario molón');
-		$this->colRule('nivel', '^[5..7]%', 'Usuario medio');
-		$this->colRule('nivel', '^[i..4]%', 'Usuario cutre');
-
-
+/*
+    // establecer reglas a campo concreto con expresions regulares
+		$tabla->colRule('nivel', '#^[8..10]%#', 'Usuario molón');
+		$tabla->colRule('nivel', '#^[5..7]%#', 'Usuario medio');
+		$tabla->colRule('nivel', '#^[i..4]%#', 'Usuario cutre'); 
+*/
 		// metodos aceptados
-		$this->allowMethods('delete', 'update');
+		$tabla->allowMethods(array('delete', 'update'));
 
 		// imprimimos o JSON da taboa
 		$tabla->return_table_json($this->cousacontrol);
