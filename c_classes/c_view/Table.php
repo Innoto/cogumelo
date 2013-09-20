@@ -79,7 +79,7 @@ class Table
 	* @return void
 	*/
 	function setFilters( $filters ) {
-		$this->filters['filters'] = $filters;
+		$this->filters = $filters;
 	}
 
 
@@ -117,7 +117,7 @@ class Table
    	echo "{";
    	echo "'total_table_rows':" . $control->listCount($this->client_data->filters_common) . ","; // only assign common filters
    	echo "'cols_def':".json_encode($this->cols_def).",";
-
+		echo "'filters':".json_encode($this->filters).",";
    	if($lista != false) {
 			while( $rowVO = $lista->fetch() ) {
 				// dump rowVO into row
@@ -140,7 +140,7 @@ class Table
 				}
 
 
-				echo json_encode($row); 
+				//echo json_encode($row); 
 			}
 		}
 		echo "}";
