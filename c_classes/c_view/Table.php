@@ -114,12 +114,19 @@ class Table
 		// printing json table...
 
     header("Content-Type: application/json"); //return only JSON data
-   	echo "{";
-   	echo "'total_table_rows':" . $control->listCount($this->client_data->filters_common) . ","; // only assign common filters
-   	echo "'cols_def':".json_encode($this->cols_def).",";
-		echo "'filters':".json_encode($this->filters).",";
+    echo "{";
+   	echo '"total_table_rows":' . $control->listCount($this->client_data->filters_common) . ','; // only assign common filters
+   	echo '"cols_def":'.json_encode($this->cols_def).',';
+		echo '"filters":'.json_encode($this->filters).',';
+
+    $coma = '';
+		echo '"table" : [';
    	if($lista != false) {
 			while( $rowVO = $lista->fetch() ) {
+
+				echo $coma;
+				$coma = ',';
+
 				// dump rowVO into row
 				$row = array();
 
@@ -140,11 +147,13 @@ class Table
 				}
 
 
-				//echo json_encode($row); 
+				echo json_encode($row); 
+
 			}
 		}
-		echo "}";
+		echo "]}";
 	}
+
 
 
 }
