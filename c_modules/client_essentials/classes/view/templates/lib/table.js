@@ -11,7 +11,7 @@ var table = Class.create({
       form_div: false,
       table_url: false,
       form_url:false,
-      finish_load: function(){}
+      finish_load: function(this){}
     }, options || {})
   
 
@@ -48,37 +48,51 @@ var table = Class.create({
       that.server_data = data;
 
       // add tabs
+      that.add_tabs();
 
       // add filters
+      that.add_filters();
 
       // add paginator
 
       // triger finish load
       that.finish_load();
-      
+
     }).fail( function(){
         that.options.table_div.html('AJAX connection failed.');
     });
   }
 
+
   //
   //  Tabs
   //
-  add_tab: function(id, name) {},
+  add_tabs: function(tabs_box, id, name) {
+      tabs_box = this.options.table_div.search('ul.tabs');
+      if(data.tabs && tabs_box.html() != "") {
+        $.each(data.tabs, function(i, e){
+          tabs_box.append('<li key="'.i.'">"'.e.'"</li>');
+        });
+      }
+    
+  },
 
   //
-  //  Widgets
+  //  filters
   //
-
-  add_widget_search: function( id, text) {
+  add_filters: function() {
 
   },
 
-  add_widget_select: function(id, json_list) {
+  add_filter_search: function( id, text) {
+
+  },
+
+  add_filter_select: function(id, json_list) {
 
   },
   
-  add_widget_checkbox_select: function(id, json_list) {
+  add_filter_checkbox_select: function(id, json_list) {
 
   }
 

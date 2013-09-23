@@ -114,9 +114,11 @@ class Table
 		// printing json table...
 
     header("Content-Type: application/json"); //return only JSON data
+    
     echo "{";
-   	echo '"total_table_rows":' . $control->listCount($this->client_data->filters_common) . ','; // only assign common filters
+   	echo '"total_query_rows":' . $control->listCount($this->client_data->filters_common) . ','; // only assign common filters
    	echo '"cols_def":'.json_encode($this->cols_def).',';
+   	echo '"tabs":'.json_encode($this->tabs).',';
 		echo '"filters":'.json_encode($this->filters).',';
 	
     $coma = '';
