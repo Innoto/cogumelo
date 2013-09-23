@@ -118,7 +118,7 @@ class Table
    	echo '"total_table_rows":' . $control->listCount($this->client_data->filters_common) . ','; // only assign common filters
    	echo '"cols_def":'.json_encode($this->cols_def).',';
 		echo '"filters":'.json_encode($this->filters).',';
-
+	
     $coma = '';
 		echo '"table" : [';
    	if($lista != false) {
@@ -138,9 +138,11 @@ class Table
 				foreach($this->cols_def as $col_def_key => $col_def) {
 					// if have rules and matches with regexp
 					if($col_def['rules'] != array() ) {
+
 						foreach($col_def['rules'] as $rule){
 							if(preg_match( $rule['regexp'], $row[$col_def_key])) {
-								eval('$row[$col_def_key]] = '.$col_def->rule->code.';');
+								eval('$row[$col_def_key] = "'.$rule['final_content'].'";');
+								break;
 							}
 						}
 					}

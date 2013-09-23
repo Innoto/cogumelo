@@ -107,12 +107,12 @@ class Cousadmin extends View
 		$tabla->setCol('name', 'Nome da cousa');
 		$tabla->setCol('fingers', "Númerod de dedos");
 		$tabla->setCol('nivel', "Nivel");
-/*
+
     // establecer reglas a campo concreto con expresions regulares
-		$tabla->colRule('nivel', '#^[8..10]%#', 'Usuario molón');
-		$tabla->colRule('nivel', '#^[5..7]%#', 'Usuario medio');
-		$tabla->colRule('nivel', '#^[i..4]%#', 'Usuario cutre'); 
-*/
+		$tabla->colRule('nivel', '#^#', 'Sen nivel asignado');
+		//$tabla->colRule('id', '#^[5..10]%#', 'Usuario medio');
+		//$tabla->colRule('id', '#^[i..4]%#', 'Usuario cutre'); 
+
 		// metodos aceptados
 		$tabla->allowMethods(array('delete', 'update'));
 
