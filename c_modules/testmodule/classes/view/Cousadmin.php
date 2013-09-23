@@ -21,14 +21,21 @@ class Cousadmin extends View
 	}
 
 
-	function lista() {
+	function lista_plana() {
 		$cousas = $this->cousacontrol->listItems(false, false, false, true);
 
 		while($cou = $cousas->fetch()) {
 			echo "<br>";
 			var_dump($cou);
 		}
-/*
+
+		}
+
+
+	function panel_admin() {
+
+
+
 	    $this->template->setTpl("cousadmin.tpl", "testmodule");
 
 	    $this->template->addJs('vendor_lib/jQuery.js', 'client_essentials');
@@ -36,11 +43,9 @@ class Cousadmin extends View
 	    $this->template->addJs('vendor_lib/jquery.address.js', 'client_essentials');
 	   	$this->template->addJs('lib/cogumelo.table.js', 'client_essentials');
 	    $this->template->exec();
-	*/
-		}
+	
 
-
-
+	}
 
 	//
 	// Actions
@@ -91,7 +96,7 @@ class Cousadmin extends View
 											'list' => array(
 												1 => 'Elemento 1',
 												2 => 'Elemento 2',
-												3 => 'Elemento 3'
+												3 => 'elemento 3'
 											)
 									),
 									4 => 'Elemento 4'
@@ -123,4 +128,3 @@ class Cousadmin extends View
 
 
 }
-
