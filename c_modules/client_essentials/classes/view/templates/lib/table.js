@@ -101,6 +101,9 @@ var table = Class.create({
       });
   },
 
+  //
+  // add filter
+  //
   filter: function(e) {
     var filter_html = "";
 
