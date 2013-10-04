@@ -24,7 +24,7 @@ USA.
 /**
 * Table Class 
 *
-* Client side .js Table class
+* Client side Table class in .js
 *
 * @author: pablinhob
 */
@@ -45,7 +45,22 @@ var Table = Class.create({
       form_url:false,
       finish_load: function(data){} // it will be ttrigger when load is finished
     }, options || {})
+
+
+
+    // address events
+
+    $.address.change(function(event) { 
+      
+    });
+
+
+    this.server_data();
+
   },
+
+
+
 
 
   /*
@@ -115,7 +130,7 @@ var Table = Class.create({
     var thead = "<tr>";
 
     $.each( this.server_data.table, function(i,e){
-
+      thead = thead + "<th ></th>";
     });
 
     thead = thead + "</tr>";
