@@ -10,7 +10,7 @@ We recomend to look carefully the [Framework dependences](https://github.com/pab
 ### Essential needs:
 * [OK] Modular system 
 * [OK] Model View Controller
-* [OK] DB Caché with <http://memcached.org/> 
+* [OK] DB Query caché with <http://memcached.org/> 
 
 ### Aditional needs:
 * [NOT READY] Devel utilities module
