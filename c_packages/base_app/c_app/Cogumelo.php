@@ -17,7 +17,7 @@ class Cogumelo extends CogumeloClass
 			'#^cousa$#' => 'view:Cousadmin::lista',
 */
 			'#^admin\/?(.*)$#' => 'view:Adminview::metodo',
-			'#^dev$#' => 'view:DevView::main',
+			//'#^dev$#' => 'view:DevView::main',
 			'#^404$#' => 'view:Adminview::page404',
 			// default views
 			'#^$#' => 'view:Adminview::seccion' // App home url
