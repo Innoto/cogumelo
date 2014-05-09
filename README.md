@@ -19,6 +19,5 @@ We recomend to look carefully the [Framework dependences](https://github.com/pab
  - Validation 
  - Auto Form generating
  - Easy file uploads without page reloads
-* [NOT READY] Users and Admin panel Modules
 
 
