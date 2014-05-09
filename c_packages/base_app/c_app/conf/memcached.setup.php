@@ -1,7 +1,7 @@
-<?
+<?php
 
 // expiration time in seconds
-define(MEMCACHED_EXPIRATION_TIME, 15);
+define("MEMCACHED_EXPIRATION_TIME", 15);
 
 global $MEMCACHED_HOST_ARRAY;
 $MEMCACHED_HOST_ARRAY = array(

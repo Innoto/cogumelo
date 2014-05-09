@@ -1,4 +1,4 @@
-<?
+<?php
 
 Cogumelo::load('c_view/View');
 Cogumelo::load('c_vendor/jsmin/jsmin.php');

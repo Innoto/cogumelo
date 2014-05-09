@@ -1,4 +1,4 @@
-<?
+<?php
 
 Cogumelo::load('c_view/View');
 
