@@ -75,6 +75,7 @@ class RequestController
 
 		// if is last request and any pattern found
 		if( $this->is_last_request ){ 
+			Cogumelo::error("URI not found ".$_SERVER['REQUEST_URI']);
 			self::Redirect(SITE_URL_CURRENT.'404');
 		}
 		else{
