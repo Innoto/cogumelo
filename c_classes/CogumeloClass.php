@@ -113,12 +113,14 @@ class CogumeloClass extends Singleton
 
     static function log( $texto, $fich_log='cogumelo' ) {
     
+      if($_SERVER['REQUEST_URI'] != "/devel/read_logs") {
         error_log( 	
         			'['. date('y-m-d H:i:s',time()) .'] ' .
         			'['. $_SERVER['REMOTE_ADDR'] .'] ' .
         			'[Session '. self::getUserInfo().'] ' . 
         			str_replace("\n", '\n', $texto)."\n", 3, LOGDIR.$fich_log.'.log' 
         );
+      }
     }
 
     // set an string with user information 
