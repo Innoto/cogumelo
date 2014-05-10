@@ -18,6 +18,7 @@ define("DB_USER" , 		"root");
 define("DB_PASSWORD", 	"q7w8e9r");
 define("DB_NAME",		"test");
 
+
 // allow cache with memcached
 define("DB_ALLOW_CACHE", true); 
 require_once(SITE_PATH.'/conf/memcached.setup.php');  //memcached options

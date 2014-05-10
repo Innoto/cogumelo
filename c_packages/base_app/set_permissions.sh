@@ -10,8 +10,8 @@ sudo chown -R $EU:www-data httpdocs
 chmod -R go-rwx,g+rX httpdocs
 
 sudo chown -R $EU:www-data c_app
-chmod -R go-rwx,g+rX c_app
-chmod -R go-rwx,g+rwX c_app/tmp c_app/log
+chmod -R g-x,o-wx,g+rwX,o+rX c_app
+chmod -R gu+rwX,o+rX c_app/tmp c_app/log
 
 
 echo .

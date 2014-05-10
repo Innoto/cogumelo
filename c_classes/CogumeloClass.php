@@ -163,7 +163,7 @@ class CogumeloClass extends Singleton
             $session_array = unserialize($_SESSION['cogumelo_dev_obj_array']); // session exist, get session array
           }
 
-          for($c=1, $c < $array_size_for_debpage , $c++){
+          for($c=1; $c < $array_size_for_debpage ; $c++){
             $session_array[$c+1] = $_SESSION['cogumelo_dev_obj_array'][$c];
           }
 
@@ -173,6 +173,7 @@ class CogumeloClass extends Singleton
         }
       }
       else // DEBUG is OFF, return false;
+      {
         $session_array = false; 
       }
       
