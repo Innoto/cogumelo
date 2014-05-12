@@ -6,7 +6,7 @@ Cogumelo::load('c_controller/DataController');
 //
 // DevelUtilsDB Controller Class
 //
-class  DevelUtilsDBController extends DataController
+class  DevelDBController extends DataController
 {
 	var $data;
 	var $voClasses = array();
@@ -14,7 +14,7 @@ class  DevelUtilsDBController extends DataController
 
 	function __construct($usuario=false, $password = false, $DB = false)
 	{	
-		$this->data = new Facade("DevelUtilsDB", "devel");
+		$this->data = new Facade("DevelDB", "devel");
 
 		if($usuario) {
 			$this->data->develMode($usuario, $password, $DB);

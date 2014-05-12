@@ -86,20 +86,20 @@ class DevelView extends View
     // Actions base de datos
     //
     function create_db_scheme(){      
-      $fvotdbcontrol = new FromVOtoDBController($_POST['u'], $_POST['p']);
+      $fvotdbcontrol = new DevelUtilsDBController($_POST['u'], $_POST['p']);
       header("Content-Type: application/json"); //return only JSON data
       echo json_encode(array('response' => $fvotdbcontrol->createSchemaDB() ));
     }
 
 
     function create_db_tables(){
-      $fvotdbcontrol = new FromVOtoDBController();
+      $fvotdbcontrol = new DevelUtilsDBController();
       header("Content-Type: application/json"); //return only JSON data
       echo json_encode(array('response' => $fvotdbcontrol->createTables() ));
     }
     
     function get_sql_tables(){
-      $fvotdbcontrol = new FromVOtoDBController();
+      $fvotdbcontrol = new DevelUtilsDBController();
       return ($fvotdbcontrol->getTablesSQL() );
     }
 
