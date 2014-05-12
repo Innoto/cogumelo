@@ -4,8 +4,7 @@
 // Framework Path
 //
 
-define('COGUMELO_LOCATION', getcwd().'/../../..');
-
+define('COGUMELO_LOCATION', '/home/proxectos/cogumelo');
 
 //
 //	DB
