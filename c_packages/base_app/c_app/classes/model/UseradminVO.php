@@ -35,6 +35,12 @@ class UseradminVO extends VO
 		'time_lastlogin' => array(
 			'name' => 'Último acceso', 
 			'type'=>'DATETIME'
+		),
+		'userdata_id' => array(
+			'name' => 'Datos extendidos',
+			'type' => 'INT',
+			'model' => UseradminDataVO,
+			'foreign_key' => 'id'
 		)
 	);
 
