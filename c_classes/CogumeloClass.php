@@ -111,11 +111,14 @@ class CogumeloClass extends Singleton
   }
 
 
+
+
   //
-  //  Debug
+  //  Advanced Object Debug
   //
-/*
+
   static function objDebugObjectCreate($obj) {
+
     return array(
         "creation_date" => getdate(),
         "data" => $obj
@@ -123,59 +126,41 @@ class CogumeloClass extends Singleton
   }
 
   static function objDebugPull() {
+    
+    $debug_object_maxlifetime = 60; // in seconds
+    $result_array = array();
 
-    // Garbage collerctor
+    if( DEBUG && isset($_SESSION['cogumelo_dev_obj_array']) ) {
+      
+      $session_array = $_SESSION['cogumelo_dev_obj_array'];
+
+      foreach ($session_array as $session_obj) {
+        if(isset($session_obj['creation_date'] && ( getdate() - $session_obj['creation_date']) <= $debug_object_maxlifetime ) ){
+          array_push($result_array, $session_obj['data']);
+        }
+      }
+      
+      // reset sesesion array
+      $_SESSION['cogumelo_dev_obj_array'] = array();
+    }
+    
   }
 
   static function objDebugPush($obj) {
     if(DEBUG && isset($obj)){
 
+      var $session_array = array();
+
+      if(isset($_SESSION['cogumelo_dev_obj_array'])){
+        $session_array = unserialize($_SESSION['cogumelo_dev_obj_array']); 
+      }
+
+      array_push($session_array, self::objDebugObjectCreate($obj));
+
+      $_SESSION['cogumelo_dev_obj_array'] = serialize($session_array);
     }
   }
-*/
-  // manages a session array, setting an array of X debug objectsor an error message
-  static function debug_object_list($debug_obj=false) {
 
-    $array_size_for_debpage = 10;
 
-    if(DEBUG){
-      if($debug_obj){ // developer only want to get session array, dont put into
-        if(isset($_SESSION['cogumelo_dev_obj_array'])){
-          $session_array = unserialize($_SESSION['cogumelo_dev_obj_array']); 
-        }
-        else {
-          $session_array = false;
-        }
-      }
-      else {
-       if( !isset($_SESSION['cogumelo_dev_obj_array']) ){ // session doesnt exist, create array
-          $session_array  = array();
-
-          for($c=1; $c <= $array_size_for_debpage; $c++){
-            $session_array[$c]  = false;
-          }
-        }
-        else {
-          $session_array = unserialize($_SESSION['cogumelo_dev_obj_array']); // session exist, get session array
-        }
-
-        for($c=1; $c < $array_size_for_debpage ; $c++){
-          $session_array[$c+1] = $_SESSION['cogumelo_dev_obj_array'][$c];
-        }
-
-        $session_array[1] = $debug_obj;
-
-        $_SESSION['cogumelo_dev_obj_array'] = serialize($session_array);
-      }
-    }
-    else // DEBUG is OFF, return false;
-    {
-      $session_array = false; 
-    }
-    
-
-    return $session_array;
-
-  }
 }
 
