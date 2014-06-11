@@ -20,6 +20,9 @@ class Cogumelo extends CogumeloClass
 			//'#^dev$#' => 'view:DevView::main',
 			'#^404$#' => 'view:Adminview::page404',
 			// default views
+
+			'#^getobj$#' => 'view:Adminview::getobj',
+			'#^setobj$#' => 'view:Adminview::setobj',			
 			'#^$#' => 'view:Adminview::seccion' // App home url
 		);
 	}

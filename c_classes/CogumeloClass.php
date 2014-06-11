@@ -126,41 +126,56 @@ class CogumeloClass extends Singleton
   }
 
   static function objDebugPull() {
-    
+    $now = getdate();
     $debug_object_maxlifetime = 60; // in seconds
     $result_array = array();
 
-    if( DEBUG && isset($_SESSION['cogumelo_dev_obj_array']) ) {
+    if( DEBUG && 
+        isset($_SESSION['cogumelo_dev_obj_array'])  &&
+        $_SESSION['cogumelo_dev_obj_array'] != "" &&
+        $_SESSION['cogumelo_dev_obj_array'] != null &&
+        is_array(unserialize($_SESSION['cogumelo_dev_obj_array'])) 
+      ) {
       
-      $session_array = $_SESSION['cogumelo_dev_obj_array'];
+      $session_array = unserialize( $_SESSION['cogumelo_dev_obj_array'] );
 
-      foreach ($session_array as $session_obj) {
-        if(isset($session_obj['creation_date'] && ( getdate() - $session_obj['creation_date']) <= $debug_object_maxlifetime ) ){
-          array_push($result_array, $session_obj['data']);
+      if(is_array($session_array) && sizeof($session_array) > 0 ) {
+        foreach ($session_array as $session_obj) {
+          if( isset($session_obj['creation_date']) && ( $now[0] - $session_obj['creation_date'][0]) <= $debug_object_maxlifetime  ){
+            array_push($result_array, $session_obj['data']);
+          }
         }
       }
-      
+
       // reset sesesion array
       $_SESSION['cogumelo_dev_obj_array'] = array();
     }
-    
+
+    return $result_array;
   }
 
   static function objDebugPush($obj) {
     if(DEBUG && isset($obj)){
 
-      var $session_array = array();
+      $session_array = array();
 
-      if(isset($_SESSION['cogumelo_dev_obj_array'])){
-        $session_array = unserialize($_SESSION['cogumelo_dev_obj_array']); 
+      if( isset($_SESSION['cogumelo_dev_obj_array']) &&
+          $_SESSION['cogumelo_dev_obj_array'] != "" &&
+          $_SESSION['cogumelo_dev_obj_array'] != null &&
+          is_array(unserialize($_SESSION['cogumelo_dev_obj_array'])) 
+        ) {
+
+        $session_array = unserialize($_SESSION['cogumelo_dev_obj_array']);
+
       }
 
-      array_push($session_array, self::objDebugObjectCreate($obj));
+      //var_dump($session_array);
+
+      array_push($session_array, self::objDebugObjectCreate($obj) );
 
       $_SESSION['cogumelo_dev_obj_array'] = serialize($session_array);
     }
   }
-
 
 }
 
