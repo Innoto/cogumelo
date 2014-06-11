@@ -37,6 +37,7 @@ class  DevelDBController extends DataController
 	function getTablesSQL(){
 		$returnStrArray = array();
 		foreach($this->listVOs() as $vo) {
+			//Cogumelo::objDebug($vo);
 			$returnStrArray[] = $this->data->getDropSQL($vo);
 			$returnStrArray[] = $this->data->getTableSQL($vo);
 		}

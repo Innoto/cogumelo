@@ -145,7 +145,7 @@ class CogumeloClass extends Singleton
   //  Advanced Object Debug
   //
 
-  static function objDebugObjectCreate($obj, $comment = "") {
+  static function objDebugObjectCreate($obj, $comment) {
 
     return array(
         "comment" => $comment,
@@ -183,7 +183,7 @@ class CogumeloClass extends Singleton
     return $result_array;
   }
 
-  static function objDebug($obj, $comment) {
+  static function objDebug($obj, $comment="") {
     return self::objDebugPush($obj, $comment);
   }
 
