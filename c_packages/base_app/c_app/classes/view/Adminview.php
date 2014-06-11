@@ -18,8 +18,6 @@ class Adminview extends View
 
 
 	function seccion($url_path=''){
-
-		
 		$this->common();
 		$this->template->exec();
 	}

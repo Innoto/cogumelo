@@ -71,6 +71,34 @@ class CogumeloClass extends Singleton
     }
   }
 
+
+  //
+  //  Error Handler
+  //
+  static function warningHandler( $errno, $errstr, $errfile, $errline) {
+
+    $error_msg = "Warning: $errstr on file '$errfile' line:$errline";
+
+    if(DEBUG){
+      self::objDebug(debug_backtrace(), $error_msg );
+    }
+
+    self::error($error_msg);
+  }
+
+  static function errorHandler() {
+
+    $last_error=error_get_last(); 
+    
+    if($last_error!=null) {
+      $error_msg = "Fatal error: ".$last_error['message']." on file '".$last_error['file']." ' line: ".$last_error['line'];
+      if(DEBUG) {
+        self::objDebug($last_error, $error_msg);
+      }
+      self::error($error_msg);
+    }  
+  }
+
 	//
 	//	LOGS
 	//
@@ -117,9 +145,10 @@ class CogumeloClass extends Singleton
   //  Advanced Object Debug
   //
 
-  static function objDebugObjectCreate($obj) {
+  static function objDebugObjectCreate($obj, $comment = "") {
 
     return array(
+        "comment" => $comment,
         "creation_date" => getdate(),
         "data" => $obj
       );
@@ -142,7 +171,7 @@ class CogumeloClass extends Singleton
       if(is_array($session_array) && sizeof($session_array) > 0 ) {
         foreach ($session_array as $session_obj) {
           if( isset($session_obj['creation_date']) && ( $now[0] - $session_obj['creation_date'][0]) <= $debug_object_maxlifetime  ){
-            array_push($result_array, $session_obj['data']);
+            array_push($result_array, $session_obj);
           }
         }
       }
@@ -154,7 +183,11 @@ class CogumeloClass extends Singleton
     return $result_array;
   }
 
-  static function objDebugPush($obj) {
+  static function objDebug($obj, $comment) {
+    return self::objDebugPush($obj, $comment);
+  }
+
+  static function objDebugPush($obj, $comment) {
     if(DEBUG && isset($obj)){
 
       $session_array = array();
@@ -171,7 +204,7 @@ class CogumeloClass extends Singleton
 
       //var_dump($session_array);
 
-      array_push($session_array, self::objDebugObjectCreate($obj) );
+      array_push($session_array, self::objDebugObjectCreate($obj, $comment) );
 
       $_SESSION['cogumelo_dev_obj_array'] = serialize($session_array);
     }

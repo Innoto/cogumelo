@@ -80,8 +80,8 @@ $C_ENABLED_MODULES = array('i18nGetLang', 'mediaserver', 'devel', 'testmodule');
 
 define("LOGDIR", SITE_PATH."log/");		//log files directory
 define('LOG_RAW_SQL', false); 	// Log RAW all SQL ¡WARNING! application passwords will dump into log files 
-define("DEBUG", true); 			// Set Debug mode to log debug messages on log
-define("ERRORS", true); 		// Set Debug mode to display errors on screen (only for development)
+define("DEBUG", true); // Set Debug mode to log debug messages on log
+define("ERRORS", false); // Display errors on screen. If you use devel module, you might disable it
 
 //
 //	Devel Mod
