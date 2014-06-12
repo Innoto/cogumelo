@@ -1,23 +1,55 @@
+/************************************************************************************************************************/
+/************************************************************************************************************************/
+/* Init elem styles and  @imports ***************************************************************************************/
+
+body { 
+  margin: 0px;
+  padding: 0px;
+  color:#444;
+  font-family: 'Share Tech Mono', sans-serif !important;
+  background:#E7E7E8;
+}
+
+hr{ border:1px solid #D6D6D6; }
 
 
-body{margin: 0px; padding: 0px; color:#444; font-family: 'Share Tech Mono', sans-serif !important; background:#E7E7E8;}
-    #header{
-      background:#333334;
-      height:70px;
-      position: fixed;
-      top:0px;
-      z-index: 10000;
-      width: 100%;
-    }
-    #header #logo{opacity: 0.8;}
-    #header #logo,
-    #header h1{
-      float:left;
-    }
-    #options_header_menu{float:right;}
-    #header #logo{ margin: 10px 20px; }
-    #header h1{margin: 20px 0px;} 
-    #options_header_menu{ margin: 0px; padding: 0px; }
+/************************************************************************************************************************/
+/************************************************************************************************************************/
+/* Common class *********************************************************************************************************/
+
+.element-left{ float:left; }
+
+.element-right{ float:left; }    
+
+.cll_container{ color: white; }
+
+/************************************************************************************************************************/
+/************************************************************************************************************************/
+/* Header ***************************************************************************************************************/
+
+#header{
+  background:#333334;
+  height:70px;
+  position: fixed;
+  top:0px;
+  z-index: 10000;
+  width: 100%;
+}
+
+#header #logo{opacity: 0.8;}
+
+#header #logo,
+#header h1{
+  float:left;
+}
+    
+#options_header_menu{float:right;}
+
+#header #logo{ margin: 10px 20px; }
+
+#header h1{margin: 20px 0px;} 
+
+#options_header_menu{ margin: 0px; padding: 0px; }
     #options_header_menu li{ 
       display:inline-block;
       color:#E7E7E8;
@@ -30,46 +62,59 @@ body{margin: 0px; padding: 0px; color:#444; font-family: 'Share Tech Mono', sans
       vertical-align: middle;
     }
     #options_header_menu li a{ color:#E7E7E8; text-decoration: none;}
-    #infosetup_link{ background: url('/media/module/devel/img/infosetup.png') right no-repeat;}
-    #deBugs_link{ background: url('/media/module/devel/img/deBugs.png') right no-repeat;}
-    #logs_link{ background: url('/media/module/devel/img/logs.png') right no-repeat;}
-    #dbsql_link{ background: url('/media/module/devel/img/database.png') right no-repeat;}
-    #logs_tabs{ font-family: 'Share Tech Mono', sans-serif !important; font-size: 0.9em; background: green;}
-    #logs_tabs .container_log{ min-height: 480px; color:green; background:#000 url('/media/module/devel/img/cogumelo_logo_mini.png') right bottom no-repeat;}
-    #logs_tabs ul{background: green; border:0px;}
+
+#infosetup_link{ background: url('/media/module/devel/img/infosetup.png') right no-repeat;}
+#deBugs_link{ background: url('/media/module/devel/img/deBugs.png') right no-repeat;}
+#logs_link{ background: url('/media/module/devel/img/logs.png') right no-repeat;}
+#dbsql_link{ background: url('/media/module/devel/img/database.png') right no-repeat;}
+
+/************************************************************************************************************************/
+/************************************************************************************************************************/
+/* Content **************************************************************************************************************/
+
+/* Logs */
+#logs_tabs{ 
+  font-family: 'Share Tech Mono', sans-serif !important; 
+  font-size: 0.9em; 
+  background: green;
+}
+  #logs_tabs .container_log{ 
+    min-height: 480px;
+    color:green;
+    background:#000 url('/media/module/devel/img/cogumelo_logo_mini.png') right bottom no-repeat;
+  }
+  #logs_tabs ul{background: green; border:0px;}
     #logs_tabs li{background: #005200; border:0px;}
-    #logs_tabs li.ui-tabs-active{ margin:0px 5px; background: #fff;}
-    #logs_tabs li a{color: white !important;}
-    #logs_tabs li.ui-tabs-active a{color:green !important; text-decoration: underline;}
+      #logs_tabs li.ui-tabs-active{ margin:0px 5px; background: #fff;}
+      #logs_tabs li a{color: white !important;}
+      #logs_tabs li.ui-tabs-active a{color:green !important; text-decoration: underline;}
     #logs_tabs p{ margin:5px 0px; }
     #logs_tabs div.lines{ margin:5px 0px; }
     
     #main{ width:100%; max-width:1100px;
-      margin:90px auto 0px auto;}
-    #dbsql_container{
-      background: #E7E7E8;
-      padding: 20px;
-    }
+      margin:90px auto 0px auto;}    
 
-    #dbsql_container .infoSQL{ padding: 10px; background: #fff; }
-    #dbsql_container fieldset{border:3px solid #D6D6D6;}
-    #dbsql_container legend{ font-size: 28px;}
-   
-    #dbsql_container .options_container_SQL{ text-align: center; height: 65px;}
+/* DBSQL */
+#dbsql_container{
+  background: #E7E7E8;
+  padding: 20px;
+}
+  #dbsql_container .infoSQL{ padding: 10px; background: #fff; }
+  #dbsql_container fieldset{border:3px solid #D6D6D6;}
+  #dbsql_container legend{ font-size: 28px;}
+  #dbsql_container .options_container_SQL{ text-align: center; height: 65px;}
     
 
-    /*InfoSetup*/
-    #infosetup_container table{ margin: 20px auto; max-width: 960px; }
-    #infosetup_container table thead tr{ background: #333; color:#E7E7E8; }
-    #infosetup_container table tr{ border: 2px solid #333334;}
-      #infosetup_container table td{ padding: 10px 15px; text-align: center; }
-      #infosetup_container table td.td_option{  background: #FCFCFC; }
-      #infosetup_container table td.td_dev{ background: #D4D4D4; }
-      #infosetup_container table td.td_fnl{ background: #A9A9A9; }
+/*InfoSetup*/
+#infosetup_container table{ margin: 20px auto; max-width: 960px; }
+#infosetup_container table thead tr{ background: #333; color:#E7E7E8; }
+#infosetup_container table tr{ border: 2px solid #333334;}
+  #infosetup_container table td{ padding: 10px 15px; text-align: center; }
+  #infosetup_container table td.td_option{  background: #FCFCFC; }
+  #infosetup_container table td.td_dev{ background: #D4D4D4; }
+  #infosetup_container table td.td_fnl{ background: #A9A9A9; }
 
 
-    /*End InfoSetup*/
 
-
-    hr{ border:1px solid #D6D6D6; }
-    .cll_container{ color: white;}
+/************************************************************************************************************************/
+/************************************************************************************************************************/
