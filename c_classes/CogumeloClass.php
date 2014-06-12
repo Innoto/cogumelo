@@ -27,6 +27,8 @@ class CogumeloClass extends Singleton
     // set url patterns
     $this->url_patterns = $this->setUrlPatterns();
 
+    Cogumelo::debug("Request URI: ".$_SERVER["REQUEST_URI"]);
+
     // cut out the SITE_FOLDER and final slash from path 
     $url_path = preg_replace('#\/$#', '', preg_replace('#^'.SITE_FOLDER.'#', '', $_SERVER["REQUEST_URI"], 1) , 1);
 

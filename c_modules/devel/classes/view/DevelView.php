@@ -1,10 +1,9 @@
 <?php
 
+Cogumelo::load('c_vendor/sql-formatter-master/lib/SqlFormatter.php');
 Cogumelo::load('c_view/View');
 devel::load('controller/LogReaderController');
 devel::load('controller/DevelDBController');
-
-Cogumelo::load('c_vendor/sql-formatter-master/lib/SqlFormatter.php');
 
 
 class DevelView extends View
@@ -76,11 +75,7 @@ class DevelView extends View
 
     function DBSQL(){
       $data_sql = $this->get_sql_tables();
-      /*foreach ($data_sql as $k => $val) {
-        var_dump($val);
-      }*/
-
-      //$this->template->assign("data_sql" , SqlFormatter::format($data_sql));
+      $this->template->assign("data_sql" , SqlFormatter::format($data_sql));
     }
 
 
@@ -91,7 +86,7 @@ class DevelView extends View
     //
     // Actions base de datos
     //
-    /*function create_db_scheme(){      
+    function create_db_scheme(){      
       $fvotdbcontrol = new DevelDBController($_POST['u'], $_POST['p']);
       header("Content-Type: application/json"); //return only JSON data
       echo json_encode(array('response' => $fvotdbcontrol->createSchemaDB() ));
@@ -107,7 +102,7 @@ class DevelView extends View
     function get_sql_tables(){
       $fvotdbcontrol = new DevelDBController();
       return ($fvotdbcontrol->getTablesSQL() );
-    }*/
+    }
 
 }
 

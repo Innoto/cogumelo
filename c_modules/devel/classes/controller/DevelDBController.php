@@ -65,7 +65,7 @@ class  DevelDBController extends DataController
 	}
 
 	function scanVOs($dir) {
-		cogumelo::debug($dir);
+		//cogumelo::debug($dir);
 		$vos = array();
 
 
