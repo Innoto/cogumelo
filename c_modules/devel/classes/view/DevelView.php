@@ -37,7 +37,7 @@ class DevelView extends View
     $this->template->addJs('js/devel.js', 'devel');
     $this->template->addCss('css/devel.css', 'devel');
     $this->logs();       
-    $this->infosetup();
+    $this->infosetup(); 
     $this->DBSQL();
         
     
