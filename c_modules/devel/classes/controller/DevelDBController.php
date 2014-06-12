@@ -9,7 +9,8 @@ Cogumelo::load('c_controller/DataController');
 class  DevelDBController extends DataController
 {
 	var $data;
-	var $voClasses = array();
+
+	var $voReferences = array();
 
 
 	function __construct($usuario=false, $password = false, $DB = false)
@@ -36,9 +37,12 @@ class  DevelDBController extends DataController
 
 	function getTablesSQL(){
 		$returnStrArray = array();
+
 		foreach($this->listVOs() as $vo) {
+			$returnStrArray[] = "#VO File: ".$this->voReferences[$vo].$vo.".php";
 			$returnStrArray[] = $this->data->getDropSQL($vo);
 			$returnStrArray[] = $this->data->getTableSQL($vo);
+
 		}
 
 		return $returnStrArray;
@@ -58,8 +62,8 @@ class  DevelDBController extends DataController
 		}
 
 		return array_unique($voarray);
-
 	}
+
 	function scanVOs($dir) {
 		cogumelo::debug($dir);
 		$vos = array();
@@ -79,6 +83,7 @@ class  DevelDBController extends DataController
 			    		if (!class_exists($class_vo_name)) {
 				        	require_once($dir.$file);
 				        	$vos[] =  $class_vo_name;
+				        	$this->voReferences[$class_vo_name] = $dir;
 				        }
 			        }
 			    }
@@ -89,7 +94,6 @@ class  DevelDBController extends DataController
 
 		return $vos;
 	}
-
 
 	function createSchemaDB() {
 		return $this->data->createSchemaDB();

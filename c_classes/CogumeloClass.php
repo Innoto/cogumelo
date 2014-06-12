@@ -1,23 +1,4 @@
 <?php
-/*
-Cogumelo v0.5 - Innoto S.L.
-Copyright (C) 2013 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@map-experience.com>
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
-USA.
-*/
 
 require_once(COGUMELO_LOCATION."/c_classes/c_controller/Singleton.php");
 require_once(COGUMELO_LOCATION."/c_classes/c_controller/ModuleController.php");
@@ -41,57 +22,82 @@ class CogumeloClass extends Singleton
 	}
 
 
-    function exec(){
+  function exec(){
 
-        // set url patterns
-        $this->url_patterns = $this->setUrlPatterns();
+    // set url patterns
+    $this->url_patterns = $this->setUrlPatterns();
 
-        // cut out the SITE_FOLDER and final slash from path 
-        $url_path = preg_replace('#\/$#', '', preg_replace('#^'.SITE_FOLDER.'#', '', $_SERVER["REQUEST_URI"], 1) , 1);
+    // cut out the SITE_FOLDER and final slash from path 
+    $url_path = preg_replace('#\/$#', '', preg_replace('#^'.SITE_FOLDER.'#', '', $_SERVER["REQUEST_URI"], 1) , 1);
 
+    // modules
+    $this->modules = new ModuleController( $url_path );
+    $url_path_after_modules = $this->modules->getLeftUrl();
 
-        // modules
-        $this->modules = new ModuleController( $url_path );
-        $url_path_after_modules = $this->modules->getLeftUrl();
+    // main request controller
+    self::load('c_controller/RequestController');
+    $this->request = new RequestController($this->url_patterns, $url_path_after_modules );
+  }  
 
+  //
+  //  Auto include 
+  //
 
-        // main request controller
-        self::load('c_controller/RequestController');
-        $this->request = new RequestController($this->url_patterns, $url_path_after_modules );
-    }  
-
-    //
-    //  Auto include 
-    //
-
-    static function load($classname) {
+  static function load($classname) {
 
 
-      if(preg_match('#^c_vendor/#', $classname)){
-        $file_path = COGUMELO_LOCATION.'/c_vendor/'.preg_replace('#^c_vendor/#', '', $classname);
-      }
-      else
-      if(preg_match('#^c_#', $classname)){ 
-        $filename =  $classname . '.php';
-        $file_path = COGUMELO_LOCATION.'/c_classes/'.$filename;
-      }
-      else
-      if(preg_match('#^vendor/#', $classname)){
-        $file_path = SITE_PATH.$classname;
-      }
-      else { 
-        $filename =  $classname . '.php';
-        $file_path = SITE_PATH. 'classes/'. $filename;
-      }
-
-
-        if(!file_exists($file_path)) {
-            Cogumelo::error("PHP File not found : ".$file_path);
-        }
-        else {
-            require_once $file_path;
-        }
+    if(preg_match('#^c_vendor/#', $classname)){
+      $file_path = COGUMELO_LOCATION.'/c_vendor/'.preg_replace('#^c_vendor/#', '', $classname);
     }
+    else
+    if(preg_match('#^c_#', $classname)){ 
+      $filename =  $classname . '.php';
+      $file_path = COGUMELO_LOCATION.'/c_classes/'.$filename;
+    }
+    else
+    if(preg_match('#^vendor/#', $classname)){
+      $file_path = SITE_PATH.$classname;
+    }
+    else { 
+      $filename =  $classname . '.php';
+      $file_path = SITE_PATH. 'classes/'. $filename;
+    }
+
+    if(!file_exists($file_path)) {
+        Cogumelo::error("PHP File not found : ".$file_path);
+    }
+    else {
+        require_once $file_path;
+    }
+  }
+
+
+  //
+  //  Error Handler
+  //
+  static function warningHandler( $errno, $errstr, $errfile, $errline) {
+
+    $error_msg = "Warning: $errstr on file '$errfile' line:$errline";
+
+    if(DEBUG){
+      self::objDebug(debug_backtrace(), $error_msg );
+    }
+
+    self::error($error_msg);
+  }
+
+  static function errorHandler() {
+
+    $last_error=error_get_last(); 
+    
+    if($last_error!=null) {
+      $error_msg = "Fatal error: ".$last_error['message']." on file '".$last_error['file']." ' line: ".$last_error['line'];
+      if(DEBUG) {
+        self::objDebug($last_error, $error_msg);
+      }
+      self::error($error_msg);
+    }  
+  }
 
 	//
 	//	LOGS
@@ -100,86 +106,109 @@ class CogumeloClass extends Singleton
 	static function error($description)	{
 		if(ERRORS == true) {
 			echo "<br>Cogumelo error: ".$description;
-        }
+    }
 
 		self::log($description, 'cogumelo_error');
 	}
 
-    static function debug($description) {
-        if(DEBUG == true) {
-             self::log($description, 'cogumelo_debug');
-        }
+  static function debug($description) {
+    if(DEBUG == true) {
+      self::log($description, 'cogumelo_debug');
     }
+  }
 
-    static function log( $texto, $fich_log='cogumelo' ) {
+  static function log( $texto, $fich_log='cogumelo' ) {
     
-      if($_SERVER['REQUEST_URI'] != "/devel/read_logs") {
-        error_log( 	
-        			'['. date('y-m-d H:i:s',time()) .'] ' .
-        			'['. $_SERVER['REMOTE_ADDR'] .'] ' .
-        			'[Session '. self::getUserInfo().'] ' . 
-        			str_replace("\n", '\n', $texto)."\n", 3, LOGDIR.$fich_log.'.log' 
-        );
-      }
+    if($_SERVER['REQUEST_URI'] != "/devel/read_logs") {
+      error_log( 	
+      	'['. date('y-m-d H:i:s',time()) .'] ' .
+    		'['. $_SERVER['REMOTE_ADDR'] .'] ' .
+    		'[Session '. self::getUserInfo().'] ' . 
+    		str_replace("\n", '\n', $texto)."\n", 3, LOGDIR.$fich_log.'.log' 
+      );
     }
+  }
 
-    // set an string with user information 
-    function setUserInfo($userinfoString) {
-    	$this->userinfoString = $userinfoString;
-    }
+  // set an string with user information 
+  function setUserInfo($userinfoString) {
+    $this->userinfoString = $userinfoString;
+  }
 
-    static function getUserInfo() {
-    	//return $this->userinfoString;
-    }
+  static function getUserInfo() {
+  	//return $this->userinfoString;
+  }
 
 
-    //
-    //  Debug
-    //
 
-    // manages a session array, setting an array of X debug objectsor an error message
-    static function debug_object_list($debug_obj=false) {
 
-      $array_size_for_debpage = 10;
+  //
+  //  Advanced Object Debug
+  //
 
-      if(DEBUG){
-        if($debug_obj){ // developer only want to get session array, dont put into
-          if(isset($_SESSION['cogumelo_dev_obj_array'])){
-            $session_array = unserialize($_SESSION['cogumelo_dev_obj_array']); 
-          }
-          else {
-            $session_array = false;
-          }
-        }
-        else {
-         if( !isset($_SESSION['cogumelo_dev_obj_array']) ){ // session doesnt exist, create array
-            $session_array  = array();
+  static function objDebugObjectCreate($obj, $comment) {
 
-            for($c=1; $c <= $array_size_for_debpage; $c++){
-              $session_array[$c]  = false;
-            }
-          }
-          else {
-            $session_array = unserialize($_SESSION['cogumelo_dev_obj_array']); // session exist, get session array
-          }
+    return array(
+        "comment" => $comment,
+        "creation_date" => getdate(),
+        "data" => $obj
+      );
+  }
 
-          for($c=1; $c < $array_size_for_debpage ; $c++){
-            $session_array[$c+1] = $_SESSION['cogumelo_dev_obj_array'][$c];
-          }
+  static function objDebugPull() {
+    $now = getdate();
+    $debug_object_maxlifetime = 60; // in seconds
+    $result_array = array();
 
-          $session_array[1] = $debug_obj;
-
-          $_SESSION['cogumelo_dev_obj_array'] = serialize($session_array);
-        }
-      }
-      else // DEBUG is OFF, return false;
-      {
-        $session_array = false; 
-      }
+    if( DEBUG && 
+        isset($_SESSION['cogumelo_dev_obj_array'])  &&
+        $_SESSION['cogumelo_dev_obj_array'] != "" &&
+        $_SESSION['cogumelo_dev_obj_array'] != null &&
+        is_array(unserialize($_SESSION['cogumelo_dev_obj_array'])) 
+      ) {
       
+      $session_array = unserialize( $_SESSION['cogumelo_dev_obj_array'] );
 
-      return $session_array;
+      if(is_array($session_array) && sizeof($session_array) > 0 ) {
+        foreach ($session_array as $session_obj) {
+          if( isset($session_obj['creation_date']) && ( $now[0] - $session_obj['creation_date'][0]) <= $debug_object_maxlifetime  ){
+            array_push($result_array, $session_obj);
+          }
+        }
+      }
 
+      // reset sesesion array
+      $_SESSION['cogumelo_dev_obj_array'] = array();
     }
+
+    return $result_array;
+  }
+
+  static function objDebug($obj, $comment="") {
+    return self::objDebugPush($obj, $comment);
+  }
+
+  static function objDebugPush($obj, $comment) {
+    if(DEBUG && isset($obj)){
+
+      $session_array = array();
+
+      if( isset($_SESSION['cogumelo_dev_obj_array']) &&
+          $_SESSION['cogumelo_dev_obj_array'] != "" &&
+          $_SESSION['cogumelo_dev_obj_array'] != null &&
+          is_array(unserialize($_SESSION['cogumelo_dev_obj_array'])) 
+        ) {
+
+        $session_array = unserialize($_SESSION['cogumelo_dev_obj_array']);
+
+      }
+
+      //var_dump($session_array);
+
+      array_push($session_array, self::objDebugObjectCreate($obj, $comment) );
+
+      $_SESSION['cogumelo_dev_obj_array'] = serialize($session_array);
+    }
+  }
+
 }
 

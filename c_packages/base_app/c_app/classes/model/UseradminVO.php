@@ -39,7 +39,6 @@ class UseradminVO extends VO
 		'userdata_id' => array(
 			'name' => 'Datos extendidos',
 			'type' => 'INT',
-			'model' => UseradminDataVO,
 			'foreign_key' => 'id'
 		)
 	);
