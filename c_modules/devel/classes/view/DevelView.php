@@ -1,5 +1,6 @@
 <?php
 
+Cogumelo::load('c_vendor/sql-formatter-master/lib/SqlFormatter.php');
 Cogumelo::load('c_view/View');
 devel::load('controller/LogReaderController');
 devel::load('controller/DevelDBController');
@@ -73,8 +74,12 @@ class DevelView extends View
     }
 
     function DBSQL(){
-     $data_sql = $this->get_sql_tables();
-     $this->template->assign("data_sql" , $data_sql);
+      $data_sql = $this->get_sql_tables();
+      /*foreach ($data_sql as $k => $val) {
+        var_dump($val);
+      }*/
+
+      $this->template->assign("data_sql" , SqlFormatter::format($data_sql));
     }
 
 
