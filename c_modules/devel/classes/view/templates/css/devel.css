@@ -1,3 +1,5 @@
+
+
 body{margin: 0px; padding: 0px; color:#444; font-family: 'Share Tech Mono', sans-serif !important; background:#E7E7E8;}
     #header{
       background:#333334;
@@ -49,7 +51,7 @@ body{margin: 0px; padding: 0px; color:#444; font-family: 'Share Tech Mono', sans
       padding: 20px;
     }
 
-    #dbsql_container #infoSQL{ padding: 10px; }
+    #dbsql_container .infoSQL{ padding: 10px; background: #fff; }
     #dbsql_container fieldset{border:3px solid #D6D6D6;}
     #dbsql_container legend{ font-size: 28px;}
    

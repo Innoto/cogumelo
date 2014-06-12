@@ -1,5 +1,4 @@
-<!doctype html>
- 
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
@@ -78,201 +77,7 @@
         <td class="td_fnl">1</td>
       </tr>
 
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">viverra suscipit.</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">ASsasddasdjsdISDA</td>
-        <td class="td_dev">false</td>
-        <td class="td_fnl">true</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Mauris</td>
-        <td class="td_dev">0</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Aenean lobortis lorem</td>
-        <td class="td_dev">Ut non </td>
-        <td class="td_fnl">Ut non </td>
-      </tr>
       
-      <tr>
-        <td class="td_option">STNF</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">Lorem ipsum dolor sit ame</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">Lorem ipsum dolor sit ame</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">viverra suscipit.</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">ASsasddasdjsdISDA</td>
-        <td class="td_dev">false</td>
-        <td class="td_fnl">true</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Mauris</td>
-        <td class="td_dev">0</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Aenean lobortis lorem</td>
-        <td class="td_dev">Ut non </td>
-        <td class="td_fnl">Ut non </td>
-      </tr>
-      <tr>
-        <td class="td_option">STNF</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl"> Lorem ipsum dolor sit ame Lorem ipsum dolor sit ame Lorem ipsum dolor sit ame v Lorem ipsum dolor sit ame Lorem ipsum dolor sit ame Lorem ipsum dolor sit ame</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">Lorem ipsum dolor sit ame</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">viverra suscipit.</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">ASsasddasdjsdISDA</td>
-        <td class="td_dev">false</td>
-        <td class="td_fnl">true</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Mauris</td>
-        <td class="td_dev">0</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">STNF</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">Lorem ipsum dolor sit ame</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">Lorem ipsum dolor sit ame</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">viverra suscipit.</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">ASsasddasdjsdISDA</td>
-        <td class="td_dev">false</td>
-        <td class="td_fnl">true</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Mauris</td>
-        <td class="td_dev">0</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Aenean lobortis lorem</td>
-        <td class="td_dev">Ut non </td>
-        <td class="td_fnl">Ut non </td>
-      </tr>
-      
-      <tr>
-        <td class="td_option">STNF</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">Lorem ipsum dolor sit ame</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">Lorem ipsum dolor sit ame</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">viverra suscipit.</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">ASsasddasdjsdISDA</td>
-        <td class="td_dev">false</td>
-        <td class="td_fnl">true</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Mauris</td>
-        <td class="td_dev">0</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Aenean lobortis lorem</td>
-        <td class="td_dev">Ut non </td>
-        <td class="td_fnl">Ut non </td>
-      </tr>
-      <tr>
-        <td class="td_option">STNF</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">Lorem ipsum dolor sit ame</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">Lorem ipsum dolor sit ame</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">viverra suscipit.</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">ASsasddasdjsdISDA</td>
-        <td class="td_dev">false</td>
-        <td class="td_fnl">true</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Mauris</td>
-        <td class="td_dev">0</td>
-        <td class="td_fnl">1</td>
-      </tr>
-
-      <tr>
-        <td class="td_option">Aenean lobortis lorem</td>
-        <td class="td_dev">Ut non </td>
-        <td class="td_fnl">Ut non </td>
-      </tr>
 
     </table>
   </div>
@@ -281,7 +86,8 @@
   <div id="dbsql_container" class="container" style="display:none;">
     <fieldset>
       <legend>SQL</legend>
-      <div id="infoSQL">{foreach $data_sql as $item}{$item} <hr /> {/foreach}</div>
+      <div class="infoSQL">{foreach $data_sql as $item}{$item}{/foreach}</div>
+      
     </fieldset>
   </div>
 </div> 

@@ -37,9 +37,7 @@ class DevelView extends View
     $this->template->addCss('css/devel.css', 'devel');
     $this->logs();       
     $this->infosetup(); 
-    $this->DBSQL();
-        
-    
+    $this->DBSQL();    
 
     $this->template->exec();
 
@@ -75,7 +73,10 @@ class DevelView extends View
 
     function DBSQL(){
       $data_sql = $this->get_sql_tables();
-      $this->template->assign("data_sql" , SqlFormatter::format($data_sql));
+      foreach ($data_sql as $k => $v) {
+        $data_sql[$k] = SqlFormatter::format($v); 
+      }
+      $this->template->assign("data_sql" , $data_sql);
     }
 
 
@@ -86,19 +87,7 @@ class DevelView extends View
     //
     // Actions base de datos
     //
-    function create_db_scheme(){      
-      $fvotdbcontrol = new DevelDBController($_POST['u'], $_POST['p']);
-      header("Content-Type: application/json"); //return only JSON data
-      echo json_encode(array('response' => $fvotdbcontrol->createSchemaDB() ));
-    }
-
-
-    function create_db_tables(){
-      $fvotdbcontrol = new DevelDBController();
-      header("Content-Type: application/json"); //return only JSON data
-      echo json_encode(array('response' => $fvotdbcontrol->createTables() ));
-    }
-    
+  
     function get_sql_tables(){
       $fvotdbcontrol = new DevelDBController();
       return ($fvotdbcontrol->getTablesSQL() );
