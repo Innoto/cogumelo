@@ -279,24 +279,10 @@
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
   <div id="dbsql_container" class="container" style="display:none;">
-    <div class="columnL">
-      <p>
-        <label for="user_root">User</label>
-        <input name="user_root" id="user_root" type="text" value="root" />
-        <label for="user_pass">Pass</label>
-        <input name="user_pass" id="user_pass" type="text" value="1234" />
-      </p>
-      <fieldset>
+    <fieldset>
       <legend>SQL</legend>
       <div id="infoSQL">{foreach $data_sql as $item}{$item} <hr /> {/foreach}</div>
     </fieldset>
-    </div>
-    <div class="columnR ">
-      <p><input type="button" value="CREATE DB AND USER DB" id="create_db" name="create_db" /></p>
-      <p><input type="button" value="CREATE TABLE" id="create_table" name="create_table" /></p>
-      <p><input disabled type="button" value="CREATE CONTENT" id="create_content" name="create_content" /><p>
-    </div>
-    <hr style="clear:both;">
   </div>
 </div> 
  
