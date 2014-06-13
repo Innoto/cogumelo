@@ -78,6 +78,7 @@ $C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'devel', 'testmodule');
 // 	Logs 
 //
 
+define("BCK", SITE_PATH."backups/");		//backups directory
 define("LOGDIR", SITE_PATH."log/");		//log files directory
 define('LOG_RAW_SQL', false); 	// Log RAW all SQL ¡WARNING! application passwords will dump into log files 
 define("DEBUG", true); // Set Debug mode to log debug messages on log
