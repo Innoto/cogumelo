@@ -32,7 +32,7 @@ class Adminview extends View
 		echo "SET OBJ<br>";
 
 		$objeto = array("id"=>100, "name"=>"Pablo");
-		Cogumelo::objDebugPush($objeto);
+		Cogumelo::objDebug($objeto, "obxeto debug");
 	}
 
 	function getObj() {
