@@ -22,7 +22,8 @@ class Cogumelo extends CogumeloClass
 			// default views
 
 			'#^getobj$#' => 'view:Adminview::getobj',
-			'#^setobj$#' => 'view:Adminview::setobj',			
+			'#^setobj$#' => 'view:Adminview::setobj',
+			'#^createdb$#' => 'view:Adminview::create_user_db_tables',
 			'#^$#' => 'view:Adminview::seccion' // App home url
 		);
 	}

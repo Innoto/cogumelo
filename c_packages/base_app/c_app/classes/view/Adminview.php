@@ -32,7 +32,7 @@ class Adminview extends View
 		echo "SET OBJ<br>";
 
 		$objeto = array("id"=>100, "name"=>"Pablo");
-		Cogumelo::objDebugPush($objeto);
+		Cogumelo::objDebug($objeto, "obxeto debug");
 	}
 
 	function getObj() {
@@ -41,6 +41,14 @@ class Adminview extends View
 		var_dump(Cogumelo::objDebugPull() );
 	}
 
+
+	function create_user_db_tables() {
+		echo "create DB<br>";
+		devel::load('controller/DevelDBController');
+	  
+	  $fvotdbcontrol = new DevelDBController("root", "nnt100");
+	  var_dump($fvotdbcontrol->createSchemaDB() );
+	}
 
 	function page404() {
 		//echo "Recurso non atopado";
