@@ -84,7 +84,6 @@ class MysqlDAO extends DAO
 			}
 		    $connectionControl->stmt->execute();
 
-
 		    if($connectionControl->stmt->error == ''){
 		    	//Cogumelo::objDebug($connectionControl->stmt);
 		    	//$ret_data =true;
@@ -97,7 +96,10 @@ class MysqlDAO extends DAO
 		    	
 		    }
 			else {
-				Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$stmt->error.' - '.$sql);
+
+Cogumelo::objDebug($connectionControl->stmt);
+
+				Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$connectionControl->stmt->error.' - '.$sql);
 				$ret_data = false;
 			}
 
