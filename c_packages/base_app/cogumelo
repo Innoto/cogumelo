@@ -44,7 +44,7 @@ $develdbcontrol = new DevelDBController();
 	       echo "archivos temporales borrados\n";
          break; 
 
-      case 'create_db': // create database
+      case 'createDB': // create database
           //$db = ReadStdin('Please enter the database: ', '');
           $user =  ReadStdin('Enter a user with privileges: ', '');
           //echo $db."\n";
@@ -54,33 +54,23 @@ $develdbcontrol = new DevelDBController();
           // Output the password
           //echo "\nYour password: " . $password . "\n";
           createDB($user, $passwd);
-          echo "database '.$db.' created\n";
         break; 
 
-      case 'generate_tables': // create database tables
+      case 'generateTables': // create database tables
         createTables();
         echo 'generate db tables';
         break;  
 
-      case 'set_permissions': // create database tables
+      case 'setPermissions': // create database tables
         setPermissions();
-        echo 'generate db tables';
-        break;  
+        break;    
 
       case 'bck': // do the backup of the given db
-      	if ($argc>2){
-      	  $bd = $argv[2];
-      	  if ($argc>3){ //nome do ficheiro de bck
-              $file = $argv[3];
-          }
-          else{ //crearase un bck.sql co nome da bbdd
-              $file = $bd.'.sql';
-          }
-          doBackup($bd, $file);
-      	}
-      	else{
-      	  echo "Not enough parameters\n usage: bck DB file\n";
-      	}
+      	if ($argc>2)
+      	  $file = $argv[2];//nome do ficheiro de bck
+        else 
+          $file = 'date +%Y%m%d-%H%M-'.DB_NAME.'.sql';
+        doBackup(DB_NAME, $file);
         break;  
 
       case 'restore': // restore the backup of a given db
@@ -96,7 +86,7 @@ $develdbcontrol = new DevelDBController();
         echo "invalid parameter;try: 
         flush           to remove temporary files
         crete_db        to create a database
-        restore_db      to restore a database";
+        restore_db      to restore a database\n";
         exit;     
     }//end switch 
 }//end parameters handler
@@ -104,7 +94,7 @@ else{
   echo "Not enough arguments;try: 
         flush           to remove temporary files
         crete_db        to create a database
-        restore_db      to restore a database";
+        restore_db      to restore a database\n";
 }
 
 function createDB($user, $passwd){
@@ -117,8 +107,30 @@ function createTables(){
   $develdbcontrol->createTables();
 }
 
-function doBackup($DB, $file){
-   echo "fai o bck...";
+function setPermissions(){
+  exec('mkdir c_app/tmp');
+  exec('mkdir c_app/tmp/templates_c');
+  exec('mkdir c_app/log');
+
+  exec('sudo chown -R $USER:www-data httpdocs');
+  exec('chmod -R go-rwx,g+rX httpdocs');
+
+  exec('sudo chown -R $USER:www-data c_app');
+  exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
+  exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log');
+
+  echo "permisssions ready!\n";
+}
+
+function doBackup($BD, $file){
+
+  echo $file;
+
+  $DIR='/home/proxectos/backups/';
+  exec('sudo mysqldump -u $USER -p$PASS '.$BD.'> $DIR/'.$file);
+  exec('sudo gzip $DIR/'.$file);
+  exec('chmod go-rwx $DIR/*');
+  echo "your db was successfully saved";
 }
 
 /**
