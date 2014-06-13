@@ -86,8 +86,7 @@
   <div id="dbsql_container" class="container" style="display:none;">
     <fieldset>
       <legend>SQL</legend>
-      <div class="infoSQL">{foreach $data_sql as $item}{$item}{/foreach}</div>
-      
+      <div class="infoSQL">{foreach $data_sql as $item}{$item}{/foreach}</div>      
     </fieldset>
   </div>
 </div> 
