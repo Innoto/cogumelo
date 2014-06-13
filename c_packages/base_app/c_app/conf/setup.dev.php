@@ -98,3 +98,4 @@ define("DEVEL_PASSWORD", 'develpassword');
 define("GETTEXT_UPDATE",  true); // update gettext files when working in localhost
 define("LANG_DEFAULT",  'gl');
 define("LANG_AVAILABLE", 'gl,es,en');
+

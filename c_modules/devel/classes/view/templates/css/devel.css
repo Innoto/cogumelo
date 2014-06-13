@@ -72,6 +72,14 @@ hr{ border:1px solid #D6D6D6; }
 /************************************************************************************************************************/
 /* Content **************************************************************************************************************/
 
+#main{ 
+  width:100%; 
+  max-width:1100px;
+  margin: 0 auto;
+  padding-top: 90px;
+}    
+
+
 /* Logs */
 #logs_tabs{ 
   font-family: 'Share Tech Mono', sans-serif !important; 
@@ -91,9 +99,7 @@ hr{ border:1px solid #D6D6D6; }
     #logs_tabs p{ margin:5px 0px; }
     #logs_tabs div.lines{ margin:5px 0px; }
     
-    #main{ width:100%; max-width:1100px;
-      margin:90px auto 0px auto;}    
-
+    
 /* DBSQL */
 #dbsql_container{
   background: #E7E7E8;

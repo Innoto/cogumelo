@@ -67,8 +67,6 @@ class DevelView extends View
 
     function infosetup(){
       print ".";
-      //print_r(SITE_PATH);
-      //print_r(SITE_URL_CURRENT);
     }
 
     function DBSQL(){
