@@ -65,11 +65,13 @@ class CogumeloClass extends Singleton
       $file_path = SITE_PATH. 'classes/'. $filename;
     }
 
+
+    // check if file exist
     if(!file_exists($file_path)) {
-        Cogumelo::error("PHP File not found : ".$file_path);
+      Cogumelo::error("PHP File not found : ".$file_path);
     }
     else {
-        require_once $file_path;
+      require_once $file_path;
     }
   }
 

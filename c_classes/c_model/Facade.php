@@ -14,7 +14,7 @@ class Facade
 	var $connectioncontrol;
 	var $connection;
 	var $dao;
-	var $develMode = false;
+	var $develModeData = false;
 	
 
 	function __construct($entity, $module=false)
@@ -24,13 +24,15 @@ class Facade
 	
 	public function openConnection()
 	{
-		$this->connectioncontrol = Connection::Factory($this->develMode);
+		$this->connectioncontrol = Connection::Factory($this->develModeData);
 	}
-	
-	public function develMode($user, $password, $DB) {
-		$this->develMode['DB_USER'] = $user;
-		$this->develMode['DB_PASSWORD'] = $password;
-		$this->develMode['DB_NAME'] = $DB;
+
+	public function develMode($user, $password, $DB=false) {
+		$this->develModeData = array();
+
+		$this->develModeData['DB_USER'] = $user;
+		$this->develModeData['DB_PASSWORD'] = $password;
+		$this->develModeData['DB_NAME'] = $DB;
 	}
 
 	function __call($name, $args){
@@ -47,6 +49,7 @@ class Facade
 
 		if($data !== false) Cogumelo::debug("TRANSACTION COMPLETED: ".$name);
 		else Cogumelo::error("TRANSACTION NOT COMPLETED: ".$name);
+
 		return $data;
 	}
 

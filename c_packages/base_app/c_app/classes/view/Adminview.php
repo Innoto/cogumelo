@@ -42,6 +42,14 @@ class Adminview extends View
 	}
 
 
+	function create_user_db_tables() {
+		echo "create DB<br>";
+		devel::load('controller/DevelDBController');
+	  
+	  $fvotdbcontrol = new DevelDBController("root", "nnt100");
+	  var_dump($fvotdbcontrol->createSchemaDB() );
+	}
+
 	function page404() {
 		//echo "Recurso non atopado";
 	}
