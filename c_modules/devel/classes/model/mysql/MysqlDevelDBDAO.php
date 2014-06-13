@@ -37,18 +37,19 @@ class MysqlDevelDBDAO extends MysqlDAO
 
 		$strSQL0 = "DROP DATABASE IF EXISTS ". DB_NAME ;
 		$strSQL1 = "CREATE DATABASE ". DB_NAME ;
-		$strSQL2 = "
-					GRANT 
-						SELECT, 
-						INSERT, 
-						UPDATE, 
-						DELETE, 
-						INDEX, 
-						LOCK TABLES, 
-						CREATE VIEW, 
-						SHOW VIEW 
-					ON ". DB_NAME .".* 
-					TO '". DB_USER ."'@'localhost' IDENTIFIED BY '". DB_PASSWORD ."' ";
+		$strSQL2 = "GRANT ".
+						"SELECT, ". 
+						"INSERT, ".
+						"UPDATE, ".
+						"DELETE, ".
+						"INDEX, ".
+						"LOCK TABLES, ".
+						"CREATE VIEW, ".
+						"CREATE, ".
+						"DROP, ".
+						"SHOW VIEW ".
+					"ON ". DB_NAME .".* ".
+					"TO '". DB_USER ."'@'localhost' IDENTIFIED BY '". DB_PASSWORD ."' ";
 
 		$resultado[] = $this->execSQL($connection, $strSQL0, array() );
 		$resultado[] = $this->execSQL($connection, $strSQL1, array() );
