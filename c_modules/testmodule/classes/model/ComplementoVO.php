@@ -1,12 +1,11 @@
 <?php
 
 Cogumelo::load('c_model/VO');
-testmodule::load('model/VO/ComplementoVO');
 
 
-class CousaVO extends VO
+class ComplementoVO extends VO
 {	
-	static $tableName = 'cousa';
+	static $tableName = 'complemento';
 	static $cols = array(
 		'id' => array(
 			'type'=>'INT', 
@@ -21,11 +20,6 @@ class CousaVO extends VO
 		'fingers'=> array(
 			'desc' => 'Número de dedos', 
 			'type'=>'INT'
-		),
-		'hobby'=> array(
-			'desc' => 'Afición', 
-			'type'=>'VARCHAR', 
-			'size'=>30
 		)
 	);
 

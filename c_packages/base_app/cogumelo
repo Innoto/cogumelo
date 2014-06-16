@@ -44,43 +44,33 @@ $develdbcontrol = new DevelDBController();
 	       echo "archivos temporales borrados\n";
          break; 
 
-      case 'create_db': // create database
-          //$db = ReadStdin('Please enter the database: ', '');
-          $user =  ReadStdin('Enter a user with privileges: ', '');
-          //echo $db."\n";
+      case 'createDB': // create database
+          $user =  ReadStdin('Enter an user with privileges: ', '');
           // Get the password
           fwrite(STDOUT, "Enter the password: ");
           $passwd = getPassword(true);
-          // Output the password
           //echo "\nYour password: " . $password . "\n";
           createDB($user, $passwd);
-          echo "database '.$db.' created\n";
         break; 
 
-      case 'generate_tables': // create database tables
+      case 'createTables': // create database tables
         createTables();
         echo 'generate db tables';
         break;  
 
-      case 'set_permissions': // create database tables
+      case 'setPermissions': // create database tables
         setPermissions();
-        echo 'generate db tables';
-        break;  
+        break;    
 
       case 'bck': // do the backup of the given db
-      	if ($argc>2){
-      	  $bd = $argv[2];
-      	  if ($argc>3){ //nome do ficheiro de bck
-              $file = $argv[3];
-          }
-          else{ //crearase un bck.sql co nome da bbdd
-              $file = $bd.'.sql';
-          }
-          doBackup($bd, $file);
-      	}
-      	else{
-      	  echo "Not enough parameters\n usage: bck DB file\n";
-      	}
+      	if ($argc>2)
+      	  $file = $argv[2].'.sql';//name of the backup file
+        else
+          $file = false;
+        $user =  ReadStdin('Enter an user with privileges: ', '');
+        fwrite(STDOUT, "Enter the password: ");
+        $passwd = getPassword(true);
+        doBackup(DB_NAME, $user, $passwd, $file);
         break;  
 
       case 'restore': // restore the backup of a given db
@@ -89,22 +79,24 @@ $develdbcontrol = new DevelDBController();
          retoreDB($bd);
         }
         else
-          echo "You must especify the database to retore\n"; 
+          echo "You must especify the database to restore\n"; 
         break;  
 
       default:
         echo "invalid parameter;try: 
-        flush           to remove temporary files
-        crete_db        to create a database
-        restore_db      to restore a database";
+        flush          to remove temporary files
+        creteDB        to create a database
+        creteTables    to generate the tables
+        restoreDB      to restore a database\n";
         exit;     
     }//end switch 
 }//end parameters handler
 else{
   echo "Not enough arguments;try: 
-        flush           to remove temporary files
-        crete_db        to create a database
-        restore_db      to restore a database";
+        flush          to remove temporary files
+        creteDB        to create a database
+        creteTables    to generate the tables
+        restoreDB      to restore a database\n";
 }
 
 function createDB($user, $passwd){
@@ -117,8 +109,34 @@ function createTables(){
   $develdbcontrol->createTables();
 }
 
-function doBackup($DB, $file){
-   echo "fai o bck...";
+function setPermissions(){
+  exec('mkdir c_app/tmp');
+  exec('mkdir c_app/tmp/templates_c');
+  exec('mkdir c_app/log');
+  exec('mkdir c_app/backups');
+
+  exec('sudo chown -R $USER:www-data httpdocs');
+  exec('chmod -R go-rwx,g+rX httpdocs');
+
+  exec('sudo chown -R $USER:www-data c_app');
+  exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
+  exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log');
+  exec('sudo chown $USER:$USER c_app/backups');
+
+  echo "permisssions ready!\n";
+}
+
+function doBackup($BD, $user, $pass, $file){
+
+  if (!$file)
+    $file = date('Ymd-Hms').'-'.$BD.'.sql';
+
+  $DIR = BCK;
+
+  exec('mysqldump -u '.$user.' -p'.$pass.' '.$BD.'> '.$DIR.'/'.$file);
+  exec('sudo gzip '.$DIR.'/'.$file);
+  exec('chmod go-rwx '.$DIR.'/*');
+  echo "\nyour db was successfully saved!\n";
 }
 
 /**

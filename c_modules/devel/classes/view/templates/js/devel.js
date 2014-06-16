@@ -23,7 +23,7 @@ function readLogs(){
     }).fail(function(e){
       console.log("Ajax no finish data load");
     });
-  },5000);
+  },2000);
     
 }
 

@@ -5,15 +5,15 @@ require_once(COGUMELO_LOCATION."/c_classes/c_controller/ModuleController.php");
 
 class CogumeloClass extends Singleton
 {
-    public $request;
-    public $modules;
-    public $url_patterns;
+  public $request;
+  public $modules;
+  public $url_patterns;
 
-    protected $userinfoString = "";
+  protected $userinfoString = "";
 
-    static function get(){
-        return parent::getInstance('Cogumelo');
-    }
+  static function get(){
+      return parent::getInstance('Cogumelo');
+  }
 
 	public function __construct() {
 

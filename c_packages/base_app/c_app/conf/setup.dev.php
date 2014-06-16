@@ -72,12 +72,13 @@ define("MINIMIFY_CACHE_PATH", SITE_PATH.'tmp/minimify');
 //
 
 global $C_ENABLED_MODULES;
-$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'devel', 'testmodule');
+$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'testmodule', 'devel');
 
 //
 // 	Logs 
 //
 
+define("BCK", SITE_PATH."backups/");		//backups directory
 define("LOGDIR", SITE_PATH."log/");		//log files directory
 define('LOG_RAW_SQL', false); 	// Log RAW all SQL ¡WARNING! application passwords will dump into log files 
 define("DEBUG", true); // Set Debug mode to log debug messages on log
