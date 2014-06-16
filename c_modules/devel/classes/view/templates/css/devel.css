@@ -5,6 +5,7 @@
 body { 
   margin: 0px;
   padding: 0px;
+  padding-top: 90px;
   color:#444;
   font-family: 'Share Tech Mono', sans-serif !important;
   background:#E7E7E8;
@@ -23,7 +24,7 @@ hr{ border:1px solid #D6D6D6; }
 
 .cll_container{ color: white; }
 
-/************************************************************************************************************************/
+/**************************************************************debugItemContainer**********************************************************/
 /************************************************************************************************************************/
 /* Header ***************************************************************************************************************/
 
@@ -76,7 +77,6 @@ hr{ border:1px solid #D6D6D6; }
   width:100%; 
   max-width:1100px;
   margin: 0 auto;
-  padding-top: 90px;
 }    
 
 
@@ -120,6 +120,18 @@ hr{ border:1px solid #D6D6D6; }
   #infosetup_container table td.td_dev{ background: #D4D4D4; }
   #infosetup_container table td.td_fnl{ background: #A9A9A9; }
 
+/*Debbuger*/
+#debug_container{
+
+}
+  #debug_container h3{
+    color: #657b83;
+  }
+  #debug_container .debugItemContainer{ 
+    padding-bottom: 20px;
+    margin-bottom: 20px; 
+    border-bottom: 3px dashed #fff;
+  }
 
 
 /************************************************************************************************************************/
