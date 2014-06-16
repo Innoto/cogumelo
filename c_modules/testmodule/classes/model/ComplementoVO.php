@@ -2,7 +2,6 @@
 
 Cogumelo::load('c_model/VO');
 
-
 class ComplementoVO extends VO
 {	
 	static $tableName = 'complemento';

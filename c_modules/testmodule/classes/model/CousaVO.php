@@ -1,7 +1,7 @@
 <?php
 
 Cogumelo::load('c_model/VO');
-testmodule::load('model/VO/ComplementoVO');
+testmodule::load('model/ComplementoVO');
 
 
 class CousaVO extends VO
@@ -26,6 +26,12 @@ class CousaVO extends VO
 			'desc' => 'Afición', 
 			'type'=>'VARCHAR', 
 			'size'=>30
+		),
+		'complemento' => array(
+      'desc' => 'Complemento', 
+      'type'=>'FOREIGN', 
+      'vo' => 'ComplementoVO',
+      'vo_id' => 'id'
 		)
 	);
 
