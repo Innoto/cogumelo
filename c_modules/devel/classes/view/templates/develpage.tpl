@@ -50,7 +50,7 @@
   <div id="debug_container" class="container" style="display:none;">
     <h3>Meu$ deBugs</h3>
     
-    <div class="debugItemsContainer">{$result}</div>
+    <div class="debugItemsContainer"></div>
     
   </div>
   <!-- ****************************************************************************************************************  -->
