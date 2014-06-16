@@ -40,8 +40,8 @@ class  DevelDBController extends DataController
 
 		foreach($this->listVOs() as $vo) {
 			$returnStrArray[] = "#VO File: ".$this->voReferences[$vo].$vo.".php";
-			$returnStrArray[] = $this->data->getDropSQL($vo);
-			$returnStrArray[] = $this->data->getTableSQL($vo);
+			$returnStrArray[] = $this->data->getDropSQL($vo, $this->voReferences[$vo]);
+			$returnStrArray[] = $this->data->getTableSQL($vo, $this->voReferences[$vo].$vo.".php");
 
 		}
 
