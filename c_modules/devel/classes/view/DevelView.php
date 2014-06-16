@@ -1,6 +1,7 @@
 <?php
 
 Cogumelo::load('c_vendor/sql-formatter-master/lib/SqlFormatter.php');
+Cogumelo::load('c_vendor/kint-1.0.0-wip/Kint.class.php');
 Cogumelo::load('c_view/View');
 devel::load('controller/LogReaderController');
 devel::load('controller/DevelDBController');
@@ -36,7 +37,7 @@ class DevelView extends View
     $this->template->addJs('js/devel.js', 'devel');
     $this->template->addCss('css/devel.css', 'devel');
     $this->logs();       
-    $this->infosetup(); 
+    $this->infosetup();
     $this->DBSQL();    
 
     $this->template->exec();
@@ -61,9 +62,6 @@ class DevelView extends View
       echo json_encode($content_logs);
         
     }
-    function debugs( ){
-
-    }
 
     function infosetup(){
       print ".";
@@ -83,12 +81,21 @@ class DevelView extends View
 
 
     //
-    // Actions base de datos
+    // Actions
     //
   
     function get_sql_tables(){
       $fvotdbcontrol = new DevelDBController();
       return ($fvotdbcontrol->getTablesSQL() );
+    }
+  
+    function get_debugger(){
+      $temp_debugs = Cogumelo::objDebugPull();
+      $result_debugs = array();
+      if(isset($temp_debugs))
+      foreach ($temp_debugs as $val_debug){
+        echo @Kint::dump( $val_debug );          
+      }   
     }
 
 }

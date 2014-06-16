@@ -1,11 +1,8 @@
 
-
-
-
 $(document).ready(function(){
   $( "#logs_tabs" ).tabs(); 
   readLogs();
-  bindsSQL();
+  reloadDebugger();
 });
 
 
@@ -24,62 +21,26 @@ function readLogs(){
         $("#"+val.log_name).find("div.cll_container").animate({ color : 'green'}, 15000).removeClass('cll_container');        
       });
     }).fail(function(e){
-      console.debug("Ajax no finish data load");
+      console.log("Ajax no finish data load");
     });
   },2000);
     
 }
 
-function bindsSQL(){
-  /* CREATE DB AND USER*/
-  $('#create_db').click(function(){
-    var user = $('#user_root').val();
-    var pass = $('#user_pass').val();
-    if( user && pass && user != "" && pass !="" ){
-
-      $.ajax({
-        url: "/devel/create_db_scheme",
-        type: "POST",
-        data:{
-          u: user,
-          p: pass
-        },
-        success: function(){
-
-        },
-        error: function(){
-          alert('Failure create DB')
-        }
-
-      });
-
-    }else{
-      alert("Introduce tus datos ROOT de Mysql");
-    }
-
-  });
-  /*FIN CREATE DB*/
-
-  /*CREATE TABLE*/
-  $('#create_table').click(function(){
-    var user = $('#user_root').val();
-    var pass = $('#user_pass').val();
-    if( user && pass && user != "" && pass !="" ){
-      $.ajax({
-        url: "/devel/create_db_tables",
-        success: function(){
-
-        },
-        error: function(){
-          alert('Failure create TABLES')
-        }
-      });
-
-    }else{
-      alert("Introduce tus datos ROOT de Mysql");
-    }
-
-  });
-  /*FIN CREATE TABLE*/
-
+function reloadDebugger(){
+  setInterval(function(){
+    $.ajax({
+      type: "GET",
+      url: "/devel/get_debugger",
+      data : "",
+      dataType: "json"
+      
+    }).done(function(e){
+console.debug(e + "SI" );
+      $('.debugItemsContainer').html('<div>asdasdas asd asd as </div');      
+    }).fail(function(e){
+console.debug(e + "NON" );
+      $('.debugItemsContainer').prepend(e);   
+    });
+  },5000);
 }
