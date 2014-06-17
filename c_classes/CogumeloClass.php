@@ -151,11 +151,9 @@ class CogumeloClass extends Singleton
 
   static function objDebugObjectCreate($obj, $comment) {
 
-    $date = getdate();
-
     return array(
         "comment" => $comment,
-        "creation_date" => $date[0],
+        "creation_date" => getdate(),
         "data" => $obj
       );
   }
@@ -176,7 +174,7 @@ class CogumeloClass extends Singleton
 
       if(is_array($session_array) && sizeof($session_array) > 0 ) {
         foreach ($session_array as $session_obj) {
-          if( isset($session_obj['creation_date']) && ( $now[0] - $session_obj['creation_date']) <= $debug_object_maxlifetime  ){
+          if( isset($session_obj['creation_date']) && ( $now[0] - $session_obj['creation_date'][0]) <= $debug_object_maxlifetime  ){
             array_push($result_array, $session_obj);
           }
         }
