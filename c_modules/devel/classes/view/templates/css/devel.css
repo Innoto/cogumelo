@@ -124,8 +124,19 @@ hr{ border:1px solid #D6D6D6; }
 #debug_container{
 
 }
-  #debug_container h3{
+  #debug_container .headerDebugItem h3{
     color: #657b83;
+    margin: 5px 0px;
+    font-size: 16px;
+    display: inline-block;
+    text-transform: uppercase;
+  }
+  #debug_container .headerDebugItem span{
+    color: #69C2FF;
+    float: right;
+    font-size: 14px;
+    font-weight: bold;  
+    margin: 5px 0px;
   }
   #debug_container .debugItemContainer{ 
     padding-bottom: 20px;

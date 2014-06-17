@@ -23,7 +23,7 @@ function readLogs(){
     }).fail(function(e){
       console.log("Ajax no finish data load");
     });
-  },2000);
+  },5000);
     
 }
 
@@ -54,10 +54,10 @@ function reloadDebugger(){
       dataType: "json",
       cache: false      
     }).done(function(e){
-      if(e.debuging !== "")
-        $('.debugItemsContainer').append('<div class="headerDebugItem"><h3>'+e.comment+'</h3><span>'+e.date+'</span></div><div class="debugItemContainer">'+e.debuging+'</div>');         
+      $.each( e , function( key, val ) {
+        $('.debugItemsContainer').append('<div class="headerDebugItem"><h3>'+val.comment+'</h3><span>'+val.date+'</span></div><div class="debugItemContainer">'+val.debuging+'</div>');   
+      });      
     }).fail(function(e){
-console.log(e);
 console.log("fallo ou baleiro");
     });
   }, 10000);

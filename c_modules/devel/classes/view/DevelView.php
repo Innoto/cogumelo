@@ -95,16 +95,21 @@ class DevelView extends View
       header("Content-Type: application/json"); //return only JSON data      
       if(isset($temp_debugs)){        
         foreach ($temp_debugs as $val_debug){
-
-          $result_debugs = array(
+          if($val_debug['creation_date']['minutes'] < 10){
+            $val_debug['creation_date']['minutes'] = "0".$val_debug['creation_date']['minutes'];
+          }
+          if($val_debug['creation_date']['seconds'] < 10){
+            $val_debug['creation_date']['seconds'] = "0".$val_debug['creation_date']['seconds'];
+          }
+          $temp_date = $val_debug['creation_date']['hours'].":".$val_debug['creation_date']['minutes'].":".$val_debug['creation_date']['seconds'];
+          array_push( $result_debugs, array(
             'comment' => $val_debug['comment'],
-            'date' => $val_debug['creation_date'],
+            'date' => $temp_date,
             'debuging' => @Kint::dump( $val_debug['data'] )
-          ); 
-            
-          echo json_encode($result_debugs);         
-          //echo @Kint::dump( $val_debug['data'] );          
+          )); 
+                   
         }   
+        echo json_encode($result_debugs);
       }
     }
 
