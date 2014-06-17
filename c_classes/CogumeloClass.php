@@ -123,7 +123,7 @@ class CogumeloClass extends Singleton
 
   static function log( $texto, $fich_log='cogumelo' ) {
     
-    if($_SERVER['REQUEST_URI'] != "/devel/read_logs") {
+    if($_SERVER['REQUEST_URI'] != "/devel/read_logs" && $_SERVER['REQUEST_URI'] != "/devel/get_debugger") {
       error_log( 	
       	'['. date('y-m-d H:i:s',time()) .'] ' .
     		'['. $_SERVER['REMOTE_ADDR'] .'] ' .
@@ -151,9 +151,11 @@ class CogumeloClass extends Singleton
 
   static function objDebugObjectCreate($obj, $comment) {
 
+    $date = getdate();
+
     return array(
         "comment" => $comment,
-        "creation_date" => getdate(),
+        "creation_date" => $date[0],
         "data" => $obj
       );
   }
@@ -174,7 +176,7 @@ class CogumeloClass extends Singleton
 
       if(is_array($session_array) && sizeof($session_array) > 0 ) {
         foreach ($session_array as $session_obj) {
-          if( isset($session_obj['creation_date']) && ( $now[0] - $session_obj['creation_date'][0]) <= $debug_object_maxlifetime  ){
+          if( isset($session_obj['creation_date']) && ( $now[0] - $session_obj['creation_date']) <= $debug_object_maxlifetime  ){
             array_push($result_array, $session_obj);
           }
         }
