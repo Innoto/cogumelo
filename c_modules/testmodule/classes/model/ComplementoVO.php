@@ -2,7 +2,6 @@
 
 Cogumelo::load('c_model/VO');
 
-
 class ComplementoVO extends VO
 {	
 	static $tableName = 'complemento';
@@ -16,10 +15,6 @@ class ComplementoVO extends VO
 			'desc' => 'Nome', 
 			'type'=>'VARCHAR', 
 			'size'=>30
-		),
-		'fingers'=> array(
-			'desc' => 'Número de dedos', 
-			'type'=>'INT'
 		)
 	);
 

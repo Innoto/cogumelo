@@ -90,14 +90,26 @@ class MysqlDevelDBDAO extends MysqlDAO
 		$lines = array();
 
 		foreach($VO::$cols as $colkey => $col) {
-			$size = (array_key_exists('size', $col))? '('.$col['size'].') ': '';
+
+      $extrapkey = "";
+      $type = "";
+      $size = "";
+
 			if(array_key_exists('primarykey', $col)){  
 				$primarykeys[] = $colkey;
-				$lines[] = '`'.$colkey.'` '.$this::$conversion_types[$col['type']].$size.' NOT NULL auto_increment ';
+				$extrapkey=' NOT NULL auto_increment ';
 			}
-			else{
-				$lines[] = '`'.$colkey.'` '.$this::$conversion_types[$col['type']].$size;
-			}
+
+      if( $col['type'] == "FOREIGN" ) { // is a foreign key
+        eval( '$foreign_col = '.$col['vo'].'::$cols[\''.$col['vo_key'].'\'];' );
+        $type = $this::$conversion_types[$foreign_col['type']].$size;  
+      }
+      else { 
+        $size = (array_key_exists('size', $col))? '('.$col['size'].') ': '';
+        $type = $this::$conversion_types[$col['type']].$size;      
+      }
+
+      $lines[] = '`'.$colkey.'` '.$type.$extrapkey;
 		}
 
 		$primarykeys_str = (sizeof($primarykeys)>0)? ', PRIMARY KEY  USING BTREE (`'.implode(',',$primarykeys).'`)' : '';

@@ -80,7 +80,7 @@ class  DevelDBController extends DataController
 			    		$class_vo_name = substr($file, 0,-4);
 
 			    		// prevent reload an existing vo in other place
-			    		if (!class_exists($class_vo_name)) {
+			    		if (!array_key_exists( $class_vo_name, $this->voReferences )) {
 				        	require_once($dir.$file);
 				        	$vos[] =  $class_vo_name;
 				        	$this->voReferences[$class_vo_name] = $dir;
