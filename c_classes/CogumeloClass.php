@@ -123,7 +123,7 @@ class CogumeloClass extends Singleton
 
   static function log( $texto, $fich_log='cogumelo' ) {
     
-    if($_SERVER['REQUEST_URI'] != "/devel/read_logs") {
+    if($_SERVER['REQUEST_URI'] != "/devel/read_logs" && $_SERVER['REQUEST_URI'] != "/devel/get_debugger") {
       error_log( 	
       	'['. date('y-m-d H:i:s',time()) .'] ' .
     		'['. $_SERVER['REMOTE_ADDR'] .'] ' .
