@@ -92,10 +92,20 @@ class DevelView extends View
     function get_debugger(){
       $temp_debugs = Cogumelo::objDebugPull();
       $result_debugs = array();
-      if(isset($temp_debugs))
-      foreach ($temp_debugs as $val_debug){
-        echo @Kint::dump( $val_debug );          
-      }   
+      header("Content-Type: application/json"); //return only JSON data      
+      if(isset($temp_debugs)){        
+        foreach ($temp_debugs as $val_debug){
+
+          $result_debugs = array(
+            'comment' => $val_debug['comment'],
+            'date' => $val_debug['creation_date'],
+            'debuging' => @Kint::dump( $val_debug['data'] )
+          ); 
+            
+          echo json_encode($result_debugs);         
+          //echo @Kint::dump( $val_debug['data'] );          
+        }   
+      }
     }
 
 }

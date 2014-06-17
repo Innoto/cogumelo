@@ -27,20 +27,38 @@ function readLogs(){
     
 }
 
+/*function reloadDebugger(){
+  setInterval(function(){
+    $.ajax({
+      type: "GET",
+      url: "/devel/get_debugger",
+      data : "",
+      dataType: "html",
+      cache: false      
+    }).done(function(e){
+      if(e !== "")
+        $('.debugItemsContainer').append('<div class="debugItemContainer">'+e+'</div>');         
+    }).fail(function(e){
+      $('.debugItemsContainer').html('<div>Error</div>');
+      
+    });
+  }, 10000);
+}*/
+
 function reloadDebugger(){
   setInterval(function(){
     $.ajax({
       type: "GET",
       url: "/devel/get_debugger",
       data : "",
-      dataType: "json"
-      
+      dataType: "json",
+      cache: false      
     }).done(function(e){
-console.debug(e + "SI" );
-      $('.debugItemsContainer').html('<div>asdasdas asd asd as </div');      
+      if(e.debuging !== "")
+        $('.debugItemsContainer').append('<div class="headerDebugItem"><h3>'+e.comment+'</h3><span>'+e.date+'</span></div><div class="debugItemContainer">'+e.debuging+'</div>');         
     }).fail(function(e){
-console.debug(e + "NON" );
-      $('.debugItemsContainer').prepend(e);   
+console.log(e);
+console.log("fallo ou baleiro");
     });
-  },5000);
+  }, 10000);
 }
