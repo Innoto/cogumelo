@@ -2,7 +2,7 @@
 
 Cogumelo::load("c_controller/Module");
 
-class client_essentials extends Module
+class client extends Module
 {
   var $url_patterns = array();
 }
