@@ -48,9 +48,8 @@ function readLogs(){
 function reloadDebugger(){
   setInterval(function(){
     $.ajax({
-      type: "GET",
+      type: "POST",
       url: "/devel/get_debugger",
-      data : "",
       dataType: "json",
       cache: false      
     }).done(function(e){
