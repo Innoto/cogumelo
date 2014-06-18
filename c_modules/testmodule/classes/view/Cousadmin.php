@@ -37,7 +37,6 @@ class Cousadmin extends View
 
 
 	    $this->template->setTpl("cousadmin.tpl", "testmodule");
-
 	    $this->template->addJs('vendor_lib/jQuery.js', 'client');
 	    $this->template->addJs('vendor_lib/Class.js', 'client');
 	    $this->template->addJs('vendor_lib/jquery.address.js', 'client');

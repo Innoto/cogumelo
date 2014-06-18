@@ -46,8 +46,8 @@ class MediaserverView extends View
 		}
 
 
-		if( substr($path, -4) == '.tpl' || substr($path, -4) == '.php' || substr($path, -4) == '.php' ) {
-			Cogumelo::error('Somebody try to load, but not allowed to serve .tpl .php or .php files ');
+		if( substr($path, -4) == '.tpl' || substr($path, -4) == '.php' || substr($path, -4) == '.inc' ) {
+			Cogumelo::error('Somebody try to load, but not allowed to serve .tpl .php or .inc files ');
 			RequestController::redirect(SITE_URL_CURRENT.'/404');
 		}
 		else {
@@ -66,6 +66,7 @@ class MediaserverView extends View
 				}
 			}
 			else {
+				Cogumelo::log($real_file_path);
 				$this->serveRawFile($real_file_path);
 			}			
 		}
@@ -74,18 +75,21 @@ class MediaserverView extends View
 
 	function serveRawFile($real_file_path) 
 	{
-		header("Content-Type: application/octet-stream");
-		set_time_limit(0);
 
-		if( $file = @fopen($real_file_path, 'rb') ){
-			while(!feof($file))
-			{
-				print(@fread($file, 1024*8));
-				ob_flush();
-				flush();
-	       	}
-	    }
-		else {
+
+		if( file_exists($real_file_path) ){
+      header('Content-Description: File Transfer');
+      header('Content-Type: application/octet-stream');
+      header('Content-Disposition: attachment; filename='.basename($real_file_path));
+      header('Expires: 0');
+      header('Cache-Control: must-revalidate');
+      header('Pragma: public');
+      header('Content-Length: ' . filesize($real_file_path));
+      ob_clean();
+      flush();
+      readfile($real_file_path);
+      exit;
+    } else {
 			Cogumelo::error("Mediaserver couldn't load ".$cache_filename);
 			RequestController::redirect(SITE_URL_CURRENT.'/404');
 		}
