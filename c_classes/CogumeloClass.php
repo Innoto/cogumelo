@@ -24,9 +24,6 @@ class CogumeloClass extends Singleton
 
   function exec(){
 
-    // set url patterns
-    $this->url_patterns = $this->setUrlPatterns();
-
     Cogumelo::debug("Request URI: ".$_SERVER["REQUEST_URI"]);
 
     // cut out the SITE_FOLDER and final slash from path 
