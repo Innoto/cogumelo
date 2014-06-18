@@ -58,18 +58,21 @@ class MediaserverView extends View
 			// if conf requires minify files
 			if(MINIMIFY_FILES) {
 				if(substr($path, -4) == '.css' ) {
+          Cogumelo::debug("Mediaserver, serving minified css: ".$real_file_path);          
 					$this->serveMinifyCache('css', $real_file_path);
 				}
 				else
 				if(substr($path, -3) == '.js') {
+          Cogumelo::debug("Mediaserver, serving minified js: ".$real_file_path);
 					$this->serveMinifyCache('js', $real_file_path);
 				}
 				else{
-						$this->serveRawFile($real_file_path);
+          Cogumelo::debug("Mediaserver, serving file: ".$real_file_path);
+					$this->serveRawFile($real_file_path);
 				}
 			}
 			else {
-				Cogumelo::log($real_file_path);
+				Cogumelo::debug("Mediaserver, serving file: ".$real_file_path);
 				$this->serveRawFile($real_file_path);
 			}			
 		}
