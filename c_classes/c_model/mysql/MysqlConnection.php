@@ -61,7 +61,7 @@ class MysqlConnection extends Connection
 			@$this->db = new mysqli(DB_HOSTNAME ,$this->DB_USER , $this->DB_PASSWORD, $this->DB_NAME,  DB_PORT);
 
 			if ($this->db->connect_error)
-				Cogumelo::log(mysqli_connect_error());
+				Cogumelo::debug(mysqli_connect_error());
 			else
 				Cogumelo::debug("MYSQLI: Connection Stablished to ".DB_HOSTNAME);
 			
@@ -81,7 +81,7 @@ class MysqlConnection extends Connection
       Cogumelo::objDebug($this->db);
 			$this->db->close();
       Cogumelo::objDebug($this->db);
-			Cogumelo::log("MYSQLI: Connection closed");
+			Cogumelo::debug("MYSQLI: Connection closed");
 		}
 		
 	}
