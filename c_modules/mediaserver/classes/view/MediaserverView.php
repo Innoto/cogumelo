@@ -41,6 +41,9 @@ class MediaserverView extends View
 
 	function serveContent($path, $module=false){
 
+
+
+
 		if(! $real_file_path = ModuleController::getRealFilePath('classes/view/templates/'.$path, $module ) ) {
 			//RequestController::redirect(SITE_URL_CURRENT.'/404');
 		}
@@ -78,8 +81,26 @@ class MediaserverView extends View
 
 
 		if( file_exists($real_file_path) ){
-      header('Content-Description: File Transfer');
-      header('Content-Type: application/octet-stream');
+
+      if(substr($real_file_path, -4) == '.css') {
+        header('content-type: text/css; charset=utf-8');
+      }
+      else
+      if(substr($real_file_path, -3) == '.js') {
+        header('content-type: text/js; charset=utf-8');
+      }
+      else
+      if(substr($real_file_path, -4) == '.jpg' || substr($real_file_path, -5) == '.jpeg') {
+        header('Content-Type: image/jpeg');
+      }
+      else
+      if(substr($real_file_path, -4) == '.png') {
+        header('Content-Type: image/png');
+      }      
+      else{
+        header('Content-Type: application/octet-stream');
+      }
+
       header('Content-Disposition: attachment; filename='.basename($real_file_path));
       header('Expires: 0');
       header('Cache-Control: must-revalidate');

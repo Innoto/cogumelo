@@ -33,7 +33,7 @@ class DevelView extends View
   }
 
   function main($url_path=''){
-echo ",";
+
     $this->template->setTpl('develpage.tpl', 'devel');
     $this->template->addJs('js/devel.js', 'devel');
     $this->template->addCss('css/devel.css', 'devel');
