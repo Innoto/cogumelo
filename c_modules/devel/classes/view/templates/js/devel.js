@@ -27,24 +27,6 @@ function readLogs(){
     
 }
 
-/*function reloadDebugger(){
-  setInterval(function(){
-    $.ajax({
-      type: "GET",
-      url: "/devel/get_debugger",
-      data : "",
-      dataType: "html",
-      cache: false      
-    }).done(function(e){
-      if(e !== "")
-        $('.debugItemsContainer').append('<div class="debugItemContainer">'+e+'</div>');         
-    }).fail(function(e){
-      $('.debugItemsContainer').html('<div>Error</div>');
-      
-    });
-  }, 10000);
-}*/
-
 function reloadDebugger(){
   setInterval(function(){
     $.ajax({
