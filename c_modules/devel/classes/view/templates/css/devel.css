@@ -13,6 +13,11 @@ body {
 
 hr{ border:1px solid #D6D6D6; }
 
+*{
+  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+  box-sizing: border-box;         /* Opera/IE 8+ */
+}
 
 /************************************************************************************************************************/
 /************************************************************************************************************************/
@@ -104,8 +109,10 @@ hr{ border:1px solid #D6D6D6; }
 #dbsql_container{
   background: #E7E7E8;
   padding: 20px;
+  max-width: 1000px; 
 }
   #dbsql_container .infoSQL{ padding: 10px; background: #fff; }
+  #dbsql_container .infoSQL pre{ white-space: pre-line !important; }
   #dbsql_container fieldset{border:3px solid #D6D6D6;}
   #dbsql_container legend{ font-size: 28px;}
   #dbsql_container .options_container_SQL{ text-align: center; height: 65px;}
