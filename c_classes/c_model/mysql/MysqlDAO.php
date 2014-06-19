@@ -243,14 +243,14 @@ class MysqlDAO extends DAO
 
 			if($cache_data = $cached->getCache($queryId)  ) {
 				// With cache, serving cache ...
-				Cogumelo::log('Using cache: cache Get with ID: '.$queryId );
+				Cogumelo::debug('Using cache: cache Get with ID: '.$queryId );
 				$queryID = $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
 			}
 			else{
 				
 				// With cache, but not cached yet. Caching ...
 				if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values'])) {
-					Cogumelo::log('Using cache: cache Set with ID: '.$queryId );
+					Cogumelo::debug('Using cache: cache Set with ID: '.$queryId );
 					$daoresult = new MysqlDAOResult( $this->VO , $res);
 					$cached->setCache($queryId, $daoresult->fetchAll_RAW() );
 				}

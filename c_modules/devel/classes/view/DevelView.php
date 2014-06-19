@@ -33,11 +33,12 @@ class DevelView extends View
   }
 
   function main($url_path=''){
-    $this->template->setTpl("develpage.tpl", "devel");
+
+    $this->template->setTpl('develpage.tpl', 'devel');
     $this->template->addJs('js/devel.js', 'devel');
     $this->template->addCss('css/devel.css', 'devel');
     $this->logs();       
-    $this->infosetup();
+    //$this->infosetup();
     $this->DBSQL();    
 
     $this->template->exec();
@@ -63,9 +64,6 @@ class DevelView extends View
         
     }
 
-    function infosetup(){
-      print ".";
-    }
 
     function DBSQL(){
       $data_sql = $this->get_sql_tables();

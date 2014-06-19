@@ -41,13 +41,16 @@ class MediaserverView extends View
 
 	function serveContent($path, $module=false){
 
+
+
+
 		if(! $real_file_path = ModuleController::getRealFilePath('classes/view/templates/'.$path, $module ) ) {
 			//RequestController::redirect(SITE_URL_CURRENT.'/404');
 		}
 
 
-		if( substr($path, -4) == '.tpl' || substr($path, -4) == '.php' || substr($path, -4) == '.php' ) {
-			Cogumelo::error('Somebody try to load, but not allowed to serve .tpl .php or .php files ');
+		if( substr($path, -4) == '.tpl' || substr($path, -4) == '.php' || substr($path, -4) == '.inc' ) {
+			Cogumelo::error('Somebody try to load, but not allowed to serve .tpl .php or .inc files ');
 			RequestController::redirect(SITE_URL_CURRENT.'/404');
 		}
 		else {
@@ -55,17 +58,21 @@ class MediaserverView extends View
 			// if conf requires minify files
 			if(MINIMIFY_FILES) {
 				if(substr($path, -4) == '.css' ) {
+          Cogumelo::debug("Mediaserver, serving minified css: ".$real_file_path);          
 					$this->serveMinifyCache('css', $real_file_path);
 				}
 				else
 				if(substr($path, -3) == '.js') {
+          Cogumelo::debug("Mediaserver, serving minified js: ".$real_file_path);
 					$this->serveMinifyCache('js', $real_file_path);
 				}
 				else{
-						$this->serveRawFile($real_file_path);
+          Cogumelo::debug("Mediaserver, serving file: ".$real_file_path);
+					$this->serveRawFile($real_file_path);
 				}
 			}
 			else {
+				Cogumelo::debug("Mediaserver, serving file: ".$real_file_path);
 				$this->serveRawFile($real_file_path);
 			}			
 		}
@@ -74,18 +81,39 @@ class MediaserverView extends View
 
 	function serveRawFile($real_file_path) 
 	{
-		header("Content-Type: application/octet-stream");
-		set_time_limit(0);
 
-		if( $file = @fopen($real_file_path, 'rb') ){
-			while(!feof($file))
-			{
-				print(@fread($file, 1024*8));
-				ob_flush();
-				flush();
-	       	}
-	    }
-		else {
+
+		if( file_exists($real_file_path) ){
+
+      if(substr($real_file_path, -4) == '.css') {
+        header('content-type: text/css; charset=utf-8');
+      }
+      else
+      if(substr($real_file_path, -3) == '.js') {
+        header('content-type: text/js; charset=utf-8');
+      }
+      else
+      if(substr($real_file_path, -4) == '.jpg' || substr($real_file_path, -5) == '.jpeg') {
+        header('Content-Type: image/jpeg');
+      }
+      else
+      if(substr($real_file_path, -4) == '.png') {
+        header('Content-Type: image/png');
+      }      
+      else{
+        header('Content-Type: application/octet-stream');
+      }
+
+      header('Content-Disposition: attachment; filename='.basename($real_file_path));
+      header('Expires: 0');
+      header('Cache-Control: must-revalidate');
+      header('Pragma: public');
+      header('Content-Length: ' . filesize($real_file_path));
+      ob_clean();
+      flush();
+      readfile($real_file_path);
+      exit;
+    } else {
 			Cogumelo::error("Mediaserver couldn't load ".$cache_filename);
 			RequestController::redirect(SITE_URL_CURRENT.'/404');
 		}

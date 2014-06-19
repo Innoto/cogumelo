@@ -84,11 +84,11 @@ Class MailSender
 		
 		if(!$this->phpmailer->Send()){
 			return false;
-			Cogumelo::Error('Error Sending mail', 3000);
+			Cogumelo::error('Error Sending mail');
 		}
 		else{
 			return true;
-			Cogumelo::Log("Mail Sent id=".$this->phpmailer->MessageID." ".var_export($adresses, true) ,3);
+			Cogumelo::debug("Mail Sent id=".$this->phpmailer->MessageID." ".var_export($adresses, true) ,3);
 		}
 			
 		$this->phpmailer->ClearAllRecipients();

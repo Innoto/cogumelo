@@ -61,7 +61,7 @@ Class VO
 		}
 		else{
 			if(!$ignore_nonexistent_key)
-				Cogumelo::Error("key '". $setterkey ."' doesn't exist in VO::". $this::$tableName);
+				Cogumelo::error("key '". $setterkey ."' doesn't exist in VO::". $this::$tableName);
 		}
 			
 	}
