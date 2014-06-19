@@ -2,7 +2,9 @@
 $(document).ready(function(){
   $( "#logs_tabs" ).tabs(); 
   readLogs();
-  reloadDebugger();
+  autoLoadDebugger();
+  
+  botonBinds();
 });
 
 
@@ -27,19 +29,34 @@ function readLogs(){
     
 }
 
-function reloadDebugger(){
+
+function autoLoadDebugger(){
   setInterval(function(){
-    $.ajax({
-      type: "POST",
-      url: "/devel/get_debugger",
-      dataType: "json",
-      cache: false      
-    }).done(function(e){
-      $.each( e , function( key, val ) {
-        $('.debugItemsContainer').append('<div class="headerDebugItem"><h3>'+val.comment+'</h3><span>'+val.date+'</span></div><div class="debugItemContainer">'+val.debuging+'</div>');   
-      });      
-    }).fail(function(e){
-console.log("fallo ou baleiro");
-    });
+    loadDebugger();
   }, 10000);
+}
+
+function loadDebugger(){
+  $.ajax({
+    type: "POST",
+    url: "/devel/get_debugger",
+    dataType: "json",
+    cache: false      
+  }).done(function(e){
+    $.each( e , function( key, val ) {
+      $('.debugItemsContainer').append('<div class="headerDebugItem"><h3>'+val.comment+'</h3><span>'+val.date+'</span></div><div class="debugItemContainer">'+val.debuging+'</div>');   
+    });      
+  }).fail(function(e){
+    console.log("fallo ou baleiro");
+  });
+}
+
+
+function botonBinds(){
+  $('.refreshDebugger').on('click', function(){
+    loadDebugger();
+  });
+  $('.clearDebugger').on('click', function(){
+    $('.debugItemsContainer').html('');
+  });
 }

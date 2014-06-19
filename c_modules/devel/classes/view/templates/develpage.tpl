@@ -48,7 +48,11 @@
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
   <div id="debug_container" class="container" style="display:none;">
-    
+    <ul class="debugOptionsContainer withoutDecoration clearfix">
+      <li><button class="buttonGrey buttonFormat clearDebugger">Limpar debugger</button></li>
+      <li><button class="buttonGrey buttonFormat refreshDebugger">Refrescar debugger</button></li>
+      <li>[Este debugger actualízase automáticamente]</li>
+    </ul>
     <div class="debugItemsContainer"></div>
     
   </div>

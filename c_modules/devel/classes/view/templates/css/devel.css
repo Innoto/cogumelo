@@ -23,11 +23,73 @@ hr{ border:1px solid #D6D6D6; }
 /************************************************************************************************************************/
 /* Common class *********************************************************************************************************/
 
-.element-left{ float:left; }
+.clearfix:after {
+    content: " ";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
 
-.element-right{ float:left; }    
+.clearfix {
+    display:block;
+    *display:inline-block;
+}
+
+html[xmlns] .clearfix {
+    display: block;
+}
+
+* html .clearfix {
+    height: 1%;
+
+}
+
+ul.withoutDecoration,
+ul.withoutDecoration li{
+  list-style: none;
+  list-style-image: none;
+}
+
+.elementLeft{ float:left; }
+
+.elementRight{ float:left; }    
 
 .cll_container{ color: white; }
+
+.buttonFormat{
+  text-align: center;
+  font-weight:550;
+  height:30px;
+  line-height:28px;
+  vertical-align: middle;
+  color: #545454;
+  font-size:14px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius:3px;
+  display: block;
+  cursor: pointer;
+  border:0px;
+  padding: 0px 5px;
+  font-family: 'Share Tech Mono', sans-serif !important;
+}
+
+.buttonBlue{ background: #0089FA; }
+.buttonBlue:hover{ background: #66A5D8; }
+
+.buttonYellow{ background: #ffE500; }
+.buttonYellow:hover{ background: #fff68F; }
+
+.buttonGrey{ background: #333334; color:#E7E7E8; }
+.buttonGrey:hover{ background: #ACACAC !important; color:#E7E7E8; }
+
+.buttonGreen{ background: #15A15D; }
+.buttonGreen:hover{ background: #4FD393; }
+
+.buttonRed{ background: #D54432; }
+.buttonRed:hover{ background: #D37D72; }
 
 /**************************************************************debugItemContainer**********************************************************/
 /************************************************************************************************************************/
@@ -109,7 +171,6 @@ hr{ border:1px solid #D6D6D6; }
 #dbsql_container{
   background: #E7E7E8;
   padding: 20px;
-  max-width: 1000px; 
 }
   #dbsql_container .infoSQL{ padding: 10px; background: #fff; }
   #dbsql_container .infoSQL pre{ white-space: pre-line !important; }
@@ -129,8 +190,16 @@ hr{ border:1px solid #D6D6D6; }
 
 /*Debbuger*/
 #debug_container{
-
+  font-family: 'Share Tech Mono', sans-serif !important; 
 }
+  #debug_container .debugOptionsContainer li{
+    float:right;
+    margin: 5px;
+    color:#333;
+    vertical-align: middle;
+    height: 30px;
+    line-height: 30px;
+  }
   #debug_container .headerDebugItem h3{
     color: #657b83;
     margin: 5px 0px;
