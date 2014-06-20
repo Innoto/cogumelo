@@ -135,6 +135,7 @@ ul.withoutDecoration li{
 #deBugs_link{ background: url('/media/module/devel/img/deBugs.png') right no-repeat;}
 #logs_link{ background: url('/media/module/devel/img/logs.png') right no-repeat;}
 #dbsql_link{ background: url('/media/module/devel/img/database.png') right no-repeat;}
+#urls_link{ background: url('/media/module/devel/img/urls.png') right no-repeat;}
 
 /************************************************************************************************************************/
 /************************************************************************************************************************/
@@ -219,7 +220,24 @@ ul.withoutDecoration li{
     margin-bottom: 20px; 
     border-bottom: 3px dashed #fff;
   }
+/* URLs */
 
+#urls_container{}
+  #urls_container fieldset{border:3px solid #D6D6D6; margin-bottom: 20px; }
+  #urls_container legend{ font-size: 20px;}
+  #urls_container .regexItem .regexDest{
+   display: block;
+   float: right;
+   width: 100%;
+   max-width: 600px;
+  }
+  #urls_container .regexItem .regex{ 
+   color: #C52664;
+   display:block;
+   float: left;
+   width: 100%;
+   max-width: 400px;
+  }
 
 /************************************************************************************************************************/
 /************************************************************************************************************************/

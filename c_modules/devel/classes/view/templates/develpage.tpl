@@ -26,10 +26,11 @@
   <img id="logo" src="/media/module/devel/img/cogumelo_logo.png" >
   <h1>DEVEL</h1>
   <ul id="options_header_menu">
-    <li id ="infosetup_link"><a onclick="hideContainer(); $('#infosetup_container').show();" href="#infosetup">Infosetup</a></li>
-    <li id ="deBugs_link"><a onclick="hideContainer(); $('#debug_container').show();" href="#deBugs">deBugs</a></li>
-    <li id ="logs_link"><a onclick="hideContainer(); $('#logs_tabs').show();" href="#logs">Logs</a></li>
-    <li id ="dbsql_link"><a onclick="hideContainer(); $('#dbsql_container').show();"  href="#dbsql">DB SQL</a></li>
+    <li id ="infosetup_link"><a onclick="hideContainer(); $('#infosetup_container').show();" href="#infosetup">[Infosetup]</a></li>
+    <li id ="urls_link"><a onclick="hideContainer(); $('#urls_container').show();" href="#urls">[URLs]</a></li>
+    <li id ="deBugs_link"><a onclick="hideContainer(); $('#debug_container').show();" href="#deBugs">[deBugs]</a></li>
+    <li id ="logs_link"><a onclick="hideContainer(); $('#logs_tabs').show();" href="#logs">[Logs]</a></li>
+    <li id ="dbsql_link"><a onclick="hideContainer(); $('#dbsql_container').show();"  href="#dbsql">[DB SQL]</a></li>
   </ul>
 </div>
 <div id="main">
@@ -97,6 +98,25 @@
       <div class="infoSQL">{foreach $data_sql as $item}{$item}{/foreach}</div>      
     </fieldset>
   </div>
+  
+  <!-- ****************************************************************************************************************  -->
+  <!-- ****************************************************************************************************************  -->
+  <div id="urls_container" class="container" style="display:none;">
+    {foreach $dataUrls as $siteUrl}
+    <fieldset>
+      <legend>{$siteUrl['name']}</legend>
+      <div class="infoUrls">
+        {foreach $siteUrl['regex_list'] as $regexItem}
+          <div class="regexItem clearfix">
+            <span class="regex">{$regexItem['regex']}</span>
+            <span class="regexDest">{$regexItem['dest']}</span>
+          </div>
+        {/foreach}
+      </div>      
+    </fieldset>
+    {/foreach}    
+  </div>
+  
 </div> 
  
 </body>

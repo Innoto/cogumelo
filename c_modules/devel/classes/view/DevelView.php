@@ -5,6 +5,7 @@ Cogumelo::load('c_vendor/kint-1.0.0-wip/Kint.class.php');
 Cogumelo::load('c_view/View');
 devel::load('controller/LogReaderController');
 devel::load('controller/DevelDBController');
+devel::load('controller/UrlListController');
 
 
 class DevelView extends View
@@ -40,6 +41,8 @@ class DevelView extends View
     $this->logs();       
     //$this->infosetup();
     $this->DBSQL();    
+    $this->infoUrls();
+    
 
     $this->template->exec();
 
@@ -74,7 +77,10 @@ class DevelView extends View
     }
 
 
-
+    function infoUrls(){  
+      $regexlist = new UrlListController();
+      $this->template->assign("dataUrls",  $regexlist->listUrls());
+    }
 
 
 
