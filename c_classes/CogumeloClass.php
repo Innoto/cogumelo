@@ -113,10 +113,24 @@ class CogumeloClass extends Singleton
   }
 
   static function log( $texto, $fich_log='cogumelo' ) {
+    $ignore = false;
 
-    if($_SERVER['REQUEST_URI'] != '/'.MOD_DEVEL_URL_DIR.'/read_logs'
-      && $_SERVER['REQUEST_URI'] != '/'.MOD_DEVEL_URL_DIR.'/get_debugger'
+    if( $_SERVER['REQUEST_URI'] != '/devel/read_logs'
+      && $_SERVER['REQUEST_URI'] != '/devel/get_debugger'
     ) {
+      $ignore = true;
+    }
+/*
+    if( defined(MOD_DEVEL_URL_DIR) ) {
+      if( $_SERVER['REQUEST_URI'] != '/'.MOD_DEVEL_URL_DIR.'/read_logs'
+        && $_SERVER['REQUEST_URI'] != '/'.MOD_DEVEL_URL_DIR.'/get_debugger'
+      ) {
+        $ignore = true;
+      }
+    }
+*/
+
+    if( !$ignore ) {
       error_log(
         '['. date('y-m-d H:i:s',time()) .'] ' .
         '['. $_SERVER['REMOTE_ADDR'] .'] ' .

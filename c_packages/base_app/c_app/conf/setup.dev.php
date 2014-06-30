@@ -96,12 +96,8 @@ define("DEVEL_PASSWORD", 'devel');
 //	i18n
 //
 
-define("GETTEXT_UPDATE",  true); // update gettext files when working in localhost
-define("LANG_DEFAULT",  'gl');
+define("GETTEXT_UPDATE", true); // update gettext files when working in localhost
+define("LANG_DEFAULT", 'gl');
 define("LANG_AVAILABLE", 'gl,es,en');
 
 
-//
-//  mediaserver
-//
-define('MEDIASERVER_URL_DIR', 'media');
