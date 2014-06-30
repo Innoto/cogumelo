@@ -11,14 +11,14 @@ else {
 
 /**
 * Calcula si estamos en el entorno de desarrollo o produccion
-* @return boolean 
+* @return bool
 */
 function is_devel_server() {
   $develEnviroment = false;
 
   if( isset( $_SERVER['REMOTE_ADDR'] ) ) {
     if ( strpos( $_SERVER['REMOTE_ADDR'], '10.77.' ) === 0 ||
-      strpos( $_SERVER['REMOTE_ADDR'], '127.0.' ) === 0 
+      strpos( $_SERVER['REMOTE_ADDR'], '127.0.' ) === 0
     ) {
       $develEnviroment = true;
     }

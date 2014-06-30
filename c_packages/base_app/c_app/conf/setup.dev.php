@@ -10,16 +10,16 @@ define('COGUMELO_LOCATION', '/home/proxectos/cogumelo');
 //	DB
 //
 
-define('DB_ENGINE', 	'mysql'); //supported Engines: ('mysql', '')
-define("DB_HOSTNAME" ,	"localhost");
-define("DB_PORT",		"3306");
-define("DB_USER" , 		"usuario");
-define("DB_PASSWORD", 	"contrasena");
-define("DB_NAME",		"test");
+define('DB_ENGINE', 'mysql'); //supported Engines: ('mysql', '')
+define("DB_HOSTNAME", "localhost");
+define("DB_PORT", "3306");
+define("DB_USER", "usuario");
+define("DB_PASSWORD", "contrasena");
+define("DB_NAME", "test");
 
 
 // allow cache with memcached
-define("DB_ALLOW_CACHE", true); 
+define("DB_ALLOW_CACHE", true);
 require_once(SITE_PATH.'/conf/memcached.setup.php');  //memcached options
 
 
@@ -31,7 +31,7 @@ define('SITE_PROTOCOL', (isset($_SERVER['HTTPS']))? 'https' : 'http');
 define('SITE_HOST', SITE_PROTOCOL.'://'.$_SERVER['HTTP_HOST']);  // solo HOST sin ('/')
 define('SITE_FOLDER', '/');  // SITE_FOLDER STARTS AND ENDS WITH SLASH ('/')
 define('SITE_URL', SITE_HOST . SITE_FOLDER);
-define('SITE_URL_HTTP', 'http://'.$_SERVER['HTTP_HOST'] . SITE_FOLDER); 
+define('SITE_URL_HTTP', 'http://'.$_SERVER['HTTP_HOST'] . SITE_FOLDER);
 define('SITE_URL_HTTPS', 'https://'.$_SERVER['HTTP_HOST'] . SITE_FOLDER);
 
 
@@ -42,7 +42,7 @@ else
 
 
 //
-//	Sendmail 
+//	Sendmail
 //
 
 define("SMTP_HOST", "localhost");
@@ -75,12 +75,12 @@ global $C_ENABLED_MODULES;
 $C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'testmodule', 'devel');
 
 //
-// 	Logs 
+// 	Logs
 //
 
 define("BCK", SITE_PATH."backups/");		//backups directory
 define("LOGDIR", SITE_PATH."log/");		//log files directory
-define('LOG_RAW_SQL', false); 	// Log RAW all SQL ¡WARNING! application passwords will dump into log files 
+define('LOG_RAW_SQL', false); 	// Log RAW all SQL ¡WARNING! application passwords will dump into log files
 define("DEBUG", true); // Set Debug mode to log debug messages on log
 define("ERRORS", true); // Display errors on screen. If you use devel module, you might disable it
 
@@ -90,13 +90,18 @@ define("ERRORS", true); // Display errors on screen. If you use devel module, yo
 
 global $DEVEL_ALLOWED_HOSTS;
 $DEVEL_ALLOWED_HOSTS = array('127.0.0.1','10.77.1.36', '55.7.8.7');
-define("DEVEL_PASSWORD", 'devel'); 	
+define("DEVEL_PASSWORD", 'devel');
 
 //
-//	i18n 
+//	i18n
 //
 
 define("GETTEXT_UPDATE",  true); // update gettext files when working in localhost
 define("LANG_DEFAULT",  'gl');
 define("LANG_AVAILABLE", 'gl,es,en');
 
+
+//
+//  mediaserver
+//
+define('MEDIASERVER_URL_DIR', 'media');

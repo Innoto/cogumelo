@@ -5,16 +5,20 @@ Cogumelo::load('c_view/View');
 class GetLang extends View
 {
 
-	function __construct($base_dir){
-		parent::__construct($base_dir);
-	}
+  function __construct($base_dir){
+    parent::__construct($base_dir);
+  }
 
-	function accessCheck() {
-		return true;
-	}
+  /**
+  * Evaluar las condiciones de acceso y reportar si se puede continuar
+  * @return bool : true -> Access allowed
+  */
+  function accessCheck() {
+    return true;
+  }
 
-	// load media from app
-	function setlang($url_path=''){
-		echo "<br> SET Lang global variables<br><br>";
-	}
+  // load media from app
+  function setlang($url_path=''){
+    echo "<br> SET Lang global variables<br><br>";
+  }
 }
