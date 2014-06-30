@@ -14,7 +14,9 @@ sudo chown -R $CGUSER:$CGUSER cogumelo cogumelo.php set_permissions.sh
 chmod 700 cogumelo cogumelo.php set_permissions.sh
 
 sudo chown -R $CGUSER:$CGSERV c_app
-chmod -R ug-x,g-w,o-rwx,u+rwX,g+rX c_app
+#chmod -R ug-x,g-w,o-rwx,u+rwX,g+rX c_app
+# TEMPORALMENTE
+chmod -R ug-x,g-w,o-rwx,u+rwX,g+rX,o+r c_app
 chmod -R g+w c_app/tmp c_app/log
 
 sudo chown $CGUSER:$CGUSER c_app/backups
