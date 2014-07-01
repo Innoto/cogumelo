@@ -75,7 +75,8 @@ class ModuleController
       $mod_path = $this->module_paths[$module_name];
       require_once($mod_path.'/'.$module_name.'.php');
       $modulo = new $module_name();
-      $this->request = new RequestController( $modulo->url_patterns, $this->url_path, $mod_path );
+      //$this->request = new RequestController( $modulo->url_patterns, $this->url_path, $mod_path );
+      $this->request = new RequestController( $modulo->getUrlPatternsToArray(), $this->url_path, $mod_path );
       $this->url_path = $this->request->getLeftoeverUrl();
       Cogumelo::debug("Module loaded: ".$module_name);
     }

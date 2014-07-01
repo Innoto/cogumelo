@@ -31,7 +31,7 @@ class MasterView extends View
   }
 
   function page404() {
-    //echo "Recurso non atopado";
+    echo "PAGE404: Recurso non atopado";
   }
 
 }

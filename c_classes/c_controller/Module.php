@@ -36,6 +36,9 @@ Cogumelo::load('c_controller/ModuleController');
 
 class Module
 {
+  private $urlPatterns = array();
+
+
   /**
   * @param string $load_path the path of module
   */
@@ -51,8 +54,23 @@ class Module
 	}
 
 
-  function setUrlPatterns() {
+  function deleteUrlPatterns() {
+    $this->urlPatterns = array();
+  }
 
+  function addUrlPatterns( $regex, $dest ) {
+    $this->urlPatterns[ $regex ] = $dest;
+  }
+
+  function setUrlPatternsFromArray( $arrayUrlPatterns ) {
+    $this->deleteUrlPatterns();
+    foreach ($arrayUrlPatterns as $key => $value) {
+      $this->addUrlPatterns( $key, $value );
+    }
+  }
+
+  function getUrlPatternsToArray() {
+    return $this->urlPatterns;
   }
 
 }

@@ -16,13 +16,12 @@ class Cogumelo extends CogumeloClass
     '#^cousa/crear$#' => 'view:Cousadmin::crea',
     '#^cousa$#' => 'view:Cousadmin::lista',
 */
-    '#^admin\/?(.*)$#' => 'view:Adminview::metodo',
+    //'#^admin\/?(.*)$#' => 'view:Adminview::metodo',
     //'#^dev$#' => 'view:DevView::main',
     // default views
 
     '#^getobj$#' => 'view:Adminview::getobj',
     '#^setobj$#' => 'view:Adminview::setobj',
-    '#^createdb$#' => 'view:Adminview::create_user_db_tables',
 
     '#^404$#' => 'view:MasterView::page404',
     '#^$#' => 'view:MasterView::master' // App home url
