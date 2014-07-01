@@ -25,7 +25,7 @@ class DevelView extends View
     if( !in_array($_SERVER["REMOTE_ADDR"], $DEVEL_ALLOWED_HOSTS) ){
 */
     if( !MOD_DEVEL_ALLOW_ACCESS ) {
-      Cogumelo::error("Must be developer machine to enter on this site");
+      Cogumelo::error("Must be developer to enter on this site");
       RequestController::redirect(SITE_URL_CURRENT.'');
     }
     else {
