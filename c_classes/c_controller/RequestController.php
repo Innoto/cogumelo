@@ -35,10 +35,11 @@ class RequestController
   var $include_base_path;
   var $leftover_url = "";
   var $is_last_request = false;
+  var $urlPatterns = array();
 
 
-  function __construct($url_patterns, $url_path, $include_base_path = false) {
-    $this->url_patterns = $url_patterns;
+  function __construct($urlPatterns, $url_path, $include_base_path = false) {
+    $this->urlPatterns = $urlPatterns;
     $this->url_path = $url_path;
 
     if($include_base_path) {
@@ -54,7 +55,7 @@ class RequestController
 
 
   function exec() {
-    foreach($this->url_patterns as $url_pattern_key => $url_pattern_action){
+    foreach($this->urlPatterns as $url_pattern_key => $url_pattern_action){
       if(preg_match( $url_pattern_key, $this->url_path, $m_url) ) {
         if(array_key_exists(1, $m_url)) {
           $this->readPatternAction($m_url[1], $url_pattern_action);

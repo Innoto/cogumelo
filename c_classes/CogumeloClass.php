@@ -7,7 +7,8 @@ class CogumeloClass extends Singleton
 {
   public $request;
   public $modules;
-  public $url_patterns;
+
+  private $urlPatterns;
 
   protected $userinfoString = '';
 
@@ -20,7 +21,7 @@ class CogumeloClass extends Singleton
   }
 
 
-  function exec(){
+  function exec() {
     Cogumelo::debug('Request URI: '.$_SERVER['REQUEST_URI']);
 
     // cut out the SITE_FOLDER and final slash from path
@@ -32,13 +33,13 @@ class CogumeloClass extends Singleton
 
     // main request controller
     self::load('c_controller/RequestController');
-    $this->request = new RequestController($this->url_patterns, $url_path_after_modules );
+    $this->request = new RequestController($this->urlPatterns, $url_path_after_modules );
   }
+
 
   //
   //  Auto include
   //
-
   static function load($classname) {
 
     if(preg_match('#^c_vendor/#', $classname)){
@@ -84,7 +85,7 @@ class CogumeloClass extends Singleton
 
   static function errorHandler() {
 
-    $last_error=error_get_last();
+    $last_error = error_get_last();
 
     if($last_error!=null) {
       $error_msg = 'Fatal error: '.$last_error['message'].' on file "'.$last_error['file'].'" line: '.$last_error['line'];
@@ -115,20 +116,14 @@ class CogumeloClass extends Singleton
   static function log( $texto, $fich_log='cogumelo' ) {
     $ignore = false;
 
-    if( $_SERVER['REQUEST_URI'] != '/devel/read_logs'
-      && $_SERVER['REQUEST_URI'] != '/devel/get_debugger'
+    // Rodeo para evitar "PHP Notice:  Use of undefined constant MOD_DEVEL_URL_DIR"
+    $arrayDefines = get_defined_constants();
+    if( isset( $arrayDefines['MOD_DEVEL_URL_DIR'] )
+      && $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/read_logs'
+      && $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/get_debugger'
     ) {
       $ignore = true;
     }
-/*
-    if( defined(MOD_DEVEL_URL_DIR) ) {
-      if( $_SERVER['REQUEST_URI'] != '/'.MOD_DEVEL_URL_DIR.'/read_logs'
-        && $_SERVER['REQUEST_URI'] != '/'.MOD_DEVEL_URL_DIR.'/get_debugger'
-      ) {
-        $ignore = true;
-      }
-    }
-*/
 
     if( !$ignore ) {
       error_log(
@@ -214,6 +209,34 @@ class CogumeloClass extends Singleton
       $_SESSION['cogumelo_dev_obj_array'] = serialize($session_array);
     }
   }
+
+
+//
+// Metodos duplicados en Module.php
+// (Ini)
+
+  function deleteUrlPatterns() {
+    $this->urlPatterns = array();
+  }
+
+  function addUrlPatterns( $regex, $destination ) {
+    $this->urlPatterns[ $regex ] = $destination;
+  }
+
+  function setUrlPatternsFromArray( $arrayUrlPatterns ) {
+    $this->deleteUrlPatterns();
+    foreach ($arrayUrlPatterns as $key => $value) {
+      $this->addUrlPatterns( $key, $value );
+    }
+  }
+
+  function getUrlPatternsToArray() {
+    return $this->urlPatterns;
+  }
+
+// (Fin)
+// Metodos duplicados en Module.php
+//
 
 }
 

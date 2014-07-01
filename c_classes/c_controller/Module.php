@@ -54,12 +54,16 @@ class Module
 	}
 
 
+//
+// Metodos duplicados en CogumeloClass.php
+// (Ini)
+
   function deleteUrlPatterns() {
     $this->urlPatterns = array();
   }
 
-  function addUrlPatterns( $regex, $dest ) {
-    $this->urlPatterns[ $regex ] = $dest;
+  function addUrlPatterns( $regex, $destination ) {
+    $this->urlPatterns[ $regex ] = $destination;
   }
 
   function setUrlPatternsFromArray( $arrayUrlPatterns ) {
@@ -72,5 +76,10 @@ class Module
   function getUrlPatternsToArray() {
     return $this->urlPatterns;
   }
+
+// (Fin)
+// Metodos duplicados en CogumeloClass.php
+//
+
 
 }

@@ -21,17 +21,6 @@ class Adminview extends View
   }
 
 
-  function seccion($url_path=''){
-    $this->common();
-    $this->template->exec();
-  }
-
-  function common() {
-    $this->template->setTpl("testpage.tpl");
-    //$this->template->addJs("vendor/jquery.js", "basics");
-    //$this->template->addJs("vendor/jquery.js");
-  }
-
   function setObj() {
     echo "SET OBJ<br>";
 
@@ -46,16 +35,5 @@ class Adminview extends View
   }
 
 
-  function create_user_db_tables() {
-    echo "create DB<br>";
-    devel::load('controller/DevelDBController');
-
-    $fvotdbcontrol = new DevelDBController("root", "nnt100");
-    var_dump($fvotdbcontrol->createSchemaDB() );
-  }
-
-  function page404() {
-    //echo "Recurso non atopado";
-  }
 }
 

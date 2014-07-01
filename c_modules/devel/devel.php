@@ -14,7 +14,7 @@ class devel extends Module
     $this->addUrlPatterns( '#^'.MOD_DEVEL_URL_DIR.'/get_debugger#', 'view:DevelView::get_debugger' );
     $this->addUrlPatterns( '#^'.MOD_DEVEL_URL_DIR.'/get_sql_tables$#', 'view:DevelView::get_sql_tables' );
 
-    Cogumelo::error( print_r( $this->getUrlPatternsToArray(), true ) );
+    //Cogumelo::error( print_r( $this->getUrlPatternsToArray(), true ) );
   }
 
 }
