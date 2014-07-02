@@ -98,7 +98,7 @@ if( IS_DEVEL_ENV || in_array( $_SERVER["REMOTE_ADDR"], array( '127.0.0.1','10.77
 else {
   define( 'MOD_DEVEL_ALLOW_ACCESS', false );
 }
-define( 'DEVEL_PASSWORD', 'devel' );
+define( 'DEVEL_PASSWORD', 'develpassword' );
 
 
 //
