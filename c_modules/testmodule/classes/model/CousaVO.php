@@ -1,7 +1,8 @@
 <?php
 
 Cogumelo::load('c_model/VO');
-//testmodule::load('model/ComplementoVO');
+testmodule::load('model/ComplementoVO');
+
 
 
 class CousaVO extends VO

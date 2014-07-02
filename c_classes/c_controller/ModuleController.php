@@ -38,12 +38,18 @@ class ModuleController
   var $module_paths = array();
 
 
-  function __construct($url_path) {
+  function __construct($url_path = false, $from_shell = false) {
     $this->url_path = $url_path;
     $this->setModules();
+
     foreach($this->module_paths as $mp_id => $mp) {
       // exec modulos
-      $this->execModule( $mp_id );
+      if( $from_shell ) {
+        $this->onlyIncludeModules( $mp_id );      
+      }
+      else {
+        $this->execModule( $mp_id );        
+      }
     }
   }
 
@@ -73,6 +79,7 @@ class ModuleController
     }
     else {
       $mod_path = $this->module_paths[$module_name];
+      echo $mod_path.'/'.$module_name.'.php\n';
       require_once($mod_path.'/'.$module_name.'.php');
       $modulo = new $module_name();
       $this->request = new RequestController( $modulo->getUrlPatternsToArray(), $this->url_path, $mod_path );
@@ -81,6 +88,13 @@ class ModuleController
     }
   }
 
+  function onlyIncludeModules($module_name) {
+
+
+      $mod_path = $this->module_paths[$module_name];
+      require_once($mod_path.'/'.$module_name.'.php');
+
+  }
 
   function getLeftUrl() {
     return $this->url_path;

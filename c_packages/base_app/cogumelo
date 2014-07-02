@@ -55,7 +55,7 @@ $develdbcontrol = new DevelDBController();
 
       case 'createTables': // create database tables
         createTables();
-        echo 'generate db tables';
+        echo 'generated db tables\n';
         break;  
 
       case 'setPermissions': // create database tables
@@ -105,6 +105,10 @@ function createDB($user, $passwd){
 }
 
 function createTables(){
+
+  Cogumelo::load('c_controller/ModuleController');
+  $moduleControl = new ModuleController(false, true);
+
   $develdbcontrol = new DevelDBController();
   $develdbcontrol->createTables();
 }

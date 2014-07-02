@@ -2,6 +2,7 @@
 
 Cogumelo::load("c_controller/Module");
 
+
 class testmodule extends Module
 {
 
