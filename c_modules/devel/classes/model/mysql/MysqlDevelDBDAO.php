@@ -74,7 +74,7 @@ class MysqlDevelDBDAO extends MysqlDAO
 
 	// Sql generation methods
 
-	function getDropSQL($connection, $vo_name, $vo_route) {
+	function getDropSQL($connection, $vo_name, $vo_route = false ) {
 		$vo= new $vo_name();
 
 		$strSQL = $this->getTableSQL($connection, $vo_name, $vo_route);
@@ -82,7 +82,7 @@ class MysqlDevelDBDAO extends MysqlDAO
 
 	}
 
-	function getTableSQL($connection, $vo_name, $vo_route){
+	function getTableSQL($connection, $vo_name, $vo_route = false){
 		$VO = new $vo_name();
 
 		$primarykeys = array();
