@@ -5,7 +5,9 @@ CGSERV=www-data
 
 
 sudo chown -R $CGUSER:$CGSERV *
-chmod -R u-x,g-wx,o-rwx,u+rwX,g+rX *
+#chmod -R u-x,g-wx,o-rwx,u+rwX,g+rX *
+# TEMPORALMENTE
+chmod -R u-x,g-wx,o-rwx,u+rwX,go+rX *
 chmod 700 set_cogumelo_permissions.sh
 
 

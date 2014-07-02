@@ -5,103 +5,103 @@ Cogumelo::load('c_model/DAOResult');
 
 class MysqlDAOResult extends DAOResult {
 
-	var $result;
-	var $VO;
-	var $cache = false;
+  var $result;
+  var $VO;
+  var $cache = false;
 
 
-	function __construct($voObj, $result, $is_cached_result = false) {
-		$this->VO = $voObj;
-		$this->result = $result;
-		if( $is_cached_result ) {
-			$this->cache = $result;
-		}
-	}
+  function __construct($voObj, $result, $isCachedResult = false) {
+    $this->VO = $voObj;
+    $this->result = $result;
+    if( $isCachedResult ) {
+      $this->cache = $result;
+    }
+  }
 
 
-	// fetch just one result
-	function fetch() {
+  // fetch just one result
+  function fetch() {
 
-		if($this->cache){ // is cached query ?
-			$ret_obj = $this->cache_fetch();
-		}
-		else {
-			$row = $this->result->fetch_assoc();
+    if($this->cache){ // is cached query ?
+      $ret_obj = $this->cacheFetch();
+    }
+    else {
+      $row = $this->result->fetch_assoc();
 
-			if($row)
-				$ret_obj = $this->VOGenerator( $row );
-			else
-				$ret_obj = false;
-		}
+      if($row)
+        $ret_obj = $this->VOGenerator( $row );
+      else
+        $ret_obj = false;
+    }
 
-		return $ret_obj;
-	}
-
-
-	// resturn an VO array with all the result rows
-	function fetchAll() {
-
-		if($this->cache){ // is cached query ?
-				$list = $this->cache_fetchAll();
-		}
-		else {
-
-				$list = array();
-
-				while( $row = $this->result->fetch_assoc() ) {
-					$rowVO = $this->VOGenerator( $row);
-					$list[ $rowVO->getter($rowVO->getFirstPrimarykeyId()) ] = $rowVO;
-				}
-		}
-
-		$this->reset_fetch();
-		
-		return $list;
-		
-	}
-
-	// count total numer of query result
-	function count() {
-
-		if($this->cache){ // is cached query ?
-			$ret = $this->cache_count();
-		}
-		else {
-			$ret = $this->result->count();
-		}
-
-		return $ret;
-	}
+    return $ret_obj;
+  }
 
 
-	//
-	// Creates an VO from a query result;
-	// Returns: Obj/false
-	function VOGenerator($row) // antes utilizaba & na variable res
-	{
-		return new $this->VO($row);
+  // resturn an VO array with all the result rows
+  function fetchAll() {
 
-	}
+    if($this->cache){ // is cached query ?
+        $list = $this->cacheFetchAll();
+    }
+    else {
 
-	function fetchAll_RAW() {
+        $list = array();
 
-				//$this->reset_fetch();
-		$list = array();
+        while( $row = $this->result->fetch_assoc() ) {
+          $rowVO = $this->VOGenerator( $row);
+          $list[ $rowVO->getter($rowVO->getFirstPrimarykeyId()) ] = $rowVO;
+        }
+    }
 
-		while( $row = $this->result->fetch_assoc() ) {
-			$list[] = $row;
-		}
-		
-		$this->reset_fetch();
+    $this->reset_fetch();
+    
+    return $list;
+    
+  }
 
-		return $list;	
-	}
+  // count total numer of query result
+  function count() {
 
-	function reset_fetch() {
-		 //return mysql_data_seek($this->result ,0);
-		 $this->result->data_seek(0);
+    if($this->cache){ // is cached query ?
+      $ret = $this->cache_count();
+    }
+    else {
+      $ret = $this->result->count();
+    }
 
-	}
+    return $ret;
+  }
+
+
+  //
+  // Creates an VO from a query result;
+  // Returns: Obj/false
+  function VOGenerator($row) // antes utilizaba & na variable res
+  {
+    return new $this->VO($row);
+
+  }
+
+  function fetchAllRaw() {
+
+        //$this->reset_fetch();
+    $list = array();
+
+    while( $row = $this->result->fetch_assoc() ) {
+      $list[] = $row;
+    }
+    
+    $this->reset_fetch();
+
+    return $list; 
+  }
+
+  function resetFetch() {
+     //return mysql_data_seek($this->result ,0);
+     $this->result->data_seek(0);
+
+  }
 
 
 }

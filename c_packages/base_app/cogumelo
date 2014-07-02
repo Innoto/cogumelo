@@ -14,7 +14,7 @@
   // cogumelo core Location
   set_include_path('.:'.SITE_PATH);
 
-  require_once("conf/setup.dev.php"); 
+  require_once("conf/setup.php"); 
 
   require_once(COGUMELO_LOCATION."/c_classes/CogumeloClass.php");
   require_once(SITE_PATH."/Cogumelo.php");
@@ -55,7 +55,7 @@ $develdbcontrol = new DevelDBController();
 
       case 'createTables': // create database tables
         createTables();
-        echo 'generate db tables';
+        echo 'generated db tables\n';
         break;  
 
       case 'setPermissions': // create database tables
@@ -105,6 +105,10 @@ function createDB($user, $passwd){
 }
 
 function createTables(){
+
+  Cogumelo::load('c_controller/ModuleController');
+  $moduleControl = new ModuleController(false, true);
+
   $develdbcontrol = new DevelDBController();
   $develdbcontrol->createTables();
 }

@@ -4,5 +4,9 @@ Cogumelo::load("c_controller/Module");
 
 class client extends Module
 {
-  var $url_patterns = array();
+
+  function __construct() {
+    //$this->addUrlPatterns( regex, destination );
+  }
+
 }

@@ -7,96 +7,106 @@
 define('COGUMELO_LOCATION', '/home/proxectos/cogumelo');
 
 //
-//	DB
+//  DB
 //
 
-define('DB_ENGINE', 	'mysql'); //supported Engines: ('mysql', '')
-define("DB_HOSTNAME" ,	"localhost");
-define("DB_PORT",		"3306");
-define("DB_USER" , 		"usuario");
-define("DB_PASSWORD", 	"contrasena");
-define("DB_NAME",		"test");
+define('DB_ENGINE', 'mysql'); //supported Engines: ('mysql', '')
+define('DB_HOSTNAME', 'localhost');
+define('DB_PORT', '3306');
+define('DB_USER', 'usuario');
+define('DB_PASSWORD', 'contrasena');
+define('DB_NAME', 'test');
 
 
 // allow cache with memcached
-define("DB_ALLOW_CACHE", true); 
+define('DB_ALLOW_CACHE', true);
 require_once(SITE_PATH.'/conf/memcached.setup.php');  //memcached options
 
 
 //
-//	Url settings
+//  Url settings
 //
 
 define('SITE_PROTOCOL', (isset($_SERVER['HTTPS']))? 'https' : 'http');
 define('SITE_HOST', SITE_PROTOCOL.'://'.$_SERVER['HTTP_HOST']);  // solo HOST sin ('/')
 define('SITE_FOLDER', '/');  // SITE_FOLDER STARTS AND ENDS WITH SLASH ('/')
 define('SITE_URL', SITE_HOST . SITE_FOLDER);
-define('SITE_URL_HTTP', 'http://'.$_SERVER['HTTP_HOST'] . SITE_FOLDER); 
+define('SITE_URL_HTTP', 'http://'.$_SERVER['HTTP_HOST'] . SITE_FOLDER);
 define('SITE_URL_HTTPS', 'https://'.$_SERVER['HTTP_HOST'] . SITE_FOLDER);
 
 
 if(SITE_PROTOCOL == 'https')
-	define('SITE_URL_CURRENT', SITE_URL_HTTPS);
+  define('SITE_URL_CURRENT', SITE_URL_HTTPS);
 else
-	define('SITE_URL_CURRENT', SITE_URL_HTTP);
+  define('SITE_URL_CURRENT', SITE_URL_HTTP);
 
 
 //
-//	Sendmail 
+//  Sendmail
 //
 
-define("SMTP_HOST", "localhost");
-define("SMTP_PORT", "25");
-define("SMTP_AUTH", false);
-define("SMTP_USER", "");
-define("SMTP_PASS", "");
+define('SMTP_HOST', 'localhost');
+define('SMTP_PORT', '25');
+define('SMTP_AUTH', false);
+define('SMTP_USER', '');
+define('SMTP_PASS', '');
 
 define('SYS_MAIL_FROM_NAME',    'Cogumelo Sender');
 define('SYS_MAIL_FROM_EMAIL',   'cogumelo@cogumelo.org');
 
 
 //
-// 	Smarty & Template
+//  Smarty & Template
 //
 
-define("SMARTY_CONFIG",	SITE_PATH."conf/smarty");
-define("SMARTY_COMPILE",SITE_PATH."tmp/templates_c");
-define("SMARTY_CACHE", 	SITE_PATH."tmp/cache");
-define("MINIMIFY_FILES", false);
-define("MINIMIFY_CACHE_PATH", SITE_PATH.'tmp/minimify');
+define('SMARTY_CONFIG', SITE_PATH.'conf/smarty');
+define('SMARTY_COMPILE',SITE_PATH.'tmp/templates_c');
+define('SMARTY_CACHE',  SITE_PATH.'tmp/cache');
+define('MINIMIFY_FILES', false);
+define('MINIMIFY_CACHE_PATH', SITE_PATH.'tmp/minimify');
 
 
 
 //
-//	Modules
+//  Modules
 //
 
 global $C_ENABLED_MODULES;
 $C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'testmodule', 'devel');
 
-//
-// 	Logs 
-//
-
-define("BCK", SITE_PATH."backups/");		//backups directory
-define("LOGDIR", SITE_PATH."log/");		//log files directory
-define('LOG_RAW_SQL', false); 	// Log RAW all SQL ¡WARNING! application passwords will dump into log files 
-define("DEBUG", true); // Set Debug mode to log debug messages on log
-define("ERRORS", true); // Display errors on screen. If you use devel module, you might disable it
 
 //
-//	Devel Mod
+//  Logs
 //
 
-global $DEVEL_ALLOWED_HOSTS;
-$DEVEL_ALLOWED_HOSTS = array('127.0.0.1','10.77.1.36', '55.7.8.7');
-define("DEVEL_PASSWORD", 'devel'); 	
+define('BCK', SITE_PATH.'backups/');    //backups directory
+define('LOGDIR', SITE_PATH.'log/');   //log files directory
+define('LOG_RAW_SQL', false);   // Log RAW all SQL ¡WARNING! application passwords will dump into log files
+define('DEBUG', true); // Set Debug mode to log debug messages on log
+define('ERRORS', true); // Display errors on screen. If you use devel module, you might disable it
+
 
 //
-//	i18n 
+//  Devel Mod
 //
 
-define("GETTEXT_UPDATE",  true); // update gettext files when working in localhost
-define("LANG_DEFAULT",  'gl');
-define("LANG_AVAILABLE", 'gl,es,en');
+//global $DEVEL_ALLOWED_HOSTS;
+//$DEVEL_ALLOWED_HOSTS = array( '127.0.0.1','10.77.1.36', '55.7.8.7' );
+if( IS_DEVEL_ENV || in_array( $_SERVER["REMOTE_ADDR"], array( '127.0.0.1','10.77.1.36', '55.7.8.7' ) ) ){
+  define( 'MOD_DEVEL_ALLOW_ACCESS', true );
+}
+else {
+  define( 'MOD_DEVEL_ALLOW_ACCESS', false );
+}
+define( 'DEVEL_PASSWORD', 'develpassword' );
+
+
+//
+//  i18n
+//
+
+define('GETTEXT_UPDATE', true); // update gettext files when working in localhost
+define('LANG_DEFAULT', 'gl');
+define('LANG_AVAILABLE', 'gl,es,en');
+
 
