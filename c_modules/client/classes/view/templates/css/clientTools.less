@@ -1,45 +1,25 @@
-*{
-  -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
-  -moz-box-sizing: border-box;    /* Firefox, other Gecko */
-  box-sizing: border-box;         /* Opera/IE 8+ */
-}
 
 //
 // Utility classes
 // --------------------------------------------------
 
-
 // Quick floats
-.pull-right {
-  float: right;
-}
-.pull-left {
-  float: left;
-}
+.pull-right { float: right; }
+.pull-left { float: left; }
 
 // Toggling content
-.hide {
-  display: none;
-}
-.show {
-  display: block;
-}
+.hide { display: none; }
+.show { display: block; }
 
 // Visibility
-.invisible {
-  visibility: hidden;
-}
+.invisible { visibility: hidden; }
 
 // For Affix plugin
-.affix {
-  position: fixed;
-}
+.affix { position: fixed; }
 
-
-
-//
-// Mixins
-// --------------------------------------------------
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
 
 
 // UTILITY MIXINS
@@ -48,7 +28,7 @@
 // Clearfix
 // --------
 // For clearing floats like a boss h5bp.com/q
-.clearfix {
+.clearfix() {
   *zoom: 1;
   &:before,
   &:after {
