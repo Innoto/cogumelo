@@ -42,16 +42,16 @@ class Module
   /**
   * @param string $load_path the path of module
   */
-	static function load($load_path) {
-		$module_name = get_called_class();
+  static function load($load_path) {
+    $module_name = get_called_class();
 
-		if($file_to_include =  ModuleController::getRealFilePath('classes/'.$load_path.'.php', $module_name)) {
-			require_once($file_to_include);
-		}
-		else {
-			Cogumelo::error("PHP File '".$load_path."'  not found in module : ".$module_name);
-		}
-	}
+    if($file_to_include =  ModuleController::getRealFilePath('classes/'.$load_path.'.php', $module_name)) {
+      require_once($file_to_include);
+    }
+    else {
+      Cogumelo::error("PHP File '".$load_path."'  not found in module : ".$module_name);
+    }
+  }
 
 
 //

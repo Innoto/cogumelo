@@ -20,13 +20,16 @@ class DevelView extends View
   * @return bool : true -> Access allowed
   */
   function accessCheck() {
+/*
     global $DEVEL_ALLOWED_HOSTS;
     if( !in_array($_SERVER["REMOTE_ADDR"], $DEVEL_ALLOWED_HOSTS) ){
-      Cogumelo::error("Must be developer machine to enter on this site");
+*/
+    if( !MOD_DEVEL_ALLOW_ACCESS ) {
+      Cogumelo::error("Must be developer to enter on this site");
       RequestController::redirect(SITE_URL_CURRENT.'');
     }
     else {
-      if ( isset($_SERVER['PHP_AUTH_PW']) && $_SERVER['PHP_AUTH_PW']!= DEVEL_PASSWORD ) {
+      if ( !isset($_SERVER['PHP_AUTH_PW']) || $_SERVER['PHP_AUTH_PW']!= DEVEL_PASSWORD ) {
         header('WWW-Authenticate: Basic realm="Cogumelo Devel Confirm"');
         header('HTTP/1.0 401 Unauthorized');
         echo 'Acceso Denegado.';
