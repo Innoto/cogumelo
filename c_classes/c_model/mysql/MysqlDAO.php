@@ -163,7 +163,8 @@ class MysqlDAO extends DAO
     }
 
     return array(
-        'string' => "WHERE true".$where_str,
+        '
+        string' => "WHERE true".$where_str,
         'values' => $val_array
       );
   }
@@ -214,7 +215,8 @@ class MysqlDAO extends DAO
   
     // SQL Query
     $VO = new $this->VO();
-    $strSQL = "SELECT * FROM `" . $VO::$tableName . "` ".$whereArray['string'].$orderSTR.$rangeSTR.";";
+
+    $strSQL = "SELECT ".$VO->keysToString()." FROM `" . $VO::$tableName . "` ".$whereArray['string'].$orderSTR.$rangeSTR.";";
 
 
     if ( $cache && DB_ALLOW_CACHE  )

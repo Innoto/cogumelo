@@ -5,7 +5,7 @@ Class VO
 {
 
   var $attributes = array();
-
+  var $dependences = array();
 
   function __construct(array $datarray){
 
@@ -24,6 +24,7 @@ Class VO
     }
 
     $this->setVarlist($datarray);
+    $this->setDependenceVOs();
   }
 
   // set variable list (initializes entity)
@@ -31,7 +32,7 @@ Class VO
   {
     // rest of variables
     foreach($datarray as $datakey=>$data) {
-        $this->setter($datakey, $data, true);
+        $this->setter($datakey, $data);
     }
   }
   
@@ -48,31 +49,89 @@ Class VO
 
     return false;
   }
-  
-  function getTableName() {
-    return $this->tableName;
+
+
+  function setDependenceVOs() {
+    foreach( $this::$cols as $col ) {
+      if( $col['type'] == 'FOREIGN' ){
+        $colVO = new $col['vo']();
+        $this->dependences[$col] = array('VO' => $colVO, 'used' => false);
+      }
+    }
   }
+
+  function getDependenceVO( $tableName ) {
+    $dependenceVO = $this;
+
+    if( in_array($tableName, $this->dependences) && $this->dependences[$tableName]['used'] ) {
+      $dependenceVO = $this->dependences[$tableName]['VO'];
+    }
+
+    return $dependenceVO;
+  }
+
+  function markDependenceAsUsed( $tableName ) {
+    if( in_array($tableName, $this->dependences) ){
+      $this->dependences[$tableName]['used'];
+    }
+  }
+
 
   // set a attribute. If exist a manual method use it
-  function setter($setterkey, $value = false, $ignore_nonexistent_key = false)
+  function setter($setterkey, $value = false)
   {
-    if( in_array($setterkey, array_keys($this::$cols)) ){
-      $this->attributes[$setterkey] = $value;
+
+    if( $setter_data = preg_match('#^(.*?)\.(.*)$#', $setterkey) ) {
+      $tableName = $setter_data[0];
+      $columnKey = $setter_data[1];
+    }
+    else { 
+      $tableName = $this::$tableName;
+      $columnKey = $setterkey;
+    }
+    
+    // choose VO
+    $setterVO = $this->getDependenceVO($tableName);
+
+    // set values
+    if( $tableName == $setterVO::$tableName && in_array($setterkey, array_keys($setterVO::$cols)) ){
+      $this->markDependenceAsUsed( $tableName ); 
+      $setterVO->attributes[$setterkey] = $value;
     }
     else{
-      if(!$ignore_nonexistent_key)
-        Cogumelo::error("key '". $setterkey ."' doesn't exist in VO::". $this::$tableName);
+      Cogumelo::error("key '". $setterkey ."' doesn't exist in VO::". $tableName);
     }
   }
 
+
+
   // get a attribute. If exist a manual method use it
-  function getter($setterkey)
+  function getter($getterkey)
   {
-    if(array_key_exists( $setterkey, $this->attributes))
-      return $this->attributes[$setterkey];
-    else
-      return null;
+
+    if( $getter_data = preg_match('#^(.*?)\.(.*)$#', $getterkey) ) {
+      $tableName = $getter_data[0];
+      $columnKey = $getter_data[1];
+    }
+    else { 
+      $tableName = $this::$tableName;
+      $columnKey = $getterkey;
+    }
+    
+    // choose VO
+    $getterVO = $this->getDependenceVO($tableName);
+
+    if( array_key_exists( $getterkey, $getterVO->attributes) ){
+      $ret = $this->attributes[$getterkey];
+    }
+    else{
+      $ret = null;
+    }
+
+    return $ret;
   }
+
+
 
   function keysToString($resolveDependences = false) {
 
@@ -82,16 +141,25 @@ Class VO
 
     }
     else {
-      $comma = ' ';
-      foreach( array_keys($this->cols) as $k ) {
-        $keys .= $comma.$k;
-        $comma = ', ';
-      }
+      $keys = implode( ',', array_keys($this->cols) );
     }
 
     return $keys;
-    
   }
+
+  function dependencesToString($resolveDependences = false) {
+
+    $keys = false;
+
+    if( $resolveDependences ) {
+
+    }
+    else {
+      $keys = implode( ',', array_keys($this->cols) );
+    }
+
+    return $keys;
+  }  
 
   function toString(){
     $str = "\n " . $keyId. ': ' .$this->getter($keyId);
