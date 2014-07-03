@@ -28,6 +28,7 @@ class MasterView extends View
   function common() {
     $this->template->setTpl("default.tpl");
     $this->template->addJs("vendor/jquery.js");
+    $this->template->addCss('css/client.css', 'client');
   }
 
   function page404() {
