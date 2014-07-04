@@ -52,10 +52,27 @@ Class VO
 
 
   function setDependenceVOs() {
-    foreach( $this::$cols as $col ) {
+    foreach( $this::$cols as $colKey => $col ) {
       if( $col['type'] == 'FOREIGN' ){
         $colVO = new $col['vo']();
         $this->dependences[$col] = array('VO' => $colVO, 'used' => false);
+
+        $colVODependences = $colVO->setDependenceVOs();
+
+        // look for circular dependences
+        if( count( 
+              array_intersect( 
+                array_keys( $this->dependences ), 
+                array_keys( $colVO->setDependenceVOs() ) 
+              )
+            ) == 0 
+        ){
+          $this->dependences = array_merge( $this->dependences, $colVO->setDependenceVOs() );
+        }
+        else 
+        {
+          Cogumelo::error('Circular relationship on VO "'.$this->tableName.'", column: '.$colKey);
+        }
       }
     }
   }
@@ -77,7 +94,7 @@ Class VO
   }
 
 
-  // set a attribute. If exist a manual method use it
+  // set an attribute
   function setter($setterkey, $value = false)
   {
 
@@ -105,7 +122,7 @@ Class VO
 
 
 
-  // get a attribute. If exist a manual method use it
+  // get an attribute
   function getter($getterkey)
   {
 
@@ -132,13 +149,16 @@ Class VO
   }
 
 
+  function getJoinArray() {
+
+  }
 
   function keysToString($resolveDependences = false) {
 
-    $keys = false;
+    $keys = '';
 
     if( $resolveDependences ) {
-
+      $keys = allDependenceKeysToString();
     }
     else {
       $keys = implode( ',', array_keys($this->cols) );
@@ -147,19 +167,34 @@ Class VO
     return $keys;
   }
 
-  function dependencesToString($resolveDependences = false) {
+  function allDependenceKeysToString() {
 
-    $keys = false;
+    $keys = '';
 
-    if( $resolveDependences ) {
+    // get keys from this VO
+    $keys .= implode(',', dependenceKeysToString($this) );
 
-    }
-    else {
-      $keys = implode( ',', array_keys($this->cols) );
+    // get keys from relationship VO's
+    foreach( $this->dependences as $dependenceVO) {
+      $keys .= implode(',', dependenceKeysToString($dependenceVO) );
     }
 
     return $keys;
-  }  
+  }
+
+
+  function dependenceKeys($voObj) {
+
+    $keys = array();
+
+    foreach($dependence['VO']::cols as $colKey => $col) {
+      if( $col['type'] != 'FOREIGN' ) {
+        array_push( $keys, $dependence['VO']->tableName . '.' . $colKey );
+      }
+    }
+
+    return $keys;
+  }
 
   function toString(){
     $str = "\n " . $keyId. ': ' .$this->getter($keyId);
