@@ -23,13 +23,12 @@ Class VO
       return false;
     }
 
-    $this->setVarlist($datarray);
+    $this->setVarList($datarray);
     $this->setDependenceVOs();
   }
 
   // set variable list (initializes entity)
-  function setVarlist(array $datarray) 
-  {
+  function setVarList(array $datarray) {
     // rest of variables
     foreach($datarray as $datakey=>$data) {
         $this->setter($datakey, $data);
@@ -55,7 +54,7 @@ Class VO
     foreach( $this::$cols as $colKey => $col ) {
       if( $col['type'] == 'FOREIGN' ){
         $colVO = new $col['vo']();
-        $this->relationship[$col]  array( 'parent' => $this::tableName ,'VO' => $colVO, 'used' => false );
+        $this->relationship[$col] = array( 'parent' => $this::$tableName ,'VO' => $colVO, 'used' => false );
 
         $colVOrelationship = $colVO->setDependenceVOs();
 
