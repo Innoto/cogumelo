@@ -5,7 +5,7 @@ Class VO
 {
 
   var $attributes = array();
-  var $dependences = array();
+  var $relationship = array();
 
   function __construct(array $datarray){
 
@@ -55,23 +55,24 @@ Class VO
     foreach( $this::$cols as $colKey => $col ) {
       if( $col['type'] == 'FOREIGN' ){
         $colVO = new $col['vo']();
-        $this->dependences[$col] = array('VO' => $colVO, 'used' => false);
+        $this->relationship[$col]  array( 'parent' => $this::tableName ,'VO' => $colVO, 'used' => false );
 
-        $colVODependences = $colVO->setDependenceVOs();
+        $colVOrelationship = $colVO->setDependenceVOs();
 
-        // look for circular dependences
+        // look for circular relationship
         if( count( 
               array_intersect( 
-                array_keys( $this->dependences ), 
+                array_keys( $this->relationship ), 
                 array_keys( $colVO->setDependenceVOs() ) 
               )
             ) == 0 
         ){
-          $this->dependences = array_merge( $this->dependences, $colVO->setDependenceVOs() );
+          $this->relationship = array_merge( $this->relationship, $colVO->setDependenceVOs() );
         }
         else 
         {
           Cogumelo::error('Circular relationship on VO "'.$this->tableName.'", column: '.$colKey);
+          exit; // exits to prevent infinite loop
         }
       }
     }
@@ -80,16 +81,16 @@ Class VO
   function getDependenceVO( $tableName ) {
     $dependenceVO = $this;
 
-    if( in_array($tableName, $this->dependences) && $this->dependences[$tableName]['used'] ) {
-      $dependenceVO = $this->dependences[$tableName]['VO'];
+    if( in_array($tableName, $this->relationship) && $this->relationship[$tableName]['used'] ) {
+      $dependenceVO = $this->relationship[$tableName]['VO'];
     }
 
     return $dependenceVO;
   }
 
   function markDependenceAsUsed( $tableName ) {
-    if( in_array($tableName, $this->dependences) ){
-      $this->dependences[$tableName]['used'];
+    if( in_array($tableName, $this->relationship) ){
+      $this->relationship[$tableName]['used'];
     }
   }
 
@@ -153,11 +154,11 @@ Class VO
 
   }
 
-  function keysToString($resolveDependences = false) {
+  function keysToString($resolverelationship = false) {
 
     $keys = '';
 
-    if( $resolveDependences ) {
+    if( $resolverelationship ) {
       $keys = allDependenceKeysToString();
     }
     else {
@@ -175,7 +176,7 @@ Class VO
     $keys .= implode(',', dependenceKeysToString($this) );
 
     // get keys from relationship VO's
-    foreach( $this->dependences as $dependenceVO) {
+    foreach( $this->relationship as $dependenceVO) {
       $keys .= implode(',', dependenceKeysToString($dependenceVO) );
     }
 

@@ -79,7 +79,6 @@ class ModuleController
     }
     else {
       $mod_path = $this->module_paths[$module_name];
-      echo $mod_path.'/'.$module_name.'.php\n';
       require_once($mod_path.'/'.$module_name.'.php');
       $modulo = new $module_name();
       $this->request = new RequestController( $modulo->getUrlPatternsToArray(), $this->url_path, $mod_path );
