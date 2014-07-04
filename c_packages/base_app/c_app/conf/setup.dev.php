@@ -72,7 +72,7 @@ define('MINIMIFY_CACHE_PATH', SITE_PATH.'tmp/minimify');
 //
 
 global $C_ENABLED_MODULES;
-$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'testmodule', 'devel');
+$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'testmodule', 'client', 'devel');
 
 
 //
