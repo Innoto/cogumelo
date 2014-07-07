@@ -50,6 +50,10 @@ class MysqlDAO extends DAO
     //set prepare sql
     $connectionControl->stmt = $connectionControl->db->prepare( $sql ); 
 
+
+
+//Cogumelo::objDebug( $connectionControl->stmt );
+
     if( $connectionControl->stmt ) {  //set prepare sql
 
       $bind_vars_type = $this->getPrepareTypes($val_array);
@@ -66,27 +70,19 @@ class MysqlDAO extends DAO
         $connectionControl->stmt->execute();
 
         if($connectionControl->stmt->error == ''){
-          //Cogumelo::objDebug($connectionControl->stmt);
-          //$ret_data =true;
-          if( $connectionControl->stmt->num_rows != null ){
-            $ret_data = $connectionControl->stmt->get_result();
-          }
-          else{
-            $ret_data = true;
-          }
-          
+          $ret_data = $connectionControl->stmt->get_result();
         }
-      else {
-        
-        Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$connectionControl->stmt->error.' - '.$sql);
-        $ret_data = null;
-      }
+        else {
+          
+          Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$connectionControl->stmt->error.' - '.$sql);
+          $ret_data = false;
+        }
 
     }
     else {
       Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connectionControl->db->error.' - '.$sql);
 
-      $ret_data = null;
+      $ret_data = false;
     }
 
     return $ret_data;
@@ -216,7 +212,6 @@ class MysqlDAO extends DAO
     $VO = new $this->VO();
 
     $strSQL = "SELECT ".$VO->keysToString( $resolveDependences )." FROM `" . $VO::$tableName . "` ".$whereArray['string'].$orderSTR.$rangeSTR.";";
-
 
     if ( $cache && DB_ALLOW_CACHE  )
     {

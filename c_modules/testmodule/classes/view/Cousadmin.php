@@ -26,7 +26,7 @@ class Cousadmin extends View
 
 
   function lista_plana() {
-    $cousas = $this->cousacontrol->listItems(false, false, false, true);
+    $cousas = $this->cousacontrol->listItems(false, false, false, false);
 
     while($cou = $cousas->fetch()) {
       echo "<br>";

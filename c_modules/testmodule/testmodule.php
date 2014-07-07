@@ -11,7 +11,7 @@ class testmodule extends Module
     $this->addUrlPatterns( '#^cousa/mostrar/?$#', 'view:Cousadmin::mostra_cousa' );
     $this->addUrlPatterns( '#^cousa/mostrar/(.*)$#', 'view:Cousadmin::mostra_cousa' );
     $this->addUrlPatterns( '#^cousa/crear$#', 'view:Cousadmin::crea' );
-    $this->addUrlPatterns( '#^lista_plana$#', 'view:Cousadmin::lista_plana' );
+    $this->addUrlPatterns( '#^cousa/lista_plana$#', 'view:Cousadmin::lista_plana' );
     $this->addUrlPatterns( '#^cousa_tabla$#', 'view:Cousadmin::cousa_tabla' );
     $this->addUrlPatterns( '#^testmodule#', 'view:TestmoduleView::inicio' );
 /*

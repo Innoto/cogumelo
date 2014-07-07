@@ -162,7 +162,7 @@ Class VO
       $keys = $this->allDependenceKeysToString();
     }
     else {
-      $keys = implode( ',', array_keys($this::$cols) );
+      $keys = implode( ', ', array_keys($this::$cols) );
     }
 
     return $keys;
