@@ -79,14 +79,14 @@ class MysqlDAO extends DAO
       else {
         
         Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$connectionControl->stmt->error.' - '.$sql);
-        $ret_data = false;
+        $ret_data = null;
       }
 
     }
     else {
       Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connectionControl->db->error.' - '.$sql);
 
-      $ret_data = false;
+      $ret_data = null;
     }
 
     return $ret_data;
@@ -163,8 +163,7 @@ class MysqlDAO extends DAO
     }
 
     return array(
-        '
-        string' => "WHERE true".$where_str,
+        'string' => "WHERE true".$where_str,
         'values' => $val_array
       );
   }
@@ -176,7 +175,7 @@ class MysqlDAO extends DAO
   //
   //  Generic Find by key
   //
-  function find(&$connectionControl, $search, $key = false, $cache = false)
+  function find(&$connectionControl, $search, $key = false,  $resolveDependences = false, $cache = false)
   {
     $VO = new $this->VO();
 
@@ -186,11 +185,11 @@ class MysqlDAO extends DAO
 
     $filter = array($key => $search);
 
-    if($res = $this->listItems($connectionControl, $filter, false, false, $cache) ) {
+    if($res = $this->listItems($connectionControl, $filter, false, false, $resolveDependences, $cache) ) {
       return $res->fetch();
     }
     else 
-      return false;
+      return null;
       
   }
 
@@ -198,7 +197,7 @@ class MysqlDAO extends DAO
   //  Generic listItems
   //
   //  Return: array [array_list, number_of_rows]
-  function listItems(&$connectionControl, $filters, $range, $order, $cache = false)
+  function listItems(&$connectionControl, $filters, $range, $order, $resolveDependences = false, $cache = false)
   {
 
     // where string and vars
@@ -216,7 +215,7 @@ class MysqlDAO extends DAO
     // SQL Query
     $VO = new $this->VO();
 
-    $strSQL = "SELECT ".$VO->keysToString()." FROM `" . $VO::$tableName . "` ".$whereArray['string'].$orderSTR.$rangeSTR.";";
+    $strSQL = "SELECT ".$VO->keysToString( $resolveDependences )." FROM `" . $VO::$tableName . "` ".$whereArray['string'].$orderSTR.$rangeSTR.";";
 
 
     if ( $cache && DB_ALLOW_CACHE  )
@@ -238,7 +237,7 @@ class MysqlDAO extends DAO
           $cached->setCache($queryId, $daoresult->fetchAll_RAW() );
         }
         else{
-          $daoresult = false;
+          $daoresult = null;
         }
       }
     }
@@ -248,7 +247,7 @@ class MysqlDAO extends DAO
       if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']))
         $daoresult = new MysqlDAOResult( $this->VO , $res);
       else
-        $daoresult = false;
+        $daoresult = null;
     }
 
     return $daoresult;
@@ -279,7 +278,7 @@ class MysqlDAO extends DAO
         return $row['number_elements'];
     }
     else {
-      return false;
+      return null;
     }
   }
 
@@ -320,7 +319,7 @@ class MysqlDAO extends DAO
 
     }
     else {
-      return false;
+      return null;
     }
   }
   
@@ -353,7 +352,7 @@ class MysqlDAO extends DAO
       return $VOobj;
     }
     else {
-      return false;
+      return null;
     }
   } 
   
@@ -371,7 +370,7 @@ class MysqlDAO extends DAO
       return $true;
     }
     else {
-      return false;
+      return null;
     }
   }
   

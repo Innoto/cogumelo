@@ -1,6 +1,5 @@
 <?php
 
-
 Class VO
 {
 
@@ -24,7 +23,7 @@ Class VO
     }
 
     $this->setVarList($datarray);
-    $this->setDependenceVOs();
+    $this->setRelationshipVOs();
   }
 
   // set variable list (initializes entity)
@@ -50,23 +49,23 @@ Class VO
   }
 
 
-  function setDependenceVOs() {
+  function setRelationshipVOs() {
     foreach( $this::$cols as $colKey => $col ) {
       if( $col['type'] == 'FOREIGN' ){
         $colVO = new $col['vo']();
-        $this->relationship[$col] = array( 'parent' => $this::$tableName ,'VO' => $colVO, 'used' => false );
 
-        $colVOrelationship = $colVO->setDependenceVOs();
+        $this->relationship[$colKey] = array( 'parent_table' => $this::$tableName, 'parent_key' => $this::$tableName.'.'.$colKey ,'VO' => $colVO, 'used' => false );
+
 
         // look for circular relationship
         if( count( 
               array_intersect( 
                 array_keys( $this->relationship ), 
-                array_keys( $colVO->setDependenceVOs() ) 
+                array_keys( $colVO->relationship ) 
               )
             ) == 0 
         ){
-          $this->relationship = array_merge( $this->relationship, $colVO->setDependenceVOs() );
+          $this->relationship = array_merge( $this->relationship, $colVO->relationship );
         }
         else 
         {
@@ -151,6 +150,8 @@ Class VO
 
   function getJoinArray() {
 
+
+     //array('table' => t, $relationship => r);
   }
 
   function keysToString($resolverelationship = false) {
@@ -158,10 +159,10 @@ Class VO
     $keys = '';
 
     if( $resolverelationship ) {
-      $keys = allDependenceKeysToString();
+      $keys = $this->allDependenceKeysToString();
     }
     else {
-      $keys = implode( ',', array_keys($this->cols) );
+      $keys = implode( ',', array_keys($this::$cols) );
     }
 
     return $keys;
@@ -172,11 +173,13 @@ Class VO
     $keys = '';
 
     // get keys from this VO
-    $keys .= implode(',', dependenceKeysToString($this) );
+    $keys .= implode(', ', $this->dependenceKeys( $this ) );
+
 
     // get keys from relationship VO's
-    foreach( $this->relationship as $dependenceVO) {
-      $keys .= implode(',', dependenceKeysToString($dependenceVO) );
+    foreach( $this->relationship as $dependence) {
+      $keys .=', '. $dependence['parent_key'];
+      $keys .=', '. implode(', ', $this->dependenceKeys( $dependence['VO']) );
     }
 
     return $keys;
@@ -187,9 +190,9 @@ Class VO
 
     $keys = array();
 
-    foreach($dependence['VO']::cols as $colKey => $col) {
+    foreach($voObj::$cols as $colKey => $col) {
       if( $col['type'] != 'FOREIGN' ) {
-        array_push( $keys, $dependence['VO']->tableName . '.' . $colKey );
+        array_push( $keys, $voObj::$tableName . '.' . $colKey );
       }
     }
 

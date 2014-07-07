@@ -7,6 +7,7 @@ class testmodule extends Module
 {
 
   function __construct() {
+    $this->addUrlPatterns( '#^cousa/vo/?$#', 'view:Cousadmin::vo' );
     $this->addUrlPatterns( '#^cousa/mostrar/?$#', 'view:Cousadmin::mostra_cousa' );
     $this->addUrlPatterns( '#^cousa/mostrar/(.*)$#', 'view:Cousadmin::mostra_cousa' );
     $this->addUrlPatterns( '#^cousa/crear$#', 'view:Cousadmin::crea' );

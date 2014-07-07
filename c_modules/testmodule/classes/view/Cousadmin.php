@@ -70,6 +70,17 @@ class Cousadmin extends View
   }
 
 
+
+  function vo($url = false) {
+
+    testmodule::load('model/CousaVO');
+
+    $vo = new CousaVO();
+    //Cogumelo::objDebug($vo);
+    echo($vo->keysToString(true));
+  }
+
+
   //
   //  Tablas
   //
