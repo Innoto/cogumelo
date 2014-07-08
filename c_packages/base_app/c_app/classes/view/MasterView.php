@@ -8,8 +8,8 @@ Cogumelo::load('c_view/View');
 class MasterView extends View
 {
 
-  function __construct($base_dir){
-    parent::__construct($base_dir);
+  function __construct($baseDir){
+    parent::__construct($baseDir);
   }
 
   /**
@@ -20,19 +20,20 @@ class MasterView extends View
     return true;
   }
 
-  function master($url_path=''){
+  function master($urlPath=''){
     $this->common();
     $this->template->exec();
   }
 
   function common() {
-    $this->template->setTpl("default.tpl");
-    $this->template->addJs("vendor/jquery.js");
-    $this->template->addCss('css/client.css', 'client');
+    $this->template->setTpl('default.tpl');
+    $this->template->addJs('vendorLib/jQuery.js' , 'client');
+    $this->template->addJs('vendorLib/less.js', 'client');
+    //$this->template->addCss('css/client.css', 'client');
   }
 
   function page404() {
-    echo "PAGE404: Recurso non atopado";
+    echo 'PAGE404: Recurso non atopado';
   }
 
 }

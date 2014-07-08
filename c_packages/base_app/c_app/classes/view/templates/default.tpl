@@ -2,7 +2,9 @@
 if( isset($_SERVER['HTTP_USER_AGENT']) && ( strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ) ) {
   header('X-UA-Compatible: IE=edge');
 }
-?><!DOCTYPE html>
+?>
+
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -18,12 +20,11 @@ if( isset($_SERVER['HTTP_USER_AGENT']) && ( strpos($_SERVER['HTTP_USER_AGENT'], 
 
     .test {
       background: #3C3F41;
-      margin-top: 3%;
       text-align: center;
       color: #F2F1F0;
       font-size: 54px;
-      height: 130px;
-      line-height: 130px;
+      height: 80px;
+      line-height: 80px;
       vertical-align: middle;
       text-shadow: 1px -1px 4px rgba(240, 245, 242, 0.6);
     }
@@ -31,7 +32,24 @@ if( isset($_SERVER['HTTP_USER_AGENT']) && ( strpos($_SERVER['HTTP_USER_AGENT'], 
   </style>
   
     {$css_includes}
+    <link rel="stylesheet/less" type="text/css" href="/media/module/client/css/client.less" />
+    
+    <!-- set options before less.js script -->
+    <script>
+      less = {
+        env: "development",
+        async: false,
+        fileAsync: false,
+        poll: 1000,
+        functions: {  myfunc: function() { alert( 1 ); } },
+        dumpLineNumbers: "all",
+        relativeUrls: false,
+        errorReporting: 'console'
+      };
+    </script>
+    
     {$js_includes}
+    
 </head>
 
 <body>
