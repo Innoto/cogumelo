@@ -26,7 +26,7 @@ class Cousadmin extends View
 
 
   function lista_plana() {
-    $cousas = $this->cousacontrol->listItems(false, false, false, true);
+    $cousas = $this->cousacontrol->listItems(false, false, false, false);
 
     while($cou = $cousas->fetch()) {
       echo "<br>";
@@ -67,6 +67,17 @@ class Cousadmin extends View
     $this->cousacontrol->create($novacousa);
 
     echo "Creado nova entrada para cousa";
+  }
+
+
+
+  function vo($url = false) {
+
+    testmodule::load('model/CousaVO');
+
+    $vo = new CousaVO();
+    //Cogumelo::objDebug($vo);
+    echo($vo->keysToString(true));
   }
 
 

@@ -26,12 +26,19 @@ class MysqlDAOResult extends DAOResult {
       $ret_obj = $this->cacheFetch();
     }
     else {
-      $row = $this->result->fetch_assoc();
+     
 
-      if($row)
+        //Cogumelo::objDebug($this->result);
+      if( 
+        is_object( $this->result ) && 
+        $row = $this->result->fetch_assoc() 
+      ) {
+
         $ret_obj = $this->VOGenerator( $row );
-      else
-        $ret_obj = false;
+      }
+      else {
+        $ret_obj = null;
+      }
     }
 
     return $ret_obj;
