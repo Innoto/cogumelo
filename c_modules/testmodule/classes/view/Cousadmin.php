@@ -26,7 +26,7 @@ class Cousadmin extends View
 
 
   function lista_plana() {
-    $cousas = $this->cousacontrol->listItems(false, false, false, false);
+    $cousas = $this->cousacontrol->listItems(false, false, false, true);
 
     while($cou = $cousas->fetch()) {
       echo "<br>";
@@ -77,7 +77,7 @@ class Cousadmin extends View
 
     $vo = new CousaVO();
     //Cogumelo::objDebug($vo);
-    echo($vo->keysToString(false));
+    echo($vo->keysToString(true));
     echo "<pre>";
     var_dump( $vo->getJoinArray() );
   }

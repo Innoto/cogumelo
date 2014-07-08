@@ -160,7 +160,7 @@ Class VO
     foreach ( $this->relationship as $rel ) {
       array_push($ret, 
         array(
-          'table' => $rel['parent_table'], 
+          'table' => $rel['VO']::$tableName, 
           'relationship' => array( $rel['parent_key'], $rel['vo_key'] ) 
         ) 
       );
