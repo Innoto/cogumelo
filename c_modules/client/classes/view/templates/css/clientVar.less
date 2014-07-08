@@ -48,9 +48,9 @@
 @serifFontFamily:       Georgia, "Times New Roman", Times, serif;
 @monoFontFamily:        Monaco, Menlo, Consolas, "Courier New", monospace;
 
-@baseFontSize:          12px;
+@baseFontSize:          14px;
 @baseFontFamily:        @sansFontFamily;
-@baseLineHeight:        18px;
+@baseLineHeight:        20px;
 @altFontFamily:         @serifFontFamily;
 
 @headingsFontFamily:    inherit; // empty to use BS default, @baseFontFamily
@@ -84,9 +84,13 @@
 
 // Buttons
 // -------------------------
-@btnBackground:                     @white;
+@btnBackground:                     #545454;
+@btnColor:                          @white;
 @btnBackgroundHighlight:            darken(@white, 10%);
 @btnBorder:                         #ccc;
+@btnBorderFocus:                    #8CD7F7;
+@btnHeight:                         @baseLineHeight + 12px; // base line-height + 8px vertical padding + 2px top/bottom border
+
 
 
 // Forms

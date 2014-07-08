@@ -139,29 +139,29 @@ hr {
 // Buttons, inputs and form elements
 // --------------------------------------------------
 
-.btnFormat(@backgroundColor, @color){  
+.btnFormat(@background:@btnBackground, @color:@btnColor) {  
   display: inline-block;
   .ie7-inline-block();
-  border:0px;
-  padding: 0px 5px;
-  height: 30px;
-  line-height: 28px;
+  height: @btnHeight;
+  padding: 1px 10px;
+  font-size: @baseFontSize;
+  line-height: @btnHeight;
   vertical-align: middle;
-  background: @backgroundColor;
+  border:0px;
+  background: @background;
   color: @color;
-  font-size: 14px;
   font-family: 'Share Tech Mono', sans-serif;
   font-weight: 550;
   text-align: center; 
   cursor: pointer;
-  
+  .border-radius(@inputBorderRadius);
   .border-radius(@baseBorderRadius);
   .ie7-restore-left-whitespace(); // Give IE7 some love
   .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
   
   &:hover{
     color: @color+ #222222;
-    background: @backgroundColor+ #222222;
+    background: @background+ #222222;
   }
 }
 
@@ -183,8 +183,7 @@ label {
 // -------------------------
 
 // Shared size and type resets
-select,
-textarea,
+
 input[type="text"],
 input[type="password"],
 input[type="datetime"],
@@ -201,11 +200,11 @@ input[type="tel"],
 input[type="color"],
 .uneditable-input {
   display: inline-block;
-  height: @baseLineHeight;
+  height: @inputHeight;
   padding: 4px 6px;
-  margin-bottom: @baseLineHeight / 2;
+  margin-bottom: @inputHeight / 2;
   font-size: @baseFontSize;
-  line-height: @baseLineHeight;
+  line-height: @inputHeight;
   color: @gray;
   .border-radius(@inputBorderRadius);
   vertical-align: middle;
@@ -236,6 +235,44 @@ input[type="checkbox"] {
   width: auto; // Override of generic input selector
 }
 
+input[type="text"],
+input[type="password"]{
+  background-image: none;
+  border: 1px solid @btnBorder;
+  .border-radius(@baseBorderRadius);
+  .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 1px rgba(0,0,0,.075)");
+  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+  width: 100%;
+  
+  &:focus{
+    border-color: @btnBorderFocus;
+    .box-shadow(~"inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(140,215,247,.06)");
+    outline: 0 none;
+  }
+}
+
+
+input[type="button"],
+input[type="reset"],
+input[type="submit"],
+button{
+  .btnFormat();  
+}
+
+textarea{
+  .btnFormat(@white, @gray);
+  text-align: left;
+  border: 1px solid @btnBorder;
+  height: 200px;
+  width: 100%;
+  max-width: 1000px;
+  
+  &:focus{
+    border-color: @btnBorderFocus;
+    .box-shadow(~"inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(140,215,247,.06)");
+    outline: 0 none;
+  }
+}
 
 // Placeholder
 // -------------------------
