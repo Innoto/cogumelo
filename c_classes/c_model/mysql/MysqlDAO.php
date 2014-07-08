@@ -50,10 +50,6 @@ class MysqlDAO extends DAO
     //set prepare sql
     $connectionControl->stmt = $connectionControl->db->prepare( $sql ); 
 
-
-
-//Cogumelo::objDebug( $connectionControl->stmt );
-
     if( $connectionControl->stmt ) {  //set prepare sql
 
       $bind_vars_type = $this->getPrepareTypes($val_array);
@@ -159,7 +155,7 @@ class MysqlDAO extends DAO
     }
 
     return array(
-        'string' => "WHERE true".$where_str,
+        'string' => " WHERE true".$where_str,
         'values' => $val_array
       );
   }
@@ -196,22 +192,24 @@ class MysqlDAO extends DAO
   function listItems(&$connectionControl, $filters, $range, $order, $resolveDependences = false, $cache = false)
   {
 
+    // SQL Query
+    $VO = new $this->VO();
+
     // where string and vars
     $whereArray = $this->getFilters($filters);
     
     // order string
     $orderSTR = ($order)? $this->orderByString($order): "";
 
-
     // range string
     $rangeSTR = ($range != array() && is_array($range) )? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
 
+    // join SQL
+    $joinSTR = $this->JoinSQL($VO, $resolveDependences);
 
-  
-    // SQL Query
-    $VO = new $this->VO();
 
-    $strSQL = "SELECT ".$VO->keysToString( $resolveDependences )." FROM `" . $VO::$tableName . "` ".$whereArray['string'].$orderSTR.$rangeSTR.";";
+    $strSQL = "SELECT ".$VO->keysToString( $resolveDependences )." FROM `" . $VO::$tableName ."` ". $joinSTR . $whereArray['string'].$orderSTR.$rangeSTR.";";
+
 
     if ( $cache && DB_ALLOW_CACHE  )
     {
@@ -248,6 +246,18 @@ class MysqlDAO extends DAO
     return $daoresult;
 
 
+  }
+
+  function JoinSQL($VO, $resolveDependences) {
+    $resSQL = '';
+
+    if( $resolveDependences ) {
+      foreach($VO->getJoinArray() as $join){
+        $resSQL = ' LEFT JOIN '.$join['table'].' ON '.implode('=', $join['relationship'] );
+      }
+    }
+
+    return $resSQL;
   }
 
 
