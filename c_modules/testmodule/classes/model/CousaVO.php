@@ -32,7 +32,7 @@ class CousaVO extends VO
       'desc' => 'Complemento',
       'type'=>'FOREIGN',
       'vo' => 'ComplementoVO',
-      'vo_key' => 'id'
+      'key' => 'id'
     )
   );
 

@@ -77,7 +77,9 @@ class Cousadmin extends View
 
     $vo = new CousaVO();
     //Cogumelo::objDebug($vo);
-    echo($vo->keysToString(true));
+    echo($vo->keysToString(false));
+    echo "<pre>";
+    var_dump( $vo->getJoinArray() );
   }
 
 

@@ -54,7 +54,13 @@ Class VO
       if( $col['type'] == 'FOREIGN' ){
         $colVO = new $col['vo']();
 
-        $this->relationship[$colKey] = array( 'parent_table' => $this::$tableName, 'parent_key' => $this::$tableName.'.'.$colKey ,'VO' => $colVO, 'used' => false );
+        $this->relationship[$colKey] = array( 
+                                              'parent_table' => $this::$tableName, 
+                                              'parent_key' => $this::$tableName.'.'.$colKey,
+                                              'vo_key' => $colVO::$tableName.'.'.$col['key'], 
+                                              'VO' => $colVO, 
+                                              'used' => false 
+                                            );
 
 
         // look for circular relationship
@@ -88,7 +94,7 @@ Class VO
 
   function markDependenceAsUsed( $tableName ) {
     if( in_array($tableName, $this->relationship) ){
-      $this->relationship[$tableName]['used'];
+      $this->relationship[$tableName]['used'] = true;
     }
   }
 
@@ -150,8 +156,17 @@ Class VO
 
   function getJoinArray() {
 
-
+    $ret = array();
+    foreach ( $this->relationship as $rel ) {
+      array_push($ret, 
+        array(
+          'table' => $rel['parent_table'], 
+          'relationship' => array( $rel['parent_key'], $rel['vo_key'] ) 
+        ) 
+      );
+    }
      //array('table' => t, $relationship => r);
+    return $ret;
   }
 
   function keysToString($resolverelationship = false) {
@@ -208,10 +223,5 @@ Class VO
     return $str;
   }
 
-
-
-
 }
-
-
 
