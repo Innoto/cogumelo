@@ -41,7 +41,7 @@ if( isset($_SERVER['HTTP_USER_AGENT']) && ( strpos($_SERVER['HTTP_USER_AGENT'], 
         async: false,
         fileAsync: false,
         poll: 1000,
-        functions: {  myfunc: function() { alert( 1 ); } },
+        functions: { },
         dumpLineNumbers: "all",
         relativeUrls: false,
         errorReporting: 'console'
@@ -53,14 +53,9 @@ if( isset($_SERVER['HTTP_USER_AGENT']) && ( strpos($_SERVER['HTTP_USER_AGENT'], 
 </head>
 
 <body>
+  
+  
   <div class="test">[ Cogumelo Base App ]</div>
-  
-  
-  
-  
-  
-  
-  
   
   
   
