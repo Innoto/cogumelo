@@ -2,7 +2,9 @@
 if( isset($_SERVER['HTTP_USER_AGENT']) && ( strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE') !== false ) ) {
   header('X-UA-Compatible: IE=edge');
 }
-?><!DOCTYPE html>
+?>
+
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -31,6 +33,7 @@ if( isset($_SERVER['HTTP_USER_AGENT']) && ( strpos($_SERVER['HTTP_USER_AGENT'], 
   </style>
   
     {$css_includes}
+    <link rel="stylesheet/less" type="text/css" href="styles.less" />  
     {$js_includes}
 </head>
 
