@@ -18,17 +18,17 @@ class MysqlConnection extends Connection
 
     function __construct($db_devel_auth = false){
 
-    if($db_devel_auth) {
-      $this->DB_USER = $db_devel_auth['DB_USER'];
-      $this->DB_PASSWORD = $db_devel_auth['DB_PASSWORD'];
-      $this->DB_NAME = $db_devel_auth['DB_NAME'];
-    }
-    else {
+      if($db_devel_auth) {
+        $this->DB_USER = $db_devel_auth['DB_USER'];
+        $this->DB_PASSWORD = $db_devel_auth['DB_PASSWORD'];
+        $this->DB_NAME = $db_devel_auth['DB_NAME'];
+      }
+      else {
 
-      $this->DB_USER = DB_USER;
-      $this->DB_PASSWORD = DB_PASSWORD;
-      $this->DB_NAME = DB_NAME;
-    }
+        $this->DB_USER = DB_USER;
+        $this->DB_PASSWORD = DB_PASSWORD;
+        $this->DB_NAME = DB_NAME;
+      }
 
     }
 
