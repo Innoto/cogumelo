@@ -108,9 +108,7 @@ Class VO
   // set an attribute
   function setter($setterkey, $value = false)
   {
-      //echo $setterkey."";
 
-    //echo $setterkey.'<br>';
     if( preg_match('#^(.*?)\.(.*)$#', $setterkey, $setter_data) ) {
       $tableName = $setter_data[1];
       $columnKey = $setter_data[2];
@@ -126,7 +124,7 @@ Class VO
     // set values
     if( $tableName == $setterVO::$tableName && in_array($columnKey, array_keys($setterVO::$cols)) ){
       $this->markRelationshipAsUsed( $tableName ); 
-      $setterVO->attributes[$setterkey] = $value;
+      $setterVO->attributes[$columnKey] = $value;
     }
     else{
       Cogumelo::error("key '". $setterkey ."' doesn't exist in VO::". $setterVO::$tableName);
@@ -138,6 +136,32 @@ Class VO
   // get an attribute
   function getter($getterkey)
   {
+
+    $value = false;
+
+    if( preg_match('#^(.*?)\.(.*)$#', $getterkey, $getter_data) ) {
+      $tableName = $getter_data[1];
+      $columnKey = $getter_data[2];
+    }
+    else { 
+      $tableName = $this::$tableName;
+      $columnKey = $getterkey;
+    }
+
+    // choose VO
+    $getterVO = $this->getDependenceVO($tableName);
+
+    // get values
+    if( $tableName == $getterVO::$tableName && in_array($columnKey, array_keys($getterVO::$cols)) ){
+      $this->markRelationshipAsUsed( $tableName ); 
+
+      $value = $getterVO->attributes[$columnKey];
+    }
+    else{
+      Cogumelo::error("key '". $getterkey ."' doesn't exist in VO::". $setterVO::$tableName);
+    }
+
+    return $value;
 /*
     if( $getter_data = preg_match('#^(.*?)\.(.*)$#', $getterkey) ) {
       $tableName = $getter_data[0];
