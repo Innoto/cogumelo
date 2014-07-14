@@ -26,13 +26,14 @@ class Cousadmin extends View
 
 
   function lista_plana() {
+    echo "<pre>";
     $cousas = $this->cousacontrol->listItems(false, false, false, true);
 
     while($cou = $cousas->fetch()) {
 
       echo "<br>";
       //var_dump($cou->attributes);
-      //var_dump($cou);
+      var_dump($cou);
     }
 
   }

@@ -22,8 +22,9 @@ Class VO
       return false;
     }
 
-    $this->setVarList($datarray);
     $this->setRelationshipVOs();
+    $this->setVarList($datarray);
+
   }
 
   // set variable list (initializes entity)
@@ -83,17 +84,22 @@ Class VO
   }
 
   function getDependenceVO( $tableName ) {
-    $dependenceVO = $this;
 
-    if( in_array($tableName, $this->relationship) && $this->relationship[$tableName]['used'] ) {
-      $dependenceVO = $this->relationship[$tableName]['VO'];
+    $dependenceVO = false;
+
+    if( $this::$tableName == $tableName){
+      $dependenceVO = $this;  
     }
-
+    else {
+      if(! $dependenceVO = $this->relationship[$tableName]['VO']){
+        Cogumelo::error('VO relationship "'.$tableName.'" doesnt exist in VO::'.$this::$tableName);
+      }
+    }
     return $dependenceVO;
   }
 
-  function markDependenceAsUsed( $tableName ) {
-    if( in_array($tableName, $this->relationship) ){
+  function markRelationshipAsUsed( $tableName ) {
+    if( in_array($tableName, array_keys($this->relationship)) ){
       $this->relationship[$tableName]['used'] = true;
     }
   }
@@ -105,12 +111,9 @@ Class VO
       //echo $setterkey."";
 
     //echo $setterkey.'<br>';
-    if( $setter_data = preg_match('#^(.*?)\.(.*)$#', $setterkey) ) {
-      $tableName = $setter_data[0];
-      $columnKey = $setter_data[1];
-      
-      Cogumelo::objDebug($setter_data);
-
+    if( preg_match('#^(.*?)\.(.*)$#', $setterkey, $setter_data) ) {
+      $tableName = $setter_data[1];
+      $columnKey = $setter_data[2];
     }
     else { 
       $tableName = $this::$tableName;
@@ -121,14 +124,12 @@ Class VO
     $setterVO = $this->getDependenceVO($tableName);
 
     // set values
-    if( $tableName == $setterVO::$tableName && in_array($setterkey, array_keys($setterVO::$cols)) ){
-      $this->markDependenceAsUsed( $tableName ); 
+    if( $tableName == $setterVO::$tableName && in_array($columnKey, array_keys($setterVO::$cols)) ){
+      $this->markRelationshipAsUsed( $tableName ); 
       $setterVO->attributes[$setterkey] = $value;
-      //echo $setterVO::$tableName."<br>";
-
     }
     else{
-      Cogumelo::error("key '". $setterkey ."' doesn't exist in VO::". $tableName);
+      Cogumelo::error("key '". $setterkey ."' doesn't exist in VO::". $setterVO::$tableName);
     }
   }
 
@@ -137,7 +138,7 @@ Class VO
   // get an attribute
   function getter($getterkey)
   {
-
+/*
     if( $getter_data = preg_match('#^(.*?)\.(.*)$#', $getterkey) ) {
       $tableName = $getter_data[0];
       $columnKey = $getter_data[1];
@@ -157,7 +158,7 @@ Class VO
       $ret = null;
     }
 
-    return $ret;
+    return $ret;*/
   }
 
 
@@ -190,8 +191,6 @@ Class VO
   }
 
   function getKeysToString($resolverelationship = false) {
-//var_dump( $this->getKeys($resolverelationship)  );
-//    return implode(', ', $this->getKeys($resolverelationship) );
 
     $strKeys = '';
     $comma = '';
@@ -211,8 +210,7 @@ Class VO
 
     // get keys from relationship VO's
     foreach( $this->relationship as $dependence) {
-      array_push($keys, $dependence['parent_key']);
-      array_merge($keys, $this->dependenceKeys( $dependence['VO']));
+      $keys = array_merge($keys, $this->dependenceKeys( $dependence['VO']));
     }
 
     return $keys;
@@ -223,11 +221,12 @@ Class VO
 
     $keys = array();
 
+
     foreach($voObj::$cols as $colKey => $col) {
-      if( $col['type'] != 'FOREIGN' ) {
-        array_push( $keys, $voObj::$tableName . '.' . $colKey );
-      }
+      array_push( $keys, $voObj::$tableName . '.' . $colKey );
     }
+
+
 
     return $keys;
   }
