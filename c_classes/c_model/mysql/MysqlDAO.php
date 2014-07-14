@@ -209,10 +209,7 @@ class MysqlDAO extends DAO
 
 
     $strSQL = "SELECT ".$VO->getKeysToString( $resolveDependences )." FROM `" . $VO::$tableName ."` ". $joinSTR . $whereArray['string'].$orderSTR.$rangeSTR.";";
-    //$strSQL = "SELECT cousa.id, cousa.name, cousa.fingers, cousa.hobby, cousa.complemento, complemento.id as 'complemento.id', complemento.name as 'complemento.name' FROM `cousa` LEFT JOIN complemento ON cousa.complemento=complemento.id WHERE true";
 
-
-echo $strSQL."<br>";
 
     if ( $cache && DB_ALLOW_CACHE  )
     {
