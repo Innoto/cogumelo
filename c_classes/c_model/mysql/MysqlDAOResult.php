@@ -26,9 +26,6 @@ class MysqlDAOResult extends DAOResult {
       $ret_obj = $this->cacheFetch();
     }
     else {
-     
-
-        //Cogumelo::objDebug($this->result);
       if( 
         is_object( $this->result ) && 
         $row = $this->result->fetch_assoc() 
