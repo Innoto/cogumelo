@@ -32,7 +32,7 @@ class Cousadmin extends View
     while($cou = $cousas->fetch()) {
 
       echo "<br>";
-      //var_dump($cou);
+      var_dump($cou);
       var_dump($cou->getter('complemento.name'));
     }
 

@@ -154,35 +154,16 @@ Class VO
     // get values
     if( $tableName == $getterVO::$tableName && in_array($columnKey, array_keys($getterVO::$cols)) ){
       $this->markRelationshipAsUsed( $tableName ); 
-
-      $value = $getterVO->attributes[$columnKey];
+      if( array_key_exists($columnKey, $getterVO->attributes) ) {
+        $value = $getterVO->attributes[$columnKey];
+      }
     }
     else{
       Cogumelo::error("key '". $getterkey ."' doesn't exist in VO::". $setterVO::$tableName);
     }
 
     return $value;
-/*
-    if( $getter_data = preg_match('#^(.*?)\.(.*)$#', $getterkey) ) {
-      $tableName = $getter_data[0];
-      $columnKey = $getter_data[1];
-    }
-    else { 
-      $tableName = $this::$tableName;
-      $columnKey = $getterkey;
-    }
-    
-    // choose VO
-    $getterVO = $this->getDependenceVO($tableName);
 
-    if( array_key_exists( $getterkey, $getterVO->attributes) ){
-      $ret = $this->attributes[$getterkey];
-    }
-    else{
-      $ret = null;
-    }
-
-    return $ret;*/
   }
 
 
