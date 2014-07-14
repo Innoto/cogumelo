@@ -29,11 +29,13 @@ class Cousadmin extends View
     $cousas = $this->cousacontrol->listItems(false, false, false, true);
 
     while($cou = $cousas->fetch()) {
+
       echo "<br>";
-      var_dump($cou);
+      //var_dump($cou->attributes);
+      //var_dump($cou);
     }
 
-    }
+  }
 
 
   function panel_admin() {
@@ -77,7 +79,7 @@ class Cousadmin extends View
 
     $vo = new CousaVO();
     //Cogumelo::objDebug($vo);
-    echo($vo->keysToString(true));
+    echo($vo->keysToString(false));
     echo "<pre>";
     var_dump( $vo->getJoinArray() );
   }

@@ -102,16 +102,21 @@ Class VO
   // set an attribute
   function setter($setterkey, $value = false)
   {
+      //echo $setterkey."";
 
+    //echo $setterkey.'<br>';
     if( $setter_data = preg_match('#^(.*?)\.(.*)$#', $setterkey) ) {
       $tableName = $setter_data[0];
       $columnKey = $setter_data[1];
+      
+      Cogumelo::objDebug($setter_data);
+
     }
     else { 
       $tableName = $this::$tableName;
       $columnKey = $setterkey;
     }
-    
+
     // choose VO
     $setterVO = $this->getDependenceVO($tableName);
 
@@ -119,6 +124,8 @@ Class VO
     if( $tableName == $setterVO::$tableName && in_array($setterkey, array_keys($setterVO::$cols)) ){
       $this->markDependenceAsUsed( $tableName ); 
       $setterVO->attributes[$setterkey] = $value;
+      //echo $setterVO::$tableName."<br>";
+
     }
     else{
       Cogumelo::error("key '". $setterkey ."' doesn't exist in VO::". $tableName);
@@ -169,32 +176,43 @@ Class VO
     return $ret;
   }
 
-  function keysToString($resolverelationship = false) {
-
-    $keys = '';
+  function getKeys($resolverelationship = false) {
+    $keys = array();
 
     if( $resolverelationship ) {
-      $keys = $this->allDependenceKeysToString();
+      $keys = $this->getDependenceKeys();
     }
     else {
-      $keys = implode( ', ', array_keys($this::$cols) );
+      $keys = array_keys($this::$cols);
     }
 
     return $keys;
   }
 
-  function allDependenceKeysToString() {
+  function getKeysToString($resolverelationship = false) {
+//var_dump( $this->getKeys($resolverelationship)  );
+//    return implode(', ', $this->getKeys($resolverelationship) );
 
-    $keys = '';
+    $strKeys = '';
+    $comma = '';
+
+    foreach( $this->getKeys($resolverelationship) as $k ) {
+      $strKeys .= $comma . $k . ' as `' . $k . '`';
+      $comma = ', ';
+    }
+
+    return $strKeys;
+  }
+
+  function getDependenceKeys() {
 
     // get keys from this VO
-    $keys .= implode(', ', $this->dependenceKeys( $this ) );
-
+    $keys =  $this->dependenceKeys( $this ) ;
 
     // get keys from relationship VO's
     foreach( $this->relationship as $dependence) {
-      $keys .=', '. $dependence['parent_key'];
-      $keys .=', '. implode(', ', $this->dependenceKeys( $dependence['VO']) );
+      array_push($keys, $dependence['parent_key']);
+      array_merge($keys, $this->dependenceKeys( $dependence['VO']));
     }
 
     return $keys;

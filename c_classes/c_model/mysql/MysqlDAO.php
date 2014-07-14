@@ -208,8 +208,11 @@ class MysqlDAO extends DAO
     $joinSTR = $this->JoinSQL($VO, $resolveDependences);
 
 
-    $strSQL = "SELECT ".$VO->keysToString( $resolveDependences )." FROM `" . $VO::$tableName ."` ". $joinSTR . $whereArray['string'].$orderSTR.$rangeSTR.";";
+    $strSQL = "SELECT ".$VO->getKeysToString( $resolveDependences )." FROM `" . $VO::$tableName ."` ". $joinSTR . $whereArray['string'].$orderSTR.$rangeSTR.";";
+    //$strSQL = "SELECT cousa.id, cousa.name, cousa.fingers, cousa.hobby, cousa.complemento, complemento.id as 'complemento.id', complemento.name as 'complemento.name' FROM `cousa` LEFT JOIN complemento ON cousa.complemento=complemento.id WHERE true";
 
+
+echo $strSQL."<br>";
 
     if ( $cache && DB_ALLOW_CACHE  )
     {
@@ -237,10 +240,12 @@ class MysqlDAO extends DAO
     else
     {
       //  Without cache!
-      if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']))
+      if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values'])){
         $daoresult = new MysqlDAOResult( $this->VO , $res);
-      else
+      }
+      else{
         $daoresult = null;
+      }
     }
 
     return $daoresult;
