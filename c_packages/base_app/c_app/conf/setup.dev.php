@@ -56,16 +56,22 @@ define('SYS_MAIL_FROM_EMAIL',   'cogumelo@cogumelo.org');
 
 
 //
-//  Smarty & Template
+//  Templates 
 //
 
 define('SMARTY_CONFIG', SITE_PATH.'conf/smarty');
 define('SMARTY_COMPILE',SITE_PATH.'tmp/templates_c');
 define('SMARTY_CACHE',  SITE_PATH.'tmp/cache');
-define('MINIMIFY_FILES', false);
-define('MINIMIFY_CACHE_PATH', SITE_PATH.'tmp/minimify');
 
 
+//
+//	Media server
+//
+
+define('MEDIASERVER_MINIMIFY_FILES', false); // minimify js and css files
+define('MEDIASERVER_TMP_CACHE_PATH', SITE_PATH.'tmp/mediaserver');
+define('MEDIASERVER_CACHE_TIME', 2000); // in ms (when devel mode is enabled ignore cache times)
+define('MEDIASERVER_COMPILE_LESS', true); 
 
 //
 //  Modules
