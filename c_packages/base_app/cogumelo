@@ -87,7 +87,8 @@ $develdbcontrol = new DevelDBController();
         flush          to remove temporary files
         creteDB        to create a database
         creteTables    to generate the tables
-        restoreDB      to restore a database\n";
+        restoreDB      to restore a database
+        setPermissions tp set permissions in app\n";
         exit;     
     }//end switch 
 }//end parameters handler
@@ -96,7 +97,8 @@ else{
         flush          to remove temporary files
         creteDB        to create a database
         creteTables    to generate the tables
-        restoreDB      to restore a database\n";
+        restoreDB      to restore a database
+        setPermissions tp set permissions in app\n";
 }
 
 function createDB($user, $passwd){
@@ -124,7 +126,7 @@ function setPermissions(){
 
   exec('sudo chown -R $USER:www-data c_app');
   exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
-  exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log');
+  exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache');
   exec('sudo chown $USER:$USER c_app/backups');
 
   echo "permisssions ready!\n";
