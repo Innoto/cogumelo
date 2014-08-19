@@ -224,10 +224,12 @@
       
       $modUrl = ModuleController::getRealFilePath( $mod.".php" , $mod );
       require_once($modUrl);
-      
-      
-      //error_log( print_r( eval($mod."::dependencies") , true));
-      //array_push( $modDependencies,  );
+     
+      eval('class extClass'. $mod .' extends '.$mod. '{}');
+      eval('$objMod'.$mod.' = new extClass'.$mod.'();');
+
+      eval('$dependences = $objMod'.$mod.'->dependences;');
+      print_r($dependences);
     }
     
     error_log( print_r($C_ENABLED_MODULES , true));
