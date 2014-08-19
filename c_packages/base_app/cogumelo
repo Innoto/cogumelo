@@ -217,7 +217,7 @@
     Cogumelo::load('c_controller/ModuleController');
     $moduleControl = new ModuleController(false, true);
     
-    $modDependencies = array();
+    $allDependencies = array();
 
     global $C_ENABLED_MODULES;
     foreach ( $C_ENABLED_MODULES as $mod ){
@@ -227,9 +227,41 @@
       
       
       //error_log( print_r( eval($mod."::dependencies") , true));
-      //array_push( $modDependencies,  );
+      $modDependencies = array(
+       array(
+         "id" => "jquery",
+         "params" => array("jquery#1.*"),
+         "installer" => "bower",
+         "load" => array("jquery.js")
+       ),
+       array(
+         "id" => "jquery-ui",
+         "params" => array("jquery-ui"),
+         "installer" => "bower",
+         "load" => array("jquery-ui.js", "jquery-ui.css")
+       ),
+       array(
+         "id" => "bootstrap",
+         "params" => array("bootstrap"),
+         "installer" => "bower",
+         "load" => array("bootstrap.css")
+       )
+      );
+      
+      foreach ( $modDependencies as $md ){
+      
+      
+        //if( in_array($md['id'], $allDependencies))
+        if(!$allDependencies[$md['id']]){
+          //array_push( $allDependencies[$md['id']], $md['params'] );
+        }
+        else{
+          //array_push( $allDependencies[$md['id']], $md['params'] );
+        }
+      }      
     }
     
+    error_log( print_r($allDependencies , true));
     error_log( print_r($C_ENABLED_MODULES , true));
   }
 ?>
