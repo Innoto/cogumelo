@@ -224,32 +224,13 @@
       
       $modUrl = ModuleController::getRealFilePath( $mod.".php" , $mod );
       require_once($modUrl);
+
+      eval('class extClass'. $mod .' extends '.$mod. '{}');
+      eval('$objMod'.$mod.' = new extClass'.$mod.'();');
+
+      eval('$dependences = $objMod'.$mod.'->dependences;');
       
-      
-      //error_log( print_r( eval($mod."::dependencies") , true));
-      $modDependencies = array(
-       array(
-         "id" => "jquery",
-         "params" => array("jquery#1.*"),
-         "installer" => "bower",
-         "load" => array("jquery.js")
-       ),
-       array(
-         "id" => "jquery-ui",
-         "params" => array("jquery-ui"),
-         "installer" => "bower",
-         "load" => array("jquery-ui.js", "jquery-ui.css")
-       ),
-       array(
-         "id" => "bootstrap",
-         "params" => array("bootstrap"),
-         "installer" => "bower",
-         "load" => array("bootstrap.css")
-       )
-      );
-      
-      foreach ( $modDependencies as $md ){
-      
+      foreach ( $dependences as $md ){     
       
         //if( in_array($md['id'], $allDependencies))
         if(!$allDependencies[$md['id']]){
