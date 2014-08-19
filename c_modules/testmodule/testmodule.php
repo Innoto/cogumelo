@@ -5,7 +5,10 @@ Cogumelo::load("c_controller/Module");
 
 class testmodule extends Module
 {
-
+  public $name = "test";
+  public $version = "";
+  public $dependences = array();
+  
   function __construct() {
     $this->addUrlPatterns( '#^cousa/vo/?$#', 'view:Cousadmin::vo' );
     $this->addUrlPatterns( '#^cousa/mostrar/?$#', 'view:Cousadmin::mostra_cousa' );

@@ -15,6 +15,7 @@
   set_include_path('.:'.SITE_PATH);
 
   require_once("conf/setup.php"); 
+  
 
   require_once(COGUMELO_LOCATION."/c_classes/CogumeloClass.php");
   require_once(SITE_PATH."/Cogumelo.php");
@@ -23,28 +24,26 @@
   $_C =Cogumelo::get();
 
   //
-//  CARGO MÓDULO DEVEL E O DEVELDBCONTROLLER, QUE É ONDE ESTÁN OS MÉTODOS QUE NOS INTERESAN
-//
-require_once(COGUMELO_LOCATION."/c_modules/devel/devel.php");
-require_once(COGUMELO_LOCATION."/c_modules/devel/classes/controller/DevelDBController.php");
+  //  CARGO MÓDULO DEVEL E O DEVELDBCONTROLLER, QUE É ONDE ESTÁN OS MÉTODOS QUE NOS INTERESAN
+  //
+  require_once(COGUMELO_LOCATION."/c_modules/devel/devel.php");
+  require_once(COGUMELO_LOCATION."/c_modules/devel/classes/controller/DevelDBController.php");
 
-//
-//  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
-//
-$develdbcontrol = new DevelDBController();
-//var_dump( $develdbcontrol->getTablesSQL() ); // este método, por exemplo, devolvenos todo o  SQL xerado para os VO's do proxecto
+  //
+  //  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
+  //
+  $develdbcontrol = new DevelDBController();
+  //var_dump( $develdbcontrol->getTablesSQL() ); // este método, por exemplo, devolvenos todo o  SQL xerado para os VO's do proxecto
 
 
- 
- if ($argc>1){ //parameters handler
-    switch($argv[1]){
+   if ($argc>1){ //parameters handler
+      switch($argv[1]){
+        case 'flush': // delete temporary files
+           exec('rm tmp/');
+           echo "archivos temporales borrados\n";
+        break; 
 
-      case 'flush': // delete temporary files
-	       exec('rm tmp/');
-	       echo "archivos temporales borrados\n";
-         break; 
-
-      case 'createDB': // create database
+        case 'createDB': // create database
           $user =  ReadStdin('Enter an user with privileges: ', '');
           // Get the password
           fwrite(STDOUT, "Enter the password: ");
@@ -53,153 +52,184 @@ $develdbcontrol = new DevelDBController();
           createDB($user, $passwd);
         break; 
 
-      case 'createTables': // create database tables
-        createTables();
-        echo 'generated db tables\n';
+        case 'createTables': // create database tables
+          createTables();
+          echo 'generated db tables\n';
         break;  
 
-      case 'setPermissions': // create database tables
-        setPermissions();
+        case 'setPermissions': // create database tables
+          setPermissions();
         break;    
 
-      case 'bck': // do the backup of the given db
-      	if ($argc>2)
-      	  $file = $argv[2].'.sql';//name of the backup file
-        else
-          $file = false;
-        $user =  ReadStdin('Enter an user with privileges: ', '');
-        fwrite(STDOUT, "Enter the password: ");
-        $passwd = getPassword(true);
-        doBackup(DB_NAME, $user, $passwd, $file);
+        case 'bck': // do the backup of the given db
+          if ($argc>2){
+            $file = $argv[2].'.sql';//name of the backup file
+          }
+          else{
+            $file = false;
+          }
+          $user =  ReadStdin('Enter an user with privileges: ', '');
+          fwrite(STDOUT, "Enter the password: ");
+          $passwd = getPassword(true);
+          doBackup(DB_NAME, $user, $passwd, $file);
         break;  
 
-      case 'restore': // restore the backup of a given db
-        if ($argc>2){
-	       $bd = $argv[2];
-         retoreDB($bd);
-        }
-        else
-          echo "You must especify the database to restore\n"; 
+        case 'restoreDB': // restore the backup of a given db
+          if ($argc>2){
+           $bd = $argv[2];
+           retoreDB($bd);
+          }
+          else{
+            echo "You must especify the database to restore\n"; 
+          }
         break;  
 
-      default:
-        echo "invalid parameter;try: 
-        flush          to remove temporary files
-        creteDB        to create a database
-        creteTables    to generate the tables
-        restoreDB      to restore a database
-        setPermissions tp set permissions in app\n";
-        exit;     
-    }//end switch 
-}//end parameters handler
-else{
-  echo "Not enough arguments;try: 
-        flush          to remove temporary files
-        creteDB        to create a database
-        creteTables    to generate the tables
-        restoreDB      to restore a database
-        setPermissions tp set permissions in app\n";
-}
+        case 'installDependencies': 
+            getModDependencies();
+            echo "Fuck u\n"; 
+        break;    
 
-function createDB($user, $passwd){
-  $develdbcontrol = new DevelDBController($user, $passwd);
-  $develdbcontrol->createSchemaDB();
-}
 
-function createTables(){
+        default:
+          echo "invalid parameter;try: 
+          flush                   to remove temporary files
+          createDB                to create a database
+          createTables            to generate the tables
+          restoreDB               to restore a database
+          installDependencies     to install all modules dependencies
+          setPermissions          to set permissions in app\n";
+          exit;     
+      }//end switch 
+  }//end parameters handler
+  else{
+    echo "Not enough arguments;try: 
+          flush                   to remove temporary files
+          createDB                to create a database
+          createTables            to generate the tables
+          restoreDB               to restore a database
+          installDependencies     to install all modules dependencies
+          setPermissions          to set permissions in app\n";
+  }
 
-  Cogumelo::load('c_controller/ModuleController');
-  $moduleControl = new ModuleController(false, true);
+  function createDB($user, $passwd){
+    $develdbcontrol = new DevelDBController($user, $passwd);
+    $develdbcontrol->createSchemaDB();
+  }
 
-  $develdbcontrol = new DevelDBController();
-  $develdbcontrol->createTables();
-}
+  function createTables(){
 
-function setPermissions(){
-  exec('mkdir c_app/tmp');
-  exec('mkdir c_app/tmp/templates_c');
-  exec('mkdir c_app/log');
-  exec('mkdir c_app/backups');
+    Cogumelo::load('c_controller/ModuleController');
+    $moduleControl = new ModuleController(false, true);
 
-  exec('sudo chown -R $USER:www-data httpdocs');
-  exec('chmod -R go-rwx,g+rX httpdocs');
+    $develdbcontrol = new DevelDBController();
+    $develdbcontrol->createTables();
+  }
 
-  exec('sudo chown -R $USER:www-data c_app');
-  exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
-  exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache');
-  exec('sudo chown $USER:$USER c_app/backups');
+  function setPermissions(){
+    exec('mkdir c_app/tmp');
+    exec('mkdir c_app/tmp/templates_c');
+    exec('mkdir c_app/log');
+    exec('mkdir c_app/backups');
 
-  echo "permisssions ready!\n";
-}
+    exec('sudo chown -R $USER:www-data httpdocs');
+    exec('chmod -R go-rwx,g+rX httpdocs');
 
-function doBackup($BD, $user, $pass, $file){
+    exec('sudo chown -R $USER:www-data c_app');
+    exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
+    exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache');
+    exec('sudo chown $USER:$USER c_app/backups');
 
-  if (!$file)
-    $file = date('Ymd-Hms').'-'.$BD.'.sql';
+    echo "permisssions ready!\n";
+  }
 
-  $DIR = BCK;
+  function doBackup($BD, $user, $pass, $file){
 
-  exec('mysqldump -u '.$user.' -p'.$pass.' '.$BD.'> '.$DIR.'/'.$file);
-  exec('sudo gzip '.$DIR.'/'.$file);
-  exec('chmod go-rwx '.$DIR.'/*');
-  echo "\nyour db was successfully saved!\n";
-}
+    if (!$file)
+      $file = date('Ymd-Hms').'-'.$BD.'.sql';
 
-/**
- * Get data from the shell.
- */
-function ReadStdin($prompt, $valid_inputs, $default = '') { 
-    while(!isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input))) { 
-        echo $prompt; 
-        $input = strtolower(trim(fgets(STDIN))); 
-        if(empty($input) && !empty($default)) { 
-            $input = $default; 
-        } 
-    } 
-    return $input; 
-} 
+    $DIR = BCK;
 
-/**
- * Get a password from the shell.
- * This function works on *nix systems only and requires shell_exec and stty.
- *
- * @param  boolean $stars Wether or not to output stars for given characters
- * @return string
- */
-function getPassword($stars = false)
-{
-    // Get current style
-    $oldStyle = shell_exec('stty -g');
+    exec('mysqldump -u '.$user.' -p'.$pass.' '.$BD.'> '.$DIR.'/'.$file);
+    exec('sudo gzip '.$DIR.'/'.$file);
+    exec('chmod go-rwx '.$DIR.'/*');
+    echo "\nyour db was successfully saved!\n";
+  }
 
-    if ($stars === false) {
-        shell_exec('stty -echo');
-        $password = rtrim(fgets(STDIN), "\n");
-    } else {
-        shell_exec('stty -icanon -echo min 1 time 0');
+  /**
+   * Get data from the shell.
+   */
+  function ReadStdin($prompt, $valid_inputs, $default = '') { 
+      while(!isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input))) { 
+          echo $prompt; 
+          $input = strtolower(trim(fgets(STDIN))); 
+          if(empty($input) && !empty($default)) { 
+              $input = $default; 
+          } 
+      } 
+      return $input; 
+  } 
 
-        $password = '';
-        while (true) {
-            $char = fgetc(STDIN);
+  /**
+   * Get a password from the shell.
+   * This function works on *nix systems only and requires shell_exec and stty.
+   *
+   * @param  boolean $stars Wether or not to output stars for given characters
+   * @return string
+   */
+  function getPassword($stars = false)
+  {
+      // Get current style
+      $oldStyle = shell_exec('stty -g');
 
-            if ($char === "\n") {
-                break;
-            } else if (ord($char) === 127) {
-                if (strlen($password) > 0) {
-                    fwrite(STDOUT, "\x08 \x08");
-                    $password = substr($password, 0, -1);
-                }
-            } else {
-                fwrite(STDOUT, "*");
-                $password .= $char;
-            }
-        }
+      if ($stars === false) {
+          shell_exec('stty -echo');
+          $password = rtrim(fgets(STDIN), "\n");
+      } else {
+          shell_exec('stty -icanon -echo min 1 time 0');
+
+          $password = '';
+          while (true) {
+              $char = fgetc(STDIN);
+
+              if ($char === "\n") {
+                  break;
+              } else if (ord($char) === 127) {
+                  if (strlen($password) > 0) {
+                      fwrite(STDOUT, "\x08 \x08");
+                      $password = substr($password, 0, -1);
+                  }
+              } else {
+                  fwrite(STDOUT, "*");
+                  $password .= $char;
+              }
+          }
+      }
+
+      // Reset old style
+      shell_exec('stty ' . $oldStyle);
+
+      // Return the password
+      return $password;
+  }
+
+  function getModDependencies()
+  {
+    Cogumelo::load('c_controller/ModuleController');
+    $moduleControl = new ModuleController(false, true);
+    
+    $modDependencies = array();
+
+    global $C_ENABLED_MODULES;
+    foreach ( $C_ENABLED_MODULES as $mod ){
+      
+      $modUrl = ModuleController::getRealFilePath( $mod.".php" , $mod );
+      require_once($modUrl);
+      
+      
+      //error_log( print_r( eval($mod."::dependencies") , true));
+      //array_push( $modDependencies,  );
     }
-
-    // Reset old style
-    shell_exec('stty ' . $oldStyle);
-
-    // Return the password
-    return $password;
-}
-
+    
+    error_log( print_r($C_ENABLED_MODULES , true));
+  }
 ?>

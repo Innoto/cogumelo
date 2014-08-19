@@ -7,6 +7,28 @@ Cogumelo::load("c_controller/Module");
 
 class devel extends Module
 {
+  public $name = "devel";
+  public $version = "2.0";
+  public $dependencies = array(
+   array(
+     "id" =>"jquery",
+     "params" => array("jquery#1.*"),
+     "installer" => "bower",
+     "load" => array("jquery.js")
+   ),
+   array(
+     "id" =>"jquery-ui",
+     "params" => array("jquery-ui"),
+     "installer" => "bower",
+     "load" => array("jquery-ui.js", "jquery-ui.css")
+   ),
+   array(
+     "params" => array("bootstrap"),
+     "installer" => "bower",
+     "load" => array("bootstrap.css")
+   )
+  );
+  
 
   function __construct() {
     $this->addUrlPatterns( '#^'.MOD_DEVEL_URL_DIR.'$#', 'view:DevelView::main' );

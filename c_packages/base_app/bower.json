@@ -1,0 +1,9 @@
+{
+  "name": "cogumelo",
+  "version": "0.0.0",
+  "homepage": "https://github.com/Innoto/cogumelo",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "1.*"
+  }
+}
