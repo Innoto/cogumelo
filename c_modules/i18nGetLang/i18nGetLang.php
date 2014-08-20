@@ -6,7 +6,7 @@ class i18nGetLang extends Module
     
   public $name = "i18nGetLang";
   public $version = "";
-  public $dependencies = array();
+  public $dependences = array();
   
   
   function __construct(){

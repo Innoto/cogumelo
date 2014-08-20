@@ -9,16 +9,22 @@ class devel extends Module
 {
   public $name = "devel";
   public $version = "2.0";
-  public $dependencies = array(
+  public $dependences = array(
    array(
      "id" => "jquery",
-     "params" => array("jquery#1.*"),
+     "params" => array("jquery#2.*"),
      "installer" => "bower",
      "load" => array("jquery.js")
-   ),
-   array(
+   )/*,
+  array(
+     "id" => "jquery2",
+     "params" => array("jquery#2.*"),
+     "installer" => "bower",
+     "load" => array("jquery.js")
+   ),*/  
+  /* array(
      "id" => "jquery-ui",
-     "params" => array("jquery-ui"),
+     "params" => array("jquery-ui-bootstrap"),
      "installer" => "bower",
      "load" => array("jquery-ui.js", "jquery-ui.css")
    ),
@@ -27,7 +33,7 @@ class devel extends Module
      "params" => array("bootstrap"),
      "installer" => "bower",
      "load" => array("bootstrap.css")
-   )
+   )*/
   );
   
 

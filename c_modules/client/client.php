@@ -7,7 +7,7 @@ class client extends Module
   public $name = "client";
   public $version = "";
   
-  public $dependencies = array(
+  public $dependences = array(
    array(
      "id" =>"jquery",
      "params" => array("jquery#1.*"),
