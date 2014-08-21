@@ -10,30 +10,38 @@ class devel extends Module
   public $name = "devel";
   public $version = "2.0";
   public $dependences = array(
+   // BOWER   
    array(
      "id" => "jquery",
-     "params" => array("jquery#2.*"),
+     "params" => array("jquery#1.*"),
      "installer" => "bower",
      "load" => array("jquery.js")
-   )/*,
+   ),
   array(
      "id" => "jquery2",
      "params" => array("jquery#2.*"),
      "installer" => "bower",
      "load" => array("jquery.js")
-   ),*/  
-  /* array(
-     "id" => "jquery-ui",
-     "params" => array("jquery-ui-bootstrap"),
-     "installer" => "bower",
-     "load" => array("jquery-ui.js", "jquery-ui.css")
-   ),
+   ),  
    array(
      "id" => "bootstrap",
      "params" => array("bootstrap"),
      "installer" => "bower",
      "load" => array("bootstrap.css")
-   )*/
+   ),  
+   // COMPOSER 
+   array(
+     "id" => "kint",
+     "params" => array("raveren/kint","1.0.*@dev"),
+     "installer" => "composer",
+     "load" => array("Kint.class.php")
+   ),
+   array(
+     "id" => "sqlFormatter",
+     "params" => array("jdorn/sql-formatter", "1.3.*@dev"),
+     "installer" => "composer",
+     "load" => array("SqlFormatter.php")
+   )
   );
   
 

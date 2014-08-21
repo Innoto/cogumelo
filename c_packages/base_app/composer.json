@@ -1,0 +1,8 @@
+{
+    "require": {
+        "raveren/kint": "1.0.*@dev"
+    },
+    "config": {
+        "vendor-dir":"httpdocs/vendorServer"
+    }
+}

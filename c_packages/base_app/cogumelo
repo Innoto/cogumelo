@@ -216,7 +216,8 @@
     Cogumelo::load('c_controller/ModuleController');
     $moduleControl = new ModuleController(false, true);
     
-    $allDependences = array();
+    $allDependencesBower = array();
+    $allDependencesComposer = array();
 
     global $C_ENABLED_MODULES;
     foreach ( $C_ENABLED_MODULES as $mod ){
@@ -227,41 +228,77 @@
       eval('$objMod'.$mod.' = new extClass'.$mod.'();');
       eval('$dependences = $objMod'.$mod.'->dependences;');
       
+      //Hacemos una lista de las dependecias de todos los modulos
       foreach ( $dependences as $md ){     
-        if(!array_key_exists($md['id'], $allDependences)){
-          $allDependences[$md['id']] = array($md['params']);
-        }
-        else{
-          $diffAllDepend = array_diff($md['params'] , $allDependences[$md['id']][0]); 
-
-          if(!empty($diffAllDepend)){
-            array_push($allDependences[$md['id']], array_diff($md['params'] , $allDependences[$md['id']][0])  );
-          }          
-        }
-      }   // end foreach
-          
       
-    }
+        //Diferenciamos entre instaladores
+        switch($md['installer']){
+          case "composer":
+            if(!array_key_exists($md['id'], $allDependencesComposer)){
+              $allDependencesComposer[$md['id']] = array($md['params']);
+            }
+            else{
+              $diffAllDepend = array_diff($md['params'] , $allDependencesComposer[$md['id']][0]); 
 
-    foreach( $allDependences as $depKey => $dep ){
-      foreach( $dep as $params ){                
-        if(count($params) > 1){
-          $allparam = "";
-          foreach( $params as $p ){
-            $allparam = $allparam." ".$p;
-          } // end foreach
-          echo("Exec ... bower install ".$depKey."=".$allparam." --save\n");
-          exec('bower install '.$depKey.'='.$allparam.' --save');          
+              if(!empty($diffAllDepend)){
+                array_push($allDependencesComposer[$md['id']], array_diff($md['params'] , $allDependencesComposer[$md['id']][0])  );
+              }          
+            }
+          break;
+          case "bower":
+            if(!array_key_exists($md['id'], $allDependencesBower)){
+            $allDependencesBower[$md['id']] = array($md['params']);
+            }
+            else{
+              $diffAllDepend = array_diff($md['params'] , $allDependencesBower[$md['id']][0]); 
+
+              if(!empty($diffAllDepend)){
+                array_push($allDependencesBower[$md['id']], array_diff($md['params'] , $allDependencesBower[$md['id']][0])  );
+              }          
+            }    
+          break;
         }
-        else{
-          echo("Exec ... bower install ".$depKey."=".$params[0]." --save\n");
-          exec('bower install '.$depKey.'='.$params[0].' --save');
-          
-        }
+      }   // end foreach             
+    } // end foreach 
         
-      }       // end foreach
-    }   // end foreach
+    //error_log( print_r( "ALLBOWER" ,true));
+    //error_log( print_r( $allDependencesBower,true));
+    //error_log( print_r( "ALLCOMPOSER" ,true));
+    //error_log( print_r( $allDependencesComposer,true));
+
+    installDependencesBower($allDependencesBower);
+    installDependencesComposer($allDependencesComposer);
     
-    
+  }
+  
+  
+  function installDependencesBower($dependences)
+  {
+    //Instala las dependecias con Bower
+    /*
+    foreach( $dependences as $depKey => $dep ){
+        foreach( $dep as $params ){                
+          if(count($params) > 1){
+            $allparam = "";
+            foreach( $params as $p ){
+              $allparam = $allparam." ".$p;
+            } // end foreach
+            echo("Exec ... bower install ".$depKey."=".$allparam." --save\n");
+            exec('bower install '.$depKey.'='.$allparam.' --save');          
+          }
+          else{
+            echo("Exec ... bower install ".$depKey."=".$params[0]." --save\n");
+            exec('bower install '.$depKey.'='.$params[0].' --save');
+
+          }
+
+        }       // end foreach
+      }   // end foreach
+    */
+  }
+
+  function installDependencesComposer($dependences)
+  {
+    error_log( print_r( $dependences,true ));
   }
 ?>
