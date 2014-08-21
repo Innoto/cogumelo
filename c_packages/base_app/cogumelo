@@ -275,30 +275,42 @@
   function installDependencesBower($dependences)
   {
     //Instala las dependecias con Bower
-    /*
+    
     foreach( $dependences as $depKey => $dep ){
-        foreach( $dep as $params ){                
-          if(count($params) > 1){
-            $allparam = "";
-            foreach( $params as $p ){
-              $allparam = $allparam." ".$p;
-            } // end foreach
-            echo("Exec ... bower install ".$depKey."=".$allparam." --save\n");
-            exec('bower install '.$depKey.'='.$allparam.' --save');          
-          }
-          else{
-            echo("Exec ... bower install ".$depKey."=".$params[0]." --save\n");
-            exec('bower install '.$depKey.'='.$params[0].' --save');
+      foreach( $dep as $params ){                
+        if(count($params) > 1){
+          $allparam = "";
+          foreach( $params as $p ){
+            $allparam = $allparam." ".$p;
+          } // end foreach
+          echo("Exec ... bower install ".$depKey."=".$allparam." --save\n");
+          exec('bower install '.$depKey.'='.$allparam.' --save');          
+        }
+        else{
+          echo("Exec ... bower install ".$depKey."=".$params[0]." --save\n");
+          exec('bower install '.$depKey.'='.$params[0].' --save');
 
-          }
-
-        }       // end foreach
-      }   // end foreach
-    */
+        }
+      }       // end foreach
+    }   // end foreach
+    
   }
 
   function installDependencesComposer($dependences)
   {
-    error_log( print_r( $dependences,true ));
+    
+    $finalArrayDep = array("require" => array(), "config" => array("vendor-dir" => "httpdocs/vendorServer"));
+    foreach( $dependences as $depKey => $dep ){
+      foreach( $dep as $params ){   
+        $finalArrayDep['require'][$params[0]] = $params[1];
+      }
+    }
+    $jsonencoded = json_encode($finalArrayDep);
+    $fh = fopen("composer.json", 'w');
+      fwrite($fh, $jsonencoded);
+    fclose($fh);
+    echo("Exec ... php composer.phar update\n");          
+    exec('php composer.phar update');
+    
   }
 ?>
