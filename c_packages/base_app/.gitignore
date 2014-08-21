@@ -6,6 +6,8 @@ c_app/tmp/templates_c/
 
 # mediaserver caches
 httpdocs/mediaCache/
+httpdocs/vendor/
+httpdocs/vendorServer/
 
 
 *.log
