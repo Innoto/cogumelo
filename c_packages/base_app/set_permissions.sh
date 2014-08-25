@@ -26,6 +26,7 @@ sudo chown -R $CGUSER:$CGSERV httpdocs
 #chmod -R g-wx,o-rwx,u+rwX,g+rX httpdocs
 # TEMPORALMENTE
 chmod -R g-wx,o-rwx,u+rwX,go+rX httpdocs
+chmod g-x,o-wx,ug+rwX,o+rX httpdocs/test_upload
 
 
 echo -e "\n\n  READY. Enjoy :)  \n\n"
