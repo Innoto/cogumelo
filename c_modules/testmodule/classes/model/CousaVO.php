@@ -27,13 +27,13 @@ class CousaVO extends VO
       'desc' => 'Afición',
       'type'=>'VARCHAR',
       'size'=>30
-    )/*,
+    ),
     'complemento' => array(
       'desc' => 'Complemento',
       'type'=>'FOREIGN',
       'vo' => 'ComplementoVO',
-      'vo_key' => 'id'
-    )*/
+      'key' => 'relid'
+    )
   );
 
 

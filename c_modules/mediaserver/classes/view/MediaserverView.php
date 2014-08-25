@@ -1,14 +1,17 @@
 <?php
 
 Cogumelo::load('c_view/View');
-Cogumelo::load('c_vendor/jsmin/jsmin.php');
-Cogumelo::load('c_controller/ModuleController');
+mediaserver::load('controller/MediaserverController');
 
 class MediaserverView extends View
 {
 
+  private $mediaserverControl;
+
   function __construct($base_dir){
     parent::__construct($base_dir);
+
+    $this->mediaserverControl = new MediaserverController();
   }
 
   /**
@@ -25,7 +28,7 @@ class MediaserverView extends View
       Cogumelo::error('Mediaserver receives empty request');
       RequestController::redirect(SITE_URL_CURRENT.'/404');
     }
-    $this->serveContent($url_path);
+    $this->mediaserverControl->serveContent($url_path);
   }
 
   //load media from a module
@@ -34,7 +37,7 @@ class MediaserverView extends View
     preg_match('#/(.*?)/(.*)#', $url_path, $result);
 
     if( $result != array() ) {
-      $this->servecontent($result[2], $result[1]);
+      $this->mediaserverControl->servecontent($result[2], $result[1]);
     }
     else {
       Cogumelo::error('Mediaserver module receives empty request');
@@ -43,46 +46,61 @@ class MediaserverView extends View
 
   }
 
-  function serveContent($path, $module=false){
 
 
 
 
-    if(! $real_file_path = ModuleController::getRealFilePath('classes/view/templates/'.$path, $module ) ) {
-      //RequestController::redirect(SITE_URL_CURRENT.'/404');
-    }
 
 
-    if( substr($path, -4) == '.tpl' || substr($path, -4) == '.php' || substr($path, -4) == '.inc' ) {
-      Cogumelo::error('Somebody try to load, but not allowed to serve .tpl .php or .inc files ');
-      RequestController::redirect(SITE_URL_CURRENT.'/404');
-    }
-    else {
-
-      // if conf requires minify files
-      if(MINIMIFY_FILES) {
-        if(substr($path, -4) == '.css' ) {
-          Cogumelo::debug("Mediaserver, serving minified css: ".$real_file_path);
-          $this->serveMinifyCache('css', $real_file_path);
-        }
-        else
-        if(substr($path, -3) == '.js') {
-          Cogumelo::debug("Mediaserver, serving minified js: ".$real_file_path);
-          $this->serveMinifyCache('js', $real_file_path);
-        }
-        else{
-          Cogumelo::debug("Mediaserver, serving file: ".$real_file_path);
-          $this->serveRawFile($real_file_path);
-        }
-      }
-      else {
-        Cogumelo::debug("Mediaserver, serving file: ".$real_file_path);
-        $this->serveRawFile($real_file_path);
-      }
-    }
-  }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
   function serveRawFile($real_file_path)
   {
 
@@ -106,8 +124,8 @@ class MediaserverView extends View
       }
       else{
         header('Content-Type: application/octet-stream');
-      }
-
+      
+}
       header('Content-Disposition: attachment; filename='.basename($real_file_path));
       header('Expires: 0');
       header('Cache-Control: must-revalidate');
@@ -122,8 +140,8 @@ class MediaserverView extends View
       RequestController::redirect(SITE_URL_CURRENT.'/404');
     }
   }
-
-
+*/
+/*
   function serveMinifyCache($type, $real_file_path){
 
     header("Content-Type: application/octet-stream");
@@ -156,7 +174,7 @@ class MediaserverView extends View
 
     echo $content;
   }
-
+*/
 
 
 }
