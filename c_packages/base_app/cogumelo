@@ -247,9 +247,13 @@
       
       pushDependences($dependences);
     }    
-    //Cargamos las dependencias de Base App (externas a los modulos)
-    $baseApp = new Cogumelo();
-    pushDependences($baseApp->dependences);
+    //Cargamos las dependencias de Base App (externas a los modulos).
+    class extClassCogumelo extends Cogumelo {}
+    $objModCogumelo = new extClassCogumelo();
+    $baseAppDependences = $objModCogumelo->dependences;
+
+    pushDependences($baseAppDependences);
+    
   }
   
   
