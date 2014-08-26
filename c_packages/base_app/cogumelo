@@ -341,8 +341,9 @@
     $fh = fopen("composer.json", 'w');
       fwrite($fh, $jsonencoded);
     fclose($fh);
-    echo("Exec ... php composer.phar update\n");          
+    echo("Exec ... php composer.phar update\n\n");          
     exec('php composer.phar update');
+    echo("If the folder does not appear vendorServer dependencies run 'php composer.phar update' or 'composer update' and resolves conflicts.\n");
     
   }
   //-------------------------------------------------------------------- END DEPENDENCES---------------------------------------------------------
