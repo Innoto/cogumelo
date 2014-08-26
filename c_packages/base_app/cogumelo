@@ -210,67 +210,99 @@
       // Return the password
       return $password;
   }
+  
+  
+
+  //--------------------------------------------------------------------DEPENDENCES---------------------------------------------------------
 
   function installDependences()
   {
-    Cogumelo::load('c_controller/ModuleController');
-    $moduleControl = new ModuleController(false, true);
-    
+    global $allDependencesBower; 
     $allDependencesBower = array();
+    global $allDependencesComposer;
     $allDependencesComposer = array();
 
-    global $C_ENABLED_MODULES;
-    foreach ( $C_ENABLED_MODULES as $mod ){
-      
+    loadDependences();    
+    //Descomentar para ver las depen a instalar 
+    //error_log( print_r( "ALLBOWER", true));
+    //error_log( print_r( $allDependencesBower, true));
+    //error_log( print_r( "ALLCOMPOSER", true));
+    //error_log( print_r( $allDependencesComposer, true));
+
+    installDependencesBower($allDependencesBower);
+    installDependencesComposer($allDependencesComposer);    
+  }
+  
+  function loadDependences(){
+    Cogumelo::load('c_controller/ModuleController');
+    $moduleControl = new ModuleController(false, true);
+    //Cargamos las dependencias de los modulos
+    global $C_ENABLED_MODULES;    
+    foreach ( $C_ENABLED_MODULES as $mod ){      
       $modUrl = ModuleController::getRealFilePath( $mod.".php" , $mod );
       require_once($modUrl);
       eval('class extClass'. $mod .' extends '.$mod. '{}');
       eval('$objMod'.$mod.' = new extClass'.$mod.'();');
       eval('$dependences = $objMod'.$mod.'->dependences;');
       
-      //Hacemos una lista de las dependecias de todos los modulos
-      foreach ( $dependences as $md ){     
-      
-        //Diferenciamos entre instaladores
-        switch($md['installer']){
-          case "composer":
-            if(!array_key_exists($md['id'], $allDependencesComposer)){
-              $allDependencesComposer[$md['id']] = array($md['params']);
-            }
-            else{
-              $diffAllDepend = array_diff($md['params'] , $allDependencesComposer[$md['id']][0]); 
+      pushDependences($dependences);
+    }    
+    //Cargamos las dependencias de Base App (externas a los modulos)
+    $baseApp = new Cogumelo();
+    pushDependences($baseApp->dependences);
+  }
+  
+  
+  
+  function pushDependences($dependences)
+  {
+    //Hacemos una lista de las dependecias de todos los modulos
+    foreach ( $dependences as $dependence ){     
 
-              if(!empty($diffAllDepend)){
-                array_push($allDependencesComposer[$md['id']], array_diff($md['params'] , $allDependencesComposer[$md['id']][0])  );
-              }          
-            }
-          break;
-          case "bower":
-            if(!array_key_exists($md['id'], $allDependencesBower)){
-            $allDependencesBower[$md['id']] = array($md['params']);
-            }
-            else{
-              $diffAllDepend = array_diff($md['params'] , $allDependencesBower[$md['id']][0]); 
+      //Diferenciamos entre instaladores
+      switch($dependence['installer']){
+        case "composer":
+          pushDependencesComposer($dependence);
+        break;
+        case "bower":
+          pushDependencesBower($dependence);    
+        break;
+      }
+    }   // end foreach             
 
-              if(!empty($diffAllDepend)){
-                array_push($allDependencesBower[$md['id']], array_diff($md['params'] , $allDependencesBower[$md['id']][0])  );
-              }          
-            }    
-          break;
-        }
-      }   // end foreach             
-    } // end foreach 
-        
-    //error_log( print_r( "ALLBOWER" ,true));
-    //error_log( print_r( $allDependencesBower,true));
-    //error_log( print_r( "ALLCOMPOSER" ,true));
-    //error_log( print_r( $allDependencesComposer,true));
-
-    installDependencesBower($allDependencesBower);
-    installDependencesComposer($allDependencesComposer);
     
   }
   
+  
+  function pushDependencesComposer($dependence)
+  {
+    global $allDependencesComposer;
+    if(!array_key_exists($dependence['id'], $allDependencesComposer)){
+      $allDependencesComposer[$dependence['id']] = array($dependence['params']);
+    }
+    else{
+      $diffAllDepend = array_diff($dependence['params'] , $allDependencesComposer[$dependence['id']][0]); 
+
+      if(!empty($diffAllDepend)){
+        array_push($allDependencesComposer[$dependence['id']], array_diff($dependence['params'] , $allDependencesComposer[$dependence['id']][0])  );
+      }          
+    }
+  }
+  
+  function pushDependencesBower($dependence)
+  {
+    global $allDependencesBower;
+    if(!array_key_exists($dependence['id'], $allDependencesBower)){
+      $allDependencesBower[$dependence['id']] = array($dependence['params']);
+    }
+    else{
+      $diffAllDepend = array_diff($dependence['params'] , $allDependencesBower[$dependence['id']][0]); 
+
+      if(!empty($diffAllDepend)){
+        array_push($allDependencesBower[$dependence['id']], array_diff($dependence['params'] , $allDependencesBower[$dependence['id']][0])  );
+      }          
+    }
+  }
   
   function installDependencesBower($dependences)
   {
@@ -313,4 +345,5 @@
     exec('php composer.phar update');
     
   }
+  //-------------------------------------------------------------------- END DEPENDENCES---------------------------------------------------------
 ?>

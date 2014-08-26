@@ -4,8 +4,63 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "03df4d8ca7a782c2441333ae78e865be",
+    "hash": "d01642dff111fe1818203c38539b2311",
     "packages": [
+        {
+            "name": "faisalman/simple-excel-php",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/faisalman/simple-excel-php.git",
+                "reference": "9bcff4b001fac43bce07e2ba348468d9fdedb82b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/faisalman/simple-excel-php/zipball/9bcff4b001fac43bce07e2ba348468d9fdedb82b",
+                "reference": "9bcff4b001fac43bce07e2ba348468d9fdedb82b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "3.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "SimpleExcel\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Faisal Salman",
+                    "email": "fyzlman@gmail.com",
+                    "homepage": "http://faisalman.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Easily parse / convert / write between Microsoft Excel XML / CSV / TSV / HTML / JSON / etc formats",
+            "homepage": "http://faisalman.github.com/simple-excel-php",
+            "keywords": [
+                "converter",
+                "csv",
+                "document",
+                "excel",
+                "html",
+                "json",
+                "parser",
+                "spreadsheet",
+                "tsv",
+                "writer",
+                "xml"
+            ],
+            "time": "2014-06-05 04:42:47"
+        },
         {
             "name": "jdorn/sql-formatter",
             "version": "dev-master",
@@ -120,7 +175,8 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "raveren/kint": 20,
-        "jdorn/sql-formatter": 20
+        "jdorn/sql-formatter": 20,
+        "faisalman/simple-excel-php": 20
     },
     "prefer-stable": false,
     "platform": [
