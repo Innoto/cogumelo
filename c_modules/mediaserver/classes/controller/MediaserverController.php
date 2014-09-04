@@ -64,18 +64,25 @@ class MediaserverController {
 
     $modulePath = ( $this->moduleName )? '/'.$this->moduleName.'/' : '' ;
 
-    if( !file_exists( MEDIASERVER_TMP_CACHE_PATH . $modulePath . $this->urlPath && MEDIASERVER_HOST != '/' ) ) {
+    $tmp_cache = MEDIASERVER_TMP_CACHE_PATH . $modulePath . $this->urlPath;
+    $final_cache = SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH . $modulePath . $this->urlPath;
+
+
+    if( !file_exists( $tmp_cache && MEDIASERVER_HOST == '/' ) ) {
 
       // create tmp folder
-      $this->createDirPath(MEDIASERVER_TMP_CACHE_PATH . $modulePath . $this->urlPath);
+      $this->createDirPath( $tmp_cache );
       // copy to tmp path
-      //copy($this->realFilePath, MEDIASERVER_TMP_CACHE_PATH . $modulePath . $this->urlPath);
+      copy($this->realFilePath, $tmp_cache );
 
       // create final folder
-      $this->createDirPath(SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH . $modulePath . $this->urlPath);
-      
+      $this->createDirPath( $final_cache );
+
+      if( file_exists( $final_cache ) ){
+        unlink( $final_cache );
+      }
       // move from tmp path to final path
-      rename(MEDIASERVER_TMP_CACHE_PATH . $modulePath . $this->urlPath, SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH . $modulePath . $this->urlPath);
+      rename( $tmp_cache , $final_cache );
     }
 
     return MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $modulePath . $this->urlPath;
