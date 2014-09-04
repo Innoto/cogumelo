@@ -33,7 +33,6 @@ class Cogumelo extends CogumeloClass
     $this->addUrlPatterns( '#^getobj$#', 'view:Adminview::getobj' );
     $this->addUrlPatterns( '#^setobj$#', 'view:Adminview::setobj' );
     $this->addUrlPatterns( '#^404$#', 'view:MasterView::page404' );
-
     $this->addUrlPatterns( '#^$#', 'view:MasterView::master' ); // App home url
 
   }
