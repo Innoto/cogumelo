@@ -129,7 +129,8 @@
     exec('mkdir c_app/tmp/templates_c');
     exec('mkdir c_app/log');
     exec('mkdir c_app/backups');
-
+    exec('mkdir httpdocs/mediaCache');  
+    
     exec('sudo chown -R $USER:www-data httpdocs');
     exec('chmod -R go-rwx,g+rX httpdocs');
 
@@ -137,6 +138,7 @@
     exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
     exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache');
     exec('sudo chown $USER:$USER c_app/backups');
+    
 
     echo "permisssions ready!\n";
   }
