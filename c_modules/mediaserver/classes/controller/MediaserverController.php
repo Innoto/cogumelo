@@ -8,6 +8,7 @@ class MediaserverController {
   var $realFilePath = false;
   var $urlPath = false;
   var $moduleName = false;
+  var $modulePath = '';
 
   /**
   * Process path to serve media resource. It will move and 
@@ -18,40 +19,49 @@ class MediaserverController {
 
     $this->urlPath = $path;
     $this->moduleName = $module;
+    $this->realFilePath = ModuleController::getRealFilePath('classes/view/templates/'.$this->urlPath, $this->moduleName);
+    $this->modulePath = ( $this->moduleName )? '/module/'.$this->moduleName.'/' : '' ;
 
-    if(! $this->realFilePath = ModuleController::getRealFilePath('classes/view/templates/'.$this->urlPath, $this->moduleName ) ) {
-      RequestController::redirect(SITE_URL_CURRENT.'/404');
-    }
-
-    if( substr($this->urlPath, -4) == '.tpl' || substr($this->urlPath, -4) == '.php' || substr($this->urlPath, -4) == '.inc' ) {
-
-      Cogumelo::error('trying to load( '.$this->urlPath.' ), but not allowed to serve .tpl .php or .inc files ');
-      RequestController::redirect(SITE_URL_CURRENT.'/404');
-
-    }
-    else {
-      Cogumelo::debug("Mediaserver, serving file: ".$this->realFilePath);
-
-      if( (substr($this->urlPath, -4) == '.css' || substr($this->urlPath, -3) == '.js' ) && MEDIASERVER_MINIMIFY_FILES ) {
-        $redirectPath = $this->copyAndMoveFile( $this->minify() );
+    if( MEDIASERVER_REFRESH_CACHE ) {
+      if( !file_exists( $this->realFilePath ) ) {
+        RequestController::redirect(SITE_URL_CURRENT.'/404');
       }
-      else
-      if( substr($this->urlPath, -5) == '.less' ) {
-        //if( MEDIASERVER_MINIMIFY_FILES ) {
-        //  $redirectPath = $this->copyAndMoveFile( $this->minify($this->lessCompile()) );
-        //}
-        //else {
-        // $redirectPath = $this->copyAndMoveFile( $this->lessCompile() );
-        //}
+
+      if( substr($this->urlPath, -4) == '.tpl' || 
+          substr($this->urlPath, -4) == '.php' || 
+          substr($this->urlPath, -4) == '.inc' 
+        ) {
+
+        Cogumelo::error('trying to load( '.$this->urlPath.' ), but not allowed to serve .tpl .php or .inc files ');
+        RequestController::redirect(SITE_URL_CURRENT.'/404');
+
       }
       else {
-        $redirectPath = $this->copyAndMoveFile();
-      }
+        Cogumelo::debug("Mediaserver, serving file: ".$this->realFilePath);
 
-      // redirect to file
-      RequestController::redirect( $redirectPath );
-      //echo $redirectPath;
+        if( (substr($this->urlPath, -4) == '.css' || substr($this->urlPath, -3) == '.js' ) && MEDIASERVER_MINIMIFY_FILES ) {
+          //$this->copyAndMoveFile( $this->minify() );
+        }
+        else
+        if( substr($this->urlPath, -5) == '.less' ) {
+          //if( MEDIASERVER_MINIMIFY_FILES ) {
+          // $this->copyAndMoveFile( $this->minify($this->lessCompile()) );
+          //}
+          //else {
+          // $this->copyAndMoveFile( $this->lessCompile() );
+          //}
+        }
+        else {
+          $this->copyAndMoveFile();
+        }
+      }
     }
+
+    // redirect to file
+    RequestController::redirect( MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath );
+
+    //echo MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath;
+    
   } 
 
 
@@ -62,10 +72,8 @@ class MediaserverController {
   */
   function copyAndMoveFile( ) {
 
-    $modulePath = ( $this->moduleName )? '/'.$this->moduleName.'/' : '' ;
-
-    $tmp_cache = MEDIASERVER_TMP_CACHE_PATH . $modulePath . $this->urlPath;
-    $final_cache = SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH . $modulePath . $this->urlPath;
+    $tmp_cache = MEDIASERVER_TMP_CACHE_PATH . $this->modulePath . $this->urlPath;
+    $final_cache = SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath;
 
 
     if( !file_exists( $tmp_cache && MEDIASERVER_HOST == '/' ) ) {
@@ -84,18 +92,6 @@ class MediaserverController {
       // move from tmp path to final path
       rename( $tmp_cache , $final_cache );
     }
-
-    return MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $modulePath . $this->urlPath;
-  }
-
-
-
-  /*
-  * Copy less files to tmp path and move it to final path
-  * @return string : final path of file
-  * @var string $path: the path of file to copy
-  */
-  function copyAndMoveLess( ) {
 
   }
 
@@ -125,22 +121,13 @@ class MediaserverController {
 
   }*/
 
-  /*
-  * Compile less file
-  * @return string : the path of compiled file
-  * @var string $path: less file to compile
-  */
-  function lessCompile( ) {
-
-  }
-
 
   /*
   * Minimify css or js files
   * @return string : path of minified file
   * @var string $path: the path of file to minify
   */
-  function minify($realpath, $path, $type) {
+  /*function minify($realpath, $path, $type) {
 
     // creating secure name for cache file
     $cache_filename = MEDIASERVER_MINIMIFY_CACHE_PATH."/".str_replace('/','', $path);
@@ -171,6 +158,6 @@ class MediaserverController {
       }
     }
 
-  }
+  }*/
 
 }
