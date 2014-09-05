@@ -63,32 +63,236 @@
     <table>
       <thead>
         <tr>
-          <th>Options</th>
-          <th>setup.dev</th>
-          <th>setup.final</th>
+          <th>Cogumelo Setup</th>
+          <th>Value</th>
         </tr>
       </thead>
+      <!-- row -->
       <tr>
-        <td class="td_option">Lorem ipsum dolor sit ame</td>
-        <td class="td_dev">Ut non </td>
-        <td class="td_fnl">viverra suscipit.</td>
+        <td class="td_option">IS_DEVEL_ENV</td>
+        <td class="td_value">{$infoIsDevelEnv}</td>
       </tr>
-
+      <!-- row -->
       <tr>
-        <td class="td_option">STNF</td>
-        <td class="td_dev">viverra suscipit.</td>
-        <td class="td_fnl">Lorem ipsum dolor sit ame</td>
+        <td class="td_option">COGUMELO_LOCATION</td>
+        <td class="td_value">{$infoCogumeloLocation}</td>
       </tr>
-
       <tr>
-        <td class="td_option">viverra suscipit.</td>
-        <td class="td_dev">Lorem ipsum dolor sit ame</td>
-        <td class="td_fnl">1</td>
+        <td class="td_option">SITE_PROTOCOL</td>
+        <td class="td_value">{$infoSiteProtocol}</td>
       </tr>
-
-      
-
+      <!-- row -->
+      <tr>
+        <td class="td_option">SITE_HOST</td>
+        <td class="td_value">{$infoSiteHost}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SITE_FOLDER</td>
+        <td class="td_value">{$infoSiteFolder}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SITE_URL</td>
+        <td class="td_value">{$infoSiteUrl}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SITE_URL_HTTP</td>
+        <td class="td_value">{$infoSiteUrlHttp}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SITE_URL_HTTPS</td>
+        <td class="td_value">{$infoSiteUrlHttps}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SITE_URL_CURRENT</td>
+        <td class="td_value">{$infoSiteUrlCurrent}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SMARTY_CONFIG</td>
+        <td class="td_value">{$infoSmartyConfig}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SMARTY_COMPILE</td>
+        <td class="td_value">{$infoSmartyCompile}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SMARTY_CACHE</td>
+        <td class="td_value">{$infoSmartyCache}</td>
+      </tr>
+      <tr>
+        <td class="td_option">C_ENABLED_MODULES</td>
+        <td class="td_value">{$infoCEnabledModules}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">BCK</td>
+        <td class="td_value">{$infoBck}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">LOGDIR</td>
+        <td class="td_value">{$infoLogDir}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">LOG_RAW_SQL</td>
+        <td class="td_value">{$infoLogRawSql}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">DEBUG</td>
+        <td class="td_value">{$infoDebug}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">ERRORS</td>
+        <td class="td_value">{$infoErrors}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">MOD_DEVEL_ALLOW_ACCESS</td>
+        <td class="td_value">{$infoModDevelAllowAccess}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">GETTEXT_UPDATE</td>
+        <td class="td_value">{$infoGetTextUpdate}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">LANG_DEFAULT</td>
+        <td class="td_value">{$infoLangDefault}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">LANG_AVAILABLE</td>
+        <td class="td_value">{$infoLangAvailable}</td>
+      </tr>
     </table>
+    
+    
+    <table>
+      <thead>
+        <tr>
+          <th>MediaServer Setup</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+
+      <tr>
+        <td class="td_option">MEDIASERVER_HOST</td>
+        <td class="td_value">{$infoMediaServerHost}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">MEDIASERVER_TMP_CACHE_PATH</td>
+        <td class="td_value">{$infoMediaServerTmpCachePath}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">MEDIASERVER_FINAL_CACHE_PATH</td>
+        <td class="td_value">{$infoMediaServerFinalCachePath}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">MEDIASERVER_CACHE_TIME</td>
+        <td class="td_value">{$infoMediaServerCacheTime}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">MEDIASERVER_COMPILE_LESS</td>
+        <td class="td_value">{$infoMediaServerCompileLess}</td>
+      </tr>    
+      
+    </table>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>MAIL Setup</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+
+      <!-- row -->
+      <tr>
+        <td class="td_option">SMTP_HOST</td>
+        <td class="td_value">{$infoSiteHost}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SMTP_PORT</td>
+        <td class="td_value">{$infoSmtpPort}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SMTP_AUTH</td>
+        <td class="td_value">{$infoSmtpAuth}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SMTP_USER</td>
+        <td class="td_value">{$infoSmtpUser}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SYS_MAIL_FROM_NAME</td>
+        <td class="td_value">{$infoSysMailFromName}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">SYS_MAIL_FROM_EMAIL</td>
+        <td class="td_value">{$infoSysMailFromEmail}</td>
+      </tr>
+    </table>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>DB Setup</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <!-- row -->
+      <tr>
+        <td class="td_option">DB_ENGINE</td>
+        <td class="td_value">{$infoDBEngine}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">DB_HOSTNAME</td>
+        <td class="td_value">{$infoDBHostName}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">DB_PORT</td>
+        <td class="td_value">{$infoDBPort}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">DB_USER</td>
+        <td class="td_value">{$infoDBUser}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">DB_NAME</td>
+        <td class="td_value">{$infoDBName}</td>
+      </tr>
+      <!-- row -->
+      <tr>
+        <td class="td_option">DB_ALLOW_CACHE</td>
+        <td class="td_value">{$infoDBAllowCache}</td>
+      </tr>
+    </table>
+    
+    
   </div>
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
