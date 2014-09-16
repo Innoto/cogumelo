@@ -15,17 +15,18 @@ class FormController implements Serializable {
   private $messages = array();
 
   // POST submit
-  private $formValues = false;
+  private $postValues = false;
   //private $evaluateRuleMethod = false;
   private $validationObj = null;
   private $rulesErrors = array();
+
 
 
   function __construct( $name = false, $action = false, $cgIntFrmId = false, $formPost = false ) {
     if( $cgIntFrmId ) {
       $this->loadFromSession( $cgIntFrmId );
       if( $formPost ) {
-        $this->loadFormValues( $formPost );
+        $this->loadPostValues( $formPost );
       }
     }
     else {
@@ -51,7 +52,7 @@ class FormController implements Serializable {
     $data[] = $this->fields;
     $data[] = $this->rules;
     $data[] = $this->messages;
-    $data[] = $this->formValues;
+    $data[] = $this->postValues;
 
     return serialize( $data );
   }
@@ -68,7 +69,7 @@ class FormController implements Serializable {
     $this->fields = array_shift( $data );
     $this->rules = array_shift( $data );
     $this->messages = array_shift( $data );
-    $this->formValues = array_shift( $data );
+    $this->postValues = array_shift( $data );
   }
 
   public function saveToSession() {
@@ -85,8 +86,8 @@ class FormController implements Serializable {
     //error_log( $_SESSION[ $formSessionId ] );
   }
 
-  public function loadFormValues( $formPost ) {
-    $this->formValues = $formPost;
+  public function loadPostValues( $formPost ) {
+    $this->postValues = $formPost;
   }
 
   public function getIntFrmId() {
@@ -233,7 +234,7 @@ class FormController implements Serializable {
     $html .= '<!-- Validate form '.$this->name.' - END -->'."\n";
 
     return $html;
-  }
+  } // function getJqueryValidationJS
 
   public function setField( $fieldName, $params = false ) {
 
@@ -285,7 +286,7 @@ class FormController implements Serializable {
   }
 
   public function getFieldValue( $fieldName ) {
-    $value = isset( $this->formValues[ $fieldName ] ) ? $this->formValues[ $fieldName ] : null;
+    $value = isset( $this->postValues[ $fieldName ] ) ? $this->postValues[ $fieldName ] : null;
     return $value;
   }
 
@@ -305,11 +306,11 @@ class FormController implements Serializable {
     $validate = true;
 
     if( $formPost ) {
-      $this->loadFormValues( $formPost );
+      $this->loadPostValues( $formPost );
     }
 
     // Tienen que existir los validadores y los valores del form
-    if( is_object( $this->validationObj ) && $this->formValues!==false ) {
+    if( is_object( $this->validationObj ) && $this->postValues!==false ) {
       foreach( $this->rules as $fieldName => $fieldRules ) {
         $fieldValidate = false;
         $value = $this->getFieldValue( $fieldName );
@@ -341,14 +342,14 @@ class FormController implements Serializable {
         }
 
       } // foreach( $this->rules as $fieldName => $fieldRules )
-    } // if(
+    } // if( is_object( $this->validationObj ) && $this->postValues!==false )
     else {
       $validate = false;
       error_log( 'FALTA CARGAR EL POST DEL FORM O LOS VALIDADORES' );
     }
 
     return $validate;
-  } // public function validateForm( $formPost = false ) {
+  } // function validateForm( $formPost = false ) {
 
   public function getJVErrors() {
     $errors = array();
