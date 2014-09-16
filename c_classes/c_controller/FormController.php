@@ -21,7 +21,6 @@ class FormController implements Serializable {
   private $rulesErrors = array();
 
 
-
   function __construct( $name = false, $action = false, $cgIntFrmId = false, $formPost = false ) {
     if( $cgIntFrmId ) {
       $this->loadFromSession( $cgIntFrmId );
