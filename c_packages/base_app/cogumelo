@@ -62,7 +62,7 @@ $develdbcontrol = new DevelDBController();
         setPermissions();
         break;    
 
-      case 'bck': // do the backup of the given db
+      case 'bckDB': // do the backup of the given db
       	if ($argc>2)
       	  $file = $argv[2].'.sql';//name of the backup file
         else
@@ -70,23 +70,29 @@ $develdbcontrol = new DevelDBController();
         $user =  ReadStdin('Enter an user with privileges: ', '');
         fwrite(STDOUT, "Enter the password: ");
         $passwd = getPassword(true);
-        doBackup(DB_NAME, $user, $passwd, $file);
+        backupDB(DB_NAME, $user, $passwd, $file);
         break;  
 
-      case 'restore': // restore the backup of a given db
+      case 'restoreDB': // restore the backup of a given db
         if ($argc>2){
-	       $bd = $argv[2];
-         retoreDB($bd);
+	       $db = $argv[2];
+         $user =  ReadStdin('Enter an user with privileges: ', '');
+         fwrite(STDOUT, "Enter the password: ");
+         $passwd = getPassword(true);
+         echo $db;
+         restoreDB($db, $user, $passwd);
         }
         else
           echo "You must especify the database to restore\n"; 
         break;  
 
       default:
-        echo "invalid parameter;try: 
+        echo "Invalid parameter;try: 
         flush          to remove temporary files
+        setPermission  to set the folder permission
         creteDB        to create a database
         creteTables    to generate the tables
+        bckDB          to do a DB backup (optional arg: filename)
         restoreDB      to restore a database\n";
         exit;     
     }//end switch 
@@ -94,8 +100,10 @@ $develdbcontrol = new DevelDBController();
 else{
   echo "Not enough arguments;try: 
         flush          to remove temporary files
+        setPermission  to set the folder permission
         creteDB        to create a database
         creteTables    to generate the tables
+        bckDB          to do a DB backup (optional arg: filename)
         restoreDB      to restore a database\n";
 }
 
@@ -123,20 +131,30 @@ function setPermissions(){
   exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log');
   exec('sudo chown $USER:$USER c_app/backups');
 
-  echo "permisssions ready!\n";
+  echo "permissions ready!\n";
 }
 
-function doBackup($BD, $user, $pass, $file){
+function backupDB($DB, $user, $pass, $file){
 
   if (!$file)
     $file = date('Ymd-Hms').'-'.$BD.'.sql';
 
   $DIR = BCK;
 
-  exec('mysqldump -u '.$user.' -p'.$pass.' '.$BD.'> '.$DIR.'/'.$file);
+  exec('mysqldump -u '.$user.' -p'.$pass.' '.$DB.'> '.$DIR.'/'.$file);
   exec('sudo gzip '.$DIR.'/'.$file);
   exec('chmod go-rwx '.$DIR.'/*');
   echo "\nyour db was successfully saved!\n";
+}
+
+function restoreDB($DB, $user, $pass){
+
+  $DIR = BCK;
+
+  echo('mysql -u '.$user.' -p'.$pass.'< gzip -d '.$DIR.$DB);
+
+  exec('mysql -u '.$user.' -p'.$pass.'< gzip -d '.$DIR.$DB);
+  echo "\nthe db was successfully restored!\n";
 }
 
 /**
