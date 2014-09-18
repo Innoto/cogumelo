@@ -166,6 +166,18 @@ class FormController implements Serializable {
         $this->setValidationRule( $field['name'], 'inArray', array_keys( $field['options'] ) );
         break;
 
+      case 'textarea':
+        $html .= '<textarea name="'.$field['name'].'" id="'.$field['id'].'"';
+        if( isset( $field['placeholder'] ) ) { $html .= ' placeholder="'.$field['placeholder'].'"'; }
+        if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
+        if( isset( $field['readonly'] ) ) { $html .= ' readonly="readonly"'; }
+        if( isset( $field['cols'] ) ) { $html .= ' cols="'.$field['cols'].'"'; }
+        if( isset( $field['rows'] ) ) { $html .= ' rows="'.$field['rows'].'"'; }
+        $html .= '>';
+        if( isset( $field['value'] ) ) { $html .= $field['value']; }
+        $html .= '</textarea>';
+        break;
+
       case 'checkbox':
         //<input type="checkbox" name="vehicle" value="Bike"> I have a bike<br>
         //<input type="checkbox" name="vehicle" value="Car" checked="checked"> I have a car
