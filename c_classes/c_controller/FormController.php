@@ -127,6 +127,14 @@ class FormController implements Serializable {
     return $html;
   }
 
+  public function getHtmlFieldsArray() {
+    $html = array();
+    foreach( $this->fields as $fieldName => $fieldParams ) {
+      $html[] = '<div>'.$this->getHtmlField($fieldName)."</div>\n";
+    }
+    return $html;
+  }
+
   public function getHtmlField( $fieldName ) {
     $html = '';
 
