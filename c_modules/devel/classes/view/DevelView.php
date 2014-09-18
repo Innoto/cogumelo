@@ -20,13 +20,16 @@ class DevelView extends View
   * @return bool : true -> Access allowed
   */
   function accessCheck() {
+/*
     global $DEVEL_ALLOWED_HOSTS;
     if( !in_array($_SERVER["REMOTE_ADDR"], $DEVEL_ALLOWED_HOSTS) ){
-      Cogumelo::error("Must be developer machine to enter on this site");
+*/
+    if( !MOD_DEVEL_ALLOW_ACCESS ) {
+      Cogumelo::error("Must be developer to enter on this site");
       RequestController::redirect(SITE_URL_CURRENT.'');
     }
     else {
-      if ( isset($_SERVER['PHP_AUTH_PW']) && $_SERVER['PHP_AUTH_PW']!= DEVEL_PASSWORD ) {
+      if ( !isset($_SERVER['PHP_AUTH_PW']) || $_SERVER['PHP_AUTH_PW']!= DEVEL_PASSWORD ) {
         header('WWW-Authenticate: Basic realm="Cogumelo Devel Confirm"');
         header('HTTP/1.0 401 Unauthorized');
         echo 'Acceso Denegado.';
@@ -43,7 +46,7 @@ class DevelView extends View
     $this->template->addJs('js/devel.js', 'devel');
     $this->template->addCss('css/devel.css', 'devel');
     $this->logs();
-    //$this->infosetup();
+    $this->infoSetup();
     $this->DBSQL();
     $this->infoUrls();
 
@@ -76,6 +79,100 @@ class DevelView extends View
     $this->template->assign("data_sql" , $data_sql);
   }
 
+  function infoSetup(){
+    global $C_ENABLED_MODULES;
+    if(IS_DEVEL_ENV){
+      $this->template->assign("infoIsDevelEnv" , 'True');
+    }
+    else{
+      $this->template->assign("infoIsDevelEnv" , 'False');
+    }
+    $this->template->assign("infoCogumeloLocation" , COGUMELO_LOCATION);
+    $this->template->assign("infoDBEngine" , DB_ENGINE);
+    $this->template->assign("infoDBHostName" , DB_HOSTNAME);
+    $this->template->assign("infoDBPort" , DB_PORT);
+    $this->template->assign("infoDBUser" , DB_USER);
+    $this->template->assign("infoDBName" , DB_NAME);
+    
+    if(DB_ALLOW_CACHE){
+      $this->template->assign("infoDBAllowCache" , 'True');
+    }
+    else{
+      $this->template->assign("infoDBAllowCache" , 'False');
+    }
+    $this->template->assign("infoSiteProtocol" , SITE_PROTOCOL);
+    $this->template->assign("infoSiteHost" , SITE_HOST);
+    $this->template->assign("infoSiteFolder" , SITE_FOLDER);
+    $this->template->assign("infoSiteUrl" , SITE_URL);
+    $this->template->assign("infoSiteUrlHttp" , SITE_URL_HTTP);
+    $this->template->assign("infoSiteUrlHttps" , SITE_URL_HTTPS);
+    $this->template->assign("infoSiteUrlCurrent" , SITE_URL_CURRENT);
+    $this->template->assign("infoSmtpHost" , SMTP_HOST);
+    $this->template->assign("infoSmtpPort" , SMTP_PORT);
+    $this->template->assign("infoSmtpAuth" , SMTP_AUTH);
+    $this->template->assign("infoSmtpUser" , SMTP_USER);
+    $this->template->assign("infoSysMailFromName" , SYS_MAIL_FROM_NAME);
+    $this->template->assign("infoSysMailFromEmail" , SYS_MAIL_FROM_EMAIL);
+    $this->template->assign("infoSmartyConfig" , SMARTY_CONFIG);
+    $this->template->assign("infoSmartyCompile" , SMARTY_COMPILE);
+    $this->template->assign("infoSmartyCache" , SMARTY_CACHE);
+    $this->template->assign("infoMediaServerHost" , MEDIASERVER_HOST);
+    $this->template->assign("infoMediaServerTmpCachePath" , MEDIASERVER_TMP_CACHE_PATH);
+    $this->template->assign("infoMediaServerFinalCachePath" , MEDIASERVER_FINAL_CACHE_PATH);
+    $this->template->assign("infoMediaServerCacheTime" , MEDIASERVER_CACHE_TIME);
+    
+    if(MEDIASERVER_COMPILE_LESS){
+      $this->template->assign("infoMediaServerCompileLess" , 'True');
+    }
+    else{
+      $this->template->assign("infoMediaServerCompileLess" , 'False');
+    }
+    
+    $stringEnabledModules = "";
+    foreach( $C_ENABLED_MODULES as $em){
+      $stringEnabledModules = $stringEnabledModules." ".$em." "; 
+    }
+    $this->template->assign("infoCEnabledModules" , $stringEnabledModules);
+    $this->template->assign("infoBck" , BCK);
+    $this->template->assign("infoLogDir" , LOGDIR);
+    
+    if(LOG_RAW_SQL){
+      $this->template->assign("infoLogRawSql" , 'True');
+    }
+    else{
+      $this->template->assign("infoLogRawSql" , 'False');
+    }
+    if(DEBUG){
+      $this->template->assign("infoDebug" , 'True');
+    }
+    else{
+      $this->template->assign("infoDebug" , 'False');
+    }
+    
+    if(ERRORS){
+      $this->template->assign("infoErrors" , 'True');
+    }
+    else{
+      $this->template->assign("infoErrors" , 'False');
+    }    
+    
+    if(MOD_DEVEL_ALLOW_ACCESS){
+      $this->template->assign("infoModDevelAllowAccess" , 'True');
+    }
+    else{
+      $this->template->assign("infoModDevelAllowAccess" , 'False');
+    }    
+    if(GETTEXT_UPDATE){
+      $this->template->assign("infoGetTextUpdate" , 'True');
+    }
+    else{
+      $this->template->assign("infoGetTextUpdate" , 'False');
+    } 
+    
+    $this->template->assign("infoLangDefault" , LANG_DEFAULT);
+    $this->template->assign("infoLangAvailable" , LANG_AVAILABLE);
+    
+  }
 
   function infoUrls(){
     $regexlist = new UrlListController();

@@ -1,23 +1,4 @@
 <?php
-/*
-Cogumelo v0.5 - Innoto S.L.
-Copyright (C) 2010 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@map-experience.com>
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
-USA.
-*/
 
 Cogumelo::load('c_controller/Cache');
 Cogumelo::load('c_model/DAO');
@@ -85,21 +66,13 @@ class MysqlDAO extends DAO
         $connectionControl->stmt->execute();
 
         if($connectionControl->stmt->error == ''){
-          //Cogumelo::objDebug($connectionControl->stmt);
-          //$ret_data =true;
-          if( $connectionControl->stmt->num_rows != null ){
-            $ret_data = $connectionControl->stmt->get_result();
-          }
-          else{
-            $ret_data = true;
-          }
-          
+          $ret_data = $connectionControl->stmt->get_result();
         }
-      else {
-        
-        Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$connectionControl->stmt->error.' - '.$sql);
-        $ret_data = false;
-      }
+        else {
+          
+          Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$connectionControl->stmt->error.' - '.$sql);
+          $ret_data = false;
+        }
 
     }
     else {
@@ -182,7 +155,7 @@ class MysqlDAO extends DAO
     }
 
     return array(
-        'string' => "WHERE true".$where_str,
+        'string' => " WHERE true".$where_str,
         'values' => $val_array
       );
   }
@@ -194,7 +167,7 @@ class MysqlDAO extends DAO
   //
   //  Generic Find by key
   //
-  function find(&$connectionControl, $search, $key = false, $cache = false)
+  function find(&$connectionControl, $search, $key = false,  $resolveDependences = false, $cache = false)
   {
     $VO = new $this->VO();
 
@@ -204,11 +177,11 @@ class MysqlDAO extends DAO
 
     $filter = array($key => $search);
 
-    if($res = $this->listItems($connectionControl, $filter, false, false, $cache) ) {
+    if($res = $this->listItems($connectionControl, $filter, false, false, $resolveDependences, $cache) ) {
       return $res->fetch();
     }
     else 
-      return false;
+      return null;
       
   }
 
@@ -216,8 +189,11 @@ class MysqlDAO extends DAO
   //  Generic listItems
   //
   //  Return: array [array_list, number_of_rows]
-  function listItems(&$connectionControl, $filters, $range, $order, $cache = false)
+  function listItems(&$connectionControl, $filters, $range, $order, $resolveDependences = false, $cache = false)
   {
+
+    // SQL Query
+    $VO = new $this->VO();
 
     // where string and vars
     $whereArray = $this->getFilters($filters);
@@ -225,15 +201,14 @@ class MysqlDAO extends DAO
     // order string
     $orderSTR = ($order)? $this->orderByString($order): "";
 
-
     // range string
     $rangeSTR = ($range != array() && is_array($range) )? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
 
+    // join SQL
+    $joinSTR = $this->JoinSQL($VO, $resolveDependences);
 
-  
-    // SQL Query
-    $VO = new $this->VO();
-    $strSQL = "SELECT * FROM `" . $VO::$tableName . "` ".$whereArray['string'].$orderSTR.$rangeSTR.";";
+
+    $strSQL = "SELECT ".$VO->getKeysToString( $resolveDependences )." FROM `" . $VO::$tableName ."` ". $joinSTR . $whereArray['string'].$orderSTR.$rangeSTR.";";
 
 
     if ( $cache && DB_ALLOW_CACHE  )
@@ -255,22 +230,36 @@ class MysqlDAO extends DAO
           $cached->setCache($queryId, $daoresult->fetchAll_RAW() );
         }
         else{
-          $daoresult = false;
+          $daoresult = null;
         }
       }
     }
     else
     {
       //  Without cache!
-      if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']))
+      if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values'])){
         $daoresult = new MysqlDAOResult( $this->VO , $res);
-      else
-        $daoresult = false;
+      }
+      else{
+        $daoresult = null;
+      }
     }
 
     return $daoresult;
 
 
+  }
+
+  function JoinSQL($VO, $resolveDependences) {
+    $resSQL = '';
+
+    if( $resolveDependences ) {
+      foreach($VO->getJoinArray() as $join){
+        $resSQL = ' LEFT JOIN '.$join['table'].' ON '.implode('=', $join['relationship'] );
+      }
+    }
+
+    return $resSQL;
   }
 
 
@@ -296,7 +285,7 @@ class MysqlDAO extends DAO
         return $row['number_elements'];
     }
     else {
-      return false;
+      return null;
     }
   }
 
@@ -337,7 +326,7 @@ class MysqlDAO extends DAO
 
     }
     else {
-      return false;
+      return null;
     }
   }
   
@@ -370,7 +359,7 @@ class MysqlDAO extends DAO
       return $VOobj;
     }
     else {
-      return false;
+      return null;
     }
   } 
   
@@ -388,7 +377,7 @@ class MysqlDAO extends DAO
       return $true;
     }
     else {
-      return false;
+      return null;
     }
   }
   

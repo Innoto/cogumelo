@@ -3,31 +3,31 @@
 
 abstract class DAOResult {
 
-  var $cache_fetch_index = 0;
+  var $cacheFetchIndex = 0;
 
 	abstract function fetch();
 	abstract function fetchAll();
 	abstract function count();
 	abstract function VOGenerator($res);
-  abstract function fetchAll_RAW();
-  abstract function reset_fetch();
+  abstract function fetchAllRaw();
+  abstract function resetFetch();
 
-  function cache_fetch() {
+  function cacheFetch() {
 
-    if (array_key_exists($this->cache_fetch_index, $this->cache)) {
-      $ret_obj = $this->VOGenerator( $this->cache[$this->cache_fetch_index] );
-      //$ret_obj = $this->cache[$this->cache_fetch_index] ;
-      $this->cache_fetch_index++;
+    if (array_key_exists($this->cacheFetchIndex, $this->cache)) {
+      $retObj = $this->VOGenerator( $this->cache[$this->cacheFetchIndex] );
+      //$retObj = $this->cache[$this->cacheFetchIndex] ;
+      $this->cacheFetchIndex++;
     }
     else {
-      $ret_obj = false;
+      $retObj = false;
     }
 
-    return $ret_obj;
+    return $retObj;
   
   }
 
-  function cache_fetchAll() {
+  function cacheFetchAll() {
     $list = array();
 
     foreach( $this->cache as $cached_row) {

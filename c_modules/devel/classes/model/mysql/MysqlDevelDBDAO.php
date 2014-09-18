@@ -3,105 +3,105 @@
 Cogumelo::load('c_model/mysql/MysqlDAO');
 
 //
-//	Mysql MysqlDevelDBDAO DAO
+//  Mysql MysqlDevelDBDAO DAO
 //
 
 class MysqlDevelDBDAO extends MysqlDAO
 {
 
-	static $conversion_types = array(
-		'INT' => 'INT',
-		'BIGINT' => 'BIGINT',
-		'FLOAT' => 'FLOAT',
-		'DATETIME' => 'DATETIME',
-		'BOOLEAN' => 'BIT',
-		'CHAR' => 'CHAR',
-		'VARCHAR' => 'VARCHAR',
-		'TEXT' => 'TEXT',
-		'LONGTEXT' => 'LONGTEXT',
+  static $conversion_types = array(
+    'INT' => 'INT',
+    'BIGINT' => 'BIGINT',
+    'FLOAT' => 'FLOAT',
+    'DATETIME' => 'DATETIME',
+    'BOOLEAN' => 'BIT',
+    'CHAR' => 'CHAR',
+    'VARCHAR' => 'VARCHAR',
+    'TEXT' => 'TEXT',
+    'LONGTEXT' => 'LONGTEXT',
 
-		// GIS DATA
-		'GEOMETRY' => 'GEOMETRY',
-		'POINT' => 'POINT',
-		'LINESTRING' => 'LINESTRING',
-		'POLYGON' => 'POLYGON',
-		'MULTIPOINT' => 'MULTIPOINT',
-		'MULTILINESTRING' => 'MULTILINESTRING',
-		'MULTIPOLYGON' => 'MULTIPOLYGON',
-		'GEOMETRYCOLLECTION' => 'GEOMETRYCOLLECTION'
-	);
+    // GIS DATA
+    'GEOMETRY' => 'GEOMETRY',
+    'POINT' => 'POINT',
+    'LINESTRING' => 'LINESTRING',
+    'POLYGON' => 'POLYGON',
+    'MULTIPOINT' => 'MULTIPOINT',
+    'MULTILINESTRING' => 'MULTILINESTRING',
+    'MULTIPOLYGON' => 'MULTIPOLYGON',
+    'GEOMETRYCOLLECTION' => 'GEOMETRYCOLLECTION'
+  );
 
-	function createSchemaDB($connection){
+  function createSchemaDB($connection){
 
-		$resultado =  array();
+    $resultado =  array();
 
-		$strSQL0 = "DROP DATABASE IF EXISTS ". DB_NAME ;
-		$strSQL1 = "CREATE DATABASE ". DB_NAME ;
-		$strSQL2 = "GRANT ".
-						"SELECT, ". 
-						"INSERT, ".
-						"UPDATE, ".
-						"DELETE, ".
-						"INDEX, ".
-						"LOCK TABLES, ".
-						"CREATE VIEW, ".
-						"CREATE, ".
-						"DROP, ".
-						"SHOW VIEW ".
-					"ON ". DB_NAME .".* ".
-					"TO '". DB_USER ."'@'localhost' IDENTIFIED BY '". DB_PASSWORD ."' ";
+    $strSQL0 = "DROP DATABASE IF EXISTS ". DB_NAME ;
+    $strSQL1 = "CREATE DATABASE ". DB_NAME ;
+    $strSQL2 = "GRANT ".
+            "SELECT, ". 
+            "INSERT, ".
+            "UPDATE, ".
+            "DELETE, ".
+            "INDEX, ".
+            "LOCK TABLES, ".
+            "CREATE VIEW, ".
+            "CREATE, ".
+            "DROP, ".
+            "SHOW VIEW ".
+          "ON ". DB_NAME .".* ".
+          "TO '". DB_USER ."'@'localhost' IDENTIFIED BY '". DB_PASSWORD ."' ";
 
-		$resultado[] = $this->execSQL($connection, $strSQL0, array() );
-		$resultado[] = $this->execSQL($connection, $strSQL1, array() );
-		$resultado[] = $this->execSQL($connection, $strSQL2, array() );
+    $resultado[] = $this->execSQL($connection, $strSQL0, array() );
+    $resultado[] = $this->execSQL($connection, $strSQL1, array() );
+    $resultado[] = $this->execSQL($connection, $strSQL2, array() );
 
-		return $resultado;
-	}
-
-
-
-	function dropTable($connection, $vo_name) {
-		$this->execSQL($connection, $this->getDropSQL($connection, $vo_name) , array() );
-	}
-
-	function createTable($connection, $vo_name) {
-
-		$strSQL = $this->getTableSQL($connection, $vo_name);
-		$this->execSQL($connection, $strSQL, array() );
-
-	}
+    return $resultado;
+  }
 
 
-	// Sql generation methods
 
-	function getDropSQL($connection, $vo_name, $vo_route) {
-		$vo= new $vo_name();
+  function dropTable($connection, $vo_name) {
+    $this->execSQL($connection, $this->getDropSQL($connection, $vo_name) , array() );
+  }
 
-		$strSQL = $this->getTableSQL($connection, $vo_name, $vo_route);
-		return "DROP TABLE IF EXISTS  ".$vo::$tableName.";";
+  function createTable($connection, $vo_name) {
 
-	}
+    $strSQL = $this->getTableSQL($connection, $vo_name);
+    $this->execSQL($connection, $strSQL, array() );
 
-	function getTableSQL($connection, $vo_name, $vo_route){
-		$VO = new $vo_name();
+  }
 
-		$primarykeys = array();
-		$autoincrements = array();
-		$lines = array();
 
-		foreach($VO::$cols as $colkey => $col) {
+  // Sql generation methods
+
+  function getDropSQL($connection, $vo_name, $vo_route = false ) {
+    $vo= new $vo_name();
+
+    $strSQL = $this->getTableSQL($connection, $vo_name, $vo_route);
+    return "DROP TABLE IF EXISTS  ".$vo::$tableName.";";
+
+  }
+
+  function getTableSQL($connection, $vo_name, $vo_route = false){
+    $VO = new $vo_name();
+
+    $primarykeys = array();
+    $autoincrements = array();
+    $lines = array();
+
+    foreach($VO::$cols as $colkey => $col) {
 
       $extrapkey = "";
       $type = "";
       $size = "";
 
-			if(array_key_exists('primarykey', $col)){  
-				$primarykeys[] = $colkey;
-				$extrapkey=' NOT NULL auto_increment ';
-			}
+      if(array_key_exists('primarykey', $col)){  
+        $primarykeys[] = $colkey;
+        $extrapkey=' NOT NULL auto_increment ';
+      }
 
       if( $col['type'] == "FOREIGN" ) { // is a foreign key
-        eval( '$foreign_col = '.$col['vo'].'::$cols[\''.$col['vo_key'].'\'];' );
+        eval( '$foreign_col = '.$col['vo'].'::$cols[\''.$col['key'].'\'];' );
         $type = $this::$conversion_types[$foreign_col['type']].$size;  
       }
       else { 
@@ -110,12 +110,12 @@ class MysqlDevelDBDAO extends MysqlDAO
       }
 
       $lines[] = '`'.$colkey.'` '.$type.$extrapkey;
-		}
+    }
 
-		$primarykeys_str = (sizeof($primarykeys)>0)? ', PRIMARY KEY  USING BTREE (`'.implode(',',$primarykeys).'`)' : '';
-		$strSQL = "CREATE TABLE ".$VO::$tableName." (\n".implode(" ,\n", $lines).' '.$primarykeys_str.')'." ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Generated by Cogumelo devel, ref:".$vo_route."';";
-		
-		return $strSQL;
-	}
-		
+    $primarykeys_str = (sizeof($primarykeys)>0)? ', PRIMARY KEY  USING BTREE (`'.implode(',',$primarykeys).'`)' : '';
+    $strSQL = "CREATE TABLE ".$VO::$tableName." (\n".implode(" ,\n", $lines).' '.$primarykeys_str.')'." ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci COMMENT='Generated by Cogumelo devel, ref:".$vo_route."';";
+    
+    return $strSQL;
+  }
+    
 }

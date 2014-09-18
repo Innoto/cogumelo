@@ -8,11 +8,11 @@ testmodule::load('model/CousaVO');
 //
 class  CousaController extends DataController
 {
-	var $data;
+  var $data;
 
-	function __construct()
-	{	
-		$this->data = new Facade("Cousa", "testmodule");
-		$this->voClass = 'CousaVO';
-	}
+  function __construct()
+  {   
+    $this->data = new Facade("Cousa", "testmodule");
+    $this->voClass = 'CousaVO';
+  }
 }

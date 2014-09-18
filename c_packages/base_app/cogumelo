@@ -14,7 +14,8 @@
   // cogumelo core Location
   set_include_path('.:'.SITE_PATH);
 
-  require_once("conf/setup.dev.php"); 
+  require_once("conf/setup.php"); 
+  
 
   require_once(COGUMELO_LOCATION."/c_classes/CogumeloClass.php");
   require_once(SITE_PATH."/Cogumelo.php");
@@ -23,28 +24,26 @@
   $_C =Cogumelo::get();
 
   //
-//  CARGO MÓDULO DEVEL E O DEVELDBCONTROLLER, QUE É ONDE ESTÁN OS MÉTODOS QUE NOS INTERESAN
-//
-require_once(COGUMELO_LOCATION."/c_modules/devel/devel.php");
-require_once(COGUMELO_LOCATION."/c_modules/devel/classes/controller/DevelDBController.php");
+  //  CARGO MÓDULO DEVEL E O DEVELDBCONTROLLER, QUE É ONDE ESTÁN OS MÉTODOS QUE NOS INTERESAN
+  //
+  require_once(COGUMELO_LOCATION."/c_modules/devel/devel.php");
+  require_once(COGUMELO_LOCATION."/c_modules/devel/classes/controller/DevelDBController.php");
 
-//
-//  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
-//
-$develdbcontrol = new DevelDBController();
-//var_dump( $develdbcontrol->getTablesSQL() ); // este método, por exemplo, devolvenos todo o  SQL xerado para os VO's do proxecto
+  //
+  //  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
+  //
+  $develdbcontrol = new DevelDBController();
+  //var_dump( $develdbcontrol->getTablesSQL() ); // este método, por exemplo, devolvenos todo o  SQL xerado para os VO's do proxecto
 
 
- 
- if ($argc>1){ //parameters handler
-    switch($argv[1]){
+  if ($argc>1){ //parameters handler
+      switch($argv[1]){
+        case 'flush': // delete temporary files
+           exec('rm tmp/');
+           echo "archivos temporales borrados\n";
+        break; 
 
-      case 'flush': // delete temporary files
-	       exec('rm tmp/');
-	       echo "archivos temporales borrados\n";
-         break; 
-
-      case 'createDB': // create database
+        case 'createDB': // create database
           $user =  ReadStdin('Enter an user with privileges: ', '');
           // Get the password
           fwrite(STDOUT, "Enter the password: ");
@@ -53,165 +52,305 @@ $develdbcontrol = new DevelDBController();
           createDB($user, $passwd);
         break; 
 
-      case 'createTables': // create database tables
-        createTables();
-        echo 'generate db tables';
+        case 'createTables': // create database tables
+          createTables();
+          echo 'generated db tables\n';
         break;  
 
-      case 'setPermissions': // create database tables
-        setPermissions();
+        case 'setPermissions': // create database tables
+          setPermissions();
         break;    
 
-      case 'bckDB': // do the backup of the given db
-      	if ($argc>2)
-      	  $file = $argv[2].'.sql';//name of the backup file
-        else
-          $file = false;
-        $user =  ReadStdin('Enter an user with privileges: ', '');
-        fwrite(STDOUT, "Enter the password: ");
-        $passwd = getPassword(true);
-        backupDB(DB_NAME, $user, $passwd, $file);
+        case 'bckDB': // do the backup of the given db
+          if ($argc>2)
+            $file = $argv[2].'.sql';//name of the backup file
+          else
+            $file = false;
+          $user =  ReadStdin('Enter an user with privileges: ', '');
+          fwrite(STDOUT, "Enter the password: ");
+          $passwd = getPassword(true);
+          backupDB(DB_NAME, $user, $passwd, $file);
         break;  
 
-      case 'restoreDB': // restore the backup of a given db
-        if ($argc>2){
-	       $db = $argv[2];
-         $user =  ReadStdin('Enter an user with privileges: ', '');
-         fwrite(STDOUT, "Enter the password: ");
-         $passwd = getPassword(true);
-         echo $db;
-         restoreDB($db, $user, $passwd);
-        }
-        else
-          echo "You must especify the database to restore\n"; 
-        break;  
+        case 'restoreDB': // restore the backup of a given db
+          if ($argc>2){
+           $db = $argv[2];
+           $user =  ReadStdin('Enter an user with privileges: ', '');
+           fwrite(STDOUT, "Enter the password: ");
+           $passwd = getPassword(true);
+           echo $db;
+           restoreDB($db, $user, $passwd);
+          }
+          else
+            echo "You must especify the database to restore\n"; 
+        break;
 
-      default:
-        echo "Invalid parameter;try: 
-        flush          to remove temporary files
-        setPermission  to set the folder permission
-        creteDB        to create a database
-        creteTables    to generate the tables
-        bckDB          to do a DB backup (optional arg: filename)
-        restoreDB      to restore a database\n";
-        exit;     
-    }//end switch 
-}//end parameters handler
-else{
-  echo "Not enough arguments;try: 
-        flush          to remove temporary files
-        setPermission  to set the folder permission
-        creteDB        to create a database
-        creteTables    to generate the tables
-        bckDB          to do a DB backup (optional arg: filename)
-        restoreDB      to restore a database\n";
-}
+        case 'installDependences': 
+          installDependences();
+        break;      
 
-function createDB($user, $passwd){
-  $develdbcontrol = new DevelDBController($user, $passwd);
-  $develdbcontrol->createSchemaDB();
-}
+        default:
+          echo "Invalid parameter;try: 
+          flush          to remove temporary files
+          setPermission  to set the folder permission
+          creteDB        to create a database
+          creteTables    to generate the tables
+          bckDB          to do a DB backup (optional arg: filename)
+          restoreDB      to restore a database
+          installDependences      to install all modules dependencies\n";
 
-function createTables(){
-  $develdbcontrol = new DevelDBController();
-  $develdbcontrol->createTables();
-}
+          exit;     
+      }//end switch 
+  }//end parameters handler
+  else{
+    echo "Not enough arguments;try: 
+          flush          to remove temporary files
+          setPermission  to set the folder permission
+          creteDB        to create a database
+          creteTables    to generate the tables
+          bckDB          to do a DB backup (optional arg: filename)
+          restoreDB      to restore a database
+          installDependences      to install all modules dependencies\n";
+  }
 
-function setPermissions(){
-  exec('mkdir c_app/tmp');
-  exec('mkdir c_app/tmp/templates_c');
-  exec('mkdir c_app/log');
-  exec('mkdir c_app/backups');
+  function createDB($user, $passwd){
+    $develdbcontrol = new DevelDBController($user, $passwd);
+    $develdbcontrol->createSchemaDB();
+  }
 
-  exec('sudo chown -R $USER:www-data httpdocs');
-  exec('chmod -R go-rwx,g+rX httpdocs');
+  function createTables(){
+    $develdbcontrol = new DevelDBController();
+    $develdbcontrol->createTables();
+  }
 
-  exec('sudo chown -R $USER:www-data c_app');
-  exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
-  exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log');
-  exec('sudo chown $USER:$USER c_app/backups');
+  function setPermissions(){
+    exec('mkdir c_app/tmp');
+    exec('mkdir c_app/tmp/templates_c');
+    exec('mkdir c_app/log');
+    exec('mkdir c_app/backups');
 
-  echo "permissions ready!\n";
-}
+    exec('sudo chown -R $USER:www-data httpdocs');
+    exec('chmod -R go-rwx,g+rX httpdocs');
 
-function backupDB($DB, $user, $pass, $file){
+    exec('sudo chown -R $USER:www-data c_app');
+    exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
+    exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log');
+    exec('sudo chown $USER:$USER c_app/backups');
 
-  if (!$file)
-    $file = date('Ymd-Hms').'-'.$BD.'.sql';
+    echo "permissions ready!\n";
+  }
 
-  $DIR = BCK;
+  function backupDB($DB, $user, $pass, $file){
 
-  exec('mysqldump -u '.$user.' -p'.$pass.' '.$DB.'> '.$DIR.'/'.$file);
-  exec('sudo gzip '.$DIR.'/'.$file);
-  exec('chmod go-rwx '.$DIR.'/*');
-  echo "\nyour db was successfully saved!\n";
-}
+    if (!$file)
+      $file = date('Ymd-Hms').'-'.$BD.'.sql';
 
-function restoreDB($DB, $user, $pass){
+    $DIR = BCK;
 
-  $DIR = BCK;
+    exec('mysqldump -u '.$user.' -p'.$pass.' '.$DB.'> '.$DIR.'/'.$file);
+    exec('sudo gzip '.$DIR.'/'.$file);
+    exec('chmod go-rwx '.$DIR.'/*');
+    echo "\nyour db was successfully saved!\n";
+  }
 
-  echo('mysql -u '.$user.' -p'.$pass.'< gzip -d '.$DIR.$DB);
+  function restoreDB($DB, $user, $pass){
 
-  exec('mysql -u '.$user.' -p'.$pass.'< gzip -d '.$DIR.$DB);
-  echo "\nthe db was successfully restored!\n";
-}
+    $DIR = BCK;
 
-/**
- * Get data from the shell.
- */
-function ReadStdin($prompt, $valid_inputs, $default = '') { 
-    while(!isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input))) { 
-        echo $prompt; 
-        $input = strtolower(trim(fgets(STDIN))); 
-        if(empty($input) && !empty($default)) { 
-            $input = $default; 
-        } 
-    } 
-    return $input; 
-} 
+    echo('mysql -u '.$user.' -p'.$pass.'< gzip -d '.$DIR.$DB);
 
-/**
- * Get a password from the shell.
- * This function works on *nix systems only and requires shell_exec and stty.
- *
- * @param  boolean $stars Wether or not to output stars for given characters
- * @return string
- */
-function getPassword($stars = false)
-{
-    // Get current style
-    $oldStyle = shell_exec('stty -g');
+    exec('mysql -u '.$user.' -p'.$pass.'< gzip -d '.$DIR.$DB);
+    echo "\nthe db was successfully restored!\n";
+  }
 
-    if ($stars === false) {
-        shell_exec('stty -echo');
-        $password = rtrim(fgets(STDIN), "\n");
-    } else {
-        shell_exec('stty -icanon -echo min 1 time 0');
+  /**
+   * Get data from the shell.
+   */
+  function ReadStdin($prompt, $valid_inputs, $default = '') { 
+      while(!isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input))) { 
+          echo $prompt; 
+          $input = strtolower(trim(fgets(STDIN))); 
+          if(empty($input) && !empty($default)) { 
+              $input = $default; 
+          } 
+      } 
+      return $input; 
+  } 
 
-        $password = '';
-        while (true) {
-            $char = fgetc(STDIN);
+  /**
+   * Get a password from the shell.
+   * This function works on *nix systems only and requires shell_exec and stty.
+   *
+   * @param  boolean $stars Wether or not to output stars for given characters
+   * @return string
+   */
+  function getPassword($stars = false)
+  {
+      // Get current style
+      $oldStyle = shell_exec('stty -g');
 
-            if ($char === "\n") {
-                break;
-            } else if (ord($char) === 127) {
-                if (strlen($password) > 0) {
-                    fwrite(STDOUT, "\x08 \x08");
-                    $password = substr($password, 0, -1);
-                }
-            } else {
-                fwrite(STDOUT, "*");
-                $password .= $char;
-            }
-        }
+      if ($stars === false) {
+          shell_exec('stty -echo');
+          $password = rtrim(fgets(STDIN), "\n");
+      } else {
+          shell_exec('stty -icanon -echo min 1 time 0');
+
+          $password = '';
+          while (true) {
+              $char = fgetc(STDIN);
+
+              if ($char === "\n") {
+                  break;
+              } else if (ord($char) === 127) {
+                  if (strlen($password) > 0) {
+                      fwrite(STDOUT, "\x08 \x08");
+                      $password = substr($password, 0, -1);
+                  }
+              } else {
+                  fwrite(STDOUT, "*");
+                  $password .= $char;
+              }
+          }
+      }
+
+      // Reset old style
+      shell_exec('stty ' . $oldStyle);
+
+      // Return the password
+      return $password;
+  }
+
+  //--------------------------------------------------------------------DEPENDENCES---------------------------------------------------------
+
+  function installDependences()
+  {
+    global $allDependencesBower; 
+    $allDependencesBower = array();
+    global $allDependencesComposer;
+    $allDependencesComposer = array();
+
+    loadDependences();    
+    //Descomentar para ver las depen a instalar 
+    //error_log( print_r( "ALLBOWER", true));
+    //error_log( print_r( $allDependencesBower, true));
+    //error_log( print_r( "ALLCOMPOSER", true));
+    //error_log( print_r( $allDependencesComposer, true));
+
+    installDependencesBower($allDependencesBower);
+    installDependencesComposer($allDependencesComposer);    
+  }
+  
+  function loadDependences(){
+    Cogumelo::load('c_controller/ModuleController');
+    $moduleControl = new ModuleController(false, true);
+    //Cargamos las dependencias de los modulos
+    global $C_ENABLED_MODULES;    
+    foreach ( $C_ENABLED_MODULES as $mod ){      
+      $modUrl = ModuleController::getRealFilePath( $mod.".php" , $mod );
+      require_once($modUrl);
+      eval('class extClass'. $mod .' extends '.$mod. '{}');
+      eval('$objMod'.$mod.' = new extClass'.$mod.'();');
+      eval('$dependences = $objMod'.$mod.'->dependences;');
+      
+      pushDependences($dependences);
+    }    
+    //Cargamos las dependencias de Base App (externas a los modulos).
+    class extClassCogumelo extends Cogumelo {}
+    $objModCogumelo = new extClassCogumelo();
+    $baseAppDependences = $objModCogumelo->dependences;
+
+    pushDependences($baseAppDependences);
+  }
+  
+  function pushDependences($dependences)
+  {
+    //Hacemos una lista de las dependecias de todos los modulos
+    foreach ( $dependences as $dependence ){     
+
+      //Diferenciamos entre instaladores
+      switch($dependence['installer']){
+        case "composer":
+          pushDependencesComposer($dependence);
+        break;
+        case "bower":
+          pushDependencesBower($dependence);    
+        break;
+      }
+    }   // end foreach             
+  }
+  
+  function pushDependencesComposer($dependence)
+  {
+    global $allDependencesComposer;
+    if(!array_key_exists($dependence['id'], $allDependencesComposer)){
+      $allDependencesComposer[$dependence['id']] = array($dependence['params']);
     }
+    else{
+      $diffAllDepend = array_diff($dependence['params'] , $allDependencesComposer[$dependence['id']][0]); 
 
-    // Reset old style
-    shell_exec('stty ' . $oldStyle);
+      if(!empty($diffAllDepend)){
+        array_push($allDependencesComposer[$dependence['id']], array_diff($dependence['params'] , $allDependencesComposer[$dependence['id']][0])  );
+      }          
+    }
+  }
+  
+  function pushDependencesBower($dependence)
+  {
+    global $allDependencesBower;
+    if(!array_key_exists($dependence['id'], $allDependencesBower)){
+      $allDependencesBower[$dependence['id']] = array($dependence['params']);
+    }
+    else{
+      $diffAllDepend = array_diff($dependence['params'] , $allDependencesBower[$dependence['id']][0]); 
 
-    // Return the password
-    return $password;
-}
+      if(!empty($diffAllDepend)){
+        array_push($allDependencesBower[$dependence['id']], array_diff($dependence['params'] , $allDependencesBower[$dependence['id']][0])  );
+      }          
+    }
+  }
+  
+  function installDependencesBower($dependences)
+  {
+    //Instala las dependecias con Bower
+    
+    foreach( $dependences as $depKey => $dep ){
+      foreach( $dep as $params ){                
+        if(count($params) > 1){
+          $allparam = "";
+          foreach( $params as $p ){
+            $allparam = $allparam." ".$p;
+          } // end foreach
+          echo("Exec ... bower install ".$depKey."=".$allparam." --save\n");
+          exec('bower install '.$depKey.'='.$allparam.' --save');          
+        }
+        else{
+          echo("Exec ... bower install ".$depKey."=".$params[0]." --save\n");
+          exec('bower install '.$depKey.'='.$params[0].' --save');
+
+        }
+      }       // end foreach
+    }   // end foreach
+    
+  }
+
+  function installDependencesComposer($dependences)
+  {
+    
+    $finalArrayDep = array("require" => array(), "config" => array("vendor-dir" => "httpdocs/vendorServer"));
+    foreach( $dependences as $depKey => $dep ){
+      foreach( $dep as $params ){   
+        $finalArrayDep['require'][$params[0]] = $params[1];
+      }
+    }
+    $jsonencoded = json_encode($finalArrayDep);
+    $fh = fopen("composer.json", 'w');
+      fwrite($fh, $jsonencoded);
+    fclose($fh);
+    echo("Exec ... php composer.phar update\n\n");          
+    exec('php composer.phar update');
+    echo("If the folder does not appear vendorServer dependencies run 'php composer.phar update' or 'composer update' and resolves conflicts.\n");
+  }
+  //-------------------------------------------------------------------- END DEPENDENCES---------------------------------------------------------
+
 
 ?>

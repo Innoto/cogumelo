@@ -26,14 +26,17 @@ class Cousadmin extends View
 
 
   function lista_plana() {
+    echo "<pre>";
     $cousas = $this->cousacontrol->listItems(false, false, false, true);
 
     while($cou = $cousas->fetch()) {
+
       echo "<br>";
       var_dump($cou);
+      var_dump($cou->getter('complemento.name'));
     }
 
-    }
+  }
 
 
   function panel_admin() {
@@ -67,6 +70,19 @@ class Cousadmin extends View
     $this->cousacontrol->create($novacousa);
 
     echo "Creado nova entrada para cousa";
+  }
+
+
+
+  function vo($url = false) {
+
+    testmodule::load('model/CousaVO');
+
+    $vo = new CousaVO();
+    //Cogumelo::objDebug($vo);
+    echo($vo->keysToString(false));
+    echo "<pre>";
+    var_dump( $vo->getJoinArray() );
   }
 
 

@@ -2,6 +2,13 @@
 c_app/log/
 
 # Exclude templates directory
+c_app/tmp/*
 c_app/tmp/templates_c/
+
+# mediaserver caches
+httpdocs/mediaCache/
+httpdocs/vendor/
+httpdocs/vendorServer/
+
 
 *.log
