@@ -229,7 +229,7 @@ class FormController implements Serializable {
         }
 
         // Colocamos los selected
-        if( isset( $field['value'] ) || is_array( $field['value'] ) ) {
+        if( isset( $field['value'] ) ) {
           $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
           foreach( $values as $val ) {
             $html['options'][$val]['input'] = str_replace( 'option value="'.$val.'"',
@@ -262,7 +262,7 @@ class FormController implements Serializable {
         }
 
         // Colocamos los checked
-        if( isset( $field['value'] ) || is_array( $field['value'] ) ) {
+        if( isset( $field['value'] ) ) {
           $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
           foreach( $values as $val ) {
             $html['options'][$val]['input'] = str_replace( 'name="'.$field['name'].'" value="'.$val.'"',
