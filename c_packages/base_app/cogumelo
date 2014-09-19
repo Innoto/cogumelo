@@ -91,26 +91,26 @@
 
         default:
           echo "Invalid parameter;try: 
-          flush          to remove temporary files
-          setPermission  to set the folder permission
-          creteDB        to create a database
-          creteTables    to generate the tables
-          bckDB          to do a DB backup (optional arg: filename)
-          restoreDB      to restore a database
-          installDependences      to install all modules dependencies\n";
+          flush               to remove temporary files
+          setPermission       to set the folder permission
+          creteDB             to create a database
+          creteTables         to generate the tables
+          bckDB               to do a DB backup (optional arg: filename)
+          restoreDB           to restore a database
+          installDependences  to install all modules dependencies\n";
 
           exit;     
       }//end switch 
   }//end parameters handler
   else{
     echo "Not enough arguments;try: 
-          flush          to remove temporary files
-          setPermission  to set the folder permission
-          creteDB        to create a database
-          creteTables    to generate the tables
-          bckDB          to do a DB backup (optional arg: filename)
-          restoreDB      to restore a database
-          installDependences      to install all modules dependencies\n";
+          flush               to remove temporary files
+          setPermission       to set the folder permission
+          creteDB             to create a database
+          creteTables         to generate the tables
+          bckDB               to do a DB backup (optional arg: filename)
+          restoreDB           to restore a database
+          installDependences  to install all modules dependencies\n";
   }
 
   function createDB($user, $passwd){
