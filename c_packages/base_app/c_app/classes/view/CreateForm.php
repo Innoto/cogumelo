@@ -3,7 +3,7 @@
 
 Cogumelo::load('c_view/View');
 Cogumelo::load('c_controller/FormController');
-
+Cogumelo::load('c_controller/FormValidators');
 
 class CreateForm extends View
 {
@@ -24,7 +24,7 @@ class CreateForm extends View
   
   function lostForm() {
 
-    $form = new FormController( 'lostForm', '/sendlostform' ); //actionform
+    $form = new FormController( 'lostForm', '/sendLostForm' ); //actionform
 
     $form->setField( 'lostName', array( 'placeholder' => 'Nombre') );
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
@@ -35,7 +35,7 @@ class CreateForm extends View
     ) );        
     $form->setField( 'lostPassword', array( 'type' => 'password', 'placeholder' => 'Password' ) );
     $form->setField( 'lostPassword2', array( 'type' => 'password', 'placeholder' => 'Repeat password' ) );      
-    $form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => 'He leído y acepto los Términos y Condiciones de uso') );    
+    //$form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => 'He leído y acepto los Términos y Condiciones de uso') );    
     $form->setField( 'lostSubmit', array( 'type' => 'submit', 'value' => 'OK' ) );
 
     
@@ -43,7 +43,7 @@ class CreateForm extends View
     $form->setValidationRule( 'lostConditions', 'required' );
     $form->setValidationRule( 'lostMail', 'required' );
     $form->setValidationRule( 'lostPhone', 'required' );
-    $form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
+    //$form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
     
     $form->saveToSession();
     
@@ -80,6 +80,11 @@ class CreateForm extends View
       $form->validateForm();
       $jvErrors = $form->getJVErrors();
 
+      //Si todo esta OK!
+      if( sizeof( $jvErrors ) == 0 ){
+        var_dump($postData);
+      }
+      
       if( sizeof( $jvErrors ) > 0 ) {
         echo json_encode(
           array(
