@@ -85,6 +85,34 @@ class FormController implements Serializable {
     //error_log( $_SESSION[ $formSessionId ] );
   }
 
+  public function setField( $fieldName, $params = false ) {
+
+    if( !isset( $this->fields[$fieldName]['id'] ) ||
+      ( isset( $this->fields[$fieldName]['name'] ) && $this->fields[$fieldName]['name'] === $this->fields[$fieldName]['id'] ) )
+    {
+      $this->fields[$fieldName]['id'] = $fieldName;
+    }
+
+    $this->fields[$fieldName]['name'] = $fieldName;
+    if( $params ) {
+      foreach( $params as $key => $value ) {
+        $this->fields[$fieldName][$key] = $value;
+      }
+    }
+    if( !isset( $this->fields[$fieldName]['type'] ) ) {
+      $this->fields[$fieldName]['type'] = 'text';
+    }
+  } // function setField
+
+  public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
+    $this->rules[$fieldName][$ruleName] = $ruleParams;
+  }
+
+  public function setValidationMsg( $fieldName, $msg ) {
+    $this->messages[$fieldName] = $msg;
+  }
+
+
   public function loadPostValues( $formPost ) {
     $this->postValues = $formPost;
   }
@@ -98,7 +126,6 @@ class FormController implements Serializable {
 
     $html .= $this->getHtmpOpen()."\n";
     $html .= $this->getHtmlFields()."\n";
-    //$html .= $this->getHtmlSubmit()."\n";
     $html .= $this->getHtmlClose()."\n";
 
     $html .= $this->getJqueryValidationJS()."\n";
@@ -155,6 +182,8 @@ class FormController implements Serializable {
         foreach( $field['options'] as $key => $text ) {
           $html .= '<option value="'.$key.'">'.$text.'</option>'."\n";
         }
+
+        // Colocamos los selected
         if( isset( $field['value'] ) ) {
           $html = str_replace( 'option value="'.$field['value'].'"',
             'option value="'.$field['value'].'" selected="selected"', $html );
@@ -164,6 +193,28 @@ class FormController implements Serializable {
 
         // Creamos ya la regla que controla el contenido
         $this->setValidationRule( $field['name'], 'inArray', array_keys( $field['options'] ) );
+        break;
+
+      case 'checkbox':
+      case 'radio':
+        foreach( $field['options'] as $key => $text ) {
+          $html .= '<input type="'.$field['type'].'" name="'.$field['name'].'" value="'.$key.'"';
+          if( isset( $field['id'] ) ) { $html .= ' id="'.$field['id'].'"'; }
+          if( isset( $field['placeholder'] ) ) { $html .= ' placeholder="'.$field['placeholder'].'"'; }
+          if( isset( $field['maxlength'] ) ) { $html .= ' maxlength="'.$field['maxlength'].'"'; }
+          if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
+          if( isset( $field['readonly'] ) ) { $html .= ' readonly="readonly"'; }
+          $html .= '>'.$text;
+        }
+
+        // Colocamos los checked
+        if( isset( $field['value'] ) || is_array( $field['value'] ) ) {
+          $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
+          foreach( $values as $val ) {
+            $html = str_replace( 'name="'.$field['name'].'" value="'.$val.'"',
+              'name="'.$field['name'].'" value="'.$val.'" checked="checked"', $html );
+          }
+        }
         break;
 
       case 'textarea':
@@ -178,24 +229,19 @@ class FormController implements Serializable {
         $html .= '</textarea>';
         break;
 
-      case 'checkbox':
-        //<input type="checkbox" name="vehicle" value="Bike"> I have a bike<br>
-        //<input type="checkbox" name="vehicle" value="Car" checked="checked"> I have a car
-        break;
-
-      case 'radio':
-        //<input type="radio" name="gender" value="male"> Male<br>
-        //<input type="radio" name="gender" value="female" checked="checked"> Female
-        break;
-
       case 'file':
         break;
 
-      /*
-      case 'reset':
       case 'submit':
+        // button, file, hidden, password, range, text
+        // color, date, datetime, datetime-local, email, image, month, number, search, tel, time, url, week
+        $html .= '<input name="'.$field['name'].'" id="'.$field['id'].'"';
+        if( isset( $field['value'] ) ) { $html .= ' value="'.$field['value'].'"'; }
+        if( isset( $field['formAction'] ) ) { $html .= ' formAction="'.$field['formAction'].'"'; }
+        if( isset( $field['formNoValidate'] ) ) { $html .= ' formNoValidate="'.$field['formNoValidate'].'"'; }
+        if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
+        $html .= ' type="'.$field['type'].'">';
         break;
-      */
 
       default:
         // button, file, hidden, password, range, text
@@ -213,15 +259,12 @@ class FormController implements Serializable {
     return $html;
   } // function getHtmlField
 
-  public function getHtmlSubmit() {
-    $html = '<input name="submit" id="submit" value="submit" type="submit">';
-    return $html;
-  }
 
   public function getHtmlClose() {
     $html = '</form><!-- '.$this->name.' -->';
     return $html;
   }
+
 
   public function getJqueryValidationJS() {
     $html = '';
@@ -255,38 +298,6 @@ class FormController implements Serializable {
     return $html;
   } // function getJqueryValidationJS
 
-  public function setField( $fieldName, $params = false ) {
-
-    if( !isset( $this->fields[$fieldName]['id'] ) ||
-      ( isset( $this->fields[$fieldName]['name'] ) && $this->fields[$fieldName]['name'] === $this->fields[$fieldName]['id'] ) )
-    {
-      $this->fields[$fieldName]['id'] = $fieldName;
-    }
-
-    $this->fields[$fieldName]['name'] = $fieldName;
-    if( $params ) {
-      foreach( $params as $key => $value ) {
-        $this->fields[$fieldName][$key] = $value;
-      }
-    }
-    if( !isset( $this->fields[$fieldName]['type'] ) ) {
-      $this->fields[$fieldName]['type'] = 'text';
-    }
-  } // function setField
-
-  public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
-    $this->rules[$fieldName][$ruleName] = $ruleParams;
-  }
-
-  public function setValidationMsg( $fieldName, $msg ) {
-    $this->messages[$fieldName] = $msg;
-  }
-
-  public function isRequiredField( $fieldName ) {
-    return isset( $this->rules[ $fieldName ][ 'required' ] );
-  }
-
-
 
 /**
   * VALIDATION
@@ -309,6 +320,9 @@ class FormController implements Serializable {
     return $value;
   }
 
+  public function isRequiredField( $fieldName ) {
+    return isset( $this->rules[ $fieldName ][ 'required' ] );
+  }
 
 
   /**

@@ -35,6 +35,13 @@ class Forms extends View
       'options'=> array( '' => 'Vacio', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' ),
       'multiple' => 'multiple'
       ) );
+    $form->setField( 'check1', array( 'type' => 'checkbox', 'label' => 'Meu checkbox',
+      'value' => array( '1', 'asdf' ),
+      'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
+      ) );
+    $form->setField( 'radio1', array( 'type' => 'radio', 'label' => 'Meu radio', 'value' => '2',
+      'options'=> array( '' => 'Vacio', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
+      ) );
     $form->setField( 'submit', array( 'type' => 'submit', 'label' => 'Pulsa para enviar', 'value' => 'Manda' ) );
 
     $form->setValidationRule( 'input1', 'required' );
