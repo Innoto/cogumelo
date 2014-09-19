@@ -10,12 +10,12 @@ define('COGUMELO_LOCATION', '/home/proxectos/cogumelo');
 //  DB
 //
 
-define('DB_ENGINE', 'mysql'); //supported Engines: ('mysql', '')
-define('DB_HOSTNAME', 'localhost');
-define('DB_PORT', '3306');
-define('DB_USER', 'usuario');
-define('DB_PASSWORD', 'contrasena');
-define('DB_NAME', 'test');
+define('DB_ENGINE', 	'mysql'); //supported Engines: ('mysql', '')
+define("DB_HOSTNAME" ,	"localhost");
+define("DB_PORT",		"3306");
+define("DB_USER" , 		"base_app");
+define("DB_PASSWORD", 	"q7w8e9r");
+define("DB_NAME",		"test");
 
 
 // allow cache with memcached

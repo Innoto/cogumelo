@@ -36,7 +36,7 @@
   //var_dump( $develdbcontrol->getTablesSQL() ); // este método, por exemplo, devolvenos todo o  SQL xerado para os VO's do proxecto
 
 
-  if ($argc>1){ //parameters handler
+   if ($argc>1){ //parameters handler
       switch($argv[1]){
         case 'flush': // delete temporary files
            exec('rm tmp/');
@@ -44,73 +44,72 @@
         break; 
 
         case 'createDB': // create database
-          $user =  ReadStdin('Enter an user with privileges: ', '');
+          $user =  ReadStdin("Enter an user with privileges:\n", '');
           // Get the password
-          fwrite(STDOUT, "Enter the password: ");
+          fwrite(STDOUT, "Enter the password:\n");
           $passwd = getPassword(true);
           //echo "\nYour password: " . $password . "\n";
           createDB($user, $passwd);
+          fwrite(STDOUT, "\n--\n");
         break; 
 
         case 'createTables': // create database tables
           createTables();
-          echo 'generated db tables\n';
+          echo "\ngenerated db tables\n";
         break;  
 
         case 'setPermissions': // create database tables
           setPermissions();
         break;    
 
-        case 'bckDB': // do the backup of the given db
-          if ($argc>2)
+        case 'bck': // do the backup of the given db
+          if ($argc>2){
             $file = $argv[2].'.sql';//name of the backup file
-          else
+          }
+          else{
             $file = false;
+          }
           $user =  ReadStdin('Enter an user with privileges: ', '');
           fwrite(STDOUT, "Enter the password: ");
           $passwd = getPassword(true);
-          backupDB(DB_NAME, $user, $passwd, $file);
+          doBackup(DB_NAME, $user, $passwd, $file);
         break;  
 
         case 'restoreDB': // restore the backup of a given db
           if ($argc>2){
-           $db = $argv[2];
-           $user =  ReadStdin('Enter an user with privileges: ', '');
-           fwrite(STDOUT, "Enter the password: ");
-           $passwd = getPassword(true);
-           echo $db;
-           restoreDB($db, $user, $passwd);
+           $bd = $argv[2];
+           retoreDB($bd);
           }
-          else
+          else{
             echo "You must especify the database to restore\n"; 
-        break;
+          }
+        break;  
 
         case 'installDependences': 
-          installDependences();
-        break;      
+            installDependences();
+        break;    
 
         default:
           echo "Invalid parameter;try: 
-          flush               to remove temporary files
-          setPermission       to set the folder permission
-          creteDB             to create a database
-          creteTables         to generate the tables
-          bckDB               to do a DB backup (optional arg: filename)
-          restoreDB           to restore a database
-          installDependences  to install all modules dependencies\n";
+          flush                 to remove temporary files
+          setPermission         to set the folder permission
+          creteDB               to create a database
+          creteTables           to generate the tables
+          bckDB                 to do a DB backup (optional arg: filename)
+          restoreDB             to restore a database
+          installDependences    to install all modules dependencies\n";
 
-          exit;     
       }//end switch 
   }//end parameters handler
   else{
     echo "Not enough arguments;try: 
-          flush               to remove temporary files
-          setPermission       to set the folder permission
-          creteDB             to create a database
-          creteTables         to generate the tables
-          bckDB               to do a DB backup (optional arg: filename)
-          restoreDB           to restore a database
-          installDependences  to install all modules dependencies\n";
+          flush                 to remove temporary files
+          setPermission         to set the folder permission
+          creteDB               to create a database
+          creteTables           to generate the tables
+          bckDB                 to do a DB backup (optional arg: filename)
+          restoreDB             to restore a database
+          installDependences    to install all modules dependencies\n";
   }
 
   function createDB($user, $passwd){
@@ -119,6 +118,10 @@
   }
 
   function createTables(){
+
+    Cogumelo::load('c_controller/ModuleController');
+    $moduleControl = new ModuleController(false, true);
+
     $develdbcontrol = new DevelDBController();
     $develdbcontrol->createTables();
   }
@@ -128,39 +131,31 @@
     exec('mkdir c_app/tmp/templates_c');
     exec('mkdir c_app/log');
     exec('mkdir c_app/backups');
-
+    exec('mkdir httpdocs/mediaCache');  
+    
     exec('sudo chown -R $USER:www-data httpdocs');
     exec('chmod -R go-rwx,g+rX httpdocs');
 
     exec('sudo chown -R $USER:www-data c_app');
     exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
-    exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log');
+    exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache');
     exec('sudo chown $USER:$USER c_app/backups');
+    
 
-    echo "permissions ready!\n";
+    echo "permisssions ready!\n";
   }
 
-  function backupDB($DB, $user, $pass, $file){
+  function doBackup($BD, $user, $pass, $file){
 
     if (!$file)
       $file = date('Ymd-Hms').'-'.$BD.'.sql';
 
     $DIR = BCK;
 
-    exec('mysqldump -u '.$user.' -p'.$pass.' '.$DB.'> '.$DIR.'/'.$file);
+    exec('mysqldump -u '.$user.' -p'.$pass.' '.$BD.'> '.$DIR.'/'.$file);
     exec('sudo gzip '.$DIR.'/'.$file);
     exec('chmod go-rwx '.$DIR.'/*');
     echo "\nyour db was successfully saved!\n";
-  }
-
-  function restoreDB($DB, $user, $pass){
-
-    $DIR = BCK;
-
-    echo('mysql -u '.$user.' -p'.$pass.'< gzip -d '.$DIR.$DB);
-
-    exec('mysql -u '.$user.' -p'.$pass.'< gzip -d '.$DIR.$DB);
-    echo "\nthe db was successfully restored!\n";
   }
 
   /**
@@ -219,6 +214,8 @@
       // Return the password
       return $password;
   }
+  
+  
 
   //--------------------------------------------------------------------DEPENDENCES---------------------------------------------------------
 
@@ -260,7 +257,10 @@
     $baseAppDependences = $objModCogumelo->dependences;
 
     pushDependences($baseAppDependences);
+    
   }
+  
+  
   
   function pushDependences($dependences)
   {
@@ -277,7 +277,10 @@
         break;
       }
     }   // end foreach             
+
+    
   }
+  
   
   function pushDependencesComposer($dependence)
   {
@@ -349,8 +352,7 @@
     echo("Exec ... php composer.phar update\n\n");          
     exec('php composer.phar update');
     echo("If the folder does not appear vendorServer dependencies run 'php composer.phar update' or 'composer update' and resolves conflicts.\n");
+    
   }
   //-------------------------------------------------------------------- END DEPENDENCES---------------------------------------------------------
-
-
 ?>
