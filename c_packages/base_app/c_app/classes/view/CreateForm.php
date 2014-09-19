@@ -56,6 +56,11 @@ class CreateForm extends View
     $this->template->assign("lostFormValidations", $form->getJqueryValidationJS());
    
     
+    $lostControl = new LostController();
+    $res = $lostControl->listItems();
+var_dump($res->result);
+    $this->template->assign("lostList", $res);    
+    
     $this->template->setTpl('lostForm.tpl');
     $this->template->exec();
     
