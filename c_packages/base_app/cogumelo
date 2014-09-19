@@ -89,26 +89,27 @@
             installDependences();
         break;    
 
-
         default:
-          echo "invalid parameter;try: 
-          flush                   to remove temporary files
-          createDB                to create a database
-          createTables            to generate the tables
-          restoreDB               to restore a database
-          installDependences      to install all modules dependencies
-          setPermissions          to set permissions in app\n";
-          exit;     
+          echo "Invalid parameter;try: 
+          flush                 to remove temporary files
+          setPermission         to set the folder permission
+          creteDB               to create a database
+          creteTables           to generate the tables
+          bckDB                 to do a DB backup (optional arg: filename)
+          restoreDB             to restore a database
+          installDependences    to install all modules dependencies\n";
+
       }//end switch 
   }//end parameters handler
   else{
     echo "Not enough arguments;try: 
-          flush                   to remove temporary files
-          createDB                to create a database
-          createTables            to generate the tables
-          restoreDB               to restore a database
-          installDependences      to install all modules dependencies
-          setPermissions          to set permissions in app\n";
+          flush                 to remove temporary files
+          setPermission         to set the folder permission
+          creteDB               to create a database
+          creteTables           to generate the tables
+          bckDB                 to do a DB backup (optional arg: filename)
+          restoreDB             to restore a database
+          installDependences    to install all modules dependencies\n";
   }
 
   function createDB($user, $passwd){
