@@ -156,11 +156,13 @@ class FormController implements Serializable {
   public function getHtmlFieldsArray() {
     $html = array();
     foreach( $this->fields as $fieldName => $fieldParams ) {
-      $html[] = '<div>'.$this->getHtmlField($fieldName)."</div>\n";
+      $html[] = '<div class="ffn-'.$fieldName.'">'.$this->getHtmlField($fieldName)."</div>\n";
     }
     return $html;
   }
 
+
+/*
   public function getHtmlField( $fieldName ) {
     $html = '';
 
@@ -179,8 +181,8 @@ class FormController implements Serializable {
         if( isset( $field['multiple'] ) ) { $html .= ' multiple="multiple"'; }
         $html .= '>'."\n";
 
-        foreach( $field['options'] as $key => $text ) {
-          $html .= '<option value="'.$key.'">'.$text.'</option>'."\n";
+        foreach( $field['options'] as $val => $text ) {
+          $html .= '<option value="'.$val.'">'.$text.'</option>'."\n";
         }
 
         // Colocamos los selected
@@ -189,9 +191,10 @@ class FormController implements Serializable {
           foreach( $values as $val ) {
             $html = str_replace( 'option value="'.$val.'"',
               'option value="'.$val.'" selected="selected"', $html );
+            if( !isset( $field['multiple'] ) ) {
+              break; // Si no es multiple, solo puede tener 1 valor
+            }
           }
-        }
-        if( isset( $field['value'] ) ) {
         }
 
         $html .= '</select>'."\n";
@@ -202,8 +205,8 @@ class FormController implements Serializable {
 
       case 'checkbox':
       case 'radio':
-        foreach( $field['options'] as $key => $text ) {
-          $html .= '<input type="'.$field['type'].'" name="'.$field['name'].'" value="'.$key.'"';
+        foreach( $field['options'] as $val => $text ) {
+          $html .= '<input type="'.$field['type'].'" name="'.$field['name'].'" value="'.$val.'"';
           if( isset( $field['id'] ) ) { $html .= ' id="'.$field['id'].'"'; }
           if( isset( $field['placeholder'] ) ) { $html .= ' placeholder="'.$field['placeholder'].'"'; }
           if( isset( $field['maxlength'] ) ) { $html .= ' maxlength="'.$field['maxlength'].'"'; }
@@ -218,6 +221,9 @@ class FormController implements Serializable {
           foreach( $values as $val ) {
             $html = str_replace( 'name="'.$field['name'].'" value="'.$val.'"',
               'name="'.$field['name'].'" value="'.$val.'" checked="checked"', $html );
+            if( $field['type']=='radio' ) {
+              break; // Radio solo puede tener 1 valor
+            }
           }
         }
         break;
@@ -234,8 +240,8 @@ class FormController implements Serializable {
         $html .= '</textarea>';
         break;
 
-      case 'file':
-        break;
+      //case 'file':
+      //  break;
 
       case 'submit':
         // button, file, hidden, password, range, text
@@ -263,7 +269,181 @@ class FormController implements Serializable {
 
     return $html;
   } // function getHtmlField
+*/
 
+
+
+  public function getHtmlField( $fieldName ) {
+    $html = '';
+
+    $htmlFieldArray = $this->getHtmlFieldArray( $fieldName );
+
+    if( isset( $htmlFieldArray['label'] ) ) {
+      $html .= $htmlFieldArray['label']."<br>\n";
+    }
+    switch( $htmlFieldArray['fieldType'] ) {
+      case 'select':
+        $html .= $htmlFieldArray['inputOpen']."\n";
+        foreach( $htmlFieldArray['options'] as $optionAndText ) {
+          $html .= $optionAndText['input']."\n";
+        }
+        $html .= $htmlFieldArray['inputClose'];
+        break;
+      case 'checkbox':
+      case 'radio':
+        foreach( $htmlFieldArray['options'] as $inputAndText ) {
+          $html .= $inputAndText['input'] . $inputAndText['text'];
+        }
+        break;
+      case 'textarea':
+        $html .= $htmlFieldArray['inputOpen'] . $htmlFieldArray['value'] . $htmlFieldArray['inputClose'];
+        break;
+      default:
+        $html .= $htmlFieldArray['input'];
+        break;
+    }
+
+    return $html;
+  } // function getHtmlField
+
+
+
+
+
+  public function getHtmlFieldArray( $fieldName ) {
+    $html = array();
+
+    $field = $this->fields[$fieldName];
+
+    $html['fieldType'] = $field['type'];
+
+    if( isset( $field['label'] ) && isset( $field['id'] ) ) {
+      $html['label'] = '<label for="'.$field['id'].'">'.$field['label'].'</label>';
+    }
+    switch( $field['type'] ) {
+
+      case 'select':
+        $html['inputOpen'] = '<select name="'.$field['name'].'" id="'.$field['id'].'"';
+        if( isset( $field['size'] ) ) { $html['inputOpen'] .= ' size="'.$field['size'].'"'; }
+        if( isset( $field['disabled'] ) ) { $html['inputOpen'] .= ' disabled="disabled"'; }
+        if( isset( $field['readonly'] ) ) { $html['inputOpen'] .= ' readonly="readonly"'; }
+        if( isset( $field['multiple'] ) ) { $html['inputOpen'] .= ' multiple="multiple"'; }
+        $html['inputOpen'] .= '>';
+
+        $html['options'] = array();
+        foreach( $field['options'] as $val => $text ) {
+          $html['options'][$val] = array(
+            'input' => '<option value="'.$val.'">'.$text.'</option>',
+            'text' => $text
+            );
+        }
+
+        // Colocamos los selected
+        if( isset( $field['value'] ) || is_array( $field['value'] ) ) {
+          $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
+          foreach( $values as $val ) {
+            $html['options'][$val]['input'] = str_replace( 'option value="'.$val.'"',
+              'option value="'.$val.'" selected="selected"', $html['options'][$val]['input'] );
+            if( !isset( $field['multiple'] ) ) {
+              break; // Si no es multiple, solo puede tener 1 valor
+            }
+          }
+        }
+
+        $html['inputClose'] = '</select><!-- select '.$field['name'].' -->';
+
+        // Creamos ya la regla que controla el contenido
+        $this->setValidationRule( $field['name'], 'inArray', array_keys( $field['options'] ) );
+        break;
+
+      case 'checkbox':
+      case 'radio':
+        $html['options'] = array();
+        foreach( $field['options'] as $val => $text ) {
+          $html['options'][$val] = array();
+          $html['options'][$val]['input'] = '<input type="'.$field['type'].'" name="'.$field['name'].'" value="'.$val.'"';
+          $html['options'][$val]['input'] .= isset( $field['id'] ) ? ' id="'.$field['id'].'"' : '';
+          if( isset( $field['placeholder'] ) ) { $html['options'][$val]['input'] .= ' placeholder="'.$field['placeholder'].'"'; }
+          if( isset( $field['maxlength'] ) ) { $html['options'][$val]['input'] .= ' maxlength="'.$field['maxlength'].'"'; }
+          if( isset( $field['disabled'] ) ) { $html['options'][$val]['input'] .= ' disabled="disabled"'; }
+          if( isset( $field['readonly'] ) ) { $html['options'][$val]['input'] .= ' readonly="readonly"'; }
+          $html['options'][$val]['input'] .= '>';
+          $html['options'][$val]['text'] = $text;
+        }
+
+        // Colocamos los checked
+        if( isset( $field['value'] ) || is_array( $field['value'] ) ) {
+          $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
+          foreach( $values as $val ) {
+            $html['options'][$val]['input'] = str_replace( 'name="'.$field['name'].'" value="'.$val.'"',
+              'name="'.$field['name'].'" value="'.$val.'" checked="checked"', $html['options'][$val]['input'] );
+            if( $field['type']=='radio' ) {
+              break; // Radio solo puede tener 1 valor
+            }
+          }
+        }
+        break;
+
+      case 'textarea':
+        $html['inputOpen'] = '<textarea name="'.$field['name'].'" id="'.$field['id'].'"';
+        if( isset( $field['placeholder'] ) ) { $html['inputOpen'] .= ' placeholder="'.$field['placeholder'].'"'; }
+        if( isset( $field['disabled'] ) ) { $html['inputOpen'] .= ' disabled="disabled"'; }
+        if( isset( $field['readonly'] ) ) { $html['inputOpen'] .= ' readonly="readonly"'; }
+        if( isset( $field['cols'] ) ) { $html['inputOpen'] .= ' cols="'.$field['cols'].'"'; }
+        if( isset( $field['rows'] ) ) { $html['inputOpen'] .= ' rows="'.$field['rows'].'"'; }
+        $html['inputOpen'] .= '>';
+        $html['value'] = isset( $field['value'] ) ? $field['value'] : '';
+        $html['inputClose'] = '</textarea>';
+        break;
+
+      //case 'file':
+      //  break;
+
+      default:
+        // button, file, hidden, password, range, text
+        // color, date, datetime, datetime-local, email, image, month, number, search, tel, time, url, week
+        $html['input'] = '<input name="'.$field['name'].'" id="'.$field['id'].'"';
+        if( isset( $field['value'] ) ) { $html['input'] .= ' value="'.$field['value'].'"'; }
+        if( isset( $field['placeholder'] ) ) { $html['input'] .= ' placeholder="'.$field['placeholder'].'"'; }
+        if( isset( $field['maxlength'] ) ) { $html['input'] .= ' maxlength="'.$field['maxlength'].'"'; }
+        if( isset( $field['disabled'] ) ) { $html['input'] .= ' disabled="disabled"'; }
+        if( isset( $field['readonly'] ) ) { $html['input'] .= ' readonly="readonly"'; }
+        $html['input'] .= ' type="'.$field['type'].'">';
+        break;
+    }
+
+    return $html;
+  } // function getHtmlFieldArray
+
+
+
+
+
+
+  public function getHtmlPartialField( $fieldName, $paramValue ) {
+    $html = '';
+    $field = $this->fields[$fieldName];
+
+    switch( $field['type'] ) {
+
+      case 'checkbox':
+      case 'radio':
+        if( isset( $field['options'][$paramValue] ) ) {
+          $val = $paramValue;
+          $text = $field['options'][$val];
+          $html .= '<input type="'.$field['type'].'" name="'.$field['name'].'" value="'.$val.'"';
+          if( isset( $field['id'] ) ) { $html .= ' id="'.$field['id'].'"'; }
+          if( isset( $field['placeholder'] ) ) { $html .= ' placeholder="'.$field['placeholder'].'"'; }
+          if( isset( $field['maxlength'] ) ) { $html .= ' maxlength="'.$field['maxlength'].'"'; }
+          if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
+          if( isset( $field['readonly'] ) ) { $html .= ' readonly="readonly"'; }
+          $html .= '>'.$text;
+        }
+        break;
+    }
+
+    return $html;
+  } // function getHtmlPartialField
 
   public function getHtmlClose() {
     $html = '</form><!-- '.$this->name.' -->';
@@ -304,8 +484,15 @@ class FormController implements Serializable {
   } // function getJqueryValidationJS
 
 
+
+
+
+
+
 /**
-  * VALIDATION
+  ***********************************************************
+  VALIDATION
+  ***********************************************************
 **/
 
   /*
