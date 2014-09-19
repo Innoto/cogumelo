@@ -4,6 +4,7 @@
 Cogumelo::load('c_view/View');
 Cogumelo::load('c_controller/FormController');
 Cogumelo::load('c_controller/FormValidators');
+Cogumelo::load('controller/LostController');
 
 class CreateForm extends View
 {
@@ -82,7 +83,10 @@ class CreateForm extends View
 
       //Si todo esta OK!
       if( sizeof( $jvErrors ) == 0 ){
-        var_dump($postData);
+        $lostControl = new LostController();
+        $res = $lostControl->create($postData);
+        
+        var_dump($res);
       }
       
       if( sizeof( $jvErrors ) > 0 ) {
