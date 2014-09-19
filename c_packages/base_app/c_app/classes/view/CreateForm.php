@@ -5,6 +5,7 @@ Cogumelo::load('c_view/View');
 Cogumelo::load('c_controller/FormController');
 Cogumelo::load('c_controller/FormValidators');
 Cogumelo::load('controller/LostController');
+Cogumelo::load('model/LostVO');
 
 class CreateForm extends View
 {
@@ -38,6 +39,7 @@ class CreateForm extends View
     $form->setField( 'lostPassword2', array( 'type' => 'password', 'placeholder' => 'Repeat password' ) );      
     //$form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => 'He leído y acepto los Términos y Condiciones de uso') );    
     $form->setField( 'lostSubmit', array( 'type' => 'submit', 'value' => 'OK' ) );
+    $form->setField( 'lostSubmit2', array( 'type' => 'submit', 'value' => 'OK2' ) );
 
     
     $form->setValidationRule( 'lostName', 'required' );
@@ -84,6 +86,11 @@ class CreateForm extends View
       //Si todo esta OK!
       if( sizeof( $jvErrors ) == 0 ){
         $lostControl = new LostController();
+        
+        unset($postData['cgIntFrmId']);
+        unset($postData['lostPassword2']);
+        unset($postData['lostSubmit']);
+        unset($postData['lostSubmit2']);
         $res = $lostControl->create($postData);
         
         var_dump($res);

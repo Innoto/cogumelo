@@ -23,7 +23,7 @@ class LostVO extends VO
       'type' => 'CHAR', 
       'size' => 40
     ),
-    'lostEmail' => array(
+    'lostMail' => array(
       'name' => 'Email', 
       'type' => 'CHAR', 
       'size' => 30
