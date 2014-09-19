@@ -21,6 +21,7 @@ class FormController implements Serializable {
   private $rulesErrors = array();
 
 
+
   function __construct( $name = false, $action = false, $cgIntFrmId = false, $formPost = false ) {
     if( $cgIntFrmId ) {
       $this->loadFromSession( $cgIntFrmId );
@@ -160,117 +161,6 @@ class FormController implements Serializable {
     }
     return $html;
   }
-
-
-/*
-  public function getHtmlField( $fieldName ) {
-    $html = '';
-
-    $field = $this->fields[$fieldName];
-
-    if( isset( $field['label'] ) ) {
-      $html .= '<label for="'.$field['id'].'">'.$field['label'].'</label>'."<br>\n";
-    }
-    switch( $field['type'] ) {
-
-      case 'select':
-        $html .= '<select name="'.$field['name'].'" id="'.$field['id'].'"';
-        if( isset( $field['size'] ) ) { $html .= ' size="'.$field['size'].'"'; }
-        if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
-        if( isset( $field['readonly'] ) ) { $html .= ' readonly="readonly"'; }
-        if( isset( $field['multiple'] ) ) { $html .= ' multiple="multiple"'; }
-        $html .= '>'."\n";
-
-        foreach( $field['options'] as $val => $text ) {
-          $html .= '<option value="'.$val.'">'.$text.'</option>'."\n";
-        }
-
-        // Colocamos los selected
-        if( isset( $field['value'] ) || is_array( $field['value'] ) ) {
-          $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
-          foreach( $values as $val ) {
-            $html = str_replace( 'option value="'.$val.'"',
-              'option value="'.$val.'" selected="selected"', $html );
-            if( !isset( $field['multiple'] ) ) {
-              break; // Si no es multiple, solo puede tener 1 valor
-            }
-          }
-        }
-
-        $html .= '</select>'."\n";
-
-        // Creamos ya la regla que controla el contenido
-        $this->setValidationRule( $field['name'], 'inArray', array_keys( $field['options'] ) );
-        break;
-
-      case 'checkbox':
-      case 'radio':
-        foreach( $field['options'] as $val => $text ) {
-          $html .= '<input type="'.$field['type'].'" name="'.$field['name'].'" value="'.$val.'"';
-          if( isset( $field['id'] ) ) { $html .= ' id="'.$field['id'].'"'; }
-          if( isset( $field['placeholder'] ) ) { $html .= ' placeholder="'.$field['placeholder'].'"'; }
-          if( isset( $field['maxlength'] ) ) { $html .= ' maxlength="'.$field['maxlength'].'"'; }
-          if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
-          if( isset( $field['readonly'] ) ) { $html .= ' readonly="readonly"'; }
-          $html .= '>'.$text;
-        }
-
-        // Colocamos los checked
-        if( isset( $field['value'] ) || is_array( $field['value'] ) ) {
-          $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
-          foreach( $values as $val ) {
-            $html = str_replace( 'name="'.$field['name'].'" value="'.$val.'"',
-              'name="'.$field['name'].'" value="'.$val.'" checked="checked"', $html );
-            if( $field['type']=='radio' ) {
-              break; // Radio solo puede tener 1 valor
-            }
-          }
-        }
-        break;
-
-      case 'textarea':
-        $html .= '<textarea name="'.$field['name'].'" id="'.$field['id'].'"';
-        if( isset( $field['placeholder'] ) ) { $html .= ' placeholder="'.$field['placeholder'].'"'; }
-        if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
-        if( isset( $field['readonly'] ) ) { $html .= ' readonly="readonly"'; }
-        if( isset( $field['cols'] ) ) { $html .= ' cols="'.$field['cols'].'"'; }
-        if( isset( $field['rows'] ) ) { $html .= ' rows="'.$field['rows'].'"'; }
-        $html .= '>';
-        if( isset( $field['value'] ) ) { $html .= $field['value']; }
-        $html .= '</textarea>';
-        break;
-
-      //case 'file':
-      //  break;
-
-      case 'submit':
-        // button, file, hidden, password, range, text
-        // color, date, datetime, datetime-local, email, image, month, number, search, tel, time, url, week
-        $html .= '<input name="'.$field['name'].'" id="'.$field['id'].'"';
-        if( isset( $field['value'] ) ) { $html .= ' value="'.$field['value'].'"'; }
-        if( isset( $field['formAction'] ) ) { $html .= ' formAction="'.$field['formAction'].'"'; }
-        if( isset( $field['formNoValidate'] ) ) { $html .= ' formNoValidate="'.$field['formNoValidate'].'"'; }
-        if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
-        $html .= ' type="'.$field['type'].'">';
-        break;
-
-      default:
-        // button, file, hidden, password, range, text
-        // color, date, datetime, datetime-local, email, image, month, number, search, tel, time, url, week
-        $html .= '<input name="'.$field['name'].'" id="'.$field['id'].'"';
-        if( isset( $field['value'] ) ) { $html .= ' value="'.$field['value'].'"'; }
-        if( isset( $field['placeholder'] ) ) { $html .= ' placeholder="'.$field['placeholder'].'"'; }
-        if( isset( $field['maxlength'] ) ) { $html .= ' maxlength="'.$field['maxlength'].'"'; }
-        if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
-        if( isset( $field['readonly'] ) ) { $html .= ' readonly="readonly"'; }
-        $html .= ' type="'.$field['type'].'">';
-        break;
-    }
-
-    return $html;
-  } // function getHtmlField
-*/
-
 
 
   public function getHtmlField( $fieldName ) {

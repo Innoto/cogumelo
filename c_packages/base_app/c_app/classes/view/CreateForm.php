@@ -3,7 +3,9 @@
 
 Cogumelo::load('c_view/View');
 Cogumelo::load('c_controller/FormController');
-
+Cogumelo::load('c_controller/FormValidators');
+Cogumelo::load('controller/LostController');
+Cogumelo::load('model/LostVO');
 
 class CreateForm extends View
 {
@@ -24,7 +26,7 @@ class CreateForm extends View
   
   function lostForm() {
 
-    $form = new FormController( 'lostForm', '/sendlostform' ); //actionform
+    $form = new FormController( 'lostForm', '/sendLostForm' ); //actionform
 
     $form->setField( 'lostName', array( 'placeholder' => 'Nombre') );
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
@@ -35,15 +37,16 @@ class CreateForm extends View
     ) );        
     $form->setField( 'lostPassword', array( 'type' => 'password', 'placeholder' => 'Password' ) );
     $form->setField( 'lostPassword2', array( 'type' => 'password', 'placeholder' => 'Repeat password' ) );      
-    $form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => 'He leído y acepto los Términos y Condiciones de uso') );    
+    //$form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => 'He leído y acepto los Términos y Condiciones de uso') );    
     $form->setField( 'lostSubmit', array( 'type' => 'submit', 'value' => 'OK' ) );
+    $form->setField( 'lostSubmit2', array( 'type' => 'submit', 'value' => 'OK2' ) );
 
     
     $form->setValidationRule( 'lostName', 'required' );
     $form->setValidationRule( 'lostConditions', 'required' );
     $form->setValidationRule( 'lostMail', 'required' );
     $form->setValidationRule( 'lostPhone', 'required' );
-    $form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
+    //$form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
     
     $form->saveToSession();
     
@@ -52,6 +55,11 @@ class CreateForm extends View
     $this->template->assign("lostFormClose", $form->getHtmlClose());
     $this->template->assign("lostFormValidations", $form->getJqueryValidationJS());
    
+    
+    $lostControl = new LostController();
+    $res = $lostControl->listItems();
+var_dump($res->result);
+    $this->template->assign("lostList", $res);    
     
     $this->template->setTpl('lostForm.tpl');
     $this->template->exec();
@@ -80,6 +88,19 @@ class CreateForm extends View
       $form->validateForm();
       $jvErrors = $form->getJVErrors();
 
+      //Si todo esta OK!
+      if( sizeof( $jvErrors ) == 0 ){
+        $lostControl = new LostController();
+        
+        unset($postData['cgIntFrmId']);
+        unset($postData['lostPassword2']);
+        unset($postData['lostSubmit']);
+        unset($postData['lostSubmit2']);
+        $res = $lostControl->create($postData);
+        
+        var_dump($res);
+      }
+      
       if( sizeof( $jvErrors ) > 0 ) {
         echo json_encode(
           array(

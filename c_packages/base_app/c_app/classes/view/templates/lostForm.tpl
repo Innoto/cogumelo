@@ -25,5 +25,13 @@
     {$lostFormClose}
     {$lostFormValidations}
     
+    <h3>Listado de Perdidos</h3>
+    {if $lostList}
+      {foreach from=$lostList key=key item=item}
+        <div>{$item->getter('lostName')} ---- {$item->getter('lostMail')} ---- {$item->getter('lostProvince')} ---- {$item->getter('lostPhone')} </div>
+      {/foreach}
+    {else}
+      <div>Vacio</div>
+    {/if}    
   </body>
 </html>
