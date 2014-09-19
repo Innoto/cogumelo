@@ -31,7 +31,8 @@ class Forms extends View
 
     $form->setField( 'input1', array( 'placeholder' => 'Mete 1 valor', 'value' => '5' ) );
     $form->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor888' ) );
-    $form->setField( 'select1', array( 'type' => 'select', 'label' => 'Meu Select', 'value' => '2',
+    $form->setField( 'select1', array( 'type' => 'select', 'label' => 'Meu Select',
+      'value' => array( '1', '2' ),
       'options'=> array( '' => 'Vacio', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' ),
       'multiple' => 'multiple'
       ) );

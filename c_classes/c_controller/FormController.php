@@ -184,9 +184,14 @@ class FormController implements Serializable {
         }
 
         // Colocamos los selected
+        if( isset( $field['value'] ) || is_array( $field['value'] ) ) {
+          $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
+          foreach( $values as $val ) {
+            $html = str_replace( 'option value="'.$val.'"',
+              'option value="'.$val.'" selected="selected"', $html );
+          }
+        }
         if( isset( $field['value'] ) ) {
-          $html = str_replace( 'option value="'.$field['value'].'"',
-            'option value="'.$field['value'].'" selected="selected"', $html );
         }
 
         $html .= '</select>'."\n";
