@@ -15,17 +15,18 @@ class FormController implements Serializable {
   private $messages = array();
 
   // POST submit
-  private $formValues = false;
+  private $postValues = false;
   //private $evaluateRuleMethod = false;
   private $validationObj = null;
   private $rulesErrors = array();
+
 
 
   function __construct( $name = false, $action = false, $cgIntFrmId = false, $formPost = false ) {
     if( $cgIntFrmId ) {
       $this->loadFromSession( $cgIntFrmId );
       if( $formPost ) {
-        $this->loadFormValues( $formPost );
+        $this->loadPostValues( $formPost );
       }
     }
     else {
@@ -51,7 +52,7 @@ class FormController implements Serializable {
     $data[] = $this->fields;
     $data[] = $this->rules;
     $data[] = $this->messages;
-    $data[] = $this->formValues;
+    $data[] = $this->postValues;
 
     return serialize( $data );
   }
@@ -68,7 +69,7 @@ class FormController implements Serializable {
     $this->fields = array_shift( $data );
     $this->rules = array_shift( $data );
     $this->messages = array_shift( $data );
-    $this->formValues = array_shift( $data );
+    $this->postValues = array_shift( $data );
   }
 
   public function saveToSession() {
@@ -85,8 +86,36 @@ class FormController implements Serializable {
     //error_log( $_SESSION[ $formSessionId ] );
   }
 
-  public function loadFormValues( $formPost ) {
-    $this->formValues = $formPost;
+  public function setField( $fieldName, $params = false ) {
+    /* Vamos a dejar de crear "id" de forma automatica
+    if( !isset( $this->fields[$fieldName]['id'] ) ||
+      ( isset( $this->fields[$fieldName]['name'] ) && $this->fields[$fieldName]['name'] === $this->fields[$fieldName]['id'] ) )
+    {
+      $this->fields[$fieldName]['id'] = $fieldName;
+    }
+    */
+    $this->fields[$fieldName]['name'] = $fieldName;
+    if( $params ) {
+      foreach( $params as $key => $value ) {
+        $this->fields[$fieldName][$key] = $value;
+      }
+    }
+    if( !isset( $this->fields[$fieldName]['type'] ) ) {
+      $this->fields[$fieldName]['type'] = 'text';
+    }
+  } // function setField
+
+  public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
+    $this->rules[$fieldName][$ruleName] = $ruleParams;
+  }
+
+  public function setValidationMsg( $fieldName, $msg ) {
+    $this->messages[$fieldName] = $msg;
+  }
+
+
+  public function loadPostValues( $formPost ) {
+    $this->postValues = $formPost;
   }
 
   public function getIntFrmId() {
@@ -98,7 +127,6 @@ class FormController implements Serializable {
 
     $html .= $this->getHtmpOpen()."\n";
     $html .= $this->getHtmlFields()."\n";
-    //$html .= $this->getHtmlSubmit()."\n";
     $html .= $this->getHtmlClose()."\n";
 
     $html .= $this->getJqueryValidationJS()."\n";
@@ -126,82 +154,155 @@ class FormController implements Serializable {
     return $html;
   }
 
+  public function getHtmlFieldsArray() {
+    $html = array();
+    foreach( $this->fields as $fieldName => $fieldParams ) {
+      $html[] = '<div class="ffn-'.$fieldName.'">'.$this->getHtmlField($fieldName)."</div>\n";
+    }
+    return $html;
+  }
+
+
   public function getHtmlField( $fieldName ) {
     $html = '';
 
-    $field = $this->fields[$fieldName];
+    $htmlFieldArray = $this->getHtmlFieldArray( $fieldName );
 
-    if( isset( $field['label'] ) ) {
-      $html .= '<label for="'.$field['id'].'">'.$field['label'].'</label>'."<br>\n";
+    if( isset( $htmlFieldArray['label'] ) ) {
+      $html .= $htmlFieldArray['label']."<br>\n";
     }
-    switch( $field['type'] ) {
-
+    switch( $htmlFieldArray['fieldType'] ) {
       case 'select':
-        $html .= '<select name="'.$field['name'].'" id="'.$field['id'].'"';
-        if( isset( $field['size'] ) ) { $html .= ' size="'.$field['size'].'"'; }
-        if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
-        if( isset( $field['readonly'] ) ) { $html .= ' readonly="readonly"'; }
-        if( isset( $field['multiple'] ) ) { $html .= ' multiple="multiple"'; }
-        $html .= '>'."\n";
-
-        foreach( $field['options'] as $key => $text ) {
-          $html .= '<option value="'.$key.'">'.$text.'</option>'."\n";
+        $html .= $htmlFieldArray['inputOpen']."\n";
+        foreach( $htmlFieldArray['options'] as $optionAndText ) {
+          $html .= $optionAndText['input']."\n";
         }
-        if( isset( $field['value'] ) ) {
-          $html = str_replace( 'option value="'.$field['value'].'"',
-            'option value="'.$field['value'].'" selected="selected"', $html );
-        }
-
-        $html .= '</select>'."\n";
-
-        // Creamos ya la regla que controla el contenido
-        $this->setValidationRule( $field['name'], 'inArray', array_keys( $field['options'] ) );
+        $html .= $htmlFieldArray['inputClose'];
         break;
-
       case 'checkbox':
-        //<input type="checkbox" name="vehicle" value="Bike"> I have a bike<br>
-        //<input type="checkbox" name="vehicle" value="Car" checked="checked"> I have a car
-        break;
-
       case 'radio':
-        //<input type="radio" name="gender" value="male"> Male<br>
-        //<input type="radio" name="gender" value="female" checked="checked"> Female
+        foreach( $htmlFieldArray['options'] as $inputAndText ) {
+          $html .= $inputAndText['input'] . $inputAndText['text'];
+        }
         break;
-
-      case 'file':
+      case 'textarea':
+        $html .= $htmlFieldArray['inputOpen'] . $htmlFieldArray['value'] . $htmlFieldArray['inputClose'];
         break;
-
-      /*
-      case 'reset':
-      case 'submit':
-        break;
-      */
-
       default:
-        // button, file, hidden, password, range, text
-        // color, date, datetime, datetime-local, email, image, month, number, search, tel, time, url, week
-        $html .= '<input name="'.$field['name'].'" id="'.$field['id'].'"';
-        if( isset( $field['value'] ) ) { $html .= ' value="'.$field['value'].'"'; }
-        if( isset( $field['placeholder'] ) ) { $html .= ' placeholder="'.$field['placeholder'].'"'; }
-        if( isset( $field['maxlength'] ) ) { $html .= ' maxlength="'.$field['maxlength'].'"'; }
-        if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
-        if( isset( $field['readonly'] ) ) { $html .= ' readonly="readonly"'; }
-        $html .= ' type="'.$field['type'].'">';
+        $html .= $htmlFieldArray['input'];
         break;
     }
 
     return $html;
   } // function getHtmlField
 
-  public function getHtmlSubmit() {
-    $html = '<input name="submit" id="submit" value="submit" type="submit">';
+
+  public function getHtmlFieldArray( $fieldName ) {
+    $html = array();
+
+    $field = $this->fields[$fieldName];
+
+    $html['fieldType'] = $field['type'];
+
+    if( isset( $field['label'] ) ) {
+      $html['label'] = '<label';
+      $html['label'] .= isset( $field['id'] ) ? ' for="'.$field['id'].'"' : '';
+      $html['label'] .= isset( $field['class'] ) ? ' class="'.$field['class'].'"' : '';
+      $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
+      $html['label'] .= '>'.$field['label'].'</label>';
+    }
+
+    $attribs = '';
+    $attribs .= isset( $field['id'] )    ? ' id="'.$field['id'].'"' : '';
+    $attribs .= isset( $field['class'] ) ? ' class="'.$field['class'].'"' : '';
+    $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
+    $attribs .= isset( $field['title'] ) ? ' title="'.$field['title'].'"' : '';
+    $attribs .= isset( $field['placeholder'] ) ? ' placeholder="'.$field['placeholder'].'"' : '';
+    $attribs .= isset( $field['maxlength'] ) ? ' maxlength="'.$field['maxlength'].'"' : '';
+    $attribs .= isset( $field['size'] ) ? ' size="'.$field['size'].'"' : '';
+    $attribs .= isset( $field['cols'] ) ? ' cols="'.$field['cols'].'"' : '';
+    $attribs .= isset( $field['rows'] ) ? ' rows="'.$field['rows'].'"' : '';
+    $attribs .= isset( $field['multiple'] ) ? ' multiple="multiple"' : '';
+    $attribs .= isset( $field['readonly'] ) ? ' readonly="readonly"' : '';
+    $attribs .= isset( $field['disabled'] ) ? ' disabled="disabled"' : '';
+    $attribs .= isset( $field['hidden'] ) ? ' hidden="hidden"' : '';
+
+    switch( $field['type'] ) {
+      case 'select':
+        $html['inputOpen'] = '<select name="'.$field['name'].'"'. $attribs.'>';
+
+        $html['options'] = array();
+        foreach( $field['options'] as $val => $text ) {
+          $html['options'][$val] = array(
+            'input' => '<option value="'.$val.'">'.$text.'</option>',
+            'text' => $text
+            );
+        }
+        // Colocamos los selected
+        if( isset( $field['value'] ) ) {
+          $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
+          foreach( $values as $val ) {
+            $html['options'][$val]['input'] = str_replace( 'option value="'.$val.'"',
+              'option value="'.$val.'" selected="selected"', $html['options'][$val]['input'] );
+            if( !isset( $field['multiple'] ) ) {
+              break; // Si no es multiple, solo puede tener 1 valor
+            }
+          }
+        }
+
+        $html['inputClose'] = '</select><!-- select '.$field['name'].' -->';
+
+        // Creamos ya la regla que controla el contenido
+        $this->setValidationRule( $field['name'], 'inArray', array_keys( $field['options'] ) );
+        break;
+
+      case 'checkbox':
+      case 'radio':
+        $html['options'] = array();
+        foreach( $field['options'] as $val => $text ) {
+          $html['options'][$val] = array();
+          $html['options'][$val]['input'] = '<input name="'.$field['name'].'" value="'.$val.'"'.
+            ' type="'.$field['type'].'"'.$attribs.'>';
+          $html['options'][$val]['text'] = $text;
+        }
+        // Colocamos los checked
+        if( isset( $field['value'] ) ) {
+          $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
+          foreach( $values as $val ) {
+            $html['options'][$val]['input'] = str_replace( 'name="'.$field['name'].'" value="'.$val.'"',
+              'name="'.$field['name'].'" value="'.$val.'" checked="checked"', $html['options'][$val]['input'] );
+            if( $field['type']=='radio' ) {
+              break; // Radio solo puede tener 1 valor
+            }
+          }
+        }
+        break;
+
+      case 'textarea':
+        $html['inputOpen'] = '<textarea name="'.$field['name'].'"'.$attribs.'>';
+        $html['value'] = isset( $field['value'] ) ? $field['value'] : '';
+        $html['inputClose'] = '</textarea>';
+        break;
+
+      //case 'file':
+      //  break;
+
+      default:
+        // button, file, hidden, password, range, text
+        // color, date, datetime, datetime-local, email, image, month, number, search, tel, time, url, week
+        $html['input'] = '<input name="'.$field['name'].'" type="'.$field['type'].'"'.$attribs.'>';
+        break;
+    }
+
     return $html;
-  }
+  } // function getHtmlFieldArray
+
 
   public function getHtmlClose() {
     $html = '</form><!-- '.$this->name.' -->';
     return $html;
   }
+
 
   public function getJqueryValidationJS() {
     $html = '';
@@ -233,43 +334,23 @@ class FormController implements Serializable {
     $html .= '<!-- Validate form '.$this->name.' - END -->'."\n";
 
     return $html;
-  }
+  } // function getJqueryValidationJS
 
-  public function setField( $fieldName, $params = false ) {
+  
+  
+  public function getValuesArray(){
+    return $this->postValues;
+  }// fuction getValuesArray
 
-    if( !isset( $this->fields[$fieldName]['id'] ) ||
-      ( isset( $this->fields[$fieldName]['name'] ) && $this->fields[$fieldName]['name'] === $this->fields[$fieldName]['id'] ) )
-    {
-      $this->fields[$fieldName]['id'] = $fieldName;
-    }
 
-    $this->fields[$fieldName]['name'] = $fieldName;
-    if( $params ) {
-      foreach( $params as $key => $value ) {
-        $this->fields[$fieldName][$key] = $value;
-      }
-    }
-    if( !isset( $this->fields[$fieldName]['type'] ) ) {
-      $this->fields[$fieldName]['type'] = 'text';
-    }
-  } // function setField
 
-  public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
-    $this->rules[$fieldName][$ruleName] = $ruleParams;
-  }
-
-  public function setValidationMsg( $fieldName, $msg ) {
-    $this->messages[$fieldName] = $msg;
-  }
-
-  public function isRequiredField( $fieldName ) {
-    return isset( $this->rules[ $fieldName ][ 'required' ] );
-  }
 
 
 
 /**
-  * VALIDATION
+  ***********************************************************
+  VALIDATION
+  ***********************************************************
 **/
 
   /*
@@ -285,10 +366,13 @@ class FormController implements Serializable {
   }
 
   public function getFieldValue( $fieldName ) {
-    $value = isset( $this->formValues[ $fieldName ] ) ? $this->formValues[ $fieldName ] : null;
+    $value = isset( $this->postValues[ $fieldName ] ) ? $this->postValues[ $fieldName ] : null;
     return $value;
   }
 
+  public function isRequiredField( $fieldName ) {
+    return isset( $this->rules[ $fieldName ][ 'required' ] );
+  }
 
 
   /**
@@ -305,11 +389,11 @@ class FormController implements Serializable {
     $validate = true;
 
     if( $formPost ) {
-      $this->loadFormValues( $formPost );
+      $this->loadPostValues( $formPost );
     }
 
     // Tienen que existir los validadores y los valores del form
-    if( is_object( $this->validationObj ) && $this->formValues!==false ) {
+    if( is_object( $this->validationObj ) && $this->postValues!==false ) {
       foreach( $this->rules as $fieldName => $fieldRules ) {
         $fieldValidate = false;
         $value = $this->getFieldValue( $fieldName );
@@ -341,14 +425,14 @@ class FormController implements Serializable {
         }
 
       } // foreach( $this->rules as $fieldName => $fieldRules )
-    } // if(
+    } // if( is_object( $this->validationObj ) && $this->postValues!==false )
     else {
       $validate = false;
       error_log( 'FALTA CARGAR EL POST DEL FORM O LOS VALIDADORES' );
     }
 
     return $validate;
-  } // public function validateForm( $formPost = false ) {
+  } // function validateForm( $formPost = false ) {
 
   public function getJVErrors() {
     $errors = array();
@@ -365,6 +449,6 @@ class FormController implements Serializable {
     }
 
     return $errors;
-  }
-
+  }  
+  
 } // class FormController implements Serializable {

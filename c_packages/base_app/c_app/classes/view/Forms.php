@@ -31,9 +31,17 @@ class Forms extends View
 
     $form->setField( 'input1', array( 'placeholder' => 'Mete 1 valor', 'value' => '5' ) );
     $form->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor888' ) );
-    $form->setField( 'select1', array( 'type' => 'select', 'label' => 'Meu Select', 'value' => '2',
-      'options'=> array( '' => 'Vacio', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' ),
+    $form->setField( 'select1', array( 'type' => 'select', 'label' => 'Meu Select',
+      'value' => array( '1', '2' ),
+      'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' ),
       'multiple' => 'multiple'
+      ) );
+    $form->setField( 'check1', array( 'type' => 'checkbox', 'label' => 'Meu checkbox',
+      'value' => array( '1', 'asdf' ),
+      'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
+      ) );
+    $form->setField( 'radio1', array( 'type' => 'radio', 'label' => 'Meu radio', 'value' => '2',
+      'options'=> array( '' => 'Vacio', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
       ) );
     $form->setField( 'submit', array( 'type' => 'submit', 'label' => 'Pulsa para enviar', 'value' => 'Manda' ) );
 
@@ -46,7 +54,6 @@ class Forms extends View
     // Creamos ya la regla que controla el contenido
     // $this->setValidationRule( $field['name'], 'in', array_keys( $field['options'] ) );
 
-    $html = $form->getHtmlForm();
     $form->saveToSession();
 
     print '<!DOCTYPE html>'."\n".
@@ -65,7 +72,10 @@ class Forms extends View
     '  <style>div { border:1px dashed; margin:5px; } label.error{ color:red; }</style>'."\n".
     '</head>'."\n".
     '<body>'."\n".
-    $html."\n".
+
+    $form->getHtmlForm()."\n".
+    $form->getHtmlField( 'check1', '2' )."\n".
+
     '</body>'."\n".
     '</html>'."\n";
   } // function loadForm()

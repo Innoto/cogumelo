@@ -57,7 +57,7 @@ class MysqlDAOResult extends DAOResult {
         }
     }
 
-    $this->reset_fetch();
+    $this->resetFetch();
     
     return $list;
     
@@ -96,7 +96,7 @@ class MysqlDAOResult extends DAOResult {
       $list[] = $row;
     }
     
-    $this->reset_fetch();
+    $this->resetFetch();
 
     return $list; 
   }

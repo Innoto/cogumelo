@@ -10,8 +10,8 @@ mkdir -p c_app/log
 mkdir -p c_app/backups
 
 
-sudo chown -R $CGUSER:$CGUSER cogumelo cogumelo.php set_permissions.sh
-chmod 700 cogumelo cogumelo.php set_permissions.sh
+sudo chown -R $CGUSER:$CGUSER cogumelo cogumelo.php composer.phar set_permissions.sh
+chmod 700 cogumelo cogumelo.php composer.phar set_permissions.sh
 
 sudo chown -R $CGUSER:$CGSERV c_app
 #chmod -R ug-x,g-w,o-rwx,u+rwX,g+rX c_app
