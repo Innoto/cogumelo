@@ -87,13 +87,13 @@ class FormController implements Serializable {
   }
 
   public function setField( $fieldName, $params = false ) {
-
+    /* Vamos a dejar de crear "id" de forma automatica
     if( !isset( $this->fields[$fieldName]['id'] ) ||
       ( isset( $this->fields[$fieldName]['name'] ) && $this->fields[$fieldName]['name'] === $this->fields[$fieldName]['id'] ) )
     {
       $this->fields[$fieldName]['id'] = $fieldName;
     }
-
+    */
     $this->fields[$fieldName]['name'] = $fieldName;
     if( $params ) {
       foreach( $params as $key => $value ) {
@@ -207,18 +207,32 @@ class FormController implements Serializable {
 
     $html['fieldType'] = $field['type'];
 
-    if( isset( $field['label'] ) && isset( $field['id'] ) ) {
-      $html['label'] = '<label for="'.$field['id'].'">'.$field['label'].'</label>';
+    if( isset( $field['label'] ) ) {
+      $html['label'] = '<label';
+      $html['label'] .= isset( $field['id'] ) ? ' for="'.$field['id'].'"' : '';
+      $html['label'] .= isset( $field['class'] ) ? ' class="'.$field['class'].'"' : '';
+      $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
+      $html['label'] .= '>'$field['label'].'</label>';
     }
-    switch( $field['type'] ) {
 
+    $attribs = '';
+    $attribs .= isset( $field['id'] )    ? ' id="'.$field['id'].'"' : '';
+    $attribs .= isset( $field['class'] ) ? ' class="'.$field['class'].'"' : '';
+    $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
+    $attribs .= isset( $field['title'] ) ? ' title="'.$field['title'].'"' : '';
+    $attribs .= isset( $field['placeholder'] ) ? ' placeholder="'.$field['placeholder'].'"' : '';
+    $attribs .= isset( $field['maxlength'] ) ? ' maxlength="'.$field['maxlength'].'"' : '';
+    $attribs .= isset( $field['size'] ) ? ' size="'.$field['size'].'"' : '';
+    $attribs .= isset( $field['cols'] ) ? ' cols="'.$field['cols'].'"' : '';
+    $attribs .= isset( $field['rows'] ) ? ' rows="'.$field['rows'].'"' : '';
+    $attribs .= isset( $field['multiple'] ) ? ' multiple="multiple"' : '';
+    $attribs .= isset( $field['readonly'] ) ? ' readonly="readonly"' : '';
+    $attribs .= isset( $field['disabled'] ) ? ' disabled="disabled"' : '';
+    $attribs .= isset( $field['hidden'] ) ? ' hidden="hidden"' : '';
+
+    switch( $field['type'] ) {
       case 'select':
-        $html['inputOpen'] = '<select name="'.$field['name'].'" id="'.$field['id'].'"';
-        if( isset( $field['size'] ) ) { $html['inputOpen'] .= ' size="'.$field['size'].'"'; }
-        if( isset( $field['disabled'] ) ) { $html['inputOpen'] .= ' disabled="disabled"'; }
-        if( isset( $field['readonly'] ) ) { $html['inputOpen'] .= ' readonly="readonly"'; }
-        if( isset( $field['multiple'] ) ) { $html['inputOpen'] .= ' multiple="multiple"'; }
-        $html['inputOpen'] .= '>';
+        $html['inputOpen'] = '<select name="'.$field['name'].'"'. $attribs.'>';
 
         $html['options'] = array();
         foreach( $field['options'] as $val => $text ) {
@@ -227,7 +241,6 @@ class FormController implements Serializable {
             'text' => $text
             );
         }
-
         // Colocamos los selected
         if( isset( $field['value'] ) ) {
           $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
@@ -251,16 +264,10 @@ class FormController implements Serializable {
         $html['options'] = array();
         foreach( $field['options'] as $val => $text ) {
           $html['options'][$val] = array();
-          $html['options'][$val]['input'] = '<input type="'.$field['type'].'" name="'.$field['name'].'" value="'.$val.'"';
-          $html['options'][$val]['input'] .= isset( $field['id'] ) ? ' id="'.$field['id'].'"' : '';
-          if( isset( $field['placeholder'] ) ) { $html['options'][$val]['input'] .= ' placeholder="'.$field['placeholder'].'"'; }
-          if( isset( $field['maxlength'] ) ) { $html['options'][$val]['input'] .= ' maxlength="'.$field['maxlength'].'"'; }
-          if( isset( $field['disabled'] ) ) { $html['options'][$val]['input'] .= ' disabled="disabled"'; }
-          if( isset( $field['readonly'] ) ) { $html['options'][$val]['input'] .= ' readonly="readonly"'; }
-          $html['options'][$val]['input'] .= '>';
+          $html['options'][$val]['input'] = '<input name="'.$field['name'].'" value="'.$val.'"'.
+            ' type="'.$field['type'].'"'.$attribs.'>';
           $html['options'][$val]['text'] = $text;
         }
-
         // Colocamos los checked
         if( isset( $field['value'] ) ) {
           $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
@@ -275,13 +282,7 @@ class FormController implements Serializable {
         break;
 
       case 'textarea':
-        $html['inputOpen'] = '<textarea name="'.$field['name'].'" id="'.$field['id'].'"';
-        if( isset( $field['placeholder'] ) ) { $html['inputOpen'] .= ' placeholder="'.$field['placeholder'].'"'; }
-        if( isset( $field['disabled'] ) ) { $html['inputOpen'] .= ' disabled="disabled"'; }
-        if( isset( $field['readonly'] ) ) { $html['inputOpen'] .= ' readonly="readonly"'; }
-        if( isset( $field['cols'] ) ) { $html['inputOpen'] .= ' cols="'.$field['cols'].'"'; }
-        if( isset( $field['rows'] ) ) { $html['inputOpen'] .= ' rows="'.$field['rows'].'"'; }
-        $html['inputOpen'] .= '>';
+        $html['inputOpen'] = '<textarea name="'.$field['name'].'"'.$attribs.'>';
         $html['value'] = isset( $field['value'] ) ? $field['value'] : '';
         $html['inputClose'] = '</textarea>';
         break;
@@ -292,13 +293,7 @@ class FormController implements Serializable {
       default:
         // button, file, hidden, password, range, text
         // color, date, datetime, datetime-local, email, image, month, number, search, tel, time, url, week
-        $html['input'] = '<input name="'.$field['name'].'" id="'.$field['id'].'"';
-        if( isset( $field['value'] ) ) { $html['input'] .= ' value="'.$field['value'].'"'; }
-        if( isset( $field['placeholder'] ) ) { $html['input'] .= ' placeholder="'.$field['placeholder'].'"'; }
-        if( isset( $field['maxlength'] ) ) { $html['input'] .= ' maxlength="'.$field['maxlength'].'"'; }
-        if( isset( $field['disabled'] ) ) { $html['input'] .= ' disabled="disabled"'; }
-        if( isset( $field['readonly'] ) ) { $html['input'] .= ' readonly="readonly"'; }
-        $html['input'] .= ' type="'.$field['type'].'">';
+        $html['input'] = '<input name="'.$field['name'].'" type="'.$field['type'].'"'.$attribs.'>';
         break;
     }
 
