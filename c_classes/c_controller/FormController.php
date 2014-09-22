@@ -373,6 +373,11 @@ class FormController implements Serializable {
     return $html;
   } // function getJqueryValidationJS
 
+  
+  
+  public function getValuesArray(){
+    return $this->postValues;
+  }// fuction getValuesArray
 
 
 
@@ -481,6 +486,6 @@ class FormController implements Serializable {
     }
 
     return $errors;
-  }
-
+  }  
+  
 } // class FormController implements Serializable {

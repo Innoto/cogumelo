@@ -58,8 +58,7 @@ class CreateForm extends View
     
     $lostControl = new LostController();
     $res = $lostControl->listItems();
-var_dump($res->fetchAll());
-    $this->template->assign("lostList", $res);    
+    $this->template->assign("lostList", $res->fetchAll());    
     
     $this->template->setTpl('lostForm.tpl');
     $this->template->exec();
@@ -91,14 +90,15 @@ var_dump($res->fetchAll());
       //Si todo esta OK!
       if( sizeof( $jvErrors ) == 0 ){
         $lostControl = new LostController();
+        $valuesArray = $form->getValuesArray();
         
-        unset($postData['cgIntFrmId']);
-        unset($postData['lostPassword2']);
-        unset($postData['lostSubmit']);
-        unset($postData['lostSubmit2']);
-        $res = $lostControl->create($postData);
+        unset($valuesArray['cgIntFrmId']);
+        unset($valuesArray['lostPassword2']);
+        unset($valuesArray['lostSubmit']);
+        unset($valuesArray['lostSubmit2']);
+        $res = $lostControl->create($valuesArray);
         
-        var_dump($res);
+var_dump($res);
       }
       
       if( sizeof( $jvErrors ) > 0 ) {

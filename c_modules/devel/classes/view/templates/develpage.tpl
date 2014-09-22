@@ -202,11 +202,6 @@
       </tr>
       <!-- row -->
       <tr>
-        <td class="td_option">MEDIASERVER_CACHE_TIME</td>
-        <td class="td_value">{$infoMediaServerCacheTime}</td>
-      </tr>
-      <!-- row -->
-      <tr>
         <td class="td_option">MEDIASERVER_COMPILE_LESS</td>
         <td class="td_value">{$infoMediaServerCompileLess}</td>
       </tr>    
