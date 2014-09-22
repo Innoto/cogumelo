@@ -13,7 +13,11 @@ We recomend to look carefully the [Framework dependences](https://github.com/pab
 * [OK] DB Query caché with <http://memcached.org/> 
 * [OK] Autoresolve client and server vendor lib dependences ( bower and composer)
 * [OK] Devel utilities module
-* [OK] Sys manager script (Create database scheme, set permissions, flush caches...)
+* [OK] Sys manager script 
+ - Create database schems
+ - set permissions 
+ - flush caches
+ - resolve dependences
 
 ### Aditional needs:
 * [NOT READY] Ajax Tables
