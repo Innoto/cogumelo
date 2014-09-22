@@ -97,8 +97,6 @@ class CreateForm extends View
         unset($valuesArray['lostSubmit']);
         unset($valuesArray['lostSubmit2']);
         $res = $lostControl->create($valuesArray);
-        
-var_dump($res);
       }
       
       if( sizeof( $jvErrors ) > 0 ) {
