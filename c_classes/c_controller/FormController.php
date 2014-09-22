@@ -197,9 +197,6 @@ class FormController implements Serializable {
   } // function getHtmlField
 
 
-
-
-
   public function getHtmlFieldArray( $fieldName ) {
     $html = array();
 
@@ -300,35 +297,6 @@ class FormController implements Serializable {
     return $html;
   } // function getHtmlFieldArray
 
-
-
-
-
-
-  public function getHtmlPartialField( $fieldName, $paramValue ) {
-    $html = '';
-    $field = $this->fields[$fieldName];
-
-    switch( $field['type'] ) {
-
-      case 'checkbox':
-      case 'radio':
-        if( isset( $field['options'][$paramValue] ) ) {
-          $val = $paramValue;
-          $text = $field['options'][$val];
-          $html .= '<input type="'.$field['type'].'" name="'.$field['name'].'" value="'.$val.'"';
-          if( isset( $field['id'] ) ) { $html .= ' id="'.$field['id'].'"'; }
-          if( isset( $field['placeholder'] ) ) { $html .= ' placeholder="'.$field['placeholder'].'"'; }
-          if( isset( $field['maxlength'] ) ) { $html .= ' maxlength="'.$field['maxlength'].'"'; }
-          if( isset( $field['disabled'] ) ) { $html .= ' disabled="disabled"'; }
-          if( isset( $field['readonly'] ) ) { $html .= ' readonly="readonly"'; }
-          $html .= '>'.$text;
-        }
-        break;
-    }
-
-    return $html;
-  } // function getHtmlPartialField
 
   public function getHtmlClose() {
     $html = '</form><!-- '.$this->name.' -->';
