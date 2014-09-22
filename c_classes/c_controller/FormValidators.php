@@ -115,20 +115,20 @@ private function val_dateISO( $value ) {
     $value ) === 1;
 }
   
-private function val_dateMin( $dateMin, $dateCompare ) {  
-  return (strtotime($dateMin) < strtotime($dateCompare));
+private function val_dateMin( $value, $param ) {  
+  return (strtotime($value) < strtotime($param));
 } 
   
-private function val_dateMax( $dateMax, $dateCompare ) {
-  return (strtotime($dateMax) > strtotime($dateCompare));
+private function val_dateMax( $value, $param ) {
+  return (strtotime($value) > strtotime($param));
 } 
   
-private function val_timeMin( $timeMin, $timeCompare ) {
-  return (strtotime($timeMin) < strtotime($timeCompare));
+private function val_timeMin( $value, $param ) {
+  return (strtotime($value) < strtotime($param));
 }
   
-private function val_timeMax( $timeMax, $timeCompare ) {
-  return (strtotime($timeMax) < strtotime($timeCompare));
+private function val_timeMax( $value, $param ) {
+  return (strtotime($value) < strtotime($param));
 }  
   
   
