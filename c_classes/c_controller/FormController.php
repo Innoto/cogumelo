@@ -209,7 +209,7 @@ class FormController implements Serializable {
       $html['label'] .= isset( $field['id'] ) ? ' for="'.$field['id'].'"' : '';
       $html['label'] .= isset( $field['class'] ) ? ' class="'.$field['class'].'"' : '';
       $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
-      $html['label'] .= '>'$field['label'].'</label>';
+      $html['label'] .= '>'.$field['label'].'</label>';
     }
 
     $attribs = '';
