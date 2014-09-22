@@ -58,7 +58,7 @@ class CreateForm extends View
     
     $lostControl = new LostController();
     $res = $lostControl->listItems();
-var_dump($res->result);
+var_dump($res->fetchAll());
     $this->template->assign("lostList", $res);    
     
     $this->template->setTpl('lostForm.tpl');
