@@ -11,9 +11,11 @@ We recomend to look carefully the [Framework dependences](https://github.com/pab
 * [OK] Modular system 
 * [OK] Model View Controller
 * [OK] DB Query caché with <http://memcached.org/> 
+* [OK] Autoresolve client and server vendor lib dependences ( bower and composer)
+* [OK] Devel utilities module
+* [OK] Sys manager script (Create database scheme, set permissions, flush caches...)
 
 ### Aditional needs:
-* [NOT READY] Devel utilities module
 * [NOT READY] Ajax Tables
 * [NOT READY] Forms
  - Validation 
