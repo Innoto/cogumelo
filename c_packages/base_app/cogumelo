@@ -38,11 +38,10 @@
 
    if ($argc>1){ //parameters handler
       switch($argv[1]){
-        case 'flush': // delete temporary files
-           exec('rm tmp/');
-           echo "archivos temporales borrados\n";
-        break; 
-
+        case 'setPermissions': // create database tables
+          setPermissions();
+        break;   
+        
         case 'createDB': // create database
           $user =  ReadStdin("Enter an user with privileges:\n", '');
           // Get the password
@@ -57,11 +56,13 @@
           echo "\ngenerated db tables\n";
         break;  
 
-        case 'setPermissions': // create database tables
-          setPermissions();
-        break;    
+        case 'flush': // delete temporary files
+           setPermissions(); 
+           exec('rm c_app/tmp/templates_c/*');
+           echo "archivos temporales borrados\n";
+        break;  
 
-        case 'bckDB': // do the backup of the given db
+        case 'bckDB': // do the backup of the db
           if ($argc>2){
             $file = $argv[2].'.sql';//name of the backup file
           }
@@ -125,6 +126,9 @@
   }
 
   function setPermissions(){
+
+    // falta comprobar se existen os directorios antes de crealos
+
     exec('mkdir c_app/tmp');
     exec('mkdir c_app/tmp/templates_c');
     exec('mkdir c_app/log');
