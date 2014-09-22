@@ -114,7 +114,24 @@ private function val_dateISO( $value ) {
   return preg_match( '/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/',
     $value ) === 1;
 }
-
+  
+private function val_dateMin( $dateMin, $dateCompare ) {  
+  return (strtotime($dateMin) < strtotime($dateCompare));
+} 
+  
+private function val_dateMax( $dateMax, $dateCompare ) {
+  return (strtotime($dateMax) > strtotime($dateCompare));
+} 
+  
+private function val_timeMin( $timeMin, $timeCompare ) {
+  return (strtotime($timeMin) < strtotime($timeCompare));
+}
+  
+private function val_timeMax( $timeMax, $timeCompare ) {
+  return (strtotime($timeMax) < strtotime($timeCompare));
+}  
+  
+  
 private function val_number( $value ) {
   return preg_match( '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/',
     $value ) === 1;
