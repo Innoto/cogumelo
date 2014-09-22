@@ -2,6 +2,8 @@
 Is a simple PHP5 framework created by <http://www.innoto.es> on GPL v2. It`s under alpha version. 
 This page will serve to post the essential and aditional needs of this framework.
 
+REMEMBER! code is under alpha version. Please read the [DOC WIKI](https://github.com/Innoto/cogumelo/wiki)
+
 
 We recomend to look carefully the [Framework dependences](https://github.com/pablinhob/cogumelo/wiki/Overview#wiki-dependences)
 
@@ -11,9 +13,15 @@ We recomend to look carefully the [Framework dependences](https://github.com/pab
 * [OK] Modular system 
 * [OK] Model View Controller
 * [OK] DB Query caché with <http://memcached.org/> 
+* [OK] Autoresolve client and server vendor lib dependences ( bower and composer)
+* [OK] Devel utilities module
+* [OK] Sys manager script 
+ - Create database schems
+ - set permissions 
+ - flush caches
+ - resolve dependences
 
 ### Aditional needs:
-* [NOT READY] Devel utilities module
 * [NOT READY] Ajax Tables
 * [NOT READY] Forms
  - Validation 
