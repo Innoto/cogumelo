@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/raveren/kint.git",
-                "reference": "4ffa2cbad67e5ca15abd902e3b148c72e93dbeae"
+                "reference": "1a466e2f03eede375e574998b5db4b3d65949942"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/raveren/kint/zipball/4ffa2cbad67e5ca15abd902e3b148c72e93dbeae",
-                "reference": "4ffa2cbad67e5ca15abd902e3b148c72e93dbeae",
+                "url": "https://api.github.com/repos/raveren/kint/zipball/1a466e2f03eede375e574998b5db4b3d65949942",
+                "reference": "1a466e2f03eede375e574998b5db4b3d65949942",
                 "shasum": ""
             },
             "require": {
@@ -163,7 +163,7 @@
                 "kint",
                 "php"
             ],
-            "time": "2014-04-08 09:52:14"
+            "time": "2014-09-23 09:53:24"
         }
     ],
     "packages-dev": [

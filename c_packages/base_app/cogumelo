@@ -53,13 +53,14 @@
 
         case 'createTables': // create database tables
           createTables();
-          echo "\ngenerated db tables\n";
+          echo "\nGenerated db tables\n";
         break;  
 
         case 'flush': // delete temporary files
-           setPermissions(); 
+           exec('sudo chown -R $USER:www-data c_app');
+           exec('chmod -R gu+rwX,o+rX c_app/tmp');
            exec('rm c_app/tmp/templates_c/*');
-           echo "archivos temporales borrados\n";
+           echo "\nTemporary files deleted!\n";
         break;  
 
         case 'bckDB': // do the backup of the db
@@ -91,7 +92,7 @@
         default:
           echo "Invalid parameter;try: 
           flush                 to remove temporary files
-          setPermission         to set the folder permission
+          setPermissions        to set the folder permission
           creteDB               to create a database
           creteTables           to generate the tables
           bckDB                 to do a DB backup (optional arg: filename)
@@ -103,7 +104,7 @@
   else{
     echo "Not enough arguments;try: 
           flush                 to remove temporary files
-          setPermission         to set the folder permission
+          setPermissions        to set the folder permission
           creteDB               to create a database
           creteTables           to generate the tables
           bckDB                 to do a DB backup (optional arg: filename)
@@ -114,6 +115,7 @@
   function createDB($user, $passwd){
     $develdbcontrol = new DevelDBController($user, $passwd);
     $develdbcontrol->createSchemaDB();
+    echo "\nDatase created!\n";
   }
 
   function createTables(){
@@ -129,11 +131,16 @@
 
     // falta comprobar se existen os directorios antes de crealos
 
-    exec('mkdir c_app/tmp');
-    exec('mkdir c_app/tmp/templates_c');
-    exec('mkdir c_app/log');
-    exec('mkdir c_app/backups');
-    exec('mkdir httpdocs/mediaCache');  
+    if (!is_dir('c_app/tmp'))
+      exec('mkdir c_app/tmp');
+    if (!is_dir('c_app/tmp/templates_c'))
+      exec('mkdir c_app/tmp/templates_c');
+    if (!is_dir('c_app/log'))
+      exec('mkdir c_app/log');
+    if (!is_dir('c_app/backups'))
+      exec('mkdir c_app/backups');
+    if (!is_dir('httpdocs/mediaCache'))
+      exec('mkdir httpdocs/mediaCache');  
     
     exec('sudo chown -R $USER:www-data httpdocs');
     exec('chmod -R go-rwx,g+rX httpdocs');
@@ -144,7 +151,7 @@
     exec('sudo chown $USER:$USER c_app/backups');
     
 
-    echo "permisssions ready!\n";
+    echo "Permissions ready!\n";
   }
 
   function doBackup($BD, $user, $file){
@@ -157,7 +164,7 @@
     popen('mysqldump -u '.$user.' -p '.$BD.'> '.$DIR.'/'.$file, 'r');
     exec('sudo gzip '.$DIR.'/'.$file);
     exec('chmod go-rwx '.$DIR.'/*');
-    echo "\nyour db was successfully saved!\n";
+    echo "\nYour db was successfully saved!\n";
   }
 
   function retoreDB($BD, $user, $file){
@@ -172,7 +179,7 @@
     else{
       popen('mysql -u '.$user.' -p '.$BD.'< '.$DIR.$file, 'r');
     }
-    echo "\nyour db was successfully restored!\n";
+    echo "\nYour db was successfully restored!\n";
   }
 
   /**
