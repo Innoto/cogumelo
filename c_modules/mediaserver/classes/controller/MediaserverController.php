@@ -40,7 +40,7 @@ class MediaserverController {
         Cogumelo::debug("Mediaserver, serving file: ".$this->realFilePath);
 
         if( (substr($this->urlPath, -4) == '.css' || substr($this->urlPath, -3) == '.js' ) && MEDIASERVER_MINIMIFY_FILES ) {
-          //$this->copyAndMoveFile( $this->minify() );
+          $this->copyAndMoveFile( true ); // copy and mofe with MINIFY
         }
         else
         if( substr($this->urlPath, -5) == '.less' ) {
@@ -70,7 +70,7 @@ class MediaserverController {
   * @return string : final path of file
   * @var string $path: the path of file to copy
   */
-  function copyAndMoveFile( ) {
+  function copyAndMoveFile( $minify = false ) {
 
     $tmp_cache = MEDIASERVER_TMP_CACHE_PATH . $this->modulePath . $this->urlPath;
     $final_cache = SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath;
@@ -80,15 +80,23 @@ class MediaserverController {
 
       // create tmp folder
       $this->createDirPath( $tmp_cache );
-      // copy to tmp path
-      copy($this->realFilePath, $tmp_cache );
+
+      if( !$minify ) {
+        // copy to tmp path
+        copy( $this->realFilePath, $tmp_cache );
+      }
+      else {
+        $this->minifyCopy( $this->realFilePath, $tmp_cache );
+      }
 
       // create final folder
       $this->createDirPath( $final_cache );
 
+      // delete final file if exist
       if( file_exists( $final_cache ) ){
         unlink( $final_cache );
       }
+
       // move from tmp path to final path
       rename( $tmp_cache , $final_cache );
     }
@@ -123,41 +131,47 @@ class MediaserverController {
 
 
   /*
-  * Minimify css or js files
-  * @return string : path of minified file
-  * @var string $path: the path of file to minify
+  * Copy with Minimify css or js files using lib https://github.com/nitra/PhpMin/tree/master
+  * @return void
+  * @var string $fromPath: the path of file to minify
+  * @var string $toPath: the path to copy minify file
   */
-  /*function minify($realpath, $path, $type) {
+  function minifyCopy($fromPath, $toPath) {
 
-    // creating secure name for cache file
-    $cache_filename = MEDIASERVER_MINIMIFY_CACHE_PATH."/".str_replace('/','', $path);
-    @$content =file_get_contents($cache_filename);
 
-    if( ! $content ) {
-      if($type == 'js'){
-        $content = JSMin::minify(file_get_contents( $path ));
-      }
-      else
-      if($type == 'css') {
-        $content = CssMin::minify( file_get_contents( $path ));
-      }
+    $filters = array
+    (
+      "RemoveComments" => true
+    );
 
-      if( $fp = fopen($cache_filename, 'w') ){
-        if (flock($fp, LOCK_EX)) { // acquire an exclusive lock
-          fwrite($fp, $content);
-          fflush($fp); // flush output before releasing the lock
-          flock($fp, LOCK_UN); //unlock
-        }
-        else {
-          Cogumelo::debug('file in use: '. MEDIASERVER_MINIMIFY_CACHE_PATH.' '.$path);
-        }
-        fclose($fp);
-      }
-      else {
-        Cogumelo::error('Cannot create cache file into '. MEDIASERVER_MINIMIFY_CACHE_PATH.' for file '.$path);
-      }
+    $type = false;
+
+    if( substr($fromPath, -4) == '.css' ) {
+      $type = 'css';
+    }
+    else if( substr($fromPath, -3) == '.js' ) {
+      $type = 'js';
     }
 
-  }*/
+    if($type == 'js'){
+      file_put_contents(
+        $toPath, 
+        JSMin::minify(file_get_contents( $fromPath ), $filters),
+        LOCK_EX
+      );
+    }
+    else if($type == 'css') {
+      file_put_contents(
+        $toPath, 
+        CssMin::minify( file_get_contents( $fromPath ), $filters),
+        LOCK_EX
+      );
+    }
+    else {
+      copy( $fromPath, $toPath );
+    }
+
+
+  }
 
 }

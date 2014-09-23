@@ -119,7 +119,6 @@ class DevelView extends View
     $this->template->assign("infoMediaServerHost" , MEDIASERVER_HOST);
     $this->template->assign("infoMediaServerTmpCachePath" , MEDIASERVER_TMP_CACHE_PATH);
     $this->template->assign("infoMediaServerFinalCachePath" , MEDIASERVER_FINAL_CACHE_PATH);
-    $this->template->assign("infoMediaServerCacheTime" , MEDIASERVER_CACHE_TIME);
     
     if(MEDIASERVER_COMPILE_LESS){
       $this->template->assign("infoMediaServerCompileLess" , 'True');

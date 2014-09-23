@@ -69,7 +69,7 @@ define('SMARTY_CACHE',  SITE_PATH.'tmp/cache');
 //
 define('MEDIASERVER_REFRESH_CACHE', true); // false for best performance in final server
 define('MEDIASERVER_HOST', '/'); 
-define('MEDIASERVER_MINIMIFY_FILES', false); // minimify js and css files
+define('MEDIASERVER_MINIMIFY_FILES', true); // minimify js and css files
 define('MEDIASERVER_TMP_CACHE_PATH', SITE_PATH.'tmp/mediaCache');
 define('MEDIASERVER_FINAL_CACHE_PATH', 'mediaCache');
 //define('MEDIASERVER_CACHE_TIME', 2000); // in ms (when devel mode is enabled ignore cache times)
@@ -106,6 +106,7 @@ if( IS_DEVEL_ENV || in_array( $_SERVER["REMOTE_ADDR"], array( '127.0.0.1','10.77
 else {
   define( 'MOD_DEVEL_ALLOW_ACCESS', false );
 }
+define('MOD_DEVEL_URL_DIR', 'devel');
 define( 'DEVEL_PASSWORD', 'develpassword' );
 
 
