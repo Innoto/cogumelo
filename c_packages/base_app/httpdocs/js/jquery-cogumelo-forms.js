@@ -4,11 +4,13 @@
 function setValidateForm( idForm, rules, messages ) {
 
   var $validateForm = $( '#'+idForm ).validate({
+    debug: true,
     errorClass: "formError",
     rules: rules,
     messages: messages,
     submitHandler:
       function ( form ) {
+        $( form ).find( '[type="submit"]' ).attr("disabled", "disabled");
         $.ajax( {
            contentType: 'application/json', processData: false,
            data: JSON.stringify( $( form ).serializeFormToObject() ),
@@ -38,6 +40,7 @@ function setValidateForm( idForm, rules, messages ) {
             };
             if( response.formError !== '' ) $validateForm.showErrors( {"submit": response.formError} );
           }
+          $( form ).find( '[type="submit"]' ).removeAttr("disabled");
         } );
         return false; // required to block normal submit since you used ajax
       }
