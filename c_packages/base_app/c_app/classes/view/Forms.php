@@ -51,8 +51,7 @@ class Forms extends View
     $form->setValidationRule( 'input2', 'required' );
     $form->setValidationRule( 'input2', 'minlength', '8' );
     //$form->setValidationRule( 'select1', 'equalTo', '#input1' );
-    // Creamos ya la regla que controla el contenido
-    // $this->setValidationRule( $field['name'], 'in', array_keys( $field['options'] ) );
+    $form->setValidationRule( 'check1', 'required' );
 
     $form->saveToSession();
 
@@ -74,7 +73,7 @@ class Forms extends View
     '<body>'."\n".
 
     $form->getHtmlForm()."\n".
-    $form->getHtmlField( 'check1', '2' )."\n".
+    //$form->getHtmlFieldArray( 'check1' )['options']['2']['text'].$form->getHtmlFieldArray( 'check1' )['options']['2']['input']."\n".
 
     '</body>'."\n".
     '</html>'."\n";
