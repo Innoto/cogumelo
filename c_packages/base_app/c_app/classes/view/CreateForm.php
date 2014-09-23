@@ -31,6 +31,11 @@ class CreateForm extends View
     $form->setField( 'lostName', array( 'placeholder' => 'Nombre') );
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
     $form->setField( 'lostMail', array( 'placeholder' => 'Email') );
+    $form->setField( 'lostBornDate', array( 'label' => 'Fecha de nacimiento Min', 'placeholder' => 'Fecha de nacimiento', 'value' => '15/11/1987') );
+    $form->setField( 'lostBornDate2', array( 'label' => 'Fecha de nacimiento Max', 'placeholder' => 'Fecha de nacimiento Max', 'value' => '15/11/2000') );
+    $form->setField( 'lostDate', array( 'label' => 'Fecha Min', 'placeholder' => 'Fecha Min', 'value' => '2014-1-9') );
+    $form->setField( 'lostDate2', array( 'label' => 'Fecha Max', 'placeholder' => 'Fecha Max', 'value' => '2012-11-8') );
+    $form->setField( 'lostMail', array( 'placeholder' => 'Email') );
     $form->setField( 'lostPhone', array( 'placeholder' => 'Phone') );
     $form->setField( 'lostProvince', array( 'type' => 'select', 'label' => 'Province',
       'options'=> array( '' => 'Selecciona', '1' => 'A coruña', '2' => 'Lugo', '3' => 'Ourense', '4' => 'Pontevedra' )
@@ -43,10 +48,16 @@ class CreateForm extends View
 
     
     $form->setValidationRule( 'lostName', 'required' );
-    $form->setValidationRule( 'lostConditions', 'required' );
+    //$form->setValidationRule( 'lostConditions', 'required' );
     $form->setValidationRule( 'lostMail', 'required' );
     $form->setValidationRule( 'lostPhone', 'required' );
-    //$form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
+    $form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
+    
+    $form->setValidationRule( 'lostBornDate', 'dateMin', '2014-9-9' );
+    $form->setValidationRule( 'lostBornDate2', 'dateMax', '2014-9-9' );
+    $form->setValidationRule( 'lostDate', 'dateMin', '2014-9-9' );
+    $form->setValidationRule( 'lostDate2', 'dateMax', '2014-9-9' );
+    
     
     $form->saveToSession();
     
