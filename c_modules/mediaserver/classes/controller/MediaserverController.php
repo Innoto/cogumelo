@@ -81,7 +81,6 @@ class MediaserverController {
       // create tmp folder
       $this->createDirPath( $tmp_cache );
 
-
       if( !$minify ) {
         // copy to tmp path
         copy( $this->realFilePath, $tmp_cache );
@@ -139,6 +138,12 @@ class MediaserverController {
   */
   function minifyCopy($fromPath, $toPath) {
 
+
+    $filters = array
+    (
+      "RemoveComments" => true
+    );
+
     $type = false;
 
     if( substr($fromPath, -4) == '.css' ) {
@@ -151,14 +156,14 @@ class MediaserverController {
     if($type == 'js'){
       file_put_contents(
         $toPath, 
-        JSMin::minify(file_get_contents( $path )),
+        JSMin::minify(file_get_contents( $fromPath ), $filters),
         LOCK_EX
       );
     }
     else if($type == 'css') {
       file_put_contents(
         $toPath, 
-        CssMin::minify( file_get_contents( $path )),
+        CssMin::minify( file_get_contents( $fromPath ), $filters),
         LOCK_EX
       );
     }

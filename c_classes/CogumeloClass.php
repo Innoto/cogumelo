@@ -118,14 +118,15 @@ class CogumeloClass extends Singleton
 
     // Rodeo para evitar "PHP Notice:  Use of undefined constant MOD_DEVEL_URL_DIR"
     $arrayDefines = get_defined_constants();
-    if( isset( $arrayDefines['MOD_DEVEL_URL_DIR'] )
-      && $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/read_logs'
-      && $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/get_debugger'
+    if( 
+      $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/read_logs' && 
+      $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/get_debugger'
     ) {
       $ignore = true;
     }
 
-    if( !$ignore ) {
+    if( $ignore ) {
+ 
       error_log(
         '['. date('y-m-d H:i:s',time()) .'] ' .
         '['. $_SERVER['REMOTE_ADDR'] .'] ' .

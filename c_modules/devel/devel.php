@@ -1,6 +1,5 @@
 <?php
 
-define('MOD_DEVEL_URL_DIR', 'devel');
 // Dependencias en classes/view/templates/js/devel.js
 
 Cogumelo::load("c_controller/Module");
