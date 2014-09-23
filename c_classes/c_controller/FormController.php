@@ -405,14 +405,14 @@ class FormController implements Serializable {
       foreach( $this->rules as $fieldName => $fieldRules ) {
         $fieldValidate = false;
         $value = $this->getFieldValue( $fieldName );
-        error_log( 'validando '.$fieldName.' = '.$value );
+        error_log( 'validando '.$fieldName.' = '.print_r( $value, true ) );
         if( $value === '' && !isRequiredField( $fieldName ) ) {
           $fieldValidate = true;
         }
         else {
           $fieldValidate = true;
           foreach( $fieldRules as $ruleName => $ruleParams ) {
-            error_log( 'evaluateRule( '.$ruleName.', '.$value.', '.$fieldName.', '.$ruleParams.' )' );
+            error_log( 'evaluateRule( '.$ruleName.', '.print_r( $value, true ).', '.$fieldName.', '.$ruleParams.' )' );
 
             $fieldRuleValidate = $this->validationObj->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
             if( $ruleName === 'equalTo' ) {
