@@ -6,13 +6,14 @@ Cogumelo::load('c_controller/ModuleController');
 Class DependencesController {
 
 
+  //
+  //  Vendor lib resolution
+  //
+  var $allDependencesComposer = array();
+  var $allDependencesBower = array();
+
   function installDependences()
   {
-    global $allDependencesBower; 
-    $allDependencesBower = array();
-    global $allDependencesComposer;
-    $allDependencesComposer = array();
-
     $this->loadDependences();    
     //Descomentar para ver las depen a instalar 
     //error_log( print_r( "ALLBOWER", true));
@@ -20,8 +21,8 @@ Class DependencesController {
     //error_log( print_r( "ALLCOMPOSER", true));
     //error_log( print_r( $allDependencesComposer, true));
 
-    $this->installDependencesBower($allDependencesBower);
-    $this->installDependencesComposer($allDependencesComposer);    
+    $this->installDependencesBower($this->allDependencesBower);
+    $this->installDependencesComposer($this->allDependencesComposer);    
   }
   
   function loadDependences(){
@@ -70,30 +71,29 @@ Class DependencesController {
   
   function pushDependencesComposer($dependence)
   {
-    global $allDependencesComposer;
-    if(!array_key_exists($dependence['id'], $allDependencesComposer)){
-      $allDependencesComposer[$dependence['id']] = array($dependence['params']);
+
+    if(!array_key_exists($dependence['id'], $this->allDependencesComposer)){
+      $this->allDependencesComposer[$dependence['id']] = array($dependence['params']);
     }
     else{
-      $diffAllDepend = array_diff($dependence['params'] , $allDependencesComposer[$dependence['id']][0]); 
+      $diffAllDepend = array_diff($dependence['params'] , $this->allDependencesComposer[$dependence['id']][0]); 
 
       if(!empty($diffAllDepend)){
-        array_push($allDependencesComposer[$dependence['id']], array_diff($dependence['params'] , $allDependencesComposer[$dependence['id']][0])  );
+        array_push($this->allDependencesComposer[$dependence['id']], array_diff($dependence['params'] , $this->allDependencesComposer[$dependence['id']][0])  );
       }          
     }
   }
   
   function pushDependencesBower($dependence)
   {
-    global $allDependencesBower;
-    if(!array_key_exists($dependence['id'], $allDependencesBower)){
-      $allDependencesBower[$dependence['id']] = array($dependence['params']);
+    if(!array_key_exists($dependence['id'], $this->allDependencesBower)){
+      $this->allDependencesBower[$dependence['id']] = array($dependence['params']);
     }
     else{
-      $diffAllDepend = array_diff($dependence['params'] , $allDependencesBower[$dependence['id']][0]); 
+      $diffAllDepend = array_diff($dependence['params'] , $this->allDependencesBower[$dependence['id']][0]); 
 
       if(!empty($diffAllDepend)){
-        array_push($allDependencesBower[$dependence['id']], array_diff($dependence['params'] , $allDependencesBower[$dependence['id']][0])  );
+        array_push($this->allDependencesBower[$dependence['id']], array_diff($dependence['params'] , $this->allDependencesBower[$dependence['id']][0])  );
       }          
     }
   }
@@ -140,5 +140,12 @@ Class DependencesController {
     echo("If the folder does not appear vendorServer dependencies run 'php composer.phar update' or 'composer update' and resolves conflicts.\n");
     
   }
+
+
+  //
+  //  Includes
+  //
+
+
 
 }
