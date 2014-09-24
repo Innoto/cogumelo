@@ -86,12 +86,21 @@
         break;  
 
         case 'installDependences': 
+<<<<<<< HEAD
             
             Cogumelo::load('c_controller/DependencesController');
 
             $dependencesControl = new DependencesController();
             $dependencesControl->installDependences();
         break;    
+=======
+            installDependences();
+        break;   
+
+        case 'rotateLogs': 
+            rotateLogs();
+        break;  
+>>>>>>> 03d13e7676aa63f37b1dd51e1d9ba9dad6d589c8
 
         default:
           echo "Invalid parameter;try: 
@@ -243,6 +252,12 @@
       return $password;
   }
   
+  function rotateLogs(){
+    exec('gzip -c c_app/log/cogumelo.log > c_app/backups/'.date('Ymd-Hms').'-cogumelo.log.gz');
+    exec('gzip -c c_app/log/cogumelo_error.log > c_app/backups/'.date('Ymd-Hms').'-cogumelo_error.log.gz');
+    exec('gzip -c c_app/log/cogumelo_debug.log > c_app/backups/'.date('Ymd-Hms').'-cogumelo_debug.log.gz');
+    echo "\nLogs rotated\n";
+  }
   
 
 ?>
