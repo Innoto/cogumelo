@@ -41,6 +41,7 @@ Class DependencesController {
     }    
 
     //Cargamos las dependencias de Base App (externas a los modulos).
+    global $_C;
     $this->pushDependences($_C->dependences);
     
   }
