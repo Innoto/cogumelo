@@ -87,7 +87,11 @@
 
         case 'installDependences': 
             installDependences();
-        break;    
+        break;   
+
+        case 'rotateLogs': 
+            rotateLogs();
+        break;  
 
         default:
           echo "Invalid parameter;try: 
@@ -239,6 +243,12 @@
       return $password;
   }
   
+  function rotateLogs(){
+    exec('gzip -c c_app/log/cogumelo.log > c_app/backups/'.date('Ymd-Hms').'-cogumelo.log.gz');
+    exec('gzip -c c_app/log/cogumelo_error.log > c_app/backups/'.date('Ymd-Hms').'-cogumelo_error.log.gz');
+    exec('gzip -c c_app/log/cogumelo_debug.log > c_app/backups/'.date('Ymd-Hms').'-cogumelo_debug.log.gz');
+    echo "\nLogs rotated\n";
+  }
   
 
   //--------------------------------------------------------------------DEPENDENCES---------------------------------------------------------
