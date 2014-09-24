@@ -1,5 +1,5 @@
 $.validator.addMethod(
-  "dateMin",
+  "dateTimeMin",
   function( value, element, param) {
     
     var valueDateArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(value);
@@ -20,7 +20,7 @@ $.validator.addMethod(
 
 
 $.validator.addMethod(
-  "dateMax",
+  "dateTimeMax",
   function( value, element, param ) {    
     var valueDateArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(value);
     var paramDateArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(param);
