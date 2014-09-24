@@ -54,14 +54,7 @@
         case 'createTables': // create database tables
           createTables();
           echo "\nGenerated db tables\n";
-        break;  
-
-        case 'flush': // delete temporary files
-           exec('sudo chown -R $USER:www-data c_app');
-           exec('chmod -R gu+rwX,o+rX c_app/tmp');
-           exec('rm c_app/tmp/templates_c/*');
-           echo "\nTemporary files deleted!\n";
-        break;  
+        break;    
 
         case 'bckDB': // do the backup of the db
           if ($argc>2){
@@ -87,7 +80,16 @@
 
         case 'installDependences': 
             installDependences();
-        break;   
+        break; 
+
+        /* We will execute this two actions from web as we need to operate with the apache permissions*/
+
+        case 'flush': // delete temporary files
+           exec('sudo chown -R $USER:www-data c_app');
+           exec('chmod -R gu+rwX,o+rX c_app/tmp');
+           exec('rm c_app/tmp/templates_c/*');
+           echo "\nTemporary files deleted!\n";
+        break;  
 
         case 'rotateLogs': 
             rotateLogs();
