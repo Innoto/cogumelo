@@ -8,6 +8,7 @@ REMEMBER! code is under alpha version. Please read the [DOC WIKI](https://github
 We recomend to look carefully the [Framework dependences](https://github.com/pablinhob/cogumelo/wiki/Overview#wiki-dependences)
 
 
+![Current status of framework](https://cloud.githubusercontent.com/assets/4938295/4391631/0086f7aa-4407-11e4-8414-a8080f0e6339.png)
 
 ### Essential needs:
 * [OK] Modular system 
