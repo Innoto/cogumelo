@@ -2,17 +2,17 @@ $.validator.addMethod(
   "dateTimeMin",
   function( value, element, param) {
     
-    var valueDateArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(value);
-    var paramDateArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(param);
-    var valueDate = "";    
-    var paramDate = "";
+    var valueDateTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(value);
+    var paramDateTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(param);
+    var valueDateTime = "";    
+    var paramDateTime = "";
     
-    if(valueDateArray)
-      valueDate = new Date(valueDateArray[1], valueDateArray[2], valueDateArray[3]);
-    if(paramDateArray)
-      paramDate = new Date(paramDateArray[1], paramDateArray[2], paramDateArray[3]);
+    if(valueDateTimeArray)
+      valueDateTime = new Date(valueDateTimeArray[1], valueDateTimeArray[2], valueDateTimeArray[3], valueDateTimeArray[4], valueDateTimeArray[5], valueDateTimeArray[6]);
+    if(paramDateTimeArray)
+      paramDateTime = new Date(paramDateTimeArray[1], paramDateTimeArray[2], paramDateTimeArray[3], paramDateTimeArray[4], paramDateTimeArray[5], paramDateTimeArray[6]);
     
-    return (valueDate.getTime() > paramDate.getTime());
+    return (valueDateTime.getTime() > paramDateTime.getTime());
     
   },
     "The date entered is too old"
@@ -22,17 +22,17 @@ $.validator.addMethod(
 $.validator.addMethod(
   "dateTimeMax",
   function( value, element, param ) {    
-    var valueDateArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(value);
-    var paramDateArray = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(param);
-    var valueDate = "";    
-    var paramDate = "";
+    var valueDateTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(value);
+    var paramDateTimeArray = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(param);
+    var valueDateTime = "";    
+    var paramDateTime = "";
     
-    if(valueDateArray)
-      valueDate = new Date(valueDateArray[1], valueDateArray[2], valueDateArray[3]);
-    if(paramDateArray)
-      paramDate = new Date(paramDateArray[1], paramDateArray[2], paramDateArray[3]);
+    if(valueDateTimeArray)
+      valueDateTime = new Date(valueDateTimeArray[1], valueDateTimeArray[2], valueDateTimeArray[3], valueDateTimeArray[4], valueDateTimeArray[5], valueDateTimeArray[6]);
+    if(paramDateTimeArray)
+      paramDateTime = new Date(paramDateTimeArray[1], paramDateTimeArray[2], paramDateTimeArray[3], paramDateTimeArray[4], paramDateTimeArray[5], paramDateTimeArray[6]);
     
-    return (valueDate.getTime() < paramDate.getTime());
+    return (valueDateTime.getTime() < paramDateTime.getTime());
   },
     "The date entered must be oldest"
 );

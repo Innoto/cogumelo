@@ -41,8 +41,8 @@ class CreateForm extends View
     $form->setField( 'lostTime', array( 'label' => 'Time Hms Min', 'placeholder' => 'Hora', 'value' => '10:11:12', 'format' => 'timeHms'));
     $form->setField( 'lostTime2', array( 'label' => 'Time Hms Max', 'placeholder' => 'Hora', 'value' => '10:11:12', 'format' => 'timeHms'));    
     
-    $form->setField( 'lostDateTime', array( 'label' => 'Time Hms Min', 'placeholder' => 'Hora', 'value' => '2011-10-11 10:11:12', 'format' => 'dateTimeYmdHms'));
-    $form->setField( 'lostDateTime2', array( 'label' => 'Time Hms Max', 'placeholder' => 'Hora', 'value' => '2011-10-11 10:11:12', 'format' => 'dateTimeYmdHms'));
+    $form->setField( 'lostDateTime', array( 'label' => 'Time YmdHms Min', 'placeholder' => 'Hora', 'value' => '2011-10-11 10:11:12', 'format' => 'dateTimeYmdHms'));
+    $form->setField( 'lostDateTime2', array( 'label' => 'Time YmdHms Max', 'placeholder' => 'Hora', 'value' => '2011-10-11 10:11:12', 'format' => 'dateTimeYmdHms'));
     
     $form->setField( 'lostMail', array( 'placeholder' => 'Email') );
     $form->setField( 'lostPhone', array( 'placeholder' => 'Phone') );
