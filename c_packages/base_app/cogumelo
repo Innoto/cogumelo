@@ -86,21 +86,18 @@
         break;  
 
         case 'installDependences': 
-<<<<<<< HEAD
-            
             Cogumelo::load('c_controller/DependencesController');
 
             $dependencesControl = new DependencesController();
             $dependencesControl->installDependences();
         break;    
-=======
-            installDependences();
+
         break;   
 
         case 'rotateLogs': 
             rotateLogs();
         break;  
->>>>>>> 03d13e7676aa63f37b1dd51e1d9ba9dad6d589c8
+
 
         default:
           echo "Invalid parameter;try: 
