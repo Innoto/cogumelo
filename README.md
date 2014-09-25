@@ -9,7 +9,10 @@ We recomend to look carefully the [Framework dependences](https://github.com/pab
 
 
 
-### Essential needs:
+### Current status of work:
+![Current status of framework](https://cloud.githubusercontent.com/assets/4938295/4391631/0086f7aa-4407-11e4-8414-a8080f0e6339.png)
+
+### Framework features:
 * [OK] Modular system 
 * [OK] Model View Controller
 * [OK] DB Query caché with <http://memcached.org/> 
@@ -20,8 +23,6 @@ We recomend to look carefully the [Framework dependences](https://github.com/pab
  - set permissions 
  - flush caches
  - resolve dependences
-
-### Aditional needs:
 * [NOT READY] Ajax Tables
 * [NOT READY] Forms
  - Validation 
