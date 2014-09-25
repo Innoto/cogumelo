@@ -25,8 +25,6 @@ $.validator.addMethod(
   "timeMax",
   function( value, element, param ) {   
     
-    console.log(value);
-    console.log(param);
     var valueTimeArray = /^(\d{1,2}):(\d{2}):(\d{2})$/.exec(value);
     var paramTimeArray = /^(\d{1,2}):(\d{2}):(\d{2})$/.exec(param);
     var valueTimeSeconds = "";

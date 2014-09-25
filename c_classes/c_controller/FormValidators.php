@@ -116,21 +116,28 @@ private function val_dateISO( $value ) {
 }
   
 private function val_dateMin( $value, $param ) {  
-  return (strtotime($value) < strtotime($param));
-} 
-  
-private function val_dateMax( $value, $param ) {
   return (strtotime($value) > strtotime($param));
 } 
   
-private function val_timeMin( $value, $param ) {
+private function val_dateMax( $value, $param ) {
   return (strtotime($value) < strtotime($param));
+} 
+  
+private function val_timeMin( $value, $param ) {
+  return (strtotime($value) > strtotime($param));
 }
   
 private function val_timeMax( $value, $param ) {
   return (strtotime($value) < strtotime($param));
-}  
+}
   
+private function val_dateTimeMin( $value, $param ) {
+  return (strtotime($value) > strtotime($param));
+}
+  
+private function val_dateTimeMax( $value, $param ) {
+  return (strtotime($value) < strtotime($param));
+}    
   
 private function val_number( $value ) {
   return preg_match( '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/',

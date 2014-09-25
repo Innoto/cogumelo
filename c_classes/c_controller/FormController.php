@@ -406,7 +406,7 @@ class FormController implements Serializable {
         $fieldValidate = false;
         $value = $this->getFieldValue( $fieldName );
         error_log( 'validando '.$fieldName.' = '.print_r( $value, true ) );
-        if( $value === '' && !isRequiredField( $fieldName ) ) {
+        if( $value === '' && !$this->isRequiredField( $fieldName ) ) {
           $fieldValidate = true;
         }
         else {
