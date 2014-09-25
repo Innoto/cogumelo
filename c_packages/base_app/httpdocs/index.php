@@ -7,6 +7,9 @@ define('SITE_PATH', getcwd().'/../c_app/');
 set_include_path('.:'.SITE_PATH);
 
 require_once('conf/setup.php');
+
+
+
 require_once(COGUMELO_LOCATION.'/c_classes/CogumeloClass.php');
 require_once(SITE_PATH.'/Cogumelo.php');
 
