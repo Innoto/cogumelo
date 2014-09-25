@@ -42,6 +42,17 @@ class devel extends Module
      "load" => array("SqlFormatter.php")
    )
   );
+
+  public $clientCommon = array(  
+    '',
+    ''
+  );
+
+  public $serverCommon = array(
+    '',
+    ''
+  );
+
   
 
   function __construct() {

@@ -37,6 +37,12 @@ Cogumelo::load('c_controller/ModuleController');
 class Module
 {
   private $urlPatterns = array();
+  
+  public $name = "";
+  public $version = "";
+  public $dependences = array();
+  public $clientCommon = array();
+  public $serverCommon = array();
 
 
   /**

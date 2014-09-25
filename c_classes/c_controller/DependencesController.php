@@ -147,5 +147,92 @@ Class DependencesController {
   //
 
 
+  function loadModuleIncludes($moduleName) {
+    $this->loadCogumeloIncludes();
+    eval( "$this->addIncludeList(".$moduleName."->mainDependences);" );
+    eval( "$this->addIncludeList(".$moduleName."->mainClientCommon);" );
+    eval( "$this->addIncludeList(".$moduleName."->mainServerCommon);" );
+  }
 
+  function loadCogumeloIncludes() {
+    global $cogumeloIncludesLoaded;
+
+    if( $cogumeloIncludesLoaded != true ) {
+      $this->addIncludeList(Cogumelo::$mainDependences);
+      $this->addIncludeList(Cogumelo::$mainClientCommon);
+      $this->addIncludeList(Cogumelo::$mainServerCommon);
+    }
+
+    $cogumeloIncludesLoaded =  true;
+  }
+
+  function loadAppIncludes() {
+    global $_C;
+    $this->loadCogumeloIncludes();
+    $this->addIncludeList( $_C->mainDependences );
+    $this->addIncludeList( $_C->mainClientCommon );
+    $this->addIncludeList( $_C->$mainServerCommon );
+  }
+
+  function addIncludeList($includes) {
+
+    if( sizeof( $includes ) > 0) {
+      
+      foreach ($includes as $includeElement) {
+        if( is_array($includeElement) ){
+          
+          if( sizeof( $includeElement["load"] ) > 0 ) {
+            foreach( $includeElement["load"] as $includeFile ) { $this->addInclude( $includeFile ) }
+          }
+
+        }
+        else {
+          $this->addInclude( $includeFile );
+        }
+
+      }
+
+    }
+  }
+
+
+  function addInclude( $includeFile ) {
+    if( substr($includeFile, -4) == '.css' || substr($includeFile, -5) == '.less') {
+
+    }
+    else if( substr($includeFile, -3) == '.js' ) {
+
+    }
+    else if( substr($includeFile, -4) == '.php' || substr($includeFile, -4) == '.inc')  {
+      require_once( $includeFile );
+    }
+
+  }
+
+
+
+  function addIncludeCSS( $includeFile ) {
+    global $cogumeloIncludesCSS;
+
+    if( !isset( $cogumeloIncludesCSS ) ) {
+      $cogumeloIncludesCSS = array();
+    }
+
+    if( !in_array($cogumeloIncludesCSS) ) {
+      array_push($cogumeloIncludesCSS, $includeFile);
+    }
+
+  }
+
+  function addIncludeJS( $includeFile ) {
+    global $cogumeloIncludesJS;
+
+    if( !isset( $cogumeloIncludesJS ) ) {
+      $cogumeloIncludesJS = array();
+    }
+
+    if( !in_array($cogumeloIncludesJS) ) {
+      array_push($cogumeloIncludesJS, $includeFile);
+    }
+  }
 }

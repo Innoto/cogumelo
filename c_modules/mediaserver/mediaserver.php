@@ -8,15 +8,6 @@ class mediaserver extends Module
 {
   public $name = "mediaserver";
   public $version = "";
-  public $dependences = array(
-     // BOWER   
-     array(
-       "id" => "jquery",
-       "params" => array("jquery#1.*"),
-       "installer" => "bower",
-       "load" => array("jquery.js")
-     )
- );
 
  
   function __construct() {
