@@ -115,7 +115,7 @@ class CreateForm extends View
       // y lo asociamos
       $form->setValidationObj( $validator );
       
-      $form->setValidationRule( 'lostFrutas', 'inArray', array("Peras", "Naranjas", "Melocotones"));
+      //$form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
       //$form->setValidationRule( 'lostDate', 'dateMin', '2014-09-09' );
       //$form->setValidationRule( 'lostDate2', 'dateMax', '2014-09-09' );
       
