@@ -197,6 +197,23 @@ private function val_inArray( $value, $param ) {
       break;
     }
   }
+  return $validate;
+}
+  
+private function val_notInArray( $value, $param ) {
+  $validate = true;
+
+  $values = $value;
+  if( !is_array( $value ) ) {
+    $values = array( $value );
+  }
+
+  foreach( $values as $val ) {
+    if( in_array( $val, $param ) ) {
+      $validate = false;
+      break;
+    }
+  }
 
   return $validate;
 }

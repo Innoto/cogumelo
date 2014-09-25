@@ -30,7 +30,9 @@ class CreateForm extends View
 
     $form->setField( 'lostName', array( 'placeholder' => 'Nombre', 'value' => 'Un nombre culquiera') );
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
-    $form->setField( 'lostMail', array( 'placeholder' => 'Email', 'value' => 'temp@temp.com') );    
+    $form->setField( 'lostMail', array( 'placeholder' => 'Email', 'value' => 'temp@temp.com') );
+    
+    $form->setField( 'lostFrutas', array( 'placeholder' => 'notInArray', 'label' => 'notInArray', 'value' => 'manzana') );
     
     //$form->setField( 'lostBornDate', array( 'label' => 'Fecha dmy Min', 'placeholder' => 'Fecha', 'value' => '15/11/1987', 'format' => 'datedmy'));
     //$form->setField( 'lostBornDate2', array( 'label' => 'Fecha dmy Max', 'placeholder' => 'Fecha', 'value' => '15/11/2000', 'format' => 'datedmy'));    
@@ -44,7 +46,7 @@ class CreateForm extends View
     $form->setField( 'lostDateTime', array( 'label' => 'Time YmdHms Min', 'placeholder' => 'Hora', 'value' => '2011-10-11 10:11:12', 'format' => 'dateTimeYmdHms'));
     $form->setField( 'lostDateTime2', array( 'label' => 'Time YmdHms Max', 'placeholder' => 'Hora', 'value' => '2011-10-11 10:11:12', 'format' => 'dateTimeYmdHms'));
     
-    $form->setField( 'lostMail', array( 'placeholder' => 'Email') );
+    $form->setField( 'lostMail', array( 'placeholder' => 'Email'));
     $form->setField( 'lostPhone', array( 'placeholder' => 'Phone', 'value' => '666666666') );
     $form->setField( 'lostProvince', array( 'type' => 'select', 'label' => 'Province',
       'options'=> array( '' => 'Selecciona', '1' => 'A coruña', '2' => 'Lugo', '3' => 'Ourense', '4' => 'Pontevedra' )
@@ -55,22 +57,24 @@ class CreateForm extends View
     //$form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => 'He leído y acepto los Términos y Condiciones de uso') );    
     $form->setField( 'lostSubmit', array( 'type' => 'submit', 'value' => 'OK' ) );
 
-    
+    /******************************************************************************************** VALIDATIONS */
     $form->setValidationRule( 'lostName', 'required' );
     //$form->setValidationRule( 'lostConditions', 'required' );
     $form->setValidationRule( 'lostMail', 'required' );
-    $form->setValidationRule( 'lostPhone', 'required' );
+    $form->setValidationRule( 'lostPhone', 'required' );    
+   
+    //$form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
     //$form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
     
     //$form->setValidationRule( 'lostBornDate', 'dateMin', '2014-9-9' );
     //$form->setValidationRule( 'lostBornDate2', 'dateMax', '2014-9-9' );
-    $form->setValidationRule( 'lostDate', 'dateMin', '2014-09-09' );
+    $form->setValidationRule( 'lostDate', 'dateMin', '2014-01-4' );
     $form->setValidationRule( 'lostDate2', 'dateMax', '2014-09-09' );
     
     $form->setValidationRule( 'lostTime', 'timeMin', '9:10:09' );
     $form->setValidationRule( 'lostTime2', 'timeMax', '22:59:59' );
     
-    $form->setValidationRule( 'lostDateTime', 'dateTimeMin', '2014-11-11 9:10:09' );
+    $form->setValidationRule( 'lostDateTime', 'dateTimeMin', '2010-11-11 12:10:09' );
     $form->setValidationRule( 'lostDateTime2', 'dateTimeMax', '2014-07-1 22:59:59' );
     
     
@@ -111,6 +115,7 @@ class CreateForm extends View
       // y lo asociamos
       $form->setValidationObj( $validator );
       
+      $form->setValidationRule( 'lostFrutas', 'inArray', array("Peras", "Naranjas", "Melocotones"));
       //$form->setValidationRule( 'lostDate', 'dateMin', '2014-09-09' );
       //$form->setValidationRule( 'lostDate2', 'dateMax', '2014-09-09' );
       
@@ -131,6 +136,7 @@ class CreateForm extends View
         unset($valuesArray['lostDate2']);
         unset($valuesArray['lostTime2']);
         unset($valuesArray['lostDateTime2']);
+        unset($valuesArray['lostFrutas']);
         $res = $lostControl->create($valuesArray);
       }
       
