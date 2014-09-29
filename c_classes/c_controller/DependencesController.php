@@ -105,6 +105,9 @@ Class DependencesController {
   {
     //Instala las dependecias con Bower
     
+    exec('rm bower.json');
+    exec('echo "{\"name\": \"cogumelo\", \"version\": \"1.0a\", \"homepage\": \"https://github.com/Innoto/cogumelo\", \"license\": \"GPLv2\", \"dependencies\": {} }" > bower.json');
+
     foreach( $dependences as $depKey => $dep ){
       foreach( $dep as $params ){                
         if(count($params) > 1){
