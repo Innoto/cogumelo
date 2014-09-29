@@ -41,8 +41,7 @@ class Module
   public $name = "";
   public $version = "";
   public $dependences = array();
-  public $clientCommon = array();
-  public $serverCommon = array();
+  public $includesCommon = array();
 
 
   /**

@@ -21,6 +21,8 @@ class client extends Module
      "load" => array("jquery-ui.js", "jquery-ui.css")
    )
   );  
+
+  public $includesCommon = array();
     
     
   function __construct() {

@@ -10,7 +10,7 @@ class Cogumelo extends CogumeloClass
       "id" => "jquery1.7",
       "params" => array("jquery#1.7"),
       "installer" => "bower",
-      "load" => array("jquery.js")
+      "includes" => array("jquery.js")
     ),  
     // COMPOSER 
 
@@ -18,9 +18,11 @@ class Cogumelo extends CogumeloClass
       "id" => "simpleExcel",
       "params" => array("faisalman/simple-excel-php" , "dev-master"),
       "installer" => "composer",
-      "load" => array("yii.php")
+      "includes" => array("yii.php")
     )
   );
+
+  public $includesCommon = array();  
   
   
   function __construct() {

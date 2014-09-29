@@ -105,6 +105,9 @@ Class DependencesController {
   {
     //Instala las dependecias con Bower
     
+    exec('rm bower.json');
+    exec('echo "{\"name\": \"cogumelo\", \"version\": \"1.0a\", \"homepage\": \"https://github.com/Innoto/cogumelo\", \"license\": \"GPLv2\", \"dependencies\": {} }" > bower.json');
+
     foreach( $dependences as $depKey => $dep ){
       foreach( $dep as $params ){                
         if(count($params) > 1){
@@ -184,8 +187,8 @@ Class DependencesController {
       foreach ($includes as $includeElement) {
         if( is_array($includeElement) ){
           
-          if( sizeof( $includeElement["load"] ) > 0 ) {
-            foreach( $includeElement["load"] as $includeFile ) { 
+          if( sizeof( $includeElement["includes"] ) > 0 ) {
+            foreach( $includeElement["includes"] as $includeFile ) { 
               $this->addInclude( $includeFile );
             }
           }
