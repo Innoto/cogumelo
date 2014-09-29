@@ -63,7 +63,7 @@ class CreateForm extends View
     $form->setValidationRule( 'lostMail', 'required' );
     $form->setValidationRule( 'lostPhone', 'required' );    
    
-    //$form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
+    $form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
     //$form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
     
     //$form->setValidationRule( 'lostBornDate', 'dateMin', '2014-9-9' );

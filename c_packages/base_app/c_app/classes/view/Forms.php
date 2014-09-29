@@ -73,7 +73,7 @@ class Forms extends View
     '<body>'."\n".
 
     $form->getHtmlForm()."\n".
-    //$form->getHtmlFieldArray( 'check1' )['options']['2']['text'].$form->getHtmlFieldArray( 'check1' )['options']['2']['input']."\n".
+   //$form->getHtmlFieldArray( 'check1' )['options']['2']['text'].$form->getHtmlFieldArray( 'check1' )['options']['2']['input']."\n".
 
     '</body>'."\n".
     '</html>'."\n";
