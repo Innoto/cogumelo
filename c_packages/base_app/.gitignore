@@ -10,8 +10,8 @@ httpdocs/mediaCache/
 httpdocs/vendor/
 httpdocs/vendorServer/
 
-c_app/bower.json
-c_app/composer.json
-c_app/composer.lock
+bower.json
+composer.json
+composer.lock
 
 *.log
