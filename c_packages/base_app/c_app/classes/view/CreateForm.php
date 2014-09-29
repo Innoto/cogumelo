@@ -28,18 +28,26 @@ class CreateForm extends View
 
     $form = new FormController( 'lostForm', '/sendLostForm' ); //actionform
 
-    $form->setField( 'lostName', array( 'placeholder' => 'Nombre') );
+    $form->setField( 'lostName', array( 'placeholder' => 'Nombre', 'value' => 'Un nombre culquiera') );
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
-    $form->setField( 'lostMail', array( 'placeholder' => 'Email') );    
+    $form->setField( 'lostMail', array( 'placeholder' => 'Email', 'value' => 'temp@temp.com') );
     
-    $form->setField( 'lostBornDate', array( 'label' => 'Fecha de nacimiento Min', 'placeholder' => 'Fecha', 'value' => '15/11/1987', 'format' => 'datedma'));
-    $form->setField( 'lostBornDate2', array( 'label' => 'Fecha de nacimiento Max', 'placeholder' => 'Fecha', 'value' => '15/11/2000', 'format' => 'datedma'));    
+    $form->setField( 'lostFrutas', array( 'placeholder' => 'notInArray', 'label' => 'notInArray', 'value' => 'manzana') );
     
-    $form->setField( 'lostDate', array( 'label' => 'Fecha Min', 'placeholder' => 'Fecha', 'value' => '2014-1-9', 'format' => 'dateamd') );
-    $form->setField( 'lostDate2', array( 'label' => 'Fecha Max', 'placeholder' => 'Fecha', 'value' => '2012-11-8', 'format' => 'dateamd')) ;
+    //$form->setField( 'lostBornDate', array( 'label' => 'Fecha dmy Min', 'placeholder' => 'Fecha', 'value' => '15/11/1987', 'format' => 'datedmy'));
+    //$form->setField( 'lostBornDate2', array( 'label' => 'Fecha dmy Max', 'placeholder' => 'Fecha', 'value' => '15/11/2000', 'format' => 'datedmy'));    
     
-    $form->setField( 'lostMail', array( 'placeholder' => 'Email') );
-    $form->setField( 'lostPhone', array( 'placeholder' => 'Phone') );
+    $form->setField( 'lostDate', array( 'label' => 'Fecha Ymd Min', 'placeholder' => 'Fecha', 'value' => '2014-1-9', 'format' => 'dateYmd'));
+    $form->setField( 'lostDate2', array( 'label' => 'Fecha Ymd Max', 'placeholder' => 'Fecha', 'value' => '2012-11-8', 'format' => 'dateYmd'));
+    
+    $form->setField( 'lostTime', array( 'label' => 'Time Hms Min', 'placeholder' => 'Hora', 'value' => '10:11:12', 'format' => 'timeHms'));
+    $form->setField( 'lostTime2', array( 'label' => 'Time Hms Max', 'placeholder' => 'Hora', 'value' => '10:11:12', 'format' => 'timeHms'));    
+    
+    $form->setField( 'lostDateTime', array( 'label' => 'Time YmdHms Min', 'placeholder' => 'Hora', 'value' => '2011-10-11 10:11:12', 'format' => 'dateTimeYmdHms'));
+    $form->setField( 'lostDateTime2', array( 'label' => 'Time YmdHms Max', 'placeholder' => 'Hora', 'value' => '2011-10-11 10:11:12', 'format' => 'dateTimeYmdHms'));
+    
+    $form->setField( 'lostMail', array( 'placeholder' => 'Email'));
+    $form->setField( 'lostPhone', array( 'placeholder' => 'Phone', 'value' => '666666666') );
     $form->setField( 'lostProvince', array( 'type' => 'select', 'label' => 'Province',
       'options'=> array( '' => 'Selecciona', '1' => 'A coruña', '2' => 'Lugo', '3' => 'Ourense', '4' => 'Pontevedra' )
     ) );        
@@ -48,19 +56,26 @@ class CreateForm extends View
     $form->setField( 'lostPassword2', array( 'type' => 'password', 'placeholder' => 'Repeat password' ) );      
     //$form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => 'He leído y acepto los Términos y Condiciones de uso') );    
     $form->setField( 'lostSubmit', array( 'type' => 'submit', 'value' => 'OK' ) );
-    $form->setField( 'lostSubmit2', array( 'type' => 'submit', 'value' => 'OK2' ) );
 
-    
+    /******************************************************************************************** VALIDATIONS */
     $form->setValidationRule( 'lostName', 'required' );
     //$form->setValidationRule( 'lostConditions', 'required' );
     $form->setValidationRule( 'lostMail', 'required' );
-    $form->setValidationRule( 'lostPhone', 'required' );
-    $form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
+    $form->setValidationRule( 'lostPhone', 'required' );    
+   
+    //$form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
+    //$form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
     
-    $form->setValidationRule( 'lostBornDate', 'dateMin', '2014-9-9' );
-    $form->setValidationRule( 'lostBornDate2', 'dateMax', '2014-9-9' );
-    $form->setValidationRule( 'lostDate', 'dateMin', '2014-9-9' );
-    $form->setValidationRule( 'lostDate2', 'dateMax', '2014-9-9' );
+    //$form->setValidationRule( 'lostBornDate', 'dateMin', '2014-9-9' );
+    //$form->setValidationRule( 'lostBornDate2', 'dateMax', '2014-9-9' );
+    $form->setValidationRule( 'lostDate', 'dateMin', '2014-01-4' );
+    $form->setValidationRule( 'lostDate2', 'dateMax', '2014-09-09' );
+    
+    $form->setValidationRule( 'lostTime', 'timeMin', '9:10:09' );
+    $form->setValidationRule( 'lostTime2', 'timeMax', '22:59:59' );
+    
+    $form->setValidationRule( 'lostDateTime', 'dateTimeMin', '2010-11-11 12:10:09' );
+    $form->setValidationRule( 'lostDateTime2', 'dateTimeMax', '2014-07-1 22:59:59' );
     
     
     $form->saveToSession();
@@ -99,6 +114,11 @@ class CreateForm extends View
       $validator = new FormValidators();
       // y lo asociamos
       $form->setValidationObj( $validator );
+      
+      //$form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
+      //$form->setValidationRule( 'lostDate', 'dateMin', '2014-09-09' );
+      //$form->setValidationRule( 'lostDate2', 'dateMax', '2014-09-09' );
+      
       $form->validateForm();
       $jvErrors = $form->getJVErrors();
 
@@ -110,7 +130,13 @@ class CreateForm extends View
         unset($valuesArray['cgIntFrmId']);
         unset($valuesArray['lostPassword2']);
         unset($valuesArray['lostSubmit']);
-        unset($valuesArray['lostSubmit2']);
+        unset($valuesArray['lostDate']);
+        unset($valuesArray['lostTime']);
+        unset($valuesArray['lostDateTime']);
+        unset($valuesArray['lostDate2']);
+        unset($valuesArray['lostTime2']);
+        unset($valuesArray['lostDateTime2']);
+        unset($valuesArray['lostFrutas']);
         $res = $lostControl->create($valuesArray);
       }
       

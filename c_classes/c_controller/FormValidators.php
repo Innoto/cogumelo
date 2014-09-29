@@ -116,21 +116,28 @@ private function val_dateISO( $value ) {
 }
   
 private function val_dateMin( $value, $param ) {  
-  return (strtotime($value) < strtotime($param));
-} 
-  
-private function val_dateMax( $value, $param ) {
   return (strtotime($value) > strtotime($param));
 } 
   
-private function val_timeMin( $value, $param ) {
+private function val_dateMax( $value, $param ) {
   return (strtotime($value) < strtotime($param));
+} 
+  
+private function val_timeMin( $value, $param ) {
+  return (strtotime($value) > strtotime($param));
 }
   
 private function val_timeMax( $value, $param ) {
   return (strtotime($value) < strtotime($param));
-}  
+}
   
+private function val_dateTimeMin( $value, $param ) {
+  return (strtotime($value) > strtotime($param));
+}
+  
+private function val_dateTimeMax( $value, $param ) {
+  return (strtotime($value) < strtotime($param));
+}    
   
 private function val_number( $value ) {
   return preg_match( '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/',
@@ -186,6 +193,23 @@ private function val_inArray( $value, $param ) {
 
   foreach( $values as $val ) {
     if( !in_array( $val, $param ) ) {
+      $validate = false;
+      break;
+    }
+  }
+  return $validate;
+}
+  
+private function val_notInArray( $value, $param ) {
+  $validate = true;
+
+  $values = $value;
+  if( !is_array( $value ) ) {
+    $values = array( $value );
+  }
+
+  foreach( $values as $val ) {
+    if( in_array( $val, $param ) ) {
       $validate = false;
       break;
     }

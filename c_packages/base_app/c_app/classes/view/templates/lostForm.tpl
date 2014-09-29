@@ -12,6 +12,7 @@
     <script src="/js/jquery-validation/numberEU.js"></script>
     <script src="/js/jquery-validation/timeMaxMin.js"></script>
     <script src="/js/jquery-validation/dateMaxMin.js"></script>
+    <script src="/js/jquery-validation/dateTimeMaxMin.js"></script>
     <!-- script>$.validator.setDefaults( { submitHandler: function(){ alert("submitted!"); } } );</script -->
     <style> label.error{ color:red; } </style>
   </head>

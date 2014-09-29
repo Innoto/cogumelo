@@ -54,14 +54,7 @@
         case 'createTables': // create database tables
           createTables();
           echo "\nGenerated db tables\n";
-        break;  
-
-        case 'flush': // delete temporary files
-           exec('sudo chown -R $USER:www-data c_app');
-           exec('chmod -R gu+rwX,o+rX c_app/tmp');
-           exec('rm c_app/tmp/templates_c/*');
-           echo "\nTemporary files deleted!\n";
-        break;  
+        break;    
 
         case 'bckDB': // do the backup of the db
           if ($argc>2){
@@ -90,14 +83,18 @@
 
             $dependencesControl = new DependencesController();
             $dependencesControl->installDependences();
+        break; 
+
+        /* We execute this two actions from web as we need to operate with the apache permissions*/
+        case 'flush': // delete temporary files
+           exec('wget -q --spider http://cogumelo/cogumelo-script.php?q=flush');
+           echo "Temporary files deleted!\n";
         break;    
 
-        break;   
-
         case 'rotateLogs': 
-            rotateLogs();
+            exec('wget -q --spider cogumelo/cogumelo-script.php?q=logs');
+            echo "The logs have been stored\n";
         break;  
-
 
         default:
           echo "Invalid parameter;try: 
@@ -138,8 +135,6 @@
   }
 
   function setPermissions(){
-
-    // falta comprobar se existen os directorios antes de crealos
 
     if (!is_dir('c_app/tmp'))
       exec('mkdir c_app/tmp');
@@ -247,14 +242,6 @@
 
       // Return the password
       return $password;
-  }
-  
-  function rotateLogs(){
-    exec('gzip -c c_app/log/cogumelo.log > c_app/backups/'.date('Ymd-Hms').'-cogumelo.log.gz');
-    exec('gzip -c c_app/log/cogumelo_error.log > c_app/backups/'.date('Ymd-Hms').'-cogumelo_error.log.gz');
-    exec('gzip -c c_app/log/cogumelo_debug.log > c_app/backups/'.date('Ymd-Hms').'-cogumelo_debug.log.gz');
-    echo "\nLogs rotated\n";
-  }
-  
+  }  
 
 ?>
