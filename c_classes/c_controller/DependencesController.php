@@ -41,6 +41,9 @@ Class DependencesController {
       $this->pushDependences($dependences);
     }    
 
+    //Cargamos dependencias de Cogumelo class
+    $this->pushDependences(Cogumelo::$mainDependences);
+
     //Cargamos las dependencias de Base App (externas a los modulos).
     global $_C;
     $this->pushDependences($_C->dependences);
@@ -182,7 +185,9 @@ Class DependencesController {
         if( is_array($includeElement) ){
           
           if( sizeof( $includeElement["load"] ) > 0 ) {
-            foreach( $includeElement["load"] as $includeFile ) { $this->addInclude( $includeFile ) }
+            foreach( $includeElement["load"] as $includeFile ) { 
+              $this->addInclude( $includeFile );
+            }
           }
 
         }
@@ -198,10 +203,10 @@ Class DependencesController {
 
   function addInclude( $includeFile ) {
     if( substr($includeFile, -4) == '.css' || substr($includeFile, -5) == '.less') {
-
+      $this->addIncludeCSS( $includeFile );
     }
     else if( substr($includeFile, -3) == '.js' ) {
-
+      $this->addIncludeJS( $includeFile );
     }
     else if( substr($includeFile, -4) == '.php' || substr($includeFile, -4) == '.inc')  {
       require_once( $includeFile );
@@ -223,6 +228,7 @@ Class DependencesController {
     }
 
   }
+  
 
   function addIncludeJS( $includeFile ) {
     global $cogumeloIncludesJS;

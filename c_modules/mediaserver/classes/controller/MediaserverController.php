@@ -63,7 +63,7 @@ class MediaserverController {
 
       }
       else {
-        Cogumelo::debug("Mediaserver, serving: ".$this->realFilePath);
+        Cogumelo::debug("Mediaserver, serving file: ".$this->realFilePath);
 
         if( (substr($this->urlPath, -4) == '.css' || substr($this->urlPath, -3) == '.js' ) && MEDIASERVER_MINIMIFY_FILES ) {
           $this->copyAndMoveFile( true ); // copy and mofe with MINIFY
