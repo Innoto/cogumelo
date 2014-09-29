@@ -187,8 +187,8 @@ Class DependencesController {
       foreach ($includes as $includeElement) {
         if( is_array($includeElement) ){
           
-          if( sizeof( $includeElement["load"] ) > 0 ) {
-            foreach( $includeElement["load"] as $includeFile ) { 
+          if( sizeof( $includeElement["includes"] ) > 0 ) {
+            foreach( $includeElement["includes"] as $includeFile ) { 
               $this->addInclude( $includeFile );
             }
           }

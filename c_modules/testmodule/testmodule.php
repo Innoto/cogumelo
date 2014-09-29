@@ -8,6 +8,7 @@ class testmodule extends Module
   public $name = "test";
   public $version = "";
   public $dependences = array();
+  public $includesCommon = array();
   
   function __construct() {
     $this->addUrlPatterns( '#^cousa/vo/?$#', 'view:Cousadmin::vo' );
