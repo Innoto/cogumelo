@@ -6,13 +6,14 @@ Cogumelo::load('c_controller/ModuleController');
 Class DependencesController {
 
 
+  //
+  //  Vendor lib resolution
+  //
+  var $allDependencesComposer = array();
+  var $allDependencesBower = array();
+
   function installDependences()
   {
-    global $allDependencesBower; 
-    $allDependencesBower = array();
-    global $allDependencesComposer;
-    $allDependencesComposer = array();
-
     $this->loadDependences();    
     //Descomentar para ver las depen a instalar 
     //error_log( print_r( "ALLBOWER", true));
@@ -20,8 +21,8 @@ Class DependencesController {
     //error_log( print_r( "ALLCOMPOSER", true));
     //error_log( print_r( $allDependencesComposer, true));
 
-    $this->installDependencesBower($allDependencesBower);
-    $this->installDependencesComposer($allDependencesComposer);    
+    $this->installDependencesBower($this->allDependencesBower);
+    $this->installDependencesComposer($this->allDependencesComposer);    
   }
   
   function loadDependences(){
@@ -39,6 +40,9 @@ Class DependencesController {
       
       $this->pushDependences($dependences);
     }    
+
+    //Cargamos dependencias de Cogumelo class
+    $this->pushDependences(Cogumelo::$mainDependences);
 
     //Cargamos las dependencias de Base App (externas a los modulos).
     global $_C;
@@ -70,30 +74,29 @@ Class DependencesController {
   
   function pushDependencesComposer($dependence)
   {
-    global $allDependencesComposer;
-    if(!array_key_exists($dependence['id'], $allDependencesComposer)){
-      $allDependencesComposer[$dependence['id']] = array($dependence['params']);
+
+    if(!array_key_exists($dependence['id'], $this->allDependencesComposer)){
+      $this->allDependencesComposer[$dependence['id']] = array($dependence['params']);
     }
     else{
-      $diffAllDepend = array_diff($dependence['params'] , $allDependencesComposer[$dependence['id']][0]); 
+      $diffAllDepend = array_diff($dependence['params'] , $this->allDependencesComposer[$dependence['id']][0]); 
 
       if(!empty($diffAllDepend)){
-        array_push($allDependencesComposer[$dependence['id']], array_diff($dependence['params'] , $allDependencesComposer[$dependence['id']][0])  );
+        array_push($this->allDependencesComposer[$dependence['id']], array_diff($dependence['params'] , $this->allDependencesComposer[$dependence['id']][0])  );
       }          
     }
   }
   
   function pushDependencesBower($dependence)
   {
-    global $allDependencesBower;
-    if(!array_key_exists($dependence['id'], $allDependencesBower)){
-      $allDependencesBower[$dependence['id']] = array($dependence['params']);
+    if(!array_key_exists($dependence['id'], $this->allDependencesBower)){
+      $this->allDependencesBower[$dependence['id']] = array($dependence['params']);
     }
     else{
-      $diffAllDepend = array_diff($dependence['params'] , $allDependencesBower[$dependence['id']][0]); 
+      $diffAllDepend = array_diff($dependence['params'] , $this->allDependencesBower[$dependence['id']][0]); 
 
       if(!empty($diffAllDepend)){
-        array_push($allDependencesBower[$dependence['id']], array_diff($dependence['params'] , $allDependencesBower[$dependence['id']][0])  );
+        array_push($this->allDependencesBower[$dependence['id']], array_diff($dependence['params'] , $this->allDependencesBower[$dependence['id']][0])  );
       }          
     }
   }
@@ -141,4 +144,101 @@ Class DependencesController {
     
   }
 
+
+  //
+  //  Includes
+  //
+
+
+  function loadModuleIncludes($moduleName) {
+    $this->loadCogumeloIncludes();
+    eval( "$this->addIncludeList(".$moduleName."->mainDependences);" );
+    eval( "$this->addIncludeList(".$moduleName."->mainClientCommon);" );
+    eval( "$this->addIncludeList(".$moduleName."->mainServerCommon);" );
+  }
+
+  function loadCogumeloIncludes() {
+    global $cogumeloIncludesLoaded;
+
+    if( $cogumeloIncludesLoaded != true ) {
+      $this->addIncludeList(Cogumelo::$mainDependences);
+      $this->addIncludeList(Cogumelo::$mainClientCommon);
+      $this->addIncludeList(Cogumelo::$mainServerCommon);
+    }
+
+    $cogumeloIncludesLoaded =  true;
+  }
+
+  function loadAppIncludes() {
+    global $_C;
+    $this->loadCogumeloIncludes();
+    $this->addIncludeList( $_C->mainDependences );
+    $this->addIncludeList( $_C->mainClientCommon );
+    $this->addIncludeList( $_C->$mainServerCommon );
+  }
+
+  function addIncludeList($includes) {
+
+    if( sizeof( $includes ) > 0) {
+      
+      foreach ($includes as $includeElement) {
+        if( is_array($includeElement) ){
+          
+          if( sizeof( $includeElement["load"] ) > 0 ) {
+            foreach( $includeElement["load"] as $includeFile ) { 
+              $this->addInclude( $includeFile );
+            }
+          }
+
+        }
+        else {
+          $this->addInclude( $includeFile );
+        }
+
+      }
+
+    }
+  }
+
+
+  function addInclude( $includeFile ) {
+    if( substr($includeFile, -4) == '.css' || substr($includeFile, -5) == '.less') {
+      $this->addIncludeCSS( $includeFile );
+    }
+    else if( substr($includeFile, -3) == '.js' ) {
+      $this->addIncludeJS( $includeFile );
+    }
+    else if( substr($includeFile, -4) == '.php' || substr($includeFile, -4) == '.inc')  {
+      require_once( $includeFile );
+    }
+
+  }
+
+
+
+  function addIncludeCSS( $includeFile ) {
+    global $cogumeloIncludesCSS;
+
+    if( !isset( $cogumeloIncludesCSS ) ) {
+      $cogumeloIncludesCSS = array();
+    }
+
+    if( !in_array($cogumeloIncludesCSS) ) {
+      array_push($cogumeloIncludesCSS, $includeFile);
+    }
+
+  }
+  
+
+  function addIncludeJS( $includeFile ) {
+    global $cogumeloIncludesJS;
+
+    if( !isset( $cogumeloIncludesJS ) ) {
+      $cogumeloIncludesJS = array();
+    }
+
+    if( !in_array($cogumeloIncludesJS) ) {
+      array_push($cogumeloIncludesJS, $includeFile);
+    }
+  }
 }

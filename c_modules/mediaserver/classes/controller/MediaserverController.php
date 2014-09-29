@@ -10,6 +10,32 @@ class MediaserverController {
   var $moduleName = false;
   var $modulePath = '';
 
+
+
+  static $mainDependences = array(
+    // BOWER   
+    array(
+       "id" => "jquery",
+       "params" => array("jquery#1.*"),
+       "installer" => "bower",
+       "load" => array("jquery.js")
+    ),
+
+    // COMPOSER
+    array(
+      "id" => "kint",
+      "params" => array("raveren/kint","1.0.*@dev"),
+      "installer" => "composer",
+      "load" => array("Kint.class.php")
+    )
+  );
+
+  static $mainClientCommon = array(  
+  );
+
+  static $mainServerCommon = array(
+  );
+
   /**
   * Process path to serve media resource. It will move and 
   * redirect resource to final path.

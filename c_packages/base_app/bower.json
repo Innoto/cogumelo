@@ -1,13 +1,8 @@
 {
   "name": "cogumelo",
-  "version": "0.0.0",
+  "version": "1.0a",
   "homepage": "https://github.com/Innoto/cogumelo",
-  "license": "MIT",
+  "license": "GPLv2",
   "dependencies": {
-    "jquery": "1.*",
-    "jquery-ui": "~1.11.1",
-    "jquery2": "jquery#2.*",
-    "bootstrap": "~3.2.0",
-    "jquery1.7": "jquery#1.7"
   }
 }

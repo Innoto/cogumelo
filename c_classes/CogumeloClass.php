@@ -12,6 +12,24 @@ class CogumeloClass extends Singleton
 
   protected $userinfoString = '';
 
+
+  // main dependences for cogumelo framework
+  static $mainDependences = array(
+
+  );
+
+  // common client includes for cogumelo framework
+  static $mainClientCommon = array(  
+
+  );
+
+  // common server includes for cogumelo framework
+  static $mainServerCommon = array(
+  );
+
+
+
+
   static function get(){
     return parent::getInstance('Cogumelo');
   }
