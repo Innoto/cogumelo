@@ -10,5 +10,5 @@ httpdocs/mediaCache/
 httpdocs/vendor/
 httpdocs/vendorServer/
 
-
+*.json
 *.log
