@@ -20,8 +20,7 @@ function setValidateForm( idForm, rules, messages ) {
         .done( function ( response ) {
           console.log( response );
           if( response.success == 'success' ) {
-            console.log( 'OK' );
-            alert( 'PREMIO!!!  Todo OK ;-)' );
+            
           }
           else {
             console.log( 'ERROR' );

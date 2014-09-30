@@ -12,7 +12,8 @@ class Cogumelo extends CogumeloClass
     parent::__construct();
     
     /*createForm*/
-    $this->addUrlPatterns( '#^lostForm#', 'view:CreateForm::lostForm' );    
+    $this->addUrlPatterns( '#^lostForm$#', 'view:CreateForm::lostForm' );    
+    $this->addUrlPatterns( '#^lostForm/u/(.*)#', 'view:CreateForm::updateLostForm' );           
     $this->addUrlPatterns( '#^sendLostForm#', 'view:CreateForm::sendLostForm' );
     
     

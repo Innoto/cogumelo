@@ -24,11 +24,24 @@ class CreateForm extends View
 
 
   
-  function lostForm() {
-
+  function updateLostForm( $idParam = '' ){
+    $lostControl = new LostController();
+    $dataVO = $lostControl->find( $idParam );
+    
+    if(!$dataVO){
+    
+    }else{
+      $this->lostForm( $dataVO );
+    }    
+  }
+  
+  function lostForm( $dataVO = '' ) {
+        
+    var_dump($dataVO);
+    
     $form = new FormController( 'lostForm', '/sendLostForm' ); //actionform
 
-    $form->setField( 'lostName', array( 'placeholder' => 'Nombre', 'value' => 'Un nombre culquiera') );
+    $form->setField( 'lostName', array( 'placeholder' => 'Nombre', 'value' => ""));
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
     $form->setField( 'lostMail', array( 'placeholder' => 'Email', 'value' => 'temp@temp.com') );
     
@@ -55,7 +68,7 @@ class CreateForm extends View
     $form->setField( 'lostPassword', array( 'type' => 'password', 'placeholder' => 'Password' ) );
     $form->setField( 'lostPassword2', array( 'type' => 'password', 'placeholder' => 'Repeat password' ) );      
     //$form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => 'He leído y acepto los Términos y Condiciones de uso') );    
-    $form->setField( 'lostSubmit', array( 'type' => 'submit', 'value' => 'OK' ) );
+    $form->setField( 'lostSubmit', array( 'type' => 'submit', 'value' => 'Guardar' ) );
 
     /******************************************************************************************** VALIDATIONS */
     $form->setValidationRule( 'lostName', 'required' );
