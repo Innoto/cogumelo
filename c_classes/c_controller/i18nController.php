@@ -7,7 +7,7 @@
 */
 
 
-C_ClassLoader::Load('c_vendor/gettext/gettext.php');
+C_ClassLoader::Load('vendor/gettext/gettext.php');
 
 class C_i18n {
 	

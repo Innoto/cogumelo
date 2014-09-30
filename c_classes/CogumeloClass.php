@@ -30,8 +30,13 @@ class CogumeloClass extends Singleton
        "params" => array("smarty/smarty", "3.1.19"),
        "installer" => "composer",
        "includes" => array("")
+     ),
+     array(
+       "id" => "gettext",
+       "params" => array("gettext/gettext", "1.1.2"),
+       "installer" => "composer",
+       "includes" => array("")
      )     
-     
   );
 
   // common client and server includes for cogumelo framework
@@ -70,10 +75,6 @@ class CogumeloClass extends Singleton
   //
   static function load($classname) {
 
-    if(preg_match('#^c_vendor/#', $classname)){
-      $file_path = COGUMELO_LOCATION.'/c_vendor/'.preg_replace('#^c_vendor/#', '', $classname);
-    }
-    else
     if(preg_match('#^c_#', $classname)){
       $filename =  $classname . '.php';
       $file_path = COGUMELO_LOCATION.'/c_classes/'.$filename;

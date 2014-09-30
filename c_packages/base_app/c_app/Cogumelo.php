@@ -4,26 +4,9 @@
 class Cogumelo extends CogumeloClass
 {
 
-  public $dependences = array(
-    // BOWER   
-    array(
-      "id" => "jquery1.7",
-      "params" => array("jquery#1.7"),
-      "installer" => "bower",
-      "includes" => array("jquery.js")
-    ),  
-    // COMPOSER 
-
-    array(
-      "id" => "simpleExcel",
-      "params" => array("faisalman/simple-excel-php" , "dev-master"),
-      "installer" => "composer",
-      "includes" => array("yii.php")
-    )
-  );
-
+  public $dependences = array();
   public $includesCommon = array();  
-  
+
   
   function __construct() {
     parent::__construct();
