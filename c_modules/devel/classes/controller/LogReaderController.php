@@ -30,14 +30,21 @@ class LogReaderController
     }else{
       if(isset($_SESSION['log_session_'.$name_file])){
           $data = stream_get_contents($handle, -1, $_SESSION['log_session_'.$name_file]);
-          $data = nl2br($data);
+          
+          $data = explode('<br />' , nl2br($data) );
+          unset($data[0]);        
+          $data = array_values($data); 
+          $data = array_reverse($data);
+          $data = implode('<br />' , $data);
+      
       }else{
           fseek ( $handle, ($lines * -230), SEEK_END );
           $data = stream_get_contents($handle, -1);                
           $data = explode('<br />' , nl2br($data) );
           unset($data[0]);
+        
           $data = array_values($data); 
-          $data = array_reverse($data);
+          //$data = array_reverse($data);
           $data = implode('<br />' , $data);
       }
     }        
