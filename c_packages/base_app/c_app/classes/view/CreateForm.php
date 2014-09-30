@@ -29,7 +29,7 @@ class CreateForm extends View
     $dataVO = $lostControl->find( $idParam );
     
     if(!$dataVO){
-    
+      Cogumelo::redirect(SITE_URL.'lostForm');
     }else{
       $this->lostForm( $dataVO );
     }    
@@ -41,7 +41,7 @@ class CreateForm extends View
     
     $form = new FormController( 'lostForm', '/sendLostForm' ); //actionform
 
-    $form->setField( 'lostName', array( 'placeholder' => 'Nombre', 'value' => ""));
+    $form->setField( 'lostName', array( 'placeholder' => 'Nombre', 'value' => '' ));
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
     $form->setField( 'lostMail', array( 'placeholder' => 'Email', 'value' => 'temp@temp.com') );
     
