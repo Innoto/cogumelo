@@ -1,7 +1,7 @@
 <?php
 
-Cogumelo::load('vendor/jdorn/sql-formatter/lib/SqlFormatter.php');
-Cogumelo::load('vendor/raveren/kint/Kint.class.php');
+Cogumelo::vendorLoad('jdorn/sql-formatter/lib/SqlFormatter.php');
+Cogumelo::vendorLoad('raveren/kint/Kint.class.php');
 Cogumelo::load('c_view/View');
 devel::load('controller/LogReaderController');
 devel::load('controller/DevelDBController');

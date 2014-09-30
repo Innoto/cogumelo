@@ -71,18 +71,15 @@ class CogumeloClass extends Singleton
 
 
   //
-  //  Auto include
+  //  include
   //
   static function load($classname) {
 
-    if(preg_match('#^c_#', $classname)){
+    if( preg_match('#^c_#', $classname) ){
       $filename =  $classname . '.php';
       $file_path = COGUMELO_LOCATION.'/c_classes/'.$filename;
     }
-    else
-    if(preg_match('#^vendor/#', $classname)){
-      $file_path = SITE_PATH.$classname;
-    }
+
     else {
       $filename =  $classname . '.php';
       $file_path = SITE_PATH. 'classes/'. $filename;
@@ -95,6 +92,14 @@ class CogumeloClass extends Singleton
     else {
       require_once $file_path;
     }
+  }
+
+
+  //
+  //  include Vendor libs
+  //
+  static function vendorLoad($loadFile) {
+    require_once SITE_PATH.'../httpdocs/vendorServer/'.$loadFile;
   }
 
 

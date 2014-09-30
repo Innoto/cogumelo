@@ -1,8 +1,8 @@
 <?php
 
-Cogumelo::load('vendor/smarty/smarty/libs/Smarty.class.php');
-Cogumelo::load('vendor/jsmin/jsmin.php');
-Cogumelo::load('vendor/cssmin/cssmin.php');
+Cogumelo::vendorLoad('smarty/smarty/distribution/libs/Smarty.class.php');
+Cogumelo::vendorLoad('linkorb/jsmin-php/src/jsmin-1.1.1.php');
+Cogumelo::vendorLoad('natxet/CssMin/src/CssMin.php');
 Cogumelo::load('c_controller/ModuleController');
 
 //

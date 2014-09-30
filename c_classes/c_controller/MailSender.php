@@ -30,7 +30,7 @@ USA.
 * @author: pablinhob
 */
 
-Cogumelo::Load('vendor/phpmailer/class.phpmailer.php');
+Cogumelo::vendorLoad('phpmailer/phpmailer/class.phpmailer.php');
 
 
 Class MailSender 
