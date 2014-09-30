@@ -73,7 +73,7 @@ class RequestController
     // if is last request and any pattern found
     if( $this->is_last_request ) {
       Cogumelo::error("URI not found ".$_SERVER['REQUEST_URI']);
-      self::Redirect(SITE_URL_CURRENT.'404');
+      self::redirect(SITE_URL_CURRENT.'404');
     }
     else {
       $this->leftover_url = $this->url_path;
@@ -100,7 +100,7 @@ class RequestController
   }
 
 
-  public static function Redirect($redirect_url) {
+  public static function redirect($redirect_url) {
     header("HTTP/1.1 301 Moved Permanently");
     header("Location: {$redirect_url}");
     exit;

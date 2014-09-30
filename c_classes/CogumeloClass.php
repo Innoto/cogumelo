@@ -103,6 +103,14 @@ class CogumeloClass extends Singleton
   }
 
 
+  // 
+  //  Redirect (alias for RequestController::redirect )
+  //
+  static function redirect( $redirect_url ) {
+    RequestController::redirect( $redirect_url );
+  }
+
+
   //
   //  Error Handler
   //
