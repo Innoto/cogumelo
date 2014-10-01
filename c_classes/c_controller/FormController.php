@@ -379,6 +379,10 @@ class FormController implements Serializable {
     $value = isset( $this->postValues[ $fieldName ] ) ? $this->postValues[ $fieldName ] : null;
     return $value;
   }
+  
+  public function setFieldValue( $fieldName, $fieldValue ){
+  
+  }
 
   public function isRequiredField( $fieldName ) {
     return isset( $this->rules[ $fieldName ][ 'required' ] );
