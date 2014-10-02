@@ -37,7 +37,6 @@ class CreateForm extends View
   
   function lostForm( $dataVO = '' ) {
         
-    var_dump($dataVO);
     
     $form = new FormController( 'lostForm', '/sendLostForm' ); //actionform
 
@@ -90,6 +89,8 @@ class CreateForm extends View
     $form->setValidationRule( 'lostDateTime', 'dateTimeMin', '2010-11-11 12:10:09' );
     $form->setValidationRule( 'lostDateTime2', 'dateTimeMax', '2014-07-1 22:59:59' );
     
+    
+$form->setValuesVO($dataVO);   
     
     $form->saveToSession();
     

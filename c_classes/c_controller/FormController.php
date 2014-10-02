@@ -349,6 +349,10 @@ class FormController implements Serializable {
   }// fuction getValuesArray
 
 
+  public function setValuesVO( $dataVO ){
+    var_dump(get_class($dataVO));
+    var_dump($dataVO->getKeys());
+  }
 
 
 
@@ -381,7 +385,7 @@ class FormController implements Serializable {
   }
   
   public function setFieldValue( $fieldName, $fieldValue ){
-  
+    $this->fields[ $fieldName ]['value'] = $fieldValue;
   }
 
   public function isRequiredField( $fieldName ) {
