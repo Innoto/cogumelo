@@ -106,14 +106,12 @@ class FormsTestV2 extends View
       // y lo asociamos
       $form->setValidationObj( $validator );
 
+
       // CAMBIANDO AS REGLAS
       $form->setValidationRule( 'input1', 'minlength', '3' );
       $form->setValidationRule( 'input2', 'maxlength', '8' );
-      //$form->setValidationRule( 'check1', 'required' );
+      $form->setValidationRule( 'check1', 'required' );
 
-      // REGLAS:
-      // 'input1', 'required' - 'numberEU'
-      // 'input2', 'required' - 'minlength', '8'
 
       $form->validateForm();
 
