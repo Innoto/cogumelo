@@ -19,24 +19,24 @@ class CogumeloClass extends Singleton
 
   // main dependences for cogumelo framework
   static $mainDependences = array(
-     array(
-       "id" => "phpmailer",
-       "params" => array("phpmailer/phpmailer", "5.2.9"),
-       "installer" => "composer",
-       "includes" => array("")
-     ),
-     array(
-       "id" => "smarty",
-       "params" => array("smarty/smarty", "3.1.19"),
-       "installer" => "composer",
-       "includes" => array("")
-     ),
-     array(
-       "id" => "gettext",
-       "params" => array("gettext/gettext", "1.1.2"),
-       "installer" => "composer",
-       "includes" => array("")
-     )     
+    array(
+      "id" => "phpmailer",
+      "params" => array("phpmailer/phpmailer", "5.2.9"),
+      "installer" => "composer",
+      "includes" => array("")
+    ),
+    array(
+      "id" => "smarty",
+      "params" => array("smarty/smarty", "3.1.18"),
+      "installer" => "composer",
+      "includes" => array("")
+    ),
+    array(
+      "id" => "gettext",
+      "params" => array("gettext/gettext", "1.1.2"),
+      "installer" => "composer",
+      "includes" => array("")
+    )
   );
 
   // common client and server includes for cogumelo framework
@@ -103,7 +103,7 @@ class CogumeloClass extends Singleton
   }
 
 
-  // 
+  //
   //  Redirect (alias for RequestController::redirect )
   //
   static function redirect( $redirect_url ) {
@@ -160,15 +160,15 @@ class CogumeloClass extends Singleton
 
     // Rodeo para evitar "PHP Notice:  Use of undefined constant MOD_DEVEL_URL_DIR"
     $arrayDefines = get_defined_constants();
-    if( 
-      $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/read_logs' && 
+    if(
+      $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/read_logs' &&
       $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/get_debugger'
     ) {
       $ignore = true;
     }
 
     if( $ignore ) {
- 
+
       error_log(
         '['. date('y-m-d H:i:s',time()) .'] ' .
         '['. $_SERVER['REMOTE_ADDR'] .'] ' .
