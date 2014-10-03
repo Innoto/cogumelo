@@ -189,6 +189,9 @@ class FormController implements Serializable {
       case 'textarea':
         $html .= $htmlFieldArray['inputOpen'] . $htmlFieldArray['value'] . $htmlFieldArray['inputClose'];
         break;
+      case 'reserved':
+      
+        break;
       default:
         $html .= $htmlFieldArray['input'];
         break;
@@ -288,7 +291,10 @@ class FormController implements Serializable {
         $html['value'] = isset( $field['value'] ) ? $field['value'] : '';
         $html['inputClose'] = '</textarea>';
         break;
-
+      
+      case 'reserved':
+      
+        break;
       //case 'file':
       //  break;
 
