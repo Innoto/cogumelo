@@ -350,8 +350,12 @@ class FormController implements Serializable {
 
 
   public function setValuesVO( $dataVO ){
-    var_dump(get_class($dataVO));
+    var_dump(gettype($dataVO));
     var_dump($dataVO->getKeys());
+    foreach( $dataVO->getKeys() as $keyVO){
+      $this->fields[ $keyVO ]['value'] = $dataVO->getter($keyVO);
+    }
+    
   }
 
 
