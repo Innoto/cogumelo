@@ -350,12 +350,11 @@ class FormController implements Serializable {
 
 
   public function setValuesVO( $dataVO ){
-    var_dump(gettype($dataVO));
-    var_dump($dataVO->getKeys());
-    foreach( $dataVO->getKeys() as $keyVO){
-      $this->fields[ $keyVO ]['value'] = $dataVO->getter($keyVO);
-    }
-    
+    if(gettype($dataVO) == "object"){
+      foreach( $dataVO->getKeys() as $keyVO){
+        $this->setFieldValue( $keyVO, $dataVO->getter($keyVO));
+      }      
+    }    
   }
 
 
@@ -389,7 +388,9 @@ class FormController implements Serializable {
   }
   
   public function setFieldValue( $fieldName, $fieldValue ){
-    $this->fields[ $fieldName ]['value'] = $fieldValue;
+    if(array_key_exists($fieldName, $this->fields)){
+      $this->fields[ $fieldName ]['value'] = $fieldValue;
+    }
   }
 
   public function isRequiredField( $fieldName ) {
