@@ -3,9 +3,9 @@
 Cogumelo::load("c_controller/Module");
 
 
-class formsmodule extends Module
+class formmodule extends Module
 {
-  public $name = "forms";
+  public $name = "form";
   public $version = "";
   public $dependences = array();
   public $includesCommon = array();

@@ -1,7 +1,7 @@
 <?php
 
 
-class FormsController implements Serializable {
+class FormController implements Serializable {
 
   private $name = false;
   private $id = false;
