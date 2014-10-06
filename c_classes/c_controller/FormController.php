@@ -115,7 +115,12 @@ class FormController implements Serializable {
 
 
   public function loadPostValues( $formPost ) {
-    $this->postValues = $formPost;
+    $this->postValues = $formPost;        
+    foreach($formPost as $key => $val ){     
+      if(array_key_exists( $key, $this->fields )){
+        $this->fields[$key]['value'] = $val;
+      }         
+    }    
   }
 
   public function getIntFrmId() {
@@ -351,9 +356,22 @@ class FormController implements Serializable {
 
 
   public function getValuesArray(){
-    return $this->postValues;
+    $fieldsValuesArray = array();
+    $fieldsNamesArray = $this->getFieldsNamesArray();
+    foreach( $fieldsNamesArray => $val ){
+      array_push($fieldsValuesArray, $this->fields[$val]['value']);
+    } 
+    return $fieldsValuesArray;
+    
   }// fuction getValuesArray
-
+  
+  public function getFieldsNamesArray(){
+    $fieldsNamesArray = array();   
+    foreach( $this->fields, $key => $val ){
+       array_push( $fieldsNamesArray, $key);
+    }      
+    return $fieldNamesArray;
+  }
 
   public function setValuesVO( $dataVO ){
     if(gettype($dataVO) == "object"){
@@ -388,8 +406,13 @@ class FormController implements Serializable {
     return $value;
   }
 
-  public function getFieldValue( $fieldName ) {
-    $value = isset( $this->postValues[ $fieldName ] ) ? $this->postValues[ $fieldName ] : null;
+  public function getFieldValue( $fieldName ) {        
+    if(array_key_exists( $fieldName, $this->fields )){
+      $value = isset( $this->fields[ $fieldName ]['value'] ) ? $this->fields[ $fieldName ]['value'] : false;
+    }
+    else{
+      $value = null;
+    }    
     return $value;
   }
   
