@@ -46,11 +46,13 @@ class FormsTestV2 extends View
       ) );
     $form->setField( 'submit', array( 'type' => 'submit', 'label' => 'Pulsa para enviar', 'value' => 'Manda' ) );
 
-    $form->setValidationRule( 'input1', 'required' );
-    $form->setValidationRule( 'input1', 'numberEU' );
+    //$form->setValidationRule( 'input1', 'required' );
+    //$form->setValidationRule( 'input1', 'numberEU' );
     //$form->setValidationRule( 'input1', 'regex', '^\d+$' );
-    $form->setValidationRule( 'input2', 'required' );
-    $form->setValidationRule( 'input2', 'minlength', '8' );
+
+    //$form->setValidationRule( 'input2', 'required' );
+    //$form->setValidationRule( 'input2', 'minlength', '8' );
+
     //$form->setValidationRule( 'select1', 'equalTo', '#input1' );
     //$form->setValidationRule( 'check1', 'required' );
 
@@ -63,7 +65,7 @@ class FormsTestV2 extends View
     '  <script src="/js/jquery.min.js"></script>'."\n".
     '  <script src="/js/jquery-cogumelo-forms.js"></script>'."\n".
     '  <script src="/js/jquery.serializeFormToObject.js"></script>'."\n".
-    '  <script src="/js/jquery-validation/jquery.validate.min.js"></script>'."\n".
+    '  <script src="/js/jquery-validation/jquery.validate.js"></script>'."\n".
     '  <script src="/js/jquery-validation/additional-methods.min.js"></script>'."\n".
     '  <script src="/js/jquery-validation/inArray.js"></script>'."\n".
     '  <script src="/js/jquery-validation/regex.js"></script>'."\n".
@@ -84,7 +86,7 @@ class FormsTestV2 extends View
 
   function actionForm() {
     error_log( '--------------------------------' );error_log( '--------------------------------' );
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( 'FormsTestV2: actionForm');
     error_log( '--------------------------------' );error_log( '--------------------------------' );
 
     $formError = false;
@@ -108,8 +110,11 @@ class FormsTestV2 extends View
 
 
       // CAMBIANDO AS REGLAS
+      $form->setValidationRule( 'input1', 'required' );
+      $form->setValidationRule( 'input2', 'required' );
       $form->setValidationRule( 'input1', 'minlength', '3' );
       $form->setValidationRule( 'input2', 'maxlength', '8' );
+      $form->setValidationRule( 'select1', 'required' );
       $form->setValidationRule( 'check1', 'required' );
 
 

@@ -76,9 +76,8 @@ private function val_required( $value ) {
     $validate = ( sizeof( $value ) > 0 );
   }
   else {
-    $validate = ( $value !== '' );
+    $validate = ( $value !== false && $value !== '' );
   }
-  // required implemented in FormController
   return $validate;
 }
 
@@ -107,6 +106,9 @@ private function val_url( $value ) {
 }
 
 private function val_date( $value ) {
+  /*
+   *
+  */
   return false;
 }
 
@@ -114,31 +116,31 @@ private function val_dateISO( $value ) {
   return preg_match( '/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/',
     $value ) === 1;
 }
-  
-private function val_dateMin( $value, $param ) {  
+
+private function val_dateMin( $value, $param ) {
   return (strtotime($value) > strtotime($param));
-} 
-  
+}
+
 private function val_dateMax( $value, $param ) {
   return (strtotime($value) < strtotime($param));
-} 
-  
+}
+
 private function val_timeMin( $value, $param ) {
   return (strtotime($value) > strtotime($param));
 }
-  
+
 private function val_timeMax( $value, $param ) {
   return (strtotime($value) < strtotime($param));
 }
-  
+
 private function val_dateTimeMin( $value, $param ) {
   return (strtotime($value) > strtotime($param));
 }
-  
+
 private function val_dateTimeMax( $value, $param ) {
   return (strtotime($value) < strtotime($param));
-}    
-  
+}
+
 private function val_number( $value ) {
   return preg_match( '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/',
     $value ) === 1;
@@ -155,6 +157,9 @@ private function val_digits( $value ) {
 }
 
 private function val_creditcard( $value ) {
+  /*
+   *
+  */
   return false;
 }
 
@@ -199,7 +204,7 @@ private function val_inArray( $value, $param ) {
   }
   return $validate;
 }
-  
+
 private function val_notInArray( $value, $param ) {
   $validate = true;
 
