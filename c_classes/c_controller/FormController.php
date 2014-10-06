@@ -358,8 +358,8 @@ class FormController implements Serializable {
   public function getValuesArray(){
     $fieldsValuesArray = array();
     $fieldsNamesArray = $this->getFieldsNamesArray();
-    foreach( $fieldsNamesArray => $val ){
-      array_push($fieldsValuesArray, $this->fields[$val]['value']);
+    foreach( $fieldsNamesArray as $val ){
+      $fieldsValuesArray[$val] = $this->getFieldValue($val);
     } 
     return $fieldsValuesArray;
     
@@ -367,10 +367,10 @@ class FormController implements Serializable {
   
   public function getFieldsNamesArray(){
     $fieldsNamesArray = array();   
-    foreach( $this->fields, $key => $val ){
+    foreach( $this->fields as $key => $val ){
        array_push( $fieldsNamesArray, $key);
     }      
-    return $fieldNamesArray;
+    return $fieldsNamesArray;
   }
 
   public function setValuesVO( $dataVO ){
