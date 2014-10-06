@@ -385,12 +385,31 @@ class FormControllerV2 implements Serializable {
     return $value;
   }
 
+  public function isEmptyFieldValue( $fieldName ) {
+    $empty = true;
+    $value = $this->getFieldValue( $fieldName );
+    $type = $this->getFieldType( $fieldName );
+
+    if( is_array( $value ) ) {
+      $empty = ( sizeof( $value ) <= 0 );
+    }
+    else {
+      $empty = ( $value === false || $value === '' );
+    }
+
+    return $empty;
+  }
+
   public function setFieldValue( $fieldName, $fieldValue ){
 
   }
 
   public function isRequiredField( $fieldName ) {
     return isset( $this->rules[ $fieldName ][ 'required' ] );
+  }
+
+  public function evaluateRule( $ruleName, $value, $fieldName, $ruleParams ) {
+    return $this->validationObj->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
   }
 
 
@@ -427,19 +446,19 @@ class FormControllerV2 implements Serializable {
           //$value = $this->getFieldValue( $fieldName );
           error_log( 'validando '.$fieldName.' = '.print_r( $value, true ) );
 
-          if( !$this->isRequiredField( $fieldName ) && ( $value === false || $value === '' ) ) {
-            error_log( 'evaluateRule: Vacio e non required' );
-            $fieldValidateValue = true;
-          }
-
-          if( $this->isRequiredField( $fieldName ) && $value === false ) {
-            error_log( 'evaluateRule: Required e false' );
-            $this->rulesErrors[ $fieldName ][ 'required' ] = false;
-            $fieldValidateValue = false;
-          }
-
-          if( $this->isRequiredField( $fieldName ) && $value !== false ) {
-            error_log( 'evaluateRule: Required e non false - Evaluar contido coas reglas...' );
+          if( $this->isEmptyFieldValue( $fieldName ) ) {
+            if( $this->isRequiredField( $fieldName ) ) {
+              error_log( 'evaluateRule: VACIO e required = fallo' );
+              $this->rulesErrors[ $fieldName ][ 'required' ] = false;
+              $fieldValidateValue = false;
+            }
+            else {
+              error_log( 'evaluateRule: VACIO e non required = ok' );
+              $fieldValidateValue = true;
+            }
+          } // if( $this->isEmptyFieldValue( $fieldName ) )
+          else {
+            error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
             $fieldValidateValue = true;
             foreach( $fieldRules as $ruleName => $ruleParams ) {
               error_log( 'evaluateRule( '.$ruleName.', '.print_r( $value, true ).', '.$fieldName.', '.$ruleParams.' )' );
@@ -448,7 +467,7 @@ class FormControllerV2 implements Serializable {
                 $fieldRuleValidate = ( $value === $this->getFieldValue( $ruleParams ) );
               }
               else {
-                $fieldRuleValidate = $this->validationObj->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
+                $fieldRuleValidate = $this->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
               }
               error_log( 'evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
 
@@ -458,7 +477,8 @@ class FormControllerV2 implements Serializable {
 
               $fieldValidateValue = $fieldValidateValue && $fieldRuleValidate;
             } // foreach( $fieldRules as $ruleName => $ruleParams )
-          }
+
+          } // else if( $this->isEmptyFieldValue( $fieldName ) )
 
           $fieldValidated = $fieldValidated && $fieldValidateValue;
         } // foreach( $fieldValues as $value )
