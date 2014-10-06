@@ -20,7 +20,7 @@ function setValidateForm( idForm, rules, messages ) {
         .done( function ( response ) {
           console.log( response );
           if( response.success == 'success' ) {
-            
+
           }
           else {
             console.log( 'ERROR' );
@@ -29,12 +29,13 @@ function setValidateForm( idForm, rules, messages ) {
             for(var i in response.jvErrors) {
               errObj = response.jvErrors[i];
               console.log( errObj );
-
               if ( errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] === '' ) {
-                errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] = $validateForm.defaultMessage( errObj['fieldName'], errObj['msgRule'] )( errObj['ruleParams'] );
+                $defMess = $validateForm.defaultMessage( errObj['fieldName'], errObj['msgRule'] );
+                if( $.isFunction( $defMess ) ) {
+                  $defMess = $defMess( errObj['ruleParams'] );
+                }
+                errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] = $defMess;
               }
-              console.log( errObj[ 'JVshowErrors' ] );
-
               $validateForm.showErrors( errObj[ 'JVshowErrors' ] );
             };
             if( response.formError !== '' ) $validateForm.showErrors( {"submit": response.formError} );
@@ -44,15 +45,6 @@ function setValidateForm( idForm, rules, messages ) {
         return false; // required to block normal submit since you used ajax
       }
   });
-  /*
-  if( count( $this->rules ) > 0 ) {
-    rules: json_encode( $this->rules );
-  }
-
-  if( count( $this->messages ) > 0 ) {
-    messages: json_encode( $this->messages );
-  }
-  */
 
   console.log( $validateForm );
   return $validateForm
