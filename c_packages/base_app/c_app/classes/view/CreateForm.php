@@ -37,10 +37,11 @@ class CreateForm extends View
   
   function lostForm( $dataVO = '' ) {
         
-    var_dump($dataVO);
     
     $form = new FormController( 'lostForm', '/sendLostForm' ); //actionform
 
+    $form->setField( 'id', array( 'type' => 'reserved' ));
+        
     $form->setField( 'lostName', array( 'placeholder' => 'Nombre', 'value' => '' ));
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
     $form->setField( 'lostMail', array( 'placeholder' => 'Email', 'value' => 'temp@temp.com') );
@@ -90,6 +91,8 @@ class CreateForm extends View
     $form->setValidationRule( 'lostDateTime', 'dateTimeMin', '2010-11-11 12:10:09' );
     $form->setValidationRule( 'lostDateTime2', 'dateTimeMax', '2014-07-1 22:59:59' );
     
+    
+    $form->setValuesVO($dataVO);   
     
     $form->saveToSession();
     

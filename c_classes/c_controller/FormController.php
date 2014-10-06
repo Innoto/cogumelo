@@ -189,6 +189,9 @@ class FormController implements Serializable {
       case 'textarea':
         $html .= $htmlFieldArray['inputOpen'] . $htmlFieldArray['value'] . $htmlFieldArray['inputClose'];
         break;
+      case 'reserved':
+      
+        break;
       default:
         $html .= $htmlFieldArray['input'];
         break;
@@ -288,7 +291,10 @@ class FormController implements Serializable {
         $html['value'] = isset( $field['value'] ) ? $field['value'] : '';
         $html['inputClose'] = '</textarea>';
         break;
-
+      
+      case 'reserved':
+      
+        break;
       //case 'file':
       //  break;
 
@@ -349,6 +355,13 @@ class FormController implements Serializable {
   }// fuction getValuesArray
 
 
+  public function setValuesVO( $dataVO ){
+    if(gettype($dataVO) == "object"){
+      foreach( $dataVO->getKeys() as $keyVO){
+        $this->setFieldValue( $keyVO, $dataVO->getter($keyVO));
+      }      
+    }    
+  }
 
 
 
@@ -381,7 +394,9 @@ class FormController implements Serializable {
   }
   
   public function setFieldValue( $fieldName, $fieldValue ){
-  
+    if(array_key_exists($fieldName, $this->fields)){
+      $this->fields[ $fieldName ]['value'] = $fieldValue;
+    }
   }
 
   public function isRequiredField( $fieldName ) {
