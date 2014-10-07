@@ -46,12 +46,14 @@ class FormsTestV2 extends View
       ) );
     $form->setField( 'submit', array( 'type' => 'submit', 'label' => 'Pulsa para enviar', 'value' => 'Manda' ) );
 
-    //$form->setValidationRule( 'input1', 'required' );
+    $form->setValidationRule( 'input1', 'required' );
     //$form->setValidationRule( 'input1', 'numberEU' );
     //$form->setValidationRule( 'input1', 'regex', '^\d+$' );
 
-    //$form->setValidationRule( 'input2', 'required' );
+    $form->setValidationRule( 'input2', 'required' );
     //$form->setValidationRule( 'input2', 'minlength', '8' );
+
+    $form->setValidationRule( 'select1', 'required' );
 
     //$form->setValidationRule( 'select1', 'equalTo', '#input1' );
     //$form->setValidationRule( 'check1', 'required' );
@@ -71,12 +73,21 @@ class FormsTestV2 extends View
     '  <script src="/js/jquery-validation/regex.js"></script>'."\n".
     '  <script src="/js/jquery-validation/numberEU.js"></script>'."\n".
     '  <!-- script>$.validator.setDefaults( { submitHandler: function(){ alert("submitted!"); } } );</script -->'."\n".
-    '  <style>div { border:1px dashed; margin:5px; } label.error{ color:red; }</style>'."\n".
+    '  <style>div { border:1px dashed; margin:5px; } label.error, .formError{ color:red; border:2px solid red; }</style>'."\n".
     '</head>'."\n".
     '<body>'."\n".
 
-    $form->getHtmlForm()."\n".
-   //$form->getHtmlFieldArray( 'check1' )['options']['2']['text'].$form->getHtmlFieldArray( 'check1' )['options']['2']['input']."\n".
+    $form->getHtmpOpen()."\n".
+    $form->getHtmlFields()."\n".
+
+//$form->getHtmlFieldArray( 'check1' )['options']['2']['text'].$form->getHtmlFieldArray( 'check1' )['options']['2']['input']."\n".
+'<div id="JQVMC-meu2-error">errores meu2... </div>'."\n".
+'<div id="JQVMC-ungrupo-error">errores ungrupo... </div>'."\n".
+'<div id="JQVMC-manual">errores manuales... </div>'."\n".
+'<div class="JQVMC-formError">errores formError... </div>'."\n".
+
+    $form->getHtmlClose()."\n".
+    $form->getJqueryValidationJS()."\n".
 
     '</body>'."\n".
     '</html>'."\n";
@@ -110,19 +121,27 @@ class FormsTestV2 extends View
 
 
       // CAMBIANDO AS REGLAS
-      $form->setValidationRule( 'input1', 'required' );
-      $form->setValidationRule( 'input2', 'required' );
+      //$form->setValidationRule( 'input1', 'required' );
+      //$form->setValidationRule( 'input2', 'required' );
+
+      $form->setValidationRule( 'input1', 'numberEU' );
       $form->setValidationRule( 'input1', 'minlength', '3' );
-      $form->setValidationRule( 'input2', 'maxlength', '8' );
+      $form->setValidationRule( 'input2', 'maxlength', '3' );
       $form->setValidationRule( 'select1', 'required' );
       $form->setValidationRule( 'check1', 'required' );
 
 
       $form->validateForm();
 
+      //$form->addJVError( 'manual', 'Ola meu... ERROR ;-)' );
+
       $jvErrors = $form->getJVErrors();
 
+
       if( sizeof( $jvErrors ) > 0 ) {
+        $form->addJVError( 'formError', 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.' );
+        $form->addJVError( 'sinSitioDefinido', 'Error a lo loco :D' );
+        $jvErrors = $form->getJVErrors();
         echo json_encode(
           array(
             'success' => 'error',

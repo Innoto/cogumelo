@@ -19,6 +19,7 @@ class FormControllerV2 implements Serializable {
   //private $evaluateRuleMethod = false;
   private $validationObj = null;
   private $rulesErrors = array();
+  private $formErrors = array();
 
 
 
@@ -375,6 +376,10 @@ class FormControllerV2 implements Serializable {
     $this->validationObj = $validationObj;
   }
 
+  public function issetValidationObj() {
+    return( $this->validationObj !== null );
+  }
+
   public function getFieldType( $fieldName ) {
     $value = $this->fields[ $fieldName ][ 'type' ];
     return $value;
@@ -420,17 +425,13 @@ class FormControllerV2 implements Serializable {
    * @param mixed $param (optinal)
    * @return bool $validate
    **/
-  public function validateForm( $formPost = false ) {
+  public function validateForm() {
     error_log( 'validateForm:' );
 
     $formValidated = true;
 
-    if( $formPost ) {
-      $this->loadPostValues( $formPost );
-    }
-
     // Tienen que existir los validadores y los valores del form
-    if( is_object( $this->validationObj ) && $this->postValues!==false ) {
+    if( $this->issetValidationObj() ) {
       foreach( $this->rules as $fieldName => $fieldRules ) {
         $fieldValidated = true;
         $fieldType = $this->getFieldType( $fieldName );
@@ -461,7 +462,7 @@ class FormControllerV2 implements Serializable {
             error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
             $fieldValidateValue = true;
             foreach( $fieldRules as $ruleName => $ruleParams ) {
-              error_log( 'evaluateRule( '.$ruleName.', '.print_r( $value, true ).', '.$fieldName.', '.$ruleParams.' )' );
+              error_log( 'evaluateRule( '.$ruleName.', '.$value.', '.$fieldName.', '.$ruleParams.' )' );
 
               if( $ruleName === 'equalTo' ) {
                 $fieldRuleValidate = ( $value === $this->getFieldValue( $ruleParams ) );
@@ -486,76 +487,19 @@ class FormControllerV2 implements Serializable {
         $formValidated = $formValidated && $fieldValidated;
       } // foreach( $this->rules as $fieldName => $fieldRules )
 
-    } // if( is_object( $this->validationObj ) && $this->postValues!==false )
+    } // if( $this->issetValidationObj() )
     else {
       $formValidated = false;
-      error_log( 'FALTA CARGAR EL POST DEL FORM O LOS VALIDADORES' );
+      error_log( 'FALTA CARGAR LOS VALIDADORES' );
     }
 
     return $formValidated;
   } // function validateForm( $formPost = false )
 
 
-
-  /*
-  public function validateForm( $formPost = false ) {
-    error_log( 'validateForm:' );
-
-    $validate = true;
-
-    if( $formPost ) {
-      $this->loadPostValues( $formPost );
-    }
-
-    // Tienen que existir los validadores y los valores del form
-    if( is_object( $this->validationObj ) && $this->postValues!==false ) {
-      foreach( $this->rules as $fieldName => $fieldRules ) {
-        $fieldValidate = false;
-        $value = $this->getFieldValue( $fieldName );
-
-        error_log( 'validando '.$fieldName.' = '.print_r( $value, true ) );
-        if( $value === '' && !$this->isRequiredField( $fieldName ) ) {
-          $fieldValidate = true;
-        }
-        else {
-          $fieldValidate = true;
-          foreach( $fieldRules as $ruleName => $ruleParams ) {
-
-            error_log( 'evaluateRule( '.$ruleName.', '.print_r( $value, true ).', '.$fieldName.', '.$ruleParams.' )' );
-
-            if( $ruleName === 'equalTo' ) {
-              $fieldRuleValidate = ( $value === $this->getFieldValue( $ruleParams ) );
-            }
-            else {
-              $fieldRuleValidate = $this->validationObj->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
-            }
-            error_log( print_r( $fieldRuleValidate, true ) );
-
-            $this->rulesErrors[ $fieldName ][ $ruleName ] = $fieldRuleValidate;
-            if( !$fieldRuleValidate ) {
-              $fieldValidate = false;
-              break;
-            }
-          }
-        }
-
-        if( !$fieldValidate ) {
-          $validate = false;
-        }
-
-      } // foreach( $this->rules as $fieldName => $fieldRules )
-    } // if( is_object( $this->validationObj ) && $this->postValues!==false )
-    else {
-      $validate = false;
-      error_log( 'FALTA CARGAR EL POST DEL FORM O LOS VALIDADORES' );
-    }
-
-    return $validate;
-  } // function validateForm( $formPost = false )
-  */
-
-
-
+  public function addJVError( $msgClass, $msgText ) {
+    $this->formErrors[] = array( 'msgClass' => $msgClass, 'msgText' => $msgText );
+  }
 
 
   public function getJVErrors() {
@@ -570,6 +514,10 @@ class FormControllerV2 implements Serializable {
           $errors[] = array( 'fieldName' => $fieldName, 'msgRule' => $ruleName, 'ruleParams' => $ruleParams, 'JVshowErrors' => array( $fieldName => $msgRule ) );
         }
       }
+    }
+
+    foreach( $this->formErrors as $formError ) {
+      $errors[] = array( 'fieldName' => false, 'JVshowErrors' => $formError );
     }
 
     return $errors;
