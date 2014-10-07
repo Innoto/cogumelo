@@ -16,12 +16,6 @@ class devel extends Module
      "installer" => "bower",
      "includes" => array("jquery.js")
    ),
-  array(
-     "id" => "jquery2",
-     "params" => array("jquery#2.*"),
-     "installer" => "bower",
-     "includes" => array("jquery.js")
-   ),  
    array(
      "id" => "bootstrap",
      "params" => array("bootstrap"),

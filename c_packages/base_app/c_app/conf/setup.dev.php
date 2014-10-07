@@ -80,7 +80,7 @@ define('MEDIASERVER_COMPILE_LESS', true);
 //
 
 global $C_ENABLED_MODULES;
-$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'testmodule', 'client', 'devel');
+$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'testmodule', 'client', 'form', 'devel');
 
 
 //

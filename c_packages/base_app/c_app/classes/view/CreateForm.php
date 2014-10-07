@@ -143,6 +143,7 @@ class CreateForm extends View
         $lostControl = new LostController();
         $valuesArray = $form->getValuesArray();
         
+        //BUG VO en cuanto no ignore campos no declarados en el VO
         unset($valuesArray['cgIntFrmId']);
         unset($valuesArray['lostPassword2']);
         unset($valuesArray['lostSubmit']);
@@ -153,7 +154,16 @@ class CreateForm extends View
         unset($valuesArray['lostTime2']);
         unset($valuesArray['lostDateTime2']);
         unset($valuesArray['lostFrutas']);
-        $res = $lostControl->create($valuesArray);
+        
+        
+        if($valuesArray['id'] !== false){
+          //UPDATE
+          $res = $lostControl->update($valuesArray);
+        }
+        else{
+          //CREATE
+          $res = $lostControl->create($valuesArray);
+        }      
       }
       
       if( sizeof( $jvErrors ) > 0 ) {
