@@ -44,7 +44,7 @@ class DevelView extends View
   function main($url_path=''){
     $this->template->setTpl('develpage.tpl', 'devel');
     $this->template->addClientScript('js/devel.js', 'devel');
-    $this->template->addCss('styles/devel.css', 'devel');
+    $this->template->addClientStyles('styles/devel.css', 'devel');
     $this->logs();
     $this->infoSetup();
     $this->DBSQL();

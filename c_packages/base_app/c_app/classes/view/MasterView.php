@@ -29,8 +29,6 @@ class MasterView extends View
 
     devel::autoIncludes();
 
-
-
     $this->common();
     $this->template->exec();
 
@@ -40,7 +38,7 @@ class MasterView extends View
     $this->template->setTpl('default.tpl');
     //$this->template->addClientScript('vendorLib/jQuery.js' , 'client');
     //$this->template->addClientScript('vendorLib/less.js', 'client');
-    $this->template->addClientStyles('styles/client.css', 'client');
+    //$this->template->addClientStyles('styles/client.css', 'client');
   }
 
   function page404() {
