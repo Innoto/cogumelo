@@ -25,18 +25,20 @@ Class Template extends Smarty
     $this->cache_dir = SMARTY_CACHE;
   }
 
-  function addJs($file_path, $module = false)  {
+  function addClientScript($file_path, $module = false)  {
 
-    if($module)
+    if($module){
       $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/module/'.$module.'/';
-    else
+    }
+    else{
       $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/';
+    }
 
     $this->js_includes .= "\n".'<script type="text/javascript" src="'.$base_path.$file_path.'"></script>';
   }
 
 
-  function addCss($file_path, $module = false) {
+  function addClientStyles($file_path, $module = false) {
     if($module)
       $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/module/'.$module.'/';
     else

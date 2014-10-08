@@ -208,20 +208,17 @@ Class DependencesController {
           foreach( $includeElement['includes'] as $includeFile ) { 
             $type = $this->typeIncludeFile( $includeFile );
 
-            echo "VendorIncludes ";
             if( $type == 'serverScript' ) {
               require_once( SITE_PATH.'../httpdocs/vendorServer/'.$include_folder.'/'.$includeFile );
             }
             else
             if( $type == 'clientScript' ) {
-              echo MEDIASERVER_HOST.'vendor/'.$include_folder.'/'.$includeFile ;
+              $this->addIncludeJS( MEDIASERVER_HOST.'vendor/'.$include_folder.'/'.$includeFile );
             }
             else
             if( $type == 'styles' ) {
-              echo MEDIASERVER_HOST.'vendor/'.$include_folder.'/'.$includeFile ;
+              $this->addIncludeJS( MEDIASERVER_HOST.'vendor/'.$include_folder.'/'.$includeFile );
             }
-
-            echo "<br>";
           }
         }
       }
@@ -285,7 +282,7 @@ Class DependencesController {
   }
 
 
-/*
+
   function addIncludeCSS( $includeFile ) {
     global $cogumeloIncludesCSS;
 
@@ -293,7 +290,7 @@ Class DependencesController {
       $cogumeloIncludesCSS = array();
     }
 
-    if( !in_array($cogumeloIncludesCSS) ) {
+    if( !in_array($includeFile, $cogumeloIncludesCSS) ) {
       array_push($cogumeloIncludesCSS, $includeFile);
     }
 
@@ -307,8 +304,8 @@ Class DependencesController {
       $cogumeloIncludesJS = array();
     }
 
-    if( !in_array($cogumeloIncludesJS) ) {
+    if( !in_array($includeFile, $cogumeloIncludesJS) ) {
       array_push($cogumeloIncludesJS, $includeFile);
     }
-  }*/
+  }
 }
