@@ -69,7 +69,7 @@ class ModuleController
       $modulo = new $module_name();
       $this->request = new RequestController( $modulo->getUrlPatternsToArray(), $this->url_path, $this->module_paths[$module_name] );
       $this->url_path = $this->request->getLeftoeverUrl();
-      Cogumelo::debug("Reading Url Patterns from: ".$module_name);
+      Cogumelo::debug("Reading UrlPatterns from: ".$module_name);
     }
   }
 
