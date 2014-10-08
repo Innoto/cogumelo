@@ -21,10 +21,10 @@ class MasterView extends View
   }
 
   function master($urlPath=''){
-
+/*
     $dependencesControl = new DependencesController();
     $dependencesControl->loadModuleIncludes('devel');
-
+*/
     $this->common();
     $this->template->exec();
   }
