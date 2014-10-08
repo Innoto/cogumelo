@@ -3,16 +3,20 @@
   <head>
     <title>FORMs con Cogumelo</title>
     <script src="/js/jquery.min.js"></script>
+  
     <script src="/js/jquery-cogumelo-forms.js"></script>
     <script src="/js/jquery.serializeFormToObject.js"></script>
+    
     <script src="/js/jquery-validation/jquery.validate.min.js"></script>
     <script src="/js/jquery-validation/additional-methods.min.js"></script>
+    
     <script src="/js/jquery-validation/inArray.js"></script>
     <script src="/js/jquery-validation/regex.js"></script>
     <script src="/js/jquery-validation/numberEU.js"></script>
     <script src="/js/jquery-validation/timeMaxMin.js"></script>
     <script src="/js/jquery-validation/dateMaxMin.js"></script>
     <script src="/js/jquery-validation/dateTimeMaxMin.js"></script>
+    
     <!-- script>$.validator.setDefaults( { submitHandler: function(){ alert("submitted!"); } } );</script -->
     <style> label.error{ color:red; } </style>
   </head>
