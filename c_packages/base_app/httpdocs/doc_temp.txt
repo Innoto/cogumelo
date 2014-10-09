@@ -1,0 +1,36 @@
+Recordar que necesitamos tener instalado en el equipo tanto git como svn.
+
+1- Paso debemos instalar NPM y nodejs sino lo tenemos instalado para poder continuar con la instalacion de bower
+sudo apt-get install nodejs-legacy 
+sudo apt-get install npm 
+
+(version de npm = 1.3.10)(version de nodejs = v0.10.25)
+
+Instalamos bower:
+sudo npm install -g bower
+
+En el caso que tengamos problemas al ejecutar bower con la version de nodejs y npm seguir estos otros pasos:
+
+sudo apt-get install python g++ make
+sudo add-apt-repository ppa:chris-lea/node.js
+sudo apt-get update
+sudo apt-get install nodejs
+(version de npm = 1.4.3)(version de nodejs = v0.10.26)
+
+Nosotros preferimos la primera opción si esta correcta porque mantenemos los paquetes de sistema.
+
+Volvemos ejecutar la instalación de bower
+sudo npm install -g bower
+
+
+2-Composer ya esta instalado en el proyecto no es necesario instalarlo. De todas formas lo dejo las lineas de instalacion 
+
+-Instalando composer
+
+curl -sS https://getcomposer.org/installer | php
+
+Or if you don't have curl:
+php -r "readfile('https://getcomposer.org/installer');" | php
+
+
+Para cualquier error de composer a la hora de descargar una dependencia de cogumelo aconsejamos ejecutar a mano "php composer.phar update" si estais en la raiz del proyecto o "composer update" si lo teneis instalado en el sistema.
