@@ -19,8 +19,8 @@ class TestmoduleView extends View
 
   function inicio() {
     $this->template->setTpl("test.tpl", 'testmodule');
-    $this->template->addCss("styles/common.css", 'testmodule');
-    $this->template->addCss("styles/common2.css", 'testmodule');
+    $this->template->addClientStyles("styles/common.css", 'testmodule');
+    $this->template->addClientStyles("styles/common2.css", 'testmodule');
     $this->template->exec();
   }
 }

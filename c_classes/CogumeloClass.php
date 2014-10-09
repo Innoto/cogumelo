@@ -2,6 +2,8 @@
 
 require_once(COGUMELO_LOCATION.'/c_classes/c_controller/Singleton.php');
 require_once(COGUMELO_LOCATION.'/c_classes/c_controller/ModuleController.php');
+require_once(COGUMELO_LOCATION.'/c_classes/c_controller/DependencesController.php');
+
 
 class CogumeloClass extends Singleton
 {
@@ -19,30 +21,31 @@ class CogumeloClass extends Singleton
 
   // main dependences for cogumelo framework
   static $mainDependences = array(
-    array(
-      "id" => "phpmailer",
-      "params" => array("phpmailer/phpmailer", "5.2.9"),
-      "installer" => "composer",
-      "includes" => array("")
-    ),
-    array(
-      "id" => "smarty",
-      "params" => array("smarty/smarty", "3.1.18"),
-      "installer" => "composer",
-      "includes" => array("")
-    ),
-    array(
-      "id" => "gettext",
-      "params" => array("gettext/gettext", "1.1.2"),
-      "installer" => "composer",
-      "includes" => array("")
-    )
+
+     array(
+       "id" => "phpmailer",
+       "params" => array("phpmailer/phpmailer", "5.2.9"),
+       "installer" => "composer",
+       "includes" => array("class.phpmailer.php")
+     ),
+     array(
+       "id" => "smarty",
+       "params" => array("smarty/smarty", "3.1.19"),
+       "installer" => "composer",
+       "includes" => array()
+     ),
+     array(
+       "id" => "gettext",
+       "params" => array("gettext/gettext", "1.1.2"),
+       "installer" => "composer",
+       "includes" => array()
+     )     
   );
 
-  // common client and server includes for cogumelo framework
-  static $mainIncludesCommon = array();
+  // Set autoincludes 
+  static function autoIncludes() {
 
-
+  }
 
 
   static function get(){

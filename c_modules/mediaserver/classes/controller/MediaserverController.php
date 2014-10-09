@@ -1,6 +1,7 @@
 <?php
 
-Cogumelo::load('c_vendor/jsmin/jsmin.php');
+Cogumelo::vendorLoad('linkorb/jsmin-php/src/jsmin-1.1.1.php');
+Cogumelo::vendorLoad('natxet/CssMin/src/CssMin.php');
 
 class MediaserverController {
 

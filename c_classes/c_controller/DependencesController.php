@@ -1,6 +1,6 @@
 <?php
 
-Cogumelo::load('c_controller/ModuleController');
+
 
 
 Class DependencesController {
@@ -14,6 +14,9 @@ Class DependencesController {
 
   function installDependences()
   {
+
+    Cogumelo::load('c_controller/ModuleController');
+
     $this->loadDependences();    
     //Descomentar para ver las depen a instalar 
     //error_log( print_r( "ALLBOWER", true));
@@ -154,94 +157,171 @@ Class DependencesController {
 
 
   function loadModuleIncludes($moduleName) {
+
+    Cogumelo::load('c_controller/ModuleController');
+    ModuleController::getRealFilePath( $moduleName.'.php', $moduleName );
+
     $this->loadCogumeloIncludes();
-    eval( "$this->addIncludeList(".$moduleName."->mainDependences);" );
-    eval( "$this->addIncludeList(".$moduleName."->mainClientCommon);" );
-    eval( "$this->addIncludeList(".$moduleName."->mainServerCommon);" );
+
+    $moduleInstance = new $moduleName();
+
+    $this->addVendorIncludeList($moduleInstance->dependences);
+    $this->addIncludeList($moduleInstance->includesCommon, $moduleName );
+  }
+
+  function loadAppIncludes() {
+    global $_C;
+
+    $this->loadCogumeloIncludes();
+    $this->addVendorIncludeList( $_C->dependences );
+    $this->addIncludeList( $_C->includesCommon );
   }
 
   function loadCogumeloIncludes() {
     global $cogumeloIncludesLoaded;
 
     if( $cogumeloIncludesLoaded != true ) {
-      $this->addIncludeList(Cogumelo::$mainDependences);
-      $this->addIncludeList(Cogumelo::$mainClientCommon);
-      $this->addIncludeList(Cogumelo::$mainServerCommon);
+      $this->addVendorIncludeList(Cogumelo::$mainDependences);
     }
 
     $cogumeloIncludesLoaded =  true;
   }
 
-  function loadAppIncludes() {
-    global $_C;
-    $this->loadCogumeloIncludes();
-    $this->addIncludeList( $_C->mainDependences );
-    $this->addIncludeList( $_C->mainClientCommon );
-    $this->addIncludeList( $_C->$mainServerCommon );
-  }
 
-  function addIncludeList($includes) {
+
+  function addVendorIncludeList( $includes ) {
 
     if( sizeof( $includes ) > 0) {
       
       foreach ($includes as $includeElement) {
-        if( is_array($includeElement) ){
-          
-          if( sizeof( $includeElement["includes"] ) > 0 ) {
-            foreach( $includeElement["includes"] as $includeFile ) { 
-              $this->addInclude( $includeFile );
+
+        $include_folder = '';
+
+        if( $includeElement['installer'] == 'bower' ) {
+          $include_folder = $includeElement['id'];
+        }
+        else if( $includeElement['installer'] == 'composer' ) {
+          $include_folder = $includeElement['params'][0];
+        }
+
+        if( sizeof( $includeElement['includes'] ) > 0 ) {
+          foreach( $includeElement['includes'] as $includeFile ) { 
+            $type = $this->typeIncludeFile( $includeFile );
+
+            if( $type == 'serverScript' ) {
+              require_once( SITE_PATH.'../httpdocs/vendorServer/'.$include_folder.'/'.$includeFile );
+            }
+            else
+            if( $type == 'clientScript' ) {
+              $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor' );
+            }
+            else
+            if( $type == 'styles' ) {
+              $this->addIncludeCSS( $include_folder.'/'.$includeFile, 'vendor' );
             }
           }
-
         }
-        else {
-          $this->addInclude( $includeFile );
-        }
-
       }
 
     }
+    
   }
 
 
-  function addInclude( $includeFile ) {
+
+  function addIncludeList( $includes, $module=false) {
+
+    if( sizeof( $includes ) > 0) { 
+      foreach ($includes as $includeElement) { 
+
+        $type = $this->typeIncludeFile( $includeElement );
+
+
+        echo "include '".$module."' ";
+
+        if( $type == 'serverScript' ) {
+          echo $type.' '.$includeFile ;
+        }
+        else
+        if( $type == 'clientScript' ) {
+          echo $type.' '.$includeFile ;
+        }
+        else
+        if( $type == 'styles' ) {
+          echo $type.' '.$includeFile ;
+        }
+
+        echo "<br>";
+      }
+    }
+  }
+
+
+
+
+
+  function typeIncludeFile( $includeFile ) {
+
+    $type = false;
+
+    // css or less file
     if( substr($includeFile, -4) == '.css' || substr($includeFile, -5) == '.less') {
-      $this->addIncludeCSS( $includeFile );
+      $type = 'styles';
     }
+    // javascript file
     else if( substr($includeFile, -3) == '.js' ) {
-      $this->addIncludeJS( $includeFile );
+      $type = 'clientScript';
     }
+    // php include
     else if( substr($includeFile, -4) == '.php' || substr($includeFile, -4) == '.inc')  {
-      require_once( $includeFile );
+      $type = 'serverScript';
     }
+
+    return $type;
 
   }
 
 
 
-  function addIncludeCSS( $includeFile ) {
+  function addIncludeCSS( $includeFile, $module=false ) {
     global $cogumeloIncludesCSS;
 
     if( !isset( $cogumeloIncludesCSS ) ) {
       $cogumeloIncludesCSS = array();
     }
 
-    if( !in_array($cogumeloIncludesCSS) ) {
-      array_push($cogumeloIncludesCSS, $includeFile);
+    if( !$this->isInIncludesArray($includeFile, $cogumeloIncludesCSS) ) {
+      array_push($cogumeloIncludesCSS, array('src'=>$includeFile, 'module'=>$module ) );
     }
 
   }
   
 
-  function addIncludeJS( $includeFile ) {
+  function addIncludeJS( $includeFile, $module = false) {
     global $cogumeloIncludesJS;
 
     if( !isset( $cogumeloIncludesJS ) ) {
       $cogumeloIncludesJS = array();
     }
 
-    if( !in_array($cogumeloIncludesJS) ) {
-      array_push($cogumeloIncludesJS, $includeFile);
+    if( !$this->isInIncludesArray($includeFile, $cogumeloIncludesJS) ) {
+      array_push($cogumeloIncludesJS, array('src'=>$includeFile, 'module'=>$module ) );
     }
   }
+
+
+  function isInIncludesArray( $file, $includesArray) {
+    $ret = false;
+
+    if( sizeof($includesArray) > 0 ) {
+      foreach ($includesArray as $includedFile) {
+        if($includedFile['src'] == $file ) {
+          $ret = true;
+        }
+      }
+    }
+
+    return $ret;
+  }
+
 }
