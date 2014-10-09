@@ -1,9 +1,9 @@
 <?php
 
 
-Cogumelo::load('c_view/View');
-Cogumelo::load('c_controller/FormController');
-Cogumelo::load('c_controller/FormValidators');
+Cogumelo::load('c_view/View.php');
+Cogumelo::load('c_controller/FormController.php');
+Cogumelo::load('c_controller/FormValidators.php');
 
 
 class FormAction extends View

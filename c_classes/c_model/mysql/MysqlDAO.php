@@ -1,8 +1,8 @@
 <?php
 
-Cogumelo::load('c_controller/Cache');
-Cogumelo::load('c_model/DAO');
-Cogumelo::load('c_model/mysql/MysqlDAOResult');
+Cogumelo::load('c_controller/Cache.php');
+Cogumelo::load('c_model/DAO.php');
+Cogumelo::load('c_model/mysql/MysqlDAOResult.php');
 
 
 class MysqlDAO extends DAO

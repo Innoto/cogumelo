@@ -29,7 +29,7 @@ abstract class Connection
 	{
 
 		$class = 'c_model/'. DB_ENGINE . '/'. ucfirst(DB_ENGINE) ."Connection";
-		Cogumelo::load($class);
+		Cogumelo::load($class.'.php');
 		
 		$dbObj = ucfirst(DB_ENGINE)."Connection";
 		return new $dbObj($devel_data);

@@ -1,6 +1,6 @@
 <?php
 
-Cogumelo::load("c_controller/Module");
+Cogumelo::load("c_controller/Module.php");
 
 class client extends Module
 {

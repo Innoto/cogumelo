@@ -1,7 +1,7 @@
 <?php
 
-Cogumelo::load('c_controller/DataController');
-Cogumelo::load('model/LostVO');
+Cogumelo::load('c_controller/DataController.php');
+Cogumelo::load('model/LostVO.php');
 
 
 //

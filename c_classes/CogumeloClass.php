@@ -30,21 +30,22 @@ class CogumeloClass extends Singleton
      ),
      array(
        "id" => "smarty",
-       "params" => array("smarty/smarty", "3.1.19"),
-       "installer" => "composer",
-       "includes" => array()
+       "params" => array('smarty/smarty', '3.1.19'),
+       "installer" => 'composer',
+       "includes" => array('distribution/libs/Smarty.class.php')
      ),
      array(
        "id" => "gettext",
-       "params" => array("gettext/gettext", "1.1.2"),
-       "installer" => "composer",
-       "includes" => array()
-     )     
+       "params" => array('gettext/gettext', '1.1.2'),
+       "installer" => 'composer',
+       "includes" => array('Gettext/autoloader.php')
+     )
   );
 
   // Set autoincludes 
   static function autoIncludes() {
-
+    $dependencesControl = new DependencesController();
+    $dependencesControl->loadAppIncludes();
   }
 
 
@@ -68,7 +69,7 @@ class CogumeloClass extends Singleton
     $url_path_after_modules = $this->modules->getLeftUrl();
 
     // main request controller
-    self::load('c_controller/RequestController');
+    self::load('c_controller/RequestController.php');
     $this->request = new RequestController($this->urlPatterns, $url_path_after_modules );
   }
 
@@ -79,12 +80,12 @@ class CogumeloClass extends Singleton
   static function load($classname) {
 
     if( preg_match('#^c_#', $classname) ){
-      $filename =  $classname . '.php';
+      $filename =  $classname;
       $file_path = COGUMELO_LOCATION.'/c_classes/'.$filename;
     }
 
     else {
-      $filename =  $classname . '.php';
+      $filename =  $classname;
       $file_path = SITE_PATH. 'classes/'. $filename;
     }
 

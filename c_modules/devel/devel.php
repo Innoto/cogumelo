@@ -2,7 +2,7 @@
 
 // Dependencias en classes/view/templates/js/devel.js
 
-Cogumelo::load("c_controller/Module");
+Cogumelo::load("c_controller/Module.php");
 
 class devel extends Module
 {
@@ -37,8 +37,11 @@ class devel extends Module
    )
   );
 
-  public $includesCommon = array();
-  
+  public $includesCommon = array(
+    'controller/LogReaderController.php',
+    'controller/DevelDBController.php',
+    'controller/UrlListController.php'
+  );
 
   function __construct() {
     $this->addUrlPatterns( '#^'.MOD_DEVEL_URL_DIR.'$#', 'view:DevelView::main' );

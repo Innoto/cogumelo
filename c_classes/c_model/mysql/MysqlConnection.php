@@ -1,7 +1,7 @@
 <?php
 
 
-Cogumelo::load('c_model/Connection');
+Cogumelo::load('c_model/Connection.php');
 
 //
 // Mysql connection class
