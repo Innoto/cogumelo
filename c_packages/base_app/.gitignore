@@ -1,6 +1,9 @@
 # Exclude log directory
 c_app/log/
 
+# Exclude backups directory
+c_app/backups
+
 # Exclude templates directory
 c_app/tmp/*
 c_app/tmp/templates_c/

@@ -14,13 +14,13 @@ class devel extends Module
      "id" => "jquery",
      "params" => array("jquery#1.*"),
      "installer" => "bower",
-     "includes" => array("jquery.js")
+     "includes" => array("src/jquery.js")
    ),
    array(
      "id" => "bootstrap",
      "params" => array("bootstrap"),
      "installer" => "bower",
-     "includes" => array("bootstrap.css")
+     "includes" => array()
    ),  
    // COMPOSER 
    array(
@@ -33,7 +33,7 @@ class devel extends Module
      "id" => "sqlFormatter",
      "params" => array("jdorn/sql-formatter", "1.3.*@dev"),
      "installer" => "composer",
-     "includes" => array("SqlFormatter.php")
+     "includes" => array("lib/SqlFormatter.php")
    )
   );
 

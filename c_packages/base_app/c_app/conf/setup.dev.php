@@ -78,9 +78,11 @@ define('MEDIASERVER_COMPILE_LESS', true);
 //
 //  Modules
 //
-
 global $C_ENABLED_MODULES;
-$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'testmodule', 'client', 'form', 'devel');
+global $C_INDEX_MODULES;
+
+$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'testmodule', 'client', 'devel', 'form');
+$C_INDEX_MODULES  = array('mediaserver', 'i18nGetLang', 'devel'); 			// before c_app/Cogumelo.php execution
 
 
 //

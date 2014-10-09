@@ -38,6 +38,13 @@ class Module
   }
 
 
+  // Set autoincludes 
+  static function autoIncludes() {
+    $dependencesControl = new DependencesController();
+    $dependencesControl->loadModuleIncludes( get_called_class() );
+  }
+
+
 //
 // Metodos duplicados en CogumeloClass.php
 // (Ini)
