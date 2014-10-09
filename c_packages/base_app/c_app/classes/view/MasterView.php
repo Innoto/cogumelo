@@ -39,7 +39,7 @@ class MasterView extends View
     //$this->template->addJs('vendorLib/jQuery.js' , 'client');
     //$this->template->addJs('vendorLib/less.js', 'client');
 
-    $this->template->addCss('styles/client.css', 'client');
+    $this->template->addClientStyles('styles/client.css', 'client');
 
 
   }

@@ -130,9 +130,25 @@ dd {
 }
 // TABLE
 // --
-table{}
-table tr{}
-
+table{
+  border: 1px solid @tableBorder;
+  background: @tableBackground;
+  padding: 5px;
+  tr{
+    &.even{
+      background: @tableBackgroundEven;
+    }
+    &:hover{
+      background: @tableBackgroundHover;
+    }
+  }
+  td, th{
+    padding: 10px;
+  }
+  th{
+    background: @tableBackgroundTh;
+  }
+}
 
 
 // MISC
