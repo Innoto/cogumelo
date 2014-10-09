@@ -2,7 +2,7 @@
 
 define('MOD_MEDIASERVER_URL_DIR', 'media');
 
-Cogumelo::load("c_controller/Module");
+Cogumelo::load("c_controller/Module.php");
 
 class mediaserver extends Module
 {
@@ -15,7 +15,7 @@ class mediaserver extends Module
       "id" => "jsmin",
       "params" => array("linkorb/jsmin-php", "1.0.0"),
       "installer" => "composer",
-      "includes" => array("")
+      "includes" => array("src/jsmin-1.1.1.php")
     ),
     array(
       "id" => "cssmin",

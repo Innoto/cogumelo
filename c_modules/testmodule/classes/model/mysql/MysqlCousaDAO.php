@@ -3,7 +3,7 @@
 
 
 
-Cogumelo::load('c_model/mysql/MysqlDAO');
+Cogumelo::load('c_model/mysql/MysqlDAO.php');
 
 //
 //	Mysql cousa DAO

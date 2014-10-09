@@ -1,7 +1,6 @@
 <?php
 
-Cogumelo::vendorLoad('smarty/smarty/distribution/libs/Smarty.class.php');
-Cogumelo::load('c_controller/ModuleController');
+Cogumelo::load('c_controller/ModuleController.php');
 
 //
 //  Template Class (Extends smarty library)

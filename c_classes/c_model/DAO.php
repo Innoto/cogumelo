@@ -15,11 +15,11 @@ class DAO
 
     // check if entity is in module or is in main project
     if($module) {
-      eval($module.'::load("'. $classPath .'");');
+      eval($module.'::load("'. $classPath .'.php");');
     }
     else
     {
-      Cogumelo::load($classPath);
+      Cogumelo::load($classPath.'.php');
     }
 
 

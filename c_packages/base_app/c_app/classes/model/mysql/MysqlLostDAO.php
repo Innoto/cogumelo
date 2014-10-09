@@ -1,8 +1,8 @@
 <?php
 
 
-Cogumelo::load('c_model/mysql/MysqlDAO');
-Cogumelo::load('model/LostVO');
+Cogumelo::load('c_model/mysql/MysqlDAO.php');
+Cogumelo::load('model/LostVO.php');
 
 //
 //	Mysql lost DAO

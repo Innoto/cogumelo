@@ -1,6 +1,6 @@
 <?php
 
-Cogumelo::load('c_model/VO');
+Cogumelo::load('c_model/VO.php');
 
 class ComplementoVO extends VO
 { 

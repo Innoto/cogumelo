@@ -1,9 +1,9 @@
 <?php
 
 
-Cogumelo::load('c_view/View');
-Cogumelo::load('c_view/Table');
-testmodule::load('controller/CousaController');
+Cogumelo::load('c_view/View.php');
+Cogumelo::load('c_view/Table.php');
+testmodule::load('controller/CousaController.php');
 
 
 class Cousadmin extends View

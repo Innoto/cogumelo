@@ -1,11 +1,7 @@
 <?php
 
-Cogumelo::vendorLoad('jdorn/sql-formatter/lib/SqlFormatter.php');
-Cogumelo::vendorLoad('raveren/kint/Kint.class.php');
-Cogumelo::load('c_view/View');
-devel::load('controller/LogReaderController');
-devel::load('controller/DevelDBController');
-devel::load('controller/UrlListController');
+Cogumelo::load('c_view/View.php');
+devel::autoIncludes();
 
 
 class DevelView extends View
@@ -13,6 +9,7 @@ class DevelView extends View
 
   function __construct($base_dir) {
     parent::__construct($base_dir);
+
   }
 
   /**

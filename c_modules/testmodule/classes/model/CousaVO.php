@@ -1,7 +1,7 @@
 <?php
 
-Cogumelo::load('c_model/VO');
-testmodule::load('model/ComplementoVO');
+Cogumelo::load('c_model/VO.php');
+testmodule::load('model/ComplementoVO.php');
 
 
 

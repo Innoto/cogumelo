@@ -2,8 +2,8 @@
 
 
 
-Cogumelo::load('c_model/Connection');
-Cogumelo::load('c_model/DAO');
+Cogumelo::load('c_model/Connection.php');
+Cogumelo::load('c_model/DAO.php');
 
 //
 // Facade Superclass
