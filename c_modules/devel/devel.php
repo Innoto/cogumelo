@@ -1,3 +1,4 @@
+
 <?php
 
 // Dependencias en classes/view/templates/js/devel.js
@@ -9,20 +10,32 @@ class devel extends Module
   public $name = "devel";
   public $version = "2.0";
   public $dependences = array(
-   // BOWER   
+   // BOWER
    array(
      "id" => "jquery",
      "params" => array("jquery#1.*"),
      "installer" => "bower",
-     "includes" => array("src/jquery.js")
+     "includes" => array("dist/jquery.js")
+   ),
+   array(
+     "id" =>"jquery-ui",
+     "params" => array("jquery-ui"),
+     "installer" => "bower",
+     "includes" => array("jquery-ui.js", "themes/smoothness/jquery-ui.css")
+   ),
+   array(
+     "id" =>"less",
+     "params" => array("less"),
+     "installer" => "bower",
+     "includes" => array("dist/less-1.7.5.min.js")
    ),
    array(
      "id" => "bootstrap",
      "params" => array("bootstrap"),
      "installer" => "bower",
      "includes" => array()
-   ),  
-   // COMPOSER 
+   ),
+   // COMPOSER
    array(
      "id" => "kint",
      "params" => array("raveren/kint","1.0.*@dev"),
@@ -40,7 +53,10 @@ class devel extends Module
   public $includesCommon = array(
     'controller/LogReaderController.php',
     'controller/DevelDBController.php',
-    'controller/UrlListController.php'
+    'controller/UrlListController.php',
+    'js/devel.js',
+    'styles/devel.less'
+
   );
 
   function __construct() {

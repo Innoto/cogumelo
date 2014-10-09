@@ -40,8 +40,7 @@ class DevelView extends View
 
   function main($url_path=''){
     $this->template->setTpl('develpage.tpl', 'devel');
-    $this->template->addClientScript('js/devel.js', 'devel');
-    $this->template->addClientStyles('styles/devel.css', 'devel');
+
     $this->logs();
     $this->infoSetup();
     $this->DBSQL();
@@ -90,7 +89,7 @@ class DevelView extends View
     $this->template->assign("infoDBPort" , DB_PORT);
     $this->template->assign("infoDBUser" , DB_USER);
     $this->template->assign("infoDBName" , DB_NAME);
-    
+
     if(DB_ALLOW_CACHE){
       $this->template->assign("infoDBAllowCache" , 'True');
     }
@@ -116,22 +115,22 @@ class DevelView extends View
     $this->template->assign("infoMediaServerHost" , MEDIASERVER_HOST);
     $this->template->assign("infoMediaServerTmpCachePath" , MEDIASERVER_TMP_CACHE_PATH);
     $this->template->assign("infoMediaServerFinalCachePath" , MEDIASERVER_FINAL_CACHE_PATH);
-    
+
     if(MEDIASERVER_COMPILE_LESS){
       $this->template->assign("infoMediaServerCompileLess" , 'True');
     }
     else{
       $this->template->assign("infoMediaServerCompileLess" , 'False');
     }
-    
+
     $stringEnabledModules = "";
     foreach( $C_ENABLED_MODULES as $em){
-      $stringEnabledModules = $stringEnabledModules." ".$em." "; 
+      $stringEnabledModules = $stringEnabledModules." ".$em." ";
     }
     $this->template->assign("infoCEnabledModules" , $stringEnabledModules);
     $this->template->assign("infoBck" , BCK);
     $this->template->assign("infoLogDir" , LOGDIR);
-    
+
     if(LOG_RAW_SQL){
       $this->template->assign("infoLogRawSql" , 'True');
     }
@@ -144,30 +143,30 @@ class DevelView extends View
     else{
       $this->template->assign("infoDebug" , 'False');
     }
-    
+
     if(ERRORS){
       $this->template->assign("infoErrors" , 'True');
     }
     else{
       $this->template->assign("infoErrors" , 'False');
-    }    
-    
+    }
+
     if(MOD_DEVEL_ALLOW_ACCESS){
       $this->template->assign("infoModDevelAllowAccess" , 'True');
     }
     else{
       $this->template->assign("infoModDevelAllowAccess" , 'False');
-    }    
+    }
     if(GETTEXT_UPDATE){
       $this->template->assign("infoGetTextUpdate" , 'True');
     }
     else{
       $this->template->assign("infoGetTextUpdate" , 'False');
-    } 
-    
+    }
+
     $this->template->assign("infoLangDefault" , LANG_DEFAULT);
     $this->template->assign("infoLangAvailable" , LANG_AVAILABLE);
-    
+
   }
 
   function infoUrls(){
