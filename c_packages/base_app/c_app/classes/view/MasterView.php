@@ -27,8 +27,7 @@ class MasterView extends View
     $dependencesControl->loadModuleIncludes('devel');
 */
 
-    devel::autoIncludes();
-
+    client::autoIncludes();
     $this->common();
     $this->template->exec();
 

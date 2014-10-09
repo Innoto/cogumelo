@@ -213,11 +213,11 @@ Class DependencesController {
             }
             else
             if( $type == 'clientScript' ) {
-              $this->addIncludeJS( MEDIASERVER_HOST.'vendor/'.$include_folder.'/'.$includeFile );
+              $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor' );
             }
             else
             if( $type == 'styles' ) {
-              $this->addIncludeJS( MEDIASERVER_HOST.'vendor/'.$include_folder.'/'.$includeFile );
+              $this->addIncludeCSS( $include_folder.'/'.$includeFile, 'vendor' );
             }
           }
         }
@@ -283,29 +283,45 @@ Class DependencesController {
 
 
 
-  function addIncludeCSS( $includeFile ) {
+  function addIncludeCSS( $includeFile, $module=false ) {
     global $cogumeloIncludesCSS;
 
     if( !isset( $cogumeloIncludesCSS ) ) {
       $cogumeloIncludesCSS = array();
     }
 
-    if( !in_array($includeFile, $cogumeloIncludesCSS) ) {
-      array_push($cogumeloIncludesCSS, $includeFile);
+    if( !$this->isInIncludesArray($includeFile, $cogumeloIncludesCSS) ) {
+      array_push($cogumeloIncludesCSS, array('src'=>$includeFile, 'module'=>$module ) );
     }
 
   }
   
 
-  function addIncludeJS( $includeFile ) {
+  function addIncludeJS( $includeFile, $module = false) {
     global $cogumeloIncludesJS;
 
     if( !isset( $cogumeloIncludesJS ) ) {
       $cogumeloIncludesJS = array();
     }
 
-    if( !in_array($includeFile, $cogumeloIncludesJS) ) {
-      array_push($cogumeloIncludesJS, $includeFile);
+    if( !$this->isInIncludesArray($includeFile, $cogumeloIncludesJS) ) {
+      array_push($cogumeloIncludesJS, array('src'=>$includeFile, 'module'=>$module ) );
     }
   }
+
+
+  function isInIncludesArray( $file, $includesArray) {
+    $ret = false;
+
+    if( sizeof($includesArray) > 0 ) {
+      foreach ($includesArray as $includedFile) {
+        if($includedFile['src'] == $file ) {
+          $ret = true;
+        }
+      }
+    }
+
+    return $ret;
+  }
+
 }
