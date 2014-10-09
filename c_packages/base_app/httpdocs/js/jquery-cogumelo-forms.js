@@ -3,6 +3,8 @@
 
 function setValidateForm( idForm, rules, messages ) {
 
+  bindFormInputFiles();
+
   var $validateForm = $( '#'+idForm ).validate({
 
     debug: true,
@@ -102,26 +104,46 @@ function showErrorsValidateForm( msgClass, msgText, $form ) {
 **/
 
 
+function bindFormInputFiles() {
+  console.log( 'bindFormInputFiles' );
+
+  // Check for the various File API support.
+  if( !(window.File && window.FileReader && window.FileList && window.Blob) ) {
+    alert('Tu navegador no soporta alguna de las características necesarias para el envío de ficheros.');
+  }
+
+  document.getElementById('inputFicheiro').addEventListener('change', handleFileSelect, false);
+
+  // Setup the dnd listeners.
+  var dropZone = document.getElementById('drop_zone');
+  dropZone.addEventListener('dragover', handleDragOver, false);
+  dropZone.addEventListener('drop', handleFileDrop, false);
+}
+
 
 
 // Ficheros seleccionados con el boton
 function handleFileSelect(evt) {
   console.log( 'handleFileSelect' );
+  console.log( evt );
   var files = evt.target.files; // FileList object
-  procesarFiles( files );
+  checkInputFieldFiles( files );
 }
 
 
 // Ficheros "soltados" sobre el input
 function handleFileDrop(evt) {
   console.log( 'handleFileDrop' );
+  console.log( evt );
   evt.stopPropagation();
   evt.preventDefault();
   var files = evt.dataTransfer.files; // FileList object.
-  procesarFiles( files );
+  checkInputFieldFiles( files );
 }
 
 function handleDragOver(evt) {
+  console.log( 'handleDragOver' );
+  console.log( evt );
   evt.stopPropagation();
   evt.preventDefault();
   evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
@@ -129,7 +151,7 @@ function handleDragOver(evt) {
 
 
 
-function procesarFiles( files ) {
+function checkInputFieldFiles( files ) {
   // Loop through the FileList and render image files as thumbnails.
   for (var i = 0, f; f = files[i]; i++) {
   console.log( f );
@@ -141,6 +163,7 @@ function procesarFiles( files ) {
       // Closure to capture the file information.
       reader.onload = (function cargado(theFile) {
         return function procesando(e) {
+          console.log( 'Procesando e' );
           console.log( e );
           // Render thumbnail.
           var span = document.createElement('div');
@@ -171,40 +194,23 @@ function procesarFiles( files ) {
 } // function procesarFiles
 
 
-function bindFormInputFiles( form ) {
-  // Check for the various File API support.
-  if( !(window.File && window.FileReader && window.FileList && window.Blob) ) {
-    alert('Tu navegador no soporta alguna de las características necesarias para el envío de ficheros.');
-  }
-
-  document.getElementById('inputFile').addEventListener('change', handleFileSelect, false);
-
-  // Setup the dnd listeners.
-  var dropZone = document.getElementById('drop_zone');
-  dropZone.addEventListener('dragover', handleDragOver, false);
-  dropZone.addEventListener('drop', handleFileDrop, false);
-}
 
 
-
-
-
-/* Video Tutorial: http://www.youtube.com/watch?v=EraNFJiY0Eg */
 /* Video Tutorial: http://www.youtube.com/watch?v=EraNFJiY0Eg */
 
 function uploadFile() {
   console.log( 'uploadFile' );
-  var file = document.getElementById("inputFile").files[0];
+  var file = document.getElementById("inputFicheiro").files[0];
 
   var formdata = new FormData();
   formdata.append("ajaxFileUpload", file);
-  var ajax = new XMLHttpRequest();
 
+  var ajax = new XMLHttpRequest();
   ajax.upload.addEventListener("progress", progressHandler, false);
   ajax.addEventListener("load", completeHandler, false);
   ajax.addEventListener("error", errorHandler, false);
   ajax.addEventListener("abort", abortHandler, false);
-  ajax.open("POST", "/ajax_file_upload_parser");
+  ajax.open("POST", "/ajax_file_uploadV2");
   ajax.send(formdata);
 }
 

@@ -90,9 +90,10 @@ class FormsTestV2 extends View
     $form->getHtmlFields()."\n".
 
 "\n".
-'<span id="drop_zone" style="background-color:blue;">Drop files here</span>'."\n".
 '<div id="subidas" style="background-color:grey;">'."\n".
-'<input type="button" value="Upload File" onclick="uploadFile()"> <input type="submit" name="submit" value="Submit"><br>'."\n".
+'<div id="list">Info: </div>'."\n".
+'<span id="drop_zone" style="background-color:blue;">Drop files here</span>'."\n".
+'<input type="button" name="botonUploadFile" value="subir ficheiro" onclick="uploadFile()"><br>'."\n".
 '<progress id="progressBar" value="0" max="100" style="width:300px;"></progress>'."\n".
 '<h3 id="status">status</h3>'."\n".
 '<p id="loaded_n_total">carga</p>'."\n".
@@ -185,6 +186,37 @@ class FormsTestV2 extends View
     }
 
   }
+
+
+
+
+
+  function ajaxUpload() {
+    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( 'ajaxUpload FormsTestV2');
+    error_log( '--------------------------------' );error_log( '--------------------------------' );
+
+    error_log( print_r( $_FILES, true ) );
+
+    $fileName     = $_FILES["ajaxFileUpload"]["name"];// The file name
+    $fileTmpLoc   = $_FILES["ajaxFileUpload"]["tmp_name"];// File in the PHP tmp folder
+    $fileType     = $_FILES["ajaxFileUpload"]["type"];// The type of file it is
+    $fileSize     = $_FILES["ajaxFileUpload"]["size"];// File size in bytes
+    $fileErrorMsg = $_FILES["ajaxFileUpload"]["error"];// 0 for false... and 1 for true
+
+    if (!$fileTmpLoc) { // if file not chosen
+      error_log( "ajaxUpload: ERROR: Please browse for a file before clicking the upload button." );
+    }
+    else {
+      if(move_uploaded_file($fileTmpLoc, $_SERVER['DOCUMENT_ROOT'].'test_upload/'.$fileName )) {
+        error_log( "ajaxUpload: $fileName upload is complete" );
+      }
+      else {
+        error_log( "ajaxUpload: ERROR: move_uploaded_file function failed" );
+      }
+    }
+
+  } // function ajaxUpload() {
 
 
 
