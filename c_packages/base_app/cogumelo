@@ -29,6 +29,9 @@
   require_once(COGUMELO_LOCATION."/c_modules/devel/devel.php");
   require_once(COGUMELO_LOCATION."/c_modules/devel/classes/controller/DevelDBController.php");
 
+  // Cargo gettext
+  Cogumelo::Load('c_vendor/gettext/gettext.inc');
+
   //
   //  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
   //
