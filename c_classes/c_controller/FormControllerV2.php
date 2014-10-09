@@ -155,7 +155,7 @@ class FormControllerV2 implements Serializable {
   public function getHtmlFields() {
     $html = '';
     foreach( $this->fields as $fieldName => $fieldParams ) {
-      $html .= '<div>'.$this->getHtmlField($fieldName)."</div>\n";
+      $html .= '<div class="ffn-'.$fieldName.'">'.$this->getHtmlField($fieldName)."</div>\n";
     }
     return $html;
   }
@@ -297,11 +297,14 @@ class FormControllerV2 implements Serializable {
         $html['inputClose'] = '</textarea>';
         break;
 
-      case 'reserved':
+      case 'file':
+        $html['input'] = '<input name="'.$field['name'].'"';
+        $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
+        $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
         break;
 
-      //case 'file':
-      //  break;
+      case 'reserved':
+        break;
 
       default:
         // button, file, hidden, password, range, text
