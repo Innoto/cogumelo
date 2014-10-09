@@ -1,8 +1,8 @@
 <?php
 
-Cogumelo::load('c_controller/Cache');
-Cogumelo::load('c_model/DAO');
-Cogumelo::load('c_model/mysql/MysqlDAOResult');
+Cogumelo::load('c_controller/Cache.php');
+Cogumelo::load('c_model/DAO.php');
+Cogumelo::load('c_model/mysql/MysqlDAOResult.php');
 
 
 class MysqlDAO extends DAO
@@ -345,16 +345,16 @@ class MysqlDAO extends DAO
     $valArray = array();
     foreach( $VOobj::$cols as $colk => $col) {
       if($VOobj->getter($colk) !== null) {
-        $setvalues .= 'AND '.$colk.'= ? ';
+        $setvalues .= ', '.$colk.'= ? ';
         $valArray[] = $VOobj->getter($colk);
       }
     }
 
     // add primary key value to values array
     $valArray[] = $pkValue;
-
-    $strSQL = "UPDATE `".$VOobj::$tableName."` SET (".substr($setvalues,3)." WHERE ".$VOobj->getFirstPrimarykeyId()."= ? ;";
     
+    $strSQL = "UPDATE `".$VOobj::$tableName."` SET ".substr($setvalues, 1)." WHERE `".$VOobj->getFirstPrimarykeyId()."`= ?;";
+
     if($res = $this->execSQL($connectionControl, $strSQL, $valArray)) {
       return $VOobj;
     }

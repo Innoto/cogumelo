@@ -32,16 +32,15 @@ LC_MESSAGES     5
 LC_ALL          6
 */
 
+Cogumelo::Load('c_vendor/gettext/streams.php');
+Cogumelo::Load('c_vendor/gettext/gettext.php');
+
 
 // LC_MESSAGES is not available if php-gettext is not loaded
 // while the other constants are already available from session extension.
 if (!defined('LC_MESSAGES')) {
   define('LC_MESSAGES',	5);
 }
-
-require('Classes/Utils/Vendor/Gettext/streams.php');
-require('Classes/Utils/Vendor/Gettext/gettext.php');
-
 
 // Variables
 

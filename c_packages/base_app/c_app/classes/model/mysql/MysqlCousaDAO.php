@@ -3,8 +3,8 @@
 
 
 
-Cogumelo::load('c_model/mysql/MysqlDAO');
-testmodule::load('model/CousaVO');
+Cogumelo::load('c_model/mysql/MysqlDAO.php');
+testmodule::load('model/CousaVO.php');
 
 //
 //	Mysql cousa DAO

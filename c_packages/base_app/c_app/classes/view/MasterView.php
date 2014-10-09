@@ -1,6 +1,6 @@
 <?php
 
-Cogumelo::load('c_view/View');
+Cogumelo::load('c_view/View.php');
 
 /**
 * Clase Master de la que extenderemos todos los View
@@ -21,15 +21,21 @@ class MasterView extends View
   }
 
   function master($urlPath=''){
+
+/*
+    $dependencesControl = new DependencesController();
+    $dependencesControl->loadModuleIncludes('devel');
+*/
+
+    client::autoIncludes();
     $this->common();
     $this->template->exec();
+
   }
 
   function common() {
     $this->template->setTpl('default.tpl');
-    $this->template->addJs('vendorLib/jQuery.js' , 'client');
-    $this->template->addJs('vendorLib/less.js', 'client');
-    //$this->template->addCss('css/client.css', 'client');
+    //$this->template->addClientStyles('styles/client.css', 'client');
   }
 
   function page404() {

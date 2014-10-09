@@ -1,6 +1,6 @@
 <?php
 
-Cogumelo::load('c_view/View');
+Cogumelo::load('c_view/View.php');
 
 class TestmoduleView extends View
 {
@@ -19,8 +19,8 @@ class TestmoduleView extends View
 
   function inicio() {
     $this->template->setTpl("test.tpl", 'testmodule');
-    $this->template->addCss("css/common.css", 'testmodule');
-    $this->template->addCss("css/common2.css", 'testmodule');
+    $this->template->addClientStyles("styles/common.css", 'testmodule');
+    $this->template->addClientStyles("styles/common2.css", 'testmodule');
     $this->template->exec();
   }
 }

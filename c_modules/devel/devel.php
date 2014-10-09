@@ -1,34 +1,41 @@
+
 <?php
 
 // Dependencias en classes/view/templates/js/devel.js
 
-Cogumelo::load("c_controller/Module");
+Cogumelo::load("c_controller/Module.php");
 
 class devel extends Module
 {
   public $name = "devel";
   public $version = "2.0";
   public $dependences = array(
-   // BOWER   
+   // BOWER
    array(
      "id" => "jquery",
      "params" => array("jquery#1.*"),
      "installer" => "bower",
-     "includes" => array("jquery.js")
+     "includes" => array("dist/jquery.js")
    ),
-  array(
-     "id" => "jquery2",
-     "params" => array("jquery#2.*"),
+   array(
+     "id" =>"jquery-ui",
+     "params" => array("jquery-ui"),
      "installer" => "bower",
-     "includes" => array("jquery.js")
-   ),  
+     "includes" => array("jquery-ui.js", "themes/smoothness/jquery-ui.css")
+   ),
+   array(
+     "id" =>"less",
+     "params" => array("less"),
+     "installer" => "bower",
+     "includes" => array("dist/less-1.7.5.min.js")
+   ),
    array(
      "id" => "bootstrap",
      "params" => array("bootstrap"),
      "installer" => "bower",
-     "includes" => array("bootstrap.css")
-   ),  
-   // COMPOSER 
+     "includes" => array()
+   ),
+   // COMPOSER
    array(
      "id" => "kint",
      "params" => array("raveren/kint","1.0.*@dev"),
@@ -39,12 +46,18 @@ class devel extends Module
      "id" => "sqlFormatter",
      "params" => array("jdorn/sql-formatter", "1.3.*@dev"),
      "installer" => "composer",
-     "includes" => array("SqlFormatter.php")
+     "includes" => array("lib/SqlFormatter.php")
    )
   );
 
-  public $includesCommon = array();
-  
+  public $includesCommon = array(
+    'controller/LogReaderController.php',
+    'controller/DevelDBController.php',
+    'controller/UrlListController.php',
+    'js/devel.js',
+    'styles/devel.less'
+
+  );
 
   function __construct() {
     $this->addUrlPatterns( '#^'.MOD_DEVEL_URL_DIR.'$#', 'view:DevelView::main' );

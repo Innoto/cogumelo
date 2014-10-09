@@ -1,6 +1,7 @@
 <?php
 
-Cogumelo::load('c_vendor/jsmin/jsmin.php');
+Cogumelo::vendorLoad('linkorb/jsmin-php/src/jsmin-1.1.1.php');
+Cogumelo::vendorLoad('natxet/CssMin/src/CssMin.php');
 
 class MediaserverController {
 
@@ -63,6 +64,7 @@ class MediaserverController {
 
       }
       else {
+        
         Cogumelo::debug("Mediaserver, serving file: ".$this->realFilePath);
 
         if( (substr($this->urlPath, -4) == '.css' || substr($this->urlPath, -3) == '.js' ) && MEDIASERVER_MINIMIFY_FILES ) {
@@ -70,6 +72,9 @@ class MediaserverController {
         }
         else
         if( substr($this->urlPath, -5) == '.less' ) {
+          if( MEDIASERVER_COMPILE_LESS == false ) {
+            $this->copyAndMoveFile();
+          }
           //if( MEDIASERVER_MINIMIFY_FILES ) {
           // $this->copyAndMoveFile( $this->minify($this->lessCompile()) );
           //}
@@ -82,6 +87,8 @@ class MediaserverController {
         }
       }
     }
+
+
 
     // redirect to file
     RequestController::redirect( MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath );

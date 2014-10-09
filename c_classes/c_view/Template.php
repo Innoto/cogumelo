@@ -1,9 +1,6 @@
 <?php
 
-Cogumelo::load('c_vendor/Smarty/libs/Smarty.class.php');
-Cogumelo::load('c_vendor/jsmin/jsmin.php');
-Cogumelo::load('c_vendor/cssmin/cssmin.php');
-Cogumelo::load('c_controller/ModuleController');
+Cogumelo::load('c_controller/ModuleController.php');
 
 //
 //  Template Class (Extends smarty library)
@@ -13,7 +10,10 @@ Class Template extends Smarty
 {
   var $tpl;
   var $base_dir;
+
+  var $css_autoincludes = '';
   var $css_includes = '';
+  var $js_autoincludes = '';
   var $js_includes = '';
 
 
@@ -27,24 +27,51 @@ Class Template extends Smarty
     $this->cache_dir = SMARTY_CACHE;
   }
 
-  function addJs($file_path, $module = false)  {
+  function addClientScript($file_path, $module = false, $vendor=false, $is_autoinclude = false)  {
 
-    if($module)
-      $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/module/'.$module.'/';
-    else
+    if($module == false){
       $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/';
+    }
+    else
+    if($module == 'vendor') {
+      $base_path = MEDIASERVER_HOST.'vendor/';
+    }
+    else {
+      $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/module/'.$module.'/';
+    }
 
-    $this->js_includes .= "\n".'<script type="text/javascript" src="'.$base_path.$file_path.'"></script>';
+
+    if( $is_autoinclude ){
+      $this->js_autoincludes .= "\n".'<script type="text/javascript" src="'.$base_path.$file_path.'"></script>';
+    }
+    else {
+      $this->js_includes .= "\n".'<script type="text/javascript" src="'.$base_path.$file_path.'"></script>';
+    }
+
   }
 
 
-  function addCss($file_path, $module = false) {
-    if($module)
-      $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/module/'.$module.'/';
-    else
-      $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/';
+  function addClientStyles( $file_path, $module = false, $vendor=false, $is_autoinclude = false ) {
 
-    $this->css_includes .= "\n".'<link rel="stylesheet" type="text/css" href="'.$base_path.$file_path.'">';
+    if($module == false){
+      $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/';
+    }
+    else
+    if($module == 'vendor') {
+      $base_path = MEDIASERVER_HOST.'vendor/';
+    }
+    else {
+      $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/module/'.$module.'/';
+    }
+
+
+
+    if( $is_autoinclude ){
+      $this->css_autoincludes .= "\n".'<link rel="stylesheet/less" type="text/css" href="'.$base_path.$file_path.'">';
+    }
+    else {
+      $this->css_includes .= "\n".'<link rel="stylesheet/less" type="text/css" href="'.$base_path.$file_path.'">';
+    }
   }
 
   function setTpl($file_name, $module = false) {
@@ -55,8 +82,23 @@ Class Template extends Smarty
   function exec() {
     if($this->tpl) {
 
-      $this->assign('css_includes', $this->css_includes);
-      $this->assign('js_includes', $this->js_includes);
+      global $cogumeloIncludesCSS;
+      global $cogumeloIncludesJS;
+
+      if( is_array( $cogumeloIncludesCSS ) ){
+        foreach( $cogumeloIncludesCSS as $fileCss){
+          $this->addClientStyles( $fileCss['src'], $fileCss['module'] );
+        }
+      }
+
+      if( is_array( $cogumeloIncludesJS ) ){
+        foreach( $cogumeloIncludesJS as $fileJs ){
+          $this->addClientScript( $fileJs['src'],  $fileJs ['module']);
+        }
+      }
+
+      $this->assign('css_includes', $this->css_autoincludes . $this->css_includes );
+      $this->assign('js_includes', $this->js_autoincludes . $this->js_includes );
 
       if( file_exists($this->tpl) ) {
         $this->display($this->tpl);

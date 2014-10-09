@@ -1,8 +1,8 @@
 <?php
 
 
-Cogumelo::load('c_view/View');
-Cogumelo::load('c_controller/FormController');
+Cogumelo::load('c_view/View.php');
+Cogumelo::load('c_controller/FormController.php');
 
 
 class Forms extends View

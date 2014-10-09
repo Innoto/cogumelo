@@ -1,7 +1,7 @@
 <?php
 
 
-Cogumelo::load('c_view/Template');
+Cogumelo::load('c_view/Template.php');
 
 
 abstract class View {

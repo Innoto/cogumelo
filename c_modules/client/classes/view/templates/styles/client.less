@@ -1,0 +1,32 @@
+/*
+ * Cogumelo styles
+ */
+
+.reset-box-sizing {
+  &,
+  *,
+  *:before,
+  *:after {
+    .box-sizing(border-box);
+  }
+}
+* {
+  .reset-box-sizing();
+}
+
+
+
+// Core variables and mixins
+@import "clientVar.less"; // Modify this for custom colors, font-sizes, etc
+@import "clientMixins.less";
+
+// CSS Reset
+@import "clientNormalize.less";
+
+// Base CSS
+@import "clientElements.less";
+
+// Components: common
+@import "clientAnimations.less";
+
+/*****************************************/

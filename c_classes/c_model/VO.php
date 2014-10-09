@@ -127,7 +127,7 @@ Class VO
       $setterVO->attributes[$columnKey] = $value;
     }
     else{
-      Cogumelo::error("key '". $setterkey ."' doesn't exist in VO::". $setterVO::$tableName);
+      Cogumelo::debug("key '". $setterkey ."' doesn't exist in VO::". $setterVO::$tableName);
     }
   }
 
@@ -159,7 +159,7 @@ Class VO
       }
     }
     else{
-      Cogumelo::error("key '". $getterkey ."' doesn't exist in VO::". $setterVO::$tableName);
+      Cogumelo::debug("key '". $getterkey ."' doesn't exist in VO::". $setterVO::$tableName);
     }
 
     return $value;

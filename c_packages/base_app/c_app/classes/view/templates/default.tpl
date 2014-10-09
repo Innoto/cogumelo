@@ -4,13 +4,13 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  {* <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=Edge"><![endif]--> *}
+  <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=Edge"><![endif]-->
   <title>Test page</title>
   <style>
 
-    body { 
+    /*body {
       background: #f2f2f2;
-    }
+    }*/
 
     .test {
       background: #3C3F41;
@@ -24,10 +24,9 @@
     }
 
   </style>
-  
+
     {$css_includes}
-    <link rel="stylesheet/less" type="text/css" href="/media/module/client/css/client.less" />
-    
+
     <!-- set options before less.js script -->
     <script>
       less = {
@@ -41,18 +40,18 @@
         errorReporting: 'console'
       };
     </script>
-    
+
     {$js_includes}
-    
+
 </head>
 
 <body>
-  
-  
+
+
   <div class="test">[ Cogumelo Base App ]</div>
-  
-  
-  
+
+
+
   <!-- Sample Content to Plugin to Template -->
   <h1>CSS Basic Elements</h1>
 
@@ -206,12 +205,12 @@
 
   <small><a href="#wrapper">[top]</a></small>
   <!-- End of Sample Content -->
-  
-  
-  
-  
-  
-  
+
+
+
+
+
+
 </body>
 
 </html>
