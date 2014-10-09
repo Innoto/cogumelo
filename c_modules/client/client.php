@@ -28,7 +28,9 @@ class client extends Module
    )
   );  
 
-  public $includesCommon = array();
+  public $includesCommon = array(
+    'styles/client.less'
+  );
     
     
   function __construct() {
