@@ -26,7 +26,7 @@
   </style>
   
     {$css_includes}
-    <link rel="stylesheet/less" type="text/css" href="/media/module/client/css/client.less" />
+    <link rel="stylesheet/less" type="text/css" href="/media/module/client/styles/client.less" />
     
     <!-- set options before less.js script -->
     <script>

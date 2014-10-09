@@ -1,7 +1,7 @@
 <?php
 
-Cogumelo::load('c_vendor/sql-formatter-master/lib/SqlFormatter.php');
-Cogumelo::load('c_vendor/kint-1.0.0-wip/Kint.class.php');
+Cogumelo::vendorLoad('jdorn/sql-formatter/lib/SqlFormatter.php');
+Cogumelo::vendorLoad('raveren/kint/Kint.class.php');
 Cogumelo::load('c_view/View');
 devel::load('controller/LogReaderController');
 devel::load('controller/DevelDBController');
@@ -43,8 +43,8 @@ class DevelView extends View
 
   function main($url_path=''){
     $this->template->setTpl('develpage.tpl', 'devel');
-    $this->template->addJs('js/devel.js', 'devel');
-    $this->template->addCss('css/devel.css', 'devel');
+    $this->template->addClientScript('js/devel.js', 'devel');
+    $this->template->addClientStyles('styles/devel.css', 'devel');
     $this->logs();
     $this->infoSetup();
     $this->DBSQL();

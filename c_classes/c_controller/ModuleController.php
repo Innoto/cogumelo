@@ -1,24 +1,4 @@
 <?php
-/*
-Cogumelo v1.0a - Innoto S.L.
-Copyright (C) 2013 Innoto Gestión para el Desarrollo Social S.L. <mapinfo@innoto.es>
-
-This program is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program; if not, write to the Free Software
-Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
-USA.
-
-*/
 
 
 /**
@@ -34,6 +14,7 @@ require_once(COGUMELO_LOCATION."/c_classes/c_controller/RequestController.php");
 
 class ModuleController
 {
+
   var $url_path;
   var $module_paths = array();
 
@@ -42,15 +23,13 @@ class ModuleController
     $this->url_path = $url_path;
     $this->setModules();
 
-    foreach($this->module_paths as $mp_id => $mp) {
-      // exec modulos
-      if( $from_shell ) {
-        $this->onlyIncludeModules( $mp_id );
-      }
-      else {
-        $this->execModule( $mp_id );
-      }
+    $this->includeModules();
+
+    if( !$from_shell ) {
+      $this->execModules();
     }
+  
+
   }
 
 
@@ -70,28 +49,38 @@ class ModuleController
         Cogumelo::error("Module not found: ".$module_name);
       }
     }
+
   }
 
+
+  function execModules() {
+    global $C_INDEX_MODULES;
+
+    foreach($C_INDEX_MODULES as $module_name) {
+      $this->execModule($module_name);
+    }
+  }
 
   function execModule($module_name) {
     if($this->module_paths[$module_name] == false) {
       Cogumelo::error("Module '".$module_name. "' not found.");
     }
     else {
-      $mod_path = $this->module_paths[$module_name];
-      require_once($mod_path.'/'.$module_name.'.php');
       $modulo = new $module_name();
-      $this->request = new RequestController( $modulo->getUrlPatternsToArray(), $this->url_path, $mod_path );
+      $this->request = new RequestController( $modulo->getUrlPatternsToArray(), $this->url_path, $this->module_paths[$module_name] );
       $this->url_path = $this->request->getLeftoeverUrl();
-      Cogumelo::debug("Module loaded: ".$module_name);
+      Cogumelo::debug("Reading UrlPatterns from: ".$module_name);
     }
   }
 
-  function onlyIncludeModules($module_name) {
+  function includeModules() {
 
+    global $C_ENABLED_MODULES;
 
+    foreach($C_ENABLED_MODULES as $module_name) {
       $mod_path = $this->module_paths[$module_name];
       require_once($mod_path.'/'.$module_name.'.php');
+    }
 
   }
 

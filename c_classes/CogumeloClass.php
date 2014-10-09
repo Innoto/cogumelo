@@ -2,6 +2,8 @@
 
 require_once(COGUMELO_LOCATION.'/c_classes/c_controller/Singleton.php');
 require_once(COGUMELO_LOCATION.'/c_classes/c_controller/ModuleController.php');
+require_once(COGUMELO_LOCATION.'/c_classes/c_controller/DependencesController.php');
+
 
 class CogumeloClass extends Singleton
 {
@@ -19,25 +21,31 @@ class CogumeloClass extends Singleton
 
   // main dependences for cogumelo framework
   static $mainDependences = array(
+
      array(
        "id" => "phpmailer",
        "params" => array("phpmailer/phpmailer", "5.2.9"),
        "installer" => "composer",
-       "includes" => array("")
+       "includes" => array("class.phpmailer.php")
      ),
      array(
        "id" => "smarty",
        "params" => array("smarty/smarty", "3.1.19"),
        "installer" => "composer",
-       "includes" => array("")
+       "includes" => array()
+     ),
+     array(
+       "id" => "gettext",
+       "params" => array("gettext/gettext", "1.1.2"),
+       "installer" => "composer",
+       "includes" => array()
      )     
-     
   );
 
-  // common client and server includes for cogumelo framework
-  static $mainIncludesCommon = array();
+  // Set autoincludes 
+  static function autoIncludes() {
 
-
+  }
 
 
   static function get(){
@@ -66,22 +74,15 @@ class CogumeloClass extends Singleton
 
 
   //
-  //  Auto include
+  //  include
   //
   static function load($classname) {
 
-    if(preg_match('#^c_vendor/#', $classname)){
-      $file_path = COGUMELO_LOCATION.'/c_vendor/'.preg_replace('#^c_vendor/#', '', $classname);
-    }
-    else
-    if(preg_match('#^c_#', $classname)){
+    if( preg_match('#^c_#', $classname) ){
       $filename =  $classname . '.php';
       $file_path = COGUMELO_LOCATION.'/c_classes/'.$filename;
     }
-    else
-    if(preg_match('#^vendor/#', $classname)){
-      $file_path = SITE_PATH.$classname;
-    }
+
     else {
       $filename =  $classname . '.php';
       $file_path = SITE_PATH. 'classes/'. $filename;
@@ -94,6 +95,22 @@ class CogumeloClass extends Singleton
     else {
       require_once $file_path;
     }
+  }
+
+
+  //
+  //  include Vendor libs
+  //
+  static function vendorLoad($loadFile) {
+    require_once SITE_PATH.'../httpdocs/vendorServer/'.$loadFile;
+  }
+
+
+  //
+  //  Redirect (alias for RequestController::redirect )
+  //
+  static function redirect( $redirect_url ) {
+    RequestController::redirect( $redirect_url );
   }
 
 
@@ -146,15 +163,15 @@ class CogumeloClass extends Singleton
 
     // Rodeo para evitar "PHP Notice:  Use of undefined constant MOD_DEVEL_URL_DIR"
     $arrayDefines = get_defined_constants();
-    if( 
-      $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/read_logs' && 
+    if(
+      $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/read_logs' &&
       $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/get_debugger'
     ) {
       $ignore = true;
     }
 
     if( $ignore ) {
- 
+
       error_log(
         '['. date('y-m-d H:i:s',time()) .'] ' .
         '['. $_SERVER['REMOTE_ADDR'] .'] ' .

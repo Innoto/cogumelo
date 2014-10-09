@@ -44,10 +44,10 @@ class Cousadmin extends View
 
 
       $this->template->setTpl("cousadmin.tpl", "testmodule");
-      $this->template->addJs('vendor_lib/jQuery.js', 'client');
-      $this->template->addJs('vendor_lib/Class.js', 'client');
-      $this->template->addJs('vendor_lib/jquery.address.js', 'client');
-      $this->template->addJs('lib/cogumelo.table.js', 'client');
+      $this->template->addClientScript('vendor_lib/jQuery.js', 'client');
+      $this->template->addClientScript('vendor_lib/Class.js', 'client');
+      $this->template->addClientScript('vendor_lib/jquery.address.js', 'client');
+      $this->template->addClientScript('lib/cogumelo.table.js', 'client');
       $this->template->exec();
 
 

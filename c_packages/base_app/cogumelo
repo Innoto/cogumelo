@@ -41,8 +41,12 @@
 
    if ($argc>1){ //parameters handler
       switch($argv[1]){
-        case 'setPermissions': // create database tables
+        case 'setPermissions': // set the files/folders permission
           setPermissions();
+        break;   
+
+        case 'setPermissionsDevel': // set the files/folders permission
+          setPermissionsDevel();
         break;   
         
         case 'createDB': // create database
@@ -102,7 +106,8 @@
         default:
           echo "Invalid parameter;try: 
           flush                 to remove temporary files
-          setPermissions        to set the folder permission
+          setPermissions        to set the files/folders permission
+          setPermissionsDevel   to set the files/folders permission
           creteDB               to create a database
           creteTables           to generate the tables
           bckDB                 to do a DB backup (optional arg: filename)
@@ -114,7 +119,8 @@
   else{
     echo "Not enough arguments;try: 
           flush                 to remove temporary files
-          setPermissions        to set the folder permission
+          setPermissions        to set the files/folders permission
+          setPermissionsDevel   to set the files/folders permission
           creteDB               to create a database
           creteTables           to generate the tables
           bckDB                 to do a DB backup (optional arg: filename)
@@ -138,26 +144,40 @@
   }
 
   function setPermissions(){
-
-    if (!is_dir('c_app/tmp'))
-      exec('mkdir c_app/tmp');
-    if (!is_dir('c_app/tmp/templates_c'))
-      exec('mkdir c_app/tmp/templates_c');
-    if (!is_dir('c_app/log'))
-      exec('mkdir c_app/log');
-    if (!is_dir('c_app/backups'))
-      exec('mkdir c_app/backups');
-    if (!is_dir('httpdocs/mediaCache'))
-      exec('mkdir httpdocs/mediaCache');  
+    exec('mkdir -p c_app/tmp/templates_c');
+    exec('mkdir -p c_app/log');
+    exec('mkdir -p c_app/backups');
+    exec('mkdir -p httpdocs/mediaCache');  
     
     exec('sudo chown -R $USER:www-data httpdocs');
     exec('chmod -R go-rwx,g+rX httpdocs');
 
     exec('sudo chown -R $USER:www-data c_app');
     exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
-    exec('chmod -R gu+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache');
+    exec('chmod -R ug+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache');
+
     exec('sudo chown $USER:$USER c_app/backups');
+    exec('chmod -R go-rwx c_app/backups');
+
+    echo "Permissions ready!\n";
+  }
+
+
+  function setPermissionsDevel(){
+    exec('mkdir -p c_app/tmp/templates_c');
+    exec('mkdir -p c_app/log');
+    exec('mkdir -p c_app/backups');
+    exec('mkdir -p httpdocs/mediaCache');  
     
+    exec('sudo chown -R $USER:www-data httpdocs');
+    exec('chmod -R u-x,go-wx,ugo+rX httpdocs');
+
+    exec('sudo chown -R $USER:www-data c_app');
+    exec('chmod -R go-wx,go+rX c_app');
+    exec('chmod -R ug+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache');
+
+    exec('sudo chown $USER:$USER c_app/backups');
+    exec('chmod -R go-rwx c_app/backups');
 
     echo "Permissions ready!\n";
   }

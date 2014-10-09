@@ -2,7 +2,7 @@
 
 Cogumelo::load('c_view/View');
 
-class TestmoduleView extends View
+class FormModuleView extends View
 {
 
   function __construct($base_dir){
@@ -17,10 +17,4 @@ class TestmoduleView extends View
     return true;
   }
 
-  function inicio() {
-    $this->template->setTpl("test.tpl", 'testmodule');
-    $this->template->addClientStyles("styles/common.css", 'testmodule');
-    $this->template->addClientStyles("styles/common2.css", 'testmodule');
-    $this->template->exec();
-  }
 }
