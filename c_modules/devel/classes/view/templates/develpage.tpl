@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title>Cogumelo Devel!</title>
-  
+
   {literal}
   <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" >
@@ -17,7 +17,20 @@
   </script>
 
   {/literal}
+
   {$css_includes}
+  <script>
+    less = {
+      env: "development",
+      async: false,
+      fileAsync: false,
+      poll: 1000,
+      functions: { },
+      dumpLineNumbers: "all",
+      relativeUrls: false,
+      errorReporting: 'console'
+    };
+  </script>
   {$js_includes}
 
 </head>
@@ -38,11 +51,11 @@
   <!-- ****************************************************************************************************************  -->
   <div id="logs_tabs" class="container" style="display:none;">
     <ul>
-      {foreach key=key item=name_log from=$list_file_logs}    
+      {foreach key=key item=name_log from=$list_file_logs}
         <li><a href="#{$name_log}">{$name_log}</a></li>
       {/foreach}
     </ul>
-    {foreach key=key item=name_log from=$list_file_logs}    
+    {foreach key=key item=name_log from=$list_file_logs}
       <div id="{$name_log}" class="container_log"></div>
     {/foreach}
   </div>
@@ -55,7 +68,7 @@
       <li>[Este debugger actualízase automáticamente]</li>
     </ul>
     <div class="debugItemsContainer"></div>
-    
+
   </div>
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
@@ -176,8 +189,8 @@
         <td class="td_value">{$infoLangAvailable}</td>
       </tr>
     </table>
-    
-    
+
+
     <table>
       <thead>
         <tr>
@@ -204,10 +217,10 @@
       <tr>
         <td class="td_option">MEDIASERVER_COMPILE_LESS</td>
         <td class="td_value">{$infoMediaServerCompileLess}</td>
-      </tr>    
-      
+      </tr>
+
     </table>
-    
+
     <table>
       <thead>
         <tr>
@@ -247,7 +260,7 @@
         <td class="td_value">{$infoSysMailFromEmail}</td>
       </tr>
     </table>
-    
+
     <table>
       <thead>
         <tr>
@@ -286,18 +299,18 @@
         <td class="td_value">{$infoDBAllowCache}</td>
       </tr>
     </table>
-    
-    
+
+
   </div>
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
   <div id="dbsql_container" class="container" style="display:none;">
     <fieldset>
       <legend>SQL</legend>
-      <div class="infoSQL">{foreach $data_sql as $item}{$item}{/foreach}</div>      
+      <div class="infoSQL">{foreach $data_sql as $item}{$item}{/foreach}</div>
     </fieldset>
   </div>
-  
+
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
   <div id="urls_container" class="container" style="display:none;">
@@ -311,12 +324,12 @@
             <span class="regexDest">{$regexItem['dest']}</span>
           </div>
         {/foreach}
-      </div>      
+      </div>
     </fieldset>
-    {/foreach}    
+    {/foreach}
   </div>
-  
-</div> 
- 
+
+</div>
+
 </body>
 </html>
