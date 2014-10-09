@@ -1,6 +1,6 @@
 <?php
 
-Cogumelo::load('c_model/DAOResult');
+Cogumelo::load('c_model/DAOResult.php');
 
 
 class MysqlDAOResult extends DAOResult {

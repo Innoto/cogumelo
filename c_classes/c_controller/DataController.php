@@ -10,7 +10,7 @@
 */
 
 
-Cogumelo::load("c_model/Facade");
+Cogumelo::load("c_model/Facade.php");
 
 
 abstract class DataController {

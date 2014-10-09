@@ -11,7 +11,7 @@
 */
 
 
-Cogumelo::load('c_controller/ModuleController');
+Cogumelo::load('c_controller/ModuleController.php');
 
 class Module
 {
@@ -29,7 +29,7 @@ class Module
   static function load($load_path) {
     $module_name = get_called_class();
 
-    if($file_to_include =  ModuleController::getRealFilePath('classes/'.$load_path.'.php', $module_name)) {
+    if($file_to_include =  ModuleController::getRealFilePath('classes/'.$load_path.'', $module_name)) {
       require_once($file_to_include);
     }
     else {

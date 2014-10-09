@@ -1,9 +1,9 @@
 <?php
 
 
-Cogumelo::load('c_view/View');
-Cogumelo::load('c_controller/FormControllerV2');
-Cogumelo::load('c_controller/FormValidators');
+Cogumelo::load('c_view/View.php');
+Cogumelo::load('c_controller/FormControllerV2.php');
+Cogumelo::load('c_controller/FormValidators.php');
 
 
 class FormsTestV2 extends View

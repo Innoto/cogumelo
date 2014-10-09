@@ -1,6 +1,6 @@
 <?php
 
-Cogumelo::load('c_view/View');
+Cogumelo::load('c_view/View.php');
 
 class TestmoduleView extends View
 {

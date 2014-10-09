@@ -15,7 +15,7 @@ Class DependencesController {
   function installDependences()
   {
 
-    Cogumelo::load('c_controller/ModuleController');
+    Cogumelo::load('c_controller/ModuleController.php');
 
     $this->loadDependences();    
     //Descomentar para ver las depen a instalar 
@@ -158,33 +158,28 @@ Class DependencesController {
 
   function loadModuleIncludes($moduleName) {
 
-    Cogumelo::load('c_controller/ModuleController');
+    Cogumelo::load('c_controller/ModuleController.php');
     ModuleController::getRealFilePath( $moduleName.'.php', $moduleName );
 
-    $this->loadCogumeloIncludes();
+    //$this->loadCogumeloIncludes();
 
     $moduleInstance = new $moduleName();
 
-    $this->addVendorIncludeList($moduleInstance->dependences);
-    $this->addIncludeList($moduleInstance->includesCommon, $moduleName );
+    $this->addVendorIncludeList( $moduleInstance->dependences );
+    $this->addIncludeList( $moduleInstance->includesCommon, $moduleName );
+
   }
 
   function loadAppIncludes() {
     global $_C;
 
-    $this->loadCogumeloIncludes();
+    //$this->loadCogumeloIncludes();
     $this->addVendorIncludeList( $_C->dependences );
     $this->addIncludeList( $_C->includesCommon );
   }
 
   function loadCogumeloIncludes() {
-    global $cogumeloIncludesLoaded;
-
-    if( $cogumeloIncludesLoaded != true ) {
-      $this->addVendorIncludeList(Cogumelo::$mainDependences);
-    }
-
-    $cogumeloIncludesLoaded =  true;
+    $this->addVendorIncludeList(CogumeloClass::$mainDependences);
   }
 
 
@@ -209,6 +204,7 @@ Class DependencesController {
 
             switch ($this->typeIncludeFile( $includeFile )) {
               case 'serverScript':
+                Cogumelo::debug( 'Including vendor:'.SITE_PATH.'../httpdocs/vendorServer/'.$include_folder.'/'.$includeFile );
                 require_once( SITE_PATH.'../httpdocs/vendorServer/'.$include_folder.'/'.$includeFile );
                 break;
               case 'clientScript':
@@ -234,9 +230,10 @@ Class DependencesController {
 
     if( sizeof( $includes ) > 0) { 
       foreach ($includes as $includeFile) { 
-
+              
         switch($this->typeIncludeFile( $includeFile ) ) {
           case 'serverScript':
+
             if($module == false) {
               Cogumelo::load($includeFile);              
             }

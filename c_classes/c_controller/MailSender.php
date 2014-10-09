@@ -9,8 +9,6 @@
 * @author: pablinhob
 */
 
-Cogumelo::vendorLoad('phpmailer/phpmailer/class.phpmailer.php');
-
 
 Class MailSender 
 {

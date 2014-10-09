@@ -1,8 +1,8 @@
 <?php
 
 
-Cogumelo::load('c_model/mysql/MysqlDAO');
-Cogumelo::load('model/UseradminVO');
+Cogumelo::load('c_model/mysql/MysqlDAO.php');
+Cogumelo::load('model/UseradminVO.php');
 
 //
 //	Mysql useradmin DAO
