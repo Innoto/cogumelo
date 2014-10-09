@@ -206,19 +206,20 @@ Class DependencesController {
 
         if( sizeof( $includeElement['includes'] ) > 0 ) {
           foreach( $includeElement['includes'] as $includeFile ) { 
-            $type = $this->typeIncludeFile( $includeFile );
 
-            if( $type == 'serverScript' ) {
-              require_once( SITE_PATH.'../httpdocs/vendorServer/'.$include_folder.'/'.$includeFile );
+            switch ($this->typeIncludeFile( $includeFile )) {
+              case 'serverScript':
+                require_once( SITE_PATH.'../httpdocs/vendorServer/'.$include_folder.'/'.$includeFile );
+                break;
+              case 'clientScript':
+                $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor' );
+              
+                break;
+              case 'styles':
+                $this->addIncludeCSS( $include_folder.'/'.$includeFile, 'vendor' );
+                break;
             }
-            else
-            if( $type == 'clientScript' ) {
-              $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor' );
-            }
-            else
-            if( $type == 'styles' ) {
-              $this->addIncludeCSS( $include_folder.'/'.$includeFile, 'vendor' );
-            }
+
           }
         }
       }
@@ -232,30 +233,28 @@ Class DependencesController {
   function addIncludeList( $includes, $module=false) {
 
     if( sizeof( $includes ) > 0) { 
-      foreach ($includes as $includeElement) { 
+      foreach ($includes as $includeFile) { 
 
-        $type = $this->typeIncludeFile( $includeElement );
-
-
-        echo "include '".$module."' ";
-
-        if( $type == 'serverScript' ) {
-          echo $type.' '.$includeFile ;
+        switch($this->typeIncludeFile( $includeFile ) ) {
+          case 'serverScript':
+            if($module == false) {
+              Cogumelo::load($includeFile);              
+            }
+            else {
+              eval($module.'::load("'. $includeFile .'");');
+            }
+            break;
+          case 'clientScript':
+            $this->addIncludeJS( $includeFile, $module );
+            break;
+          case 'styles':
+            $this->addIncludeCSS( $includeFile, $module );
+            break;
         }
-        else
-        if( $type == 'clientScript' ) {
-          echo $type.' '.$includeFile ;
-        }
-        else
-        if( $type == 'styles' ) {
-          echo $type.' '.$includeFile ;
-        }
 
-        echo "<br>";
       }
     }
   }
-
 
 
 
@@ -264,17 +263,19 @@ Class DependencesController {
 
     $type = false;
 
-    // css or less file
-    if( substr($includeFile, -4) == '.css' || substr($includeFile, -5) == '.less') {
-      $type = 'styles';
-    }
-    // javascript file
-    else if( substr($includeFile, -3) == '.js' ) {
-      $type = 'clientScript';
-    }
-    // php include
-    else if( substr($includeFile, -4) == '.php' || substr($includeFile, -4) == '.inc')  {
-      $type = 'serverScript';
+    if( $includeFile != '' ) {
+      // css or less file
+      if( substr($includeFile, -4) == '.css' || substr($includeFile, -5) == '.less') {
+        $type = 'styles';
+      }
+      // javascript file
+      else if( substr($includeFile, -3) == '.js' ) {
+        $type = 'clientScript';
+      }
+      // php include
+      else if( substr($includeFile, -4) == '.php' || substr($includeFile, -4) == '.inc')  {
+        $type = 'serverScript';
+      }
     }
 
     return $type;
