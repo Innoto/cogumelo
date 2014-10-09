@@ -11,6 +11,8 @@ class Cogumelo extends CogumeloClass
   function __construct() {
     parent::__construct();
 
+    //echo _("Let’s make the web multilingual.");exit;
+
     /*createForm*/
     $this->addUrlPatterns( '#^lostForm$#', 'view:CreateForm::lostForm' );
     $this->addUrlPatterns( '#^lostForm/u/(.*)#', 'view:CreateForm::updateLostForm' );
@@ -37,6 +39,8 @@ class Cogumelo extends CogumeloClass
     /*MasterView*/
     $this->addUrlPatterns( '#^404$#', 'view:MasterView::page404' );
     $this->addUrlPatterns( '#^$#', 'view:MasterView::master' ); // App home url
+
+
 
   }
 

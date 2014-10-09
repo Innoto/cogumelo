@@ -29,9 +29,6 @@
   require_once(COGUMELO_LOCATION."/c_modules/devel/devel.php");
   require_once(COGUMELO_LOCATION."/c_modules/devel/classes/controller/DevelDBController.php");
 
-  // Cargo gettext
-  Cogumelo::Load('c_vendor/gettext/gettext.inc');
-
   //
   //  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
   //
@@ -92,6 +89,18 @@
             $dependencesControl->installDependences();
         break; 
 
+        case 'generateTranslations': 
+           translateWeb();
+           generateTranslations();
+           echo "The files.po are ready to be edited!\n";
+        break;  
+
+        case 'compileTranslations': 
+           translateWeb();
+           compileTranslations();
+           echo "The files.mo are ready to be used!\n";
+        break;
+
         /* We execute this two actions from web as we need to operate with the apache permissions*/
         case 'flush': // delete temporary files
            exec('wget -q --spider http://cogumelo/cogumelo-script.php?q=flush');
@@ -112,7 +121,9 @@
           creteTables           to generate the tables
           bckDB                 to do a DB backup (optional arg: filename)
           restoreDB             to restore a database
-          installDependences    to install all modules dependencies\n";
+          installDependences    to install all modules dependencies
+          generateTranslations  to get all the web text into a file.po
+          compileTranslations   to compile file.po and get the translations ready\n";
 
       }//end switch 
   }//end parameters handler
@@ -125,7 +136,9 @@
           creteTables           to generate the tables
           bckDB                 to do a DB backup (optional arg: filename)
           restoreDB             to restore a database
-          installDependences    to install all modules dependencies\n";
+          installDependences    to install all modules dependencies
+          generateTranslations  to get all the web text into a file.po
+          compileTranslations   to compile file.po and get the translations ready\n";
   }
 
   function createDB($user, $passwd){
@@ -208,6 +221,89 @@
       popen('mysql -u '.$user.' -p '.$BD.'< '.$DIR.$file, 'r');
     }
     echo "\nYour db was successfully restored!\n";
+  }
+
+  /**
+  * Prepare the enviroment to localize the project
+  */
+  function translateWeb(){
+    $textdomain="c_cogumelo";
+    
+    $locale= 'es_ES';
+    
+    global $c_lang;
+    
+    putenv('LANGUAGE='.$locale);
+    putenv('LANG='.$locale);
+    putenv('LC_ALL='.$locale);
+    putenv('LC_MESSAGES='.$locale);
+    
+    setlocale(LC_ALL,$locale);
+    setlocale(LC_CTYPE,$locale);
+
+    bindtextdomain($textdomain, SITE_PATH.'conf/i18n');
+    bind_textdomain_codeset($textdomain, 'UTF-8'); 
+    textdomain($textdomain);
+  }
+
+  
+  function generateTranslations(){
+    /**
+    * Prepare the enviroment to localize the project
+    */
+    $textdomain="c_cogumelo";
+    
+    $locale= 'es_ES';
+    
+    global $c_lang;
+    
+    putenv('LANGUAGE='.$locale);
+    putenv('LANG='.$locale);
+    putenv('LC_ALL='.$locale);
+    putenv('LC_MESSAGES='.$locale);
+    
+    setlocale(LC_ALL,$locale);
+    setlocale(LC_CTYPE,$locale);
+
+    bindtextdomain($textdomain, SITE_PATH.'conf/i18n');
+    bind_textdomain_codeset($textdomain, 'UTF-8'); 
+    textdomain($textdomain);
+
+    /**
+    * Generate files.po or update them if don't exist already
+    */
+    foreach(explode(',', 'gl,es,en') as $lng) {
+      $filepath = SITE_PATH.'conf/i18n/'.$lng.'/LC_MESSAGES/';
+      if (is_dir($filepath)) {
+        $handle = opendir($filepath);
+        while ($file = readdir($handle)) {
+          $parts = explode('.',$file);
+          if ($parts[1]!='.po'){
+            exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_php.po '.SITE_PATH.'../*.php');
+            // exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_js.po '.SITE_PATH.'../*.php');
+            // exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_tpl.po '.SITE_PATH.'../*.php');
+          }
+          else{
+            shell_exec('find '.SITE_PATH.'. -iname "*.php" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code utf-8 -d '.$textdomain.'_php -o '.$filepath.$textdomain.'.pot -L PHP');
+            shell_exec('msgmerge -U '.$filepath.$textdomain.'_php.po '.$filepath.$textdomain.'_php.pot');
+          }
+        }
+        closedir($handle);
+      }
+    }
+  }
+
+  /**
+  * Compile files.po to get the translations ready to be used
+  */
+  function compileTranslations(){
+    $textdomain="c_cogumelo";
+    foreach(explode(',', 'gl,es,en') as $lng) {
+      $filepath = SITE_PATH.'conf/i18n/'.$lng.'/LC_MESSAGES/';
+      exec('msgfmt -o '.$filepath.$textdomain.'_php.mo '.$filepath.$textdomain.'_php.po');
+      // exec('msgfmt -o '.$filepath.$textdomain.'_js.mo '.$filepath.$textdomain.'_js.po');
+      // exec('msgfmt -o '.$filepath.$textdomain.'_tpl.mo '.$filepath.$textdomain.'_tpl.po');
+    }
   }
 
   /**
