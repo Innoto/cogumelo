@@ -154,10 +154,10 @@ function handleDragOver(evt) {
 function checkInputFieldFiles( files ) {
   // Loop through the FileList and render image files as thumbnails.
   for (var i = 0, f; f = files[i]; i++) {
-  console.log( f );
+    console.log( f );
 
     // Only process image files.
-    if (f.type.match('image.*')) {
+    if (f.type.match('^image/.*')) {
       var reader = new FileReader();
 
       // Closure to capture the file information.
@@ -189,6 +189,7 @@ function checkInputFieldFiles( files ) {
       document.getElementById('list').insertBefore(span, null);
     }
 
+
   } // for files[i]
 
 } // function procesarFiles
@@ -216,6 +217,7 @@ function uploadFile() {
 
 function progressHandler(event) {
   console.log( 'progressHandler' );
+  console.log( event );
   document.getElementById("loaded_n_total").innerHTML = "Uploaded "+event.loaded+" bytes of "+event.total;
   var percent = (event.loaded / event.total) * 100;
   document.getElementById("progressBar").value = Math.round(percent);
@@ -224,15 +226,20 @@ function progressHandler(event) {
 
 function completeHandler(event) {
   console.log( 'completeHandler' );
+  console.log( event );
   document.getElementById("status").innerHTML = event.target.responseText;
   document.getElementById("progressBar").value = 0;
 }
 
 function errorHandler(event) {
+  console.log( 'errorHandler' );
+  console.log( event );
   document.getElementById("status").innerHTML = "Upload Failed";
 }
 
 function abortHandler(event) {
+  console.log( 'abortHandler' );
+  console.log( event );
   document.getElementById("status").innerHTML = "Upload Aborted";
 }
 
