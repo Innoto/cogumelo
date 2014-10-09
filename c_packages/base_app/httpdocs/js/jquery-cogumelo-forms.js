@@ -3,7 +3,9 @@
 
 function setValidateForm( idForm, rules, messages ) {
 
-  bindFormInputFiles();
+  if( $( 'input:file' ).length > 0 ) {
+    bindFormInputFiles();
+  }
 
   var $validateForm = $( '#'+idForm ).validate({
 
@@ -140,10 +142,7 @@ function handleFileDrop(evt) {
   var files = evt.dataTransfer.files; // FileList object.
   checkInputFieldFiles( files );
 }
-
 function handleDragOver(evt) {
-  console.log( 'handleDragOver' );
-  console.log( evt );
   evt.stopPropagation();
   evt.preventDefault();
   evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
