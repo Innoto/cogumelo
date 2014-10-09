@@ -26,7 +26,6 @@
   </style>
 
     {$css_includes}
-    <!--<link rel="stylesheet" type="text/css" href="/vendor/bootstrap/dist/css/bootstrap.css" />
 
     <!-- set options before less.js script -->
     <script>

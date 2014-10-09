@@ -31,32 +31,40 @@ class FormsTestV2 extends View
     $form = new FormControllerV2( 'probaPorto', '/actionformV2' ); //actionform
 
     $form->setField( 'input1', array( 'placeholder' => 'Mete 1 valor', 'value' => '5' ) );
+    $form->setValidationRule( 'input1', 'required' );
+    //$form->setValidationRule( 'input1', 'numberEU' );
+    //$form->setValidationRule( 'input1', 'regex', '^\d+$' );
+
     $form->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor888' ) );
+    $form->setValidationRule( 'input2', 'required' );
+    //$form->setValidationRule( 'input2', 'minlength', '8' );
+
     $form->setField( 'select1', array( 'type' => 'select', 'label' => 'Meu Select',
       'value' => array( '1', '2' ),
       'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' ),
       'multiple' => 'multiple'
       ) );
+
     $form->setField( 'check1', array( 'type' => 'checkbox', 'label' => 'Meu checkbox',
       'value' => array( '1', 'asdf' ),
       'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
       ) );
+    //$form->setValidationRule( 'check1', 'required' );
+
     $form->setField( 'radio1', array( 'type' => 'radio', 'label' => 'Meu radio', 'value' => '2',
       'options'=> array( '' => 'Vacio', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
       ) );
+
+
+    $form->setField( 'inputFicheiro', array( 'type' => 'file', 'id' => 'inputFicheiro', 'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro' ) );
+    $form->setValidationRule( 'inputFicheiro', 'required' );
+
+
     $form->setField( 'submit', array( 'type' => 'submit', 'label' => 'Pulsa para enviar', 'value' => 'Manda' ) );
 
-    $form->setValidationRule( 'input1', 'required' );
-    //$form->setValidationRule( 'input1', 'numberEU' );
-    //$form->setValidationRule( 'input1', 'regex', '^\d+$' );
 
-    $form->setValidationRule( 'input2', 'required' );
-    //$form->setValidationRule( 'input2', 'minlength', '8' );
 
-    $form->setValidationRule( 'select1', 'required' );
 
-    //$form->setValidationRule( 'select1', 'equalTo', '#input1' );
-    //$form->setValidationRule( 'check1', 'required' );
 
     $form->saveToSession();
 
@@ -72,13 +80,25 @@ class FormsTestV2 extends View
     '  <script src="/js/jquery-validation/inArray.js"></script>'."\n".
     '  <script src="/js/jquery-validation/regex.js"></script>'."\n".
     '  <script src="/js/jquery-validation/numberEU.js"></script>'."\n".
-    '  <!-- script>$.validator.setDefaults( { submitHandler: function(){ alert("submitted!"); } } );</script -->'."\n".
-    '  <style>div { border:1px dashed; margin:5px; } label.error, .formError{ color:red; border:2px solid red; }</style>'."\n".
+    '  <style>div { border:1px dashed; margin:5px; padding:5px; } '.
+      'label.error, .formError{ color:red; border:2px solid red; } '.
+      '.ffn-inputFicheiro { background-color: yellow; }</style>'."\n".
     '</head>'."\n".
     '<body>'."\n".
 
     $form->getHtmpOpen()."\n".
     $form->getHtmlFields()."\n".
+
+"\n".
+'<div id="subidas" style="background-color:grey;">'."\n".
+'<div id="list">Info: </div>'."\n".
+'<span id="drop_zone" style="background-color:blue;">Drop files here</span>'."\n".
+'<input type="button" name="botonUploadFile" value="subir ficheiro" onclick="uploadFile()"><br>'."\n".
+'<progress id="progressBar" value="0" max="100" style="width:300px;"></progress>'."\n".
+'<h3 id="status">status</h3>'."\n".
+'<p id="loaded_n_total">carga</p>'."\n".
+'</div>'."\n".
+"\n".
 
 //$form->getHtmlFieldArray( 'check1' )['options']['2']['text'].$form->getHtmlFieldArray( 'check1' )['options']['2']['input']."\n".
 '<div id="JQVMC-meu2-error">errores meu2... </div>'."\n".
@@ -124,12 +144,13 @@ class FormsTestV2 extends View
       //$form->setValidationRule( 'input1', 'required' );
       //$form->setValidationRule( 'input2', 'required' );
 
+      /*
       $form->setValidationRule( 'input1', 'numberEU' );
       $form->setValidationRule( 'input1', 'minlength', '3' );
       $form->setValidationRule( 'input2', 'maxlength', '3' );
       $form->setValidationRule( 'select1', 'required' );
       $form->setValidationRule( 'check1', 'required' );
-
+      */
 
       $form->validateForm();
 
@@ -165,6 +186,37 @@ class FormsTestV2 extends View
     }
 
   }
+
+
+
+
+
+  function ajaxUpload() {
+    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( 'ajaxUpload FormsTestV2');
+    error_log( '--------------------------------' );error_log( '--------------------------------' );
+
+    error_log( print_r( $_FILES, true ) );
+
+    $fileName     = $_FILES["ajaxFileUpload"]["name"];// The file name
+    $fileTmpLoc   = $_FILES["ajaxFileUpload"]["tmp_name"];// File in the PHP tmp folder
+    $fileType     = $_FILES["ajaxFileUpload"]["type"];// The type of file it is
+    $fileSize     = $_FILES["ajaxFileUpload"]["size"];// File size in bytes
+    $fileErrorMsg = $_FILES["ajaxFileUpload"]["error"];// 0 for false... and 1 for true
+
+    if (!$fileTmpLoc) { // if file not chosen
+      error_log( "ajaxUpload: ERROR: Please browse for a file before clicking the upload button." );
+    }
+    else {
+      if(move_uploaded_file($fileTmpLoc, $_SERVER['DOCUMENT_ROOT'].'test_upload/'.$fileName )) {
+        error_log( "ajaxUpload: $fileName upload is complete" );
+      }
+      else {
+        error_log( "ajaxUpload: ERROR: move_uploaded_file function failed" );
+      }
+    }
+
+  } // function ajaxUpload() {
 
 
 

@@ -117,6 +117,11 @@ class FormControllerV2 implements Serializable {
 
   public function loadPostValues( $formPost ) {
     $this->postValues = $formPost;
+    foreach($formPost as $key => $val ){
+      if(array_key_exists( $key, $this->fields )){
+        $this->fields[$key]['value'] = $val;
+      }
+    }
   }
 
   public function getIntFrmId() {
@@ -150,7 +155,7 @@ class FormControllerV2 implements Serializable {
   public function getHtmlFields() {
     $html = '';
     foreach( $this->fields as $fieldName => $fieldParams ) {
-      $html .= '<div>'.$this->getHtmlField($fieldName)."</div>\n";
+      $html .= '<div class="ffn-'.$fieldName.'">'.$this->getHtmlField($fieldName)."</div>\n";
     }
     return $html;
   }
@@ -292,8 +297,11 @@ class FormControllerV2 implements Serializable {
         $html['inputClose'] = '</textarea>';
         break;
 
-      //case 'file':
-      //  break;
+      case 'file':
+        $html['input'] = '<input name="'.$field['name'].'"';
+        $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
+        $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
+        break;
 
       case 'reserved':
         break;
@@ -351,10 +359,32 @@ class FormControllerV2 implements Serializable {
 
 
   public function getValuesArray(){
-    return $this->postValues;
+    $fieldsValuesArray = array();
+    $fieldsNamesArray = $this->getFieldsNamesArray();
+    foreach( $fieldsNamesArray as $fieldsName ){
+      $fieldsValuesArray[ $fieldsName ] = $this->getFieldValue( $fieldsName );
+    }
+
+    return $fieldsValuesArray;
   }// fuction getValuesArray
 
 
+  public function getFieldsNamesArray(){
+    $fieldsNamesArray = array();
+    foreach( $this->fields as $key => $val ){
+       array_push( $fieldsNamesArray, $key);
+    }
+
+    return $fieldsNamesArray;
+  }
+
+  public function setValuesVO( $dataVO ){
+    if(gettype($dataVO) == "object"){
+      foreach( $dataVO->getKeys() as $keyVO){
+        $this->setFieldValue( $keyVO, $dataVO->getter($keyVO));
+      }
+    }
+  }
 
 
 
@@ -386,8 +416,22 @@ class FormControllerV2 implements Serializable {
   }
 
   public function getFieldValue( $fieldName ) {
-    $value = isset( $this->postValues[ $fieldName ] ) ? $this->postValues[ $fieldName ] : null;
+    $value = null;
+    if(array_key_exists( $fieldName, $this->fields )){
+      $value = isset( $this->fields[ $fieldName ]['value'] ) ? $this->fields[ $fieldName ]['value'] : false;
+    }
+
     return $value;
+  }
+
+  public function setFieldValue( $fieldName, $fieldValue ){
+    if(array_key_exists($fieldName, $this->fields)){
+      $this->fields[ $fieldName ]['value'] = $fieldValue;
+    }
+  }
+
+  public function isRequiredField( $fieldName ) {
+    return isset( $this->rules[ $fieldName ][ 'required' ] );
   }
 
   public function isEmptyFieldValue( $fieldName ) {
@@ -403,14 +447,6 @@ class FormControllerV2 implements Serializable {
     }
 
     return $empty;
-  }
-
-  public function setFieldValue( $fieldName, $fieldValue ){
-
-  }
-
-  public function isRequiredField( $fieldName ) {
-    return isset( $this->rules[ $fieldName ][ 'required' ] );
   }
 
   public function evaluateRule( $ruleName, $value, $fieldName, $ruleParams ) {
@@ -523,4 +559,4 @@ class FormControllerV2 implements Serializable {
     return $errors;
   }
 
-} // class FormController implements Serializable {
+} // class FormControllerV2 implements Serializable {
