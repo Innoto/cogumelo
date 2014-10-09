@@ -1,5 +1,10 @@
 // Body text
 // -------------------------
+body{
+  font-family: @headingsFontFamily;
+  font-size:  @baseFontSize;
+}
+
 p {
   margin: 0 0 @baseLineHeight / 2;
 }
@@ -24,7 +29,7 @@ h1, h2, h3, h4, h5, h6 {
   text-rendering: optimizelegibility; // Fix the character spacing for headings
   small {
     font-weight: normal;
-    line-height: 1; 
+    line-height: 1;
     color: @grayLight;
   }
 }
@@ -123,6 +128,12 @@ dd {
     margin-left: @horizontalComponentOffset;
   }
 }
+// TABLE
+// --
+table{}
+table tr{}
+
+
 
 // MISC
 // ----
@@ -139,7 +150,7 @@ hr {
 // Buttons, inputs and form elements
 // --------------------------------------------------
 
-.btnFormat(@background:@btnBackground, @color:@btnColor) {  
+.btnFormat(@background:@btnBackground, @color:@btnColor) {
   display: inline-block;
   .ie7-inline-block();
   height: @btnHeight;
@@ -152,13 +163,13 @@ hr {
   color: @color;
   font-family: 'Share Tech Mono', sans-serif;
   font-weight: 550;
-  text-align: center; 
+  text-align: center;
   cursor: pointer;
   .border-radius(@inputBorderRadius);
   .border-radius(@baseBorderRadius);
   .ie7-restore-left-whitespace(); // Give IE7 some love
   .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05)");
-  
+
   &:hover{
     color: @color+ #222222;
     background: @background+ #222222;
@@ -243,7 +254,7 @@ input[type="password"]{
   .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 1px rgba(0,0,0,.075)");
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
   width: 100%;
-  
+
   &:focus{
     border-color: @btnBorderFocus;
     .box-shadow(~"inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(140,215,247,.06)");
@@ -256,7 +267,7 @@ input[type="button"],
 input[type="reset"],
 input[type="submit"],
 button{
-  .btnFormat();  
+  .btnFormat();
 }
 
 textarea{
@@ -266,7 +277,7 @@ textarea{
   height: 200px;
   width: 100%;
   max-width: 1000px;
-  
+
   &:focus{
     border-color: @btnBorderFocus;
     .box-shadow(~"inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(140,215,247,.06)");
