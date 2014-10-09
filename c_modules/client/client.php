@@ -12,7 +12,7 @@ class client extends Module
      "id" =>"jquery",
      "params" => array("jquery#1.*"),
      "installer" => "bower",
-     "includes" => array("/src/jquery.js")
+     "includes" => array("dist/jquery.js")
    ),
    array(
      "id" =>"jquery-ui",
