@@ -14,7 +14,7 @@ Class Template extends Smarty
 
   var $css_autoincludes = '';
   var $css_includes = '';
-  var $js_autoincludes = '';  
+  var $js_autoincludes = '';
   var $js_includes = '';
 
 
@@ -33,7 +33,7 @@ Class Template extends Smarty
     if($module == false){
       $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/';
     }
-    else 
+    else
     if($module == 'vendor') {
       $base_path = MEDIASERVER_HOST.'vendor/';
     }
@@ -57,7 +57,7 @@ Class Template extends Smarty
     if($module == false){
       $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/';
     }
-    else 
+    else
     if($module == 'vendor') {
       $base_path = MEDIASERVER_HOST.'vendor/';
     }
@@ -68,10 +68,10 @@ Class Template extends Smarty
 
 
     if( $is_autoinclude ){
-      $this->css_autoincludes .= "\n".'<link rel="stylesheet" type="text/css" href="'.$base_path.$file_path.'">';
+      $this->css_autoincludes .= "\n".'<link rel="stylesheet/less" type="text/css" href="'.$base_path.$file_path.'">';
     }
     else {
-      $this->css_includes .= "\n".'<link rel="stylesheet" type="text/css" href="'.$base_path.$file_path.'">';
+      $this->css_includes .= "\n".'<link rel="stylesheet/less" type="text/css" href="'.$base_path.$file_path.'">';
     }
   }
 
