@@ -30,7 +30,7 @@ class CogumeloClass extends Singleton
      ),
      array(
        "id" => "smarty",
-       "params" => array('smarty/smarty', '3.1.19'),
+       "params" => array('smarty/smarty', '3.1.18'),
        "installer" => 'composer',
        "includes" => array('distribution/libs/Smarty.class.php')
      ),

@@ -3,8 +3,8 @@
 
 function setValidateForm( idForm, rules, messages ) {
 
-  if( $( 'input:file' ).length > 0 ) {
-    bindFormInputFiles();
+  if( $( '#'+idForm+' input:file' ).length > 0 ) {
+    bindFormInputFiles( idForm );
   }
 
   var $validateForm = $( '#'+idForm ).validate({
@@ -106,7 +106,7 @@ function showErrorsValidateForm( msgClass, msgText, $form ) {
 **/
 
 
-function bindFormInputFiles() {
+function bindFormInputFiles( idForm ) {
   console.log( 'bindFormInputFiles' );
 
   // Check for the various File API support.
@@ -226,8 +226,9 @@ function progressHandler(event) {
 function completeHandler(event) {
   console.log( 'completeHandler' );
   console.log( event );
-  document.getElementById("status").innerHTML = event.target.responseText;
+  document.getElementById("loaded_n_total").innerHTML = "";
   document.getElementById("progressBar").value = 0;
+  document.getElementById("status").innerHTML = event.target.responseText;
 }
 
 function errorHandler(event) {
