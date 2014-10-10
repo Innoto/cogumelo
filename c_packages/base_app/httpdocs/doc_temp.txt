@@ -1,8 +1,8 @@
 Recordar que necesitamos tener instalado en el equipo tanto git como svn.
 
 1- Paso debemos instalar NPM y nodejs sino lo tenemos instalado para poder continuar con la instalacion de bower
-sudo apt-get install nodejs-legacy 
-sudo apt-get install npm 
+sudo apt-get install nodejs-legacy
+sudo apt-get install npm
 
 (version de npm = 1.3.10)(version de nodejs = v0.10.25)
 
@@ -23,7 +23,7 @@ Volvemos ejecutar la instalación de bower
 sudo npm install -g bower
 
 
-2-Composer ya esta instalado en el proyecto no es necesario instalarlo. De todas formas lo dejo las lineas de instalacion 
+2-Composer ya esta instalado en el proyecto no es necesario instalarlo. De todas formas lo dejo las lineas de instalacion
 
 -Instalando composer
 
@@ -34,3 +34,62 @@ php -r "readfile('https://getcomposer.org/installer');" | php
 
 
 Para cualquier error de composer a la hora de descargar una dependencia de cogumelo aconsejamos ejecutar a mano "php composer.phar update" si estais en la raiz del proyecto o "composer update" si lo teneis instalado en el sistema.
+
+
+A continuacion desde la raiz de al app puedes ejecutar './cogumelo installDependences' este comando buscara todas las dependencias de Cogumelo y de la App y las instalara dentro de httpdocs las dependencias de cliente en 'httpdocs/vendorServer' y las de cliente 'httpdocs/vendor'.
+
+Para añadir las dependencias a nuestros módulos de aplicación(c_app/modules/nameModule/nameModule.php) o a la aplicación en general(c_app/Cogumelo.php). En cualquiera de estos sitios estan definidos dos arrays $dependences y $includesCommon. Dentro de dependences incluimos las dependencias :
+
+public $dependences = array(
+// BOWER
+array(
+ "id" => "jquery",
+ "params" => array("jquery#1.*"),
+ "installer" => "bower",
+ "includes" => array("dist/jquery.js")
+),
+array(
+ "id" =>"jquery-ui",
+ "params" => array("jquery-ui"),
+ "installer" => "bower",
+ "includes" => array("jquery-ui.js", "themes/smoothness/jquery-ui.css")
+),
+array(
+ "id" =>"less",
+ "params" => array("less"),
+ "installer" => "bower",
+ "includes" => array("dist/less-1.7.5.min.js")
+),
+array(
+ "id" => "bootstrap",
+ "params" => array("bootstrap"),
+ "installer" => "bower",
+ "includes" => array()
+),
+// COMPOSER
+array(
+ "id" => "kint",
+ "params" => array("raveren/kint","1.0.*@dev"),
+ "installer" => "composer",
+ "includes" => array("Kint.class.php")
+),
+array(
+ "id" => "sqlFormatter",
+ "params" => array("jdorn/sql-formatter", "1.3.*@dev"),
+ "installer" => "composer",
+ "includes" => array("lib/SqlFormatter.php")
+)
+);
+
+Cada dependencia tiene sus atrr:
+
+"id": en el caso de las dependencias de cliente es decir las instaladas por Bower usamos el 'id' para darle nombre a la carpeta donde se descargan los archivos. En el caso de composer se ignora dado que composer crea una carpeta con el nombre de usuario y dentro otra con el nombre de la biblioteca.
+
+public $includesCommon = array(
+  'controller/LogReaderController.php',
+  'controller/DevelDBController.php',
+  'controller/UrlListController.php',
+  'js/devel.js',
+  'styles/devel.less'
+
+);
