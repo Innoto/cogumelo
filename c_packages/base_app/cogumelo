@@ -117,8 +117,8 @@
           flush                 to remove temporary files
           setPermissions        to set the files/folders permission
           setPermissionsDevel   to set the files/folders permission
-          creteDB               to create a database
-          creteTables           to generate the tables
+          createDB               to create a database
+          createTables           to generate the tables
           bckDB                 to do a DB backup (optional arg: filename)
           restoreDB             to restore a database
           installDependences    to install all modules dependencies
@@ -132,8 +132,8 @@
           flush                 to remove temporary files
           setPermissions        to set the files/folders permission
           setPermissionsDevel   to set the files/folders permission
-          creteDB               to create a database
-          creteTables           to generate the tables
+          createDB               to create a database
+          createTables           to generate the tables
           bckDB                 to do a DB backup (optional arg: filename)
           restoreDB             to restore a database
           installDependences    to install all modules dependencies
@@ -246,11 +246,10 @@
     textdomain($textdomain);
   }
 
-  
-  function generateTranslations(){
-    /**
-    * Prepare the enviroment to localize the project
+  /**
+    * Get all the text to be translated and update or create a file.po if not exists
     */
+  function generateTranslations(){
     $textdomain="c_cogumelo";
     
     $locale= 'es_ES';
@@ -279,6 +278,7 @@
         while ($file = readdir($handle)) {
           $parts = explode('.',$file);
           if ($parts[1]!='.po'){
+            //exec('find '.SITE_PATH.'.. -iname "*.php" -o -iname "*.php" | xargs xgettext --from-code=UTF-8 -o -d '.SITE_PATH.'../*.php');
             exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_php.po '.SITE_PATH.'../*.php');
             // exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_js.po '.SITE_PATH.'../*.php');
             // exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_tpl.po '.SITE_PATH.'../*.php');
