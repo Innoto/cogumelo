@@ -160,8 +160,10 @@ class FormsTestV2 extends View
 
 
       if( sizeof( $jvErrors ) > 0 ) {
+        // Añado errores a mano
         $form->addJVError( 'formError', 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.' );
         $form->addJVError( 'sinSitioDefinido', 'Error a lo loco :D' );
+        // y recargo los errores para tenerlos todos
         $jvErrors = $form->getJVErrors();
         echo json_encode(
           array(
@@ -197,36 +199,74 @@ class FormsTestV2 extends View
     error_log( '--------------------------------' );error_log( '--------------------------------' );
 
     $error = false;
+    $fileInfo = false;
 
 
     error_log( print_r( $_FILES, true ) );
 
-    $fileName     = $_FILES['ajaxFileUpload']['name'];// The file name
-    $fileTmpLoc   = $_FILES['ajaxFileUpload']['tmp_name'];// File in the PHP tmp folder
-    $fileType     = $_FILES['ajaxFileUpload']['type'];// The type of file it is
-    $fileSize     = $_FILES['ajaxFileUpload']['size'];// File size in bytes
-    $fileErrorMsg = $_FILES['ajaxFileUpload']['error'];// 0 for false... and 1 for true
+    if( isset( $_FILES['ajaxFileUpload'] ) ) {
+      $fileName     = $_FILES['ajaxFileUpload']['name'];     // The file name
+      $fileTmpLoc   = $_FILES['ajaxFileUpload']['tmp_name']; // File in the PHP tmp folder
+      $fileType     = $_FILES['ajaxFileUpload']['type'];     // The type of file it is
+      $fileSize     = $_FILES['ajaxFileUpload']['size'];     // File size in bytes
+      $fileErrorMsg = $_FILES['ajaxFileUpload']['error'];    // 0 for false... and 1 for true
 
-    if (!$fileTmpLoc) { // if file not chosen
-      $error = 'ajaxUpload: ERROR: Please browse for a file before clicking the upload button.';
+      switch ($fileErrorMsg) {
+        case UPLOAD_ERR_OK:
+          // Todo OK, no hay error
+          break;
+        case UPLOAD_ERR_INI_SIZE:
+          $error = "El tamaño del fichero ha superado el límite establecido en el servidor.";
+          break;
+        case UPLOAD_ERR_FORM_SIZE:
+          $error = "El tamaño del fichero ha superado el límite establecido para este campo.";
+          break;
+        case UPLOAD_ERR_PARTIAL:
+          $error = "La subida del fichero no se ha completado.";
+          break;
+        case UPLOAD_ERR_NO_FILE:
+          $error = "No se ha subido el fichero.";
+          break;
+        case UPLOAD_ERR_NO_TMP_DIR:
+          $error = "La subida del fichero ha fallado. (6)";
+          break;
+        case UPLOAD_ERR_CANT_WRITE:
+          $error = "La subida del fichero ha fallado. (7)";
+          break;
+        case UPLOAD_ERR_EXTENSION:
+          $error = "La subida del fichero ha fallado. (8)";
+          break;
+        default:
+          $error = "La subida del fichero ha fallado.";
+          break;
+      }
+
+      if( $error === false && $fileSize < 1 ) {
+        $error = "El tamaño del fichero parece ser cero (0).";
+      }
+
+      if( $error === false ) {
+        if( move_uploaded_file( $fileTmpLoc, $_SERVER['DOCUMENT_ROOT'].'test_upload/'.$fileName ) ) {
+          $fileInfo = $_SERVER['DOCUMENT_ROOT'].'test_upload/'.$fileName;
+        }
+        else {
+          $error = 'move_uploaded_file fallou';
+        }
+      }
     }
-    else {
-      if( move_uploaded_file( $fileTmpLoc, $_SERVER['DOCUMENT_ROOT'].'test_upload/'.$fileName ) ) {
-      }
-      else {
-        $error = 'ajaxUpload: ERROR: move_uploaded_file function failed';
-      }
+    else { // no parece haber fichero
+      $error = 'No ha llegado el fichero o lo ha hecho con errores.';
     }
 
-$error = 'probando o ERROR';
 
     if( $error === false ) {
       $respond = array( 'success' => 'success' );
     }
     else {
-      $respond = array( 'success' => 'error', 'error' => $error );
+      $respond = array( 'success' => 'error', 'error' => 'ajaxUpload: ERROR: '.$error );
     }
 
+    header('Content-Type: text/plain; charset=utf-8');
     echo json_encode($respond);
   } // function ajaxUpload() {
 
