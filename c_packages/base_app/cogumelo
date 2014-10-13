@@ -271,6 +271,16 @@
     /**
     * Generate files.po or update them if don't exist already
     */
+
+    // Search for all the .php into base_app folder excluding 
+    $all_php = shell_exec('find '.getcwd().' -iname "*.php" | grep -v vendorServer | grep -v templates');
+
+    $dir_path = SITE_PATH.'conf/i18n/';
+    $res = exec($all_php.' | xargs xgettext -kT_gettext -kT_ --from-code=UTF-8 -o '.$dir_path.$textdomain.'_php.po '.SITE_PATH.'../*.php');
+
+    echo $res;
+
+
     foreach(explode(',', 'gl,es,en') as $lng) {
       $filepath = SITE_PATH.'conf/i18n/'.$lng.'/LC_MESSAGES/';
       if (is_dir($filepath)) {
@@ -278,8 +288,25 @@
         while ($file = readdir($handle)) {
           $parts = explode('.',$file);
           if ($parts[1]!='.po'){
-            //exec('find '.SITE_PATH.'.. -iname "*.php" -o -iname "*.php" | xargs xgettext --from-code=UTF-8 -o -d '.SITE_PATH.'../*.php');
-            exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_php.po '.SITE_PATH.'../*.php');
+
+/*            $res = exec($all_php.' | xargs xgettext -kT_gettext -kT_ --from-code=UTF-8 -o '.$filepath.$textdomain.'_php.po '.SITE_PATH.'../*.php');
+            echo $res;*/
+
+            // buscamos todos os .php e logo aplicámoslles xgettext con xargs
+            //exec('find '.SITE_PATH.'. -iname "*.php" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code=UTF-8 -o '.$filepath.$textdomain.'_php.po '.SITE_PATH.'../*.php'); 
+            
+            //echo('find '.getcwd().' -iname "*.php" | grep -v vendorServer');
+
+            //$res = exec('find '.getcwd().' -iname "*.php" | grep -v vendorServer');
+
+            //$proba = 'find '.getcwd().' -iname "*.php" | grep -v vendorServer';
+
+            //echo $proba;
+            //echo($res."\n"); // devolve TODOS os .php
+
+
+            //exec('find '.SITE_PATH.'. -iname "*.php" -o -iname "*.php" | xargs xgettext --from-code=UTF-8 -o -d '.SITE_PATH.'../*.php');
+            //exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_php.po '.SITE_PATH.'../*.php');
             // exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_js.po '.SITE_PATH.'../*.php');
             // exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_tpl.po '.SITE_PATH.'../*.php');
           }
