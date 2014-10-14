@@ -272,50 +272,81 @@
     * Generate files.po or update them if don't exist already
     */
 
-    // Search for all the .php into base_app folder excluding 
-    $all_php = shell_exec('find '.getcwd().' -iname "*.php" | grep -v vendorServer | grep -v templates');
-
     $dir_path = SITE_PATH.'conf/i18n/';
-    $res = exec($all_php.' | xargs xgettext -kT_gettext -kT_ --from-code=UTF-8 -o '.$dir_path.$textdomain.'_php.po '.SITE_PATH.'../*.php');
+    $tmp_dir = SITE_PATH.'tmp/';
 
-    echo $res;
+    // Get all the php files excluding the translations and the libraries and save them to a temporary file
+    $all_php = 'find '.getcwd().' -iname "*.php" | grep -v vendorServer | grep -v tmp | grep -v conf > '.$tmp_dir.'xgettext_php.tmp';
+    exec($all_php);
+    // Get all the tpl files excluding the translations and the libraries and save them to a temporary file
+    $all_tpl = 'find '.getcwd().' -iname "*.tpl" | grep -v vendorServer | grep -v tmp | grep -v conf > '.$tmp_dir.'xgettext_tpl.tmp';
+    exec($all_tpl);
+    // Get all the js files excluding the translations and the libraries and save them to a temporary file
+    $all_js = 'find '.getcwd().' -iname "*.js" | grep -v vendorServer | grep -v tmp | grep -v conf > '.$tmp_dir.'xgettext_js.tmp';
+    exec($all_js);
 
-
-    foreach(explode(',', 'gl,es,en') as $lng) {
-      $filepath = SITE_PATH.'conf/i18n/'.$lng.'/LC_MESSAGES/';
-      if (is_dir($filepath)) {
-        $handle = opendir($filepath);
-        while ($file = readdir($handle)) {
-          $parts = explode('.',$file);
-          if ($parts[1]!='.po'){
-
-/*            $res = exec($all_php.' | xargs xgettext -kT_gettext -kT_ --from-code=UTF-8 -o '.$filepath.$textdomain.'_php.po '.SITE_PATH.'../*.php');
-            echo $res;*/
-
-            // buscamos todos os .php e logo aplicámoslles xgettext con xargs
-            //exec('find '.SITE_PATH.'. -iname "*.php" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code=UTF-8 -o '.$filepath.$textdomain.'_php.po '.SITE_PATH.'../*.php'); 
-            
-            //echo('find '.getcwd().' -iname "*.php" | grep -v vendorServer');
-
-            //$res = exec('find '.getcwd().' -iname "*.php" | grep -v vendorServer');
-
-            //$proba = 'find '.getcwd().' -iname "*.php" | grep -v vendorServer';
-
-            //echo $proba;
-            //echo($res."\n"); // devolve TODOS os .php
-
-
-            //exec('find '.SITE_PATH.'. -iname "*.php" -o -iname "*.php" | xargs xgettext --from-code=UTF-8 -o -d '.SITE_PATH.'../*.php');
-            //exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_php.po '.SITE_PATH.'../*.php');
-            // exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_js.po '.SITE_PATH.'../*.php');
-            // exec('xgettext --from-code=UTF-8 -o '.$filepath.$textdomain.'_tpl.po '.SITE_PATH.'../*.php');
-          }
-          else{
-            shell_exec('find '.SITE_PATH.'. -iname "*.php" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code utf-8 -d '.$textdomain.'_php -o '.$filepath.$textdomain.'.pot -L PHP');
-            shell_exec('msgmerge -U '.$filepath.$textdomain.'_php.po '.$filepath.$textdomain.'_php.pot');
-          }
+    // Check if the .po files exist already
+    $existPHP = false;
+    $existTPL = false;
+    $existJS = false;
+    if (is_dir($dir_path)){
+      $handle = opendir($dir_path);
+      while ($file = readdir($handle)) {
+        if ($file=='c_cogumelo_php.po'){
+          $existPHP = true;
         }
-        closedir($handle);
+        if ($file=='c_cogumelo_tpl.po'){
+          $existTPL = true;
+        }
+        if ($file=='c_cogumelo_js.po'){
+          $existJS = true;
+        }
+        if ($existPHP && $existTPL && $existJS)
+          break;
+      }
+    }
+
+    /* PHP */
+    if ($existPHP){ // Extract new texts and merge in the .po file
+      $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.pot';
+      exec($extractPHP);
+      $mergePHP = 'msgmerge -U '.$dir_path.$textdomain.'_php.po '.$dir_path.$textdomain.'_php.pot';
+      exec($mergePHP);
+    }
+    else{ // Extract all the texts to be translated and create the file
+      $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.po'; 
+      exec($extractPHP);
+    }
+
+    /* TPL */
+    if ($existTPL){ // Extract new texts and merge in the .po file
+      $extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.pot'; 
+    }
+    else{ // Extract all the texts to be translated and create the file
+      $extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.po'; //tpl
+    }
+
+    /* JS */
+    if ($existJS){ // Extract new texts and merge in the .po file
+      $extractJS = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_js.tmp -o '.$dir_path.$textdomain.'_js.pot'; 
+    }
+    else{ // Extract all the texts to be translated and create the file
+      $extractJS = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_js.tmp -o '.$dir_path.$textdomain.'_js.po'; //js
+    }
+
+    // Delete the modified files remaining
+    if (is_dir($dir_path)){
+      $handle = opendir($dir_path);
+      while ($file = readdir($handle)) {
+        if ($file=='c_cogumelo_php.po~'){
+         unlink($dir_path.$file);
+        }
+        if ($file=='c_cogumelo_tpl.po~'){
+         unlink($file);
+        }
+        if ($file=='c_cogumelo_js.po~'){
+         unlink($file);
+        }
       }
     }
   }
@@ -326,8 +357,8 @@
   function compileTranslations(){
     $textdomain="c_cogumelo";
     foreach(explode(',', 'gl,es,en') as $lng) {
-      $filepath = SITE_PATH.'conf/i18n/'.$lng.'/LC_MESSAGES/';
-      exec('msgfmt -o '.$filepath.$textdomain.'_php.mo '.$filepath.$textdomain.'_php.po');
+      $filepath = SITE_PATH.'conf/i18n/';
+      exec('msgfmt -o '.$filepath.$lng.'/LC_MESSAGES/'.$textdomain.'_php.mo '.$filepath.$textdomain.'_php.po');
       // exec('msgfmt -o '.$filepath.$textdomain.'_js.mo '.$filepath.$textdomain.'_js.po');
       // exec('msgfmt -o '.$filepath.$textdomain.'_tpl.mo '.$filepath.$textdomain.'_tpl.po');
     }
