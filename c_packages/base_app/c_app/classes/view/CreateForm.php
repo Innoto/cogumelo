@@ -50,7 +50,9 @@ class CreateForm extends View
     //$form->setField( 'lostBornDate', array( 'label' => 'Fecha dmy Min', 'placeholder' => 'Fecha', 'value' => '15/11/1987', 'format' => 'datedmy'));
     //$form->setField( 'lostBornDate2', array( 'label' => 'Fecha dmy Max', 'placeholder' => 'Fecha', 'value' => '15/11/2000', 'format' => 'datedmy'));
 
-    $form->setField( 'lostDate', array( 'label' => 'Fecha Ymd Min', 'placeholder' => 'Fecha', 'value' => '2014-1-9', 'format' => 'dateYmd'));
+    $form->setField( 'lostDate', array( 'label' => 'Prueba extend app', 'placeholder' => 'Fecha', 'value' => '2014-1-9', 'format' => 'dateYmd'));
+
+    //$form->setField( 'lostDate', array( 'label' => 'Fecha Ymd Min', 'placeholder' => 'Fecha', 'value' => '2014-1-9', 'format' => 'dateYmd'));
     $form->setField( 'lostDate2', array( 'label' => 'Fecha Ymd Max', 'placeholder' => 'Fecha', 'value' => '2012-11-8', 'format' => 'dateYmd'));
 
     $form->setField( 'lostTime', array( 'label' => 'Time Hms Min', 'placeholder' => 'Hora', 'value' => '10:11:12', 'format' => 'timeHms'));
@@ -81,7 +83,9 @@ class CreateForm extends View
 
     //$form->setValidationRule( 'lostBornDate', 'dateMin', '2014-9-9' );
     //$form->setValidationRule( 'lostBornDate2', 'dateMax', '2014-9-9' );
-    $form->setValidationRule( 'lostDate', 'dateMin', '2014-01-4' );
+    $form->setValidationRule( 'lostDate', 'uppercase', 0);
+
+    //$form->setValidationRule( 'lostDate', 'dateMin', '2014-01-4' );
     $form->setValidationRule( 'lostDate2', 'dateMax', '2014-09-09' );
 
     $form->setValidationRule( 'lostTime', 'timeMin', '9:10:09' );

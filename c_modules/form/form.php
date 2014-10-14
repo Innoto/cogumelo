@@ -33,7 +33,8 @@ class form extends Module
     'js/numberEU.js',
     'js/timeMaxMin.js',
     'js/dateMaxMin.js',
-    'js/dateTimeMaxMin.js'
+    'js/dateTimeMaxMin.js',
+    'js/appValidateMethods.js'
   );
 
   function __construct() {
