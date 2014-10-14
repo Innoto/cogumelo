@@ -3,7 +3,7 @@
 /************************************************************************************************************************/
 /* Init elem styles and  @imports ***************************************************************************************/
 
-body { 
+body {
   margin: 0px;
   padding: 0px;
   padding-top: 90px;
@@ -55,7 +55,7 @@ ul.withoutDecoration li{
 
 .elementLeft{ float:left; }
 
-.elementRight{ float:left; }    
+.elementRight{ float:left; }
 
 .cll_container{ color: white; }
 
@@ -111,15 +111,15 @@ ul.withoutDecoration li{
 #header h1{
   float:left;
 }
-    
+
 #options_header_menu{float:right;}
 
 #header #logo{ margin: 10px 20px; }
 
-#header h1{margin: 20px 0px;} 
+#header h1{margin: 20px 0px;}
 
 #options_header_menu{ margin: 0px; padding: 0px; }
-    #options_header_menu li{ 
+    #options_header_menu li{
       display:inline-block;
       color:#E7E7E8;
       list-style: none;
@@ -142,20 +142,20 @@ ul.withoutDecoration li{
 /************************************************************************************************************************/
 /* Content **************************************************************************************************************/
 
-#main{ 
-  width:100%; 
+#main{
+  width:100%;
   max-width:1100px;
   margin: 0 auto;
-}    
+}
 
 
 /* Logs */
-#logs_tabs{ 
-  font-family: 'Ubuntu Mono', sans-serif !important; 
-  font-size: 0.9em; 
+#logs_tabs{
+  font-family: 'Ubuntu Mono', sans-serif !important;
+  font-size: 0.9em;
   background: green;
 }
-  #logs_tabs .container_log{ 
+  #logs_tabs .container_log{
     min-height: 480px;
     color:green;
     background:#000 url('/media/module/devel/img/cogumelo_logo_mini.png') right bottom no-repeat;
@@ -167,8 +167,8 @@ ul.withoutDecoration li{
       #logs_tabs li.ui-tabs-active a{color:green !important; text-decoration: underline;}
     #logs_tabs p{ margin:5px 0px; }
     #logs_tabs div.lines{ margin:5px 0px; }
-    
-    
+
+
 /* DBSQL */
 #dbsql_container{
   background: #E7E7E8;
@@ -179,14 +179,14 @@ ul.withoutDecoration li{
   #dbsql_container fieldset{border:3px solid #D6D6D6;}
   #dbsql_container legend{ font-size: 28px;}
   #dbsql_container .options_container_SQL{ text-align: center; height: 65px;}
-    
+
 
 /*InfoSetup*/
-#infosetup_container table{ 
-  margin: 50px auto;  
-  min-width: 500px;  
-  max-width: 960px;  
-  border-bottom: 3px dashed #fff; 
+#infosetup_container table{
+  margin: 50px auto;
+  min-width: 500px;
+  max-width: 960px;
+  border-bottom: 3px dashed #fff;
   padding-bottom: 30px;
 }
 #infosetup_container table thead tr{ background: #333; color:#E7E7E8; }
@@ -197,7 +197,7 @@ ul.withoutDecoration li{
 
 /*Debbuger*/
 #debug_container{
-  font-family: 'Ubuntu Mono', sans-serif !important; 
+  font-family: 'Ubuntu Mono', sans-serif !important;
 }
   #debug_container .debugOptionsContainer li{
     float:right;
@@ -218,12 +218,12 @@ ul.withoutDecoration li{
     color: #69C2FF;
     float: right;
     font-size: 14px;
-    font-weight: bold;  
+    font-weight: bold;
     margin: 5px 0px;
   }
-  #debug_container .debugItemContainer{ 
+  #debug_container .debugItemContainer{
     padding-bottom: 20px;
-    margin-bottom: 20px; 
+    margin-bottom: 20px;
     border-bottom: 3px dashed #fff;
   }
 /* URLs */
@@ -237,7 +237,7 @@ ul.withoutDecoration li{
    width: 100%;
    max-width: 600px;
   }
-  #urls_container .regexItem .regex{ 
+  #urls_container .regexItem .regex{
    color: #C52664;
    display:block;
    float: left;
@@ -247,3 +247,39 @@ ul.withoutDecoration li{
 
 /************************************************************************************************************************/
 /************************************************************************************************************************/
+
+/* KINT Styles */
+.kint{
+  > dl > dt{
+    background: linear-gradient(to bottom, #fff 0px, #E7E7E8 100%) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+  }
+  dt{
+    border-top: 0px !important;
+    border:1px solid #d6d6d6 !important;
+    background: #fff !important;
+    font-weight: normal !important;
+  }
+  footer {
+    span{ color: #0092db !important; }
+    li{ color: #545454 !important; }
+  }
+  pre{
+      background: #D7D7DC !important;
+      border-top: 0px !important;
+      border:1px solid #d6d6d6 !important;
+    }
+  ul.kint-tabs{
+    background: linear-gradient(to bottom, #fff 0px, #E7E7E8 100%) repeat scroll 0 0 rgba(0, 0, 0, 0) !important;
+    li{
+      background: #D7D7DC !important;
+      border-top: 0px !important;
+      border:1px solid #d6d6d6 !important;
+      color: #0092db !important;
+    }
+  }
+}
+
+
+/************************************************************************************************************************/
+/************************************************************************************************************************/
+
