@@ -1,7 +1,8 @@
 <?php
 
+form::load('controller/AppFormValidators.php');
 
-class FormValidators implements Serializable {
+class FormValidators extends AppFormValidators {
 
   private $methods = array();
   private $messages = array();
