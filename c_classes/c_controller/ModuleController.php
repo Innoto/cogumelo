@@ -28,7 +28,7 @@ class ModuleController
     if( !$from_shell ) {
       $this->execModules();
     }
-  
+
 
   }
 

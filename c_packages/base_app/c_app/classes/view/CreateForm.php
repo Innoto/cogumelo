@@ -1,11 +1,10 @@
 <?php
 Cogumelo::load('c_view/View.php');
-//Cogumelo::load('c_controller/FormController.php');
-//Cogumelo::load('c_controller/FormValidators.php');
 Cogumelo::load('controller/LostController.php');
 Cogumelo::load('model/LostVO.php');
 
 form::autoIncludes();
+
 
 class CreateForm extends View
 {
@@ -128,8 +127,11 @@ class CreateForm extends View
       $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
       // Creamos un objeto con los validadores
       $validator = new FormValidators();
+
       // y lo asociamos
       $form->setValidationObj( $validator );
+
+      $form->setValidationRule('lostDate', 'uppercase', '1');
 
       //$form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
       //$form->setValidationRule( 'lostDate', 'dateMin', '2014-09-09' );
