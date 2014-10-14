@@ -3,6 +3,8 @@ Cogumelo::load('c_view/View.php');
 Cogumelo::load('controller/LostController.php');
 Cogumelo::load('model/LostVO.php');
 
+
+client::autoIncludes();
 form::autoIncludes();
 
 
@@ -35,6 +37,8 @@ class CreateForm extends View
   }
 
   function lostForm( $dataVO = '' ) {
+
+
 
     Cogumelo::objdebug($dataVO);
 

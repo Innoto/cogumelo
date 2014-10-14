@@ -10,12 +10,6 @@ class form extends Module
   public $dependences = array(
    // BOWER
    array(
-     "id" => "jquery",
-     "params" => array("jquery#1.*"),
-     "installer" => "bower",
-     "includes" => array("dist/jquery.js")
-   ),
-   array(
      "id" => "jquery-validation",
      "params" => array("jquery-validation"),
      "installer" => "bower",
