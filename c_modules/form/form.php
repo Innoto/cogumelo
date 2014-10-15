@@ -28,7 +28,8 @@ class form extends Module
     'js/timeMaxMin.js',
     'js/dateMaxMin.js',
     'js/dateTimeMaxMin.js',
-    'js/appValidateMethods.js'
+    'js/appValidateMethods.js',
+    'styles/form.less'
   );
 
   function __construct() {

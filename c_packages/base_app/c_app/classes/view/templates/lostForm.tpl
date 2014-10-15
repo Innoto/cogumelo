@@ -28,9 +28,7 @@
   <body>
     {$lostFormOpen}
       {foreach from=$lostFormFields key=key item=field}
-      <p>
         {$field}
-      </p>
       {/foreach}
     {$lostFormClose}
     {$lostFormValidations}
