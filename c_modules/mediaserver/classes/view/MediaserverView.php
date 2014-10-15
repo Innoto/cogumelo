@@ -1,7 +1,7 @@
 <?php
 
 Cogumelo::load('c_view/View.php');
-mediaserver::load('controller/MediaserverController.php');
+mediaserver::autoIncludes();
 
 class MediaserverView extends View
 {
