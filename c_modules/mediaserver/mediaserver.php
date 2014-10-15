@@ -22,10 +22,19 @@ class mediaserver extends Module
       "params" => array("natxet/CssMin", "3.0.2"),
       "installer" => "composer",
       "includes" => array("")
-    )
+    ),
+    array(
+      "id" => "cssmin",
+      "params" => array("less.php/less.php", "1.7.0.2"),
+      "installer" => "composer",
+      "includes" => array("lessc.inc.php")
+    )        
   );
 
-  public $includesCommon = array();
+  public $includesCommon = array(
+    'controller/MediaserverController.php',
+    'controller/LessController.php'
+  );
 
  
   function __construct() {
