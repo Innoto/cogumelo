@@ -41,8 +41,7 @@ class LessController {
 
     }
     else {
-      $appPath = SITE_PATH.'/classes/view/template/' . dirname($filePath);
-
+      $appPath = SITE_PATH.'/classes/view/template/';
       $this->less->setImportDir( $appPath ); 
     }
   }
