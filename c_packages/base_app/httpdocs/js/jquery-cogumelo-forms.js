@@ -1,11 +1,8 @@
 
+var CogumeloForms = [];
 
 
 function setValidateForm( idForm, rules, messages ) {
-
-  if( $( '#'+idForm+' input:file' ).length > 0 ) {
-    bindFormInputFiles( idForm );
-  }
 
   var $validateForm = $( '#'+idForm ).validate({
 
@@ -65,7 +62,7 @@ function setValidateForm( idForm, rules, messages ) {
                 console.log( 'Msg cargado...' );
               }
 
-            };
+            }
             // if( response.formError !== '' ) $validateForm.showErrors( {"submit": response.formError} );
           }
           $( form ).find( '[type="submit"]' ).removeAttr("disabled");
@@ -73,11 +70,28 @@ function setValidateForm( idForm, rules, messages ) {
         return false; // required to block normal submit since you used ajax
       }
   });
-
   console.log( $validateForm );
+
+  if( $( '#'+idForm+' input:file' ).length > 0 ) {
+    bindFormInputFiles( idForm );
+  }
+
+  CogumeloForms[ CogumeloForms.length ] = { idForm: idForm, validateForm: $validateForm };
+
   return $validateForm
 } // function
 
+
+function getValidateForm( idForm ) {
+  $validateForm = null;
+  for (var i = CogumeloForms.length - 1; i >= 0; i--) {
+    if( CogumeloForms[i].idForm === idForm ) {
+      $validateForm = CogumeloForms[i].validateForm;
+      break;
+    }
+  };
+  return $validateForm
+}
 
 function showErrorsValidateForm( msgClass, msgText, $form ) {
   // Solo se muestran los errores pero no se marcan los campos
@@ -116,10 +130,12 @@ function bindFormInputFiles( idForm ) {
 
   document.getElementById('inputFicheiro').addEventListener('change', handleFileSelect, false);
 
+  /*
   // Setup the dnd listeners.
   var dropZone = document.getElementById('drop_zone');
   dropZone.addEventListener('dragover', handleDragOver, false);
   dropZone.addEventListener('drop', handleFileDrop, false);
+  */
 }
 
 
@@ -129,29 +145,32 @@ function handleFileSelect(evt) {
   console.log( 'handleFileSelect' );
   console.log( evt );
   var files = evt.target.files; // FileList object
-  checkInputFieldFiles( files );
+  checkInputFieldFiles( files, evt.target.form.id, evt.target.name );
 }
 
-
-// Ficheros "soltados" sobre el input
+/*
+// Ficheros "soltados" sobre un area
 function handleFileDrop(evt) {
   console.log( 'handleFileDrop' );
   console.log( evt );
   evt.stopPropagation();
   evt.preventDefault();
   var files = evt.dataTransfer.files; // FileList object.
-  checkInputFieldFiles( files );
+  checkInputFieldFiles( files, evt.target.form.id );
 }
 function handleDragOver(evt) {
   evt.stopPropagation();
   evt.preventDefault();
   evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 }
+*/
 
 
+function checkInputFieldFiles( files, idForm, nameField ) {
 
-function checkInputFieldFiles( files ) {
-  // Loop through the FileList and render image files as thumbnails.
+  var $validateForm = getValidateForm( idForm );
+  $validateForm.element( 'input[name='+nameField+']' );
+
   for (var i = 0, f; f = files[i]; i++) {
     console.log( f );
 

@@ -1,7 +1,5 @@
 <?php
 
-Cogumelo::vendorLoad('linkorb/jsmin-php/src/jsmin-1.1.1.php');
-Cogumelo::vendorLoad('natxet/CssMin/src/CssMin.php');
 
 class MediaserverController {
 
@@ -11,31 +9,6 @@ class MediaserverController {
   var $moduleName = false;
   var $modulePath = '';
 
-
-
-  static $mainDependences = array(
-    // BOWER   
-    array(
-       "id" => "jquery",
-       "params" => array("jquery#1.*"),
-       "installer" => "bower",
-       "load" => array("jquery.js")
-    ),
-
-    // COMPOSER
-    array(
-      "id" => "kint",
-      "params" => array("raveren/kint","1.0.*@dev"),
-      "installer" => "composer",
-      "load" => array("Kint.class.php")
-    )
-  );
-
-  static $mainClientCommon = array(  
-  );
-
-  static $mainServerCommon = array(
-  );
 
   /**
   * Process path to serve media resource. It will move and 
@@ -75,12 +48,9 @@ class MediaserverController {
           if( MEDIASERVER_COMPILE_LESS == false ) {
             $this->copyAndMoveFile();
           }
-          //if( MEDIASERVER_MINIMIFY_FILES ) {
-          // $this->copyAndMoveFile( $this->minify($this->lessCompile()) );
-          //}
-          //else {
-          // $this->copyAndMoveFile( $this->lessCompile() );
-          //}
+          else {
+            $this->compileAndMoveLessFile();
+          }
         }
         else {
           $this->copyAndMoveFile();
@@ -100,8 +70,7 @@ class MediaserverController {
 
   /*
   * Copy files to tmp path and move it to final path
-  * @return string : final path of file
-  * @var string $path: the path of file to copy
+  * @var boolean $minify: if we want to minify result
   */
   function copyAndMoveFile( $minify = false ) {
 
@@ -134,6 +103,24 @@ class MediaserverController {
       rename( $tmp_cache , $final_cache );
     }
 
+  }
+
+
+  /*
+  * Compile and move compiled less to final path
+  * @var boolean $minify: if we want to minify result
+  */
+  function compileAndMoveLessFile( $minify = false ) {
+
+    $lessControl = new LessController();
+    $tmp_cache = MEDIASERVER_TMP_CACHE_PATH . $this->modulePath . $this->urlPath. '.css';
+    $final_cache = SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath.'.css' ;
+
+
+    $lessControl->compile( $this->urlPath, $tmp_cache, $this->moduleName );
+
+    // move from tmp path to final path
+    rename( $tmp_cache , $final_cache );
   }
 
 

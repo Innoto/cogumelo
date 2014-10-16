@@ -57,7 +57,9 @@ class FormsTestV2 extends View
 
 
     $form->setField( 'inputFicheiro', array( 'type' => 'file', 'id' => 'inputFicheiro', 'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro' ) );
-    $form->setValidationRule( 'inputFicheiro', 'required' );
+    //$form->setValidationRule( 'inputFicheiro', 'required' );
+    $form->setValidationRule( 'inputFicheiro', 'minfilesize', 1024 );
+    $form->setValidationRule( 'inputFicheiro', 'accept', 'text/plain' );
 
 
     $form->setField( 'submit', array( 'type' => 'submit', 'label' => 'Pulsa para enviar', 'value' => 'Manda' ) );
@@ -76,10 +78,8 @@ class FormsTestV2 extends View
     '  <script src="/js/jquery-cogumelo-forms.js"></script>'."\n".
     '  <script src="/js/jquery.serializeFormToObject.js"></script>'."\n".
     '  <script src="/js/jquery-validation/jquery.validate.js"></script>'."\n".
-    '  <script src="/js/jquery-validation/additional-methods.min.js"></script>'."\n".
-    '  <script src="/js/jquery-validation/inArray.js"></script>'."\n".
-    '  <script src="/js/jquery-validation/regex.js"></script>'."\n".
-    '  <script src="/js/jquery-validation/numberEU.js"></script>'."\n".
+    '  <script src="/js/jquery-validation/additional-methods.js"></script>'."\n".
+    '  <script src="/js/jquery-validation/CFM-additional-methods.js"></script>'."\n".
     '  <style>div { border:1px dashed; margin:5px; padding:5px; } '.
       'label.error, .formError{ color:red; border:2px solid red; } '.
       '.ffn-inputFicheiro { background-color: yellow; }</style>'."\n".
@@ -92,7 +92,7 @@ class FormsTestV2 extends View
 "\n".
 '<div id="subidas" style="background-color:grey;">'."\n".
 '<div id="list">Info: </div>'."\n".
-'<span id="drop_zone" style="background-color:blue;">Drop files here</span>'."\n".
+//'<span id="drop_zone" style="background-color:blue;">Drop files here</span>'."\n".
 '<input type="button" name="botonUploadFile" value="subir ficheiro" onclick="uploadFile()"><br>'."\n".
 '<progress id="progressBar" value="0" max="100" style="width:300px;"></progress>'."\n".
 '<h3 id="status">status</h3>'."\n".
@@ -268,7 +268,52 @@ class FormsTestV2 extends View
 
     header('Content-Type: text/plain; charset=utf-8');
     echo json_encode($respond);
+
   } // function ajaxUpload() {
+
+/**
+
+pasos
+
+1.- Sube o ficheiro + ver que existe en tmp e ten tamaño
+http://php.net/manual/es/function.is-uploaded-file.php
+http://es1.php.net/manual/en/function.filesize.php
+Controlar upload_max_filesize e post_max_size
+To upload large files, this value must be larger than upload_max_filesize.
+If memory limit is enabled by your configure script, memory_limit also affects file uploading.
+Generally speaking, memory_limit should be larger than post_max_size.
+
+2.- Validadores - Se non valida, eliminar en form e en srv.
+http://es1.php.net/manual/en/function.finfo-file.php
+$finfo = new finfo(FILEINFO_MIME_TYPE);
+$finfo->file($_FILES['upfile']['tmp_name'])
+
+3.- Establecer o seu destino temporal e definitivo: ruta e nome (evitando colisions)
+make sure that the file name not bigger than 250 characters.
+mb_strlen($filename,"UTF-8") > 225
+make sure the file name in English characters, numbers and (_-.) symbols.
+preg_match("`^[-0-9A-Z_\.]+$`i",$filename)
+http://php.net/manual/es/ini.core.php#ini.open-basedir
+http://php.net/pathinfo
+http://es1.php.net/manual/en/function.chmod.php
+http://es1.php.net/manual/en/function.move-uploaded-file.php
+http://php.net/manual/en/function.sha1-file.php
+
+4.- Gardar todo no obj FORM e voltalo a meter na sesion
+
+
+
+SEGURIDADE EXTERNA
+
+You can use .htaccess to stop working some scripts as in example php file in your upload path.
+use :
+AddHandler cgi-script .php .pl .jsp .asp .sh .cgi
+Options -ExecCGI
+
+
+**/
+
+
 
 
 

@@ -48,7 +48,7 @@ class CreateForm extends View
 
     $form->setField( 'lostName', array( 'placeholder' => 'Nombre', 'value' => '' ));
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
-    $form->setField( 'lostMail', array( 'placeholder' => 'Email', 'value' => 'temp@temp.com') );
+    $form->setField( 'lostMail', array( 'placeholder' => 'Email') );
 
     $form->setField( 'lostFrutas', array( 'placeholder' => 'notInArray', 'label' => 'notInArray', 'value' => 'manzana') );
 
@@ -66,7 +66,6 @@ class CreateForm extends View
     $form->setField( 'lostDateTime', array( 'label' => 'Time YmdHms Min', 'placeholder' => 'Hora', 'value' => '2011-10-11 10:11:12', 'format' => 'dateTimeYmdHms'));
     $form->setField( 'lostDateTime2', array( 'label' => 'Time YmdHms Max', 'placeholder' => 'Hora', 'value' => '2011-10-11 10:11:12', 'format' => 'dateTimeYmdHms'));
 
-    $form->setField( 'lostMail', array( 'placeholder' => 'Email'));
     $form->setField( 'lostPhone', array( 'placeholder' => 'Phone', 'value' => '666666666') );
     $form->setField( 'lostProvince', array( 'type' => 'select', 'label' => 'Province',
       'options'=> array( '' => 'Selecciona', '1' => 'A coruña', '2' => 'Lugo', '3' => 'Ourense', '4' => 'Pontevedra' )
@@ -82,13 +81,16 @@ class CreateForm extends View
     //$form->setValidationRule( 'lostConditions', 'required' );
     $form->setValidationRule( 'lostMail', 'required' );
     $form->setValidationRule( 'lostPhone', 'required' );
+    $form->setValidationRule( 'lostProvince', 'required' );
 
     $form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
+
     //$form->setValidationRule( 'lostPassword', 'equalTo', '#lostPassword2' );
 
     //$form->setValidationRule( 'lostBornDate', 'dateMin', '2014-9-9' );
     //$form->setValidationRule( 'lostBornDate2', 'dateMax', '2014-9-9' );
     //$form->setValidationRule( 'lostDate', 'uppercase', 0);
+    $form->setValidationRule( 'lostMail', 'email' );
 
     $form->setValidationRule( 'lostDate', 'dateMin', '2014-01-4' );
     $form->setValidationRule( 'lostDate2', 'dateMax', '2014-09-09' );
@@ -153,19 +155,6 @@ class CreateForm extends View
       if( sizeof( $jvErrors ) == 0 ){
         $lostControl = new LostController();
         $valuesArray = $form->getValuesArray();
-
-        //BUG VO en cuanto no ignore campos no declarados en el VO
-        unset($valuesArray['cgIntFrmId']);
-        unset($valuesArray['lostPassword2']);
-        unset($valuesArray['lostSubmit']);
-        unset($valuesArray['lostDate']);
-        unset($valuesArray['lostTime']);
-        unset($valuesArray['lostDateTime']);
-        unset($valuesArray['lostDate2']);
-        unset($valuesArray['lostTime2']);
-        unset($valuesArray['lostDateTime2']);
-        unset($valuesArray['lostFrutas']);
-
 
         if($valuesArray['id'] !== false){
           //UPDATE

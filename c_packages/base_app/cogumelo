@@ -84,7 +84,7 @@
         break;  
 
         case 'installDependences': 
-            Cogumelo::load('c_controller/DependencesController');
+            Cogumelo::load('c_controller/DependencesController.php');
 
             $dependencesControl = new DependencesController();
             $dependencesControl->installDependences();
@@ -150,7 +150,7 @@
 
   function createTables(){
 
-    Cogumelo::load('c_controller/ModuleController');
+    Cogumelo::load('c_controller/ModuleController.php');
     $moduleControl = new ModuleController(false, true);
 
     $develdbcontrol = new DevelDBController();
