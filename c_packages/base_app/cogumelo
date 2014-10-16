@@ -28,6 +28,7 @@
   //
   require_once(COGUMELO_LOCATION."/c_modules/devel/devel.php");
   require_once(COGUMELO_LOCATION."/c_modules/devel/classes/controller/DevelDBController.php");
+  require_once(COGUMELO_LOCATION."/c_packages/base_app/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
 
   //
   //  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
@@ -75,7 +76,7 @@
           if ($argc>2){
            $db = $argv[2];
            $user =  ReadStdin('Enter an user with privileges: ', '');
-           retoreDB(DB_NAME, $user, $db);
+           restoreDB(DB_NAME, $user, $db);
           }
           else{
             echo "You must especify the database to restore\n";
@@ -208,7 +209,7 @@
     echo "\nYour db was successfully saved!\n";
   }
 
-  function retoreDB($BD, $user, $file){
+  function restoreDB($BD, $user, $file){
 
     $DIR = BCK;
 
@@ -279,10 +280,10 @@
     $all_php = 'find '.getcwd().' -iname "*.php" | grep -v vendorServer | grep -v tmp | grep -v conf > '.$tmp_dir.'xgettext_php.tmp';
     exec($all_php);
     // Get all the tpl files excluding the translations and the libraries and save them to a temporary file
-    $all_tpl = 'find '.getcwd().' -iname "*.tpl" | grep -v vendorServer | grep -v tmp | grep -v conf > '.$tmp_dir.'xgettext_tpl.tmp';
+    $all_tpl = 'find '.getcwd().' -iname "*.tpl" | grep -v vendorServer > '.$tmp_dir.'xgettext_tpl.tmp';
     exec($all_tpl);
     // Get all the js files excluding the translations and the libraries and save them to a temporary file
-    $all_js = 'find '.getcwd().' -iname "*.js" | grep -v vendorServer | grep -v tmp | grep -v conf > '.$tmp_dir.'xgettext_js.tmp';
+    $all_js = 'find '.getcwd().' -iname "*.js" | grep -v vendor | grep -v jquery-validation > '.$tmp_dir.'xgettext_js.tmp';
     exec($all_js);
 
     // Check if the .po files exist already
@@ -323,7 +324,26 @@
       $extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.pot';
     }
     else{ // Extract all the texts to be translated and create the file
-      $extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.po'; //tpl
+      //$extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.po'; //tpl
+      //shell_exec($extractTPL);
+    
+      $file_all = fopen($tmp_dir.'xgettext_tpl.tmp', 'r');
+      /*while(!feof($file_all)){
+        echo fgets($file_all);
+        $parts = explode('/',fgets($file_all));
+        echo count($parts);
+*/
+
+        //$file = fopen(fgets($file_all),'r');
+        //echo("stop\n");
+        
+        /*$file = fopen(echo fgets($file_all));
+        while(!feof($file)){
+          echo fgets($file). "<br />";
+        }
+        fclose($file);*/
+      //}
+      //fclose($file_all);
     }
 
     /* JS */
@@ -331,21 +351,18 @@
       $extractJS = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_js.tmp -o '.$dir_path.$textdomain.'_js.pot';
     }
     else{ // Extract all the texts to be translated and create the file
-      $extractJS = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_js.tmp -o '.$dir_path.$textdomain.'_js.po'; //js
+      $entries = Gettext\Extractors\JsCode::extract('proba.js');
     }
+
+
 
     // Delete the modified files remaining
     if (is_dir($dir_path)){
       $handle = opendir($dir_path);
       while ($file = readdir($handle)) {
-        if ($file=='c_cogumelo_php.po~'){
-         unlink($dir_path.$file);
-        }
-        if ($file=='c_cogumelo_tpl.po~'){
-         unlink($file);
-        }
-        if ($file=='c_cogumelo_js.po~'){
-         unlink($file);
+        if ($file=='c_cogumelo_php.po~' || $file=='c_cogumelo_tpl.po~' || $file=='c_cogumelo_js.po~' || 
+            $file=='c_cogumelo_php.pot'|| $file=='c_cogumelo_tpl.pot' || $file=='c_cogumelo_js.pot'){
+              unlink($dir_path.$file);
         }
       }
     }
