@@ -116,8 +116,19 @@ class MediaserverController {
     $tmp_cache = MEDIASERVER_TMP_CACHE_PATH . $this->modulePath . $this->urlPath. '.css';
     $final_cache = SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath.'.css' ;
 
+    // create tmp folder
+    $this->createDirPath( $tmp_cache );
 
     $lessControl->compile( $this->urlPath, $tmp_cache, $this->moduleName );
+
+
+    // create final folder
+    $this->createDirPath( $final_cache );
+
+    // delete final file if exist
+    if( file_exists( $final_cache ) ){
+      unlink( $final_cache );
+    }
 
     // move from tmp path to final path
     rename( $tmp_cache , $final_cache );

@@ -1,11 +1,13 @@
 
+@import "client/classes/view/templates/styles/clientVar.less"; // Modify this for custom colors, font-sizes, etc
+@import "client/classes/view/templates/styles/clientMixins.less";
 //
 // Variables
 // ------------------------------
 @formErrorColor: #ffd700;
 @formErrorFontColor: #ffffff;
 @formErrorBckColor: @formErrorColor;
-@labelHeight: 32px;
+@labelHeight: @inputHeight;
 //
 // form error style
 //
@@ -27,17 +29,15 @@ label{
     margin-left: 10px;
     padding: 6px;
     font-size: 12px;
-    //.border-radius(5px);
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
+    .border-radius(5px);
   }
 }
 
+input[type="radiobutton"],
+input[type="checkbox"],
+textarea,
 select{
   &.formError{
-    -webkit-box-shadow: 1px 0px 2px 0px @formErrorColor;
-    -moz-box-shadow:    1px 0px 2px 0px @formErrorColor;
-    box-shadow:         1px 0px 2px 0px @formErrorColor;
+    .box-shadow(1px 0px 2px 0px @formErrorColor);
   }
 }
