@@ -7,7 +7,7 @@
 @formErrorColor: #ffd700;
 @formErrorFontColor: #ffffff;
 @formErrorBckColor: @formErrorColor;
-@labelHeight: 32px;
+@labelHeight: @inputHeight;
 //
 // form error style
 //
@@ -33,12 +33,10 @@ label{
   }
 }
 
+input[type="radiobutton"],
+input[type="checkbox"],
+textarea,
 select{
-  &.formError{
-    .box-shadow(1px 0px 2px 0px @formErrorColor);
-  }
-}
-textarea{
   &.formError{
     .box-shadow(1px 0px 2px 0px @formErrorColor);
   }
