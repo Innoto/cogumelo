@@ -76,7 +76,7 @@
           if ($argc>2){
            $db = $argv[2];
            $user =  ReadStdin('Enter an user with privileges: ', '');
-           retoreDB(DB_NAME, $user, $db);
+           restoreDB(DB_NAME, $user, $db);
           }
           else{
             echo "You must especify the database to restore\n"; 
@@ -209,7 +209,7 @@
     echo "\nYour db was successfully saved!\n";
   }
 
-  function retoreDB($BD, $user, $file){
+  function restoreDB($BD, $user, $file){
 
     $DIR = BCK;
 
