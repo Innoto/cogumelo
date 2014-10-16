@@ -73,7 +73,24 @@ class CreateForm extends View
 
     $form->setField( 'lostPassword', array( 'type' => 'password', 'placeholder' => 'Password' ) );
     $form->setField( 'lostPassword2', array( 'type' => 'password', 'placeholder' => 'Repeat password' ) );
-    //$form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => 'He leído y acepto los Términos y Condiciones de uso') );
+
+
+    $form->setField( 'lostAppearance', array( 'type' => 'checkbox', 'label' => 'Aspecto de mascota',
+      'value' => array( ),
+      'options'=> array( 'Claro' => 'Claro', 'Oscuro' => 'Oscuro', 'Peludo' => 'Peludo', 'Gordo' => 'Gordo' )
+    ) );
+
+    $form->setField( 'lostPetType', array( 'type' => 'radio', 'label' => 'Tipo de Mascota', 'value' => '2',
+      'options'=> array( '1' => 'Perro', '2' => 'Gato', '0' => 'Otros' )
+    ) );
+
+    $form->setField( 'lostDesc', array( 'label' => 'Description', 'value' => '', 'type' => 'textarea'));
+
+    $form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => '',
+      'value' => array( ),
+      'options'=> array( '1' => 'He leído y acepto los Términos y Condiciones de uso' )
+    ) );
+
     $form->setField( 'lostSubmit', array( 'type' => 'submit', 'value' => 'Guardar' ) );
 
     /******************************************************************************************** VALIDATIONS */
@@ -82,6 +99,11 @@ class CreateForm extends View
     $form->setValidationRule( 'lostMail', 'required' );
     $form->setValidationRule( 'lostPhone', 'required' );
     $form->setValidationRule( 'lostProvince', 'required' );
+
+    $form->setValidationRule( 'lostDesc', 'required' );
+    $form->setValidationRule( 'lostConditions', 'required' );
+    $form->setValidationRule( 'lostAppearance', 'required' );
+    $form->setValidationRule( 'lostPetType', 'required' );
 
     $form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
 
