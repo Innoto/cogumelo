@@ -1,6 +1,6 @@
 
-@import "client/classes/view/templates/styles/clientVar.less"; // Modify this for custom colors, font-sizes, etc
-@import "client/classes/view/templates/styles/clientMixins.less";
+@import "client/classes/view/templates/styles/clientCoreIncludes.less"; // Modify this for custom colors, font-sizes, etc
+
 //
 // Variables
 // ------------------------------
@@ -12,6 +12,7 @@
 // form error style
 //
 
+@import "form/classes/view/templates/styles/formExtender.less";
 
 
 input[type="text"],
@@ -40,4 +41,8 @@ select{
   &.formError{
     .box-shadow(1px 0px 2px 0px @formErrorColor);
   }
+}
+
+textarea{
+  .hide();
 }
