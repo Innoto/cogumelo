@@ -532,7 +532,7 @@ class FormControllerV2 implements Serializable {
             error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
             $fieldValidateValue = true;
             foreach( $fieldRules as $ruleName => $ruleParams ) {
-              error_log( 'evaluateRule( '.$ruleName.', '.$value.', '.$fieldName.', '.$ruleParams.' )' );
+              error_log( 'evaluateRule( '.$ruleName.', '.$value.', '.$fieldName.', '. print_r( $ruleParams, true ) .' )' );
 
               if( $ruleName === 'equalTo' ) {
                 $fieldRuleValidate = ( $value === $this->getFieldValue( $ruleParams ) );
