@@ -6,11 +6,12 @@ function setValidateForm( idForm, rules, messages ) {
 
   var $validateForm = $( '#'+idForm ).validate({
 
-    debug: true,
+    // debug: true,
 
     //groups: { ungrupo: "input1 input2" },
 
     errorPlacement: function( place, element ) {
+      console.log( 'errorPlacement:' );
       console.log( place, element );
       $msgContainer = $( '#JQVMC-'+place.attr('id')+', .JQVMC-'+place.attr('id') );
       if ( $msgContainer.length > 0 ) {
