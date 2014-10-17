@@ -114,32 +114,30 @@
         break;
 
         default:
-          echo "Invalid parameter;try:
-          flush                 to remove temporary files
-          setPermissions        to set the files/folders permission
-          setPermissionsDevel   to set the files/folders permission
-          createDB               to create a database
-          createTables           to generate the tables
-          bckDB                 to do a DB backup (optional arg: filename)
-          restoreDB             to restore a database
-          installDependences    to install all modules dependencies
-          generateTranslations  to get all the web text into a file.po
-          compileTranslations   to compile file.po and get the translations ready\n";
+          echo "Invalid parameter;try:";
+          printOptions();
 
       }//end switch
   }//end parameters handler
   else{
-    echo "Not enough arguments;try:
-          flush                 to remove temporary files
-          setPermissions        to set the files/folders permission
-          setPermissionsDevel   to set the files/folders permission
-          createDB               to create a database
-          createTables           to generate the tables
-          bckDB                 to do a DB backup (optional arg: filename)
-          restoreDB             to restore a database
-          installDependences    to install all modules dependencies
-          generateTranslations  to get all the web text into a file.po
-          compileTranslations   to compile file.po and get the translations ready\n";
+    echo "Not enough arguments;try:";
+    printOptions();
+  }
+
+
+  function printOptions(){
+    echo "\n
+          flush                         to remove temporary files
+          setPermissions                to set the files/folders permission
+          setPermissionsDevel           to set the files/folders permission
+          createDB                      to create a database
+          createTables                  to generate the tables
+          bckDB                         to do a DB backup (optional arg: filename)
+          restoreDB                     to restore a database
+          installDependences            to install all modules dependencies
+          generateTranslations          to get all the web text into a file.po
+          compileTranslations           to compile file.po and get the translations ready
+    \n\n";
   }
 
   function createDB($user, $passwd){
@@ -326,7 +324,7 @@
     else{ // Extract all the texts to be translated and create the file
       //$extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.po'; //tpl
       //shell_exec($extractTPL);
-    
+
       $file_all = fopen($tmp_dir.'xgettext_tpl.tmp', 'r');
       /*while(!feof($file_all)){
         echo fgets($file_all);
@@ -336,7 +334,7 @@
 
         //$file = fopen(fgets($file_all),'r');
         //echo("stop\n");
-        
+
         /*$file = fopen(echo fgets($file_all));
         while(!feof($file)){
           echo fgets($file). "<br />";
@@ -360,7 +358,7 @@
     if (is_dir($dir_path)){
       $handle = opendir($dir_path);
       while ($file = readdir($handle)) {
-        if ($file=='c_cogumelo_php.po~' || $file=='c_cogumelo_tpl.po~' || $file=='c_cogumelo_js.po~' || 
+        if ($file=='c_cogumelo_php.po~' || $file=='c_cogumelo_tpl.po~' || $file=='c_cogumelo_js.po~' ||
             $file=='c_cogumelo_php.pot'|| $file=='c_cogumelo_tpl.pot' || $file=='c_cogumelo_js.pot'){
               unlink($dir_path.$file);
         }
