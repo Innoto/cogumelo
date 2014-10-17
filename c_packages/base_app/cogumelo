@@ -285,6 +285,9 @@
     // Get all the js files excluding the translations and the libraries and save them to a temporary file
     $all_js = 'find '.getcwd().' -iname "*.js" | grep -v vendor | grep -v jquery-validation > '.$tmp_dir.'xgettext_js.tmp';
     exec($all_js);
+     // Get all the dir containing js files excluding the translations and the libraries and save them to a temporary file
+    $all_js = 'find '.getcwd().' -iname "/js/" | grep -v vendor | grep -v jquery-validation > '.$tmp_dir.'xgettext_js.tmp';
+    exec($all_js);
 
     // Check if the .po files exist already
     $existPHP = false;
@@ -346,15 +349,28 @@
       //fclose($file_all);
     }
 
-    /* JS */
-    if ($existJS){ // Extract new texts and merge in the .po file
-      $extractJS = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_js.tmp -o '.$dir_path.$textdomain.'_js.pot'; 
-    }
-    else{ // Extract all the texts to be translated and create the file
-      $entries = Gettext\Extractors\JsCode::extract('proba.js');
-    }
+    /***** JS *****/
 
+      // First we generate an array of files.js
+      $i = 0;
+      $files_js = fopen($tmp_dir.'xgettext_js.tmp', 'r');
+      while(!feof($files_js)){
+        $array_js[$i] = fgets($files_js);
+        $i = $i+1;
+      }
+      fclose($files_js);
 
+      //print_r($array_js);
+
+      // We extract the strings from the files in the array
+      //$entries = Gettext\Extractors\JsCode::extract($array_js);
+
+      
+
+      /*$po = Gettext\Generators\Po::generate($entries);
+      $pofile = fopen($dir_path.'c_cogumelo_js.po', 'w') or die('Unable to open file!');
+      fwrite($pofile, $po);
+      fclose($pofile); */  
 
     // Delete the modified files remaining
     if (is_dir($dir_path)){
