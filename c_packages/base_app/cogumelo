@@ -284,7 +284,7 @@
     $all_js = 'find '.getcwd().' -iname "*.js" | grep -v vendor | grep -v jquery-validation > '.$tmp_dir.'xgettext_js.tmp';
     exec($all_js);
      // Get all the dir containing js files excluding the translations and the libraries and save them to a temporary file
-    $all_js = 'find '.getcwd().' -iname "/js/" | grep -v vendor | grep -v jquery-validation > '.$tmp_dir.'xgettext_js.tmp';
+    $all_js = 'find '.getcwd().' -iname "*.js" | grep -v vendor | grep -v jquery-validation > '.$tmp_dir.'xgettext_js.tmp';
     exec($all_js);
 
     // Check if the .po files exist already
@@ -327,49 +327,23 @@
     else{ // Extract all the texts to be translated and create the file
       //$extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.po'; //tpl
       //shell_exec($extractTPL);
-
-      $file_all = fopen($tmp_dir.'xgettext_tpl.tmp', 'r');
-      /*while(!feof($file_all)){
-        echo fgets($file_all);
-        $parts = explode('/',fgets($file_all));
-        echo count($parts);
-*/
-
-        //$file = fopen(fgets($file_all),'r');
-        //echo("stop\n");
-
-        /*$file = fopen(echo fgets($file_all));
-        while(!feof($file)){
-          echo fgets($file). "<br />";
-        }
-        fclose($file);*/
-      //}
-      //fclose($file_all);
     }
 
-    /***** JS *****/
+    /*JS */
+    // First we generate an array of files.js
+    $all_js = file($tmp_dir.'xgettext_js.tmp');
+    foreach ($all_js as $k => $value) {
+      $array_js[$k] = dirname($value);
+    }
 
-      // First we generate an array of files.js
-      $i = 0;
-      $files_js = fopen($tmp_dir.'xgettext_js.tmp', 'r');
-      while(!feof($files_js)){
-        $array_js[$i] = dirname(fgets($files_js));
-        $i = $i+1;
-      }
-      fclose($files_js);
+    // We extract the string to be translated from the files in the array and create a .po file
+    $entries = Gettext\Extractors\JsCode::extract($array_js);
+    $po = Gettext\Generators\Po::generate($entries);
+    $pofile = fopen($dir_path.'c_cogumelo_js.po', 'w') or die('Unable to open file!');
+    fwrite($pofile, $po);
+    fclose($pofile);   
 
-      //print_r($array_js);
-
-      // We extract the strings from the files in the array
-      //$entries = Gettext\Extractors\JsCode::extract($array_js);
-     
-
-      /*$po = Gettext\Generators\Po::generate($entries);
-      $pofile = fopen($dir_path.'c_cogumelo_js.po', 'w') or die('Unable to open file!');
-      fwrite($pofile, $po);
-      fclose($pofile); */  
-
-    // Delete the modified files remaining
+    /* Delete the modified files remaining */
     if (is_dir($dir_path)){
       $handle = opendir($dir_path);
       while ($file = readdir($handle)) {
@@ -389,7 +363,7 @@
     foreach(explode(',', 'gl,es,en') as $lng) {
       $filepath = SITE_PATH.'conf/i18n/';
       exec('msgfmt -o '.$filepath.$lng.'/LC_MESSAGES/'.$textdomain.'_php.mo '.$filepath.$textdomain.'_php.po');
-      // exec('msgfmt -o '.$filepath.$textdomain.'_js.mo '.$filepath.$textdomain.'_js.po');
+      exec('msgfmt -o '.$filepath.$lng.'/LC_MESSAGES/'.$textdomain.'_js.mo '.$filepath.$textdomain.'_js.po');
       // exec('msgfmt -o '.$filepath.$textdomain.'_tpl.mo '.$filepath.$textdomain.'_tpl.po');
     }
   }
