@@ -13,7 +13,7 @@
         poll: 1000,
         functions: { },
         dumpLineNumbers: "all",
-        relativeUrls: false,
+        relativeUrls: true,
         errorReporting: 'console'
       };
     </script>
