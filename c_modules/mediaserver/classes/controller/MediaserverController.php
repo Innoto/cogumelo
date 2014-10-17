@@ -17,7 +17,9 @@ class MediaserverController {
   */
   function serveContent($path, $module=false){
 
-    $this->urlPath = $path;
+
+    $parsedUrl = parse_url($path);
+    $this->urlPath = $parsedUrl['path'];
     $this->moduleName = $module;
     $this->realFilePath = ModuleController::getRealFilePath('classes/view/templates/'.$this->urlPath, $this->moduleName);
     $this->modulePath = ( $this->moduleName )? '/module/'.$this->moduleName.'/' : '' ;
@@ -149,16 +151,6 @@ class MediaserverController {
     }
 
   }
-
-  /*
-  * Copy files to tmp path locking it to prevent failures
-  * @return string : final path of file
-  * @var string $path: the path of file to copy
-  */
-  /*  
-  function blockAndCopyFile( $path ) {
-
-  }*/
 
 
   function serveFile( ) {
