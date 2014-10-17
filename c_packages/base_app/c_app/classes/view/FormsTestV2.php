@@ -32,12 +32,12 @@ class FormsTestV2 extends View
 
     $form->setField( 'input1', array( 'placeholder' => 'Mete 1 valor', 'value' => '5' ) );
     $form->setValidationRule( 'input1', 'required' );
-    //$form->setValidationRule( 'input1', 'numberEU' );
+    $form->setValidationRule( 'input1', 'numberEU' );
     //$form->setValidationRule( 'input1', 'regex', '^\d+$' );
 
     $form->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor888' ) );
     $form->setValidationRule( 'input2', 'required' );
-    //$form->setValidationRule( 'input2', 'minlength', '8' );
+    $form->setValidationRule( 'input2', 'minlength', '8' );
 
     $form->setField( 'select1', array( 'type' => 'select', 'label' => 'Meu Select',
       'value' => array( '1', '2' ),
@@ -49,7 +49,7 @@ class FormsTestV2 extends View
       'value' => array( '1', 'asdf' ),
       'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
       ) );
-    //$form->setValidationRule( 'check1', 'required' );
+    $form->setValidationRule( 'check1', 'required' );
 
     $form->setField( 'radio1', array( 'type' => 'radio', 'label' => 'Meu radio', 'value' => '2',
       'options'=> array( '' => 'Vacio', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )

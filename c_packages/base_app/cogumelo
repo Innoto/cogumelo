@@ -1,7 +1,7 @@
 #!/usr/bin/php -q
 <?php
   //
-  // CARGO COGUMELO, É PRECISO FACER UNS CANTOS APAÑOS 
+  // CARGO COGUMELO, É PRECISO FACER UNS CANTOS APAÑOS
   //
 
   // Project location
@@ -14,8 +14,8 @@
   // cogumelo core Location
   set_include_path('.:'.SITE_PATH);
 
-  require_once("conf/setup.php"); 
-  
+  require_once("conf/setup.php");
+
 
   require_once(COGUMELO_LOCATION."/c_classes/CogumeloClass.php");
   require_once(SITE_PATH."/Cogumelo.php");
@@ -41,12 +41,12 @@
       switch($argv[1]){
         case 'setPermissions': // set the files/folders permission
           setPermissions();
-        break;   
+        break;
 
         case 'setPermissionsDevel': // set the files/folders permission
           setPermissionsDevel();
-        break;   
-        
+        break;
+
         case 'createDB': // create database
           $user =  ReadStdin("Enter an user with privileges:\n", '');
           // Get the password
@@ -54,12 +54,12 @@
           $passwd = getPassword(true);
           createDB($user, $passwd);
           fwrite(STDOUT, "\n--\n");
-        break; 
+        break;
 
         case 'createTables': // create database tables
           createTables();
           echo "\nGenerated db tables\n";
-        break;    
+        break;
 
         case 'bckDB': // do the backup of the db
           if ($argc>2){
@@ -70,7 +70,7 @@
           }
           $user =  ReadStdin('Enter an user with privileges: ', '');
           doBackup(DB_NAME, $user, $file);
-        break;  
+        break;
 
         case 'restoreDB': // restore the backup of a given db
           if ($argc>2){
@@ -79,24 +79,24 @@
            restoreDB(DB_NAME, $user, $db);
           }
           else{
-            echo "You must especify the database to restore\n"; 
+            echo "You must especify the database to restore\n";
           }
-        break;  
+        break;
 
-        case 'installDependences': 
+        case 'installDependences':
             Cogumelo::load('c_controller/DependencesController.php');
 
             $dependencesControl = new DependencesController();
             $dependencesControl->installDependences();
-        break; 
+        break;
 
-        case 'generateTranslations': 
+        case 'generateTranslations':
            translateWeb();
            generateTranslations();
            echo "The files.po are ready to be edited!\n";
-        break;  
+        break;
 
-        case 'compileTranslations': 
+        case 'compileTranslations':
            translateWeb();
            compileTranslations();
            echo "The files.mo are ready to be used!\n";
@@ -106,15 +106,15 @@
         case 'flush': // delete temporary files
            exec('wget -q --spider http://cogumelo/cogumelo-script.php?q=flush');
            echo "Temporary files deleted!\n";
-        break;    
+        break;
 
-        case 'rotateLogs': 
+        case 'rotateLogs':
             exec('wget -q --spider cogumelo/cogumelo-script.php?q=logs');
             echo "The logs have been stored\n";
-        break;  
+        break;
 
         default:
-          echo "Invalid parameter;try: 
+          echo "Invalid parameter;try:
           flush                 to remove temporary files
           setPermissions        to set the files/folders permission
           setPermissionsDevel   to set the files/folders permission
@@ -126,10 +126,10 @@
           generateTranslations  to get all the web text into a file.po
           compileTranslations   to compile file.po and get the translations ready\n";
 
-      }//end switch 
+      }//end switch
   }//end parameters handler
   else{
-    echo "Not enough arguments;try: 
+    echo "Not enough arguments;try:
           flush                 to remove temporary files
           setPermissions        to set the files/folders permission
           setPermissionsDevel   to set the files/folders permission
@@ -161,8 +161,8 @@
     exec('mkdir -p c_app/tmp/templates_c');
     exec('mkdir -p c_app/log');
     exec('mkdir -p c_app/backups');
-    exec('mkdir -p httpdocs/mediaCache');  
-    
+    exec('mkdir -p httpdocs/mediaCache');
+
     exec('sudo chown -R $USER:www-data httpdocs');
     exec('chmod -R go-rwx,g+rX httpdocs');
 
@@ -181,14 +181,14 @@
     exec('mkdir -p c_app/tmp/templates_c');
     exec('mkdir -p c_app/log');
     exec('mkdir -p c_app/backups');
-    exec('mkdir -p httpdocs/mediaCache');  
-    
+    exec('mkdir -p httpdocs/mediaCache');
+
     exec('sudo chown -R $USER:www-data httpdocs');
     exec('chmod -R u-x,go-wx,ugo+rX httpdocs');
 
     exec('sudo chown -R $USER:www-data c_app');
     exec('chmod -R go-wx,go+rX c_app');
-    exec('chmod -R ug+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache');
+    exec('chmod -R ug+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache httpdocs/test_upload');
 
     exec('sudo chown $USER:$USER c_app/backups');
     exec('chmod -R go-rwx c_app/backups');
@@ -229,21 +229,21 @@
   */
   function translateWeb(){
     $textdomain="c_cogumelo";
-    
+
     $locale= 'es_ES';
-    
+
     global $c_lang;
-    
+
     putenv('LANGUAGE='.$locale);
     putenv('LANG='.$locale);
     putenv('LC_ALL='.$locale);
     putenv('LC_MESSAGES='.$locale);
-    
+
     setlocale(LC_ALL,$locale);
     setlocale(LC_CTYPE,$locale);
 
     bindtextdomain($textdomain, SITE_PATH.'conf/i18n');
-    bind_textdomain_codeset($textdomain, 'UTF-8'); 
+    bind_textdomain_codeset($textdomain, 'UTF-8');
     textdomain($textdomain);
   }
 
@@ -252,21 +252,21 @@
     */
   function generateTranslations(){
     $textdomain="c_cogumelo";
-    
+
     $locale= 'es_ES';
-    
+
     global $c_lang;
-    
+
     putenv('LANGUAGE='.$locale);
     putenv('LANG='.$locale);
     putenv('LC_ALL='.$locale);
     putenv('LC_MESSAGES='.$locale);
-    
+
     setlocale(LC_ALL,$locale);
     setlocale(LC_CTYPE,$locale);
 
     bindtextdomain($textdomain, SITE_PATH.'conf/i18n');
-    bind_textdomain_codeset($textdomain, 'UTF-8'); 
+    bind_textdomain_codeset($textdomain, 'UTF-8');
     textdomain($textdomain);
 
     /**
@@ -318,13 +318,13 @@
       exec($mergePHP);
     }
     else{ // Extract all the texts to be translated and create the file
-      $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.po'; 
+      $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.po';
       exec($extractPHP);
     }
 
     /* TPL */
     if ($existTPL){ // Extract new texts and merge in the .po file
-      $extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.pot'; 
+      $extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.pot';
     }
     else{ // Extract all the texts to be translated and create the file
       //$extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.po'; //tpl
@@ -355,7 +355,7 @@
       $i = 0;
       $files_js = fopen($tmp_dir.'xgettext_js.tmp', 'r');
       while(!feof($files_js)){
-        $array_js[$i] = fgets($files_js);
+        $array_js[$i] = dirname(fgets($files_js));
         $i = $i+1;
       }
       fclose($files_js);
@@ -364,8 +364,7 @@
 
       // We extract the strings from the files in the array
       //$entries = Gettext\Extractors\JsCode::extract($array_js);
-
-      
+     
 
       /*$po = Gettext\Generators\Po::generate($entries);
       $pofile = fopen($dir_path.'c_cogumelo_js.po', 'w') or die('Unable to open file!');
@@ -400,16 +399,16 @@
   /**
    * Get data from the shell.
    */
-  function ReadStdin($prompt, $valid_inputs, $default = '') { 
-      while(!isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input))) { 
-          echo $prompt; 
-          $input = strtolower(trim(fgets(STDIN))); 
-          if(empty($input) && !empty($default)) { 
-              $input = $default; 
-          } 
-      } 
-      return $input; 
-  } 
+  function ReadStdin($prompt, $valid_inputs, $default = '') {
+      while(!isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input))) {
+          echo $prompt;
+          $input = strtolower(trim(fgets(STDIN)));
+          if(empty($input) && !empty($default)) {
+              $input = $default;
+          }
+      }
+      return $input;
+  }
 
   /**
    * Get a password from the shell.
@@ -452,6 +451,6 @@
 
       // Return the password
       return $password;
-  }  
+  }
 
 ?>

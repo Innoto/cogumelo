@@ -104,7 +104,41 @@ class FormController implements Serializable {
     if( !isset( $this->fields[$fieldName]['type'] ) ) {
       $this->fields[$fieldName]['type'] = 'text';
     }
+
+    // Creamos ya algunas reglas en funcion del tipo
+    switch( $this->fields[$fieldName]['type'] ) {
+      case 'select':
+        $this->setValidationRule( $this->fields[$fieldName]['name'], 'inArray',
+          array_keys( $this->fields[$fieldName]['options'] ) );
+        break;
+      case 'checkbox':
+      case 'radio':
+        $this->setValidationRule( $this->fields[$fieldName]['name'], 'inArray',
+          array_keys( $this->fields[$fieldName]['options'] ) );
+        break;
+      case 'file':
+        $maxFileSize = $this->phpIni2Bytes( ini_get('upload_max_filesize') );
+        if( ini_get('post_max_size') != '0' ) {
+          $maxFileSize = min( $maxFileSize, $this->phpIni2Bytes( ini_get('post_max_size') ) );
+        }
+        if( ini_get('memory_limit') != '-1' ) {
+          $maxFileSize = min( $maxFileSize, $this->phpIni2Bytes( ini_get('memory_limit') ) );
+        }
+        $this->setValidationRule( $this->fields[$fieldName]['name'], 'maxfilesize', $maxFileSize );
+        break;
+    }
+
   } // function setField
+
+  private function phpIni2Bytes( $size ) {
+    if( preg_match( '/([\d\.]+)([KMG])/i', $size, $match ) ) {
+      $pos = array_search( $match[2], array("K", "M", "G") );
+      if( $pos !== false ) {
+        $size = $match[1] * pow(1024, $pos + 1);
+      }
+    }
+    return $size;
+  }
 
   public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
     $this->rules[$fieldName][$ruleName] = $ruleParams;
@@ -155,7 +189,7 @@ class FormController implements Serializable {
   public function getHtmlFields() {
     $html = '';
     foreach( $this->fields as $fieldName => $fieldParams ) {
-      $html .= '<div>'.$this->getHtmlField($fieldName)."</div>\n";
+      $html .= '<div class="ffn-'.$fieldName.'">'.$this->getHtmlField($fieldName)."</div>\n";
     }
     return $html;
   }
@@ -191,6 +225,7 @@ class FormController implements Serializable {
           //$html .= $inputAndText['input'].$inputAndText['label'];
           $html .= '<label>'.$inputAndText['input'].$inputAndText['text'].'</label>';
         }
+        $html .= '<span class="JQVMC-error JQVMC-'.$fieldName.'-error"></span>';
         break;
       case 'textarea':
         $html .= $htmlFieldArray['inputOpen'] . $htmlFieldArray['value'] . $htmlFieldArray['inputClose'];
@@ -297,11 +332,14 @@ class FormController implements Serializable {
         $html['inputClose'] = '</textarea>';
         break;
 
-      case 'reserved':
+      case 'file':
+        $html['input'] = '<input name="'.$field['name'].'"';
+        $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
+        $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
         break;
 
-      //case 'file':
-      //  break;
+      case 'reserved':
+        break;
 
       default:
         // button, file, hidden, password, range, text
@@ -495,7 +533,7 @@ class FormController implements Serializable {
             error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
             $fieldValidateValue = true;
             foreach( $fieldRules as $ruleName => $ruleParams ) {
-              error_log( 'evaluateRule( '.$ruleName.', '.$value.', '.$fieldName.', '.$ruleParams.' )' );
+              error_log( 'evaluateRule( '.$ruleName.', '.$value.', '.$fieldName.', '. print_r( $ruleParams, true ) .' )' );
 
               if( $ruleName === 'equalTo' ) {
                 $fieldRuleValidate = ( $value === $this->getFieldValue( $ruleParams ) );
@@ -556,4 +594,4 @@ class FormController implements Serializable {
     return $errors;
   }
 
-} // class FormController implements Serializable {
+} // class FormControllerV2 implements Serializable {
