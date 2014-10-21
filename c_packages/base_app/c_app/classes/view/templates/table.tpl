@@ -34,7 +34,29 @@
           <option value="2">Recibido</option>
           <option value="3">Rechazado</option>
         </select>
-        <div class="tableMoreFilters"></div>
+        <div class="tableMoreFilters">
+            <div class="filters">
+              Filters
+            </div>
+            <div class="MoreFilters" style="display:none;">
+              <select>
+                <option value="1">Aceptado</option>
+                <option value="2">Recibido</option>
+                <option value="3">Rechazado</option>
+              </select>
+              <select>
+                <option value="1">Aceptado</option>
+                <option value="2">Recibido</option>
+                <option value="3">Rechazado</option>
+              </select>
+              <select>
+                <option value="1">Aceptado</option>
+                <option value="2">Recibido</option>
+                <option value="3">Rechazado</option>
+              </select>
+              <button>Apply filters</button>
+            </div>
+        </div>
       </div>
       <div class="tableActions">
 
