@@ -59,10 +59,34 @@
         </div>
       </div>
       <div class="tableActions">
-
+        <div><input type="checkbox"></div>
+        <div><img></div>
+        <div><img></div>
+        <select>
+          <option value="1">Action 1</option>
+          <option value="2">Action 2</option>
+          <option value="3">Action 3</option>
+        </select>
+        <!-- Paginador -->
+        <div class="tablePaginator">
+          <div class="tablePage"><input type="text" value="100"> de 219</div>
+          <div class="tablePreviousPage"><img></div>
+          <div class="tableNextPage"><img></div>
+        </div>
+      </div>
+      <div class="tableOrders">
+        <table>
+          <tr>
+            <td></td>
+            <td>Name <img></td>
+            <td>Description <img></td>
+            <td>Date <img></td>
+            <td>Province <img></td>
+            <td>Status <img></td>
+          </tr>
+        </table>
       </div>
     </div>
-
     <table>
       <tr>
         <td><input type="checkbox"></td>
@@ -227,6 +251,12 @@
       </tr>
 
     </table>
+    <!-- Paginador -->
+    <div class="tablePaginator">
+      <div class="tablePage"><input type="text" value="100"> de 219</div>
+      <div class="tablePreviousPage"><img></div>
+      <div class="tableNextPage"><img></div>
+    </div>
   <!-- --------- END HTML TABLE --------- -->
   </body>
 </html>
