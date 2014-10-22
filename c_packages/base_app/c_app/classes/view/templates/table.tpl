@@ -81,11 +81,11 @@
     <table class="tableClass clearfix">
       <tr>
         <th></th>
-        <th>Name <img></th>
-        <th>Description <img></th>
-        <th>Date <img></th>
-        <th>Province <img></th>
-        <th>Status <img></th>
+        <th>Name <img src="/img/table/up.png"></th>
+        <th>Description <img src="/img/table/up.png"></th>
+        <th>Date <img src="/img/table/up.png"></th>
+        <th>Province <img src="/img/table/up.png"></th>
+        <th>Status <img src="/img/table/up.png"></th>
       </tr>
       <tr>
         <td><input type="checkbox"></td>

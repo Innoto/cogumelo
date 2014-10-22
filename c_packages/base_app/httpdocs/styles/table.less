@@ -1,20 +1,43 @@
 // Tables
 // -------------------------
-@tableBackground:                   #C7C9C8; // overall background-color
-@tableBackgroundEven:               #A5D4BB; // for striping
+@tableBackground:                   #ADD8E6; // overall background-color
+@tableBackgroundEven:               #87CEEB; // for striping
 @tableBackgroundTh:                 #ffffff;
 @tableBackgroundHover:              #CBD07F; // for hover
 @tableBorder:                       #ddd; // table and cell border
 @tableFontColor:                    #545454;
 @tableFontSize:                     14px;
 
+@buttonSearchBck: #1E90FF;
+@buttonSearchColor: #fff;
 
 @borderOptions: 1px solid black;
 
 
+
 .tableHeaderContainer{
   .tableSearch{
+    margin-top: 10px;
+    width: 75%;
+    height: 40px;
 
+    button,
+    input{ height: 35px; }
+
+    input{
+      width: 75%;
+      max-width: 500px;
+    }
+
+    button{
+      margin-top: -2px;
+      margin-left: -4px;
+      width: 25%;
+      max-width: 120px;
+      background-color: @buttonSearchBck;
+      color: @buttonSearchColor;
+      //.btnFormat(@buttonSearchBck, @buttonSearchColor);
+    }
   }
   .tableFilters{
     background: #f4f4f4;
@@ -98,5 +121,13 @@ table.tableClass{
   }
   th{
     background: @tableBackgroundTh;
+    height: 20px;
+    line-height: 20px;
+    vertical-align: middle;
+
+    img{
+
+    }
   }
+
 }
