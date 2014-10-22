@@ -1,0 +1,102 @@
+// Tables
+// -------------------------
+@tableBackground:                   #C7C9C8; // overall background-color
+@tableBackgroundEven:               #A5D4BB; // for striping
+@tableBackgroundTh:                 #ffffff;
+@tableBackgroundHover:              #CBD07F; // for hover
+@tableBorder:                       #ddd; // table and cell border
+@tableFontColor:                    #545454;
+@tableFontSize:                     14px;
+
+
+@borderOptions: 1px solid black;
+
+
+.tableHeaderContainer{
+  .tableSearch{
+
+  }
+  .tableFilters{
+    background: #f4f4f4;
+    margin: 10px 0px;
+
+
+    .tableMoreFilters{
+      .filters{}
+      .MoreFilters{}
+    }
+  }
+  .tableActions{
+    height: 40px;
+    select{
+      margin-left: 10px;
+      line-height: 40px;
+    }
+
+    .selectAll,
+    .addElem,
+    .exportContainer{
+      padding-left: 2px;
+      padding-top: 1px;
+      width: 40px;
+      height: 40px;
+      margin: 0px 2px;
+      float:left;
+      border: @borderOptions;
+      cursor: pointer;
+    }
+
+    .selectAll input{
+      margin: 10px 10px;
+    }
+  }
+}
+
+.tablePaginator{
+  float:right;
+  height: 50px;
+  line-height: 50px;
+  vertical-align: bottom;
+
+  .tablePage{
+    float:left;
+    margin: 0px 5px;
+    input{ width: 40px; }
+  }
+  .tableNextPage,
+  .tablePreviousPage{
+    height: 40px;
+    margin: 0px 2px;
+    float:left;
+    border: @borderOptions;
+    cursor: pointer;
+  }
+}
+
+
+// TABLE
+// --
+table.tableClass{
+  border: 1px solid @tableBorder;
+  background: @tableBackground;
+  padding: 5px;
+  color:@tableFontColor;
+  width: 100%;
+  margin: 10px 0px;
+  font-size: @tableFontSize;
+  tr{
+    &.even{
+      background: @tableBackgroundEven;
+    }
+    &:hover{
+      background: @tableBackgroundHover;
+    }
+  }
+  td, th{
+    cursor: pointer;
+    padding: 10px;
+  }
+  th{
+    background: @tableBackgroundTh;
+  }
+}

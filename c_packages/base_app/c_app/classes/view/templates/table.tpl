@@ -5,6 +5,8 @@
 
     {$css_includes}
 
+    <link rel="stylesheet/less" type="text/css" href="/styles/table.less">
+
     <script>
       less = {
         env: "development",
@@ -25,10 +27,10 @@
 
   <!-- --------- HTML TABLE ------------- -->
     <div class="tableHeaderContainer">
-      <div class="tableSearch">
+      <div class="tableSearch clearfix">
         <input type="text"><button>Search</button>
       </div>
-      <div class="tableFilters">
+      <div class="tableFilters clearfix">
         <select>
           <option value="1">Aceptado</option>
           <option value="2">Recibido</option>
@@ -58,10 +60,10 @@
             </div>
         </div>
       </div>
-      <div class="tableActions">
-        <div><input type="checkbox"></div>
-        <div><img></div>
-        <div><img></div>
+      <div class="tableActions clearfix">
+        <div class="selectAll"><input type="checkbox"></div>
+        <div class="addElem"><img src="/img/table/add.png" alt="Add"></div>
+        <div class="exportContainer"><img src="/img/table/export.png" alt="Export"></div>
         <select>
           <option value="1">Action 1</option>
           <option value="2">Action 2</option>
@@ -70,24 +72,21 @@
         <!-- Paginador -->
         <div class="tablePaginator">
           <div class="tablePage"><input type="text" value="100"> de 219</div>
-          <div class="tablePreviousPage"><img></div>
-          <div class="tableNextPage"><img></div>
+          <div class="tablePreviousPage"><img src="/img/table/a-left.png" alt="previous page"></div>
+          <div class="tableNextPage"><img src="/img/table/a-right.png" alt="next page"></div>
         </div>
       </div>
-      <div class="tableOrders">
-        <table>
-          <tr>
-            <td></td>
-            <td>Name <img></td>
-            <td>Description <img></td>
-            <td>Date <img></td>
-            <td>Province <img></td>
-            <td>Status <img></td>
-          </tr>
-        </table>
-      </div>
+
     </div>
-    <table>
+    <table class="tableClass clearfix">
+      <tr>
+        <th></th>
+        <th>Name <img></th>
+        <th>Description <img></th>
+        <th>Date <img></th>
+        <th>Province <img></th>
+        <th>Status <img></th>
+      </tr>
       <tr>
         <td><input type="checkbox"></td>
         <td>Aenean vel risus est</td>
@@ -252,10 +251,10 @@
 
     </table>
     <!-- Paginador -->
-    <div class="tablePaginator">
+    <div class="tablePaginator ">
       <div class="tablePage"><input type="text" value="100"> de 219</div>
-      <div class="tablePreviousPage"><img></div>
-      <div class="tableNextPage"><img></div>
+      <div class="tablePreviousPage"><img src="/img/table/a-left.png" alt="previous page"></div>
+      <div class="tableNextPage"><img src="/img/table/a-right.png" alt="next page"></div>
     </div>
   <!-- --------- END HTML TABLE --------- -->
   </body>
