@@ -81,11 +81,36 @@
     <table class="tableClass clearfix">
       <tr>
         <th></th>
-        <th>Name <img src="/img/table/up.png"></th>
-        <th>Description <img src="/img/table/up.png"></th>
-        <th>Date <img src="/img/table/up.png"></th>
-        <th>Province <img src="/img/table/up.png"></th>
-        <th>Status <img src="/img/table/up.png"></th>
+        <th>
+          <div class="clearfix">
+            <div>Name</div>
+            <div><img src="/img/table/up.png"></div>
+          </div>
+        </th>
+        <th>
+          <div class="clearfix">
+            <div>Description</div>
+            <div><img src="/img/table/up.png"></div>
+          </div>
+        </th>
+        <th>
+          <div class="clearfix">
+            <div>Date</div>
+            <div><img src="/img/table/up.png"></div>
+          </div>
+        </th>
+        <th>
+          <div class="clearfix">
+            <div>Province</div>
+            <div><img src="/img/table/up.png"></div>
+          </div>
+        </th>
+        <th>
+          <div class="clearfix">
+            <div>Status</div>
+            <div><img src="/img/table/up.png"></div>
+          </div>
+        </th>
       </tr>
       <tr>
         <td><input type="checkbox"></td>
