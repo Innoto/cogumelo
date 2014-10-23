@@ -113,6 +113,10 @@
             echo "The logs have been stored\n";
         break;
 
+        case 'generateClientCaches':
+          generateClientCaches();
+          echo "All client cachés generated into 'httpdocs/mediacache/' folder \n";
+        break;
         default:
           echo "Invalid parameter;try:";
           printOptions();
@@ -128,6 +132,7 @@
   function printOptions(){
     echo "\n
           flush                         to remove temporary files
+          generateClientCaches          to cache all js, css, compiled less and other client files
           setPermissions                to set the files/folders permission
           setPermissionsDevel           to set the files/folders permission
           createDB                      to create a database
@@ -487,5 +492,16 @@
       // Return the password
       return $password;
   }
+
+
+function generateClientCaches() {
+
+  Cogumelo::load('c_controller/ModuleController.php');
+
+  require_once( ModuleController::getRealFilePath( 'mediaserver.php',  'mediaserver') );
+
+  mediaserver::autoIncludes();
+  CacheUtilsController::generateAllCaches();
+}
 
 ?>

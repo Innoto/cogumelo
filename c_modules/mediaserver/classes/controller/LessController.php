@@ -44,6 +44,8 @@ class LessController {
       $appPath = SITE_PATH.'/classes/view/template/';
       $this->less->setImportDir( $appPath ); 
     }
+
+    
   }
 
 }

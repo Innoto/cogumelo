@@ -2,13 +2,95 @@
 
 class CacheUtilsController {
 
+
+  //
+  //  LESS METHODS
+  //
+
   static function generateLessCaches() {
 
+
   }
 
-  static function prepareLessCaches(){
-    
+  // crea estructura con todos os arquivos LESS para a súa futura compilación
+  static function prepareLessTmpdir( ){
+
+    global $C_ENABLED_MODULES;
+    $destino = SITE_PATH.'/tmp/mediaCache/lesstmp/'.self::generateLessTmpdirName().'/';
+
+
+    mkdir($destino);
+
+    $cacheableFolder = 'classes/view/templates/';
+
+    foreach( $C_ENABLED_MODULES as $moduleName ){
+
+      // cogumelo modules
+      self::copyLessTmpdir( 
+        COGUMELO_LOCATION.'/c_modules/',
+        $moduleName.'/'.$cacheableFolder, 
+        $destino 
+      );
+
+      // app modules
+      self::copyLessTmpdir( 
+        SITE_PATH.'/modules/',
+        $moduleName.'/'.$cacheableFolder,
+        $destino 
+      );
+      
+    }
+
+    // app files
+    self::copyLessTmpdir( 
+      SITE_PATH.'/',
+      $cacheableFolder, 
+      $destino 
+    );
+
+    return $nombreDir;
   }
+
+
+  static function copyLessTmpdir($origDir, $filePath, $destDir){
+
+    $includeFiles = array('less');
+    $fileList = self::listFolderFiles( $origDir.$filePath , $extensions, $excludeExtensions );
+
+    foreach ( $fileList as $filePath ) {
+      mkdir( dirname($destDir.$filePath ), 0744, true );
+      copy( $filePath, $destDir.$filePath );
+    }
+
+  }
+
+  static function removeLessTmpdir($dirName){
+
+  }
+
+
+  static function generateLessTmpdirName() {
+
+    $length = 5;
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+      $randomString .= $characters[rand(0, strlen($characters) - 1)];
+    }
+
+    if( file_exist( $randomString ) ){
+      $randomString = self::generateLessTmpdirName();
+    }
+
+    return $randomString;
+  }
+
+
+  //
+  //  END LESS METHODS
+  //
+
+
 
   static function generateAllCaches() {
     global $C_ENABLED_MODULES;
@@ -61,7 +143,6 @@ class CacheUtilsController {
       );
 
       foreach ($iter as $path) {
-
           if ( is_file($path) ) {
             if( $excludeExtensions ) {
               if( self::excludeExtensions($path, $extensions ) ) {
@@ -82,7 +163,6 @@ class CacheUtilsController {
   }
 
 
-
   // exclude path that have an extensión of array
   static function excludeExtensions( $filePath, $extArray ) {
     $ret = true;
@@ -93,7 +173,6 @@ class CacheUtilsController {
         $found = true;
       }
     }
-
 
     if( $found == true ){
       $ret = false;
@@ -114,5 +193,6 @@ class CacheUtilsController {
 
     return $ret;
   }  
+
 
 }
