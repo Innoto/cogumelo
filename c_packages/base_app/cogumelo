@@ -321,13 +321,15 @@
       foreach ($files_module_php as $k => $value) {
         $parts = explode('/'.$dir.'/',$value);
         $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]); 
-
         $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);
-
       }
-        print_r($array_php_module);
     }
-
+    // Agora temos un array de ficheiros susceptibles de ter gettext strings
+    $entries = Gettext\Extractors\PhpCode::extract($array_php_module);
+    $po = Gettext\Generators\Po::generate($entries);
+    $pofile = fopen($dir_path.'c_cogumelo_php.po', 'w') or die('Unable to open file!');
+    fwrite($pofile, $po);
+    fclose($pofile);
 
     if ($existPHP){ // Extract new texts and merge in the .po file
       $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.pot';
@@ -350,7 +352,9 @@
     }
 
     /*JS */
-/*    // First we generate an array of files.js
+
+    // hai q revisalo para facer q mezcle as traduccións novas en lugar de rexeneralas de cada vez
+/*  // First we generate an array of files.js
     $all_js = file($tmp_dir.'xgettext_js.tmp');
     foreach ($all_js as $k => $value) {
       $array_js[$k] = dirname($value);
