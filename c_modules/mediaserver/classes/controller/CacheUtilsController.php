@@ -38,7 +38,7 @@ class CacheUtilsController {
         $moduleName.'/'.$cacheableFolder,
         $destino 
       );
-      
+
     }
 
     // app files
@@ -48,18 +48,21 @@ class CacheUtilsController {
       $destino 
     );
 
-    return $nombreDir;
+    return $destino;
   }
 
 
   static function copyLessTmpdir($origDir, $filePath, $destDir){
 
     $includeFiles = array('less');
-    $fileList = self::listFolderFiles( $origDir.$filePath , $extensions, $excludeExtensions );
+    $fileList = self::listFolderFiles( $origDir.$filePath , $includeFiles, false );
 
     foreach ( $fileList as $filePath ) {
-      mkdir( dirname($destDir.$filePath ), 0744, true );
-      copy( $filePath, $destDir.$filePath );
+      $relativeFilePath = substr( $filePath, strlen($origDir) );
+      if(!file_exists( dirname($destDir.$relativeFilePath) )){
+        mkdir( dirname($destDir.$relativeFilePath ), 0744, true );
+      }
+      copy( $filePath, $destDir.$relativeFilePath );
     }
 
   }
@@ -78,7 +81,7 @@ class CacheUtilsController {
       $randomString .= $characters[rand(0, strlen($characters) - 1)];
     }
 
-    if( file_exist( $randomString ) ){
+    if( file_exists( $randomString ) ){
       $randomString = self::generateLessTmpdirName();
     }
 
@@ -112,6 +115,9 @@ class CacheUtilsController {
 
     // app files
     self::cacheFolder( SITE_PATH.'/'.$cacheableFolder );
+
+    // all less files
+    self::prepareLessTmpdir();
 
   }
 
