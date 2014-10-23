@@ -1,0 +1,150 @@
+
+//@import "client/classes/view/templates/styles/clientCoreIncludes.less"; // Modify this for custom colors, font-sizes, etc
+
+
+// Tables
+// -------------------------
+@tableBackground:                   #ADD8E6; // overall background-color
+@tableBackgroundEven:               #87CEEB; // for striping
+@tableBackgroundTh:                 #ffffff;
+@tableBackgroundHover:              #CBD07F; // for hover
+@tableBorder:                       #ddd; // table and cell border
+@tableFontColor:                    #545454;
+@tableFontSize:                     14px;
+
+@buttonSearchBck: #1E90FF;
+@buttonSearchColor: #fff;
+
+@borderOptions: 1px solid black;
+
+
+
+.tableHeaderContainer{
+  .tableSearch{
+    margin-top: 10px;
+    width: 75%;
+    height: 35px;
+
+    button,
+    input{ height: 35px; }
+
+    input{
+      width: 75%;
+      max-width: 500px;
+    }
+
+    button{
+      margin-top: -2px;
+      margin-left: -4px;
+      width: 25%;
+      max-width: 120px;
+      background-color: @buttonSearchBck;
+      color: @buttonSearchColor;
+      //.btnFormat(@buttonSearchBck, @buttonSearchColor);
+    }
+  }
+  .tableFilters{
+    background: #f4f4f4;
+    border: 1px solid #dddddd;
+    padding: 5px 0px;
+    margin: 20px 0px 15px 0px;
+    height: 45px;
+    vertical-align: middle;
+
+    > select{
+      margin-top: 3px;
+      margin-bottom: 0px;
+    }
+    .tableMoreFilters{
+      width: 75%;
+      padding: 5px;
+      float: right;
+      .filters{
+        .statusFilters{ float:left; }
+        img{ float: right; cursor: pointer; }
+      }
+      .MoreFilters{}
+    }
+  }
+  .tableActions{
+    height: 40px;
+    select{
+      margin-left: 10px;
+      line-height: 40px;
+    }
+
+    .selectAll,
+    .addElem,
+    .exportContainer{
+      padding-left: 2px;
+      padding-top: 1px;
+      width: 30px;
+      height: 30px;
+      margin: 0px 2px;
+      float:left;
+      border: @borderOptions;
+      cursor: pointer;
+    }
+
+    .selectAll input{
+      margin: 5px 5px;
+    }
+  }
+}
+
+.tablePaginator{
+  float:right;
+  height: 30px;
+  line-height: 30px;
+  vertical-align: bottom;
+
+  .tablePage{
+    float:left;
+    margin: 0px 5px;
+    input{ width: 40px; }
+  }
+  .tableNextPage,
+  .tablePreviousPage{
+    height: 30px;
+    margin: 0px 2px;
+    float:left;
+    border: @borderOptions;
+    cursor: pointer;
+  }
+}
+
+
+// TABLE
+// --
+table.tableClass{
+  border: 1px solid @tableBorder;
+  background: @tableBackground;
+  padding: 5px;
+  color:@tableFontColor;
+  width: 100%;
+  margin: 10px 0px;
+  font-size: @tableFontSize;
+  tr{
+    &.even{
+      background: @tableBackgroundEven;
+    }
+    &:hover{
+      background: @tableBackgroundHover;
+    }
+  }
+  td, th{
+    cursor: pointer;
+    padding: 10px;
+  }
+  th{
+    background: @tableBackgroundTh;
+    height: 20px;
+    line-height: 20px;
+    vertical-align: middle;
+    div div{ float: left;}
+    img{
+
+    }
+  }
+
+}

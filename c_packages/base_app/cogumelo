@@ -16,7 +16,6 @@
 
   require_once("conf/setup.php");
 
-
   require_once(COGUMELO_LOCATION."/c_classes/CogumeloClass.php");
   require_once(SITE_PATH."/Cogumelo.php");
 
@@ -28,6 +27,7 @@
   //
   require_once(COGUMELO_LOCATION."/c_modules/devel/devel.php");
   require_once(COGUMELO_LOCATION."/c_modules/devel/classes/controller/DevelDBController.php");
+  require_once(COGUMELO_LOCATION."/c_classes/c_controller/ModuleController.php");
   require_once(COGUMELO_LOCATION."/c_packages/base_app/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
 
   //
@@ -114,32 +114,30 @@
         break;
 
         default:
-          echo "Invalid parameter;try:
-          flush                 to remove temporary files
-          setPermissions        to set the files/folders permission
-          setPermissionsDevel   to set the files/folders permission
-          createDB               to create a database
-          createTables           to generate the tables
-          bckDB                 to do a DB backup (optional arg: filename)
-          restoreDB             to restore a database
-          installDependences    to install all modules dependencies
-          generateTranslations  to get all the web text into a file.po
-          compileTranslations   to compile file.po and get the translations ready\n";
+          echo "Invalid parameter;try:";
+          printOptions();
 
       }//end switch
   }//end parameters handler
   else{
-    echo "Not enough arguments;try:
-          flush                 to remove temporary files
-          setPermissions        to set the files/folders permission
-          setPermissionsDevel   to set the files/folders permission
-          createDB               to create a database
-          createTables           to generate the tables
-          bckDB                 to do a DB backup (optional arg: filename)
-          restoreDB             to restore a database
-          installDependences    to install all modules dependencies
-          generateTranslations  to get all the web text into a file.po
-          compileTranslations   to compile file.po and get the translations ready\n";
+    echo "Not enough arguments;try:";
+    printOptions();
+  }
+
+
+  function printOptions(){
+    echo "\n
+          flush                         to remove temporary files
+          setPermissions                to set the files/folders permission
+          setPermissionsDevel           to set the files/folders permission
+          createDB                      to create a database
+          createTables                  to generate the tables
+          bckDB                         to do a DB backup (optional arg: filename)
+          restoreDB                     to restore a database
+          installDependences            to install all modules dependencies
+          generateTranslations          to get all the web text into a file.po
+          compileTranslations           to compile file.po and get the translations ready
+    \n\n";
   }
 
   function createDB($user, $passwd){
@@ -269,6 +267,7 @@
     bind_textdomain_codeset($textdomain, 'UTF-8');
     textdomain($textdomain);
 
+
     /**
     * Generate files.po or update them if don't exist already
     */
@@ -277,7 +276,7 @@
     $tmp_dir = SITE_PATH.'tmp/';
 
     // Get all the php files excluding the translations and the libraries and save them to a temporary file
-    $all_php = 'find '.getcwd().' -iname "*.php" | grep -v vendorServer | grep -v tmp | grep -v conf > '.$tmp_dir.'xgettext_php.tmp';
+    $all_php = 'find '.COGUMELO_LOCATION.' -iname "*.php" | grep -v vendorServer | grep -v tmp | grep -v conf > '.$tmp_dir.'xgettext_php.tmp';
     exec($all_php);
     // Get all the tpl files excluding the translations and the libraries and save them to a temporary file
     $all_tpl = 'find '.getcwd().' -iname "*.tpl" | grep -v vendorServer > '.$tmp_dir.'xgettext_tpl.tmp';
@@ -308,6 +307,71 @@
     }
 
     /* PHP */
+
+    //$array_php = file($tmp_dir.'xgettext_php.tmp');
+    $dir_modules = COGUMELO_LOCATION.'/c_modules/';
+    global $C_ENABLED_MODULES;
+    $modules = $C_ENABLED_MODULES;
+
+    foreach ($modules as $k => $dir) {
+      $all_module_php = 'find '.$dir_modules.$dir.' -iname "*.php" > '.$tmp_dir.'xgettext_module_php.tmp';
+      shell_exec($all_module_php);
+      $files_module_php = file($tmp_dir.'xgettext_module_php.tmp');
+
+      foreach ($files_module_php as $k => $value) {
+        $parts = explode('/'.$dir.'/',$value);
+        $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]); 
+
+        $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);
+
+      }
+        print_r($array_php_module);
+    }
+
+    /*if (is_dir($dir_modules)){
+      $handle = opendir($dir_modules);
+       while ($dir = readdir($handle)){
+        if ($dir !="." && $dir!=".."){
+         $all_module_php = 'find '.$dir_modules.$dir.' -iname "*.php" > '.$tmp_dir.'xgettext_module_php.tmp';
+         shell_exec($all_module_php);
+         $files_module_php = file($tmp_dir.'xgettext_module_php.tmp');
+
+
+         foreach ($files_module_php as $k => $value) {
+          $parts = explode('/'.$dir.'/',$value);
+          
+          // parts[1] contén a ruta relativa dende o módulo
+          echo $dir.'->'.$parts[1]."\n";
+
+          //$array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);
+
+         }
+         //print_r($array_php_module);
+
+        }
+       }
+    }*/
+
+
+/*    $proba[0] = ('classes/controller/MediaserverController.php');
+    $proba[1] = ('classes/controller/LessController.php');
+    $proba[2] = ('classes/view/MediaserverView.php');
+
+    foreach ($proba as $key => $value) {
+      var_dump($proba[$key]);
+      $caca = ModuleController::getRealFilePath($proba[$key], 'mediaserver');
+      echo $caca."\n";
+    }*/
+
+    
+/*    print_r($array_php);
+
+    foreach ($array_php as $k => $val) {
+     
+
+    }*/
+
+
     if ($existPHP){ // Extract new texts and merge in the .po file
       $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.pot';
       exec($extractPHP);
@@ -326,41 +390,27 @@
     else{ // Extract all the texts to be translated and create the file
       //$extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.po'; //tpl
       //shell_exec($extractTPL);
-    
-      $file_all = fopen($tmp_dir.'xgettext_tpl.tmp', 'r');
-      /*while(!feof($file_all)){
-        echo fgets($file_all);
-        $parts = explode('/',fgets($file_all));
-        echo count($parts);
-*/
-
-        //$file = fopen(fgets($file_all),'r');
-        //echo("stop\n");
-        
-        /*$file = fopen(echo fgets($file_all));
-        while(!feof($file)){
-          echo fgets($file). "<br />";
-        }
-        fclose($file);*/
-      //}
-      //fclose($file_all);
     }
 
-    /* JS */
-    if ($existJS){ // Extract new texts and merge in the .po file
-      $extractJS = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_js.tmp -o '.$dir_path.$textdomain.'_js.pot';
+    /*JS */
+/*    // First we generate an array of files.js
+    $all_js = file($tmp_dir.'xgettext_js.tmp');
+    foreach ($all_js as $k => $value) {
+      $array_js[$k] = dirname($value);
     }
-    else{ // Extract all the texts to be translated and create the file
-      $entries = Gettext\Extractors\JsCode::extract('proba.js');
-    }
 
+    // We extract the string to be translated from the files in the array and create a .po file
+    $entries = Gettext\Extractors\JsCode::extract($array_js);
+    $po = Gettext\Generators\Po::generate($entries);
+    $pofile = fopen($dir_path.'c_cogumelo_js.po', 'w') or die('Unable to open file!');
+    fwrite($pofile, $po);
+    fclose($pofile); */  
 
-
-    // Delete the modified files remaining
+    /* Delete the modified files remaining */
     if (is_dir($dir_path)){
       $handle = opendir($dir_path);
       while ($file = readdir($handle)) {
-        if ($file=='c_cogumelo_php.po~' || $file=='c_cogumelo_tpl.po~' || $file=='c_cogumelo_js.po~' || 
+        if ($file=='c_cogumelo_php.po~' || $file=='c_cogumelo_tpl.po~' || $file=='c_cogumelo_js.po~' ||
             $file=='c_cogumelo_php.pot'|| $file=='c_cogumelo_tpl.pot' || $file=='c_cogumelo_js.pot'){
               unlink($dir_path.$file);
         }
@@ -376,7 +426,7 @@
     foreach(explode(',', 'gl,es,en') as $lng) {
       $filepath = SITE_PATH.'conf/i18n/';
       exec('msgfmt -o '.$filepath.$lng.'/LC_MESSAGES/'.$textdomain.'_php.mo '.$filepath.$textdomain.'_php.po');
-      // exec('msgfmt -o '.$filepath.$textdomain.'_js.mo '.$filepath.$textdomain.'_js.po');
+      exec('msgfmt -o '.$filepath.$lng.'/LC_MESSAGES/'.$textdomain.'_js.mo '.$filepath.$textdomain.'_js.po');
       // exec('msgfmt -o '.$filepath.$textdomain.'_tpl.mo '.$filepath.$textdomain.'_tpl.po');
     }
   }

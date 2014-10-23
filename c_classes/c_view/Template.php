@@ -65,12 +65,20 @@ Class Template extends Smarty
     }
 
 
-
-    if( $is_autoinclude ){
-      $this->css_autoincludes .= "\n".'<link rel="stylesheet/less" type="text/css" href="'.$base_path.$file_path.'">';
+    if( !MEDIASERVER_COMPILE_LESS && substr($file_path, -5) == '.less' ) {
+      $file_rel = "stylesheet/less";      
     }
     else {
-      $this->css_includes .= "\n".'<link rel="stylesheet/less" type="text/css" href="'.$base_path.$file_path.'">';
+      $file_rel = "stylesheet";
+    }
+    
+
+
+    if( $is_autoinclude ){
+      $this->css_autoincludes .= "\n".'<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.'">';
+    }
+    else {
+      $this->css_includes .= "\n".'<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.'">';
     }
   }
 

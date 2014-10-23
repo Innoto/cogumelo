@@ -86,7 +86,7 @@ class CreateForm extends View
 
     $form->setField( 'lostDesc', array( 'label' => 'Description', 'value' => '', 'type' => 'textarea'));
 
-    $form->setField( 'lostConditions', array( 'type' => 'checkbox', 'label' => '',
+    $form->setField( 'lostConditions', array( 'type' => 'checkbox',
       'value' => array( ),
       'options'=> array( '1' => 'He leído y acepto los Términos y Condiciones de uso' )
     ) );

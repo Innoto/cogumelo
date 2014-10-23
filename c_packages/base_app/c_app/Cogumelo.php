@@ -11,12 +11,13 @@ class Cogumelo extends CogumeloClass
   function __construct() {
     parent::__construct();
 
-    //echo _("Let’s make the web multilingual.");exit;
-
     /*createForm*/
     $this->addUrlPatterns( '#^lostForm$#', 'view:CreateForm::lostForm' );
     $this->addUrlPatterns( '#^lostForm/u/(.*)#', 'view:CreateForm::updateLostForm' );
     $this->addUrlPatterns( '#^sendLostForm#', 'view:CreateForm::sendLostForm' );
+
+    /*table*/
+    $this->addUrlPatterns( '#^tableInterface$#', 'view:TableView::main');
 
     /*i18n*/
     $this->addUrlPatterns( '#^test#', 'view:Testi18n::translate' );
