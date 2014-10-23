@@ -48,7 +48,7 @@
     border: 1px solid #dddddd;
     padding: 5px 0px;
     margin: 20px 0px 15px 0px;
-    height: 45px;
+
     vertical-align: middle;
 
     > select{
@@ -60,10 +60,13 @@
       padding: 5px;
       float: right;
       .filters{
+        height: 45px;
         .statusFilters{ float:left; }
         img{ float: right; cursor: pointer; }
       }
-      .MoreFilters{}
+      .MoreFilters{
+        img{ float: right; cursor: pointer; }
+      }
     }
   }
   .tableActions{

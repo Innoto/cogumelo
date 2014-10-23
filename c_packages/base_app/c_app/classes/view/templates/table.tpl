@@ -36,28 +36,43 @@
           <option value="2">Recibido</option>
           <option value="3">Rechazado</option>
         </select>
-        <div class="tableMoreFilters">
-            <div class="filters">
+        <div class="tableMoreFilters" >
+            <div class="filters" style="display:none;">
               <div class="statusFilters"></div>
-              <img src="/img/table/add.png">
+              <img src="/img/table/add-b.png">
             </div>
-            <div class="MoreFilters" style="display:none;">
-              <select>
-                <option value="1">Aceptado</option>
-                <option value="2">Recibido</option>
-                <option value="3">Rechazado</option>
-              </select>
-              <select>
-                <option value="1">Aceptado</option>
-                <option value="2">Recibido</option>
-                <option value="3">Rechazado</option>
-              </select>
-              <select>
-                <option value="1">Aceptado</option>
-                <option value="2">Recibido</option>
-                <option value="3">Rechazado</option>
-              </select>
-              <button>Apply filters</button>
+            <div class="MoreFilters">
+              <fieldset>
+                <legend>filters</legend>
+
+                <img src="/img/table/cancel-b.png">
+                <img src="/img/table/apply.png">
+                <div>
+                  <label>Categoria</label>
+                  <select>
+                    <option value="1">Aceptado</option>
+                    <option value="2">Recibido</option>
+                    <option value="3">Rechazado</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Sub-categoria</label>
+                  <select>
+                    <option value="1">Aceptado</option>
+                    <option value="2">Recibido</option>
+                    <option value="3">Rechazado</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Tipo</label>
+                  <select>
+                    <option value="1">Aceptado</option>
+                    <option value="2">Recibido</option>
+                    <option value="3">Rechazado</option>
+                  </select>
+                </div>
+                <button>Apply filters</button>
+              </fieldset>
             </div>
         </div>
       </div>
