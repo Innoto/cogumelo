@@ -104,12 +104,12 @@
 
         /* We execute this two actions from web as we need to operate with the apache permissions*/
         case 'flush': // delete temporary files
-           exec('wget -q --spider http://cogumelo/cogumelo-script.php?q=flush');
+           exec('wget -q --spider http://cogumelo/cogumelo-server.php?q=flush');
            echo "Temporary files deleted!\n";
         break;
 
         case 'rotateLogs':
-            exec('wget -q --spider cogumelo/cogumelo-script.php?q=logs');
+            exec('wget -q --spider cogumelo/cogumelo-server.php?q=rotate_logs');
             echo "The logs have been stored\n";
         break;
 
@@ -326,56 +326,15 @@
       foreach ($files_module_php as $k => $value) {
         $parts = explode('/'.$dir.'/',$value);
         $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]); 
-
         $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);
-
       }
-        print_r($array_php_module);
     }
-
-    /*if (is_dir($dir_modules)){
-      $handle = opendir($dir_modules);
-       while ($dir = readdir($handle)){
-        if ($dir !="." && $dir!=".."){
-         $all_module_php = 'find '.$dir_modules.$dir.' -iname "*.php" > '.$tmp_dir.'xgettext_module_php.tmp';
-         shell_exec($all_module_php);
-         $files_module_php = file($tmp_dir.'xgettext_module_php.tmp');
-
-
-         foreach ($files_module_php as $k => $value) {
-          $parts = explode('/'.$dir.'/',$value);
-          
-          // parts[1] contén a ruta relativa dende o módulo
-          echo $dir.'->'.$parts[1]."\n";
-
-          //$array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);
-
-         }
-         //print_r($array_php_module);
-
-        }
-       }
-    }*/
-
-
-/*    $proba[0] = ('classes/controller/MediaserverController.php');
-    $proba[1] = ('classes/controller/LessController.php');
-    $proba[2] = ('classes/view/MediaserverView.php');
-
-    foreach ($proba as $key => $value) {
-      var_dump($proba[$key]);
-      $caca = ModuleController::getRealFilePath($proba[$key], 'mediaserver');
-      echo $caca."\n";
-    }*/
-
-    
-/*    print_r($array_php);
-
-    foreach ($array_php as $k => $val) {
-     
-
-    }*/
-
+    // Agora temos un array de ficheiros susceptibles de ter gettext strings
+    $entries = Gettext\Extractors\PhpCode::extract($array_php_module);
+    $po = Gettext\Generators\Po::generate($entries);
+    $pofile = fopen($dir_path.'c_cogumelo_php.po', 'w') or die('Unable to open file!');
+    fwrite($pofile, $po);
+    fclose($pofile);
 
     if ($existPHP){ // Extract new texts and merge in the .po file
       $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.pot';
@@ -398,7 +357,9 @@
     }
 
     /*JS */
-/*    // First we generate an array of files.js
+
+    // hai q revisalo para facer q mezcle as traduccións novas en lugar de rexeneralas de cada vez
+/*  // First we generate an array of files.js
     $all_js = file($tmp_dir.'xgettext_js.tmp');
     foreach ($all_js as $k => $value) {
       $array_js[$k] = dirname($value);
