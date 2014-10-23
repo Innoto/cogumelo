@@ -27,55 +27,124 @@
 
   <!-- --------- HTML TABLE ------------- -->
     <div class="tableHeaderContainer">
-      <div class="tableSearch clearfix">
-        <input type="text"><button>Search</button>
-      </div>
-      <div class="tableFilters clearfix">
-        <select>
-          <option value="1">Aceptado</option>
-          <option value="2">Recibido</option>
-          <option value="3">Rechazado</option>
-        </select>
-        <div class="tableMoreFilters" >
-            <div class="filters" style="display:none;">
-              <div class="statusFilters"></div>
-              <img src="/img/table/add-b.png">
-            </div>
-            <div class="MoreFilters">
-              <fieldset>
-                <legend>filters</legend>
+      <div class="tableSearchFilters clearfix">
 
-                <img src="/img/table/cancel-b.png">
-                <img src="/img/table/apply.png">
-                <div>
-                  <label>Categoria</label>
-                  <select>
-                    <option value="1">Aceptado</option>
-                    <option value="2">Recibido</option>
-                    <option value="3">Rechazado</option>
-                  </select>
-                </div>
-                <div>
-                  <label>Sub-categoria</label>
-                  <select>
-                    <option value="1">Aceptado</option>
-                    <option value="2">Recibido</option>
-                    <option value="3">Rechazado</option>
-                  </select>
-                </div>
-                <div>
-                  <label>Tipo</label>
-                  <select>
-                    <option value="1">Aceptado</option>
-                    <option value="2">Recibido</option>
-                    <option value="3">Rechazado</option>
-                  </select>
-                </div>
-                <button>Apply filters</button>
-              </fieldset>
-            </div>
+        <div class="tableFilters clearfix">
+          <button>+Filtros</button>
+          <select>
+            <option value="1">Aceptado</option>
+            <option value="2">Recibido</option>
+            <option value="3">Rechazado</option>
+          </select>
+        </div>
+        <div class="tableSearch clearfix">
+          <input type="text"><button>Search</button>
         </div>
       </div>
+
+      <div class="tableMoreFilters clearfix">
+        <div class="MoreFilters" >
+          <fieldset>
+            <legend>filters</legend>
+            <div class="clearfix">
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="buttonsContainer">
+              <button>Cancel filters</button>
+              <button>Apply filters</button>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+
       <div class="tableActions clearfix">
         <div class="selectAll"><input type="checkbox"></div>
         <div class="addElem"><img src="/img/table/add.png" alt="Add"></div>
