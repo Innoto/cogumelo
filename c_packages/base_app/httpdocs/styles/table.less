@@ -1,3 +1,7 @@
+
+//@import "client/classes/view/templates/styles/clientCoreIncludes.less"; // Modify this for custom colors, font-sizes, etc
+
+
 // Tables
 // -------------------------
 @tableBackground:                   #ADD8E6; // overall background-color
@@ -19,7 +23,7 @@
   .tableSearch{
     margin-top: 10px;
     width: 75%;
-    height: 40px;
+    height: 35px;
 
     button,
     input{ height: 35px; }
@@ -41,11 +45,24 @@
   }
   .tableFilters{
     background: #f4f4f4;
-    margin: 10px 0px;
+    border: 1px solid #dddddd;
+    padding: 5px 0px;
+    margin: 20px 0px 15px 0px;
+    height: 45px;
+    vertical-align: middle;
 
-
+    > select{
+      margin-top: 3px;
+      margin-bottom: 0px;
+    }
     .tableMoreFilters{
-      .filters{}
+      width: 75%;
+      padding: 5px;
+      float: right;
+      .filters{
+        .statusFilters{ float:left; }
+        img{ float: right; cursor: pointer; }
+      }
       .MoreFilters{}
     }
   }
@@ -61,8 +78,8 @@
     .exportContainer{
       padding-left: 2px;
       padding-top: 1px;
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
       margin: 0px 2px;
       float:left;
       border: @borderOptions;
@@ -70,15 +87,15 @@
     }
 
     .selectAll input{
-      margin: 10px 10px;
+      margin: 5px 5px;
     }
   }
 }
 
 .tablePaginator{
   float:right;
-  height: 50px;
-  line-height: 50px;
+  height: 30px;
+  line-height: 30px;
   vertical-align: bottom;
 
   .tablePage{
@@ -88,7 +105,7 @@
   }
   .tableNextPage,
   .tablePreviousPage{
-    height: 40px;
+    height: 30px;
     margin: 0px 2px;
     float:left;
     border: @borderOptions;

@@ -38,7 +38,8 @@
         </select>
         <div class="tableMoreFilters">
             <div class="filters">
-              Filters
+              <div class="statusFilters"></div>
+              <img src="/img/table/add.png">
             </div>
             <div class="MoreFilters" style="display:none;">
               <select>
