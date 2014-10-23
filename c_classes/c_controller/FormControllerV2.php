@@ -225,7 +225,7 @@ class FormControllerV2 implements Serializable {
           //$html .= $inputAndText['input'].$inputAndText['label'];
           $html .= '<label>'.$inputAndText['input'].$inputAndText['text'].'</label>';
         }
-        $html .= '<span class="JQVMC-'.$fieldName.'-error"></span>';
+        $html .= '<span class="JQVMC-'.$fieldName.'-error JQVMC-error"></span>';
         break;
       case 'textarea':
         $html .= $htmlFieldArray['inputOpen'] . $htmlFieldArray['value'] . $htmlFieldArray['inputClose'];
