@@ -10,14 +10,7 @@ class MediaserverController {
   var $modulePath = '';
 
 
-  /**
-  * Process path to serve media resource. It will move and 
-  * redirect resource to final path.
-  *
-  */
-  function serveContent($path, $module=false){
-
-
+  function cacheContent( $path, $module, $doNotRedirect = false ) {
     $parsedUrl = parse_url($path);
     $this->urlPath = $parsedUrl['path'];
     $this->moduleName = $module;
@@ -25,8 +18,10 @@ class MediaserverController {
     $this->modulePath = ( $this->moduleName )? '/module/'.$this->moduleName.'/' : '' ;
 
     if( MEDIASERVER_REFRESH_CACHE ) {
-      if( !file_exists( $this->realFilePath ) ) {
-        RequestController::redirect(SITE_URL_CURRENT.'/404');
+      if( !file_exists( $this->realFilePath ) && !$doNotRedirect ) {
+        if(!$doNotRedirect) {
+          RequestController::redirect(SITE_URL_CURRENT.'/404');
+        }
       }
 
       if( substr($this->urlPath, -4) == '.tpl' || 
@@ -35,13 +30,13 @@ class MediaserverController {
         ) {
 
         Cogumelo::error('trying to load( '.$this->urlPath.' ), but not allowed to serve .tpl .php or .inc files ');
-        RequestController::redirect(SITE_URL_CURRENT.'/404');
+        if(!$doNotRedirect) {
+          RequestController::redirect(SITE_URL_CURRENT.'/404');
+        }
 
       }
       else {
         
-        Cogumelo::debug("Mediaserver, serving file: ".$this->realFilePath);
-
         if( (substr($this->urlPath, -4) == '.css' || substr($this->urlPath, -3) == '.js' ) && MEDIASERVER_MINIMIFY_FILES ) {
           $this->copyAndMoveFile( true ); // copy and mofe with MINIFY
         }
@@ -61,12 +56,18 @@ class MediaserverController {
     }
 
 
+  }
 
+  /**
+  * Process path to serve media resource. It will move and 
+  * serve final path resource.
+  *
+  */
+  function serveContent($path, $module=false){
 
+    $this->cacheContent( $path, $module );
     $this->serveFile( );
 
-    //echo MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath;
-    
   } 
 
 
@@ -147,13 +148,15 @@ class MediaserverController {
     $dirname = dirname($path);
 
     if( !is_dir ( $dirname ) ) {
-      mkdir( dirname($path ), 0777, true );
+      mkdir( dirname($path ), 0744, true );
     }
 
   }
 
 
   function serveFile( ) {
+
+    Cogumelo::debug("Mediaserver, serving file: ".$this->realFilePath);
 
     // js file
     if( substr($this->urlPath , -3) == '.js' ) {

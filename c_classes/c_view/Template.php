@@ -25,6 +25,9 @@ Class Template extends Smarty
     $this->config_dir = SMARTY_CONFIG;
     $this->compile_dir = SMARTY_COMPILE;
     $this->cache_dir = SMARTY_CACHE;
+
+    // Smarty Hack: http://www.smarty.net/forums/viewtopic.php?t=21352&sid=88c6bbab5fb1fd84d3e4f18857d3d10e
+    Smarty::muteExpectedErrors();
   }
 
   function addClientScript($file_path, $module = false, $vendor=false, $is_autoinclude = false)  {

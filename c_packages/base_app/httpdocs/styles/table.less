@@ -15,60 +15,91 @@
 @buttonSearchBck: #1E90FF;
 @buttonSearchColor: #fff;
 
+@buttonMoreFiltersBck: #1E90ff;
+@buttonMoreFiltersColor: #fff;
+
 @borderOptions: 1px solid black;
 
 
 
 .tableHeaderContainer{
-  .tableSearch{
-    margin-top: 10px;
-    width: 75%;
-    height: 35px;
-
-    button,
-    input{ height: 35px; }
-
-    input{
-      width: 75%;
-      max-width: 500px;
-    }
-
-    button{
-      margin-top: -2px;
-      margin-left: -4px;
-      width: 25%;
-      max-width: 120px;
-      background-color: @buttonSearchBck;
-      color: @buttonSearchColor;
-      //.btnFormat(@buttonSearchBck, @buttonSearchColor);
-    }
-  }
-  .tableFilters{
+  .tableSearchFilters{
+    padding: 10px 0px;
     background: #f4f4f4;
-    border: 1px solid #dddddd;
-    padding: 5px 0px;
-    margin: 20px 0px 15px 0px;
-    height: 45px;
-    vertical-align: middle;
+    border-bottom: 1px solid #ddd;
+    .tableSearch{
+      margin-left: 40px;
+      height: 35px;
+      float: left;
+      width: 50%;
 
-    > select{
-      margin-top: 3px;
-      margin-bottom: 0px;
-    }
-    .tableMoreFilters{
-      width: 75%;
-      padding: 5px;
-      float: right;
-      .filters{
-        .statusFilters{ float:left; }
-        img{ float: right; cursor: pointer; }
+      button,
+      input{ height: 35px; }
+
+      input{
+        width: 65%;
+        max-width: 500px;
       }
-      .MoreFilters{}
+
+      button{
+        margin-top: -2px;
+        margin-left: -4px;
+        width: 25%;
+        max-width: 120px;
+        background-color: @buttonSearchBck;
+        color: @buttonSearchColor;
+        //.btnFormat(@buttonSearchBck, @buttonSearchColor);
+      }
+    }
+    .tableFilters{
+      float: left;
+      height: 35px;
+      button,
+      select{
+        height: 35px;
+        float: left;
+        margin-left: 10px;
+      }
+
+      button{
+        background-color: @buttonMoreFiltersBck;
+        color: @buttonMoreFiltersColor;
+      }
     }
   }
+
+  .tableMoreFilters{
+    padding: 10px;
+    margin-bottom: 10px;
+    background: #f4f4f4;
+    .MoreFilters{
+      fieldset{
+        border: 1px solid #ddd;
+        .FilterMain{
+          border: 2px dashed #ddd;
+          padding: 5px;
+          margin: 5px;
+          float: left;
+        }
+        .buttonsContainer{
+          margin-top: 10px;
+          width: 100%;
+          text-align: right;
+        }
+      }
+      button{
+        background-color: @buttonMoreFiltersBck;
+        color: @buttonMoreFiltersColor;
+      }
+      img{ float: right; cursor: pointer; }
+    }
+  }
+
   .tableActions{
-    height: 40px;
+    margin-top: 10px;
+    height: 30px;
     select{
+      height: 30px;
       margin-left: 10px;
       line-height: 40px;
     }
