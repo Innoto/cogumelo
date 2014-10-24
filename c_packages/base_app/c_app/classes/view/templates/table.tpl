@@ -161,8 +161,8 @@
       </div>
       <div class="tableActions clearfix">
         <div class="selectAll"><input type="checkbox"></div>
-        <div class="addElem"><img src="/img/table/add.png" alt="Add"></div>
-        <div class="exportContainer"><img src="/img/table/export.png" alt="Export"></div>
+        <div class="addElem"><img src="media/img/table/add.png" alt="Add"></div>
+        <div class="exportContainer"><img src="media/img/table/export.png" alt="Export"></div>
         <select>
           <option value="1">Action 1</option>
           <option value="2">Action 2</option>
@@ -171,8 +171,8 @@
         <!-- Paginador -->
         <div class="tablePaginator">
           <div class="tablePage"><input type="text" value="100"> de 219</div>
-          <div class="tablePreviousPage"><img src="/img/table/a-left.png" alt="previous page"></div>
-          <div class="tableNextPage"><img src="/img/table/a-right.png" alt="next page"></div>
+          <div class="tablePreviousPage"><img src="media/img/table/a-left.png" alt="previous page"></div>
+          <div class="tableNextPage"><img src="media/img/table/a-right.png" alt="next page"></div>
         </div>
       </div>
 
@@ -183,31 +183,31 @@
         <th>
           <div class="clearfix">
             <div>Name</div>
-            <div><img src="/img/table/up.png"></div>
+            <div><img src="media/img/table/up.png"></div>
           </div>
         </th>
         <th>
           <div class="clearfix">
             <div>Description</div>
-            <div><img src="/img/table/up.png"></div>
+            <div><img src="media/img/table/up.png"></div>
           </div>
         </th>
         <th>
           <div class="clearfix">
             <div>Date</div>
-            <div><img src="/img/table/up.png"></div>
+            <div><img src="media/img/table/up.png"></div>
           </div>
         </th>
         <th>
           <div class="clearfix">
             <div>Province</div>
-            <div><img src="/img/table/up.png"></div>
+            <div><img src="media/img/table/up.png"></div>
           </div>
         </th>
         <th>
           <div class="clearfix">
             <div>Status</div>
-            <div><img src="/img/table/up.png"></div>
+            <div><img src="media/img/table/up.png"></div>
           </div>
         </th>
       </tr>
@@ -377,8 +377,8 @@
     <!-- Paginador -->
     <div class="tablePaginator ">
       <div class="tablePage"><input type="text" value="100"> de 219</div>
-      <div class="tablePreviousPage"><img src="/img/table/a-left.png" alt="previous page"></div>
-      <div class="tableNextPage"><img src="/img/table/a-right.png" alt="next page"></div>
+      <div class="tablePreviousPage"><img src="media/img/table/a-left.png" alt="previous page"></div>
+      <div class="tableNextPage"><img src="media/img/table/a-right.png" alt="next page"></div>
     </div>
   <!-- --------- END HTML TABLE --------- -->
   </body>

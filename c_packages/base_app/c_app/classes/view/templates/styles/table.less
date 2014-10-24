@@ -46,8 +46,6 @@
         margin-left: -4px;
         width: 25%;
         max-width: 120px;
-        //background-color: @buttonSearchBck;
-        //color: @buttonSearchColor;
         .btnFormat(@buttonSearchBck, @buttonSearchColor);
       }
     }
@@ -62,8 +60,7 @@
       }
 
       button{
-        background-color: @buttonMoreFiltersBck;
-        color: @buttonMoreFiltersColor;
+        .btnFormat(@buttonMoreFiltersBck, @buttonMoreFiltersColor);
       }
     }
   }
@@ -89,8 +86,7 @@
       }
 
       button{
-        background-color: @buttonMoreFiltersBck;
-        color: @buttonMoreFiltersColor;
+        .btnFormat(@buttonMoreFiltersBck, @buttonMoreFiltersColor);
       }
       img{ float: right; cursor: pointer; }
     }
@@ -100,8 +96,7 @@
     background: #E4E4E4;
     button{
       float: right;
-      background-color: @buttonMoreFiltersBck;
-      color: @buttonMoreFiltersColor;
+      .btnFormat(@buttonMoreFiltersBck, @buttonMoreFiltersColor);
     }
   }
   .tableActions{
