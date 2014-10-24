@@ -30,121 +30,137 @@
       <div class="tableSearchFilters clearfix">
 
         <div class="tableFilters clearfix">
-          <button>+Filtros</button>
           <select>
             <option value="1">Aceptado</option>
             <option value="2">Recibido</option>
             <option value="3">Rechazado</option>
           </select>
+          <button>+Filtros</button>
         </div>
         <div class="tableSearch clearfix">
           <input type="text"><button>Search</button>
         </div>
       </div>
-
       <div class="tableMoreFilters clearfix">
         <div class="MoreFilters" >
-          <fieldset>
-            <legend>filters</legend>
-            <div class="clearfix">
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
+          <div class="clearfix">
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
             </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
 
-            <div class="buttonsContainer">
-              <button>Cancel filters</button>
-              <button>Apply filters</button>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+                <div class="FilterMain">
+                  <label>Categoria</label>
+                  <select>
+                    <option value="1">Categoria 1</option>
+                    <option value="2">Categoria 2</option>
+                    <option value="3">Categoria 3</option>
+                  </select>
+                </div>
+              </div>
             </div>
-          </fieldset>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="buttonsContainer">
+            <button>Eliminar filtros</button>
+            <button>Cerrar</button>
+          </div>
         </div>
       </div>
-
+      <div class="tableResumeFilters clearfix">
+        <span>Estas filtrando por: (Categoria 1, Aceptado).</span>
+        <button>Eliminar filtros</button>
+      </div>
       <div class="tableActions clearfix">
         <div class="selectAll"><input type="checkbox"></div>
         <div class="addElem"><img src="/img/table/add.png" alt="Add"></div>
