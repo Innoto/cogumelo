@@ -7,11 +7,6 @@ class CacheUtilsController {
   //  LESS METHODS
   //
 
-  static function generateLessCaches() {
-
-
-  }
-
   // crea estructura con todos os arquivos LESS para a súa futura compilación
   static function prepareLessTmpdir( ){
 
