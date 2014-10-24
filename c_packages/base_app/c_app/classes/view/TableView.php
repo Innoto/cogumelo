@@ -18,6 +18,7 @@ class TableView extends View
   }
 
   function main() {
+    $this->template->addClientStyles('styles/table.less');
     $this->template->setTpl('table.tpl');
     $this->template->exec();
   } // function loadForm()

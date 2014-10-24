@@ -16,36 +16,19 @@ class LessController {
   */
   function compile( $lessFilePath, $resultFilePath , $moduleName ) {
 
+    // generate less caches
+    $lessTmpDir = CacheUtilsController::prepareLessTmpdir();
 
-
-    $this->setIncludesDir( $lessFilePath, $moduleName );
+    // set includes dir
+    $this->less->setImportDir( $lessTmpDir );
 
     try {
-      $this->less->checkedCompile( COGUMELO_LOCATION.'/c_modules/'.$moduleName.'/classes/view/templates/'.$lessFilePath, $resultFilePath );
+      $this->less->checkedCompile( $lessTmpDir.$moduleName.'/classes/view/templates/'.$lessFilePath, $resultFilePath );
     } catch (Exception $ex) {
       Cogumelo::error( "less.php fatal error compiling ".basename($lessFilePath).": ".$ex->getMessage() );
     }
-  }
-
-
-  function setIncludesDir( $filePath , $moduleName){
-
-
-
-    if($moduleName != false) {
-
-      $coreModulePath = COGUMELO_LOCATION.'/c_modules/'; // core module
-      $appModulePath = SITE_PATH.'/modules/'; // app module
-    
-      $this->less->setImportDir( $coreModulePath ); 
-
-    }
-    else {
-      $appPath = SITE_PATH.'/classes/view/template/';
-      $this->less->setImportDir( $appPath ); 
-    }
-
-    
+    // remove temporal files
+    //self::removeLessTmpdir( );
   }
 
 }

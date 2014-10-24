@@ -1,5 +1,5 @@
 
-//@import "client/classes/view/templates/styles/clientCoreIncludes.less"; // Modify this for custom colors, font-sizes, etc
+@import "client/classes/view/templates/styles/clientCoreIncludes.less"; // Modify this for custom colors, font-sizes, etc
 
 
 // Tables
@@ -46,9 +46,9 @@
         margin-left: -4px;
         width: 25%;
         max-width: 120px;
-        background-color: @buttonSearchBck;
-        color: @buttonSearchColor;
-        //.btnFormat(@buttonSearchBck, @buttonSearchColor);
+        //background-color: @buttonSearchBck;
+        //color: @buttonSearchColor;
+        .btnFormat(@buttonSearchBck, @buttonSearchColor);
       }
     }
     .tableFilters{
@@ -70,23 +70,24 @@
 
   .tableMoreFilters{
     padding: 10px;
-    margin-bottom: 10px;
     background: #f4f4f4;
     .MoreFilters{
-      fieldset{
-        border: 1px solid #ddd;
-        .FilterMain{
-          border: 2px dashed #ddd;
-          padding: 5px;
-          margin: 5px;
-          float: left;
+      .FilterMain{
+        border: 1px dashed #ddd;
+        padding: 5px;
+        margin: 5px;
+        float: left;
+        label{
+          display: inline;
         }
-        .buttonsContainer{
-          margin-top: 10px;
-          width: 100%;
-          text-align: right;
-        }
+        .FilterMain{ margin-left: 10px; float: none; }
       }
+      .buttonsContainer{
+        margin-top: 10px;
+        width: 100%;
+        text-align: right;
+      }
+
       button{
         background-color: @buttonMoreFiltersBck;
         color: @buttonMoreFiltersColor;
@@ -94,7 +95,15 @@
       img{ float: right; cursor: pointer; }
     }
   }
-
+  .tableResumeFilters{
+    padding: 10px;
+    background: #E4E4E4;
+    button{
+      float: right;
+      background-color: @buttonMoreFiltersBck;
+      color: @buttonMoreFiltersColor;
+    }
+  }
   .tableActions{
     margin-top: 10px;
     height: 30px;
