@@ -1,5 +1,5 @@
 
-//@import "client/classes/view/templates/styles/clientCoreIncludes.less"; // Modify this for custom colors, font-sizes, etc
+@import "client/classes/view/templates/styles/clientCoreIncludes.less"; // Modify this for custom colors, font-sizes, etc
 
 
 // Tables
@@ -46,9 +46,9 @@
         margin-left: -4px;
         width: 25%;
         max-width: 120px;
-        background-color: @buttonSearchBck;
-        color: @buttonSearchColor;
-        //.btnFormat(@buttonSearchBck, @buttonSearchColor);
+        //background-color: @buttonSearchBck;
+        //color: @buttonSearchColor;
+        .btnFormat(@buttonSearchBck, @buttonSearchColor);
       }
     }
     .tableFilters{

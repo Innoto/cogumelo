@@ -5,8 +5,6 @@
 
     {$css_includes}
 
-    <link rel="stylesheet/less" type="text/css" href="/styles/table.less">
-
     <script>
       less = {
         env: "development",
