@@ -108,8 +108,8 @@ Class Template extends Smarty
         }
       }
 
-      $this->assign('css_includes', $this->css_autoincludes . $this->css_includes );
-      $this->assign('js_includes', $this->js_autoincludes . $this->js_includes );
+      $this->assign('css_includes', $this->css_includes . $this->css_autoincludes );
+      $this->assign('js_includes', $this->js_includes . $this->js_autoincludes );
 
       if( file_exists($this->tpl) ) {
         $this->display($this->tpl);
