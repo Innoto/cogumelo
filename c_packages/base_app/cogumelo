@@ -114,7 +114,7 @@
         break;
 
         case 'generateClientCaches':
-          generateClientCaches();
+          exec('wget -q --spider cogumelo/cogumelo-server.php?q=client_caches');
           echo "All client cachés generated into 'httpdocs/mediacache/' folder \n";
         break;
         default:
@@ -124,7 +124,7 @@
       }//end switch
   }//end parameters handler
   else{
-    echo "Not enough arguments;try:";
+    echo "Not enough arguments. Try:";
     printOptions();
   }
 
@@ -454,15 +454,3 @@
       return $password;
   }
 
-
-function generateClientCaches() {
-
-  Cogumelo::load('c_controller/ModuleController.php');
-
-  require_once( ModuleController::getRealFilePath( 'mediaserver.php',  'mediaserver') );
-
-  mediaserver::autoIncludes();
-  CacheUtilsController::generateAllCaches();
-}
-
-?>
