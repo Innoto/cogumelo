@@ -20,6 +20,8 @@
 
     {$js_includes}
 
+    <script type="text/javascript" src="/media/js/table.js"></script>
+
   </head>
   <body>
 
@@ -33,13 +35,13 @@
             <option value="2">Recibido</option>
             <option value="3">Rechazado</option>
           </select>
-          <button>+Filtros</button>
+          <button class="openFilters">+Filtros</button>
         </div>
         <div class="tableSearch clearfix">
           <input type="text"><button>Search</button>
         </div>
       </div>
-      <div class="tableMoreFilters clearfix">
+      <div class="tableMoreFilters clearfix" style="display:none;">
         <div class="MoreFilters" >
           <div class="clearfix">
             <div class="FilterMain">
@@ -150,14 +152,14 @@
           </div>
 
           <div class="buttonsContainer">
-            <button>Eliminar filtros</button>
-            <button>Cerrar</button>
+            <button class="clearFilters">Eliminar filtros</button>
+            <button class="closeFilters">Cerrar</button>
           </div>
         </div>
       </div>
       <div class="tableResumeFilters clearfix">
         <span>Estas filtrando por: (Categoria 1, Aceptado).</span>
-        <button>Eliminar filtros</button>
+        <button class="clearFilters">Eliminar filtros</button>
       </div>
       <div class="tableActions clearfix">
         <div class="selectAll"><input type="checkbox"></div>
