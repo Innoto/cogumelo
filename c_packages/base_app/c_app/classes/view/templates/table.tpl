@@ -20,7 +20,7 @@
 
     {$js_includes}
 
-    <script type="text/javascript" src="/media/js/table.js"></script>
+    <!--<script type="text/javascript" src="/media/js/table.js"></script> -->
 
   </head>
   <body>
