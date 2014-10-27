@@ -288,7 +288,7 @@
     $all_tpl = 'find '.getcwd().' -iname "*.tpl" | grep -v vendorServer > '.$tmp_dir.'xgettext_tpl.tmp';
     exec($all_tpl);
     // Get all the js files excluding the translations and the libraries and save them to a temporary file
-    $all_js = 'find '.getcwd().' -iname "*.js" | grep -v vendor | grep -v jquery-validation > '.$tmp_dir.'xgettext_js.tmp';
+    $all_js = 'find '.getcwd().' -iname "*.js" | grep -v vendor | grep -v jquery-validation | grep -v modules | grep -v c_modules | grep -v conf > '.$tmp_dir.'xgettext_js.tmp';
     exec($all_js);
 
     // Check if the .po files exist already
@@ -361,7 +361,62 @@
 
     /********** END PHP **********/
 
-    /* TPL */
+    /******************************/
+    /************* JS *************/
+    /******************************/
+
+     // We check if the .po file exists already and merge the new translations. If not, we must create it.
+    $files_all_js = file($tmp_dir.'xgettext_js.tmp');
+    foreach ($files_all_js as $k => $value){
+      $array_js[$k] = (string) ereg_replace('[[:space:]]+','',$value); // We clean line breaks
+    }
+
+    if ($existJS){ // Extract new texts and merge in the .po file
+      $entries_js = Gettext\Extractors\JsCode::extract($array_js);
+      //Get the translations of the code that are stored in a po file
+      $oldEntries = Gettext\Extractors\Po::extract($dir_path.$textdomain.'_js.po');
+      //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
+      $entries_js->mergeWith($oldEntries); //now $entries has all the values
+    }
+    else{ // Extract the texts to be translated and create the .po file
+      $entries_js = Gettext\Extractors\PhpCode::extract($array_js);
+    }
+
+    // Extract all the strings from the modules files
+    foreach ($modules as $k => $dir) {
+      $all_module_js = 'find '.$dir_modules.$dir.' -iname "*.js" > '.$tmp_dir.'xgettext_module_js.tmp';
+      shell_exec($all_module_js);
+      $files_module_js = file($tmp_dir.'xgettext_module_js.tmp');
+
+      foreach ($files_module_js as $k => $value) {
+        $parts = explode('/'.$dir.'/',$value);
+        $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]); 
+        $array_js_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
+      }
+    }
+
+     if ($existJS){ //if the .po file exists
+      //echo "\n ENTRA \n";
+      //Scan the php code to find the latest gettext entries
+      $entries = Gettext\Extractors\PhpCode::extract($array_js_module);
+      //Get the translations of the code that are stored in a po file
+      $oldEntries = Gettext\Extractors\Po::extract($dir_path.$textdomain.'_js.po');
+      //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
+      $entries->mergeWith($oldEntries); //now $entries has all the values
+    }
+    else{ // we've to create it
+      $entries = Gettext\Extractors\PhpCode::extract($array_js_module);
+    }  
+    //Now save the php.po file with the result
+    Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_js.po');
+
+    /*********** END JS **********/ 
+
+
+    /******************************/
+    /************* TPL *************/
+    /******************************/
+
     if ($existTPL){ // Extract new texts and merge in the .po file
       $extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.pot';
     }
@@ -370,27 +425,7 @@
       //shell_exec($extractTPL);
     }
 
-    /******************************/
-    /************* JS *************/
-    /******************************/
-
-    // 1º temos q facer como en php e excluir do fich.temporal os que estean nos módulos, e esos extraelos coa ruta real.
-    // e despois misturamos como antes
-
-/*  // First we generate an array of files.js
-    $all_js = file($tmp_dir.'xgettext_js.tmp');
-    foreach ($all_js as $k => $value) {
-      $array_js[$k] = dirname($value);
-    }
-
-    // We extract the string to be translated from the files in the array and create a .po file
-    $entries = Gettext\Extractors\JsCode::extract($array_js);
-    $po = Gettext\Generators\Po::generate($entries);
-    $pofile = fopen($dir_path.'c_cogumelo_js.po', 'w') or die('Unable to open file!');
-    fwrite($pofile, $po);
-    fclose($pofile); */ 
-
-    /*********** END JS **********/ 
+    /*********** END TPL **********/ 
 
     /* Delete the modified files remaining */
     if (is_dir($dir_path)){
