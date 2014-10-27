@@ -281,7 +281,8 @@
     $tmp_dir = SITE_PATH.'tmp/';
 
     // Get all the php files excluding the translations and the libraries and save them to a temporary file
-    $all_php = 'find '.COGUMELO_LOCATION.' -iname "*.php" | grep -v vendorServer | grep -v tmp | grep -v conf > '.$tmp_dir.'xgettext_php.tmp';
+    // We exclude files into any module which we will process after
+    $all_php = 'find '.COGUMELO_LOCATION.' -iname "*.php" | grep -v vendorServer | grep -v tmp | grep -v modules | grep -v c_modules | grep -v conf > '.$tmp_dir.'xgettext_php.tmp';
     exec($all_php);
     // Get all the tpl files excluding the translations and the libraries and save them to a temporary file
     $all_tpl = 'find '.getcwd().' -iname "*.tpl" | grep -v vendorServer > '.$tmp_dir.'xgettext_tpl.tmp';
@@ -311,9 +312,23 @@
       }
     }
 
-    /* PHP */
+    /******************************/
+    /************ PHP *************/
+    /******************************/
 
-    //$array_php = file($tmp_dir.'xgettext_php.tmp');
+    // We check if the .po file exists already and merge the new translations. If not, we must create it.
+    if ($existPHP){ // Extract new texts and merge in the .po file
+      $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.pot';
+      exec($extractPHP);
+      $mergePHP = 'msgmerge -U '.$dir_path.$textdomain.'_php.po '.$dir_path.$textdomain.'_php.pot';
+      exec($mergePHP);
+    }
+    else{ // Extract the texts to be translated and create the .po file
+      $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.po';
+      exec($extractPHP);
+    }
+
+    // Extract all the strings from the modules files
     $dir_modules = COGUMELO_LOCATION.'/c_modules/';
     global $C_ENABLED_MODULES;
     $modules = $C_ENABLED_MODULES;
@@ -326,26 +341,25 @@
       foreach ($files_module_php as $k => $value) {
         $parts = explode('/'.$dir.'/',$value);
         $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]); 
-        $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);
+        $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
       }
     }
-    // Agora temos un array de ficheiros susceptibles de ter gettext strings
-    $entries = Gettext\Extractors\PhpCode::extract($array_php_module);
-    $po = Gettext\Generators\Po::generate($entries);
-    $pofile = fopen($dir_path.'c_cogumelo_php.po', 'w') or die('Unable to open file!');
-    fwrite($pofile, $po);
-    fclose($pofile);
 
-    if ($existPHP){ // Extract new texts and merge in the .po file
-      $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.pot';
-      exec($extractPHP);
-      $mergePHP = 'msgmerge -U '.$dir_path.$textdomain.'_php.po '.$dir_path.$textdomain.'_php.pot';
-      exec($mergePHP);
+    if ($existPHP){ //if the .po file exists
+      //Scan the php code to find the latest gettext entries
+      $entries = Gettext\Extractors\PhpCode::extract($array_php_module);
+      //Get the translations of the code that are stored in a po file
+      $oldEntries = Gettext\Extractors\Po::extract($dir_path.$textdomain.'_php.po');
+      //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
+      $entries->mergeWith($oldEntries); //now $entries has all the values
     }
-    else{ // Extract all the texts to be translated and create the file
-      $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.po';
-      exec($extractPHP);
-    }
+    else{ // we've to create it
+      $entries = Gettext\Extractors\PhpCode::extract($array_php_module);
+    }  
+    //Now save the php.po file with the result
+    Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_php.po');
+
+    /********** END PHP **********/
 
     /* TPL */
     if ($existTPL){ // Extract new texts and merge in the .po file
@@ -356,9 +370,13 @@
       //shell_exec($extractTPL);
     }
 
-    /*JS */
+    /******************************/
+    /************* JS *************/
+    /******************************/
 
-    // hai q revisalo para facer q mezcle as traduccións novas en lugar de rexeneralas de cada vez
+    // 1º temos q facer como en php e excluir do fich.temporal os que estean nos módulos, e esos extraelos coa ruta real.
+    // e despois misturamos como antes
+
 /*  // First we generate an array of files.js
     $all_js = file($tmp_dir.'xgettext_js.tmp');
     foreach ($all_js as $k => $value) {
@@ -370,7 +388,9 @@
     $po = Gettext\Generators\Po::generate($entries);
     $pofile = fopen($dir_path.'c_cogumelo_js.po', 'w') or die('Unable to open file!');
     fwrite($pofile, $po);
-    fclose($pofile); */  
+    fclose($pofile); */ 
+
+    /*********** END JS **********/ 
 
     /* Delete the modified files remaining */
     if (is_dir($dir_path)){
