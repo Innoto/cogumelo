@@ -15,6 +15,7 @@ class LessController {
   * @var string $path: less file to compile
   */
   function compile( $lessFilePath, $resultFilePath , $moduleName ) {
+    $ret = true;
 
     // generate less caches
     $lessTmpDir = CacheUtilsController::prepareLessTmpdir();
@@ -26,9 +27,10 @@ class LessController {
       $this->less->checkedCompile( $lessTmpDir.$moduleName.'/classes/view/templates/'.$lessFilePath, $resultFilePath );
     } catch (Exception $ex) {
       Cogumelo::error( "less.php fatal error compiling ".basename($lessFilePath).": ".$ex->getMessage() );
+      $ret = false;
     }
-    // remove temporal files
-    //self::removeLessTmpdir( );
+
+    return $ret;
   }
 
 }

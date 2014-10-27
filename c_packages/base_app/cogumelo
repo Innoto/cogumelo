@@ -114,6 +114,7 @@
         break;
 
         case 'generateClientCaches':
+//          setPermissions();
           exec('wget -q --spider cogumelo/cogumelo-server.php?q=client_caches');
           echo "All client cachés generated into 'httpdocs/mediacache/' folder \n";
         break;

@@ -7,6 +7,44 @@ class CacheUtilsController {
   //  LESS METHODS
   //
 
+
+
+  static function generateAllLessCaches() {
+    
+    $mediaserverControl = new MediaserverController();
+
+    // tmp less dir
+    $tmpLessDir = self::prepareLessTmpdir();
+
+    // list, compile and cache files
+    $tmpLessFiles = self::listFolderFiles( $tmpLessDir , array('less'),  false);
+
+    if( sizeof($tmpLessFiles) > 0 ){
+      foreach ($tmpLessFiles as $lessFilePath) {
+
+        $path = str_replace($tmpLessDir, '' , $lessFilePath );
+
+        if( substr( $path , 0,7) == 'classes') {
+          $moduleName = false;
+          $relativeFilePath = str_replace('classes/view/templates/', '', $path);
+        }
+        else {
+          $expPath = explode('/', $path);
+          $moduleName = $expPath[0];
+
+          $relativeFilePath = str_replace($moduleName.'/classes/view/templates/', '', $path);
+        }
+
+        $mediaserverControl->cacheContent( $relativeFilePath  , $moduleName, true );
+       
+      }
+    }
+  
+    // remove tmp less dir
+    self::removeLessTmpdir();
+
+  }
+
   // crea estructura con todos os arquivos LESS para a súa futura compilación
   static function prepareLessTmpdir( ){
     global $CACHE_UTILS_LESS_TMPDIR;
@@ -14,11 +52,12 @@ class CacheUtilsController {
 
 
     if( $CACHE_UTILS_LESS_TMPDIR ) {
-      $destino = $C_ENABLED_MODULES;
+      $destino = $CACHE_UTILS_LESS_TMPDIR;
     }
     else {
-      $destino = SITE_PATH.'/tmp/mediaCache/lesstmp/'.self::generateLessTmpdirName().'/';
 
+
+      $destino = MEDIASERVER_TMP_CACHE_PATH.'/lesstmp/'.self::generateLessTmpdirName().'/';
 
       mkdir($destino);
 
@@ -49,9 +88,9 @@ class CacheUtilsController {
         $destino 
       );
 
-      $C_ENABLED_MODULES = $destino;
+      $CACHE_UTILS_LESS_TMPDIR = $destino;
     }
-    
+
     return $destino;
   }
 
@@ -71,7 +110,7 @@ class CacheUtilsController {
 
   }
 
-  static function removeLessTmpdir($dirName){
+  static function removeLessTmpdir(){
 
   }
 
@@ -121,7 +160,7 @@ class CacheUtilsController {
     self::cacheFolder( SITE_PATH.'/'.$cacheableFolder );
 
     // all less files
-    self::prepareLessTmpdir();
+    self::generateAllLessCaches();
 
   }
 
@@ -129,8 +168,6 @@ class CacheUtilsController {
     $mediaserverControl = new MediaserverController();
 
     $fileList = self::listFolderFiles( $folder , array('php', 'tpl', 'less'), true );
-
-
 
     if( sizeof( $fileList ) > 0 )
     {

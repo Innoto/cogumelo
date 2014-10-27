@@ -15,7 +15,7 @@ if ($_SERVER['REMOTE_ADDR']=='127.0.0.1'){
   require_once(COGUMELO_LOCATION.'/c_classes/CogumeloClass.php');
   require_once(COGUMELO_LOCATION.'/c_classes/c_controller/DependencesController.php');
   require_once(SITE_PATH.'/Cogumelo.php');
-  
+
   $par = $_GET['q'];
   switch ($par){
     case 'rotate_logs':
@@ -48,7 +48,6 @@ if ($_SERVER['REMOTE_ADDR']=='127.0.0.1'){
       require_once( ModuleController::getRealFilePath( 'mediaserver.php',  'mediaserver') );
       mediaserver::autoIncludes();
       CacheUtilsController::generateAllCaches();
-      break;
   }
 }
 else{
