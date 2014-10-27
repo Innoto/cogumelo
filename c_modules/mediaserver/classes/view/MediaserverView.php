@@ -29,6 +29,7 @@ class MediaserverView extends View
       RequestController::redirect(SITE_URL_CURRENT.'/404');
     }
     $this->mediaserverControl->serveContent($url_path);
+    CacheUtilsController::removeLessTmpdir();
   }
 
   //load media from a module
@@ -38,6 +39,7 @@ class MediaserverView extends View
 
     if( $result != array() ) {
       $this->mediaserverControl->servecontent($result[2], $result[1]);
+      CacheUtilsController::removeLessTmpdir();
     }
     else {
       Cogumelo::error('Mediaserver module receives empty request');

@@ -110,8 +110,18 @@ class CacheUtilsController {
 
   }
 
-  static function removeLessTmpdir(){
+  static function removeLessTmpdir( $dir = false ){
 
+    global $CACHE_UTILS_LESS_TMPDIR;
+
+    if(!$dir)
+       $dir = $CACHE_UTILS_LESS_TMPDIR;      
+
+    $files = array_diff(scandir($dir), array('.','..'));
+    foreach ($files as $file) {
+      (is_dir("$dir/$file")) ? self::removeLessTmpdir("$dir/$file") : unlink("$dir/$file");
+    }
+    rmdir($dir);
   }
 
 

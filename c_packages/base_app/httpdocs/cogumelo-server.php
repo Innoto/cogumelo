@@ -48,6 +48,7 @@ if ($_SERVER['REMOTE_ADDR']=='127.0.0.1'){
       require_once( ModuleController::getRealFilePath( 'mediaserver.php',  'mediaserver') );
       mediaserver::autoIncludes();
       CacheUtilsController::generateAllCaches();
+      
   }
 }
 else{
