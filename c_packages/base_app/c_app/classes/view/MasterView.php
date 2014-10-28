@@ -35,7 +35,6 @@ class MasterView extends View
 
   function common() {
     $this->template->setTpl('default.tpl');
-    //$this->template->addClientStyles('styles/client.css', 'client');
   }
 
   function page404() {

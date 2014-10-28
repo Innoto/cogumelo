@@ -15,8 +15,6 @@ function bindsTable(){
 }
 
 function showTable( status ){
-console.log(status);
-console.log("entro");
   var filters = $('.tableMoreFilters');
   var resumeFilters = $('.tableResumeFilters');
 
