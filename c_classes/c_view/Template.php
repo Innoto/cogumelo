@@ -47,12 +47,9 @@ Class Template extends Smarty
     $include_chain = "\n".'<script type="text/javascript" src="'.$base_path.$file_path.'"></script>';
 
     if( $is_autoinclude ){
-      if($module == 'vendor') {
-        $this->js_autoincludes = $include_chain. $this->js_autoincludes;
-      }
-      else {
+
         $this->js_autoincludes .= $include_chain;
-      }
+
     }
     else {
       $this->js_includes .= $include_chain;
@@ -86,12 +83,12 @@ Class Template extends Smarty
     $include_chain = "\n".'<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.'">';
 
     if( $is_autoinclude ) {
-      if($module == 'vendor'){
-        $this->css_autoincludes = $include_chain.$this->css_autoincludes;  
-      }
-      else{
+      //if($module == 'vendor'){
+      //  $this->css_autoincludes = $include_chain.$this->css_autoincludes;  
+      //}
+      //else{
         $this->css_autoincludes .= $include_chain;  
-      }
+      //}
     }
     else {
       $this->css_includes .= $include_chain;  
