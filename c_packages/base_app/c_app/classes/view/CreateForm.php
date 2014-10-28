@@ -25,9 +25,9 @@ class CreateForm extends View
 
 
 
-  function updateLostForm( $idParam = '' ){
+  function updateLostForm( $request ){
     $lostControl = new LostController();
-    $dataVO = $lostControl->find( $idParam );
+    $dataVO = $lostControl->find( $request[1] );
 
     if(!$dataVO){
       Cogumelo::redirect(SITE_URL.'lostForm');
