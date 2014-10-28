@@ -67,7 +67,7 @@ class RequestController
     }
     else if(preg_match('^(noendview:)(.*)^', $url_pattern_action, $m)) {
       $this->leftover_url = $url_path[1];
-      $this->view($url_path[1] ,$m[2]);
+      $this->view($url_path ,$m[2]);
     }
     else if(preg_match('^(view:)(.*)^', $url_pattern_action, $m)) {
       $this->leftover_url = "";

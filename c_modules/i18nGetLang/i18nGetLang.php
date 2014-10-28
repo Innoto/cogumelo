@@ -10,7 +10,7 @@ class i18nGetLang extends Module
   
   
   function __construct(){
-  $this->addUrlPatterns( '#^(es/?)(.*)$#', 'noendview:GetLang::setlang' );
+  	$this->addUrlPatterns( '#^(es/?)(.*)$#', 'noendview:GetLang::setlang' );
   }
 
 }
