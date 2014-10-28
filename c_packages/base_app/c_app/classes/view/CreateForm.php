@@ -4,7 +4,7 @@ Cogumelo::load('controller/LostController.php');
 Cogumelo::load('model/LostVO.php');
 
 
-client::autoIncludes();
+common::autoIncludes();
 form::autoIncludes();
 
 
