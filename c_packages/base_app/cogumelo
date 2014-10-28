@@ -329,14 +329,17 @@
       exec($extractPHP);
     }
 
-    // Extract all the strings from the modules files
+    // Extract all the strings from the modules files FALTA CARPETA MODULES!
     $dir_modules = COGUMELO_LOCATION.'/c_modules/';
+    $dir_modules_c = SITE_PATH.'modules/';
     global $C_ENABLED_MODULES;
     $modules = $C_ENABLED_MODULES;
 
     foreach ($modules as $k => $dir) {
-      $all_module_php = 'find '.$dir_modules.$dir.' -iname "*.php" > '.$tmp_dir.'xgettext_module_php.tmp';
+      $all_module_c_php = 'find '.$dir_modules_c.$dir.' -iname "*.php" >> '.$tmp_dir.'xgettext_module_php.tmp';
+      $all_module_php = 'find '.$dir_modules.$dir.' -iname "*.php" >> '.$tmp_dir.'xgettext_module_php.tmp';
       shell_exec($all_module_php);
+      shell_exec($all_module_c_php);
       $files_module_php = file($tmp_dir.'xgettext_module_php.tmp');
 
       foreach ($files_module_php as $k => $value) {
@@ -357,6 +360,8 @@
     else{ // we've to create it
       $entries = Gettext\Extractors\PhpCode::extract($array_php_module);
     }  
+
+
     //Now save the php.po file with the result
     Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_php.po');
 
@@ -380,19 +385,26 @@
       $entries_js->mergeWith($oldEntries); //now $entries has all the values
     }
     else{ // Extract the texts to be translated and create the .po file
-      $entries_js = Gettext\Extractors\PhpCode::extract($array_js);
+      $entries_js = Gettext\Extractors\JsCode::extract($array_js);
     }
+
+    Gettext\Generators\Po::generateFile($entries_js, $dir_path.$textdomain.'_js.po');
 
     // Extract all the strings from the modules files
     foreach ($modules as $k => $dir) {
-      $all_module_js = 'find '.$dir_modules.$dir.' -iname "*.js" > '.$tmp_dir.'xgettext_module_js.tmp';
+
+      $all_module_c_js = 'find '.$dir_modules_c.$dir.' -iname "*.js" >> '.$tmp_dir.'xgettext_module_js.tmp';
+      shell_exec($all_module_c_js);
+      $all_module_js = 'find '.$dir_modules.$dir.' -iname "*.js" >> '.$tmp_dir.'xgettext_module_js.tmp';
       shell_exec($all_module_js);
       $files_module_js = file($tmp_dir.'xgettext_module_js.tmp');
 
       foreach ($files_module_js as $k => $value) {
         $parts = explode('/'.$dir.'/',$value);
-        $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]); 
-        $array_js_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
+        if ($parts && $parts[1]){
+          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]); 
+          $array_js_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
+        }
       }
     }
 
@@ -408,6 +420,7 @@
     else{ // we've to create it
       $entries = Gettext\Extractors\PhpCode::extract($array_js_module);
     }  
+
     //Now save the php.po file with the result
     Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_js.po');
 
