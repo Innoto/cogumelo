@@ -3,22 +3,9 @@
   <head>
     <title>FORMs con Cogumelo</title>
 
+    {$js_includes}
     {$css_includes}
 
-    <script>
-      less = {
-        env: "development",
-        async: false,
-        fileAsync: false,
-        poll: 1000,
-        functions: { },
-        dumpLineNumbers: "all",
-        relativeUrls: true,
-        errorReporting: 'console'
-      };
-    </script>
-
-    {$js_includes}
 
     <!--<script type="text/javascript" src="/media/js/table.js"></script> -->
 
