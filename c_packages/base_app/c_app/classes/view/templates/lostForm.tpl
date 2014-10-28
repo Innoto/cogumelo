@@ -2,11 +2,8 @@
 <html>
   <head>
     <title>FORMs con Cogumelo</title>
-
-    {$js_includes}
     {$css_includes}
-
-
+    {$js_includes}
 
     <!-- script>$.validator.setDefaults( { submitHandler: function(){ alert("submitted!"); } } );</script -->
     <style> label.error{ color:red; } </style>
