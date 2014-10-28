@@ -1,6 +1,6 @@
 <?php
 Cogumelo::load('c_view/View.php');
-client::autoIncludes();
+common::autoIncludes();
 
 class TableView extends View
 {

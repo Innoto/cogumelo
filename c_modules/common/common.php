@@ -2,9 +2,9 @@
 
 Cogumelo::load("c_controller/Module.php");
 
-class client extends Module
+class common extends Module
 {
-  public $name = "client";
+  public $name = "common";
   public $version = "";
 
   public $dependences = array(
@@ -18,12 +18,12 @@ class client extends Module
      "id" =>"less",
      "params" => array("less"),
      "installer" => "bower",
-     "includes" => array("dist/less-1.7.5.min.js")
+     "includes" => array()
    )
   );
 
   public $includesCommon = array(
-    'styles/client.less'
+    'styles/common.less'
   );
 
 
