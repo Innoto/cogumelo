@@ -6,12 +6,11 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=Edge"><![endif]-->
   <title>Test page</title>
+
+
+  {$css_includes}
+
   <style>
-
-    /*body {
-      background: #f2f2f2;
-    }*/
-
     .test {
       background: #3C3F41;
       text-align: center;
@@ -22,11 +21,9 @@
       vertical-align: middle;
       text-shadow: 1px -1px 4px rgba(240, 245, 242, 0.6);
     }
-
   </style>
 
-    {$css_includes}
-    {$js_includes}
+  {$js_includes}
 
 </head>
 
