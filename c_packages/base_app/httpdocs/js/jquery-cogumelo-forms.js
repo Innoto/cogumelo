@@ -129,7 +129,7 @@ function bindFormInputFiles( idForm ) {
     alert('Tu navegador no soporta alguna de las características necesarias para el envío de ficheros.');
   }
 
-  document.getElementById('inputFicheiro').addEventListener('change', handleFileSelect, false);
+  document.getElementById('inputFicheiro').addEventListener('change', processInputFieldFile, false);
 
   /*
   // Setup the dnd listeners.
@@ -142,11 +142,21 @@ function bindFormInputFiles( idForm ) {
 
 
 // Ficheros seleccionados con el boton
-function handleFileSelect(evt) {
-  console.log( 'handleFileSelect' );
+function processInputFieldFile( evt ) {
+  console.log( 'processInputFieldFile' );
   console.log( evt );
+
   var files = evt.target.files; // FileList object
-  checkInputFieldFiles( files, evt.target.form.id, evt.target.name );
+
+  var valid = checkInputFieldFile( files, evt.target.form.id, evt.target.name );
+
+  var cgIntFrmId = $( '#' + evt.target.form.id ).attr('sg');
+
+  if( valid ) {
+    for (var i = 0, file; file = files[i]; i++) {
+      uploadFile( file, evt.target.form.id, evt.target.name, cgIntFrmId );
+    } // for files[i]
+  }
 }
 
 /*
@@ -157,7 +167,7 @@ function handleFileDrop(evt) {
   evt.stopPropagation();
   evt.preventDefault();
   var files = evt.dataTransfer.files; // FileList object.
-  checkInputFieldFiles( files, evt.target.form.id );
+  checkInputFieldFile( files, evt.target.form.id );
 }
 function handleDragOver(evt) {
   evt.stopPropagation();
@@ -167,10 +177,13 @@ function handleDragOver(evt) {
 */
 
 
-function checkInputFieldFiles( files, idForm, nameField ) {
+function checkInputFieldFile( files, idForm, nameField ) {
+  console.log( 'checkInputFieldFile' );
 
   var $validateForm = getValidateForm( idForm );
-  $validateForm.element( 'input[name='+nameField+']' );
+  var valRes = $validateForm.element( 'input[name='+nameField+']' );
+
+  console.log( 'checkInputFieldFile - valRes: ', valRes );
 
   for (var i = 0, f; f = files[i]; i++) {
     console.log( f );
@@ -211,6 +224,7 @@ function checkInputFieldFiles( files, idForm, nameField ) {
 
   } // for files[i]
 
+  return valRes;
 } // function procesarFiles
 
 
@@ -218,12 +232,15 @@ function checkInputFieldFiles( files, idForm, nameField ) {
 
 /* Video Tutorial: http://www.youtube.com/watch?v=EraNFJiY0Eg */
 
-function uploadFile() {
-  console.log( 'uploadFile' );
-  var file = document.getElementById("inputFicheiro").files[0];
+function uploadFile( file, idForm, nameField, cgIntFrmId ) {
+  console.log( 'uploadFile: ', file );
+//  var file = document.getElementById("inputFicheiro").files[0];
 
   var formdata = new FormData();
   formdata.append("ajaxFileUpload", file);
+  formdata.append("idForm", idForm);
+  formdata.append("nameField", nameField);
+  formdata.append("cgIntFrmId", cgIntFrmId);
 
   var ajax = new XMLHttpRequest();
   ajax.upload.addEventListener("progress", progressHandler, false);
@@ -232,6 +249,11 @@ function uploadFile() {
   ajax.addEventListener("abort", abortHandler, false);
   ajax.open("POST", "/ajax_file_uploadV2");
   ajax.send(formdata);
+
+  ajax.onreadystatechange = function() {
+    console.log( 'onreadystatechange: ', ajax );
+  }
+
 }
 
 function progressHandler(event) {
