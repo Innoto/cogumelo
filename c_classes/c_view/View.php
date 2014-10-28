@@ -31,8 +31,7 @@ abstract class View {
   */
   function accessCheck() {
 
-    Cogumelo::error('Es necesario definir el método "accessCheck" en el View con los controles de'.
-      ' restricción de acceso.');
+    Cogumelo::error('You need to define "accessCheck" into View');
 
     return false;
   }
