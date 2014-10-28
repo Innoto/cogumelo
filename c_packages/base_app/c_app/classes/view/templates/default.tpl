@@ -25,8 +25,8 @@
 
   </style>
 
-    {$js_includes}
     {$css_includes}
+    {$js_includes}
 
 </head>
 
