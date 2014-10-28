@@ -122,7 +122,7 @@ Class Template extends Smarty
       }
 
       $this->assign('css_includes', $this->css_autoincludes. $this->css_includes );
-      $this->assign('js_includes', $this->js_autoincludes . $this->js_includes );
+      $this->assign('js_includes', $this->lessClientCompiler() . $this->js_autoincludes . $this->js_includes );
 
       if( file_exists($this->tpl) ) {
         $this->display($this->tpl);
@@ -135,6 +135,18 @@ Class Template extends Smarty
     else {
       Cogumelo::error('Template: no tpl file defined');
     }
+  }
+
+
+  function lessClientCompiler() {
+    $ret = "";
+    if( !MEDIASERVER_COMPILE_LESS ){
+      $ret =  "\n".'<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
+              'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
+              '<script type="text/javascript" src="/vendor/less/dist/less-1.7.5.min.js"></script>';
+    }
+
+    return $ret;
   }
 }
 

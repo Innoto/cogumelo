@@ -25,23 +25,8 @@
 
   </style>
 
-    {$css_includes}
-
-    <!-- set options before less.js script -->
-    <script>
-      less = {
-        env: "development",
-        async: false,
-        fileAsync: false,
-        poll: 1000,
-        functions: { },
-        dumpLineNumbers: "all",
-        relativeUrls: false,
-        errorReporting: 'console'
-      };
-    </script>
-
     {$js_includes}
+    {$css_includes}
 
 </head>
 
