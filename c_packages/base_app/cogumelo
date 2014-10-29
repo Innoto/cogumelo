@@ -25,10 +25,12 @@
   //
   //  CARGO MÓDULO DEVEL E O DEVELDBCONTROLLER, QUE É ONDE ESTÁN OS MÉTODOS QUE NOS INTERESAN
   //
-  require_once(COGUMELO_LOCATION."/c_modules/devel/devel.php");
-  require_once(COGUMELO_LOCATION."/c_modules/devel/classes/controller/DevelDBController.php");
-  require_once(COGUMELO_LOCATION."/c_classes/c_controller/ModuleController.php");
+  require_once(ModuleController::getRealFilePath('devel.php', 'devel'));
+  require_once(ModuleController::getRealFilePath('classes/controller/DevelDBController.php', 'devel'));
+  require_once(ModuleController::getRealFilePath('classes/controller/CacheUtilsController.php', 'mediaserver'));
   require_once(COGUMELO_LOCATION."/c_packages/base_app/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
+  Cogumelo::load('c_controller/ModuleController.php');
+  Cogumelo::load('c_controller/ModuleController.php');
 
   //
   //  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
@@ -154,8 +156,7 @@
 
   function createTables(){
 
-    Cogumelo::load('c_controller/ModuleController.php');
-    $moduleControl = new ModuleController(false, true);
+    
 
     $develdbcontrol = new DevelDBController();
     $develdbcontrol->createTables();
@@ -317,6 +318,9 @@
     /************ PHP *************/
     /******************************/
 
+    // We must avoid files into modules to use this !!!
+    //$files_php = CacheUtilsController::listFolderFiles(SITE_PATH, array('php'), false);
+
     // We check if the .po file exists already and merge the new translations. If not, we must create it.
     if ($existPHP){ // Extract new texts and merge in the .po file
       $extractPHP = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_php.tmp -o '.$dir_path.$textdomain.'_php.pot';
@@ -330,17 +334,31 @@
     }
 
     // Extract all the strings from the modules files FALTA CARPETA MODULES!
-    $dir_modules = COGUMELO_LOCATION.'/c_modules/';
-    $dir_modules_c = SITE_PATH.'modules/';
+    $dir_modules_c = COGUMELO_LOCATION.'/c_modules/';
+    $dir_modules = SITE_PATH.'modules/';
     global $C_ENABLED_MODULES;
     $modules = $C_ENABLED_MODULES;
 
-    foreach ($modules as $k => $dir) {
-      $all_module_c_php = 'find '.$dir_modules_c.$dir.' -iname "*.php" >> '.$tmp_dir.'xgettext_module_php.tmp';
-      $all_module_php = 'find '.$dir_modules.$dir.' -iname "*.php" >> '.$tmp_dir.'xgettext_module_php.tmp';
-      shell_exec($all_module_php);
-      shell_exec($all_module_c_php);
-      $files_module_php = file($tmp_dir.'xgettext_module_php.tmp');
+    $files_module_php = CacheUtilsController::listFolderFiles($dir_modules, array('php'), false);
+    foreach ($modules as $i => $dir) {
+      foreach ($files_module_php as $k => $file) {
+        $parts = explode('/'.$dir.'/',$file);
+        if (sizeof($parts)==2){
+          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);  
+          $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
+        }
+      }
+    }
+    // MIRAR PQ DEVOLVE UNHA BARRA EXTRA ENTRE c_app E modules
+    print_r($array_php_module);
+
+    /*foreach ($modules as $k => $dir) {
+      $files_module_php = mediaserver::listFolderFiles( $folder , $extensions, $excludeExtensions );
+      //$all_module_c_php = 'find '.$dir_modules_c.$dir.' -iname "*.php" >> '.$tmp_dir.'xgettext_module_php.tmp';
+      //$all_module_php = 'find '.$dir_modules.$dir.' -iname "*.php" >> '.$tmp_dir.'xgettext_module_php.tmp';
+      //shell_exec($all_module_php);
+      //shell_exec($all_module_c_php);
+      //$files_module_php = file($tmp_dir.'xgettext_module_php.tmp');
 
       foreach ($files_module_php as $k => $value) {
         $parts = explode('/'.$dir.'/',$value);
@@ -348,6 +366,8 @@
         $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
       }
     }
+
+    print_r($array_php_module);
 
     if ($existPHP){ //if the .po file exists
       //Scan the php code to find the latest gettext entries
@@ -360,17 +380,17 @@
     else{ // we've to create it
       $entries = Gettext\Extractors\PhpCode::extract($array_php_module);
     }  
-
+*/
 
     //Now save the php.po file with the result
-    Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_php.po');
+    //Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_php.po');
 
     /********** END PHP **********/
 
     /******************************/
     /************* JS *************/
     /******************************/
-
+/*
      // We check if the .po file exists already and merge the new translations. If not, we must create it.
     $files_all_js = file($tmp_dir.'xgettext_js.tmp');
     foreach ($files_all_js as $k => $value){
@@ -422,7 +442,7 @@
     }  
 
     //Now save the php.po file with the result
-    Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_js.po');
+    Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_js.po');*/
 
     /*********** END JS **********/ 
 
@@ -451,6 +471,17 @@
         }
       }
     }
+
+    /* Delete the temporary files */
+    /*if (is_dir($tmp_dir)){
+      $handle = opendir($tmp_dir);
+      while ($file = readdir($handle)) {
+        if ($file=='xgettext_js.tmp' || $file=='xgettext_module_js.tmp' || $file=='xgettext_module_php.tmp' ||
+            $file=='xgettext_php.tmp'|| $file=='xgettext_tpl.tmp' || $file=='xgettext_module_tpl.tmp'){
+              unlink($tmp_dir.$file);
+        }
+      }
+    }*/
   }
 
   /**
