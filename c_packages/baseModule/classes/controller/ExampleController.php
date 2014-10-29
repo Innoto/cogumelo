@@ -2,7 +2,7 @@
 
 /*
 Cogumelo::load('c_controller/DataController.php');
-moduleApp::load('model/ExampleVO.php');
+baseModule::load('model/ExampleVO.php');
 */
 
 //
@@ -16,7 +16,7 @@ class  ExampleController extends DataController
 
   function __construct()
   {
-    $this->data = new Facade("Example", "moduleApp");
+    $this->data = new Facade("Example", "baseModule");
     $this->voClass = 'ExampleVO';
   }
 }
