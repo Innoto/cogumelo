@@ -9,7 +9,6 @@ class MasterView extends View
 {
 
   function __construct($baseDir){
-    echo $baseDir;
     parent::__construct($baseDir);
   }
 
