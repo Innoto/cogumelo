@@ -9,36 +9,37 @@
 * @author: pablinhob
 */
 
-abstract class MailController 
+abstract class MailController
 {
 	var $templatecontrol;
 	var $mailSender;
-	
+
 	function __construct()
 	{
-		Cogumelo::Load('c_view/Template');
-		Cogumelo::Load('c_controller/MailSender');
-		
-		$this->templatecontrol = new Template();
+
+		Cogumelo::load('c_view/Template.php');
+		Cogumelo::load('c_controller/MailSender.php');
+
+		$this->templatecontrol = new Template('/home/proxectos/cogumelo/c_packages/base_app/httpdocs/../c_app/');
 		$this->mailSender = new MailSender();
 	}
-	
+
 
   /*
   * @param string $template tpl file path
   * @param array template variables array
   */
 	function parseMail($template, $vars) {
-		
+
 		foreach($vars as $varkey => $variable)
-			$this->templatecontrol->assign($varkey, $variable);	
-		
-		$mailbody = $this->templatecontrol->fetch($template);
-		$this->templatecontrol->clearAllAssign();
-		
+			$this->templatecontrol->assign($varkey, $variable);
+
+		$mailbody = $this->templatecontrol->setTpl($template);
+		//$this->templatecontrol->clearAllAssign();
+
 		return $mailbody;
-	}	
-	
+	}
+
 }
 
 ?>
