@@ -2,7 +2,7 @@
 /*
 Cogumelo::load('c_view/View.php');
 
-class moduleAppView extends View
+class baseModuleView extends View
 {
 
   function __construct($base_dir){
@@ -18,8 +18,8 @@ class moduleAppView extends View
   }
 
   function inicio() {
-    $this->template->setTpl("example.tpl", 'moduleApp');
-    $this->template->addClientStyles("styles/example.less", 'moduleApp');
+    $this->template->setTpl("example.tpl", 'baseModule');
+    $this->template->addClientStyles("styles/example.less", 'baseModule');
     $this->template->exec();
   }
 }

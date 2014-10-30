@@ -11,10 +11,14 @@ class Cogumelo extends CogumeloClass
   function __construct() {
     parent::__construct();
 
+    /*probandoMailing*/
+    $this->addUrlPatterns( '#^probandoMailing$#', 'view:MailingView::probandoMailing');
+
     /*createForm*/
     $this->addUrlPatterns( '#^lostForm$#', 'view:CreateForm::lostForm' );
     $this->addUrlPatterns( '#^lostForm/u/(.*)#', 'view:CreateForm::updateLostForm' );
     $this->addUrlPatterns( '#^sendLostForm#', 'view:CreateForm::sendLostForm' );
+    $this->addUrlPatterns( '#^deleteLostForm#', 'view:CreateForm::deleteLostForm' );
 
     /*table*/
     $this->addUrlPatterns( '#^tableInterface$#', 'view:Tview::main');

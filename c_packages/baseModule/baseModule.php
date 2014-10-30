@@ -3,15 +3,15 @@
 Cogumelo::load("c_controller/Module.php");
 
 
-class moduleApp extends Module
+class baseModule extends Module
 {
-  public $name = "moduleApp";
+  public $name = "baseModule";
   public $version = "";
   public $dependences = array();
   public $includesCommon = array();
 
   function __construct() {
-    $this->addUrlPatterns( '#^testmodule#', 'view:moduleAppView::inicio' );
+    $this->addUrlPatterns( '#^testmodule#', 'view:baseModuleView::inicio' );
   }
 
 
