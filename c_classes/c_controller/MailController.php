@@ -20,7 +20,7 @@ abstract class MailController
 		Cogumelo::load('c_view/Template.php');
 		Cogumelo::load('c_controller/MailSender.php');
 
-		$this->templatecontrol = new Template('/home/proxectos/cogumelo/c_packages/base_app/httpdocs/../c_app/');
+		$this->templatecontrol = new Template();
 		$this->mailSender = new MailSender();
 	}
 

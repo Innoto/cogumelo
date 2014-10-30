@@ -25,7 +25,7 @@ class MysqlDAO extends DAO
           $orderSTR .= $coma .$elementK." DESC";
         else
           $orderSTR .= $coma .$elementK." ASC";
-        
+
         $coma=", ";
       }
       return $orderSTR;
@@ -34,7 +34,7 @@ class MysqlDAO extends DAO
       return "";
   }
 
-  
+
   //
   // Execute a SQL query command
   //
@@ -48,7 +48,7 @@ class MysqlDAO extends DAO
     $caller_method = $d[1]['class'].'.'.$d[1]['function'].'()';
 
     //set prepare sql
-    $connectionControl->stmt = $connectionControl->db->prepare( $sql ); 
+    $connectionControl->stmt = $connectionControl->db->prepare( $sql );
 
     if( $connectionControl->stmt ) {  //set prepare sql
 
@@ -69,7 +69,7 @@ class MysqlDAO extends DAO
           $ret_data = $connectionControl->stmt->get_result();
         }
         else {
-          
+
           Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$connectionControl->stmt->error.' - '.$sql);
           $ret_data = false;
         }
@@ -86,7 +86,7 @@ class MysqlDAO extends DAO
 
 
   //
-  // get string of chars according prepare type 
+  // get string of chars according prepare type
   // ex. i:integer, d:double, s:string, b:boolean
   function getPrepareTypes($values_array){
 
@@ -128,12 +128,12 @@ class MysqlDAO extends DAO
         else if(array_key_exists($fkey, $VO::$cols) ) {
           $fstr = " AND ".$VO::$tableName.".".$fkey." = ?";
         }
-        else { 
+        else {
           Cogumelo::error( $fkey." not found on wherearray or into (".$this->VO.") VO. Omiting..." );
         }
 
         // where string
-        $where_str.=$fstr; 
+        $where_str.=$fstr;
 
 
         // dump value or array value into $values array
@@ -148,7 +148,7 @@ class MysqlDAO extends DAO
             $val_array[] = $filter_val;
           }
         }
-      
+
 
 
       }
@@ -160,8 +160,8 @@ class MysqlDAO extends DAO
       );
   }
 
-  
-  
+
+
 
 
   //
@@ -180,9 +180,9 @@ class MysqlDAO extends DAO
     if($res = $this->listItems($connectionControl, $filter, false, false, $resolveDependences, $cache) ) {
       return $res->fetch();
     }
-    else 
+    else
       return null;
-      
+
   }
 
   //
@@ -197,7 +197,7 @@ class MysqlDAO extends DAO
 
     // where string and vars
     $whereArray = $this->getFilters($filters);
-    
+
     // order string
     $orderSTR = ($order)? $this->orderByString($order): "";
 
@@ -222,7 +222,7 @@ class MysqlDAO extends DAO
         $queryID = $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
       }
       else{
-        
+
         // With cache, but not cached yet. Caching ...
         if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values'])) {
           Cogumelo::debug('Using cache: cache Set with ID: '.$queryId );
@@ -272,7 +272,7 @@ class MysqlDAO extends DAO
 
     // where string and vars
     $whereArray = $this->getFilters($filters);
-  
+
     // SQL Query
     $VO = new $this->VO();
     $StrSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
@@ -293,7 +293,7 @@ class MysqlDAO extends DAO
   //
   //  Generic Create
   //
-  function create(&$connectionControl, $VOobj) 
+  function create(&$connectionControl, $VOobj)
   {
 
     $cols = array();
@@ -329,7 +329,7 @@ class MysqlDAO extends DAO
       return null;
     }
   }
-  
+
   //
   //  Generic Update
   // return: Vo updated from DB
@@ -352,7 +352,7 @@ class MysqlDAO extends DAO
 
     // add primary key value to values array
     $valArray[] = $pkValue;
-    
+
     $strSQL = "UPDATE `".$VOobj::$tableName."` SET ".substr($setvalues, 1)." WHERE `".$VOobj->getFirstPrimarykeyId()."`= ?;";
 
     if($res = $this->execSQL($connectionControl, $strSQL, $valArray)) {
@@ -361,25 +361,30 @@ class MysqlDAO extends DAO
     else {
       return null;
     }
-  } 
-  
+  }
+
   //
-  //  Generic Deletev
-  // 
-  function delete(&$connectionControl, $pkeyIdValue)
+  //  Generic Delete from ID
+  //
+  function deleteFromIds(&$connectionControl, $arrayPkeyIdValue)
   {
+    $qs = array();
+    foreach ($arrayPkeyIdValue as $id) {
+      $qs[]   = '?';
+    }
+    $nums_list = implode(',', $qs);
 
     $VO = new $this->VO();
     // SQL Query
-    $strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$VO->getFirstPrimarykeyId()."` = ?;";
+    $strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$VO->getFirstPrimarykeyId()."` IN (".$nums_list.") ;";
 
-    if( $this->execSQL($connectionControl, $strSQL, array($pkeyIdValue)) ){
+    if( $this->execSQL($connectionControl, $strSQL, $arrayPkeyIdValue) ){
       return $true;
     }
     else {
       return null;
     }
   }
-  
+
 }
 ?>
