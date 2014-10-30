@@ -73,7 +73,7 @@ Class Template extends Smarty
 
 
     if( !MEDIASERVER_COMPILE_LESS && substr($file_path, -5) == '.less' ) {
-      $file_rel = "stylesheet/less";      
+      $file_rel = "stylesheet/less";
     }
     else {
       $file_rel = "stylesheet";
@@ -84,14 +84,14 @@ Class Template extends Smarty
 
     if( $is_autoinclude ) {
       //if($module == 'vendor'){
-      //  $this->css_autoincludes = $include_chain.$this->css_autoincludes;  
+      //  $this->css_autoincludes = $include_chain.$this->css_autoincludes;
       //}
       //else{
-        $this->css_autoincludes .= $include_chain;  
+        $this->css_autoincludes .= $include_chain;
       //}
     }
     else {
-      $this->css_includes .= $include_chain;  
+      $this->css_includes .= $include_chain;
     }
   }
 
