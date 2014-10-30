@@ -65,9 +65,9 @@ class Tview extends View
 
 
     // establecer reglas a campo concreto con expresions regulares
-    $this->colRule('nivel', '^[8..10]%', 'Usuario molón');
-    $this->colRule('nivel', '^[5..7]%', 'Usuario medio');
-    $this->colRule('nivel', '^[i..4]%', 'Usuario cutre');
+    $tabla->colRule('nivel', '^[8..10]%', 'Usuario molón');
+    $tabla->colRule('nivel', '^[5..7]%', 'Usuario medio');
+    $tabla->colRule('nivel', '^[i..4]%', 'Usuario cutre');
 
 
     // imprimimos o JSON da taboa
