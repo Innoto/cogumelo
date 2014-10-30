@@ -212,5 +212,27 @@ class CreateForm extends View
     }
   }
 
+  function deleteLostForm(){
+    $lostControl = new LostController();
+
+    //Borrado  por array de ids
+    /*
+    $valuesArray = array('23','24','33');
+    $res = $lostControl->deleteFromIds($valuesArray);
+    */
+
+    //Borrado  por id
+    /*
+    $res = $lostControl->deleteFromId("25");
+    */
+
+    //Borrado por list
+
+
+    $res = $lostControl->listItems();
+    Cogumelo::objDebug($res->fetchAll());
+    //$res = $lostControl->deleteFromId("25");
+
+  }
 }
 

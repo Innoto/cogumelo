@@ -32,21 +32,21 @@ abstract class DataController {
   * @param mixed $id identifier
   * @param string $key vo key to set at id (false is VO primary key)
   */
-	function find($id, $key=false) 
+	function find($id, $key=false)
 	{
 		Cogumelo::debug( "Called find on ".get_called_class()." with id=". $id);
 		$data = $this->data->Find($id, $key);
 
 		return $data;
 	}
-	
-	
+
+
   /*
   *	List items from table
   *
   * @param array $filters array of filters
   * @param array $range two element array with result range ex. array(0,100)
-  * @param array $order order for query 
+  * @param array $order order for query
   * @apram boolean $cache true means cache is enabled
   */
 	function listItems($filters = false, $range = false, $order = false, $cache = false)
@@ -73,52 +73,93 @@ abstract class DataController {
 		return $data;
 	}
 
-	
+
   /*
   *	create item
   *
-  * @param mixed $data can be (array) or (VO object)
+  * @param mixed $data be (array) or (VO object)
   */
 	function create($data)
 	{
 		Cogumelo::debug( "Called create on ".get_called_class() );
-		if(!is_object($data))
+		if(!is_object($data)){
 			$data = new $this->voClass($data);
+    }
 
 		$data = $this->data->Create($data);
 
 		return $data;
-		
 	}
-	
-	
+
   /*
-  *	update item 
+  * create item
+  *
+  * @param mixed $data is a array
+  */
+  function createFromArray($data){
+    Cogumelo::debug( "Called create on ".get_called_class() );
+
+    $data = new $this->voClass($data);
+    $data = $this->data->Create($data);
+
+    return $data;
+  }
+
+  /*
+  *	update item
   *
   * @param mixed $data can be array or VO object
   */
-	function update($data)		
+	function update($data)
 	{
 		Cogumelo::debug( "Called update on ".get_called_class() );
-		if(!is_object($data))
+		if(!is_object($data)){
 			$data = new $this->voClass($data);
+    }
 
 		$data = $this->data->Update($data);
-				
+
 		return $data;
 	}
+
+  /*
+  * update item
+  *
+  * @param mixed $data is a array
+  */
+  function updateFromArray($data)
+  {
+    Cogumelo::debug( "Called update on ".get_called_class() );
+    $data = new $this->voClass($data);
+    $data = $this->data->Update($data);
+
+    return $data;
+  }
 
 
   /*
-  *	delete item 
+  *	delete item
   *
   * @param mixed $id must be primary key of VO
   */
-	function delete($id)
+	function deleteFromIds($arrayIds)
 	{
-		Cogumelo::debug( "Called delete on ".get_called_class()." with id=".$id );
-		$data = $this->data->Delete($id);
-		
-		return $data;
+		Cogumelo::debug( "Called delete on ".get_called_class()." with ids=". implode(",", $arrayIds) );
+		$data = $this->data->deleteFromIds($arrayIds);
+
+    return $data;
 	}
+
+  function deleteFromId($id){
+    Cogumelo::debug( "Called delete on ".get_called_class()." with id=".$id );
+
+    $arrayIds = array($id);
+    $data = $this->data->deleteFromIds($arrayIds);
+
+    return $data;
+  }
+
+  function deleteFromList($arrayVoList){
+
+  }
 }
