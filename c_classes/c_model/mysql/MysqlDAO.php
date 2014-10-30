@@ -177,7 +177,7 @@ class MysqlDAO extends DAO
 
     $filter = array($key => $search);
 
-    if($res = $this->listItems($connectionControl, $filter, false, false, $resolveDependences, $cache) ) {
+    if($res = $this->listItems($connectionControl, $filter, false, false, false, $resolveDependences, $cache) ) {
       return $res->fetch();
     }
     else
@@ -189,7 +189,7 @@ class MysqlDAO extends DAO
   //  Generic listItems
   //
   //  Return: array [array_list, number_of_rows]
-  function listItems(&$connectionControl, $filters, $range, $order, $resolveDependences = false, $cache = false)
+  function listItems(&$connectionControl, $filters, $range, $order, $fields, $resolveDependences = false, $cache = false)
   {
 
     // SQL Query
@@ -208,7 +208,7 @@ class MysqlDAO extends DAO
     $joinSTR = $this->JoinSQL($VO, $resolveDependences);
 
 
-    $strSQL = "SELECT ".$VO->getKeysToString( $resolveDependences )." FROM `" . $VO::$tableName ."` ". $joinSTR . $whereArray['string'].$orderSTR.$rangeSTR.";";
+    $strSQL = "SELECT ".$VO->getKeysToString($fields, $resolveDependences )." FROM `" . $VO::$tableName ."` ". $joinSTR . $whereArray['string'].$orderSTR.$rangeSTR.";";
 
 
     if ( $cache && DB_ALLOW_CACHE  )

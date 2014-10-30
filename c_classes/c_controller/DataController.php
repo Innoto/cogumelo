@@ -49,11 +49,11 @@ abstract class DataController {
   * @param array $order order for query
   * @apram boolean $cache true means cache is enabled
   */
-	function listItems($filters = false, $range = false, $order = false, $cache = false)
+	function listItems($filters = false, $range = false, $order = false, $fields = false, $cache = false)
 	{
 
 		Cogumelo::debug( "Called listItems on ".get_called_class() );
-		$data = $this->data->listItems($filters, $range, $order, $cache);
+		$data = $this->data->listItems($filters, $range, $order, $fields, $cache);
 
 		return $data;
 	}
@@ -138,7 +138,7 @@ abstract class DataController {
 
 
   /*
-  *	delete item
+  *	delete items
   *
   * @param mixed $id must be primary key of VO
   */
@@ -150,6 +150,12 @@ abstract class DataController {
     return $data;
 	}
 
+  /*
+  * delete item
+  *
+  * @param mixed $id must be primary key of VO
+  */
+
   function deleteFromId($id){
     Cogumelo::debug( "Called delete on ".get_called_class()." with id=".$id );
 
@@ -159,7 +165,24 @@ abstract class DataController {
     return $data;
   }
 
+  /*
+  * delete items
+  *
+  * @param mixed $VOarray from listItems
+  */
+
   function deleteFromList($arrayVoList){
 
+    $arrayIds = array();
+
+    foreach ($arrayVoList as $voKey => $voItem) {
+      $primarykeyIdName = $voItem->getFirstPrimarykeyId();
+      $primarykeyIdValue = $voItem->getter($primarykeyIdName);
+      array_push($arrayIds, $primarykeyIdValue);
+    }
+
+    $data = $this->deleteFromIds($arrayIds);
+
+    return $data;
   }
 }
