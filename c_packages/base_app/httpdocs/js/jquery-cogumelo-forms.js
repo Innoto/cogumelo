@@ -1,6 +1,22 @@
 
 var CogumeloForms = [];
 
+function setFormInfo( idForm, $validateForm ) {
+  CogumeloForms[ CogumeloForms.length ] = { idForm: idForm, validateForm: $validateForm };
+}
+
+function getFormInfo( idForm ) {
+  $validateForm = null;
+  for (var i = CogumeloForms.length - 1; i >= 0; i--) {
+    if( CogumeloForms[i].idForm === idForm ) {
+      $validateForm = CogumeloForms[i].validateForm;
+      break;
+    }
+  };
+  return $validateForm
+}
+
+
 
 function setValidateForm( idForm, rules, messages ) {
 
@@ -73,26 +89,17 @@ function setValidateForm( idForm, rules, messages ) {
   });
   console.log( $validateForm );
 
+  // Bind input file fields: Validate, send, show, ...
   if( $( '#'+idForm+' input:file' ).length > 0 ) {
     bindFormInputFiles( idForm );
   }
 
-  CogumeloForms[ CogumeloForms.length ] = { idForm: idForm, validateForm: $validateForm };
+  // Save validate instance for this Form
+  setFormInfo( idForm, $validateForm );
 
   return $validateForm
 } // function
 
-
-function getValidateForm( idForm ) {
-  $validateForm = null;
-  for (var i = CogumeloForms.length - 1; i >= 0; i--) {
-    if( CogumeloForms[i].idForm === idForm ) {
-      $validateForm = CogumeloForms[i].validateForm;
-      break;
-    }
-  };
-  return $validateForm
-}
 
 function showErrorsValidateForm( msgClass, msgText, $form ) {
   // Solo se muestran los errores pero no se marcan los campos
@@ -115,12 +122,135 @@ function showErrorsValidateForm( msgClass, msgText, $form ) {
 
 
 
+/**
+*** FICHEROS JQuery ***
+**/
+
+function bindFormInputFiles( idForm ) {
+  console.log( 'bindFormInputFiles' );
+
+  // Check for the various File API support.
+  if( !window.File ) {
+    // File - provides readonly information such as name, file size, mimetype
+    alert('Tu navegador no soporta alguna de las características necesarias para el envío de ficheros.');
+  }
+
+  $( '#' + idForm + ' input:file' ).on( 'change', processInputFieldFile );
+}
+
+
+function processInputFieldFile( evnt ) {
+  console.log( 'processInputFieldFile' );
+  console.log( evnt );
+
+  var files = evnt.target.files; // FileList object
+
+  var valid = checkInputFieldFile( files, evnt.target.form.id, evnt.target.name );
+
+  if( valid ) {
+    var cgIntFrmId = $( '#' + evnt.target.form.id ).attr('sg');
+    for (var i = 0, file; file = files[i]; i++) {
+      uploadFile( file, evnt.target.form.id, evnt.target.name, cgIntFrmId );
+    }
+  }
+}
+
+
+
+function checkInputFieldFile( files, idForm, fieldName ) {
+  console.log( 'checkInputFieldFile' );
+
+  var $validateForm = getFormInfo( idForm );
+  var valRes = $validateForm.element( 'input[name=' + fieldName + ']' );
+  console.log( 'checkInputFieldFile - valRes: ', valRes );
+
+  // Mostrando informacion obtenida del navegador
+  for( var i = 0, f; f = files[i]; i++ ) {
+    console.log( f );
+    $('#list').before( '<div>' + escape(f.name) + ' (' + f.type + ') ' + f.size + ' bytes</div>' );
+  }
+
+  return valRes;
+} // function procesarFiles
+
+
+function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
+  console.log( 'uploadFile: ', file );
+
+  var formData = new FormData();
+  formData.append("ajaxFileUpload", file);
+  formData.append("idForm", idForm);
+  formData.append("fieldName", fieldName);
+  formData.append("cgIntFrmId", cgIntFrmId);
+
+  $.ajax({
+    url: '/ajax_file_uploadV2', type: 'POST',
+    // Form data
+    data: formData,
+    //Options to tell jQuery not to process data or worry about content-type.
+    cache: false, contentType: false, processData: false,
+    // Custom XMLHttpRequest
+    xhr: function() {
+      var myXhr = $.ajaxSettings.xhr();
+      if(myXhr.upload){ // Check if upload property exists for handling the progress of the upload
+        myXhr.upload.addEventListener(
+          'progress',
+          function progressHandler( evnt ) {
+            console.log( 'progressHandler', evnt );
+            var percent = Math.round( (evnt.loaded / evnt.total) * 100 );
+            $( '#progressBar' ).val( percent );
+            $( '#status' ).html( percent + '% uploaded... please wait' );
+            $( '#loaded_n_total' ).html( 'Uploaded ' + evnt.loaded + ' bytes of ' + evnt.total );
+          },
+          false
+        );
+      }
+      return myXhr;
+    },
+    //Ajax events
+    beforeSend: function beforeSendHandler( $jqXHR, $settings ) {
+      console.log( 'beforeSendHandler', $jqXHR, $settings );
+      // $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
+    },
+    success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
+      console.log( 'successHandler', $jsonData, $textStatus, $jqXHR );
+      $( '#loaded_n_total' ).html( '' );
+      $( '#progressBar' ).val( 0 );
+      $( '#status' ).html( $textStatus );
+
+      // Cambios en el input procesado para indicar OK y otras opciones
+      $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'green' );
+      $(' #' + $jsonData[ 'idForm' ] + ' input[name=' + $jsonData[ 'fieldName' ] + ']' ).replaceWith(
+        '<span class="fileUploadOK">"' + $jsonData[ 'fileName' ] + '" uploaded OK</span>'
+      );
+    },
+    error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
+      console.log( 'errorHandler', $jqXHR, $textStatus, $errorThrown );
+      $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
+    }
+  });
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /**
 *** FICHEROS ***
 **/
 
-
+/*
 function bindFormInputFiles( idForm ) {
   console.log( 'bindFormInputFiles' );
 
@@ -131,14 +261,11 @@ function bindFormInputFiles( idForm ) {
 
   document.getElementById('inputFicheiro').addEventListener('change', processInputFieldFile, false);
 
-  /*
   // Setup the dnd listeners.
-  var dropZone = document.getElementById('drop_zone');
-  dropZone.addEventListener('dragover', handleDragOver, false);
-  dropZone.addEventListener('drop', handleFileDrop, false);
-  */
+  //var dropZone = document.getElementById('drop_zone');
+  //dropZone.addEventListener('dragover', handleDragOver, false);
+  //dropZone.addEventListener('drop', handleFileDrop, false);
 }
-
 
 
 // Ficheros seleccionados con el boton
@@ -159,6 +286,8 @@ function processInputFieldFile( evt ) {
   }
 }
 
+*/
+
 /*
 // Ficheros "soltados" sobre un area
 function handleFileDrop(evt) {
@@ -176,12 +305,12 @@ function handleDragOver(evt) {
 }
 */
 
-
-function checkInputFieldFile( files, idForm, nameField ) {
+/*
+function checkInputFieldFile( files, idForm, fieldName ) {
   console.log( 'checkInputFieldFile' );
 
-  var $validateForm = getValidateForm( idForm );
-  var valRes = $validateForm.element( 'input[name='+nameField+']' );
+  var $validateForm = getFormInfo( idForm );
+  var valRes = $validateForm.element( 'input[name='+fieldName+']' );
 
   console.log( 'checkInputFieldFile - valRes: ', valRes );
 
@@ -189,9 +318,8 @@ function checkInputFieldFile( files, idForm, nameField ) {
     console.log( f );
 
     // Only process image files.
-    if (f.type.match('^image/.*')) {
+    if( window.File && window.FileReader && f.type.match('^image/.*') ) {
       var reader = new FileReader();
-
       // Closure to capture the file information.
       reader.onload = (function cargado(theFile) {
         return function procesando(e) {
@@ -226,20 +354,19 @@ function checkInputFieldFile( files, idForm, nameField ) {
 
   return valRes;
 } // function procesarFiles
-
-
+*/
 
 
 /* Video Tutorial: http://www.youtube.com/watch?v=EraNFJiY0Eg */
-
-function uploadFile( file, idForm, nameField, cgIntFrmId ) {
+/*
+function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
   console.log( 'uploadFile: ', file );
 //  var file = document.getElementById("inputFicheiro").files[0];
 
   var formdata = new FormData();
   formdata.append("ajaxFileUpload", file);
   formdata.append("idForm", idForm);
-  formdata.append("nameField", nameField);
+  formdata.append("fieldName", fieldName);
   formdata.append("cgIntFrmId", cgIntFrmId);
 
   var ajax = new XMLHttpRequest();
@@ -255,7 +382,9 @@ function uploadFile( file, idForm, nameField, cgIntFrmId ) {
   }
 
 }
+*/
 
+/*
 function progressHandler(event) {
   console.log( 'progressHandler' );
   console.log( event );
@@ -271,6 +400,9 @@ function completeHandler(event) {
   document.getElementById("loaded_n_total").innerHTML = "";
   document.getElementById("progressBar").value = 0;
   document.getElementById("status").innerHTML = event.target.responseText;
+
+  $fileField = $(' #' + event.target[ 'idForm' ] + ' input[name=' + event.target[ 'fieldName' ] + ']' );
+  console.log($fileField);
 }
 
 function errorHandler(event) {
@@ -284,6 +416,6 @@ function abortHandler(event) {
   console.log( event );
   document.getElementById("status").innerHTML = "Upload Aborted";
 }
-
+*/
 
 
