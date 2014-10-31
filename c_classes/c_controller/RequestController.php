@@ -35,9 +35,10 @@ class RequestController
 
   function exec() {
     foreach($this->urlPatterns as $url_pattern_key => $url_pattern_action){
+
       if(preg_match( $url_pattern_key, $this->url_path, $m_url) ) {
         if(array_key_exists(1, $m_url)) {
-          $this->readPatternAction($m_url[1], $url_pattern_action);
+          $this->readPatternAction($m_url, $url_pattern_action);
         }
         else {
           $this->readPatternAction("", $url_pattern_action);
@@ -65,7 +66,7 @@ class RequestController
       self::redirect($m[2]);
     }
     else if(preg_match('^(noendview:)(.*)^', $url_pattern_action, $m)) {
-      $this->leftover_url = $url_path;
+      $this->leftover_url = $url_path[1];
       $this->view($url_path ,$m[2]);
     }
     else if(preg_match('^(view:)(.*)^', $url_pattern_action, $m)) {
@@ -99,7 +100,7 @@ class RequestController
       eval('$current_view->'.$methodname.'();');
     }
     else {
-      eval('$current_view->'.$methodname.'("'.$url_path.'");');
+      eval('$current_view->'.$methodname.'(array("'.implode( '","', $url_path).'") );');
     }
   }
 

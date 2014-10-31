@@ -4,7 +4,7 @@ Cogumelo::load('controller/LostController.php');
 Cogumelo::load('model/LostVO.php');
 
 
-client::autoIncludes();
+common::autoIncludes();
 form::autoIncludes();
 
 
@@ -25,9 +25,9 @@ class CreateForm extends View
 
 
 
-  function updateLostForm( $idParam = '' ){
+  function updateLostForm( $request ){
     $lostControl = new LostController();
-    $dataVO = $lostControl->find( $idParam );
+    $dataVO = $lostControl->find( $request[1] );
 
     if(!$dataVO){
       Cogumelo::redirect(SITE_URL.'lostForm');
@@ -212,5 +212,26 @@ class CreateForm extends View
     }
   }
 
+  function deleteLostForm(){
+    $lostControl = new LostController();
+
+    //Borrado  por array de ids
+    /*
+    $valuesArray = array('23','24','33');
+    $res = $lostControl->deleteFromIds($valuesArray);
+    */
+
+    //Borrado  por id
+    /*
+    $res = $lostControl->deleteFromId("25");
+    */
+
+    //Borrado por list
+    /*
+    $res = $lostControl->listItems();
+    $lostControl->deleteFromList($res->fetchAll());
+    */
+
+  }
 }
 

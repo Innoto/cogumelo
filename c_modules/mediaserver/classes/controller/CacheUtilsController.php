@@ -7,46 +7,89 @@ class CacheUtilsController {
   //  LESS METHODS
   //
 
-  static function generateLessCaches() {
 
+
+  static function generateAllLessCaches() {
+    
+    $mediaserverControl = new MediaserverController();
+
+    // tmp less dir
+    $tmpLessDir = self::prepareLessTmpdir();
+
+    // list, compile and cache files
+    $tmpLessFiles = self::listFolderFiles( $tmpLessDir , array('less'),  false);
+
+    if( sizeof($tmpLessFiles) > 0 ){
+      foreach ($tmpLessFiles as $lessFilePath) {
+
+        $path = str_replace($tmpLessDir, '' , $lessFilePath );
+
+        if( substr( $path , 0,7) == 'classes') {
+          $moduleName = false;
+          $relativeFilePath = str_replace('classes/view/templates/', '', $path);
+        }
+        else {
+          $expPath = explode('/', $path);
+          $moduleName = $expPath[0];
+
+          $relativeFilePath = str_replace($moduleName.'/classes/view/templates/', '', $path);
+        }
+
+        $mediaserverControl->cacheContent( $relativeFilePath  , $moduleName, true );
+       
+      }
+    }
+  
+    // remove tmp less dir
+    self::removeLessTmpdir();
 
   }
 
   // crea estructura con todos os arquivos LESS para a súa futura compilación
   static function prepareLessTmpdir( ){
-
+    global $CACHE_UTILS_LESS_TMPDIR;
     global $C_ENABLED_MODULES;
-    $destino = SITE_PATH.'/tmp/mediaCache/lesstmp/'.self::generateLessTmpdirName().'/';
 
 
-    mkdir($destino);
-
-    $cacheableFolder = 'classes/view/templates/';
-
-    foreach( $C_ENABLED_MODULES as $moduleName ){
-
-      // cogumelo modules
-      self::copyLessTmpdir( 
-        COGUMELO_LOCATION.'/c_modules/',
-        $moduleName.'/'.$cacheableFolder, 
-        $destino 
-      );
-
-      // app modules
-      self::copyLessTmpdir( 
-        SITE_PATH.'/modules/',
-        $moduleName.'/'.$cacheableFolder,
-        $destino 
-      );
-
+    if( $CACHE_UTILS_LESS_TMPDIR ) {
+      $destino = $CACHE_UTILS_LESS_TMPDIR;
     }
+    else {
 
-    // app files
-    self::copyLessTmpdir( 
-      SITE_PATH.'/',
-      $cacheableFolder, 
-      $destino 
-    );
+
+      $destino = MEDIASERVER_TMP_CACHE_PATH.'/lesstmp/'.self::generateLessTmpdirName().'/';
+
+      mkdir($destino);
+
+      $cacheableFolder = 'classes/view/templates/';
+
+      foreach( $C_ENABLED_MODULES as $moduleName ){
+
+        // cogumelo modules
+        self::copyLessTmpdir( 
+          COGUMELO_LOCATION.'/c_modules/',
+          $moduleName.'/'.$cacheableFolder, 
+          $destino 
+        );
+
+        // app modules
+        self::copyLessTmpdir( 
+          SITE_PATH.'/modules/',
+          $moduleName.'/'.$cacheableFolder,
+          $destino 
+        );
+
+      }
+
+      // app files
+      self::copyLessTmpdir( 
+        SITE_PATH.'/',
+        $cacheableFolder, 
+        $destino 
+      );
+
+      $CACHE_UTILS_LESS_TMPDIR = $destino;
+    }
 
     return $destino;
   }
@@ -67,8 +110,20 @@ class CacheUtilsController {
 
   }
 
-  static function removeLessTmpdir($dirName){
+  static function removeLessTmpdir( $dir = false ){
 
+    global $CACHE_UTILS_LESS_TMPDIR;
+
+    if( $CACHE_UTILS_LESS_TMPDIR ) {
+      if(!$dir)
+         $dir = $CACHE_UTILS_LESS_TMPDIR;      
+
+      $files = array_diff(scandir($dir), array('.','..'));
+      foreach ($files as $file) {
+        (is_dir("$dir/$file")) ? self::removeLessTmpdir("$dir/$file") : unlink("$dir/$file");
+      }
+      rmdir($dir);
+    }
   }
 
 
@@ -117,7 +172,7 @@ class CacheUtilsController {
     self::cacheFolder( SITE_PATH.'/'.$cacheableFolder );
 
     // all less files
-    self::prepareLessTmpdir();
+    self::generateAllLessCaches();
 
   }
 
@@ -125,8 +180,6 @@ class CacheUtilsController {
     $mediaserverControl = new MediaserverController();
 
     $fileList = self::listFolderFiles( $folder , array('php', 'tpl', 'less'), true );
-
-
 
     if( sizeof( $fileList ) > 0 )
     {

@@ -1,0 +1,30 @@
+/*
+ * Cogumelo styles
+ */
+
+.reset-box-sizing {
+  &,
+  *,
+  *:before,
+  *:after {
+    .box-sizing(border-box);
+  }
+}
+* {
+  .reset-box-sizing();
+}
+
+
+
+// CORE (Vars, Mixins and animates)
+@import "/common/classes/view/templates/styles/commonIncludes.less";
+
+// CSS Reset
+@import "/common/classes/view/templates/styles/commonNormalize.less";
+
+// Base CSS
+@import "/common/classes/view/templates/styles/commonElements.less";
+
+
+
+/*****************************************/

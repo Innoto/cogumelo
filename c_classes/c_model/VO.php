@@ -34,7 +34,7 @@ Class VO
         $this->setter($datakey, $data);
     }
   }
-  
+
 
   function getFirstPrimarykeyId() {
 
@@ -55,26 +55,26 @@ Class VO
       if( $col['type'] == 'FOREIGN' ){
         $colVO = new $col['vo']();
 
-        $this->relationship[$colKey] = array( 
-                                              'parent_table' => $this::$tableName, 
+        $this->relationship[$colKey] = array(
+                                              'parent_table' => $this::$tableName,
                                               'parent_key' => $this::$tableName.'.'.$colKey,
-                                              'vo_key' => $colVO::$tableName.'.'.$col['key'], 
-                                              'VO' => $colVO, 
-                                              'used' => false 
+                                              'vo_key' => $colVO::$tableName.'.'.$col['key'],
+                                              'VO' => $colVO,
+                                              'used' => false
                                             );
 
 
         // look for circular relationship
-        if( count( 
-              array_intersect( 
-                array_keys( $this->relationship ), 
-                array_keys( $colVO->relationship ) 
+        if( count(
+              array_intersect(
+                array_keys( $this->relationship ),
+                array_keys( $colVO->relationship )
               )
-            ) == 0 
+            ) == 0
         ){
           $this->relationship = array_merge( $this->relationship, $colVO->relationship );
         }
-        else 
+        else
         {
           Cogumelo::error('Circular relationship on VO "'.$this->tableName.'", column: '.$colKey);
           exit; // exits to prevent infinite loop
@@ -88,7 +88,7 @@ Class VO
     $dependenceVO = false;
 
     if( $this::$tableName == $tableName){
-      $dependenceVO = $this;  
+      $dependenceVO = $this;
     }
     else {
       if(! $dependenceVO = $this->relationship[$tableName]['VO']){
@@ -113,7 +113,7 @@ Class VO
       $tableName = $setter_data[1];
       $columnKey = $setter_data[2];
     }
-    else { 
+    else {
       $tableName = $this::$tableName;
       $columnKey = $setterkey;
     }
@@ -123,7 +123,7 @@ Class VO
 
     // set values
     if( $tableName == $setterVO::$tableName && in_array($columnKey, array_keys($setterVO::$cols)) ){
-      $this->markRelationshipAsUsed( $tableName ); 
+      $this->markRelationshipAsUsed( $tableName );
       $setterVO->attributes[$columnKey] = $value;
     }
     else{
@@ -143,7 +143,7 @@ Class VO
       $tableName = $getter_data[1];
       $columnKey = $getter_data[2];
     }
-    else { 
+    else {
       $tableName = $this::$tableName;
       $columnKey = $getterkey;
     }
@@ -153,7 +153,7 @@ Class VO
 
     // get values
     if( $tableName == $getterVO::$tableName && in_array($columnKey, array_keys($getterVO::$cols)) ){
-      $this->markRelationshipAsUsed( $tableName ); 
+      $this->markRelationshipAsUsed( $tableName );
       if( array_key_exists($columnKey, $getterVO->attributes) ) {
         $value = $getterVO->attributes[$columnKey];
       }
@@ -171,18 +171,18 @@ Class VO
 
     $ret = array();
     foreach ( $this->relationship as $rel ) {
-      array_push($ret, 
+      array_push($ret,
         array(
-          'table' => $rel['VO']::$tableName, 
-          'relationship' => array( $rel['parent_key'], $rel['vo_key'] ) 
-        ) 
+          'table' => $rel['VO']::$tableName,
+          'relationship' => array( $rel['parent_key'], $rel['vo_key'] )
+        )
       );
     }
      //array('table' => t, $relationship => r);
     return $ret;
   }
 
-  function getKeys($resolverelationship = false) {
+  function getKeys($fields = false, $resolverelationship = false) {
     $keys = array();
 
     if( $resolverelationship ) {
@@ -192,15 +192,33 @@ Class VO
       $keys = array_keys($this::$cols);
     }
 
+    if($fields){
+      $fieldsAllIn = true;
+      $fieldsError = array();
+      foreach ($fields as $field) {
+        if(!in_array($field, $keys)) {
+          $fieldsAllIn = false;
+          array_push($fieldsError, $field);
+        }
+      }
+      if($fieldsAllIn){
+        if(!in_array($this->getFirstPrimarykeyId(), $fields)) {
+          array_push($fields, $this->getFirstPrimarykeyId());
+        }
+        $keys = $fields;
+      }else{
+        Cogumelo::error("These fields do not exist: ". implode(",", $fieldsError));
+      }
+    }
     return $keys;
   }
 
-  function getKeysToString($resolverelationship = false) {
+  function getKeysToString($fields = false, $resolverelationship = false) {
 
     $strKeys = '';
     $comma = '';
 
-    foreach( $this->getKeys($resolverelationship) as $k ) {
+    foreach( $this->getKeys($fields, $resolverelationship) as $k ) {
       $strKeys .= $comma . $k . ' as `' . $k . '`';
       $comma = ', ';
     }

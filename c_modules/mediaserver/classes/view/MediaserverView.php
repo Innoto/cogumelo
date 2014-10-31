@@ -28,22 +28,36 @@ class MediaserverView extends View
       Cogumelo::error('Mediaserver receives empty request');
       RequestController::redirect(SITE_URL_CURRENT.'/404');
     }
-    $this->mediaserverControl->serveContent($url_path);
+    $this->mediaserverControl->serveContent($url_path[1]);
+    CacheUtilsController::removeLessTmpdir();
   }
 
   //load media from a module
   function module($url_path=''){
 
-    preg_match('#/(.*?)/(.*)#', $url_path, $result);
+    preg_match('#/(.*?)/(.*)#', $url_path[1], $result);
 
     if( $result != array() ) {
       $this->mediaserverControl->servecontent($result[2], $result[1]);
+      CacheUtilsController::removeLessTmpdir();
     }
     else {
       Cogumelo::error('Mediaserver module receives empty request');
       RequestController::redirect(SITE_URL_CURRENT.'/404');
     }
 
+  }
+
+  // for less client includes
+  function onClientLess($request){
+    if( $request[1] == false){
+      $this->mediaserverControl->serveContent($request[2].'.less');
+    }
+    else {
+      $moduleName = substr($request[1], 0, strlen($request[1])-1);
+
+      $this->mediaserverControl->serveContent($request[2].'.less', $moduleName);
+    }
   }
 
 }

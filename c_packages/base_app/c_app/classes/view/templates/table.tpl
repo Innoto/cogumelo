@@ -4,23 +4,9 @@
     <title>FORMs con Cogumelo</title>
 
     {$css_includes}
-
-    <link rel="stylesheet/less" type="text/css" href="/styles/table.less">
-
-    <script>
-      less = {
-        env: "development",
-        async: false,
-        fileAsync: false,
-        poll: 1000,
-        functions: { },
-        dumpLineNumbers: "all",
-        relativeUrls: true,
-        errorReporting: 'console'
-      };
-    </script>
-
     {$js_includes}
+
+
 
   </head>
   <body>
@@ -30,125 +16,141 @@
       <div class="tableSearchFilters clearfix">
 
         <div class="tableFilters clearfix">
-          <button>+Filtros</button>
           <select>
             <option value="1">Aceptado</option>
             <option value="2">Recibido</option>
             <option value="3">Rechazado</option>
           </select>
+          <button class="openFilters">+Filtros</button>
         </div>
         <div class="tableSearch clearfix">
           <input type="text"><button>Search</button>
         </div>
       </div>
-
-      <div class="tableMoreFilters clearfix">
+      <div class="tableMoreFilters clearfix" style="display:none;">
         <div class="MoreFilters" >
-          <fieldset>
-            <legend>filters</legend>
-            <div class="clearfix">
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-              </div>
+          <div class="clearfix">
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
             </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
 
-            <div class="buttonsContainer">
-              <button>Cancel filters</button>
-              <button>Apply filters</button>
+              <div class="FilterMain">
+                <label>Categoria</label>
+                <select>
+                  <option value="1">Categoria 1</option>
+                  <option value="2">Categoria 2</option>
+                  <option value="3">Categoria 3</option>
+                </select>
+                <div class="FilterMain">
+                  <label>Categoria</label>
+                  <select>
+                    <option value="1">Categoria 1</option>
+                    <option value="2">Categoria 2</option>
+                    <option value="3">Categoria 3</option>
+                  </select>
+                </div>
+              </div>
             </div>
-          </fieldset>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+            <div class="FilterMain">
+              <label>Categoria</label>
+              <select>
+                <option value="1">Categoria 1</option>
+                <option value="2">Categoria 2</option>
+                <option value="3">Categoria 3</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="buttonsContainer">
+            <button class="clearFilters">Eliminar filtros</button>
+            <button class="closeFilters">Cerrar</button>
+          </div>
         </div>
       </div>
-
+      <div class="tableResumeFilters clearfix">
+        <span>Estas filtrando por: (Categoria 1, Aceptado).</span>
+        <button class="clearFilters">Eliminar filtros</button>
+      </div>
       <div class="tableActions clearfix">
         <div class="selectAll"><input type="checkbox"></div>
-        <div class="addElem"><img src="/img/table/add.png" alt="Add"></div>
-        <div class="exportContainer"><img src="/img/table/export.png" alt="Export"></div>
+        <div class="addElem"><img src="media/img/table/add.png" alt="Add"></div>
+        <div class="exportContainer"><img src="media/img/table/export.png" alt="Export"></div>
         <select>
           <option value="1">Action 1</option>
           <option value="2">Action 2</option>
@@ -157,8 +159,8 @@
         <!-- Paginador -->
         <div class="tablePaginator">
           <div class="tablePage"><input type="text" value="100"> de 219</div>
-          <div class="tablePreviousPage"><img src="/img/table/a-left.png" alt="previous page"></div>
-          <div class="tableNextPage"><img src="/img/table/a-right.png" alt="next page"></div>
+          <div class="tablePreviousPage"><img src="media/img/table/a-left.png" alt="previous page"></div>
+          <div class="tableNextPage"><img src="media/img/table/a-right.png" alt="next page"></div>
         </div>
       </div>
 
@@ -169,31 +171,31 @@
         <th>
           <div class="clearfix">
             <div>Name</div>
-            <div><img src="/img/table/up.png"></div>
+            <div><img src="media/img/table/up.png"></div>
           </div>
         </th>
         <th>
           <div class="clearfix">
             <div>Description</div>
-            <div><img src="/img/table/up.png"></div>
+            <div><img src="media/img/table/up.png"></div>
           </div>
         </th>
         <th>
           <div class="clearfix">
             <div>Date</div>
-            <div><img src="/img/table/up.png"></div>
+            <div><img src="media/img/table/up.png"></div>
           </div>
         </th>
         <th>
           <div class="clearfix">
             <div>Province</div>
-            <div><img src="/img/table/up.png"></div>
+            <div><img src="media/img/table/up.png"></div>
           </div>
         </th>
         <th>
           <div class="clearfix">
             <div>Status</div>
-            <div><img src="/img/table/up.png"></div>
+            <div><img src="media/img/table/up.png"></div>
           </div>
         </th>
       </tr>
@@ -363,8 +365,8 @@
     <!-- Paginador -->
     <div class="tablePaginator ">
       <div class="tablePage"><input type="text" value="100"> de 219</div>
-      <div class="tablePreviousPage"><img src="/img/table/a-left.png" alt="previous page"></div>
-      <div class="tableNextPage"><img src="/img/table/a-right.png" alt="next page"></div>
+      <div class="tablePreviousPage"><img src="media/img/table/a-left.png" alt="previous page"></div>
+      <div class="tableNextPage"><img src="media/img/table/a-right.png" alt="next page"></div>
     </div>
   <!-- --------- END HTML TABLE --------- -->
   </body>
