@@ -124,7 +124,7 @@ class CreateForm extends View
     $form->setValidationRule( 'lostDateTime2', 'dateTimeMax', '2014-07-1 22:59:59' );
 
 
-    $form->setValuesVO($dataVO);
+    $form->loadVOValues( $dataVO );
 
     $form->saveToSession();
 

@@ -5,6 +5,8 @@ Cogumelo::load("c_controller/Module.php");
 
 class form extends Module
 {
+
+
   public $name = "form";
   public $version = "";
   public $dependences = array(
@@ -17,22 +19,23 @@ class form extends Module
    )
   );
 
+
   public $includesCommon = array(
     'controller/FormController.php',
     'controller/FormValidators.php',
-    'js/jquery-cogumelo-forms.js',
+    'js/jquery.cogumeloFormController.js',
     'js/jquery.serializeFormToObject.js',
-    'js/inArray.js',
-    'js/regex.js',
-    'js/numberEU.js',
-    'js/timeMaxMin.js',
-    'js/dateMaxMin.js',
-    'js/dateTimeMaxMin.js',
-    'js/appValidateMethods.js',
+    'js/formValidators.js',
+    'js/formValidatorsExtender.js',
     'styles/form.less'
   );
 
+
   function __construct() {
 
+    $this->addUrlPatterns( '#^cgmlFormFileUpload$#', 'view:FormFileUpload::fileUpload' );
+
   }
+
+
 }
