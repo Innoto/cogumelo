@@ -21,6 +21,10 @@ class FormControllerV2 implements Serializable {
   private $rulesErrors = array();
   private $formErrors = array();
 
+  private $replaceAcents = array(
+    'from' => array( 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ', 'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ', 'Ĵ', 'ĵ', 'Ķ', 'ķ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň', 'ň', 'ŉ', 'Ō', 'ō', 'Ŏ', 'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'ſ', 'ƒ', 'Ơ', 'ơ', 'Ư', 'ư', 'Ǎ', 'ǎ', 'Ǐ', 'ǐ', 'Ǒ', 'ǒ', 'Ǔ', 'ǔ', 'Ǖ', 'ǖ', 'Ǘ', 'ǘ', 'Ǚ', 'ǚ', 'Ǜ', 'ǜ', 'Ǻ', 'ǻ', 'Ǽ', 'ǽ', 'Ǿ', 'ǿ' ),
+    'to'   => array( 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'D', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 's', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', 'A', 'a', 'A', 'a', 'A', 'a', 'C', 'c', 'C', 'c', 'C', 'c', 'C', 'c', 'D', 'd', 'D', 'd', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'G', 'g', 'G', 'g', 'G', 'g', 'G', 'g', 'H', 'h', 'H', 'h', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'J', 'j', 'K', 'k', 'L', 'l', 'L', 'l', 'L', 'l', 'L', 'l', 'l', 'l', 'N', 'n', 'N', 'n', 'N', 'n', 'n', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'R', 'r', 'R', 'r', 'R', 'r', 'S', 's', 'S', 's', 'S', 's', 'S', 's', 'T', 't', 'T', 't', 'T', 't', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'W', 'w', 'Y', 'y', 'Y', 'Z', 'z', 'Z', 'z', 'Z', 'z', 's', 'f', 'O', 'o', 'U', 'u', 'A', 'a', 'I', 'i', 'O', 'o', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'A', 'a', 'A', 'a', 'O', 'o' )
+  );
 
 
   function __construct( $name = false, $action = false, $cgIntFrmId = false, $formPost = false ) {
@@ -132,9 +136,9 @@ class FormControllerV2 implements Serializable {
 
   private function phpIni2Bytes( $size ) {
     if( preg_match( '/([\d\.]+)([KMG])/i', $size, $match ) ) {
-      $pos = array_search( $match[2], array("K", "M", "G") );
+      $pos = array_search( $match[2], array( 'K', 'M', 'G' ) );
       if( $pos !== false ) {
-        $size = $match[1] * pow(1024, $pos + 1);
+        $size = $match[1] * pow( 1024, $pos + 1 );
       }
     }
     return $size;
@@ -148,12 +152,19 @@ class FormControllerV2 implements Serializable {
     $this->messages[$fieldName] = $msg;
   }
 
-
   public function loadPostValues( $formPost ) {
     $this->postValues = $formPost;
     foreach($formPost as $key => $val ){
       if(array_key_exists( $key, $this->fields )){
         $this->fields[$key]['value'] = $val;
+      }
+    }
+  }
+
+  public function loadVOValues( $dataVO ) {
+    if( gettype( $dataVO ) == "object" ) {
+      foreach( $dataVO->getKeys() as $keyVO ) {
+        $this->setFieldValue( $keyVO, $dataVO->getter( $keyVO ) );
       }
     }
   }
@@ -177,7 +188,7 @@ class FormControllerV2 implements Serializable {
   public function getHtmpOpen() {
     $html='';
 
-    $html .= '<form name="'.$this->name.'" id="'.$this->id.'" sg="'.$this->cgIntFrmId.'"';
+    $html .= '<form name="'.$this->name.'" id="'.$this->id.'" sg="'.$this->getIntFrmId().'"';
     if( $this->action ) {
       $html .= ' action="'.$this->action.'"';
     }
@@ -201,7 +212,6 @@ class FormControllerV2 implements Serializable {
     }
     return $html;
   }
-
 
   public function getHtmlField( $fieldName ) {
     $html = '';
@@ -239,7 +249,6 @@ class FormControllerV2 implements Serializable {
 
     return $html;
   } // function getHtmlField
-
 
   public function getHtmlFieldArray( $fieldName ) {
     $html = array();
@@ -353,12 +362,10 @@ class FormControllerV2 implements Serializable {
     return $html;
   } // function getHtmlFieldArray
 
-
   public function getHtmlClose() {
     $html = '</form><!-- '.$this->name.' -->';
     return $html;
   }
-
 
   public function getJqueryValidationJS() {
     $html = '';
@@ -392,7 +399,6 @@ class FormControllerV2 implements Serializable {
     return $html;
   } // function getJqueryValidationJS
 
-
   public function getValuesArray(){
     $fieldsValuesArray = array();
     $fieldsNamesArray = $this->getFieldsNamesArray();
@@ -403,74 +409,78 @@ class FormControllerV2 implements Serializable {
     return $fieldsValuesArray;
   }// fuction getValuesArray
 
-
   public function getFieldsNamesArray(){
     $fieldsNamesArray = array();
     foreach( $this->fields as $key => $val ){
-       array_push( $fieldsNamesArray, $key);
+      array_push( $fieldsNamesArray, $key);
     }
 
     return $fieldsNamesArray;
   }
 
-  public function setValuesVO( $dataVO ){
-    if(gettype($dataVO) == "object"){
-      foreach( $dataVO->getKeys() as $keyVO){
-        $this->setFieldValue( $keyVO, $dataVO->getter($keyVO));
-      }
+
+
+
+
+
+  public function getFieldParam( $fieldName, $paramName ) {
+    $value = null;
+
+    if( array_key_exists( $fieldName, $this->fields ) &&
+      array_key_exists( $paramName, $this->fields[ $fieldName ] ) &&
+      isset( $this->fields[ $fieldName ][$paramName] ) )
+    {
+      $value = $this->fields[ $fieldName ][ $paramName ];
     }
-  }
 
-
-
-/**
-  ***********************************************************
-  VALIDATION
-  ***********************************************************
-**/
-
-  /*
-  public function setEvaluateRuleMethod( $evaluateRuleMethod ) {
-    error_log( 'setEvaluateRuleMethod' );
-    error_log( print_r( $evaluateRuleMethod, true ) );
-    $this->evaluateRuleMethod = $evaluateRuleMethod;
-  }
-  */
-
-  public function setValidationObj( $validationObj ) {
-    $this->validationObj = $validationObj;
-  }
-
-  public function issetValidationObj() {
-    return( $this->validationObj !== null );
+    return $value;
   }
 
   public function getFieldType( $fieldName ) {
-    $value = $this->fields[ $fieldName ][ 'type' ];
-    return $value;
+    return $this->getFieldParam( $fieldName, 'type' );
   }
 
   public function getFieldValue( $fieldName ) {
-    $value = null;
-    if(array_key_exists( $fieldName, $this->fields )){
-      $value = isset( $this->fields[ $fieldName ]['value'] ) ? $this->fields[ $fieldName ]['value'] : false;
-    }
+    return $this->getFieldParam( $fieldName, 'value' );
+  }
 
-    return $value;
+
+
+
+
+
+  public function setFieldParam( $fieldName, $paramName, $value ) {
+    if(array_key_exists($fieldName, $this->fields)){
+      $this->fields[ $fieldName ][ $paramName ] = $value;
+    }
+    else {
+      error_log( 'Intentando almacenar un parámetro en un campo inexistente: '.$fieldName );
+    }
   }
 
   public function setFieldValue( $fieldName, $fieldValue ){
     if(array_key_exists($fieldName, $this->fields)){
       $this->fields[ $fieldName ]['value'] = $fieldValue;
     }
+    else {
+      error_log( 'Intentando almacenar un valor en un campo inexistente: '.$fieldName );
+    }
   }
 
-  public function isRequiredField( $fieldName ) {
-    return isset( $this->rules[ $fieldName ][ 'required' ] );
+  /*
+  public function setFileFieldValue( $fieldName, $fieldValue ){
+    if(array_key_exists($fieldName, $this->fields)){
+      $this->fields[ $fieldName ]['value'] = $fieldValue;
+    }
+    else {
+      error_log( 'Intentando almacenar un valor en un campo inexistente: '.$fieldName );
+    }
   }
+  */
 
   public function isEmptyFieldValue( $fieldName ) {
     $empty = true;
+
     $value = $this->getFieldValue( $fieldName );
     $type = $this->getFieldType( $fieldName );
 
@@ -484,8 +494,109 @@ class FormControllerV2 implements Serializable {
     return $empty;
   }
 
+
+
+  public function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName ) {
+    error_log( 'tmpPhpFile2tmpFormFile: '.$fileTmpLoc.' --- '.$fileName);
+    $result = false;
+    $error = false;
+
+    // PARA TEST !!!
+    $tmpCgmlFormDir = $_SERVER['DOCUMENT_ROOT'].'test_upload/'; // DEFINIDO EN SETUP !!!
+    // PARA TEST !!!
+
+    $tmpCgmlFormDir = $tmpCgmlFormDir . preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getIntFrmId() ) . '/';
+    if( !is_dir( $tmpCgmlFormDir ) ) {
+      /**
+      CAMBIAR 0777
+      **/
+      if( !mkdir( $tmpCgmlFormDir, 0777, true ) ) {
+        $error = 'Imposible crear el dir. necesario: '.$tmpCgmlFormDir; error_log($error);
+      }
+    }
+
+    if( !$error ) {
+      $secureName = $this->secureFileName( $fileName );
+
+      $tmpLocationCgml = $tmpCgmlFormDir . $secureName;
+      /**
+      FALTA VER QUE NON SE PISE UN ANTERIOR!!!
+      **/
+
+      if( !move_uploaded_file( $fileTmpLoc, $tmpLocationCgml ) ) {
+        $error = 'Fallo de move_uploaded_file pasando ('.$fileTmpLoc.') a ('.$tmpLocationCgml.')'; error_log($error);
+      }
+      else {
+        $result = $tmpLocationCgml;
+      }
+    }
+
+    error_log( 'tmpPhpFile2tmpFormFile RET: '.$result );
+    return $result;
+  }
+
+  public function secureFileName( $fileName ) {
+    error_log( 'secureFileName: '.$fileName );
+    $maxLength = 200;
+
+    $fileName = str_replace( $this->replaceAcents[ 'from' ], $this->replaceAcents[ 'to' ], $fileName );
+    $fileName = preg_replace( '/[^0-9a-z_\.-]/i', '_', $fileName );
+
+    $sobran = mb_strlen( $fileName, 'UTF-8' ) - $maxLength;
+    if( $sobran < 0 ) {
+      $sobran = 0;
+    }
+
+    $tmpExtPos = strrpos( $fileName, '.' );
+    if( $tmpExtPos > 0 && ( $tmpExtPos - $sobran ) >= 8 ) {
+      // Si hay extensión y al cortar el nombre quedan 8 o más letras, recorto solo el nombre
+      $tmpName = substr( $fileName, 0, $tmpExtPos - $sobran );
+      $tmpExt = substr( $fileName, 1 + $tmpExtPos );
+      $fileName = $tmpName . '.' . $tmpExt;
+    }
+    else {
+      // Recote por el final
+      $fileName = substr( $fileName, 0, $maxLength );
+    }
+
+    error_log( 'secureFileName RET: '.$fileName );
+    return $fileName;
+  }
+
+
+
+
+
+/**
+  ***********************************************************
+  VALIDATION
+  ***********************************************************
+**/
+
+
+  public function setValidationObj( $validationObj ) {
+    $this->validationObj = $validationObj;
+  }
+
+  public function issetValidationObj() {
+    return( $this->validationObj !== null );
+  }
+
+  public function isRequiredField( $fieldName ) {
+    return isset( $this->rules[ $fieldName ][ 'required' ] );
+  }
+
   public function evaluateRule( $ruleName, $value, $fieldName, $ruleParams ) {
-    return $this->validationObj->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
+    $validate = false;
+
+    if( $this->issetValidationObj() ) {
+      $validate = $this->validationObj->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
+    }
+    else {
+      error_log( 'FALTA CARGAR LOS VALIDADORES' );
+    }
+
+    return $validate;
   }
 
 
@@ -504,57 +615,7 @@ class FormControllerV2 implements Serializable {
     // Tienen que existir los validadores y los valores del form
     if( $this->issetValidationObj() ) {
       foreach( $this->rules as $fieldName => $fieldRules ) {
-        $fieldValidated = true;
-        $fieldType = $this->getFieldType( $fieldName );
-
-        $fieldValues = $this->getFieldValue( $fieldName );
-        if( !is_array( $fieldValues ) ) {
-          $fieldValues = array( $fieldValues );
-        }
-
-        foreach( $fieldValues as $value ) {
-          $fieldValidateValue = false;
-
-          //$value = $this->getFieldValue( $fieldName );
-          error_log( 'validando '.$fieldName.' = '.print_r( $value, true ) );
-
-          if( $this->isEmptyFieldValue( $fieldName ) ) {
-            if( $this->isRequiredField( $fieldName ) ) {
-              error_log( 'evaluateRule: VACIO e required = fallo' );
-              $this->rulesErrors[ $fieldName ][ 'required' ] = false;
-              $fieldValidateValue = false;
-            }
-            else {
-              error_log( 'evaluateRule: VACIO e non required = ok' );
-              $fieldValidateValue = true;
-            }
-          } // if( $this->isEmptyFieldValue( $fieldName ) )
-          else {
-            error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
-            $fieldValidateValue = true;
-            foreach( $fieldRules as $ruleName => $ruleParams ) {
-              error_log( 'evaluateRule( '.$ruleName.', '.$value.', '.$fieldName.', '. print_r( $ruleParams, true ) .' )' );
-
-              if( $ruleName === 'equalTo' ) {
-                $fieldRuleValidate = ( $value === $this->getFieldValue( $ruleParams ) );
-              }
-              else {
-                $fieldRuleValidate = $this->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
-              }
-              error_log( 'evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
-
-              if( !$fieldRuleValidate ) {
-                $this->rulesErrors[ $fieldName ][ $ruleName ] = $fieldRuleValidate;
-              }
-
-              $fieldValidateValue = $fieldValidateValue && $fieldRuleValidate;
-            } // foreach( $fieldRules as $ruleName => $ruleParams )
-
-          } // else if( $this->isEmptyFieldValue( $fieldName ) )
-
-          $fieldValidated = $fieldValidated && $fieldValidateValue;
-        } // foreach( $fieldValues as $value )
-
+        $fieldValidated = $this->validateField( $fieldName );
         $formValidated = $formValidated && $fieldValidated;
       } // foreach( $this->rules as $fieldName => $fieldRules )
 
@@ -566,6 +627,72 @@ class FormControllerV2 implements Serializable {
 
     return $formValidated;
   } // function validateForm( $formPost = false )
+
+
+
+  public function validateField( $fieldName ) {
+    error_log( 'validateField: '.$fieldName );
+    $fieldValidated = true;
+
+    if( $this->isEmptyFieldValue( $fieldName ) ) {
+      if( $this->isRequiredField( $fieldName ) ) {
+        error_log( 'evaluateRule: VACIO e required = fallo' );
+        $this->rulesErrors[ $fieldName ][ 'required' ] = false;
+        $fieldValidated = false;
+      }
+      else {
+        error_log( 'evaluateRule: VACIO e non required = ok' );
+        $fieldValidated = true;
+      }
+    } // if( $this->isEmptyFieldValue( $fieldName ) )
+    else {
+
+      $fieldRules = $this->rules[ $fieldName ];
+      $fieldType = $this->getFieldType( $fieldName );
+      $fieldValues = $this->getFieldValue( $fieldName );
+
+      // Hay que tener cuidado con ciertos fieldValues con estructura de array pero que son un único elemento
+      if( !is_array( $fieldValues ) || ( $fieldType === 'file' && isset( $fieldValues[ 'name' ] ) ) ) {
+        $fieldValues = array( $fieldValues );
+      }
+
+      foreach( $fieldValues as $value ) {
+        $fieldValidateValue = false;
+
+        error_log( 'validando '.$fieldName.' = '.print_r( $value, true ) );
+
+        error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
+        $fieldValidateValue = true;
+        foreach( $fieldRules as $ruleName => $ruleParams ) {
+          error_log( 'evaluateRule( '.$ruleName.', '.print_r( $value, true ) .', '.$fieldName.', '. print_r( $ruleParams, true ) .' )' );
+
+          if( $ruleName === 'equalTo' ) {
+            $fieldRuleValidate = ( $value === $this->getFieldValue( $ruleParams ) );
+          }
+          else {
+            $fieldRuleValidate = $this->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
+          }
+          error_log( 'evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
+
+          if( !$fieldRuleValidate ) {
+            $this->rulesErrors[ $fieldName ][ $ruleName ] = $fieldRuleValidate;
+          }
+
+          $fieldValidateValue = $fieldValidateValue && $fieldRuleValidate;
+        } // foreach( $fieldRules as $ruleName => $ruleParams )
+
+        $fieldValidated = $fieldValidated && $fieldValidateValue;
+      } // foreach( $fieldValues as $value )
+
+    } // else if( $this->isEmptyFieldValue( $fieldName ) )
+
+    return( $fieldValidated );
+  }
+
+
+
+
+
 
 
   public function addJVError( $msgClass, $msgText ) {

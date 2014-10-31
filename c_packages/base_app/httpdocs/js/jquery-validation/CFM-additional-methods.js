@@ -1,3 +1,16 @@
+
+
+
+$.validator.addMethod(
+  "numberEU",
+  function( value, element ) {
+    return ( value==='' && this.optional( element ) ) || /^-?\d+(,\d+)?$/.test( value );
+  },
+  "A positive or negative decimal number please (Ej. 123,25)"
+);
+
+
+
 $.validator.addMethod(
   "regex",
   function( value, element, param ) {
@@ -71,7 +84,7 @@ $.validator.addMethod(
     return (valueDateTime.getTime() > paramDateTime.getTime());
 
   },
-    "The date entered is too old"
+  $.validator.format("The date entered is too old (> {0})")
 );
 
 
@@ -90,7 +103,7 @@ $.validator.addMethod(
 
     return (valueDateTime.getTime() < paramDateTime.getTime());
   },
-    "The date entered must be oldest"
+  $.validator.format("The date entered must be oldest (> {0})")
 );
 
 
@@ -112,7 +125,7 @@ $.validator.addMethod(
     return (valueDate.getTime() > paramDate.getTime());
 
   },
-    "The date entered is too old"
+  $.validator.format("The date entered is too old (> {0})")
 );
 
 
@@ -131,7 +144,7 @@ $.validator.addMethod(
 
     return (valueDate.getTime() < paramDate.getTime());
   },
-    "The date entered must be oldest"
+  $.validator.format("The date entered must be oldest (> {0})")
 );
 
 
@@ -153,7 +166,7 @@ $.validator.addMethod(
 
     return (valueTimeSeconds > paramTimeSeconds);
   },
-  "The time entered is too old"
+  $.validator.format("The time entered is too old (> {0})")
 );
 
 
@@ -174,7 +187,7 @@ $.validator.addMethod(
 
     return (valueTimeSeconds < paramTimeSeconds);
   },
-  "The time entered must be oldest"
+  $.validator.format("The time entered must be oldest (> {0})")
 );
 
 
@@ -206,7 +219,7 @@ $.validator.addMethod(
     // browser does not support element.files and the FileList feature
     return valueResponse;
   },
-  $.validator.format("Please enter a file with a valid size.")
+  $.validator.format("Please enter a file with a valid size (<{0} Bytes).")
 );
 
 
@@ -236,17 +249,7 @@ $.validator.addMethod(
     // browser does not support element.files and the FileList feature
     return valueResponse;
   },
-  $.validator.format("Please enter a file with a valid size.")
-);
-
-
-
-$.validator.addMethod(
-  "numberEU",
-  function( value, element ) {
-    return ( value==='' && this.optional( element ) ) || /^-?\d+(,\d+)?$/.test( value );
-  },
-  "A positive or negative decimal number please (Ej. 123,25)"
+  $.validator.format("Please enter a file with a valid size (>{0} Bytes).")
 );
 
 
