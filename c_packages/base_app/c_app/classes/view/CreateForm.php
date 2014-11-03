@@ -227,11 +227,10 @@ class CreateForm extends View
     */
 
     //Borrado por list
-
-
+    /*
     $res = $lostControl->listItems();
-    Cogumelo::objDebug($res->fetchAll());
-    //$res = $lostControl->deleteFromId("25");
+    $lostControl->deleteFromList($res->fetchAll());
+    */
 
   }
 }

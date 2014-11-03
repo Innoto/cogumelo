@@ -32,7 +32,7 @@ class CogumeloClass extends Singleton
        "id" => "smarty",
        "params" => array('smarty/smarty', '3.1.18'),
        "installer" => 'composer',
-       "includes" => array('distribution/libs/Smarty.class.php')
+       "includes" => array('libs/Smarty.class.php')
      ),
      array(
        "id" => "gettext",
@@ -42,7 +42,7 @@ class CogumeloClass extends Singleton
      )
   );
 
-  // Set autoincludes 
+  // Set autoincludes
   static function autoIncludes() {
     $dependencesControl = new DependencesController();
     $dependencesControl->loadAppIncludes();
