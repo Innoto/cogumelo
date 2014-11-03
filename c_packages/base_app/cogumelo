@@ -28,7 +28,6 @@
   require_once(ModuleController::getRealFilePath('devel.php', 'devel'));
   require_once(ModuleController::getRealFilePath('classes/controller/DevelDBController.php', 'devel'));
   require_once(ModuleController::getRealFilePath('classes/controller/CacheUtilsController.php', 'mediaserver'));
-  require_once(COGUMELO_LOCATION."/c_packages/base_app/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
   Cogumelo::load('c_controller/ModuleController.php');
   Cogumelo::load('c_controller/ModuleController.php');
 
@@ -93,15 +92,19 @@
         break;
 
         case 'generateTranslations':
-           translateWeb();
-           generateTranslations();
-           echo "The files.po are ready to be edited!\n";
+          require_once(COGUMELO_LOCATION."/c_packages/base_app/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
+
+          translateWeb();
+          generateTranslations();
+          echo "The files.po are ready to be edited!\n";
         break;
 
         case 'compileTranslations':
-           translateWeb();
-           compileTranslations();
-           echo "The files.mo are ready to be used!\n";
+          require_once(COGUMELO_LOCATION."/c_packages/base_app/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
+
+          translateWeb();
+          compileTranslations();
+          echo "The files.mo are ready to be used!\n";
         break;
 
         /* We execute this two actions from web as we need to operate with the apache permissions*/
@@ -156,7 +159,7 @@
 
   function createTables(){
 
-    
+
 
     $develdbcontrol = new DevelDBController();
     $develdbcontrol->createTables();
@@ -316,7 +319,7 @@
 
     $all_files_php = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php'), false);
     foreach($all_files_php as $i => $dir){
-      if (strpos($dir,'/c_modules/')===false && strpos($dir,'/modules/')===false 
+      if (strpos($dir,'/c_modules/')===false && strpos($dir,'/modules/')===false
           && strpos($dir,'/vendorServer/')===false && strpos($dir,'/tmp/')===false){ // We exclude files from modules, tmp and vendorServer
             $files_php[$i] = $dir->getRealPath();
       }
@@ -333,7 +336,7 @@
       foreach ($files_module_php as $k => $file) {
         $parts = explode('/'.$dir.'/',$file);
         if (sizeof($parts)==2){
-          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);  
+          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
           $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
         }
       }
@@ -345,7 +348,7 @@
       foreach ($files_module_php_c as $k => $file) {
         $parts = explode('/'.$dir.'/',$file);
         if (sizeof($parts)==2){
-          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);  
+          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
           $array_php_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
         }
       }
@@ -360,11 +363,11 @@
       //Get the translations of the code that are stored in a po file
       $oldEntries = Gettext\Extractors\Po::extract($dir_path.$textdomain.'_php.po');
       //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-      $entries->mergeWith($oldEntries); //now $entries has all the values 
+      $entries->mergeWith($oldEntries); //now $entries has all the values
     }
     else{ //create
       $entries = Gettext\Extractors\PhpCode::extract($array_php);
-    }  
+    }
 
     //Now save the php.po file with the result
     Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_php.po');
@@ -406,7 +409,7 @@
       foreach ($files_module_js as $k => $value) {
         $parts = explode('/'.$dir.'/',$value);
         if ($parts && $parts[1]){
-          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]); 
+          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
           $array_js_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
         }
       }
@@ -423,12 +426,12 @@
     }
     else{ // we've to create it
       $entries = Gettext\Extractors\PhpCode::extract($array_js_module);
-    }  
+    }
 
     //Now save the php.po file with the result
     Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_js.po');*/
 
-    /*********** END JS **********/ 
+    /*********** END JS **********/
 
 
     /******************************/
@@ -443,7 +446,7 @@
       //shell_exec($extractTPL);
     }
 
-    /*********** END TPL **********/ 
+    /*********** END TPL **********/
 
     /* Delete the modified files remaining */
     /*if (is_dir($dir_path)){
