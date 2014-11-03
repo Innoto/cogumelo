@@ -16,7 +16,12 @@ class TableController{
 
   var $clientData = array();
   var $colsDef = array();
-  var $allowMethods = array();
+  var $allowMethods = array(
+      'list' => 'listItems',
+      'delete' => false,
+      'chageStatus' => false
+      );
+
   var $tabs = array();
   var $currentTab = false;
   var $filters = array();
@@ -26,7 +31,12 @@ class TableController{
   */
   function __construct($postdata)
   {
-    $this->clientData = json_decode($postdata['cogumeloTable']);
+    if(!array_key_exists('cogumeloTable', $postdata)){
+      Cogumelo::error('$_POST array doesn`t contents a cogumeloTable key');
+      exit;
+    };
+
+    $this->clientData = json_decode( $postdata['cogumeloTable'] );
   }
 
   /*
@@ -107,7 +117,7 @@ class TableController{
 
 
     // doing a query to the controller
-    $lista = $control->listItems( $this->clientData->filters , $this->clientData->range, $this->clientData->order);
+    eval('$lista = $control->'. $this->allowMethods['list'].'( $this->clientData->filters , $this->clientData->range, $this->clientData->order);');
 
 
     // printing json table...
@@ -115,7 +125,6 @@ class TableController{
     header("Content-Type: application/json"); //return only JSON data
     
     echo "{";
-    echo '"totalQueryRows":' . $control->listCount($this->clientData->filtersCommon) . ','; // only assign common filters
     echo '"colsDef":'.json_encode($this->colsDef).',';
     echo '"tabs":'.json_encode($this->tabs).',';
     echo '"filters":'.json_encode($this->filters).',';
