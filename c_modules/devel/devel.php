@@ -29,6 +29,12 @@ class devel extends Module
      "installer" => "bower",
      "includes" => array("dist/less-1.7.5.min.js")
    ),
+   array(
+     "id" => "bootstrap",
+     "params" => array("bootstrap"),
+     "installer" => "bower",
+     "includes" => array()
+   ),
    // COMPOSER
    array(
      "id" => "kint",
