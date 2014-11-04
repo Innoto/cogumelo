@@ -74,10 +74,11 @@ class TableController{
   *
   * @param string $tabsKey
   * @param array $tabs
+  * @param int $defaultKey default key
   * @return void
   */
-  function setTabs($tabsKey ,$tabs) {
-    $this->tabs = array('tabsKey' => $tabsKey, 'tabs' => $tabs);
+  function setTabs($tabsKey ,$tabs, $defaultKey) {
+    $this->tabs = array('tabsKey' => $tabsKey, 'tabs' => $tabs, 'defaultKey' => $defaultKey);
   }
 
 
@@ -95,11 +96,43 @@ class TableController{
   /*
   * Data methods to allow in table
   *
-  * @param string $allowMethods array of method names allowed in this table view
+  * @param string $methodAlias name of method for tableController
+  * @param string $method name of method in controller
   * @return void
   */
-  function allowMethods( $allowMethods ) {
-    $this->allowMethods = $allowMethods;
+  function addAllowMethod( $methodAlias, $method  ) {
+    $this->allowMethods[$methodAlias] = $method;
+  }
+
+
+  /*
+  * Turn order objects from table in array readable by DAO
+  *
+  * @return array
+  */
+  function orderIntoArray() {
+    $ordArray = array();
+
+    foreach(  $this->clientData->order as $ordObj ) {
+      $ordArray[$ordObj->key] = $ordObj->value;
+    }
+
+    return $ordArray;
+  }
+
+  /*
+  * Turn cols into array
+  *
+  * @return array
+  */
+  function colsIntoArray() {
+    $colsArray = array();
+
+    foreach(  $this->colsDef as $colKey => $col ) {
+      $colsArray[ $colKey ] = $col['name'];
+    }
+
+    return $colsArray;
   }
 
 
@@ -110,14 +143,14 @@ class TableController{
   function returnTableJson($control) {
 
     // if is executing a method ( like delete or update) and have permissions to do it
-    if($this->clientData->method && array_key_exists( $this->clientData->method->name, $this->allowMethods ))
+    if( $this->clientData->method->name != 'list' )
     {
       eval( '$control->'. $this->clientData->method->name. '('.$this->clientData->method->value.')');
     }
 
 
     // doing a query to the controller
-    eval('$lista = $control->'. $this->allowMethods['list'].'( $this->clientData->filters , $this->clientData->range, $this->clientData->order);');
+    eval('$lista = $control->'. $this->allowMethods['list'].'( $this->clientData->filters , $this->clientData->range, $this->orderIntoArray() );');
 
 
     // printing json table...
@@ -125,7 +158,7 @@ class TableController{
     header("Content-Type: application/json"); //return only JSON data
     
     echo "{";
-    echo '"colsDef":'.json_encode($this->colsDef).',';
+    echo '"colsDef":'.json_encode($this->colsIntoArray() ).',';
     echo '"tabs":'.json_encode($this->tabs).',';
     echo '"filters":'.json_encode($this->filters).',';
   
