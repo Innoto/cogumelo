@@ -162,6 +162,40 @@ class TableView {
     </div>
     <table class="tableClass clearfix">
 
+    <tr>
+      <th></th>
+      <th>
+        <div class="clearfix">
+          <div>Name</div>
+          <div><img src="media/module/table/img/up.png"></div>
+        </div>
+      </th>
+      <th>
+        <div class="clearfix">
+          <div>Description</div>
+          <div><img src="media/module/table/img/up.png"></div>
+        </div>
+      </th>
+      <th>
+        <div class="clearfix">
+          <div>Date</div>
+          <div><img src="media/module/table/img/up.png"></div>
+        </div>
+      </th>
+      <th>
+        <div class="clearfix">
+          <div>Province</div>
+          <div><img src="media/module/table/img/up.png"></div>
+        </div>
+      </th>
+      <th>
+        <div class="clearfix">
+          <div>Status</div>
+          <div><img src="media/module/table/img/down.png"></div>
+        </div>
+      </th>
+    </tr>
+
     </table>
     <!-- Paginador -->
     <div class="tablePaginator ">
