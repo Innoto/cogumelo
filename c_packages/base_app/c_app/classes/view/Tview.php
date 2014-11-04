@@ -1,6 +1,5 @@
 <?php
 Cogumelo::load('c_view/View.php');
-//common::autoIncludes();
 
 class Tview extends View
 {
