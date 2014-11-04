@@ -14,7 +14,7 @@ class table extends Module
     'controller/TableController.php',
     'view/TableView.php',
     'js/table.js',
-    'style/talbe.less'
+    'styles/table.less'
   );
 
 

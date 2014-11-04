@@ -17,7 +17,16 @@ class Tview extends View
     return true;
   }
 
-  function main() {
+  function main(){
+    /*$this->template->addClientStyles('styles/table.less');
+    $this->template->addClientScript('js/table.js');*/
+    table::autoIncludes();
+    $this->template->setTpl('paxinaTabla.tpl');
+    $this->template->assign('codigoTabla', table::getTableHtml() );
+    $this->template->exec();
+  }
+
+  function tableData() {
     /*$this->template->addClientStyles('styles/table.less');
     $this->template->addClientScript('js/table.js');
     $this->template->setTpl('table.tpl');

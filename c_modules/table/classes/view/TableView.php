@@ -145,8 +145,8 @@ class TableView {
       </div>
       <div class="tableActions clearfix">
         <div class="selectAll"><input type="checkbox"></div>
-        <div class="addElem"><img src="media/img/table/add.png" alt="Add"></div>
-        <div class="exportContainer"><img src="media/img/table/export.png" alt="Export"></div>
+        <div class="addElem"><img src="media/module/table/img/add.png" alt="Add"></div>
+        <div class="exportContainer"><img src="media/module/table/img/export.png" alt="Export"></div>
         <select>
           <option value="1">Action 1</option>
           <option value="2">Action 2</option>
@@ -155,8 +155,8 @@ class TableView {
         <!-- Paginador -->
         <div class="tablePaginator">
           <div class="tablePage"><input type="text" value="100"> de 219</div>
-          <div class="tablePreviousPage"><img src="media/img/table/a-left.png" alt="previous page"></div>
-          <div class="tableNextPage"><img src="media/img/table/a-right.png" alt="next page"></div>
+          <div class="tablePreviousPage"><img src="media/module/table/img/a-left.png" alt="previous page"></div>
+          <div class="tableNextPage"><img src="media/module/table/img/a-right.png" alt="next page"></div>
         </div>
       </div>
 
@@ -167,8 +167,8 @@ class TableView {
     <!-- Paginador -->
     <div class="tablePaginator ">
       <div class="tablePage"><input type="text" value="100"> de 219</div>
-      <div class="tablePreviousPage"><img src="media/img/table/a-left.png" alt="previous page"></div>
-      <div class="tableNextPage"><img src="media/img/table/a-right.png" alt="next page"></div>
+      <div class="tablePreviousPage"><img src="media/module/table/img/a-left.png" alt="previous page"></div>
+      <div class="tableNextPage"><img src="media/module/table/img/a-right.png" alt="next page"></div>
     </div>
   <!-- --------- END HTML TABLE --------- -->
 
