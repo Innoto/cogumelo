@@ -6,7 +6,20 @@ class TableView {
   static function getTableHtml( $tableId, $tableDataUrl ) {
 
   $tableHtml = '
+
+
+  <script>
+    $(function() {
+      if( typeof pageTables == "undefined"){
+        var cogumeloTables = {};
+      }
+
+      cogumeloTables.'. $tableId .' = new cogumeloTable("'. $tableId . '", "' . $tableDataUrl .'");
+    });
+  </script>
+
   <!-- HTML TABLE id: "' . $tableId . '" data url: "' . $tableDataUrl . '" -->
+  <div class="' . $tableId . ' tableContainer">
     <div class="tableHeaderContainer">
       <div class="tableSearchFilters clearfix">
 
@@ -203,6 +216,7 @@ class TableView {
       <div class="tablePreviousPage"><img src="media/module/table/img/a-left.png" alt="previous page"></div>
       <div class="tableNextPage"><img src="media/module/table/img/a-right.png" alt="next page"></div>
     </div>
+  </div>
   <!-- END HTML TABLE id: "' . $tableId . '" data url: "' . $tableDataUrl . '" -->
 
     ';

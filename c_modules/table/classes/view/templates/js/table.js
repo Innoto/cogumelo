@@ -5,17 +5,9 @@ $(function() {
   var showTableStatus = "default";
 // Handler for .ready() called.
   showTable('default');
-  bindsTable();
+//  bindsTable();
 });
 
-function bindsTable(){
-  $('.openFilters').on("click", function(){
-    showTable('openFilters');
-  });
-  $('.closeFilters').on("click", function(){
-    showTable('closeFilters');
-  });
-}
 
 function showTable( status ){
   var filters = $('.tableMoreFilters');
@@ -40,4 +32,21 @@ function showTable( status ){
       resumeFilters.hide();
     break;
   }
+}
+
+
+
+function cogumeloTable( tableId, tableUrl ) {
+  var that = this;
+
+  $('.'+tableId+'.tableContainer .openFilters').on("click", function(){
+    showTable('openFilters');
+  });
+  $('.'+tableId+'.tableContainer .closeFilters').on("click", function(){
+    showTable('closeFilters');
+  });
+
+
+
+
 }
