@@ -1,6 +1,5 @@
 <?php
 Cogumelo::load('c_view/View.php');
-common::autoIncludes();
 
 class Tview extends View
 {
@@ -17,7 +16,16 @@ class Tview extends View
     return true;
   }
 
-  function main() {
+  function main(){
+    /*$this->template->addClientStyles('styles/table.less');
+    $this->template->addClientScript('js/table.js');*/
+    table::autoIncludes();
+    $this->template->setTpl('paxinaTabla.tpl');
+    $this->template->assign('codigoTabla', table::getTableHtml('tview', 'url').table::getTableHtml('tview2', 'url') );
+    $this->template->exec();
+  }
+
+  function tableData() {
     /*$this->template->addClientStyles('styles/table.less');
     $this->template->addClientScript('js/table.js');
     $this->template->setTpl('table.tpl');
@@ -30,10 +38,10 @@ class Tview extends View
     // POST DE PEGA
 
     $_POST['cogumeloTable'] = '{'.
-      '  "method":{ "name" : "listItems", "value": false},' .
+      '  "method":{ "name" : "list", "value": false},' .
       '  "filters": [],' .
       '  "range": [ 0, 50 ],' .
-      '  "order": [{"id": -1}, {"lostName": 1 }] '.
+      '  "order": [{"key": "id", "value": -1}, {"key": "lostName", "value": 1 }] '.
       '}';
 
 
@@ -42,12 +50,14 @@ class Tview extends View
     $tabla = new TableController($_POST);
 
     // establecemos pestañas, así como o key identificativo á hora de filtrar
-    $tabla->setTabs('estado', array('1'=>'Activos', '2'=>'Papelera') );
+    $tabla->setTabs('estado', array('1'=>'Activos', '2'=>'Papelera'), '1' );
 
 
     // establecemos os table filters 
 
-    $tabla->setFilters(array());
+   /* $tabla->setFilters(
+      array()
+    );*/
 
 /*    
     $tabla->setFilters(
@@ -82,17 +92,6 @@ class Tview extends View
     $tabla->setCol('lostMail', 'Correo');
     $tabla->setCol('lostProvince', 'Provincia');
     $tabla->setCol('lostPhone', 'Teléfono');
-
-
-
-/*    
-    $tabla->setCol('id', 'Id');
-    $tabla->setCol('name', 'Nome da cousa');
-    $tabla->setCol('fingers', "Númerod de dedos");
-    $tabla->setCol('nivel', "Nivel");
-*/
-
-
 
     // establecer reglas a campo concreto con expresions regulares
 /*
