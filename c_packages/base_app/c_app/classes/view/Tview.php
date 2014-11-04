@@ -21,7 +21,7 @@ class Tview extends View
     $this->template->addClientScript('js/table.js');*/
     table::autoIncludes();
     $this->template->setTpl('paxinaTabla.tpl');
-    $this->template->assign('codigoTabla', table::getTableHtml('tview', 'url') );
+    $this->template->assign('codigoTabla', table::getTableHtml('tview', 'url').table::getTableHtml('tview2', 'url') );
     $this->template->exec();
   }
 
