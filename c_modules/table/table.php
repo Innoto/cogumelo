@@ -23,8 +23,8 @@ class table extends Module
 
   }
 
-  static function getTableHtml(){    
-    return TableView::getTableHtml();
+  static function getTableHtml( $tableId, $tableDataUrl ) {    
+    return TableView::getTableHtml( $tableId, $tableDataUrl );
   }
 
 }

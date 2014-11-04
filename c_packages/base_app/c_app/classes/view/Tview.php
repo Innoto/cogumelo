@@ -1,6 +1,6 @@
 <?php
 Cogumelo::load('c_view/View.php');
-common::autoIncludes();
+//common::autoIncludes();
 
 class Tview extends View
 {
@@ -22,7 +22,7 @@ class Tview extends View
     $this->template->addClientScript('js/table.js');*/
     table::autoIncludes();
     $this->template->setTpl('paxinaTabla.tpl');
-    $this->template->assign('codigoTabla', table::getTableHtml() );
+    $this->template->assign('codigoTabla', table::getTableHtml('tview', 'url') );
     $this->template->exec();
   }
 
