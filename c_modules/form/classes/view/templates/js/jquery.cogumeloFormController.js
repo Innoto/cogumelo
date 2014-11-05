@@ -133,7 +133,7 @@ function bindFormInputFiles( idForm ) {
   // Check for the various File API support.
   if( !window.File ) {
     // File - provides readonly information such as name, file size, mimetype
-    alert('Tu navegador no soporta alguna de las características necesarias para el envío de ficheros.');
+    alert('Tu navegador aún no soporta el API File para el envío de ficheros. Actualiza a versiones recientes...');
   }
 
   $( '#' + idForm + ' input:file' ).on( 'change', processInputFieldFile );
@@ -185,7 +185,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
   formData.append("cgIntFrmId", cgIntFrmId);
 
   $.ajax({
-    url: '/ajax_file_uploadV2', type: 'POST',
+    url: '/cgml-form-file-upload', type: 'POST',
     // Form data
     data: formData,
     //Options to tell jQuery not to process data or worry about content-type.
@@ -260,7 +260,7 @@ function bindFormInputFiles( idForm ) {
     alert('Tu navegador no soporta alguna de las características necesarias para el envío de ficheros.');
   }
 
-  document.getElementById('inputFicheiro').addEventListener('change', processInputFieldFile, false);
+  $( '#' + idForm + ' input:file' ).on( 'change', processInputFieldFile );
 
   // Setup the dnd listeners.
   //var dropZone = document.getElementById('drop_zone');
@@ -362,7 +362,6 @@ function checkInputFieldFile( files, idForm, fieldName ) {
 /*
 function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
   console.log( 'uploadFile: ', file );
-//  var file = document.getElementById("inputFicheiro").files[0];
 
   var formdata = new FormData();
   formdata.append("ajaxFileUpload", file);

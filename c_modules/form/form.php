@@ -33,7 +33,7 @@ class form extends Module
 
   function __construct() {
 
-    $this->addUrlPatterns( '#^cgmlFormFileUpload$#', 'view:FormFileUpload::fileUpload' );
+    $this->addUrlPatterns( '#^cgml-form-file-upload$#', 'view:FormFileUpload::fileUpload' );
 
   }
 

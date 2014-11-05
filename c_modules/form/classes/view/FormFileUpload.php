@@ -24,7 +24,7 @@ class FormFileUpload extends View
 
   function fileUpload() {
     error_log( '--------------------------------' );error_log( '--------------------------------' );
-    error_log( 'fileUpload FormsTestV2');
+    error_log( 'fileUpload FormFileUpload');
     error_log( '--------------------------------' );error_log( '--------------------------------' );
 
     $error = false;
@@ -168,19 +168,17 @@ class FormFileUpload extends View
                 $form->setFieldValue( $fieldName, $fileFieldValue );
                 $form->setFieldParam( $fieldName, 'fileStatus', $fileStatus );
 
-error_log( print_r( $fileStatus, true ) );
-
                 // Persistimos formObj para cuando se envíe el formulario completo
                 $form->saveToSession();
-              }
-            }
-          }
-        } //if( isset( $_POST[ 'cgIntFrmId' ] ) )
+              } // else - if( !$tmpCgmlFileLocation )
+            } // else - if( !$form->validateField( $fieldName ) )
+          } // else - if( $form->getFieldType( $fieldName ) !== 'file' )
+        } // if( isset( $_POST[ 'cgIntFrmId' ] ) )
         else {
           $error = 'Los datos del formulario no han llegado bien al servidor. NO SE HAN GUARDADO.'; error_log($error);
         }
-      }
-    }
+      } // if( !$error ) // Recuperamos formObj y validamos el fichero temporal
+    } // if( isset( $_FILES['ajaxFileUpload'] ) )
     else { // no parece haber fichero
       $error = 'No ha llegado el fichero o lo ha hecho con errores.'; error_log($error);
     }
