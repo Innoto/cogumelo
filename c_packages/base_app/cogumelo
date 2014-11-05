@@ -360,8 +360,10 @@
     if ($existPHP){ //merge
       //Scan the php code to find the latest gettext entries
       $entries = Gettext\Extractors\PhpCode::extract($array_php);
+
       //Get the translations of the code that are stored in a po file
       $oldEntries = Gettext\Extractors\Po::extract($dir_path.$textdomain.'_php.po');
+
       //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
       $entries->mergeWith($oldEntries); //now $entries has all the values
     }
