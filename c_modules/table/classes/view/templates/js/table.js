@@ -15,9 +15,14 @@ $(function() {
 
 function cogumeloTable( tableId, tableUrl ) {
   var that = this;
+  that.filters = $('.'+tableId+'.tableContainer .tableMoreFilters');
+  that.resumeFilters = $('.'+tableId+'.tableContainer .tableResumeFilters');
+  that.showTableStatus = false;
 
 
-  that.showTable = function( status ){
+
+
+  that.interfaceAction = function( status ){
 
     switch (status){
       case "filtered":
@@ -45,20 +50,16 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
 
-
-  that.filters = $('.'+tableId+'.tableContainer .tableMoreFilters');
-  that.resumeFilters = $('.'+tableId+'.tableContainer .tableResumeFilters');
-  that.showTableStatus = false;
-
+  // EVENTS
 
   $('.'+tableId+'.tableContainer .openFilters').on("click", function(){
-    that.showTable('openFilters');
+    that.interfaceAction('openFilters');
   });
   $('.'+tableId+'.tableContainer .closeFilters').on("click", function(){
-    that.showTable('closeFilters');
+    that.interfaceAction('closeFilters');
   });
 
-  that.showTable('default');
+  that.interfaceAction('default');
 
 
 }

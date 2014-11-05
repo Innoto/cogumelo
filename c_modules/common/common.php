@@ -1,7 +1,6 @@
 <?php
 
 Cogumelo::load("c_controller/Module.php");
-common::autoIncludes();
 
 class common extends Module
 {
