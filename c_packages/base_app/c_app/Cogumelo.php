@@ -4,7 +4,14 @@
 class Cogumelo extends CogumeloClass
 {
 
-  public $dependences = array();
+  public $dependences = array(
+    array(
+     "id" => "formstoneWallpaper",
+     "params" => array("Wallpaper"),
+     "installer" => "bower",
+     "includes" => array("jquery.fs.wallpaper.js", "jquery.fs.wallpaper.css")
+    )
+  );
   public $includesCommon = array();
 
 

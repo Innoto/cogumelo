@@ -56,7 +56,6 @@ class devel extends Module
     'controller/UrlListController.php',
     'js/devel.js',
     'styles/devel.less'
-
   );
 
   function __construct() {
