@@ -69,7 +69,7 @@ function cogumeloTable( tableId, tableUrl ) {
         that.tableData = tableData;
 
         that.clearData();
-        that.setOrderValues();
+        that.initOrderValues();
         that.setHeaders();
         that.setRows();
 
@@ -84,7 +84,7 @@ function cogumeloTable( tableId, tableUrl ) {
     that.tableContent.html('');
   }
 
-  that.setOrderValues = function() {
+  that.initOrderValues = function() {
 
     if( that.order.length == 0 ) {
       $.each( that.tableData.colsDef , function(i,e)  {
@@ -94,24 +94,35 @@ function cogumeloTable( tableId, tableUrl ) {
     }
 
 
-
   }
 
   that.getOrderValue = function( ordIndex ) {
-      $.each( that.tableData.colsDef , function(i,e)  {
-        if( i == ordIndex ) {
-          return e;
+
+    var ret = false;
+      $.each( that.order , function(i,e)  {
+        if( e.key == ordIndex ) {
+          ret = e.value;
         }
       });
+
+    return ret;
   }
 
-  that.setOrderValue = function( ordIndex, order ) {
-      $.each( that.tableData.colsDef , function(i,e)  {
-        if( i == ordIndex ) {
-          e = order;
-          that.load();
+  that.setOrderValue = function( ordIndex ) {
+
+      $.each( that.order , function(i,e)  {
+
+        if( e.key == ordIndex ) {
+          if(e.value == 1) {
+            that.order[i].value = -1;
+          }
+          else {
+            that.order[i].value = 1;
+          }
         }
       });
+
+      that.load();
   }
 
 
@@ -119,16 +130,16 @@ function cogumeloTable( tableId, tableUrl ) {
 
     var orderUpImg = '<img src="/media/module/table/img/up.png">';
     var orderDownImg = '<img src="/media/module/table/img/down.png">';    
-    var h = '';
+    var h = '<th></th>';
 
 
     $.each(that.tableData.colsDef, function(i,e)  {
 
       if( that.getOrderValue(i) == 1 ) {
-        var ord = orderUpImg;
+        var ord = orderDownImg;
       }
       else {
-        var ord = orderDownImg;
+        var ord = orderUpImg;
       }
 
       h += '' +
@@ -150,17 +161,19 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
       if( $(thElement.target).parent().hasClass('thKey') ){
-        console.log( $(thElement.target).parent() );
+        var el = $(thElement.target).parent();
       }
       else
       if( $(thElement.target).parent().parent().hasClass('thKey') ) {
-        console.log( $(thElement.target).parent().parent() );
+        var el = $(thElement.target).parent().parent();
       }
       else 
       if( $(thElement.target).parent().parent().parent().hasClass('thKey') ) {
-        console.log($(thElement.target).parent().parent().parent())
+        var el = $(thElement.target).parent().parent().parent();
       }
 
+
+      that.setOrderValue( el.attr('colKey') );
     });     
 
   }
