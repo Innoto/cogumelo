@@ -181,7 +181,20 @@ function cogumeloTable( tableId, tableUrl ) {
   }
 
   that.setRows = function(){
+    var trows = '';
+    
+    $.each(that.tableData.table , function( rowIndex, row ) {
+      trows += '<tr>';
+      trows += '<td></td>';
 
+      $.each( row, function( i, e ){
+        trows += '<td>' + e + '</td>';
+      });
+
+      trows += '<tr>';
+    });
+
+    that.tableContent.append( trows );
   }
 
   // EVENTS

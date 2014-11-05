@@ -28,12 +28,9 @@ class Cogumelo extends CogumeloClass
     $this->addUrlPatterns( '#^deletefostform#', 'view:CreateForm::deleteLostForm' );
 
     /*table*/
-<<<<<<< HEAD
+
     $this->addUrlPatterns( '#^tableinterfacedata$#', 'view:Tview::tableData');    
     $this->addUrlPatterns( '#^tableInterface$#', 'view:Tview::main');
-=======
-    $this->addUrlPatterns( '#^tableinterface$#', 'view:Tview::main');
->>>>>>> a065b2819d1223157527951abaaeaa803385aa29
 
     /*i18n*/
     $this->addUrlPatterns( '#^test#', 'view:Testi18n::translate' );
