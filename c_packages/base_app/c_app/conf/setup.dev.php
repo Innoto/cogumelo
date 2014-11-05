@@ -15,7 +15,7 @@ define("DB_HOSTNAME" ,	"localhost");
 define("DB_PORT",		"3306");
 define("DB_USER" , 		"base_app");
 define("DB_PASSWORD", 	"q7w8e9r");
-define("DB_NAME",		"test");
+define("DB_NAME",		"base_app");
 
 
 // allow cache with memcached
