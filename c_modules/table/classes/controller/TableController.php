@@ -35,7 +35,7 @@ class TableController{
     $this->clientData['method'] = $postdata['method'];
     $this->clientData['filters'] = $postdata['filters'];
     $this->clientData['range'] = $postdata['range'];
-    $this->clientData['order'] = false;//$postdata['order'];
+    $this->clientData['order'] = $postdata['order'];
   }
 
   /*
@@ -149,7 +149,6 @@ class TableController{
     {
       eval( '$control->'. $this->clientData['method']['name']. '('.$this->clientData['method']['value'].')');
     }
-
 
     // doing a query to the controller
     eval('$lista = $control->'. $this->allowMethods['list'].'( $this->clientData["filters"] , $this->clientData["range"], $this->orderIntoArray() );');

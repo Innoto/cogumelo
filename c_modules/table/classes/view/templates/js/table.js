@@ -16,7 +16,7 @@ $(function() {
 function cogumeloTable( tableId, tableUrl ) {
   var that = this;
   that.range = [];
-  that.order = [];
+  that.order = false;
   that.tableData = {};
 
 
@@ -64,7 +64,7 @@ function cogumeloTable( tableId, tableUrl ) {
       url: tableUrl ,
       type: 'POST',
       data: {
-        order:that.order
+        order: that.order
       },
       success: function(tableData) {
         that.tableData = tableData;
@@ -87,7 +87,8 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.initOrderValues = function() {
 
-    if( that.order.length == 0 ) {
+    if( !that.order.length ) {
+      that.order = [];
       $.each( that.tableData.colsDef , function(i,e)  {
         that.order.push( {"key": i, "value": 1} );
       });

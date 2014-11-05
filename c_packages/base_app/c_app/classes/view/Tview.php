@@ -35,7 +35,7 @@ class Tview extends View
 
     table::autoIncludes();
 
-
+//var_dump($_POST);
     // POST DE PEGA
     $_POST['method'] = array('name' => 'list', 'value', false);
     $_POST['filters'] = array();
