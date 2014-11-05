@@ -18,18 +18,16 @@ else {
 function develEnviroment() {
   $develEnv = false;
 
+
   if( isset( $_SERVER['REMOTE_ADDR'] ) && $_SERVER['REMOTE_ADDR'] != 'local_shell' ) {
-    if ( strpos( $_SERVER['REMOTE_ADDR'], '10.77.' ) === 0 ||
-      strpos( $_SERVER['REMOTE_ADDR'], '127.0.' ) === 0
-    ) {
+    if( isPrivateIp( $_SERVER['REMOTE_ADDR'] ) ) {
       $develEnv = true;
     }
   }
   else {
 
-    $last_line = exec('ip addr show | grep 10.77.');
-
-    if ( strpos( $last_line, '10.77.' ) !== false ) {
+    // ESTO HAI QUE REPASALO !!!!
+    if( isPrivateIp( gethostbyname( gethostname() ) ) ) {
       $develEnv = true;
     }
 
@@ -38,3 +36,7 @@ function develEnviroment() {
   return $develEnv;
 }
 
+
+function isPrivateIp( $ip ) {
+  return !filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
+}
