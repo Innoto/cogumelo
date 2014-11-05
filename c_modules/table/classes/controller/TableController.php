@@ -31,12 +31,11 @@ class TableController{
   */
   function __construct($postdata)
   {
-    if(!array_key_exists('cogumeloTable', $postdata)){
-      Cogumelo::error('$_POST array doesn`t contents a cogumeloTable key');
-      exit;
-    };
 
-    $this->clientData = json_decode( $postdata['cogumeloTable'] );
+    $this->clientData['method'] = $postdata['method'];
+    $this->clientData['filters'] = $postdata['filters'];
+    $this->clientData['range'] = $postdata['range'];
+    $this->clientData['order'] = false;//$postdata['order'];
   }
 
   /*
@@ -111,10 +110,13 @@ class TableController{
   * @return array
   */
   function orderIntoArray() {
-    $ordArray = array();
+    $ordArray = false;
 
-    foreach(  $this->clientData->order as $ordObj ) {
-      $ordArray[$ordObj->key] = $ordObj->value;
+    if( is_array( $this->clientData['order'] ) ) {
+      $ordArray = array();
+      foreach(  $this->clientData['order'] as $ordObj ) {
+        $ordArray[ $ordObj['key'] ] = $ordObj['value'];
+      }
     }
 
     return $ordArray;
@@ -143,14 +145,14 @@ class TableController{
   function returnTableJson($control) {
 
     // if is executing a method ( like delete or update) and have permissions to do it
-    if( $this->clientData->method->name != 'list' )
+    if( $this->clientData['method']['name'] != 'list' )
     {
-      eval( '$control->'. $this->clientData->method->name. '('.$this->clientData->method->value.')');
+      eval( '$control->'. $this->clientData['method']['name']. '('.$this->clientData['method']['value'].')');
     }
 
 
     // doing a query to the controller
-    eval('$lista = $control->'. $this->allowMethods['list'].'( $this->clientData->filters , $this->clientData->range, $this->orderIntoArray() );');
+    eval('$lista = $control->'. $this->allowMethods['list'].'( $this->clientData["filters"] , $this->clientData["range"], $this->orderIntoArray() );');
 
 
     // printing json table...
