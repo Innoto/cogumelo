@@ -15,7 +15,7 @@ define("DB_HOSTNAME" ,	"localhost");
 define("DB_PORT",		"3306");
 define("DB_USER" , 		"base_app");
 define("DB_PASSWORD", 	"q7w8e9r");
-define("DB_NAME",		"test");
+define("DB_NAME",		"base_app");
 
 
 // allow cache with memcached
@@ -80,7 +80,7 @@ define('MEDIASERVER_COMPILE_LESS', false);
 global $C_ENABLED_MODULES;
 global $C_INDEX_MODULES;
 
-$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'testmodule', 'common', 'devel', 'form', 'table', 'user');
+$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'common', 'devel', 'form', 'table', 'user');
 $C_INDEX_MODULES  = array('mediaserver', 'i18nGetLang', 'user', 'devel'); 			// before c_app/Cogumelo.php execution
 
 
