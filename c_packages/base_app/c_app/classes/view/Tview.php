@@ -46,7 +46,6 @@ class Tview extends View
       '}';
 
 
-
     // creamos obxecto taboa pasandolle o POST
     $tabla = new TableController($_POST);
 

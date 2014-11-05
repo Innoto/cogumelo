@@ -62,8 +62,9 @@ function cogumeloTable( tableId, tableUrl ) {
   that.load = function() {
     $.ajax({
       url: tableUrl ,
+      type: 'POST',
       data: {
-
+        order:that.order
       },
       success: function(tableData) {
         that.tableData = tableData;
@@ -188,7 +189,7 @@ function cogumeloTable( tableId, tableUrl ) {
       trows += '<td></td>';
 
       $.each( row, function( i, e ){
-        trows += '<td>' + e + '</td>';
+        trows += '<td>' + e +'</td>';
       });
 
       trows += '<tr>';
