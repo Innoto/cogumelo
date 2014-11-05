@@ -50,7 +50,17 @@ class CreateForm extends View
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
     $form->setField( 'lostMail', array( 'placeholder' => 'Email') );
 
-    $form->setField( 'lostFrutas', array( 'placeholder' => 'notInArray', 'label' => 'notInArray', 'value' => 'manzana') );
+
+
+    $form->setField( 'lostFicheiro', array( 'type' => 'file', 'id' => 'lostFicheiro',
+      'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro',
+      'destDir' => $_SERVER['DOCUMENT_ROOT'].'test_upload/0---OK/' ) );
+    $form->setValidationRule( 'lostFicheiro', 'required' );
+    $form->setValidationRule( 'lostFicheiro', 'minfilesize', 1024 );
+
+
+
+    $form->setField( 'lostFrutas', array( 'placeholder' => 'lostFrutas-notInArray', 'label' => 'lostFrutas-notInArray', 'value' => 'manzana') );
 
     //$form->setField( 'lostBornDate', array( 'label' => 'Fecha dmy Min', 'placeholder' => 'Fecha', 'value' => '15/11/1987', 'format' => 'datedmy'));
     //$form->setField( 'lostBornDate2', array( 'label' => 'Fecha dmy Max', 'placeholder' => 'Fecha', 'value' => '15/11/2000', 'format' => 'datedmy'));

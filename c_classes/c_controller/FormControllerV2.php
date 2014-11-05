@@ -219,7 +219,7 @@ class FormControllerV2 implements Serializable {
     $htmlFieldArray = $this->getHtmlFieldArray( $fieldName );
 
     if( isset( $htmlFieldArray['label'] ) ) {
-      $html .= $htmlFieldArray['label']."<br>\n";
+      $html .= $htmlFieldArray['label']."\n";
     }
     switch( $htmlFieldArray['fieldType'] ) {
       case 'select':
