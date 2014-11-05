@@ -158,22 +158,24 @@ function cogumeloTable( tableId, tableUrl ) {
     // click event table headers
     $(that.anyColHeaderQstr).on("click", function(thElement){
 
-
+      var el = false;
 
       if( $(thElement.target).parent().hasClass('thKey') ){
-        var el = $(thElement.target).parent();
+        el = $(thElement.target).parent();
       }
       else
       if( $(thElement.target).parent().parent().hasClass('thKey') ) {
-        var el = $(thElement.target).parent().parent();
+        el = $(thElement.target).parent().parent();
       }
       else 
       if( $(thElement.target).parent().parent().parent().hasClass('thKey') ) {
-        var el = $(thElement.target).parent().parent().parent();
+        el = $(thElement.target).parent().parent().parent();
       }
 
+      if( el ) {
+        that.setOrderValue( el.attr('colKey') );
+      }
 
-      that.setOrderValue( el.attr('colKey') );
     });     
 
   }

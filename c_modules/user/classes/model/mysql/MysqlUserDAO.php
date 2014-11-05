@@ -22,10 +22,10 @@ class MysqlUserDAO extends MysqlDAO
   //  Authenticate user
   //
   //  Return: UserVO (null if 0 rows)
-  function authenticate($connection, $login, $pass)
+  function authenticateUser($connection, $login, $password)
   {
     // SQL Query
-    $StrSQL = "SELECT * FROM `user` WHERE `login` = '".$connection->real_escape_string( $login )."' and `password` = SHA1('".$connection->real_escape_string( $pass )."');";
+    $StrSQL = "SELECT * FROM `user` WHERE `login` = '".$connection->real_escape_string( $login )."' and `password` = SHA1('".$connection->real_escape_string( $password )."');";
     // Secure SQL Query for log dump
     $StrSQLSecure = "SELECT * FROM `user` WHERE `login` = '".$connection->real_escape_string( $login )."' and `password` = SHA1('XXX');";
 

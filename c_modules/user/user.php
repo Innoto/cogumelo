@@ -2,6 +2,7 @@
 
 Cogumelo::load("c_controller/Module.php");
 
+define('MOD_USER_URL_DIR', 'user');
 
 class user extends Module
 {
@@ -16,8 +17,6 @@ class user extends Module
   );
 
   function __construct() {
-    //$this->addUrlPatterns( '#^'.MOD_DEVEL_URL_DIR.'/read_logs$#', 'view:DevelView::read_logs' );
-    //$this->addUrlPatterns( '#^'.MOD_DEVEL_URL_DIR.'/get_debugger#', 'view:DevelView::get_debugger' );
-    //$this->addUrlPatterns( '#^'.MOD_DEVEL_URL_DIR.'/get_sql_tables$#', 'view:DevelView::get_sql_tables' );
+    $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/userloginform$#', 'view:UserView::loginForm' );
   }
 }
