@@ -15,9 +15,21 @@ $(function() {
 
 function cogumeloTable( tableId, tableUrl ) {
   var that = this;
+  that.range = [];
+  that.order = [];
+  that.tableData = {};
+
+
+
+  // table elements
   that.filters = $('.'+tableId+'.tableContainer .tableMoreFilters');
   that.resumeFilters = $('.'+tableId+'.tableContainer .tableResumeFilters');
-  that.showTableStatus = false;
+  that.tableContent = $('.'+tableId+'.tableContainer .tableClass');  
+  
+  // buttons and action elements
+  that.openFiltersButton = $('.'+tableId+'.tableContainer .openFilters');
+  that.closeFiltersButton = $('.'+tableId+'.tableContainer .closeFilters');
+  that.anyColHeaderQstr = '.'+tableId+'.tableContainer table.tableClass tr th';
 
 
 
@@ -47,19 +59,132 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
 
+  that.load = function() {
+    $.ajax({
+      url: tableUrl ,
+      data: {
+
+      },
+      success: function(tableData) {
+        that.tableData = tableData;
+
+        that.clearData();
+        that.setOrderValues();
+        that.setHeaders();
+        that.setRows();
+
+      }
+    });
 
 
+
+  }
+
+  that.clearData = function() {
+    that.tableContent.html('');
+  }
+
+  that.setOrderValues = function() {
+
+    if( that.order.length == 0 ) {
+      $.each( that.tableData.colsDef , function(i,e)  {
+        that.order.push( {"key": i, "value": 1} );
+      });
+
+    }
+
+
+
+  }
+
+  that.getOrderValue = function( ordIndex ) {
+      $.each( that.tableData.colsDef , function(i,e)  {
+        if( i == ordIndex ) {
+          return e;
+        }
+      });
+  }
+
+  that.setOrderValue = function( ordIndex, order ) {
+      $.each( that.tableData.colsDef , function(i,e)  {
+        if( i == ordIndex ) {
+          e = order;
+          that.load();
+        }
+      });
+  }
+
+
+  that.setHeaders = function() {
+
+    var orderUpImg = '<img src="/media/module/table/img/up.png">';
+    var orderDownImg = '<img src="/media/module/table/img/down.png">';    
+    var h = '';
+
+
+    $.each(that.tableData.colsDef, function(i,e)  {
+
+      if( that.getOrderValue(i) == 1 ) {
+        var ord = orderUpImg;
+      }
+      else {
+        var ord = orderDownImg;
+      }
+
+      h += '' +
+        '<th colKey="' + i + '" class="thKey">' +
+        ' <div class="clearfix">' +
+        '  <div>' + e + '</div>' +
+        '  <div>' + ord + '</div>' +
+        ' </div>' +
+        '</th>';
+
+    });
+
+
+    that.tableContent.append('<tr>'+h+'</tr>');
+    
+    // click event table headers
+    $(that.anyColHeaderQstr).on("click", function(thElement){
+
+
+
+      if( $(thElement.target).parent().hasClass('thKey') ){
+        console.log( $(thElement.target).parent() );
+      }
+      else
+      if( $(thElement.target).parent().parent().hasClass('thKey') ) {
+        console.log( $(thElement.target).parent().parent() );
+      }
+      else 
+      if( $(thElement.target).parent().parent().parent().hasClass('thKey') ) {
+        console.log($(thElement.target).parent().parent().parent())
+      }
+
+    });     
+
+  }
+
+  that.setRows = function(){
+
+  }
 
   // EVENTS
 
-  $('.'+tableId+'.tableContainer .openFilters').on("click", function(){
+  // click open filters
+  that.openFiltersButton.on("click", function(){
     that.interfaceAction('openFilters');
   });
-  $('.'+tableId+'.tableContainer .closeFilters').on("click", function(){
+
+  // click close filters
+  that.closeFiltersButton.on("click", function(){
     that.interfaceAction('closeFilters');
   });
 
+
+
+
+  // FIRST TIME 
   that.interfaceAction('default');
-
-
+  that.load();
 }
