@@ -1,10 +1,12 @@
 <?php
 
 if( develEnviroment() ) {
+  error_log( 'CONFIGURACION: setup.dev.php' );
   define( 'IS_DEVEL_ENV', true );
   require_once('setup.dev.php');
 }
 else {
+  error_log( 'CONFIGURACION: setup.final.php' );
   define( 'IS_DEVEL_ENV', false );
   require_once('setup.final.php');
 }
@@ -27,7 +29,9 @@ function develEnviroment() {
   else {
 
     // ESTO HAI QUE REPASALO !!!!
-    if( isPrivateIp( gethostbyname( gethostname() ) ) ) {
+    $ipLocal = gethostbyname( gethostname() );
+    error_log( 'IP LOCAL: '. $ipLocal );
+    if( isPrivateIp( $ipLocal ) ) {
       $develEnv = true;
     }
 
@@ -38,5 +42,5 @@ function develEnviroment() {
 
 
 function isPrivateIp( $ip ) {
-  return !filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE );
+  return( strpos( $ip, '127.' ) === 0 || !filter_var( $ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE ) );
 }
