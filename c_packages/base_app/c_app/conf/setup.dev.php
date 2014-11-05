@@ -80,17 +80,18 @@ define('MEDIASERVER_COMPILE_LESS', false);
 global $C_ENABLED_MODULES;
 global $C_INDEX_MODULES;
 
-$C_ENABLED_MODULES = array('mediaserver', 'i18nGetLang', 'common', 'devel', 'form', 'table', 'user');
-$C_INDEX_MODULES  = array('mediaserver', 'i18nGetLang', 'user', 'devel'); 			// before c_app/Cogumelo.php execution
+$C_ENABLED_MODULES = array( 'mediaserver', 'i18nGetLang', 'common', 'devel', 'form', 'table', 'user' );
+// before c_app/Cogumelo.php execution
+$C_INDEX_MODULES  = array( 'mediaserver', 'i18nGetLang', 'user', 'form', 'devel' ); // DEVEL SIEMPRE DE ULTIMO!!!
 
 
 //
 //  Logs
 //
 
-define('BCK', SITE_PATH.'backups/');    //backups directory
-define('LOGDIR', SITE_PATH.'log/');   //log files directory
-define('LOG_RAW_SQL', false);   // Log RAW all SQL ¡WARNING! application passwords will dump into log files
+define('BCK', SITE_PATH.'backups/'); //backups directory
+define('LOGDIR', SITE_PATH.'log/'); //log files directory
+define('LOG_RAW_SQL', false); // Log RAW all SQL ¡WARNING! application passwords will dump into log files
 define('DEBUG', true); // Set Debug mode to log debug messages on log
 define('ERRORS', true); // Display errors on screen. If you use devel module, you might disable it
 

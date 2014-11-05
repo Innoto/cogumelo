@@ -214,6 +214,16 @@ input[type="color"],
   .border-radius(@inputBorderRadius);
 }
 
+input[type="file"] {
+  display: inline-block;
+  padding: 4px 6px;
+  margin-bottom: @inputHeight / 2;
+  font-size: @baseFontSize;
+  line-height: @inputHeight;
+  color: @gray;
+  .border-radius(@inputBorderRadius);
+}
+
 // Reset height since textareas have rows
 textarea {
   height: auto;
