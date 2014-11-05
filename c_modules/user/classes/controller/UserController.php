@@ -1,7 +1,7 @@
 <?php
 
-Cogumelo::load('c_controller/DataController');
-user::load('model/UserVO');
+Cogumelo::load('c_controller/DataController.php');
+user::load('model/UserVO.php');
 
 
 //

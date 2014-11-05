@@ -1,13 +1,13 @@
 <?php
 Cogumelo::load('c_view/View.php');
-Cogumelo::load('controller/UserController.php');
-Cogumelo::load('model/UserVO.php');
+user::load('controller/UserController.php');
+user::load('model/UserVO.php');
 
 common::autoIncludes();
 form::autoIncludes();
 
 
-class UserForm extends View
+class UserView extends View
 {
 
   function __construct($base_dir){
@@ -39,7 +39,6 @@ class UserForm extends View
     $form->setValidationRule( 'loginLogin', 'required' );
     $form->setValidationRule( 'loginPassword', 'required' );
 
-    $form->setValuesVO($dataVO);
     $form->saveToSession();
 
     $this->template->assign("loginFormOpen", $form->getHtmpOpen());
@@ -47,7 +46,7 @@ class UserForm extends View
     $this->template->assign("loginFormClose", $form->getHtmlClose());
     $this->template->assign("loginFormValidations", $form->getJqueryValidationJS());
 
-    $this->template->setTpl('lostForm.tpl');
+    $this->template->setTpl('loginForm.tpl', 'user');
     $this->template->exec();
 
   } // function loadForm()
@@ -82,8 +81,6 @@ class UserForm extends View
         $valuesArray = $form->getValuesArray();
         $userControl = new UserController();
         $res = $userControl->authenticateUser($valuesArray['loginLogin'], $valuesArray['loginPassword']);
-
-        }
       }
 
       if( sizeof( $jvErrors ) > 0 ) {

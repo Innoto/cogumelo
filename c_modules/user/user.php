@@ -17,6 +17,6 @@ class user extends Module
   );
 
   function __construct() {
-    $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/loginform$#', 'view:UserView::loginForm' );
+    $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/userloginform$#', 'view:UserView::loginForm' );
   }
 }
