@@ -1,6 +1,8 @@
 <?php
 
 Cogumelo::load('c_view/View.php');
+common::autoIncludes();
+Cogumelo::autoIncludes();
 
 /**
 * Clase Master de la que extenderemos todos los View
@@ -27,13 +29,13 @@ class MasterView extends View
     $dependencesControl->loadModuleIncludes('devel');
 */
 
-    common::autoIncludes();
     $this->common();
     $this->template->exec();
 
   }
 
   function common() {
+    $this->template->addClientScript('js/default.js');
     $this->template->setTpl('default.tpl');
   }
 

@@ -3,11 +3,23 @@
 class TableView {
 
 
-  static function getTableHtml() {
+  static function getTableHtml( $tableId, $tableDataUrl ) {
 
-    $tableHtml = '
+  $tableHtml = '
 
-  <!-- --------- HTML TABLE ------------- -->
+
+  <script>
+    $(function() {
+      if( typeof pageTables == "undefined"){
+        var cogumeloTables = {};
+      }
+
+      cogumeloTables.'. $tableId .' = new cogumeloTable("'. $tableId . '", "' . $tableDataUrl .'");
+    });
+  </script>
+
+  <!-- HTML TABLE id: "' . $tableId . '" data url: "' . $tableDataUrl . '" -->
+  <div class="' . $tableId . ' tableContainer">
     <div class="tableHeaderContainer">
       <div class="tableSearchFilters clearfix">
 
@@ -145,8 +157,8 @@ class TableView {
       </div>
       <div class="tableActions clearfix">
         <div class="selectAll"><input type="checkbox"></div>
-        <div class="addElem"><img src="media/img/table/add.png" alt="Add"></div>
-        <div class="exportContainer"><img src="media/img/table/export.png" alt="Export"></div>
+        <div class="addElem"><img src="media/module/table/img/add.png" alt="Add"></div>
+        <div class="exportContainer"><img src="media/module/table/img/export.png" alt="Export"></div>
         <select>
           <option value="1">Action 1</option>
           <option value="2">Action 2</option>
@@ -155,22 +167,57 @@ class TableView {
         <!-- Paginador -->
         <div class="tablePaginator">
           <div class="tablePage"><input type="text" value="100"> de 219</div>
-          <div class="tablePreviousPage"><img src="media/img/table/a-left.png" alt="previous page"></div>
-          <div class="tableNextPage"><img src="media/img/table/a-right.png" alt="next page"></div>
+          <div class="tablePreviousPage"><img src="media/module/table/img/a-left.png" alt="previous page"></div>
+          <div class="tableNextPage"><img src="media/module/table/img/a-right.png" alt="next page"></div>
         </div>
       </div>
 
     </div>
     <table class="tableClass clearfix">
 
+    <tr>
+      <th></th>
+      <th>
+        <div class="clearfix">
+          <div>Name</div>
+          <div><img src="media/module/table/img/up.png"></div>
+        </div>
+      </th>
+      <th>
+        <div class="clearfix">
+          <div>Description</div>
+          <div><img src="media/module/table/img/up.png"></div>
+        </div>
+      </th>
+      <th>
+        <div class="clearfix">
+          <div>Date</div>
+          <div><img src="media/module/table/img/up.png"></div>
+        </div>
+      </th>
+      <th>
+        <div class="clearfix">
+          <div>Province</div>
+          <div><img src="media/module/table/img/up.png"></div>
+        </div>
+      </th>
+      <th>
+        <div class="clearfix">
+          <div>Status</div>
+          <div><img src="media/module/table/img/down.png"></div>
+        </div>
+      </th>
+    </tr>
+
     </table>
     <!-- Paginador -->
     <div class="tablePaginator ">
       <div class="tablePage"><input type="text" value="100"> de 219</div>
-      <div class="tablePreviousPage"><img src="media/img/table/a-left.png" alt="previous page"></div>
-      <div class="tableNextPage"><img src="media/img/table/a-right.png" alt="next page"></div>
+      <div class="tablePreviousPage"><img src="media/module/table/img/a-left.png" alt="previous page"></div>
+      <div class="tableNextPage"><img src="media/module/table/img/a-right.png" alt="next page"></div>
     </div>
-  <!-- --------- END HTML TABLE --------- -->
+  </div>
+  <!-- END HTML TABLE id: "' . $tableId . '" data url: "' . $tableDataUrl . '" -->
 
     ';
 

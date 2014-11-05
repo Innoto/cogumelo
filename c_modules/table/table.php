@@ -14,7 +14,7 @@ class table extends Module
     'controller/TableController.php',
     'view/TableView.php',
     'js/table.js',
-    'style/talbe.less'
+    'styles/table.less'
   );
 
 
@@ -23,8 +23,8 @@ class table extends Module
 
   }
 
-  static function getTableHtml(){    
-    return TableView::getTableHtml();
+  static function getTableHtml( $tableId, $tableDataUrl ) {    
+    return TableView::getTableHtml( $tableId, $tableDataUrl );
   }
 
 }

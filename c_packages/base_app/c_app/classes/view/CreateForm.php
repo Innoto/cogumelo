@@ -3,8 +3,6 @@ Cogumelo::load('c_view/View.php');
 Cogumelo::load('controller/LostController.php');
 Cogumelo::load('model/LostVO.php');
 
-
-common::autoIncludes();
 form::autoIncludes();
 
 

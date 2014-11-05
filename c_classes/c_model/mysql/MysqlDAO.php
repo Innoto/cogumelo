@@ -15,7 +15,7 @@ class MysqlDAO extends DAO
   function orderByString($ORDArray)
   {
     // Direction (ASC, DESC) Array
-    if( is_array($ORDArray, $var_array) )
+    if( is_array($ORDArray) )
     {
       $orderSTR = " ORDER BY ";
       $coma = "";

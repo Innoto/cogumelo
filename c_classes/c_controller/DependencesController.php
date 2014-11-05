@@ -17,32 +17,32 @@ Class DependencesController {
 
     Cogumelo::load('c_controller/ModuleController.php');
 
-    $this->loadDependences();    
-    //Descomentar para ver las depen a instalar 
+    $this->loadDependences();
+    //Descomentar para ver las depen a instalar
     //error_log( print_r( "ALLBOWER", true));
     //error_log( print_r( $allDependencesBower, true));
     //error_log( print_r( "ALLCOMPOSER", true));
     //error_log( print_r( $allDependencesComposer, true));
 
     $this->installDependencesBower($this->allDependencesBower);
-    $this->installDependencesComposer($this->allDependencesComposer);    
+    $this->installDependencesComposer($this->allDependencesComposer);
   }
-  
+
   function loadDependences(){
 
     $moduleControl = new ModuleController(false, true);
 
     //Cargamos las dependencias de los modulos
-    global $C_ENABLED_MODULES;    
-    foreach ( $C_ENABLED_MODULES as $mod ){      
+    global $C_ENABLED_MODULES;
+    foreach ( $C_ENABLED_MODULES as $mod ){
       $modUrl = ModuleController::getRealFilePath( $mod.".php" , $mod );
       require_once($modUrl);
       eval('class extClass'. $mod .' extends '.$mod. '{}');
       eval('$objMod'.$mod.' = new extClass'.$mod.'();');
       eval('$dependences = $objMod'.$mod.'->dependences;');
-      
+
       $this->pushDependences($dependences);
-    }    
+    }
 
     //Cargamos dependencias de Cogumelo class
     $this->pushDependences(Cogumelo::$mainDependences);
@@ -50,15 +50,15 @@ Class DependencesController {
     //Cargamos las dependencias de Base App (externas a los modulos).
     global $_C;
     $this->pushDependences($_C->dependences);
-    
+
   }
-  
-  
-  
+
+
+
   function pushDependences($dependences)
   {
     //Hacemos una lista de las dependecias de todos los modulos
-    foreach ( $dependences as $dependence ){     
+    foreach ( $dependences as $dependence ){
 
       //Diferenciamos entre instaladores
       switch($dependence['installer']){
@@ -66,15 +66,15 @@ Class DependencesController {
           $this->pushDependencesComposer($dependence);
         break;
         case "bower":
-          $this->pushDependencesBower($dependence);    
+          $this->pushDependencesBower($dependence);
         break;
       }
-    }   // end foreach             
+    }   // end foreach
 
-    
+
   }
-  
-  
+
+
   function pushDependencesComposer($dependence)
   {
 
@@ -82,44 +82,44 @@ Class DependencesController {
       $this->allDependencesComposer[$dependence['id']] = array($dependence['params']);
     }
     else{
-      $diffAllDepend = array_diff($dependence['params'] , $this->allDependencesComposer[$dependence['id']][0]); 
+      $diffAllDepend = array_diff($dependence['params'] , $this->allDependencesComposer[$dependence['id']][0]);
 
       if(!empty($diffAllDepend)){
         array_push($this->allDependencesComposer[$dependence['id']], array_diff($dependence['params'] , $this->allDependencesComposer[$dependence['id']][0])  );
-      }          
+      }
     }
   }
-  
+
   function pushDependencesBower($dependence)
   {
     if(!array_key_exists($dependence['id'], $this->allDependencesBower)){
       $this->allDependencesBower[$dependence['id']] = array($dependence['params']);
     }
     else{
-      $diffAllDepend = array_diff($dependence['params'] , $this->allDependencesBower[$dependence['id']][0]); 
+      $diffAllDepend = array_diff($dependence['params'] , $this->allDependencesBower[$dependence['id']][0]);
 
       if(!empty($diffAllDepend)){
         array_push($this->allDependencesBower[$dependence['id']], array_diff($dependence['params'] , $this->allDependencesBower[$dependence['id']][0])  );
-      }          
+      }
     }
   }
-  
+
   function installDependencesBower($dependences)
   {
     //Instala las dependecias con Bower
-    
+
     exec('rm bower.json');
     exec('echo "{\"name\": \"cogumelo\", \"version\": \"1.0a\", \"homepage\": \"https://github.com/Innoto/cogumelo\", \"license\": \"GPLv2\", \"dependencies\": {} }" > bower.json');
 
     foreach( $dependences as $depKey => $dep ){
-      foreach( $dep as $params ){                
+      foreach( $dep as $params ){
         if(count($params) > 1){
           $allparam = "";
           foreach( $params as $p ){
             $allparam = $allparam." ".$p;
           } // end foreach
           echo("Exec ... bower install ".$depKey."=".$allparam." --save\n");
-          exec('bower install '.$depKey.'='.$allparam.' --save');          
+          exec('bower install '.$depKey.'='.$allparam.' --save');
         }
         else{
           echo("Exec ... bower install ".$depKey."=".$params[0]." --save\n");
@@ -128,15 +128,15 @@ Class DependencesController {
         }
       }       // end foreach
     }   // end foreach
-    
+
   }
 
   function installDependencesComposer($dependences)
   {
-    
+
     $finalArrayDep = array("require" => array(), "config" => array("vendor-dir" => "httpdocs/vendorServer"));
     foreach( $dependences as $depKey => $dep ){
-      foreach( $dep as $params ){   
+      foreach( $dep as $params ){
         $finalArrayDep['require'][$params[0]] = $params[1];
       }
     }
@@ -144,10 +144,10 @@ Class DependencesController {
     $fh = fopen("composer.json", 'w');
       fwrite($fh, $jsonencoded);
     fclose($fh);
-    echo("Exec ... php composer.phar update\n\n");          
+    echo("Exec ... php composer.phar update\n\n");
     exec('php composer.phar update');
     echo("If the folder does not appear vendorServer dependencies run 'php composer.phar update' or 'composer update' and resolves conflicts.\n");
-    
+
   }
 
 
@@ -187,7 +187,7 @@ Class DependencesController {
   function addVendorIncludeList( $includes ) {
 
     if( sizeof( $includes ) > 0) {
-      
+
       foreach ($includes as $includeElement) {
 
         $include_folder = '';
@@ -200,7 +200,7 @@ Class DependencesController {
         }
 
         if( sizeof( $includeElement['includes'] ) > 0 ) {
-          foreach( $includeElement['includes'] as $includeFile ) { 
+          foreach( $includeElement['includes'] as $includeFile ) {
 
             switch ($this->typeIncludeFile( $includeFile )) {
               case 'serverScript':
@@ -209,7 +209,7 @@ Class DependencesController {
                 break;
               case 'clientScript':
                 $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor' );
-              
+
                 break;
               case 'styles':
                 $this->addIncludeCSS( $include_folder.'/'.$includeFile, 'vendor' );
@@ -221,21 +221,21 @@ Class DependencesController {
       }
 
     }
-    
+
   }
 
 
 
   function addIncludeList( $includes, $module=false) {
 
-    if( sizeof( $includes ) > 0) { 
-      foreach ($includes as $includeFile) { 
-              
+    if( sizeof( $includes ) > 0) {
+      foreach ($includes as $includeFile) {
+
         switch($this->typeIncludeFile( $includeFile ) ) {
           case 'serverScript':
 
             if($module == false) {
-              Cogumelo::load($includeFile);              
+              Cogumelo::load($includeFile);
             }
             else {
               eval($module.'::load("'. $includeFile .'");');
@@ -293,7 +293,7 @@ Class DependencesController {
     }
 
   }
-  
+
 
   function addIncludeJS( $includeFile, $module = false) {
     global $cogumeloIncludesJS;

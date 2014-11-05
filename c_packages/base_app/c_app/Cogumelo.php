@@ -4,7 +4,14 @@
 class Cogumelo extends CogumeloClass
 {
 
-  public $dependences = array();
+  public $dependences = array(
+    array(
+     "id" => "formstoneWallpaper",
+     "params" => array("Wallpaper"),
+     "installer" => "bower",
+     "includes" => array("jquery.fs.wallpaper.js", "jquery.fs.wallpaper.css")
+    )
+  );
   public $includesCommon = array();
 
 
@@ -12,15 +19,17 @@ class Cogumelo extends CogumeloClass
     parent::__construct();
 
     /*probandoMailing*/
-    $this->addUrlPatterns( '#^probandoMailing$#', 'view:MailingView::probandoMailing');
+    $this->addUrlPatterns( '#^probandomailing$#', 'view:MailingView::probandoMailing');
 
     /*createForm*/
-    $this->addUrlPatterns( '#^lostForm$#', 'view:CreateForm::lostForm' );
-    $this->addUrlPatterns( '#^lostForm/u/(.*)#', 'view:CreateForm::updateLostForm' );
-    $this->addUrlPatterns( '#^sendLostForm#', 'view:CreateForm::sendLostForm' );
-    $this->addUrlPatterns( '#^deleteLostForm#', 'view:CreateForm::deleteLostForm' );
+    $this->addUrlPatterns( '#^lostform$#', 'view:CreateForm::lostForm' );
+    $this->addUrlPatterns( '#^lostform/u/(.*)#', 'view:CreateForm::updateLostForm' );
+    $this->addUrlPatterns( '#^sendlostform#', 'view:CreateForm::sendLostForm' );
+    $this->addUrlPatterns( '#^deletefostform#', 'view:CreateForm::deleteLostForm' );
 
     /*table*/
+
+    $this->addUrlPatterns( '#^tableinterfacedata$#', 'view:Tview::tableData');    
     $this->addUrlPatterns( '#^tableInterface$#', 'view:Tview::main');
 
     /*i18n*/
