@@ -16,7 +16,7 @@ $(function() {
 function cogumeloTable( tableId, tableUrl ) {
   var that = this;
   that.range = [];
-  that.order = [];
+  that.order = false;
   that.tableData = {};
 
 
@@ -62,8 +62,9 @@ function cogumeloTable( tableId, tableUrl ) {
   that.load = function() {
     $.ajax({
       url: tableUrl ,
+      type: 'POST',
       data: {
-
+        order: that.order
       },
       success: function(tableData) {
         that.tableData = tableData;
@@ -86,7 +87,8 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.initOrderValues = function() {
 
-    if( that.order.length == 0 ) {
+    if( !that.order.length ) {
+      that.order = [];
       $.each( that.tableData.colsDef , function(i,e)  {
         that.order.push( {"key": i, "value": 1} );
       });
@@ -110,19 +112,27 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.setOrderValue = function( ordIndex ) {
 
-      $.each( that.order , function(i,e)  {
+    var ordArray = [];
+    $.each( that.order , function(i,e)  {
 
-        if( e.key == ordIndex ) {
-          if(e.value == 1) {
-            that.order[i].value = -1;
-          }
-          else {
-            that.order[i].value = 1;
-          }
+      if( e.key == ordIndex ) {
+        var nval = e;
+        if(nval.value == 1) {
+          nval.value = -1;
         }
-      });
+        else {
+          nval.value = 1;
+        }
 
-      that.load();
+        ordArray.unshift( nval );
+      }
+      else {
+        ordArray.push(e); 
+      }
+    });
+
+    that.order = ordArray;
+    that.load();
   }
 
 
@@ -188,7 +198,7 @@ function cogumeloTable( tableId, tableUrl ) {
       trows += '<td></td>';
 
       $.each( row, function( i, e ){
-        trows += '<td>' + e + '</td>';
+        trows += '<td>' + e +'</td>';
       });
 
       trows += '<tr>';

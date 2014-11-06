@@ -21,6 +21,7 @@ class MysqlDAO extends DAO
       $coma = "";
       foreach ($ORDArray as $elementK => $elementV)
       {
+        if( !preg_match('/\s/',$elementK) )
         if ($elementV < 0)
           $orderSTR .= $coma .$elementK." DESC";
         else

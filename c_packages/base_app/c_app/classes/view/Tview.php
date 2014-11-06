@@ -35,17 +35,20 @@ class Tview extends View
 
     table::autoIncludes();
 
-
+//var_dump($_POST);
     // POST DE PEGA
-
+    $_POST['method'] = array('name' => 'list', 'value', false);
+    $_POST['filters'] = array();
+    $_POST['range'] = array(0,50);
+    //$_POST['order'];
+/*
     $_POST['cogumeloTable'] = '{'.
       '  "method":{ "name" : "list", "value": false},' .
       '  "filters": [],' .
       '  "range": [ 0, 50 ],' .
       '  "order": [{"key": "id", "value": -1}, {"key": "lostName", "value": 1 }] '.
       '}';
-
-
+*/
 
     // creamos obxecto taboa pasandolle o POST
     $tabla = new TableController($_POST);
