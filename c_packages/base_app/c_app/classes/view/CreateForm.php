@@ -3,6 +3,7 @@ Cogumelo::load('c_view/View.php');
 Cogumelo::load('controller/LostController.php');
 Cogumelo::load('model/LostVO.php');
 
+common::autoIncludes();
 form::autoIncludes();
 
 
@@ -40,7 +41,7 @@ class CreateForm extends View
 
     Cogumelo::objdebug($dataVO);
 
-    $form = new FormController( 'lostForm', '/sendLostForm' ); //actionform
+    $form = new FormController( 'lostForm', '/sendlostform' ); //actionform
 
     $form->setField( 'id', array( 'type' => 'reserved' ));
 
@@ -172,7 +173,7 @@ class CreateForm extends View
       // y lo asociamos
       $form->setValidationObj( $validator );
 
-      $form->setValidationRule('lostDate', 'uppercase', '1');
+      //$form->setValidationRule('lostDate', 'uppercase', '1');
 
       //$form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
       //$form->setValidationRule( 'lostDate', 'dateMin', '2014-09-09' );
