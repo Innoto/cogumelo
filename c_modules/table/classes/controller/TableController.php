@@ -13,7 +13,7 @@
 
 class TableController{
 
-
+  var $control = false;
   var $clientData = array();
   var $colsDef = array();
   var $allowMethods = array(
@@ -22,15 +22,22 @@ class TableController{
       'chageStatus' => false
       );
 
-  var $tabs = array();
+  var $tabs = false;
   var $currentTab = false;
   var $filters = array();
 
   /*
-  *  @param array $data  generally is the full $_POST data variable
+  * @param object $control: is the data controller  
+  * @param array $data  generally is the full $_POST data variable
   */
-  function __construct($postdata)
+  function __construct($control, $postdata)
   {
+
+    $this->control = $control;
+
+    if($postdata['tab']) {
+      $this->currentTab = $postdata['tab'];
+    }
 
     $this->clientData['method'] = $postdata['method'];
     $this->clientData['filters'] = $postdata['filters'];
@@ -77,6 +84,9 @@ class TableController{
   * @return void
   */
   function setTabs($tabsKey ,$tabs, $defaultKey) {
+    if( !$this->currentTab ) {
+      $this->currentTab = $defaultKey;
+    }
     $this->tabs = array('tabsKey' => $tabsKey, 'tabs' => $tabs, 'defaultKey' => $defaultKey);
   }
 
@@ -91,6 +101,15 @@ class TableController{
     $this->filters = $filters;
   }
 
+
+  /*
+  * Get filters
+  *
+  * @return array
+  */
+  function getFilters() {
+    return array($this->tabs['tabsKey'] => $this->currentTab);
+  }
 
   /*
   * Data methods to allow in table
@@ -139,19 +158,17 @@ class TableController{
 
 
   /*
-  * @param object $control: is the data controller
   * @return string JSON with table
   */
-  function returnTableJson($control) {
-
+  function returnTableJson() {
     // if is executing a method ( like delete or update) and have permissions to do it
     if( $this->clientData['method']['name'] != 'list' )
     {
-      eval( '$control->'. $this->clientData['method']['name']. '('.$this->clientData['method']['value'].')');
+      eval( '$this->control->'. $this->clientData['method']['name']. '('.$this->clientData['method']['value'].')');
     }
 
     // doing a query to the controller
-    eval('$lista = $control->'. $this->allowMethods['list'].'( $this->clientData["filters"] , $this->clientData["range"], $this->orderIntoArray() );');
+    eval('$lista = $this->control->'. $this->allowMethods['list'].'( $this->getFilters() , $this->clientData["range"], $this->orderIntoArray() );');
 
 
     // printing json table...

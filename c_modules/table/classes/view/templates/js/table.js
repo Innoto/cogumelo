@@ -17,6 +17,7 @@ function cogumeloTable( tableId, tableUrl ) {
   var that = this;
   that.range = [];
   that.order = false;
+  that.currentTab = false;
   that.tableData = {};
 
 
@@ -25,6 +26,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.filters = $('.'+tableId+'.tableContainer .tableMoreFilters');
   that.resumeFilters = $('.'+tableId+'.tableContainer .tableResumeFilters');
   that.tableContent = $('.'+tableId+'.tableContainer .tableClass');  
+  that.tabsContent = $('.'+tableId+'.tableContainer .tableFilters select');  
   
   // buttons and action elements
   that.openFiltersButton = $('.'+tableId+'.tableContainer .openFilters');
@@ -60,16 +62,20 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
   that.load = function() {
+
     $.ajax({
       url: tableUrl ,
       type: 'POST',
       data: {
+        tab : that.tabsContent.val(),
         order: that.order
+
       },
       success: function(tableData) {
         that.tableData = tableData;
 
         that.clearData();
+        that.initTabValues();
         that.initOrderValues();
         that.setHeaders();
         that.setRows();
@@ -85,17 +91,34 @@ function cogumeloTable( tableId, tableUrl ) {
     that.tableContent.html('');
   }
 
+  that.initTabValues = function() {
+
+    if( !that.currentTab ) {
+      that.currentTab = { key: that.tableData.tabs.tabsKey, default:that.tableData.tabs.defaultKey};
+      
+      $.each( that.tableData.tabs.tabs , function(i,e)  {
+        if(i == that.currentTab.default){
+          var sel = ' SELECTED ';
+        }
+        else {
+          var sel = ' ';
+        }
+        that.tabsContent.append('<option ' + sel + ' value="' + i + '">' + e + '</option>');
+
+      });
+
+    }
+  }
+
   that.initOrderValues = function() {
 
-    if( !that.order.length ) {
+    if( !that.order ) {
       that.order = [];
       $.each( that.tableData.colsDef , function(i,e)  {
         that.order.push( {"key": i, "value": 1} );
       });
 
     }
-
-
   }
 
   that.getOrderValue = function( ordIndex ) {
@@ -219,7 +242,10 @@ function cogumeloTable( tableId, tableUrl ) {
     that.interfaceAction('closeFilters');
   });
 
-
+  // tabs change
+  that.tabsContent.on("change", function(){
+    that.load();
+  });
 
 
   // FIRST TIME 
