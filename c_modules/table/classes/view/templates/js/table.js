@@ -112,19 +112,27 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.setOrderValue = function( ordIndex ) {
 
-      $.each( that.order , function(i,e)  {
+    var ordArray = [];
+    $.each( that.order , function(i,e)  {
 
-        if( e.key == ordIndex ) {
-          if(e.value == 1) {
-            that.order[i].value = -1;
-          }
-          else {
-            that.order[i].value = 1;
-          }
+      if( e.key == ordIndex ) {
+        var nval = e;
+        if(nval.value == 1) {
+          nval.value = -1;
         }
-      });
+        else {
+          nval.value = 1;
+        }
 
-      that.load();
+        ordArray.unshift( nval );
+      }
+      else {
+        ordArray.push(e); 
+      }
+    });
+
+    that.order = ordArray;
+    that.load();
   }
 
 
