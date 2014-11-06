@@ -25,9 +25,7 @@ class TableView {
 
         <div class="tableFilters clearfix">
           <select>
-            <option value="1">Aceptado</option>
-            <option value="2">Recibido</option>
-            <option value="3">Rechazado</option>
+
           </select>
           <button class="openFilters">+Filtros</button>
         </div>
@@ -175,39 +173,6 @@ class TableView {
     </div>
     <table class="tableClass clearfix">
 
-    <tr>
-      <th></th>
-      <th>
-        <div class="clearfix">
-          <div>Name</div>
-          <div><img src="media/module/table/img/up.png"></div>
-        </div>
-      </th>
-      <th>
-        <div class="clearfix">
-          <div>Description</div>
-          <div><img src="media/module/table/img/up.png"></div>
-        </div>
-      </th>
-      <th>
-        <div class="clearfix">
-          <div>Date</div>
-          <div><img src="media/module/table/img/up.png"></div>
-        </div>
-      </th>
-      <th>
-        <div class="clearfix">
-          <div>Province</div>
-          <div><img src="media/module/table/img/up.png"></div>
-        </div>
-      </th>
-      <th>
-        <div class="clearfix">
-          <div>Status</div>
-          <div><img src="media/module/table/img/down.png"></div>
-        </div>
-      </th>
-    </tr>
 
     </table>
     <!-- Paginador -->
