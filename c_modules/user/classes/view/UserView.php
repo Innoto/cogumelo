@@ -174,6 +174,8 @@ class UserView extends View
         $userControl = new UserController();
         $valuesArray['password'] = sha1($valuesArray['password']);
         unset($valuesArray['password2']);
+        $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
+
         $res = $userControl->createFromArray($valuesArray);
       }
 

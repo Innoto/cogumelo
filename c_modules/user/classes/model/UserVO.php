@@ -43,7 +43,7 @@ class UserVO extends VO
     ),
     'description'=> array(
       'name' => 'Descripción',
-      'type' => 'CHAR',
+      'type' => 'TEXT',
       'size' => '300'
     ),
     'avatar'=> array(
@@ -57,8 +57,7 @@ class UserVO extends VO
     ),
     'timeCreateUser' => array(
       'name' => 'Fechas de creación',
-      'type' => 'TIMESTAMP',
-      'default' => 'CURRENT_TIMESTAMP'
+      'type' => 'DATETIME'
     )
   );
 
