@@ -19,7 +19,7 @@ class UserVO extends VO
     'password'=> array(
       'name' => 'Contraseña',
       'type'=>'CHAR',
-      'size' => '30'
+      'size' => '200'
     ),
     'name'=> array(
       'name' => 'Nombre',
