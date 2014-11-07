@@ -164,7 +164,7 @@ class TableView {
         </select>
         <!-- Paginador -->
         <div class="tablePaginator">
-          <div class="tablePage"><input type="text" value="100"> de 219</div>
+          <div class="tablePage"><input type="text" value="1"> de <span class="totalPages">1</span></div>
           <div class="tablePreviousPage"><img src="media/module/table/img/a-left.png" alt="previous page"></div>
           <div class="tableNextPage"><img src="media/module/table/img/a-right.png" alt="next page"></div>
         </div>
@@ -177,7 +177,7 @@ class TableView {
     </table>
     <!-- Paginador -->
     <div class="tablePaginator ">
-      <div class="tablePage"><input type="text" value="100"> de 219</div>
+      <div class="tablePage"><input type="text" value="1"> de <span class="totalPages">1</span></div>
       <div class="tablePreviousPage"><img src="media/module/table/img/a-left.png" alt="previous page"></div>
       <div class="tableNextPage"><img src="media/module/table/img/a-right.png" alt="next page"></div>
     </div>

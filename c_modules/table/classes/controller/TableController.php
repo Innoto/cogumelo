@@ -18,6 +18,7 @@ class TableController{
   var $colsDef = array();
   var $allowMethods = array(
       'list' => 'listItems',
+      'count' => 'listCount',
       'delete' => false,
       'chageStatus' => false
       );
@@ -25,6 +26,7 @@ class TableController{
   var $tabs = false;
   var $currentTab = false;
   var $filters = array();
+  var $rowsEachPage = 50;
 
   /*
   * @param object $control: is the data controller  
@@ -169,6 +171,7 @@ class TableController{
 
     // doing a query to the controller
     eval('$lista = $this->control->'. $this->allowMethods['list'].'( $this->getFilters() , $this->clientData["range"], $this->orderIntoArray() );');
+    eval('$totalRows = $this->control->'. $this->allowMethods['count'].'( $this->getFilters() );');
 
 
     // printing json table...
@@ -179,7 +182,8 @@ class TableController{
     echo '"colsDef":'.json_encode($this->colsIntoArray() ).',';
     echo '"tabs":'.json_encode($this->tabs).',';
     echo '"filters":'.json_encode($this->filters).',';
-  
+    echo '"rowsEachPage":'. $this->rowsEachPage .',';
+    echo '"totalRows":'. $totalRows.',';
     $coma = '';
     echo '"table" : [';
     if($lista != false) {

@@ -19,14 +19,19 @@ function cogumeloTable( tableId, tableUrl ) {
   that.order = false;
   that.currentTab = false;
   that.tableData = {};
-
+  that.currentPage = 1;
 
 
   // table elements
   that.filters = $('.'+tableId+'.tableContainer .tableMoreFilters');
   that.resumeFilters = $('.'+tableId+'.tableContainer .tableResumeFilters');
   that.tableContent = $('.'+tableId+'.tableContainer .tableClass');  
-  that.tabsContent = $('.'+tableId+'.tableContainer .tableFilters select');  
+  that.tabsContent = $('.'+tableId+'.tableContainer .tableFilters select'); 
+
+  that.pagersTotal = $('.'+tableId+'.tableContainer .tablePaginator .tablePage .totalPages');  
+  that.pagersCurrent = $('.'+tableId+'.tableContainer .tablePaginator .tablePage input');  
+  that.pagersPrevious = $('.'+tableId+'.tableContainer .tablePaginator .tablePreviousPage');
+  that.pagersNext = $('.'+tableId+'.tableContainer .tablePaginator .tableNextPage'); 
   
   // buttons and action elements
   that.openFiltersButton = $('.'+tableId+'.tableContainer .openFilters');
@@ -79,6 +84,7 @@ function cogumeloTable( tableId, tableUrl ) {
         that.initOrderValues();
         that.setHeaders();
         that.setRows();
+        that.setPager();
 
       }
     });
@@ -185,7 +191,6 @@ function cogumeloTable( tableId, tableUrl ) {
 
     });
 
-
     that.tableContent.append('<tr>'+h+'</tr>');
     
     // click event table headers
@@ -208,10 +213,49 @@ function cogumeloTable( tableId, tableUrl ) {
       if( el ) {
         that.setOrderValue( el.attr('colKey') );
       }
-
     });     
 
   }
+
+
+  that.setPager = function( page ) {
+
+    var mustReload = false;
+    var maxPage = 1;
+
+    if( that.tableData.totalRows > that.tableData.rowsEachPage ){
+      maxPage = Math.floor( that.tableData.totalRows / that.tableData.rowsEachPage );
+      mustReload = true;
+    }
+
+
+    if( typeof page != 'undefined' && page < maxPage && page > 0 ){
+      that.currentPage = page;
+    }
+
+    that.pagersTotal.html( maxPage );
+    that.pagersCurrent.val( that.currentPage );
+
+    if( that.currentPage == maxPage ){
+      that.pagersNext.addClass('unactive'); // nextPage unactive
+    }
+    else {
+      that.pagersNext.removeClass('unactive'); // nextPage active
+    }
+
+    if( that.currentPage == 1) {
+      that.pagersPrevious.addClass('unactive'); // previousPage unactive
+    }
+    else {
+      that.pagersPrevious.removeClass('unactive'); // previousPage unactive
+    }
+
+    if( mustReload ) {
+      that.load();
+    }
+  }
+
+
 
   that.setRows = function(){
     var trows = '';
@@ -247,6 +291,18 @@ function cogumeloTable( tableId, tableUrl ) {
     that.load();
   });
 
+  // pager events
+  that.pagersCurrent.on("change", function( inputCurrentPage ){
+    that.setPager( $(inputCurrentPage.target).val() );
+  });
+
+  that.pagersPrevious.on("click", function(){
+    that.setPager(that.currentPage - 1);
+  });
+
+  that.pagersNext.on("click", function(){
+    that.setPager(that.currentPage + 1);
+  });
 
   // FIRST TIME 
   that.interfaceAction('default');
