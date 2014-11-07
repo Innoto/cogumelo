@@ -18,7 +18,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.range = [];
   that.order = false;
   that.currentTab = false;
-  that.tableData = {};
+  that.tableData = false;
   that.currentPage = 1;
 
 
@@ -27,17 +27,15 @@ function cogumeloTable( tableId, tableUrl ) {
   that.resumeFilters = $('.'+tableId+'.tableContainer .tableResumeFilters');
   that.tableContent = $('.'+tableId+'.tableContainer .tableClass');  
   that.tabsContent = $('.'+tableId+'.tableContainer .tableFilters select'); 
-
   that.pagersTotal = $('.'+tableId+'.tableContainer .tablePaginator .tablePage .totalPages');  
   that.pagersCurrent = $('.'+tableId+'.tableContainer .tablePaginator .tablePage input');  
-  that.pagersPrevious = $('.'+tableId+'.tableContainer .tablePaginator .tablePreviousPage');
-  that.pagersNext = $('.'+tableId+'.tableContainer .tablePaginator .tableNextPage'); 
   
   // buttons and action elements
   that.openFiltersButton = $('.'+tableId+'.tableContainer .openFilters');
   that.closeFiltersButton = $('.'+tableId+'.tableContainer .closeFilters');
   that.anyColHeaderQstr = '.'+tableId+'.tableContainer table.tableClass tr th';
-
+  that.pagersPrevious = $('.'+tableId+'.tableContainer .tablePaginator .tablePreviousPage');
+  that.pagersNext = $('.'+tableId+'.tableContainer .tablePaginator .tableNextPage'); 
 
 
 
@@ -68,12 +66,22 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.load = function() {
 
+    // range
+    if( !that.tableData ) {
+      var currentRange = null;
+    }
+    else {
+      var currentRange = [ (that.currentPage-1)*parseInt(that.tableData.rowsEachPage), (that.currentPage-1)*parseInt(that.tableData.rowsEachPage) + that.currentPage*parseInt(that.tableData.rowsEachPage) -1 ];
+    }
+
+
     $.ajax({
       url: tableUrl ,
       type: 'POST',
       data: {
         tab : that.tabsContent.val(),
-        order: that.order
+        order: that.order,
+        range: currentRange
 
       },
       success: function(tableData) {

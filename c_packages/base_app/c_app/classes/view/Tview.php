@@ -40,7 +40,7 @@ class Tview extends View
     $_POST['method'] = array('name' => 'list', 'value', false);
   //  $_POST['tab'] = false;
     $_POST['filters'] = array();
-    $_POST['range'] = array(0,50);
+    //$_POST['range'] = array(0,50);
     //$_POST['order'];
 /*
     $_POST['cogumeloTable'] = '{'.
