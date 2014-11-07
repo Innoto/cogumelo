@@ -1,6 +1,7 @@
 <?php
 Cogumelo::load('c_view/View.php');
 user::load('controller/UserController.php');
+user::load('controller/UserAccessController.php');
 user::load('model/UserVO.php');
 
 common::autoIncludes();
@@ -22,9 +23,7 @@ class UserView extends View
     return true;
   }
 
-  function main() {
 
-  }
 
   function loginForm() {
 
@@ -68,8 +67,8 @@ class UserView extends View
       $form->setValidationObj( new FormValidators() );
 
       $valuesArray = $form->getValuesArray();
-      $userControl = new UserController();
-      $res = $userControl->authenticateUser($valuesArray['userLogin'], $valuesArray['userPassword']);
+      $userAccessControl = new UserAccessController();
+      $res = $userAccessControl->userLogin($valuesArray['userLogin'], $valuesArray['userPassword']);
 
       if(!$res){
         $form->addJVError('.ffn-login', 'El campo login o password es erróneo');

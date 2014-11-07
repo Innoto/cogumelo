@@ -4,18 +4,18 @@
 // Session controller (UserAdmin).
 //
 
-Cogumelo::Load('SessionController');
-app::Load('UseradminVO');
+Cogumelo::load('SessionController.php');
+user::load('UserVO.php');
 
-class UserAdminSessionController extends SessionController
+class UserSessionController extends SessionController
 {
   //
   // Constructor
   //
-  function UserAdminSessionController()
+  function UserSessionController()
   {
     parent::__construct();
-    $this->session_id = "UserAdmin-Session";
+    $this->session_id = "User-Session";
   }
 
   //

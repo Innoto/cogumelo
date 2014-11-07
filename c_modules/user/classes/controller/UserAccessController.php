@@ -1,57 +1,41 @@
 <?php
 
-
 //
-// UserAdmin Access Controller
+// User Access Controller
 //
 
-Cogumelo::Load('AccessController');
+user::load('UserSessionController.php');
+user::load('UserController.php');
+user::load('UserVO.php');
 
-app::Load('UseradminSessionController');
-app::Load('UseradminController');
-app::Load('UseradminVO');
-
-class UserAccessController extends AccessController
+class UserAccessController
 {
   //
   // Constructor
   //
   function UserAccesscontroller()
   {
-    $this->setSessioncontrol( new UserAdminSessionController() );
+    $this->setSessioncontrol( new UserSessionController() );
     $this->setSessiondata($this->sessioncontrol->getUser());
   }
 
-  //
-  // Is current User a Loged Administrator?
-  //
-  function isAdmin()
-  {
-    if($this->sessiondata)
-       return true;
-    else return false;
-  }
+
 
   //
   // Login an Admin User
   //
-  function UserAdminLogin($username, $passwd)
+  function userLogin($login, $password)
   {
-    $usercontrol= new UserAdminController();
-
-    $user=new UserAdminVO();
-    $user->setter('login', $username);
-    $user->setter('passwd', $passwd);
-
-    if($logeduser = $usercontrol->AuthenticateUseradmin($user))
+    $usercontrol= new UserController();
+    if($logeduser = $usercontrol->authenticateUser( $login, $password ));
     {
       $this->sessioncontrol->setUser($logeduser);
-      Cogumelo::Log("Accepted UserAdmin authentication: user ".$username." is logged", 2);
+      Cogumelo::log("Accepted User authentication: user ".$login." is logged", 'UserLog');
       return true;
     }
     else
     {
-      Cogumelo::Log("Failed UserAdmin authentication: user ".$username, 2);
+      Cogumelo::log("Failed UserAdmin authentication: user ".$login, 'UserLog');
       return false;
     }
   }
@@ -59,17 +43,17 @@ class UserAccessController extends AccessController
   //
   // Logout a User
   //
-  function Logout()
+  function userLogout()
   {
     if($currentuser = $this->sessioncontrol->getUser())
     {
       $this->sessioncontrol->delUser();
-      Cogumelo::Log("UserAdmin ".$currentuser->getter('login')." Logged out", 2);
+      Cogumelo::log("User ".$currentuser->getter('login')." Logged out", 'UserLog');
       return true;
     }
     else
     {
-      Cogumelo::Log("Unable to Logout", 2);
+      Cogumelo::log("Unable to Logout", 'UserLog');
       return false;
     }
   }
@@ -77,11 +61,16 @@ class UserAccessController extends AccessController
   //
   // Is current User Loged?
   //
-  function isLoged()
+  function isLogged()
   {
-    if($this->sessiondata) return true;
-    else return false;
+    if($this->sessiondata) {
+      return true;
+    }
+    else {
+      return false;
+    }
   }
+
 
   function setSessioncontrol($sessioncontrol) {
     $this->sessioncontrol = $sessioncontrol;
@@ -89,8 +78,6 @@ class UserAccessController extends AccessController
 
   function getSessioncontrol() {
     // set session data
-    Cogumelo::setUserInfo($this->sessiondata->getTableName().' id: '. $this->sessiondata->getter( $this->sessiondata->getKeyId()) );
-
     return $this->sessioncontrol;
   }
 
@@ -101,4 +88,5 @@ class UserAccessController extends AccessController
   function getSessiondata(){
     return $this->sessiondata;
   }
+
 }
