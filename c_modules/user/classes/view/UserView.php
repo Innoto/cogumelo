@@ -28,9 +28,9 @@ class UserView extends View
 
   function loginForm() {
 
-    $form = new FormController( 'loginForm', '/user/loginForm' ); //actionform
+    $form = new FormController( 'loginForm', '/user/sendloginform' ); //actionform
     $form->setField( 'userLogin', array( 'placeholder' => 'Login' ));
-    $form->setField( 'userPassword', array( 'placeholder' => 'Contraseña') );
+    $form->setField( 'userPassword', array( 'type' => 'password', 'placeholder' => 'Contraseña') );
     $form->setField( 'loginSubmit', array( 'type' => 'submit', 'value' => 'Entrar' ) );
 
     /************************************************************** VALIDATIONS */
@@ -64,11 +64,16 @@ class UserView extends View
     if( isset( $postData[ 'cgIntFrmId' ] ) ) {
       // Creamos un objeto recuperandolo de session y añadiendo los datos POST
       $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
-      // Creamos un objeto con los validadores
-      $validator = new FormValidators();
+      // Creamos un objeto con los validadores y lo asociamos
+      $form->setValidationObj( new FormValidators() );
 
-      // y lo asociamos
-      $form->setValidationObj( $validator );
+      $valuesArray = $form->getValuesArray();
+      $userControl = new UserController();
+      $res = $userControl->authenticateUser($valuesArray['userLogin'], $valuesArray['userPassword']);
+
+      if(!$res){
+        $form->addJVError('.ffn-login', 'El campo login o password es erróneo');
+      }
 
       $form->validateForm();
       $jvErrors = $form->getJVErrors();
@@ -76,9 +81,7 @@ class UserView extends View
       //Si todo esta OK!
       if( sizeof( $jvErrors ) == 0 ){
 
-        $valuesArray = $form->getValuesArray();
-        $userControl = new UserController();
-        $res = $userControl->authenticateUser($valuesArray['userLogin'], $valuesArray['userPassword']);
+
       }
 
       if( sizeof( $jvErrors ) > 0 ) {
@@ -158,11 +161,17 @@ class UserView extends View
     if( isset( $postData[ 'cgIntFrmId' ] ) ) {
       // Creamos un objeto recuperandolo de session y añadiendo los datos POST
       $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
-      // Creamos un objeto con los validadores
-      $validator = new FormValidators();
+      // Creamos un objeto con los validadores y lo asociamos
+      $form->setValidationObj( new FormValidators() );
+      //Validaciones
+      $valuesArray = $form->getValuesArray();
 
-      // y lo asociamos
-      $form->setValidationObj( $validator );
+      $userControl = new UserController();
+      $loginExist = $userControl->find($valuesArray['login'], 'login');
+
+      if($loginExist){
+        $form->addJVError('.ffn-login', 'El campo login específicado ya esta en uso.');
+      }
 
       $form->validateForm();
       $jvErrors = $form->getJVErrors();
@@ -170,8 +179,6 @@ class UserView extends View
       //Si todo esta OK!
       if( sizeof( $jvErrors ) == 0 ){
 
-        $valuesArray = $form->getValuesArray();
-        $userControl = new UserController();
         $valuesArray['password'] = sha1($valuesArray['password']);
         unset($valuesArray['password2']);
         $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());

@@ -32,10 +32,10 @@ abstract class DataController {
   * @param mixed $id identifier
   * @param string $key vo key to set at id (false is VO primary key)
   */
-	function find($id, $key=false)
+	function find($value, $key=false)
 	{
-		Cogumelo::debug( "Called find on ".get_called_class()." with id=". $id);
-		$data = $this->data->Find($id, $key);
+		Cogumelo::debug( "Called find on ".get_called_class()." with id=". $value);
+		$data = $this->data->Find($value, $key);
 
 		return $data;
 	}
