@@ -34,14 +34,15 @@ class  UserController extends DataController
 
   function authenticateUser($login, $password)
   {
-    $data = $this->data->authenticateUser($login, $password);
+    $data = $this->data->authenticateUser($login, sha1($password));
 
     if($data) {
       Cogumelo::log("authenticateUser SUCCEED with login=".$login, "UserLog");
     }
     else {
-      Cogumelo::log("authenticateUser FAILED with login=".$login.". Useradmin NOT authenticated", "UserLog");
+      Cogumelo::log("authenticateUser FAILED with login=".$login.". User NOT authenticated", "UserLog");
     }
+
     return $data;
   }
 }

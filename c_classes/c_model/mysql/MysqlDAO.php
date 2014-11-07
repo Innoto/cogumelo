@@ -176,7 +176,9 @@ class MysqlDAO extends DAO
       $key = $VO->getFirstPrimarykeyId();
     }
 
-    $filter = array($key => $search);
+    $this->filters[$key.'FindMethod'] = $key.' = ?';
+
+    $filter = array($key.'FindMethod' => $search);
 
     if($res = $this->listItems($connectionControl, $filter, false, false, false, $resolveDependences, $cache) ) {
       return $res->fetch();
