@@ -158,9 +158,10 @@ class TableView {
         <div class="addElem"><img src="media/module/table/img/add.png" alt="Add"></div>
         <div class="exportContainer"><img src="media/module/table/img/export.png" alt="Export"></div>
         <select>
-          <option value="1">Action 1</option>
-          <option value="2">Action 2</option>
-          <option value="3">Action 3</option>
+          <option value="0">Acciones</option>
+          <option value="delete">Borrar</option>
+          <option value="move1">Mover a (A Coru&ntilde;a)</option>
+          <option value="move2">Mover a (A Lugo)</option>                    
         </select>
         <!-- Paginador -->
         <div class="tablePaginator">

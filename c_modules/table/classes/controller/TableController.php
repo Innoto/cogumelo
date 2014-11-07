@@ -37,14 +37,25 @@ class TableController{
 
     $this->control = $control;
 
+    // set tab
     if($postdata['tab']) {
       $this->currentTab = $postdata['tab'];
     }
 
+    // set range
+
+    if( $postdata['range'] != false ){
+          var_dump( $postdata['range'] );
+      $this->clientData['range'] = $postdata['range'];
+    }
+    else {
+      $this->clientData['range'] = array(0, $this->rowsEachPage );
+    }
+
     $this->clientData['method'] = $postdata['method'];
     $this->clientData['filters'] = $postdata['filters'];
-    $this->clientData['range'] = $postdata['range'];
     $this->clientData['order'] = $postdata['order'];
+    
   }
 
   /*
