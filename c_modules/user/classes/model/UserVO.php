@@ -16,7 +16,7 @@ class UserVO extends VO
       'type' => 'CHAR',
       'size' => '10'
     ),
-    'passwd'=> array(
+    'password'=> array(
       'name' => 'Contraseña',
       'type'=>'CHAR',
       'size' => '30'
@@ -43,8 +43,8 @@ class UserVO extends VO
     ),
     'description'=> array(
       'name' => 'Descripción',
-      'type' => 'CHAR',
-      'size' => '10'
+      'type' => 'TEXT',
+      'size' => '300'
     ),
     'avatar'=> array(
       'name' => 'Descripción',
@@ -57,7 +57,7 @@ class UserVO extends VO
     ),
     'timeCreateUser' => array(
       'name' => 'Fechas de creación',
-      'type' => 'DATETIME',
+      'type' => 'DATETIME'
     )
   );
 

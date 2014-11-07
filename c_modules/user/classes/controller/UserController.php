@@ -13,7 +13,7 @@ class  UserController extends DataController
 
   function __construct()
   {
-    $this->data = new Facade("User");
+    $this->data = new Facade("User", "user"); //In module user
     $this->voClass = 'UserVO';
   }
 

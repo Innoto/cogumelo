@@ -29,14 +29,11 @@ class UserView extends View
   function loginForm() {
 
     $form = new FormController( 'loginForm', '/user/loginForm' ); //actionform
-
-
     $form->setField( 'userLogin', array( 'placeholder' => 'Login' ));
     $form->setField( 'userPassword', array( 'placeholder' => 'Contraseña') );
-
     $form->setField( 'loginSubmit', array( 'type' => 'submit', 'value' => 'Entrar' ) );
 
-    /******************************************************************************************** VALIDATIONS */
+    /************************************************************** VALIDATIONS */
     $form->setValidationRule( 'userLogin', 'required' );
     $form->setValidationRule( 'userPassword', 'required' );
 
@@ -114,27 +111,25 @@ class UserView extends View
     $form = new FormController( 'registerForm', '/user/sendregisterform' ); //actionform
 
 
-    $form->setField( 'userLogin', array( 'placeholder' => 'Login' ) );
-    $form->setField( 'userPassword', array( 'placeholder' => 'Contraseña' ) );
-    $form->setField( 'userPassword2', array( 'placeholder' => 'Repite contraseña' ) );
-
-    $form->setField( 'userName', array( 'placeholder' => 'Nombre' ) );
-    $form->setField( 'userSurname', array( 'placeholder' => 'Apellidos' ) );
-    $form->setField( 'userEmail', array( 'placeholder' => 'Email' ) );
-
-    $form->setField( 'userRole', array( 'placeholder' => 'Rol' ) );
-
-    $form->setField( 'userDescription', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
-    $form->setField( 'userAvatar', array( 'placeholder' => 'Avatar' ) );
-
-    $form->setField( 'registerSubmit', array( 'type' => 'submit', 'value' => 'Registrar' ) );
+    $form->setField( 'login', array( 'placeholder' => 'Login' ) );
+    $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña' ) );
+    $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => 'Repite contraseña' ) );
+    $form->setField( 'name', array( 'placeholder' => 'Nombre' ) );
+    $form->setField( 'surname', array( 'placeholder' => 'Apellidos' ) );
+    $form->setField( 'email', array( 'placeholder' => 'Email' ) );
+    $form->setField( 'role', array( 'placeholder' => 'Rol' ) );
+    $form->setField( 'description', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
+    $form->setField( 'avatar', array( 'placeholder' => 'Avatar' ) );
+    $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Registrar' ) );
 
     /******************************************************************************************** VALIDATIONS */
-    $form->setValidationRule( 'userLogin', 'required' );
-    $form->setValidationRule( 'userPassword', 'required' );
-    $form->setValidationRule( 'userPassword2', 'required' );
+    $form->setValidationRule( 'login', 'required' );
+    $form->setValidationRule( 'email', 'required' );
+    $form->setValidationRule( 'password', 'required' );
+    $form->setValidationRule( 'password2', 'required' );
 
-    $form->setValidationRule( 'userPassword', 'equalTo', '#userPassword2' );
+    $form->setValidationRule( 'password', 'equalTo', '#password2' );
+    $form->setValidationRule( 'email', 'email' );
 
     $form->saveToSession();
 
@@ -177,7 +172,11 @@ class UserView extends View
 
         $valuesArray = $form->getValuesArray();
         $userControl = new UserController();
-        $res = $userControl->authenticateUser($valuesArray['registerLogin'], $valuesArray['registerPassword']);
+        $valuesArray['password'] = sha1($valuesArray['password']);
+        unset($valuesArray['password2']);
+        $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
+
+        $res = $userControl->createFromArray($valuesArray);
       }
 
       if( sizeof( $jvErrors ) > 0 ) {
