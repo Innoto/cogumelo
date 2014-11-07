@@ -1,27 +1,26 @@
 <?php
-
-
-
 Cogumelo::load('c_model/Connection.php');
 Cogumelo::load('c_model/DAO.php');
+
+define( 'COGUMELO_ERROR', 'cogumelo_error_2203b5b6531bc7251a85e3af3b8dca09');
 
 //
 // Facade Superclass
 //
 
-class Facade 
+class Facade
 {
 	var $connectioncontrol;
 	var $connection;
 	var $dao;
 	var $develModeData = false;
-	
+
 
 	function __construct($entity, $module=false)
-	{		
+	{
 		$this->dao = DAO::Factory($entity, $module);
 	}
-	
+
 	public function openConnection()
 	{
 		$this->connectioncontrol = Connection::Factory($this->develModeData);
@@ -47,7 +46,7 @@ class Facade
 		$this->OpenConnection();
 		eval('$data = $this->dao->'.$name. '($this->connectioncontrol'. $args_str . '); ');
 
-		if($data !== false) Cogumelo::debug("TRANSACTION COMPLETED: ".$name);
+		if($data !== COGUMELO_ERROR) Cogumelo::debug("TRANSACTION COMPLETED: ".$name);
 		else Cogumelo::error("TRANSACTION NOT COMPLETED: ".$name);
 
 		return $data;

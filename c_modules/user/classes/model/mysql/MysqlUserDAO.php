@@ -24,6 +24,8 @@ class MysqlUserDAO extends MysqlDAO
   //  Return: UserVO (null if 0 rows)
   function authenticateUser($connectionControl, $login, $password)
   {
+
+    Cogumelo::objdebug($password);
     // SQL Query
     $strSQL = "SELECT * FROM `user` WHERE `login` = ? and `password` = ? ;";
 
@@ -33,11 +35,11 @@ class MysqlUserDAO extends MysqlDAO
         return $this->find($connectionControl, $login, 'login');
       }
       else{
-        return "no";
+        return false;
       }
     }
     else{
-      return "no";
+      return COGUMELO_ERROR;
     }
 
   }
