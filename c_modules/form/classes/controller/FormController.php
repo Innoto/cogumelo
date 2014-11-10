@@ -689,7 +689,7 @@ class FormController implements Serializable {
           error_log( 'evaluateRule( '.$ruleName.', '.print_r( $value, true ) .', '.$fieldName.', '. print_r( $ruleParams, true ) .' )' );
 
           if( $ruleName === 'equalTo' ) {
-            $fieldRuleValidate = ( $value === $this->getFieldValue( $ruleParams ) );
+            $fieldRuleValidate = ( $value === $this->getFieldValue( str_replace('#', '', $ruleParams )) );
           }
           else {
             $fieldRuleValidate = $this->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );

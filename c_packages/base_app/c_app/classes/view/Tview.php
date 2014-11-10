@@ -35,23 +35,30 @@ class Tview extends View
 
     table::autoIncludes();
 
-
+//var_dump($_POST);
     // POST DE PEGA
-
+    $_POST['method'] = array('name' => 'list', 'value', false);
+  //  $_POST['tab'] = false;
+    $_POST['filters'] = array();
+    //$_POST['range'] = array(0,50);
+    //$_POST['order'];
+/*
     $_POST['cogumeloTable'] = '{'.
       '  "method":{ "name" : "list", "value": false},' .
       '  "filters": [],' .
       '  "range": [ 0, 50 ],' .
       '  "order": [{"key": "id", "value": -1}, {"key": "lostName", "value": 1 }] '.
       '}';
+*/
 
-
+    Cogumelo::load('controller/LostController.php');
+    $lostControl =  new LostController();
 
     // creamos obxecto taboa pasandolle o POST
-    $tabla = new TableController($_POST);
+    $tabla = new TableController( $lostControl, $_POST );
 
     // establecemos pestañas, así como o key identificativo á hora de filtrar
-    $tabla->setTabs('estado', array('1'=>'Activos', '2'=>'Papelera'), '1' );
+    $tabla->setTabs('lostProvince', array('1'=>'A Coruña', '2'=>'Lugo'), '2' );
 
 
     // establecemos os table filters 
@@ -83,26 +90,22 @@ class Tview extends View
 */
 
     
-    Cogumelo::load('controller/LostController.php');
-    $lostControl =  new LostController();
 
     // Nome das columnas
-    $tabla->setCol('id', 'Id');
-    $tabla->setCol('lostName', 'Nome');
+    //$tabla->setCol('id', 'Id');
     $tabla->setCol('lostSurname', 'Apelido');
+    $tabla->setCol('lostName', 'Nome');
     $tabla->setCol('lostMail', 'Correo');
     $tabla->setCol('lostProvince', 'Provincia');
     $tabla->setCol('lostPhone', 'Teléfono');
 
     // establecer reglas a campo concreto con expresions regulares
-/*
-    $tabla->colRule('nivel', '^[8..10]%', 'Usuario molón');
-    $tabla->colRule('nivel', '^[5..7]%', 'Usuario medio');
-    $tabla->colRule('nivel', '^[i..4]%', 'Usuario cutre');
-*/
+    $tabla->colRule('lostProvince', '#1#', 'A Coruña');
+    $tabla->colRule('lostProvince', '#2#', 'Lugo');
+
 
     // imprimimos o JSON da taboa
-    $tabla->returnTableJson( $lostControl );
+    $tabla->returnTableJson();
     
 
 

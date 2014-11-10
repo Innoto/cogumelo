@@ -25,9 +25,7 @@ class TableView {
 
         <div class="tableFilters clearfix">
           <select>
-            <option value="1">Aceptado</option>
-            <option value="2">Recibido</option>
-            <option value="3">Rechazado</option>
+
           </select>
           <button class="openFilters">+Filtros</button>
         </div>
@@ -156,17 +154,17 @@ class TableView {
         <button class="clearFilters">Eliminar filtros</button>
       </div>
       <div class="tableActions clearfix">
-        <div class="selectAll"><input type="checkbox"></div>
         <div class="addElem"><img src="media/module/table/img/add.png" alt="Add"></div>
         <div class="exportContainer"><img src="media/module/table/img/export.png" alt="Export"></div>
         <select>
-          <option value="1">Action 1</option>
-          <option value="2">Action 2</option>
-          <option value="3">Action 3</option>
+          <option value="0">Acciones</option>
+          <option value="delete">Borrar</option>
+          <option value="move1">Mover a (A Coru&ntilde;a)</option>
+          <option value="move2">Mover a (A Lugo)</option>                    
         </select>
         <!-- Paginador -->
         <div class="tablePaginator">
-          <div class="tablePage"><input type="text" value="100"> de 219</div>
+          <div class="tablePage"><input type="text" value="1"> de <span class="totalPages">1</span></div>
           <div class="tablePreviousPage"><img src="media/module/table/img/a-left.png" alt="previous page"></div>
           <div class="tableNextPage"><img src="media/module/table/img/a-right.png" alt="next page"></div>
         </div>
@@ -175,44 +173,11 @@ class TableView {
     </div>
     <table class="tableClass clearfix">
 
-    <tr>
-      <th></th>
-      <th>
-        <div class="clearfix">
-          <div>Name</div>
-          <div><img src="media/module/table/img/up.png"></div>
-        </div>
-      </th>
-      <th>
-        <div class="clearfix">
-          <div>Description</div>
-          <div><img src="media/module/table/img/up.png"></div>
-        </div>
-      </th>
-      <th>
-        <div class="clearfix">
-          <div>Date</div>
-          <div><img src="media/module/table/img/up.png"></div>
-        </div>
-      </th>
-      <th>
-        <div class="clearfix">
-          <div>Province</div>
-          <div><img src="media/module/table/img/up.png"></div>
-        </div>
-      </th>
-      <th>
-        <div class="clearfix">
-          <div>Status</div>
-          <div><img src="media/module/table/img/down.png"></div>
-        </div>
-      </th>
-    </tr>
 
     </table>
     <!-- Paginador -->
     <div class="tablePaginator ">
-      <div class="tablePage"><input type="text" value="100"> de 219</div>
+      <div class="tablePage"><input type="text" value="1"> de <span class="totalPages">1</span></div>
       <div class="tablePreviousPage"><img src="media/module/table/img/a-left.png" alt="previous page"></div>
       <div class="tableNextPage"><img src="media/module/table/img/a-right.png" alt="next page"></div>
     </div>

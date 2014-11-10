@@ -22,25 +22,29 @@ class MysqlUserDAO extends MysqlDAO
   //  Authenticate user
   //
   //  Return: UserVO (null if 0 rows)
-  function authenticateUser($connection, $login, $password)
+  function authenticateUser($connectionControl, $login, $password)
   {
-    // SQL Query
-    $StrSQL = "SELECT * FROM `user` WHERE `login` = '".$connection->real_escape_string( $login )."' and `password` = SHA1('".$connection->real_escape_string( $password )."');";
-    // Secure SQL Query for log dump
-    $StrSQLSecure = "SELECT * FROM `user` WHERE `login` = '".$connection->real_escape_string( $login )."' and `password` = SHA1('XXX');";
 
-    if( $res = MysqlDAOutils::execSQL($connection,$StrSQL, StrSQLSecure) ) {
-      if($res->num_rows == 1)
-        return $this->FindByLogin($connection, $login);
-      else
+    Cogumelo::objdebug($password);
+    // SQL Query
+    $strSQL = "SELECT * FROM `user` WHERE `login` = ? and `password` = ? ;";
+
+    if( $res = $this->execSQL($connectionControl, $strSQL, array($login, $password)) ) {
+
+      if($res->num_rows == 1){
+        return $this->find($connectionControl, $login, 'login');
+      }
+      else{
         return false;
+      }
     }
-    else
-      return false;
+    else{
+      return COGUMELO_ERROR;
+    }
 
   }
 
-
+/*
   //
   //  Use an UserVO to update a User password.
   //
@@ -63,22 +67,15 @@ class MysqlUserDAO extends MysqlDAO
 
     return MysqlDAOutils::execSQL($connection, $StrSQL, $StrSQLSecure);
   }
+*/
 
   //
   //  Use an UserVO to update User last login
   //
-  function updateTime($connection, $user)
+  function updateTimeLogin($connectionControl, $id, $date)
   {
-    // SQL Query
-    $StrSQL = sprintf("UPDATE `user` SET
-        timeLastLogin = '%s'
-      WHERE `id` = %s ;",
-      $user->getter('timeLastLogin'),
-      $user->getter('id')
-    );
-
-    return MysqlDAOutils::execSQL($connection,$StrSQL);
+    $strSQL = "UPDATE `user` SET timeLastLogin = ? WHERE `id` = ? ;";
+    $res = $this->execSQL($connectionControl, $strSQL, array($date, $id));
+    return $res;
   }
 }
-
-?>

@@ -1,6 +1,7 @@
 <?php
 Cogumelo::load('c_view/View.php');
 user::load('controller/UserController.php');
+user::load('controller/UserAccessController.php');
 user::load('model/UserVO.php');
 
 common::autoIncludes();
@@ -22,21 +23,16 @@ class UserView extends View
     return true;
   }
 
-  function main() {
 
-  }
 
   function loginForm() {
 
-    $form = new FormController( 'loginForm', '/user/loginForm' ); //actionform
-
-
+    $form = new FormController( 'loginForm', '/user/sendloginform' ); //actionform
     $form->setField( 'userLogin', array( 'placeholder' => 'Login' ));
-    $form->setField( 'userPassword', array( 'placeholder' => 'Contraseña') );
-
+    $form->setField( 'userPassword', array( 'type' => 'password', 'placeholder' => 'Contraseña') );
     $form->setField( 'loginSubmit', array( 'type' => 'submit', 'value' => 'Entrar' ) );
 
-    /******************************************************************************************** VALIDATIONS */
+    /************************************************************** VALIDATIONS */
     $form->setValidationRule( 'userLogin', 'required' );
     $form->setValidationRule( 'userPassword', 'required' );
 
@@ -67,28 +63,26 @@ class UserView extends View
     if( isset( $postData[ 'cgIntFrmId' ] ) ) {
       // Creamos un objeto recuperandolo de session y añadiendo los datos POST
       $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
-      // Creamos un objeto con los validadores
-      $validator = new FormValidators();
-
-      // y lo asociamos
-      $form->setValidationObj( $validator );
-
+      // Creamos un objeto con los validadores y lo asociamos
+      $form->setValidationObj( new FormValidators() );
       $form->validateForm();
-      $jvErrors = $form->getJVErrors();
 
       //Si todo esta OK!
-      if( sizeof( $jvErrors ) == 0 ){
-
+      if( sizeof( $form->getJVErrors() ) == 0 ){
         $valuesArray = $form->getValuesArray();
-        $userControl = new UserController();
-        $res = $userControl->authenticateUser($valuesArray['userLogin'], $valuesArray['userPassword']);
+        $userAccessControl = new UserAccessController();
+        $res = $userAccessControl->userLogin($valuesArray['userLogin'], $valuesArray['userPassword']);
+
+        if(!$res){
+          $form->addJVError('.ffn-login', 'El campo login o password es erróneo');
+        }
       }
 
-      if( sizeof( $jvErrors ) > 0 ) {
+      if( sizeof( $form->getJVErrors() ) > 0 ) {
         echo json_encode(
           array(
             'success' => 'error',
-            'jvErrors' => $jvErrors,
+            'jvErrors' => $form->getJVErrors(),
             'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
           )
         );
@@ -114,27 +108,25 @@ class UserView extends View
     $form = new FormController( 'registerForm', '/user/sendregisterform' ); //actionform
 
 
-    $form->setField( 'userLogin', array( 'placeholder' => 'Login' ) );
-    $form->setField( 'userPassword', array( 'placeholder' => 'Contraseña' ) );
-    $form->setField( 'userPassword2', array( 'placeholder' => 'Repite contraseña' ) );
-
-    $form->setField( 'userName', array( 'placeholder' => 'Nombre' ) );
-    $form->setField( 'userSurname', array( 'placeholder' => 'Apellidos' ) );
-    $form->setField( 'userEmail', array( 'placeholder' => 'Email' ) );
-
-    $form->setField( 'userRole', array( 'placeholder' => 'Rol' ) );
-
-    $form->setField( 'userDescription', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
-    $form->setField( 'userAvatar', array( 'placeholder' => 'Avatar' ) );
-
-    $form->setField( 'registerSubmit', array( 'type' => 'submit', 'value' => 'Registrar' ) );
+    $form->setField( 'login', array( 'placeholder' => 'Login' ) );
+    $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña' ) );
+    $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => 'Repite contraseña' ) );
+    $form->setField( 'name', array( 'placeholder' => 'Nombre' ) );
+    $form->setField( 'surname', array( 'placeholder' => 'Apellidos' ) );
+    $form->setField( 'email', array( 'placeholder' => 'Email' ) );
+    $form->setField( 'role', array( 'placeholder' => 'Rol' ) );
+    $form->setField( 'description', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
+    $form->setField( 'avatar', array( 'placeholder' => 'Avatar' ) );
+    $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Registrar' ) );
 
     /******************************************************************************************** VALIDATIONS */
-    $form->setValidationRule( 'userLogin', 'required' );
-    $form->setValidationRule( 'userPassword', 'required' );
-    $form->setValidationRule( 'userPassword2', 'required' );
+    $form->setValidationRule( 'login', 'required' );
+    $form->setValidationRule( 'email', 'required' );
+    $form->setValidationRule( 'password', 'required' );
+    $form->setValidationRule( 'password2', 'required' );
 
-    $form->setValidationRule( 'userPassword', 'equalTo', '#userPassword2' );
+    $form->setValidationRule( 'password', 'equalTo', '#password2' );
+    $form->setValidationRule( 'email', 'email' );
 
     $form->saveToSession();
 
@@ -163,28 +155,36 @@ class UserView extends View
     if( isset( $postData[ 'cgIntFrmId' ] ) ) {
       // Creamos un objeto recuperandolo de session y añadiendo los datos POST
       $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
-      // Creamos un objeto con los validadores
-      $validator = new FormValidators();
-
-      // y lo asociamos
-      $form->setValidationObj( $validator );
+      // Creamos un objeto con los validadores y lo asociamos
+      $form->setValidationObj( new FormValidators() );
 
       $form->validateForm();
-      $jvErrors = $form->getJVErrors();
 
       //Si todo esta OK!
-      if( sizeof( $jvErrors ) == 0 ){
+      if( sizeof( $form->getJVErrors() ) == 0 ){
 
+        //Validaciones
         $valuesArray = $form->getValuesArray();
+
         $userControl = new UserController();
-        $res = $userControl->authenticateUser($valuesArray['registerLogin'], $valuesArray['registerPassword']);
+        $loginExist = $userControl->find($valuesArray['login'], 'login');
+
+        if($loginExist){
+          $form->addJVError('.ffn-login', 'El campo login específicado ya esta en uso.');
+        }
+
+        $valuesArray['password'] = sha1($valuesArray['password']);
+        unset($valuesArray['password2']);
+        $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
+
+        $res = $userControl->createFromArray($valuesArray);
       }
 
-      if( sizeof( $jvErrors ) > 0 ) {
+      if( sizeof( $form->getJVErrors() ) > 0 ) {
         echo json_encode(
           array(
             'success' => 'error',
-            'jvErrors' => $jvErrors,
+            'jvErrors' => $form->getJVErrors(),
             'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
           )
         );

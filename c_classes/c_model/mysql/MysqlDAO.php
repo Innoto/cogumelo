@@ -21,6 +21,7 @@ class MysqlDAO extends DAO
       $coma = "";
       foreach ($ORDArray as $elementK => $elementV)
       {
+        if( !preg_match('/\s/',$elementK) )
         if ($elementV < 0)
           $orderSTR .= $coma .$elementK." DESC";
         else
@@ -71,14 +72,14 @@ class MysqlDAO extends DAO
         else {
 
           Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$connectionControl->stmt->error.' - '.$sql);
-          $ret_data = false;
+          $ret_data = COGUMELO_ERROR;
         }
 
     }
     else {
       Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connectionControl->db->error.' - '.$sql);
 
-      $ret_data = false;
+      $ret_data = COGUMELO_ERROR;
     }
 
     return $ret_data;
@@ -175,7 +176,9 @@ class MysqlDAO extends DAO
       $key = $VO->getFirstPrimarykeyId();
     }
 
-    $filter = array($key => $search);
+    $this->filters[$key.'FindMethod'] = $key.' = ?';
+
+    $filter = array($key.'FindMethod' => $search);
 
     if($res = $this->listItems($connectionControl, $filter, false, false, false, $resolveDependences, $cache) ) {
       return $res->fetch();
