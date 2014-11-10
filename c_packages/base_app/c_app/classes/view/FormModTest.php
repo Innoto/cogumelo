@@ -31,7 +31,9 @@ class FormModTest extends View
     error_log( 'FormModTest: loadForm');
     error_log( '--------------------------------' );error_log( '--------------------------------' );
 
-    $form = new FormController( 'probaPorto', '/form-mod-action' ); //actionform
+    $form = new FormController( 'probaPorto', '/form-mod-action' );
+
+    $form->setSuccess( array( 'accept' => 'Gracias por participar', 'redirect' => '/' ) );
 
     $form->setField( 'inputFicheiro', array( 'type' => 'file', 'id' => 'inputFicheiro',
       'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro',
@@ -46,13 +48,8 @@ class FormModTest extends View
       'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' ),
       'multiple' => 'multiple'
       ) );
-
-    $form->setField( 'input1', array( 'placeholder' => 'Mete 1 valor', 'value' => '5' ) );
-    $form->setValidationRule( 'input1', 'required' );
-    $form->setValidationRule( 'input1', 'numberEU' );
-    //$form->setValidationRule( 'input1', 'regex', '^\d+$' );
     */
-    $form->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor67' ) );
+    $form->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor678' ) );
     $form->setValidationRule( 'input2', 'required' );
     $form->setValidationRule( 'input2', 'minlength', '8' );
 
@@ -72,6 +69,11 @@ class FormModTest extends View
 
 
 
+    $form->getSuccess();
+
+
+
+    // Una vez que hemos definido todo, guardamos el form en sesion
     $form->saveToSession();
 
     print '<!DOCTYPE html>'."\n".
@@ -141,85 +143,45 @@ class FormModTest extends View
 
     error_log( print_r( $postData, true ) );
 
-    if( isset( $postData[ 'cgIntFrmId' ] ) ) {
-      // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-      $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
-      // Creamos un objeto con los validadores y lo asociamos
-      $form->setValidationObj( new FormValidators() );
+    // Creamos un objeto recuperandolo de session y añadiendo los datos POST
+    $form = new FormController( false, false, $formPost = $postData );
+    // Creamos un objeto con los validadores y lo asociamos
+    $form->setValidationObj( new FormValidators() );
 
 
-      // CAMBIANDO AS REGLAS
-      //$form->setValidationRule( 'input1', 'required' );
-      //$form->setValidationRule( 'input2', 'required' );
-      //$form->setValidationRule( 'input1', 'numberEU' );
-      //$form->setValidationRule( 'input1', 'minlength', '3' );
-      $form->setValidationRule( 'input2', 'maxlength', '10' );
-      //$form->setValidationRule( 'select1', 'required' );
-      //$form->setValidationRule( 'check1', 'required' );
+    // CAMBIANDO AS REGLAS
+    $form->setValidationRule( 'input2', 'maxlength', '10' );
 
-      $form->validateForm();
+    $form->validateForm();
 
-      $form->addFieldRuleError( 'check1', 'calquera', 'Un mensaxe de error de campo' );
-      $form->addFormError( 'Ola meu... ERROR porque SI ;-)' );
+    //$form->addFieldRuleError( 'check1', 'cogumelo', 'Un mensaxe de error de campo' );
+    //$form->addFormError( 'Ola meu... ERROR porque SI ;-)' );
 
-      $jvErrors = $form->getJVErrors();
-
-
-      if( sizeof( $jvErrors ) === 0 ) {
-        // Todo OK. Falta procesar File Fields
-        foreach( $form->getFieldsNamesArray() as $fieldName ){
-          if( $form->getFieldType( $fieldName ) === 'file' && !$form->isEmptyFieldValue( $fieldName ) ) {
-            error_log( 'FILE: Almacenando File Field: '.$fieldName );
-            $destDir = $form->getFieldParam( $fieldName, 'destDir' );
-            $fileStatus = $form->getFieldParam( $fieldName, 'fileStatus' );
-
-            error_log( print_r( $fileStatus, true ) );
-
-            $fileFieldValue = $form->getFieldValue( $fieldName );
-            /*
-            $fileStatus['tmpFile'] =
-              'name'
-              'originalName'
-              'absLocation'
-              'type'
-              'size'
-            */
-            // mv $fileStatus['tmpFile']['absLocation'] $destDir
-            $fileName = $form->secureFileName( $fileStatus['tmpFile']['originalName'] );
-            error_log( 'FILE: movendo ' . $fileStatus['tmpFile']['absLocation'] . ' a ' . $destDir.$fileName );
-            rename( $fileStatus['tmpFile']['absLocation'], $destDir.$fileName );
-          }
+    if( sizeof( $form->getJVErrors() ) === 0 ) {
+      // Todo OK. Falta procesar File Fields
+      foreach( $form->getFieldsNamesArray() as $fieldName ){
+        if( $form->getFieldType( $fieldName ) === 'file' && !$form->isEmptyFieldValue( $fieldName ) ) {
+          error_log( 'FILE: Almacenando File Field: '.$fieldName );
+          $destDir = $form->getFieldParam( $fieldName, 'destDir' );
+          $fileStatus = $form->getFieldParam( $fieldName, 'fileStatus' );
+          error_log( print_r( $fileStatus, true ) );
+          $fileFieldValue = $form->getFieldValue( $fieldName );
+          // $fileStatus['tmpFile'] = 'name'=>'', 'originalName'=>'', 'absLocation'=>'', 'type'=>'', 'size'=>''
+          $fileName = $form->secureFileName( $fileStatus['tmpFile']['originalName'] );
+          error_log( 'FILE: movendo ' . $fileStatus['tmpFile']['absLocation'] . ' a ' . $destDir.$fileName );
+          rename( $fileStatus['tmpFile']['absLocation'], $destDir.$fileName );
         }
       }
+    }
 
-      if( sizeof( $jvErrors ) > 0 ) {
-
-
-        // Añado errores a mano
-        $form->addFormError( 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.', 'formError' );
-        $form->addFormError( 'Error a lo loco :D','sitioNonDefinido' );
-        // y recargo los errores para tenerlos todos
-        $jvErrors = $form->getJVErrors();
-        echo json_encode(
-          array(
-            'success' => 'error',
-            'jvErrors' => $jvErrors,
-            'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
-          )
-        );
-      }
-      else {
-        echo json_encode( array( 'success' => 'success' ) );
-      }
-
-    } //if( isset( $postData[ 'cgIntFrmId' ] ) )
+    if( sizeof( $form->getJVErrors() ) > 0 ) {
+      // Añado errores a mano
+      $form->addFormError( 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.', 'formError' );
+      $form->addFormError( 'Error a lo loco :D','sitioNonDefinido' );
+      echo $form->jsonFormError();
+    }
     else {
-      echo json_encode(
-        array(
-          'success' => 'error',
-          'error' => 'Los datos del formulario no han llegado bien al servidor. NO SE HAN GUARDADO.'
-        )
-      );
+      echo $form->jsonFormOk();
     }
 
   }
