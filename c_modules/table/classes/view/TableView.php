@@ -156,7 +156,7 @@ class TableView {
       <div class="tableActions clearfix">
         <div class="addElem"><img src="media/module/table/img/add.png" alt="Add"></div>
         <div class="exportContainer"><img src="media/module/table/img/export.png" alt="Export"></div>
-        <select>
+        <select class="actionSelect">
           <option value="0">Acciones</option>
           <option value="delete">Borrar</option>
           <option value="move1">Mover a (A Coru&ntilde;a)</option>

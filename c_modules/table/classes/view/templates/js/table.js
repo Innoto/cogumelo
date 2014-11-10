@@ -38,7 +38,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.anyColHeaderQstr = '.'+tableId+'.tableContainer table.tableClass tr th';
   that.pagersPrevious = $('.'+tableId+'.tableContainer .tablePaginator .tablePreviousPage');
   that.pagersNext = $('.'+tableId+'.tableContainer .tablePaginator .tableNextPage'); 
-
+  that.actionSelect = $('.'+tableId+'.tableContainer .tableActions .actionSelect'); 
 
 
   that.interfaceAction = function( status ){
@@ -305,6 +305,12 @@ function cogumeloTable( tableId, tableUrl ) {
     });
   }
 
+
+  that.actionOnSelectedRows = function() {
+    
+  }
+
+
   // EVENTS
 
   // click open filters
@@ -315,6 +321,11 @@ function cogumeloTable( tableId, tableUrl ) {
   // click close filters
   that.closeFiltersButton.on("click", function(){
     that.interfaceAction('closeFilters');
+  });
+
+  // Action select
+  that.actionSelect.on("change", function(){
+    that.actionOnSelectedRows();
   });
 
   // tabs change
