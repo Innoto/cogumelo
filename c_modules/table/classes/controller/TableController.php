@@ -37,23 +37,25 @@ class TableController{
 
     $this->control = $control;
 
-    // set tab
+    // set orders
+    $this->clientData['order'] = $postdata['order'];
+
+    // set tabs
     if($postdata['tab']) {
       $this->currentTab = $postdata['tab'];
     }
 
-    // set range
-
+    // set ranges
     if( $postdata['range'] != false ){
       $this->clientData['range'] = $postdata['range'];
     }
     else {
       $this->clientData['range'] = array(0, $this->rowsEachPage );
     }
-
+    
     $this->clientData['method'] = $postdata['method'];
     $this->clientData['filters'] = $postdata['filters'];
-    $this->clientData['order'] = $postdata['order'];
+
     
   }
 
@@ -86,6 +88,17 @@ class TableController{
       Cogumelo::error('Col id "'.$colId.'" not found in table, can`t add col rule');
     }
   }
+
+  /*
+  * Set table action over on selected rows
+  *
+  * @param string actionId reference for action
+  * @param array ids of selected rows
+  * @return void
+  */
+  function setAction( $actionId, $rows = array() ) {
+
+  }  
 
   /*
   * Set tabs

@@ -229,7 +229,9 @@ function cogumeloTable( tableId, tableUrl ) {
       if( el ) {
         that.setOrderValue( el.attr('colKey') );
       }
-    });     
+    });
+
+
 
   }
 
@@ -288,6 +290,12 @@ function cogumeloTable( tableId, tableUrl ) {
     });
 
     that.tableContent.append( trows );
+
+    // uncheck head checkbox when change any row
+    $(that.allTableCheckBoxesQstr).unbind('change');
+    $(that.allTableCheckBoxesQstr).on('change', function( chClick ){
+      $(that.headTableCheckBoxQstr).prop('checked', false)
+    });
   }
 
   // EVENTS
