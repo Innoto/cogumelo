@@ -154,7 +154,6 @@ class TableView {
         <button class="clearFilters">Eliminar filtros</button>
       </div>
       <div class="tableActions clearfix">
-        <div class="selectAll"><input type="checkbox"></div>
         <div class="addElem"><img src="media/module/table/img/add.png" alt="Add"></div>
         <div class="exportContainer"><img src="media/module/table/img/export.png" alt="Export"></div>
         <select>

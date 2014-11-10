@@ -29,6 +29,8 @@ function cogumeloTable( tableId, tableUrl ) {
   that.tabsContent = $('.'+tableId+'.tableContainer .tableFilters select'); 
   that.pagersTotal = $('.'+tableId+'.tableContainer .tablePaginator .tablePage .totalPages');  
   that.pagersCurrent = $('.'+tableId+'.tableContainer .tablePaginator .tablePage input');  
+  that.headTableCheckBoxQstr = '.'+tableId+'.tableContainer .tableClass .headCheckBox';
+  that.allTableCheckBoxesQstr = '.'+tableId+'.tableContainer .tableClass .eachRowCheckBox';  
   
   // buttons and action elements
   that.openFiltersButton = $('.'+tableId+'.tableContainer .openFilters');
@@ -177,7 +179,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
     var orderUpImg = '<img src="/media/module/table/img/up.png">';
     var orderDownImg = '<img src="/media/module/table/img/down.png">';    
-    var h = '<th></th>';
+    var h = '<th><div class="selectAll"><input class="headCheckBox" type="checkbox"></div></th>';
 
 
     $.each(that.tableData.colsDef, function(i,e)  {
@@ -201,6 +203,12 @@ function cogumeloTable( tableId, tableUrl ) {
 
     that.tableContent.append('<tr>'+h+'</tr>');
     
+
+    // select/unselect all checkbox
+    $(that.headTableCheckBoxQstr).on("change", function(el) {
+      $(that.allTableCheckBoxesQstr).prop('checked', $(el.target).prop('checked') );;
+    });
+
     // click event table headers
     $(that.anyColHeaderQstr).on("click", function(thElement){
 
@@ -270,7 +278,7 @@ function cogumeloTable( tableId, tableUrl ) {
     
     $.each(that.tableData.table , function( rowIndex, row ) {
       trows += '<tr>';
-      trows += '<td></td>';
+      trows += '<td> <input class="eachRowCheckBox" type="checkbox"> </td>';
 
       $.each( row, function( i, e ){
         trows += '<td>' + e +'</td>';

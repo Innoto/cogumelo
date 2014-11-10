@@ -45,7 +45,6 @@ class TableController{
     // set range
 
     if( $postdata['range'] != false ){
-          var_dump( $postdata['range'] );
       $this->clientData['range'] = $postdata['range'];
     }
     else {

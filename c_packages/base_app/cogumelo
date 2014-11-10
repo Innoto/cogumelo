@@ -93,16 +93,12 @@
 
         case 'generateTranslations':
           require_once(COGUMELO_LOCATION."/c_packages/base_app/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
-
-          translateWeb();
           generateTranslations();
           echo "The files.po are ready to be edited!\n";
         break;
 
         case 'compileTranslations':
           require_once(COGUMELO_LOCATION."/c_packages/base_app/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
-
-          translateWeb();
           compileTranslations();
           echo "The files.mo are ready to be used!\n";
         break;
@@ -230,35 +226,13 @@
       popen('mysql -u '.$user.' -p '.$BD.'< '.$DIR.$file, 'r');
     }
     echo "\nYour db was successfully restored!\n";
-  }
-
-  /**
-  * Prepare the enviroment to localize the project
-  */
-  function translateWeb(){
-    $textdomain="c_cogumelo";
-
-    $locale= 'es_ES';
-
-    global $c_lang;
-
-    putenv('LANGUAGE='.$locale);
-    putenv('LANG='.$locale);
-    putenv('LC_ALL='.$locale);
-    putenv('LC_MESSAGES='.$locale);
-
-    setlocale(LC_ALL,$locale);
-    setlocale(LC_CTYPE,$locale);
-
-    bindtextdomain($textdomain, SITE_PATH.'conf/i18n');
-    bind_textdomain_codeset($textdomain, 'UTF-8');
-    textdomain($textdomain);
-  }
+}
 
   /**
     * Get all the text to be translated and update or create a file.po if not exists
     */
   function generateTranslations(){
+    // Prepare the enviroment to localize the project
     $textdomain="c_cogumelo";
 
     $locale= 'es_ES';
@@ -277,22 +251,13 @@
     bind_textdomain_codeset($textdomain, 'UTF-8');
     textdomain($textdomain);
 
-
-    /**
-    * Generate files.po or update them if don't exist already
-    */
-
     $dir_path = SITE_PATH.'conf/i18n/';
-    $tmp_dir = SITE_PATH.'tmp/';
+    $dir_modules_c = COGUMELO_LOCATION.'/c_modules/';
+    $dir_modules = SITE_PATH.'modules/';
+    global $C_ENABLED_MODULES;
+    $modules = $C_ENABLED_MODULES;
 
-    // Get all the tpl files excluding the translations and the libraries and save them to a temporary file
-    $all_tpl = 'find '.getcwd().' -iname "*.tpl" | grep -v vendorServer > '.$tmp_dir.'xgettext_tpl.tmp';
-    exec($all_tpl);
-    // Get all the js files excluding the translations and the libraries and save them to a temporary file
-    $all_js = 'find '.getcwd().' -iname "*.js" | grep -v vendor | grep -v jquery-validation | grep -v modules | grep -v c_modules | grep -v conf > '.$tmp_dir.'xgettext_js.tmp';
-    exec($all_js);
-
-    // Check if the .po files exist already
+    // Check if the .po files already exist
     $existPHP = false;
     $existTPL = false;
     $existJS = false;
@@ -317,6 +282,7 @@
     /************ PHP *************/
     /******************************/
 
+    // get all the .php files unless files into modules folder
     $all_files_php = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php'), false);
     foreach($all_files_php as $i => $dir){
       if (strpos($dir,'/c_modules/')===false && strpos($dir,'/modules/')===false
@@ -324,11 +290,6 @@
             $files_php[$i] = $dir->getRealPath();
       }
     }
-
-    $dir_modules_c = COGUMELO_LOCATION.'/c_modules/';
-    $dir_modules = SITE_PATH.'modules/';
-    global $C_ENABLED_MODULES;
-    $modules = $C_ENABLED_MODULES;
 
     // get the .php files into modules folder
     $files_module_php = CacheUtilsController::listFolderFiles($dir_modules, array('php'), false);
@@ -379,111 +340,81 @@
     /******************************/
     /************* JS *************/
     /******************************/
-/*
-     // We check if the .po file exists already and merge the new translations. If not, we must create it.
-    $files_all_js = file($tmp_dir.'xgettext_js.tmp');
-    foreach ($files_all_js as $k => $value){
-      $array_js[$k] = (string) ereg_replace('[[:space:]]+','',$value); // We clean line breaks
+
+    // get all the .js files unless files into modules folder
+    $all_files_js = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('js'), false);
+    foreach($all_files_js as $i => $dir){
+      if (strpos($dir,'/c_modules/')===false && strpos($dir,'/modules/')===false
+          && strpos($dir,'/vendor/')===false && strpos($dir,'/vendorServer/')===false
+          && strpos($dir,'/pluggins/')===false && strpos($dir,'/jquery-validation/')===false 
+          && strpos($dir,'/tmp/')===false){ // We exclude files from modules, tmp and vendorServer
+            $files_js[$i] = $dir->getRealPath();
+      }
     }
 
-    if ($existJS){ // Extract new texts and merge in the .po file
-      $entries_js = Gettext\Extractors\JsCode::extract($array_js);
-      //Get the translations of the code that are stored in a po file
-      $oldEntries = Gettext\Extractors\Po::extract($dir_path.$textdomain.'_js.po');
-      //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-      $entries_js->mergeWith($oldEntries); //now $entries has all the values
-    }
-    else{ // Extract the texts to be translated and create the .po file
-      $entries_js = Gettext\Extractors\JsCode::extract($array_js);
-    }
-
-    Gettext\Generators\Po::generateFile($entries_js, $dir_path.$textdomain.'_js.po');
-
-    // Extract all the strings from the modules files
-    foreach ($modules as $k => $dir) {
-
-      $all_module_c_js = 'find '.$dir_modules_c.$dir.' -iname "*.js" >> '.$tmp_dir.'xgettext_module_js.tmp';
-      shell_exec($all_module_c_js);
-      $all_module_js = 'find '.$dir_modules.$dir.' -iname "*.js" >> '.$tmp_dir.'xgettext_module_js.tmp';
-      shell_exec($all_module_js);
-      $files_module_js = file($tmp_dir.'xgettext_module_js.tmp');
-
-      foreach ($files_module_js as $k => $value) {
-        $parts = explode('/'.$dir.'/',$value);
-        if ($parts && $parts[1]){
+    // get the .js files into modules folder
+    $files_module_js = CacheUtilsController::listFolderFiles($dir_modules, array('js'), false);
+    foreach ($modules as $i => $dir) {
+      foreach ($files_module_js as $k => $file) {
+        $parts = explode('/'.$dir.'/',$file);
+        if (sizeof($parts)==2){
           $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
           $array_js_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
         }
       }
     }
 
-     if ($existJS){ //if the .po file exists
-      //echo "\n ENTRA \n";
+    // get the .js files into c_modules folder
+    $files_module_js_c = CacheUtilsController::listFolderFiles($dir_modules_c, array('js'), false);
+    foreach ($modules as $i => $dir) {
+      foreach ($files_module_js_c as $k => $file) {
+        $parts = explode('/'.$dir.'/',$file);
+        if (sizeof($parts)==2){
+          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
+          $array_js_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
+        }
+      }
+    }
+
+    // We combine all the arrays that we've got in an only array
+    $array_js = array_merge($array_js_module, $array_js_module_c, $files_js);
+
+    if ($existJS){ //merge
       //Scan the php code to find the latest gettext entries
-      $entries = Gettext\Extractors\PhpCode::extract($array_js_module);
+      $entries = Gettext\Extractors\JsCode::extract($array_js);
+
       //Get the translations of the code that are stored in a po file
       $oldEntries = Gettext\Extractors\Po::extract($dir_path.$textdomain.'_js.po');
+
       //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
       $entries->mergeWith($oldEntries); //now $entries has all the values
     }
-    else{ // we've to create it
-      $entries = Gettext\Extractors\PhpCode::extract($array_js_module);
+    else{ //create
+      $entries = Gettext\Extractors\JsCode::extract($array_js);
     }
 
     //Now save the php.po file with the result
-    Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_js.po');*/
+    Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_js.po');
+
 
     /*********** END JS **********/
-
 
     /******************************/
     /************* TPL *************/
     /******************************/
 
-    if ($existTPL){ // Extract new texts and merge in the .po file
-      $extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.pot';
-    }
-    else{ // Extract all the texts to be translated and create the file
-      //$extractTPL = 'xgettext --from-code=UTF-8 --files-from='.$tmp_dir.'xgettext_tpl.tmp -o '.$dir_path.$textdomain.'_tpl.po'; //tpl
-      //shell_exec($extractTPL);
-    }
+    // Buscar a forma de extraer os strings dos tpl
 
     /*********** END TPL **********/
-
-    /* Delete the modified files remaining */
-    /*if (is_dir($dir_path)){
-      $handle = opendir($dir_path);
-      while ($file = readdir($handle)) {
-        if ($file=='c_cogumelo_php.po~' || $file=='c_cogumelo_tpl.po~' || $file=='c_cogumelo_js.po~' ||
-            $file=='c_cogumelo_php.pot'|| $file=='c_cogumelo_tpl.pot' || $file=='c_cogumelo_js.pot'){
-              unlink($dir_path.$file);
-        }
-      }
-    }*/
-
-    /* Delete the temporary files */
-    /*if (is_dir($tmp_dir)){
-      $handle = opendir($tmp_dir);
-      while ($file = readdir($handle)) {
-        if ($file=='xgettext_js.tmp' || $file=='xgettext_module_js.tmp' || $file=='xgettext_module_php.tmp' ||
-            $file=='xgettext_php.tmp'|| $file=='xgettext_tpl.tmp' || $file=='xgettext_module_tpl.tmp'){
-              unlink($tmp_dir.$file);
-        }
-      }
-    }*/
   }
 
   /**
   * Compile files.po to get the translations ready to be used
   */
   function compileTranslations(){
+    $dir_path = SITE_PATH.'conf/i18n/';
     $textdomain="c_cogumelo";
-    foreach(explode(',', 'gl,es,en') as $lng) {
-      $filepath = SITE_PATH.'conf/i18n/';
-      exec('msgfmt -o '.$filepath.$lng.'/LC_MESSAGES/'.$textdomain.'_php.mo '.$filepath.$textdomain.'_php.po');
-      exec('msgfmt -o '.$filepath.$lng.'/LC_MESSAGES/'.$textdomain.'_js.mo '.$filepath.$textdomain.'_js.po');
-      // exec('msgfmt -o '.$filepath.$textdomain.'_tpl.mo '.$filepath.$textdomain.'_tpl.po');
-    }
+
   }
 
   /**
