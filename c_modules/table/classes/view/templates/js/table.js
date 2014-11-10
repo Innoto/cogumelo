@@ -285,7 +285,7 @@ function cogumeloTable( tableId, tableUrl ) {
     
     $.each(that.tableData.table , function( rowIndex, row ) {
       trows += '<tr>';
-      trows += '<td> <input class="eachRowCheckBox" key="'+row.rowReferenceKey+'" type="checkbox"> </td>';
+      trows += '<td> <input class="eachRowCheckBox" rowReferenceKey="'+row.rowReferenceKey+'" type="checkbox"> </td>';
 
       $.each( row, function( i, e ){
         if( i != 'rowReferenceKey' ){
@@ -307,7 +307,17 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
   that.actionOnSelectedRows = function() {
-    
+
+    var selectedRows = [];
+
+    $(that.allTableCheckBoxesQstr).each( function(i,e){
+
+      if( $(e).prop('checked') ){
+        selectedRows.push( $(e).attr('rowReferenceKey') );
+      }
+    });
+
+    console.log( selectedRows );
   }
 
 
