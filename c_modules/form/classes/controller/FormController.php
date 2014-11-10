@@ -7,6 +7,7 @@ class FormController implements Serializable {
   private $id = false;
   private $cgIntFrmId = false;
   private $action = false;
+  private $success = false;
   private $method = 'post';
   private $enctype = 'multipart/form-data';
   private $fields = array();
@@ -16,9 +17,8 @@ class FormController implements Serializable {
 
   // POST submit
   private $postValues = false;
-  //private $evaluateRuleMethod = false;
   private $validationObj = null;
-  private $rulesErrors = array();
+  private $fieldErrors = array();
   private $formErrors = array();
 
   private $replaceAcents = array(
@@ -27,14 +27,17 @@ class FormController implements Serializable {
   );
 
 
-  function __construct( $name = false, $action = false, $cgIntFrmId = false, $formPost = false ) {
-    if( $cgIntFrmId ) {
-      $this->loadFromSession( $cgIntFrmId );
-      if( $formPost ) {
+  function __construct( $name = false, $action = false, $formPost = false ) {
+    error_log( 'formPost: ' . print_r( $formPost, true ) );
+    if( $formPost !== false ) {
+      error_log( 'Instanciando FormController con datos de POST' );
+      $this->loadFromSession( $formPost[ 'cgIntFrmId' ] );
+      if( isset( $formPost ) && $formPost ) {
         $this->loadPostValues( $formPost );
       }
     }
     else {
+      error_log( 'Instanciando FormController sen datos de POST' );
       $this->cgIntFrmId = crypt( uniqid().'---'.session_id(), 'cf' );
       $this->name = $name;
       $this->id = $name;
@@ -53,6 +56,7 @@ class FormController implements Serializable {
     $data[] = $this->id;
     $data[] = $this->cgIntFrmId;
     $data[] = $this->action;
+    $data[] = $this->success;
     $data[] = $this->method;
     $data[] = $this->enctype;
     $data[] = $this->fields;
@@ -71,6 +75,7 @@ class FormController implements Serializable {
     $this->id = array_shift( $data );
     $this->cgIntFrmId = array_shift( $data );
     $this->action = array_shift( $data );
+    $this->success = array_shift( $data );
     $this->method = array_shift( $data );
     $this->enctype = array_shift( $data );
     $this->fields = array_shift( $data );
@@ -151,6 +156,18 @@ class FormController implements Serializable {
   }
 
 
+  public function setSuccess( $success ) {
+    error_log( 'setSuccess: ' . print_r( $success, true ) );
+    $this->success = $success;
+  }
+
+
+  public function getSuccess() {
+    error_log( 'getSuccess: ' . print_r( $this->success, true ) );
+    return $this->success;
+  }
+
+
   public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
     $this->rules[$fieldName][$ruleName] = $ruleParams;
   }
@@ -206,6 +223,8 @@ class FormController implements Serializable {
       $html .= ' action="'.$this->action.'"';
     }
     $html .= ' method="'.$this->method.'">';
+
+    $this->saveToSession(); // Guardamos en sesion de forma automatica al comenzar a generar el formulario
 
     return $html;
   }
@@ -639,7 +658,8 @@ class FormController implements Serializable {
     if( $this->isEmptyFieldValue( $fieldName ) ) {
       if( $this->isRequiredField( $fieldName ) ) {
         error_log( 'evaluateRule: VACIO e required = fallo' );
-        $this->rulesErrors[ $fieldName ][ 'required' ] = false;
+        $this->addFieldRuleError( $fieldName, 'required' );
+        //$this->fieldErrors[ $fieldName ][ 'required' ] = false;
         $fieldValidated = false;
       }
       else {
@@ -677,7 +697,8 @@ class FormController implements Serializable {
           error_log( 'evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
 
           if( !$fieldRuleValidate ) {
-            $this->rulesErrors[ $fieldName ][ $ruleName ] = $fieldRuleValidate;
+            $this->addFieldRuleError( $fieldName, $ruleName );
+            //$this->fieldErrors[ $fieldName ][ $ruleName ] = $fieldRuleValidate;
           }
 
           $fieldValidateValue = $fieldValidateValue && $fieldRuleValidate;
@@ -692,30 +713,63 @@ class FormController implements Serializable {
   }
 
 
-  public function addJVError( $msgClass, $msgText ) {
-    $this->formErrors[] = array( 'msgClass' => $msgClass, 'msgText' => $msgText );
+  public function addFormError( $msgText, $msgClass = false ) {
+    $this->formErrors[] = array( 'msgText' => $msgText, 'msgClass' => $msgClass );
+  }
+
+  public function addFieldRuleError( $fieldName, $ruleName, $msgRuleError = false ) {
+    error_log( "addFieldRuleError: $fieldName, $ruleName, $msgRuleError " );
+    $this->fieldErrors[ $fieldName ][ $ruleName ] = $msgRuleError;
   }
 
 
   public function getJVErrors() {
     $errors = array();
 
-    foreach( $this->rules as $fieldName => $fieldRules ) {
-      foreach( $fieldRules as $ruleName => $ruleParams ) {
-        $msgRule = '';
-        if( isset( $this->rulesErrors[ $fieldName ][ $ruleName ] ) &&
-          $this->rulesErrors[ $fieldName ][ $ruleName ] === false )
-        {
-          $errors[] = array( 'fieldName' => $fieldName, 'msgRule' => $ruleName, 'ruleParams' => $ruleParams, 'JVshowErrors' => array( $fieldName => $msgRule ) );
-        }
+    foreach( $this->fieldErrors as $fieldName => $fieldRules ) {
+      foreach( $fieldRules as $ruleName => $msgRuleError ) {
+        $ruleParams = isset( $this->rules[ $fieldName ][ $ruleName ] ) ? $this->rules[ $fieldName ][ $ruleName ] : false;
+        $errors[] = array( 'fieldName' => $fieldName, 'ruleName' => $ruleName, 'ruleParams' => $ruleParams, 'JVshowErrors' => array( $fieldName => $msgRuleError ) );
       }
     }
 
     foreach( $this->formErrors as $formError ) {
+      // Errores globales (no referidos a un field determinado)
       $errors[] = array( 'fieldName' => false, 'JVshowErrors' => $formError );
     }
 
     return $errors;
+  }
+
+
+  public function jsonFormOk() {
+    echo json_encode(
+      array(
+        'result' => 'ok',
+        'success' => $this->getSuccess()
+      )
+    );
+  }
+
+
+  public function jsonFormError() {
+    $jvErrors = $this->getJVErrors();
+    echo json_encode(
+      array(
+        'result' => 'error',
+        'jvErrors' => $jvErrors
+      )
+    );
+  }
+
+
+  public function existErrors() {
+    return( sizeof( $this->fieldErrors ) > 0 || sizeof( $this->formErrors ) > 0 );
+  }
+
+
+  public function existFieldErrors( $fieldName ) {
+    return( isset( $this->fieldErrors[ $fieldName ] ) || sizeof( $this->formErrors[ $fieldName ] ) > 0 );
   }
 
 
