@@ -44,7 +44,7 @@ class MysqlUserDAO extends MysqlDAO
 
   }
 
-
+/*
   //
   //  Use an UserVO to update a User password.
   //
@@ -67,22 +67,15 @@ class MysqlUserDAO extends MysqlDAO
 
     return MysqlDAOutils::execSQL($connection, $StrSQL, $StrSQLSecure);
   }
+*/
 
   //
   //  Use an UserVO to update User last login
   //
-  function updateTime($connection, $user)
+  function updateTimeLogin($connectionControl, $id, $date)
   {
-    // SQL Query
-    $StrSQL = sprintf("UPDATE `user` SET
-        timeLastLogin = '%s'
-      WHERE `id` = %s ;",
-      $user->getter('timeLastLogin'),
-      $user->getter('id')
-    );
-
-    return MysqlDAOutils::execSQL($connection,$StrSQL);
+    $strSQL = "UPDATE `user` SET timeLastLogin = ? WHERE `id` = ? ;";
+    $res = $this->execSQL($connectionControl, $strSQL, array($date, $id));
+    return $res;
   }
 }
-
-?>

@@ -4,8 +4,8 @@
 // Session controller (UserAdmin).
 //
 
-Cogumelo::load('SessionController.php');
-user::load('UserVO.php');
+Cogumelo::load('c_controller/SessionController.php');
+user::load('model/UserVO.php');
 
 class UserSessionController extends SessionController
 {

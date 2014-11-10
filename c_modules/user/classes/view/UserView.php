@@ -65,29 +65,24 @@ class UserView extends View
       $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
       // Creamos un objeto con los validadores y lo asociamos
       $form->setValidationObj( new FormValidators() );
-
-      $valuesArray = $form->getValuesArray();
-      $userAccessControl = new UserAccessController();
-      $res = $userAccessControl->userLogin($valuesArray['userLogin'], $valuesArray['userPassword']);
-
-      if(!$res){
-        $form->addJVError('.ffn-login', 'El campo login o password es erróneo');
-      }
-
       $form->validateForm();
-      $jvErrors = $form->getJVErrors();
 
       //Si todo esta OK!
-      if( sizeof( $jvErrors ) == 0 ){
+      if( sizeof( $form->getJVErrors() ) == 0 ){
+        $valuesArray = $form->getValuesArray();
+        $userAccessControl = new UserAccessController();
+        $res = $userAccessControl->userLogin($valuesArray['userLogin'], $valuesArray['userPassword']);
 
-
+        if(!$res){
+          $form->addJVError('.ffn-login', 'El campo login o password es erróneo');
+        }
       }
 
-      if( sizeof( $jvErrors ) > 0 ) {
+      if( sizeof( $form->getJVErrors() ) > 0 ) {
         echo json_encode(
           array(
             'success' => 'error',
-            'jvErrors' => $jvErrors,
+            'jvErrors' => $form->getJVErrors(),
             'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
           )
         );
@@ -162,21 +157,21 @@ class UserView extends View
       $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
       // Creamos un objeto con los validadores y lo asociamos
       $form->setValidationObj( new FormValidators() );
-      //Validaciones
-      $valuesArray = $form->getValuesArray();
-
-      $userControl = new UserController();
-      $loginExist = $userControl->find($valuesArray['login'], 'login');
-
-      if($loginExist){
-        $form->addJVError('.ffn-login', 'El campo login específicado ya esta en uso.');
-      }
 
       $form->validateForm();
-      $jvErrors = $form->getJVErrors();
 
       //Si todo esta OK!
-      if( sizeof( $jvErrors ) == 0 ){
+      if( sizeof( $form->getJVErrors() ) == 0 ){
+
+        //Validaciones
+        $valuesArray = $form->getValuesArray();
+
+        $userControl = new UserController();
+        $loginExist = $userControl->find($valuesArray['login'], 'login');
+
+        if($loginExist){
+          $form->addJVError('.ffn-login', 'El campo login específicado ya esta en uso.');
+        }
 
         $valuesArray['password'] = sha1($valuesArray['password']);
         unset($valuesArray['password2']);
@@ -185,11 +180,11 @@ class UserView extends View
         $res = $userControl->createFromArray($valuesArray);
       }
 
-      if( sizeof( $jvErrors ) > 0 ) {
+      if( sizeof( $form->getJVErrors() ) > 0 ) {
         echo json_encode(
           array(
             'success' => 'error',
-            'jvErrors' => $jvErrors,
+            'jvErrors' => $form->getJVErrors(),
             'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
           )
         );

@@ -4,9 +4,9 @@
 // User Access Controller
 //
 
-user::load('UserSessionController.php');
-user::load('UserController.php');
-user::load('UserVO.php');
+user::load('controller/UserSessionController.php');
+user::load('controller/UserController.php');
+user::load('model/UserVO.php');
 
 class UserAccessController
 {
@@ -27,15 +27,13 @@ class UserAccessController
   function userLogin($login, $password)
   {
     $usercontrol= new UserController();
-    if($logeduser = $usercontrol->authenticateUser( $login, $password ));
-    {
+    if($logeduser = $usercontrol->authenticateUser( $login, $password )) {
       $this->sessioncontrol->setUser($logeduser);
       Cogumelo::log("Accepted User authentication: user ".$login." is logged", 'UserLog');
       return true;
     }
-    else
-    {
-      Cogumelo::log("Failed UserAdmin authentication: user ".$login, 'UserLog');
+    else {
+      //Cogumelo::log("Failed User authentication: user ".$login, 'UserLog');
       return false;
     }
   }
