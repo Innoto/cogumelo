@@ -26,7 +26,7 @@ class TableController{
   var $tabs = false;
   var $currentTab = false;
   var $filters = array();
-  var $rowsEachPage = 50;
+  var $rowsEachPage = 5;
 
   /*
   * @param object $control: is the data controller  
@@ -217,7 +217,8 @@ class TableController{
 
         // dump rowVO into row
         $row = array();
-
+            
+        $row['rowReferenceKey'] = $rowVO->getter( $rowVO->getFirstPrimarykeyId() ); 
         foreach($this->colsDef as $colDefKey => $colDef){
           $row[$colDefKey] = $rowVO->getter($colDefKey);
         }

@@ -73,7 +73,8 @@ function cogumeloTable( tableId, tableUrl ) {
       var currentRange = null;
     }
     else {
-      var currentRange = [ (that.currentPage-1)*parseInt(that.tableData.rowsEachPage), (that.currentPage-1)*parseInt(that.tableData.rowsEachPage) + that.currentPage*parseInt(that.tableData.rowsEachPage) -1 ];
+      //var currentRange = [ (that.currentPage-1)*parseInt(that.tableData.rowsEachPage), (that.currentPage-1)*parseInt(that.tableData.rowsEachPage) + that.currentPage*parseInt(that.tableData.rowsEachPage) -1 ];
+      var currentRange = [ (that.currentPage-1)*parseInt(that.tableData.rowsEachPage), that.tableData.rowsEachPage ];
     }
 
 
@@ -242,17 +243,21 @@ function cogumeloTable( tableId, tableUrl ) {
     var maxPage = 1;
 
     if( that.tableData.totalRows > that.tableData.rowsEachPage ){
-      maxPage = Math.floor( that.tableData.totalRows / that.tableData.rowsEachPage );
-      mustReload = true;
+      maxPage = Math.ceil( that.tableData.totalRows / that.tableData.rowsEachPage );
     }
 
 
-    if( typeof page != 'undefined' && page < maxPage && page > 0 ){
-      that.currentPage = page;
+    if( typeof page != 'undefined' ) {
+      mustReload = true;
+
+      if( page <= maxPage && page > 0 ){
+        that.currentPage = page;
+      }
     }
 
     that.pagersTotal.html( maxPage );
     that.pagersCurrent.val( that.currentPage );
+
 
     if( that.currentPage == maxPage ){
       that.pagersNext.addClass('unactive'); // nextPage unactive
@@ -280,10 +285,12 @@ function cogumeloTable( tableId, tableUrl ) {
     
     $.each(that.tableData.table , function( rowIndex, row ) {
       trows += '<tr>';
-      trows += '<td> <input class="eachRowCheckBox" type="checkbox"> </td>';
+      trows += '<td> <input class="eachRowCheckBox" key="'+row.rowReferenceKey+'" type="checkbox"> </td>';
 
       $.each( row, function( i, e ){
-        trows += '<td>' + e +'</td>';
+        if( i != 'rowReferenceKey' ){
+          trows += '<td>' + e +'</td>';
+        }
       });
 
       trows += '<tr>';

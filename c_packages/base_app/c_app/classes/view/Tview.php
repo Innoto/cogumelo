@@ -92,9 +92,9 @@ class Tview extends View
     
 
     // Nome das columnas
-    $tabla->setCol('id', 'Id');
-    $tabla->setCol('lostName', 'Nome');
+    //$tabla->setCol('id', 'Id');
     $tabla->setCol('lostSurname', 'Apelido');
+    $tabla->setCol('lostName', 'Nome');
     $tabla->setCol('lostMail', 'Correo');
     $tabla->setCol('lostProvince', 'Provincia');
     $tabla->setCol('lostPhone', 'Teléfono');
