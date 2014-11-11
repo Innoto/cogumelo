@@ -54,8 +54,6 @@ class Tview extends View
     $tabla->setActionMethod('Mover a Coruña', 'moveToAcoruna', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>1) )');    
     $tabla->setActionMethod('Mover a Lugo', 'moveToLugo', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>2) )');    
 
-
-
     
 
     // Nome das columnas
