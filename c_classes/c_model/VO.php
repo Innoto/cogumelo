@@ -137,7 +137,7 @@ Class VO
   function getter($getterkey)
   {
 
-    $value = false;
+    $value = null;
 
     if( preg_match('#^(.*?)\.(.*)$#', $getterkey, $getter_data) ) {
       $tableName = $getter_data[1];

@@ -27,16 +27,11 @@ class Tview extends View
   }
 
   function tableData() {
-    /*$this->template->addClientStyles('styles/table.less');
-    $this->template->addClientScript('js/table.js');
-    $this->template->setTpl('table.tpl');
-    $this->template->exec();*/
-
 
     table::autoIncludes();
 
-
-    $_POST['filters'] = array();
+    $_POST['search'] = '';
+    //$_POST['filters'] = array();
 
 
     Cogumelo::load('controller/LostController.php');
@@ -49,12 +44,13 @@ class Tview extends View
     $tabla->setTabs('lostProvince', array('1'=>'A Coruña', '2'=>'Lugo'), '2' );
 
 
+    // set id search reference.
+    $tabla->setSearchRefId('tableSearch');
+
     // set table Actions
     $tabla->setActionMethod('Borrar', 'delete', 'deleteFromId($rowId)');
-    $tabla->setActionMethod('Mover a Coruña', 'moveToAcoruna', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>1) )');    
-    $tabla->setActionMethod('Mover a Lugo', 'moveToLugo', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>2) )');    
-
-
+    $tabla->setActionMethod('Mover a Lla Coruña', 'moveToAcoruna', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>1) )');
+    $tabla->setActionMethod('Mover a Lugo', 'moveToLugo', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>2) )');
 
     
 
@@ -69,7 +65,6 @@ class Tview extends View
     // establecer reglas a campo concreto con expresions regulares
     $tabla->colRule('lostProvince', '#1#', 'A Coruña');
     $tabla->colRule('lostProvince', '#2#', 'Lugo');
-
 
     // imprimimos o JSON da taboa
     $tabla->returnTableJson();

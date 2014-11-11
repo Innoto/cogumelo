@@ -94,7 +94,7 @@ function cogumeloTable( tableId, tableUrl ) {
         order: that.order,
         range: currentRange,
         action: action,
-        filters: []
+        filters: false
 
       },
       success: function(tableData) {

@@ -22,9 +22,10 @@ class TableController{
       );
   var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
   var $tabs = false;
+  var $searchId = 'tableSearch';
   var $currentTab = false;
   var $filters = array();
-  var $rowsEachPage = 5;
+  var $rowsEachPage = 50;
 
   /*
   * @param object $control: is the data controller  
@@ -50,9 +51,25 @@ class TableController{
     else {
       $this->clientData['range'] = array(0, $this->rowsEachPage );
     }
+
+    // filters
+    if( $postdata['filters'] != 'false' ) {
+      $this->clientData['filters'] = $postdata['filters'];
+    }
+    else {
+      $this->clientData['filters'] = false;
+    }
+
+    // search box
+    if(  $postdata['search'] != '') {
+      $this->clientData['search'] = $postdata['search'];
+    }
+    else {
+      $this->clientData['search'] = false;
+    }
     
     $this->clientData['action'] = $postdata['action'];
-    $this->clientData['filters'] = $postdata['filters'];
+
 
     
   }
@@ -121,7 +138,24 @@ class TableController{
   * @return array
   */
   function getFilters() {
-    return array($this->tabs['tabsKey'] => $this->currentTab);
+    $retFilters = array();
+    
+    if( $this->clientData['search'] ) {
+      $retFilters[ $this->searchId ] = $this->clientData['search'];
+    }
+
+    $retFilters[ $this->tabs['tabsKey'] ] = $this->currentTab;
+
+    return $retFilters; 
+  }
+
+  /*
+  * set Search id for DAO filters
+  * @param string $searchId
+  * @return void
+  */
+  function setSearchRefId( $searchId ) {
+    $this->searchId = $searchId;
   }
 
   /*
@@ -213,12 +247,9 @@ class TableController{
       $refVO = new $this->control->voClass();
       $primaryKey = $refVO->getFirstPrimarykeyId();
 
-
       foreach( $this->clientData['action']['keys'] as $rowId) {
         eval( '$this->control->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
       }
-
-      //eval( '$this->control->'. $this->clientData['action']['name']. '('.$this->clientData['action']['value'].')');
     }
 
     // doing a query to the controller
