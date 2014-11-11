@@ -66,7 +66,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
 
-  that.load = function() {
+  that.load = function( doAction ) {
 
     // range
     if( !that.tableData ) {
@@ -77,6 +77,14 @@ function cogumeloTable( tableId, tableUrl ) {
       var currentRange = [ (that.currentPage-1)*parseInt(that.tableData.rowsEachPage), that.tableData.rowsEachPage ];
     }
 
+    // action
+    if( typeof doAction == 'undefined' ){
+      var action = {action: 'list', keys: false};
+    }
+    else {
+      var action = doAction;
+    }
+
 
     $.ajax({
       url: tableUrl ,
@@ -84,7 +92,9 @@ function cogumeloTable( tableId, tableUrl ) {
       data: {
         tab : that.tabsContent.val(),
         order: that.order,
-        range: currentRange
+        range: currentRange,
+        action: action,
+        filters: []
 
       },
       success: function(tableData) {
@@ -92,6 +102,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
         that.clearData();
         that.initTabValues();
+        that.setActionValues();
         that.initOrderValues();
         that.setHeaders();
         that.setRows();
@@ -125,6 +136,19 @@ function cogumeloTable( tableId, tableUrl ) {
       });
 
     }
+  }
+
+  that.setActionValues = function() {
+
+    that.actionSelect.html("");
+
+    $.each(that.tableData.actions, function(i,e) {
+      that.actionSelect.append('<option value='+i+'> ' + e + '</option>');
+    });
+
+
+
+
   }
 
   that.initOrderValues = function() {
@@ -317,7 +341,14 @@ function cogumeloTable( tableId, tableUrl ) {
       }
     });
 
-    console.log( selectedRows );
+
+    if( that.actionSelect.val() != '0' && selectedRows.length > 0 ){
+      that.load( {action: that.actionSelect.val(), keys: selectedRows} );
+    }
+    else {
+      that.load();
+    }
+
   }
 
 
@@ -334,7 +365,7 @@ function cogumeloTable( tableId, tableUrl ) {
   });
 
   // Action select
-  that.actionSelect.on("change", function(){
+  that.actionSelect.on("change", function( ){
     that.actionOnSelectedRows();
   });
 

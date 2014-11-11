@@ -35,21 +35,9 @@ class Tview extends View
 
     table::autoIncludes();
 
-//var_dump($_POST);
-    // POST DE PEGA
-    $_POST['method'] = array('name' => 'list', 'value', false);
-  //  $_POST['tab'] = false;
+
     $_POST['filters'] = array();
-    //$_POST['range'] = array(0,50);
-    //$_POST['order'];
-/*
-    $_POST['cogumeloTable'] = '{'.
-      '  "method":{ "name" : "list", "value": false},' .
-      '  "filters": [],' .
-      '  "range": [ 0, 50 ],' .
-      '  "order": [{"key": "id", "value": -1}, {"key": "lostName", "value": 1 }] '.
-      '}';
-*/
+
 
     Cogumelo::load('controller/LostController.php');
     $lostControl =  new LostController();
@@ -61,33 +49,12 @@ class Tview extends View
     $tabla->setTabs('lostProvince', array('1'=>'A Coruña', '2'=>'Lugo'), '2' );
 
 
-    // establecemos os table filters 
+    // set table Actions
+    $tabla->setActionMethod('Borrar', 'delete', 'deleteFromId($rowId)');
+    $tabla->setActionMethod('Mover a Coruña', 'moveToAcoruna', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>1) )');    
+    $tabla->setActionMethod('Mover a Lugo', 'moveToLugo', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>2) )');    
 
-   /* $tabla->setFilters(
-      array()
-    );*/
 
-/*    
-    $tabla->setFilters(
-      array(
-        array('id'=> 'buscar', 'desc'=>'Búsqueda de cousas', 'type'=>'search', 'default'=> false),
-        array('id'=> 'categoria', 'desc'=>'Categorías', 'type'=>'list', 'default'=> 5,
-          'list' => array(
-              1 => 'Elemento 1',
-              2 => 'Elemento 2',
-              3 => array('list_name'=>'Elemento 3', 'id'=> 'subcategoria', 'desc'=>'Subcategorías', 'type'=>'list',
-                'list' => array(
-                  1 => 'Elemento 1',
-                  2 => 'Elemento 2',
-                  3 => 'Elemento 3'
-                )
-              ),
-              4 => 'Elemento 4'
-          )
-        )
-      )
-    );
-*/
 
     
 
@@ -112,3 +79,28 @@ class Tview extends View
   } // function loadForm()
 }
 
+
+
+
+
+/*    
+    $tabla->setFilters(
+      array(
+        array('id'=> 'buscar', 'desc'=>'Búsqueda de cousas', 'type'=>'search', 'default'=> false),
+        array('id'=> 'categoria', 'desc'=>'Categorías', 'type'=>'list', 'default'=> 5,
+          'list' => array(
+              1 => 'Elemento 1',
+              2 => 'Elemento 2',
+              3 => array('list_name'=>'Elemento 3', 'id'=> 'subcategoria', 'desc'=>'Subcategorías', 'type'=>'list',
+                'list' => array(
+                  1 => 'Elemento 1',
+                  2 => 'Elemento 2',
+                  3 => 'Elemento 3'
+                )
+              ),
+              4 => 'Elemento 4'
+          )
+        )
+      )
+    );
+*/

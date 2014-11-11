@@ -16,13 +16,11 @@ class TableController{
   var $control = false;
   var $clientData = array();
   var $colsDef = array();
-  var $allowMethods = array(
+  var $controllerMethodAlias = array(
       'list' => 'listItems',
-      'count' => 'listCount',
-      'delete' => false,
-      'chageStatus' => false
+      'count' => 'listCount'
       );
-
+  var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
   var $tabs = false;
   var $currentTab = false;
   var $filters = array();
@@ -53,7 +51,7 @@ class TableController{
       $this->clientData['range'] = array(0, $this->rowsEachPage );
     }
     
-    $this->clientData['method'] = $postdata['method'];
+    $this->clientData['action'] = $postdata['action'];
     $this->clientData['filters'] = $postdata['filters'];
 
     
@@ -89,16 +87,6 @@ class TableController{
     }
   }
 
-  /*
-  * Set table action over on selected rows
-  *
-  * @param string actionId reference for action
-  * @param array ids of selected rows
-  * @return void
-  */
-  function setAction( $actionId, $rows = array() ) {
-
-  }  
 
   /*
   * Set tabs
@@ -137,16 +125,44 @@ class TableController{
   }
 
   /*
-  * Data methods to allow in table
+  * Data actions to allow in table
   *
-  * @param string $methodAlias name of method for tableController
-  * @param string $method name of method in controller
+  * @param string $actionAlias name of action for tableController
+  * @param string $action name of action in controller
   * @return void
   */
-  function addAllowMethod( $methodAlias, $method  ) {
-    $this->allowMethods[$methodAlias] = $method;
+  function setControllerMethodAlias( $methodAlias, $method  ) {
+    $this->controllerMethodAlias[$methodAlias] = $method;
   }
 
+  /*
+  * Add Actions to the table and relate it with controller Method
+  *
+  * @param string $name to display it in table action selector
+  * @param string $id for action
+  * @param string $actionMethod method execution with variables iside
+  * @return void
+  */
+  function setActionMethod( $name, $id, $actionMethod) {
+    $this->actions[$id] = array('name' => $name, 'actionMethod' => $actionMethod);
+  }
+
+
+  /*
+  * Get simple action list for client side
+  *
+  * @return array list of available actions 
+  */
+  function getActionsForClient() {
+
+    $actList = array();
+
+    foreach ($this->actions as $key => $value) {
+      $actList[$key] = $value['name'];
+    }
+
+    return $actList;
+  }
 
   /*
   * Turn order objects from table in array readable by DAO
@@ -186,15 +202,28 @@ class TableController{
   * @return string JSON with table
   */
   function returnTableJson() {
-    // if is executing a method ( like delete or update) and have permissions to do it
-    if( $this->clientData['method']['name'] != 'list' )
-    {
-      eval( '$this->control->'. $this->clientData['method']['name']. '('.$this->clientData['method']['value'].')');
+    // if is executing a action ( like delete or update) and have permissions to do it
+    if( 
+      $this->clientData['action']['action'] != 'list' && 
+      $this->clientData['action']['action'] != 'count'  && 
+      array_key_exists( $this->clientData['action']['action'], $this->actions ) 
+    ){
+
+      // get primary key
+      $refVO = new $this->control->voClass();
+      $primaryKey = $refVO->getFirstPrimarykeyId();
+
+
+      foreach( $this->clientData['action']['keys'] as $rowId) {
+        eval( '$this->control->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
+      }
+
+      //eval( '$this->control->'. $this->clientData['action']['name']. '('.$this->clientData['action']['value'].')');
     }
 
     // doing a query to the controller
-    eval('$lista = $this->control->'. $this->allowMethods['list'].'( $this->getFilters() , $this->clientData["range"], $this->orderIntoArray() );');
-    eval('$totalRows = $this->control->'. $this->allowMethods['count'].'( $this->getFilters() );');
+    eval('$lista = $this->control->'. $this->controllerMethodAlias['list'].'( $this->getFilters() , $this->clientData["range"], $this->orderIntoArray() );');
+    eval('$totalRows = $this->control->'. $this->controllerMethodAlias['count'].'( $this->getFilters() );');
 
 
     // printing json table...
@@ -205,6 +234,7 @@ class TableController{
     echo '"colsDef":'.json_encode($this->colsIntoArray() ).',';
     echo '"tabs":'.json_encode($this->tabs).',';
     echo '"filters":'.json_encode($this->filters).',';
+    echo '"actions":'.json_encode($this->getActionsForClient()) . ',';
     echo '"rowsEachPage":'. $this->rowsEachPage .',';
     echo '"totalRows":'. $totalRows.',';
     $coma = '';
