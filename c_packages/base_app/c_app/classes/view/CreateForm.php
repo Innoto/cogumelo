@@ -37,13 +37,9 @@ class CreateForm extends View
 
   function lostForm( $dataVO = '' ) {
 
-
-
-    Cogumelo::objdebug($dataVO);
-
     $form = new FormController( 'lostForm', '/sendlostform' ); //actionform
 
-    $form->setField( 'id', array( 'type' => 'reserved' ));
+    $form->setField( 'id', array( 'type' => 'reserved', 'value' => false ));
 
     $form->setField( 'lostName', array( 'placeholder' => 'Nombre', 'value' => '' ));
     $form->setField( 'lostSurname', array( 'placeholder' => 'Apellidos') );
@@ -164,61 +160,52 @@ class CreateForm extends View
       $postData = json_decode( $postDataJson, true );
     }
     //error_log( print_r( $postData, true ) );
-    if( isset( $postData[ 'cgIntFrmId' ] ) ) {
-      // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-      $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
-      // Creamos un objeto con los validadores
-      $validator = new FormValidators();
 
-      // y lo asociamos
-      $form->setValidationObj( $validator );
+    // Creamos un objeto recuperandolo de session y añadiendo los datos POST
+    $form = new FormController( false, false, $postData );
+    // Creamos un objeto con los validadores
+    $validator = new FormValidators();
 
-      //$form->setValidationRule('lostDate', 'uppercase', '1');
+    // y lo asociamos
+    $form->setValidationObj( $validator );
 
-      //$form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
-      //$form->setValidationRule( 'lostDate', 'dateMin', '2014-09-09' );
-      //$form->setValidationRule( 'lostDate2', 'dateMax', '2014-09-09' );
+    //$form->setValidationRule('lostDate', 'uppercase', '1');
 
-      $form->validateForm();
-      $jvErrors = $form->getJVErrors();
+    //$form->setValidationRule( 'lostFrutas', 'notInArray', array("Peras", "Naranjas", "Melocotones"));
+    //$form->setValidationRule( 'lostDate', 'dateMin', '2014-09-09' );
+    //$form->setValidationRule( 'lostDate2', 'dateMax', '2014-09-09' );
 
-      //Si todo esta OK!
-      if( sizeof( $jvErrors ) == 0 ){
-        $lostControl = new LostController();
-        $valuesArray = $form->getValuesArray();
+    $form->validateForm();
+    $jvErrors = $form->getJVErrors();
 
-        if($valuesArray['id'] !== false){
-          //UPDATE
-          $res = $lostControl->update($valuesArray);
-        }
-        else{
-          //CREATE
-          $res = $lostControl->create($valuesArray);
-        }
+    //Si todo esta OK!
+    if( sizeof( $jvErrors ) == 0 ){
+      $lostControl = new LostController();
+      $valuesArray = $form->getValuesArray();
+
+      if($valuesArray['id'] !== false){
+        //UPDATE
+        $res = $lostControl->update($valuesArray);
       }
-
-      if( sizeof( $jvErrors ) > 0 ) {
-        echo json_encode(
-          array(
-            'success' => 'error',
-            'jvErrors' => $jvErrors,
-            'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
-          )
-        );
+      else{
+        //CREATE
+        $res = $lostControl->create($valuesArray);
       }
-      else {
-        echo json_encode( array( 'success' => 'success') );
-      }
+    }
 
-    } //if( isset( $postData[ 'cgIntFrmId' ] ) )
-    else {
+    if( sizeof( $jvErrors ) > 0 ) {
       echo json_encode(
         array(
           'success' => 'error',
-          'error' => 'Los datos del formulario no han llegado bien al servidor. NO SE HAN GUARDADO.'
+          'jvErrors' => $jvErrors,
+          'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
         )
       );
     }
+    else {
+      echo json_encode( array( 'success' => 'success') );
+    }
+
   }
 
   function deleteLostForm(){

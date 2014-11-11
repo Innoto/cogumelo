@@ -53,8 +53,17 @@ function setValidateForm( idForm, rules, messages ) {
         } )
         .done( function ( response ) {
           console.log( response );
-          if( response.success == 'success' ) {
-            alert( 'Form Submit OK' );
+          if( response.result === 'ok' ) {
+            var successActions = response.success;
+            console.log( successActions )
+            if ( successActions[ 'accept' ] ) {
+              alert( successActions[ 'accept' ] );
+            }
+            if ( successActions[ 'redirect' ] ) {
+              // Usando replace no permite volver a la pagina del form
+              window.location.replace( successActions[ 'redirect' ] );
+            }
+            // alert( 'Form Submit OK' );
           }
           else {
             console.log( 'ERROR' );
@@ -63,8 +72,8 @@ function setValidateForm( idForm, rules, messages ) {
               console.log( errObj );
 
               if( errObj[ 'fieldName' ] !== false ) {
-                if( errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] === '' ) {
-                  $defMess = $validateForm.defaultMessage( errObj['fieldName'], errObj['msgRule'] );
+                if( errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] === false ) {
+                  $defMess = $validateForm.defaultMessage( errObj['fieldName'], errObj['ruleName'] );
                   if( typeof $defMess !== "string" ) {
                     $defMess = $defMess( errObj['ruleParams'] );
                   }
@@ -76,7 +85,7 @@ function setValidateForm( idForm, rules, messages ) {
               }
               else {
                 console.log( errObj[ 'JVshowErrors' ] );
-                showErrorsValidateForm( errObj[ 'JVshowErrors' ][ 'msgClass' ], errObj[ 'JVshowErrors' ][ 'msgText'], $( form ) );
+                showErrorsValidateForm( $( form ), errObj[ 'JVshowErrors' ][ 'msgText'], errObj[ 'JVshowErrors' ][ 'msgClass' ] );
                 console.log( 'Msg cargado...' );
               }
 
@@ -102,15 +111,18 @@ function setValidateForm( idForm, rules, messages ) {
 } // function
 
 
-function showErrorsValidateForm( msgClass, msgText, $form ) {
+function showErrorsValidateForm( $form, msgText, msgClass ) {
   // Solo se muestran los errores pero no se marcan los campos
 
   // Replantear!!!
 
   console.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
   msgLabel = '<label class="formError">'+msgText+'</label>';
-  $msgContainer = $( '#JQVMC-'+msgClass+', .JQVMC-'+msgClass );
-  if ( $msgContainer.length > 0 ) {
+  $msgContainer = false;
+  if( msgClass !== false ) {
+    $msgContainer = $( '#JQVMC-'+msgClass+', .JQVMC-'+msgClass );
+  }
+  if( $msgContainer !== false && $msgContainer.length > 0 ) {
     $msgContainer.append( msgLabel );
   }
   else {

@@ -18,8 +18,9 @@ abstract class SessionController
   //
   public function setSession($data)
   {
-    if ( !isset($_SESSION[$this->session_id]) )
+    if ( !isset($_SESSION[$this->session_id]) ) {
       unset($_SESSION[$this->session_id]);
+    }
 
     $_SESSION[$this->session_id] = serialize($data);
   }
@@ -29,8 +30,9 @@ abstract class SessionController
   //
   public function delSession()
   {
-    if( isset($_SESSION[$this->session_id]) )
+    if( isset($_SESSION[$this->session_id]) ) {
       unset($_SESSION[$this->session_id]);
+    }
   }
 
   //
@@ -38,12 +40,13 @@ abstract class SessionController
   //
   public function getSession()
   {
-    if( isset($_SESSION[$this->session_id]) )
-    {
+    if( isset($_SESSION[$this->session_id]) ) {
       $data = $_SESSION[$this->session_id];
       return unserialize($data);
     }
-    else return false;
+    else {
+      return false;
+    }
   }
 
   //
@@ -51,9 +54,12 @@ abstract class SessionController
   //
   public function isSession()
   {
-    if( isset($_SESSION[$this->session_id]) )
+    if( isset($_SESSION[$this->session_id]) ) {
       return true;
-    else return false;
+    }
+    else {
+      return false;
+    }
   }
 
   public function getSessionId()

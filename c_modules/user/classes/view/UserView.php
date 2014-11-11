@@ -1,6 +1,7 @@
 <?php
 Cogumelo::load('c_view/View.php');
 user::load('controller/UserController.php');
+user::load('controller/UserAccessController.php');
 user::load('model/UserVO.php');
 
 common::autoIncludes();
@@ -22,9 +23,7 @@ class UserView extends View
     return true;
   }
 
-  function main() {
 
-  }
 
   function loginForm() {
 
@@ -61,52 +60,35 @@ class UserView extends View
       $postData = json_decode( $postDataJson, true );
     }
     //error_log( print_r( $postData, true ) );
-    if( isset( $postData[ 'cgIntFrmId' ] ) ) {
-      // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-      $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
-      // Creamos un objeto con los validadores y lo asociamos
-      $form->setValidationObj( new FormValidators() );
+    // Creamos un objeto recuperandolo de session y añadiendo los datos POST
+    $form = new FormController( false, false, $postData );
+    // Creamos un objeto con los validadores y lo asociamos
+    $form->setValidationObj( new FormValidators() );
+    $form->validateForm();
 
+    //Si todo esta OK!
+    if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
-      $userControl = new UserController();
-      $res = $userControl->authenticateUser($valuesArray['userLogin'], $valuesArray['userPassword']);
+      $userAccessControl = new UserAccessController();
+      $res = $userAccessControl->userLogin($valuesArray['userLogin'], $valuesArray['userPassword']);
 
       if(!$res){
-        $form->addJVError('.ffn-login', 'El campo login o password es erróneo');
+        $form->addFieldRuleError('userLogin', 'cogumelo', '');
+        $form->addFieldRuleError('userPassword', 'cogumelo', '');
+        $form->addFormError('El login y/o contraseña son erróneos');
       }
-
-      $form->validateForm();
-      $jvErrors = $form->getJVErrors();
-
-      //Si todo esta OK!
-      if( sizeof( $jvErrors ) == 0 ){
-
-
-      }
-
-      if( sizeof( $jvErrors ) > 0 ) {
-        echo json_encode(
-          array(
-            'success' => 'error',
-            'jvErrors' => $jvErrors,
-            'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
-          )
-        );
-      }
-      else {
-        echo json_encode( array( 'success' => 'success') );
-      }
-
-    } //if( isset( $postData[ 'cgIntFrmId' ] ) )
-    else {
-      echo json_encode(
-        array(
-          'success' => 'error',
-          'error' => 'Los datos del formulario no han llegado bien al servidor. NO SE HAN GUARDADO.'
-        )
-      );
     }
+
+    if( $form->existErrors() ) {
+      echo $form->jsonFormError();
+    }
+    else {
+      echo $form->jsonFormOk();
+    }
+
   }
+
+
   //END Login
 
   function registerForm() {
@@ -158,11 +140,17 @@ class UserView extends View
       $postData = json_decode( $postDataJson, true );
     }
     //error_log( print_r( $postData, true ) );
-    if( isset( $postData[ 'cgIntFrmId' ] ) ) {
-      // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-      $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
-      // Creamos un objeto con los validadores y lo asociamos
-      $form->setValidationObj( new FormValidators() );
+
+    // Creamos un objeto recuperandolo de session y añadiendo los datos POST
+    $form = new FormController( false, false, $postData );
+    // Creamos un objeto con los validadores y lo asociamos
+    $form->setValidationObj( new FormValidators() );
+
+    $form->validateForm();
+
+    //Si todo esta OK!
+    if( !$form->existErrors() ){
+
       //Validaciones
       $valuesArray = $form->getValuesArray();
 
@@ -170,44 +158,24 @@ class UserView extends View
       $loginExist = $userControl->find($valuesArray['login'], 'login');
 
       if($loginExist){
-        $form->addJVError('.ffn-login', 'El campo login específicado ya esta en uso.');
+        $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
       }
 
-      $form->validateForm();
-      $jvErrors = $form->getJVErrors();
+      $valuesArray['password'] = sha1($valuesArray['password']);
+      unset($valuesArray['password2']);
+      $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
 
-      //Si todo esta OK!
-      if( sizeof( $jvErrors ) == 0 ){
-
-        $valuesArray['password'] = sha1($valuesArray['password']);
-        unset($valuesArray['password2']);
-        $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
-
-        $res = $userControl->createFromArray($valuesArray);
-      }
-
-      if( sizeof( $jvErrors ) > 0 ) {
-        echo json_encode(
-          array(
-            'success' => 'error',
-            'jvErrors' => $jvErrors,
-            'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
-          )
-        );
-      }
-      else {
-        echo json_encode( array( 'success' => 'success') );
-      }
-
-    } //if( isset( $postData[ 'cgIntFrmId' ] ) )
-    else {
-      echo json_encode(
-        array(
-          'success' => 'error',
-          'error' => 'Los datos del formulario no han llegado bien al servidor. NO SE HAN GUARDADO.'
-        )
-      );
+      $res = $userControl->createFromArray($valuesArray);
     }
+
+    if( $form->existErrors() ) {
+      echo $form->jsonFormError();
+    }
+    else {
+      echo $form->jsonFormOk();
+    }
+
+
   }
 
 }

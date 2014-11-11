@@ -38,6 +38,7 @@ class  UserController extends DataController
 
     if($data) {
       Cogumelo::log("authenticateUser SUCCEED with login=".$login, "UserLog");
+      $this->data->updateTimeLogin($data->getter('id'), date("Y-m-d H:i:s", time()));
     }
     else {
       Cogumelo::log("authenticateUser FAILED with login=".$login.". User NOT authenticated", "UserLog");
