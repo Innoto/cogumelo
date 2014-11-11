@@ -306,9 +306,13 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.setRows = function(){
     var trows = '';
-    
+    var evenClass='';
+
     $.each(that.tableData.table , function( rowIndex, row ) {
-      trows += '<tr>';
+      if(evenClass == '') { evenClass='even'; } else { evenClass=''; }
+
+
+      trows += '<tr class="' + evenClass + '">';
       trows += '<td> <input class="eachRowCheckBox" rowReferenceKey="'+row.rowReferenceKey+'" type="checkbox"> </td>';
 
       $.each( row, function( i, e ){
