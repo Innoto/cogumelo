@@ -49,7 +49,9 @@ class Tview extends View
     $tabla->setActionMethod('Mover a Lla Coruña', 'moveToAcoruna', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>1) )');
     $tabla->setActionMethod('Mover a Lugo', 'moveToLugo', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>2) )');
 
-    
+    // set list Count methods in controller
+    $tabla->setListMethodAlias('listItems');
+    $tabla->setCountMethodAlias('listCount');
 
     // Nome das columnas
     //$tabla->setCol('id', 'Id');

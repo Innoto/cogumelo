@@ -150,6 +150,25 @@ class TableController{
   }
 
   /*
+  * set List method for controller
+  * @param string $listMethod method name
+  * @return void
+  */
+  function setListMethodAlias($listMethod) {
+    $this->controllerMethodAlias['list'] = $listMethod;
+  }
+
+  /*
+  * set Count method for controller
+  * @param string $countMethod method name
+  * @return void
+  */
+  function setCountMethodAlias($countMethod) {
+    $this->controllerMethodAlias['count'] = $countMethod;
+  }
+
+
+  /*
   * set Search id for DAO filters
   * @param string $searchId
   * @return void
