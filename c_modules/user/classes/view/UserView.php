@@ -88,7 +88,6 @@ class UserView extends View
 
   }
 
-
   //END Login
 
   function registerForm() {
@@ -102,7 +101,8 @@ class UserView extends View
     $form->setField( 'name', array( 'placeholder' => 'Nombre' ) );
     $form->setField( 'surname', array( 'placeholder' => 'Apellidos' ) );
     $form->setField( 'email', array( 'placeholder' => 'Email' ) );
-    $form->setField( 'role', array( 'placeholder' => 'Rol' ) );
+    $form->setField( 'role', array( 'type' => 'reserved', 'value' => '10' ));
+
     $form->setField( 'description', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
     $form->setField( 'avatar', array( 'placeholder' => 'Avatar' ) );
     $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Registrar' ) );
