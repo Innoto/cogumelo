@@ -35,20 +35,21 @@ class FormValidators extends FormValidatorsExtender {
   */
 
   /**
-   * Metodo de validacion segun unha regla indicada
+   * Verifica si el valor de un campo cumple una regla segun los parametros establecidos
    *
-   * @param string $ruleName
-   * @param mixed $value
-   * @param mixed $param (optinal)
-   * @return bool $validate
+   * @param string $fieldName Nombre del campo
+   * @param string $fieldValue Valor del campo
+   * @param string $ruleName Nombre de la regla
+   * @param mixed $ruleParams Parametros de la regla (opcional)
+   * @return boolean
    **/
-  public function evaluateRule( $ruleName, $value, $fieldName, $param ) {
+  public function evaluateRule( $fieldName, $fieldValue, $ruleName, $ruleParams ) {
     $validate = false;
 
     $ruleMethod = 'val_'.$ruleName;
     if( method_exists( $this, $ruleMethod ) ) {
       //error_log( 'is_callable $this->'.$ruleMethod );
-      $validate = $this->$ruleMethod( $value, $param );
+      $validate = $this->$ruleMethod( $fieldValue, $ruleParams );
     }
     else {
       error_log( 'NO EXIST $this->'.$ruleMethod );

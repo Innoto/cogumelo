@@ -3,6 +3,7 @@
 
 class FormController implements Serializable {
 
+
   private $name = false;
   private $id = false;
   private $cgIntFrmId = false;
@@ -11,12 +12,12 @@ class FormController implements Serializable {
   private $method = 'post';
   private $enctype = 'multipart/form-data';
   private $fields = array();
-  //private $validation = array( 'rules' => array(), 'messages' => array() );
   private $rules = array();
   private $messages = array();
 
   // POST submit
-  private $postValues = false;
+  private $postData = null;
+  private $postValues = null;
   private $validationObj = null;
   private $fieldErrors = array();
   private $formErrors = array();
@@ -27,28 +28,25 @@ class FormController implements Serializable {
   );
 
 
-  function __construct( $name = false, $action = false, $formPost = false ) {
-    error_log( 'formPost: ' . print_r( $formPost, true ) );
-    if( $formPost !== false ) {
-      error_log( 'Instanciando FormController con datos de POST' );
-      $this->loadFromSession( $formPost[ 'cgIntFrmId' ] );
-      if( isset( $formPost ) && $formPost ) {
-        $this->loadPostValues( $formPost );
-      }
-    }
-    else {
-      error_log( 'Instanciando FormController sen datos de POST' );
-      $this->cgIntFrmId = crypt( uniqid().'---'.session_id(), 'cf' );
+  function __construct( $name = false, $action = false ) {
+    error_log( 'Instanciando FormController sen datos de POST' );
+    if( $name !== false ) {
       $this->name = $name;
       $this->id = $name;
-      if( $action ) {
-        $this->action = $action;
-      }
-      $this->setField( 'cgIntFrmId', array( 'type' => 'text', 'value' => $this->cgIntFrmId ) );
     }
+    if( $action !== false ) {
+      $this->action = $action;
+    }
+    $this->cgIntFrmId = crypt( uniqid().'---'.session_id(), 'cf' );
+    $this->setField( 'cgIntFrmId', array( 'type' => 'text', 'value' => $this->cgIntFrmId ) );
   }
 
 
+  /**
+   * Guarda todos los datos importantes en un array y lo serializa
+   *
+   * @return string
+   **/
   public function serialize() {
     $data = array();
 
@@ -68,6 +66,11 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Recupera todos los datos importantes desde el string serializado
+   *
+   * @param string $dataSerialized Datos del form serializados
+   **/
   public function unserialize( $dataSerialized ) {
     $data = unserialize( $dataSerialized );
 
@@ -85,30 +88,112 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Guarda todos los datos importantes (serializados) en sesion
+   *
+   * @return string
+   **/
   public function saveToSession() {
     $formSessionId = 'CGFSI_'.$this->getIntFrmId();
     $_SESSION[ $formSessionId ] = $this->serialize();
-    //error_log( $_SESSION[ $formSessionId ] );
-
     return $formSessionId;
   }
 
 
+  /**
+   * Recupera de sesion todos los datos importantes (serializados)
+   *
+   * @param string $cgIntFrmId ID interno del formulario
+   * @return boolean
+   **/
   public function loadFromSession( $cgIntFrmId ) {
+    $result = false;
     $formSessionId = 'CGFSI_'.$cgIntFrmId;
-    $this->unserialize( $_SESSION[ $formSessionId ] );
-    //error_log( $_SESSION[ $formSessionId ] );
+    if( isset( $_SESSION[ $formSessionId ] ) ) {
+      $this->unserialize( $_SESSION[ $formSessionId ] );
+      $result = ( $this->cgIntFrmId === $cgIntFrmId );
+    }
+    return $result;
   }
 
 
-  public function setField( $fieldName, $params = false ) {
-    /* Vamos a dejar de crear "id" de forma automatica
-    if( !isset( $this->fields[$fieldName]['id'] ) ||
-      ( isset( $this->fields[$fieldName]['name'] ) && $this->fields[$fieldName]['name'] === $this->fields[$fieldName]['id'] ) )
-    {
-      $this->fields[$fieldName]['id'] = $fieldName;
+  /**
+   * Captura los datos enviados por el navegador, recupera parametros del form y le carga los input
+   *
+   * @return boolean
+   **/
+  public function loadPostInput() {
+    $result = false;
+
+    $postDataJson = file_get_contents( 'php://input' );
+    error_log( $postDataJson );
+    if( $postDataJson !== false && strpos( $postDataJson, '{' )===0 ) {
+      $postData = json_decode( $postDataJson, true );
+      error_log( print_r( $postData, true ) );
+
+      // recuperamos FORM de sesion y añadimos los datos enviados
+      if( $this->loadPostSession( $postData ) ) {
+        $this->loadPostValues( $postData );
+        $result = true;
+      }
     }
-    */
+
+    return $result;
+  }
+
+
+  /**
+   * Recupera de sesion todos los datos importantes (serializados)
+   *
+   * @param array $formPost Datos enviados por el navegador convertidos a array
+   * @return boolean
+   **/
+  public function loadPostSession( $formPost ) {
+    $result = false;
+    if( $formPost !== false && isset( $formPost[ 'cgIntFrmId' ] ) ) {
+      $result = $this->loadFromSession( $formPost[ 'cgIntFrmId' ] );
+    }
+    return $result;
+  }
+
+
+  /**
+   * Carga los valores de los input del navegador
+   *
+   * @param array $formPost Datos enviados por el navegador convertidos a array
+   **/
+  public function loadPostValues( $formPost ) {
+    $this->postValues = $formPost;
+    foreach( $formPost as $key => $val ){
+      if( array_key_exists( $key, $this->fields ) ){
+        $this->fields[ $key ][ 'value' ] = $val;
+      }
+    }
+  }
+
+
+  /**
+   * Carga los valores del VO
+   *
+   * @param VO $dataVO Datos cargados por el programa
+   **/
+  public function loadVOValues( $dataVO ) {
+    if( gettype( $dataVO ) == "object" ) {
+      foreach( $dataVO->getKeys() as $keyVO ) {
+        $this->setFieldValue( $keyVO, $dataVO->getter( $keyVO ) );
+      }
+    }
+  }
+
+
+  /**
+   * Define un campo del formulario y, opcionalmente, con sus parametros
+   *
+   * @param string $fieldName Nombre del campo
+   * @param array $params Opcional. Parametros: id, type, label, title, options, placeholder, size,
+   *   cols, rows, multiple, readonly, ...
+   **/
+  public function setField( $fieldName, $params = false ) {
     $this->fields[$fieldName]['name'] = $fieldName;
     if( $params ) {
       foreach( $params as $key => $value ) {
@@ -141,10 +226,15 @@ class FormController implements Serializable {
         $this->setValidationRule( $this->fields[$fieldName]['name'], 'maxfilesize', $maxFileSize );
         break;
     }
-
   } // function setField
 
 
+  /**
+   * Convierte el tamaño de memoria de formato php.ini a bytes
+   *
+   * @param string $size Tamaño de la memoria configurada en php.ini
+   * @return integer
+   **/
   private function phpIni2Bytes( $size ) {
     if( preg_match( '/([\d\.]+)([KMG])/i', $size, $match ) ) {
       $pos = array_search( $match[2], array( 'K', 'M', 'G' ) );
@@ -156,52 +246,67 @@ class FormController implements Serializable {
   }
 
 
-  public function setSuccess( $success ) {
-    error_log( 'setSuccess: ' . print_r( $success, true ) );
-    $this->success = $success;
+  /**
+   * Añade tareas para ejecutar en el navegador al finalizar bien el submit
+   *
+   * @param string $name Clave del suceso: accept, redirect, ...
+   * @param string $success Contenido del evento: Msg, url, ...
+   **/
+  public function setSuccess( $name, $success ) {
+    error_log( 'setSuccess: name='. $name . ' success=' .  $success );
+    $this->success[ $name ] = $success;
   }
 
 
+  /**
+   * Recupera las tareas que se han definido para el navegador al finalizar bien el submit
+   *
+   * @return array
+   **/
   public function getSuccess() {
     error_log( 'getSuccess: ' . print_r( $this->success, true ) );
     return $this->success;
   }
 
 
+  /**
+   * Establece una regla de validacion para un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $ruleName Nombre de la regla
+   * @param mixed $ruleParams
+   **/
   public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
     $this->rules[$fieldName][$ruleName] = $ruleParams;
   }
 
 
+  /**
+   * Establece el mensaje para un campo para el JQueryValidate
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $msg
+   **/
   public function setValidationMsg( $fieldName, $msg ) {
     $this->messages[$fieldName] = $msg;
   }
 
 
-  public function loadPostValues( $formPost ) {
-    $this->postValues = $formPost;
-    foreach($formPost as $key => $val ){
-      if(array_key_exists( $key, $this->fields )){
-        $this->fields[$key]['value'] = $val;
-      }
-    }
-  }
-
-
-  public function loadVOValues( $dataVO ) {
-    if( gettype( $dataVO ) == "object" ) {
-      foreach( $dataVO->getKeys() as $keyVO ) {
-        $this->setFieldValue( $keyVO, $dataVO->getter( $keyVO ) );
-      }
-    }
-  }
-
-
+  /**
+   * Recupera el ID interno del form
+   *
+   * @return string
+   **/
   public function getIntFrmId() {
     return $this->cgIntFrmId;
   }
 
 
+  /**
+   * Recupera todo el html y js que forman el form
+   *
+   * @return string
+   **/
   public function getHtmlForm() {
     $html='';
 
@@ -215,6 +320,11 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Recupera el html de la apertura del form
+   *
+   * @return string
+   **/
   public function getHtmpOpen() {
     $html='';
 
@@ -230,6 +340,11 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Recupera el html de todos los campos del form
+   *
+   * @return string
+   **/
   public function getHtmlFields() {
     $html = '';
     foreach( $this->fields as $fieldName => $fieldParams ) {
@@ -239,6 +354,11 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Recupera el html de todos los campos del form (por campos)
+   *
+   * @return array
+   **/
   public function getHtmlFieldsArray() {
     $html = array();
     foreach( $this->fields as $fieldName => $fieldParams ) {
@@ -248,6 +368,12 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Recupera el html de un campo del form
+   *
+   * @param string $fieldName Nombre del campo
+   * @return string
+   **/
   public function getHtmlField( $fieldName ) {
     $html = '';
 
@@ -286,6 +412,12 @@ class FormController implements Serializable {
   } // function getHtmlField
 
 
+  /**
+   * Recupera el html de un campo del form en fragmentos
+   *
+   * @param string $fieldName Nombre del campo
+   * @return array
+   **/
   public function getHtmlFieldArray( $fieldName ) {
     $html = array();
 
@@ -399,12 +531,22 @@ class FormController implements Serializable {
   } // function getHtmlFieldArray
 
 
+  /**
+   * Recupera el html del cierre del form
+   *
+   * @return string
+   **/
   public function getHtmlClose() {
     $html = '</form><!-- '.$this->name.' -->';
     return $html;
   }
 
 
+  /**
+   * Recupera el html con el JS del form
+   *
+   * @return string
+   **/
   public function getJqueryValidationJS() {
     $html = '';
 
@@ -438,6 +580,11 @@ class FormController implements Serializable {
   } // function getJqueryValidationJS
 
 
+  /**
+   * Recupera los valores de todos los campos
+   *
+   * @return array
+   **/
   public function getValuesArray(){
     $fieldsValuesArray = array();
     $fieldsNamesArray = $this->getFieldsNamesArray();
@@ -449,6 +596,11 @@ class FormController implements Serializable {
   }// fuction getValuesArray
 
 
+  /**
+   * Recupera los nombres de todos los campos
+   *
+   * @return TYPE
+   **/
   public function getFieldsNamesArray(){
     $fieldsNamesArray = array();
     foreach( $this->fields as $key => $val ){
@@ -459,6 +611,13 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Recupera un parametro de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $paramName Nombre del parametro
+   * @return mixed
+   **/
   public function getFieldParam( $fieldName, $paramName ) {
     $value = null;
 
@@ -473,16 +632,35 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Recupera el tipo de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @return string
+   **/
   public function getFieldType( $fieldName ) {
     return $this->getFieldParam( $fieldName, 'type' );
   }
 
 
+  /**
+   * Recupera el valor de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @return mixed
+   **/
   public function getFieldValue( $fieldName ) {
     return $this->getFieldParam( $fieldName, 'value' );
   }
 
 
+  /**
+   * Establece un parametro de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $paramName Nombre del parametro
+   * @param mixed $value Valor del parametro
+   **/
   public function setFieldParam( $fieldName, $paramName, $value ) {
     if(array_key_exists($fieldName, $this->fields)){
       $this->fields[ $fieldName ][ $paramName ] = $value;
@@ -493,11 +671,23 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Establece el valor de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @param mixed $fieldValue Valor del campo
+   **/
   public function setFieldValue( $fieldName, $fieldValue ){
     $this->setFieldParam( $fieldName, 'value', $fieldValue );
   }
 
 
+  /**
+   * Verifica si el valor de un campo es vacio
+   *
+   * @param string $fieldName Nombre del campo
+   * @return boolean
+   **/
   public function isEmptyFieldValue( $fieldName ) {
     $empty = true;
 
@@ -515,6 +705,49 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Procesa los ficheros temporales del form para colocarlos en su lugar definitivo y registrarlos
+   *
+   * @return boolean
+   **/
+  public function processFileFields() {
+    $result = true;
+
+    foreach( $this->getFieldsNamesArray() as $fieldName ){
+      if( $this->getFieldType( $fieldName ) === 'file' && !$this->isEmptyFieldValue( $fieldName ) ) {
+        error_log( 'FILE: Almacenando File Field: '.$fieldName );
+        $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+        $fileStatus = $this->getFieldParam( $fieldName, 'fileStatus' );
+        error_log( print_r( $fileStatus, true ) );
+        $fileFieldValue = $this->getFieldValue( $fieldName );
+        // $fileStatus['tmpFile'] = 'name'=>'', 'originalName'=>'', 'absLocation'=>'', 'type'=>'', 'size'=>''
+        $fileName = $this->secureFileName( $fileStatus['tmpFile']['originalName'] );
+        error_log( 'FILE: movendo ' . $fileStatus['tmpFile']['absLocation'] . ' a ' . $destDir.$fileName );
+
+        /**
+        // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
+        */
+
+        rename( $fileStatus['tmpFile']['absLocation'], $destDir.$fileName );
+
+        /**
+        // TODO: FALTA GUARDA LOS DATOS DEFINITIVOS DEL FICHERO!!!
+        En caso de fallo $result = false;
+        **/
+      }
+    }
+
+    return $result;
+  }
+
+
+  /**
+   * Mover con seguridad un fichero del tmp de PHP al tmp de nuestra aplicacion
+   *
+   * @param string $fileTmpLoc Fichero temporal de PHP
+   * @param string $fileName Nombre del fichero
+   * @return string Fichero temporal de la App. En caso de error: false
+   **/
   public function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName ) {
     error_log( 'tmpPhpFile2tmpFormFile: '.$fileTmpLoc.' --- '.$fileName);
     $result = false;
@@ -527,7 +760,7 @@ class FormController implements Serializable {
     $tmpCgmlFormDir = $tmpCgmlFormDir . preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getIntFrmId() ) . '/';
     if( !is_dir( $tmpCgmlFormDir ) ) {
       /**
-      CAMBIAR 0777
+      // TODO: CAMBIAR PERMISOS 0777
       **/
       if( !mkdir( $tmpCgmlFormDir, 0777, true ) ) {
         $error = 'Imposible crear el dir. necesario: '.$tmpCgmlFormDir; error_log($error);
@@ -539,7 +772,7 @@ class FormController implements Serializable {
 
       $tmpLocationCgml = $tmpCgmlFormDir . $secureName;
       /**
-      FALTA VER QUE NON SE PISE UN ANTERIOR!!!
+      // TODO: FALTA VER QUE NON SE PISE UN ANTERIOR!!!
       **/
 
       if( !move_uploaded_file( $fileTmpLoc, $tmpLocationCgml ) ) {
@@ -550,11 +783,18 @@ class FormController implements Serializable {
       }
     }
 
+    error_log( 'tmpPhpFile2tmpFormFile ERROR: '.$error );
     error_log( 'tmpPhpFile2tmpFormFile RET: '.$result );
     return $result;
   }
 
 
+  /**
+   * Crea un nombre de fichero seguro a partir del nombre de fichero deseado
+   *
+   * @param string $fileName Nombre del campo
+   * @return string
+   **/
   public function secureFileName( $fileName ) {
     error_log( 'secureFileName: '.$fileName );
     $maxLength = 200;
@@ -594,26 +834,51 @@ class FormController implements Serializable {
 **/
 
 
+  /**
+   * Regista el objeto que contiene los validadores
+   *
+   * @param object $validationObj
+   **/
   public function setValidationObj( $validationObj ) {
     $this->validationObj = $validationObj;
   }
 
 
+  /**
+   * Verifica si se ha registrado el objeto con los validadores
+   *
+   * @return boolean
+   **/
   public function issetValidationObj() {
     return( $this->validationObj !== null );
   }
 
 
+  /**
+   * Verifica si el campo es obligatorio
+   *
+   * @param string $fieldName Nombre del campo
+   * @return boolean
+   **/
   public function isRequiredField( $fieldName ) {
     return isset( $this->rules[ $fieldName ][ 'required' ] );
   }
 
 
-  public function evaluateRule( $ruleName, $value, $fieldName, $ruleParams ) {
+  /**
+   * Verifica si el valor de un campo cumple una regla segun los parametros establecidos
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $fieldValue Valor del campo
+   * @param string $ruleName Nombre de la regla
+   * @param mixed $ruleParams Parametros de la regla (opcional)
+   * @return boolean
+   **/
+  public function evaluateRule( $fieldName, $fieldValue, $ruleName, $ruleParams ) {
     $validate = false;
 
     if( $this->issetValidationObj() ) {
-      $validate = $this->validationObj->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
+      $validate = $this->validationObj->evaluateRule( $fieldName, $fieldValue, $ruleName, $ruleParams );
     }
     else {
       error_log( 'FALTA CARGAR LOS VALIDADORES' );
@@ -624,10 +889,9 @@ class FormController implements Serializable {
 
 
   /**
-   * Metodo de validacion global segun las reglas cargadas
+   * Verifica que se cumplen todas las reglas establecidas
    *
-   * @param mixed $param (optinal)
-   * @return bool $validate
+   * @return boolean
    **/
   public function validateForm() {
     error_log( 'validateForm:' );
@@ -648,9 +912,15 @@ class FormController implements Serializable {
     }
 
     return $formValidated;
-  } // function validateForm( $formPost = false )
+  } // function validateForm()
 
 
+  /**
+   * Verifica que se cumplen las reglas establecidas para un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @return boolean
+   **/
   public function validateField( $fieldName ) {
     error_log( 'validateField: '.$fieldName );
     $fieldValidated = true;
@@ -686,13 +956,13 @@ class FormController implements Serializable {
         error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
         $fieldValidateValue = true;
         foreach( $fieldRules as $ruleName => $ruleParams ) {
-          error_log( 'evaluateRule( '.$ruleName.', '.print_r( $value, true ) .', '.$fieldName.', '. print_r( $ruleParams, true ) .' )' );
+          error_log( 'evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
 
           if( $ruleName === 'equalTo' ) {
             $fieldRuleValidate = ( $value === $this->getFieldValue( str_replace('#', '', $ruleParams )) );
           }
           else {
-            $fieldRuleValidate = $this->evaluateRule( $ruleName, $value, $fieldName, $ruleParams );
+            $fieldRuleValidate = $this->evaluateRule( $fieldName, $value, $ruleName, $ruleParams );
           }
           error_log( 'evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
 
@@ -713,16 +983,35 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Añade un mensaje de error al formulario
+   *
+   * @param string $paramName
+   * @param string $paramName
+   * @return TYPE
+   **/
   public function addFormError( $msgText, $msgClass = false ) {
     $this->formErrors[] = array( 'msgText' => $msgText, 'msgClass' => $msgClass );
   }
 
+  /**
+   * Añade un mensaje de error a un campo del formulario
+   *
+   * @param string $fieldName Nombre del campo
+   * @param TYPE $paramName
+   * @return TYPE
+   **/
   public function addFieldRuleError( $fieldName, $ruleName, $msgRuleError = false ) {
     error_log( "addFieldRuleError: $fieldName, $ruleName, $msgRuleError " );
     $this->fieldErrors[ $fieldName ][ $ruleName ] = $msgRuleError;
   }
 
 
+  /**
+   * Recupera todos los errores que se han añadido
+   *
+   * @return array
+   **/
   public function getJVErrors() {
     $errors = array();
 
@@ -742,8 +1031,14 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Recupera un JSON de OK con los sucesos que hay que lanzar en el navegador
+   *
+   * @return string JSON
+   **/
   public function jsonFormOk() {
-    echo json_encode(
+
+    return json_encode(
       array(
         'result' => 'ok',
         'success' => $this->getSuccess()
@@ -752,25 +1047,111 @@ class FormController implements Serializable {
   }
 
 
+  /**
+   * Recupera un JSON de ERROR con los errores que hay que mostrar en el navegador
+   *
+   * @return string JSON
+   **/
   public function jsonFormError() {
-    $jvErrors = $this->getJVErrors();
-    echo json_encode(
+
+    return json_encode(
       array(
         'result' => 'error',
-        'jvErrors' => $jvErrors
+        'jvErrors' => $this->getJVErrors()
       )
     );
   }
 
 
+  /**
+   * Verifica si se han añadido errores
+   *
+   * @return boolean
+   **/
   public function existErrors() {
     return( sizeof( $this->fieldErrors ) > 0 || sizeof( $this->formErrors ) > 0 );
   }
 
 
+  /**
+   * Verifica si se han añadido errores a un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @return boolean
+   **/
   public function existFieldErrors( $fieldName ) {
     return( isset( $this->fieldErrors[ $fieldName ] ) || sizeof( $this->formErrors[ $fieldName ] ) > 0 );
   }
+
+
+/**
+
+
+class FormController implements Serializable {
+  function __construct( $name = false, $action = false, $formPost = false ) {
+
+  private $action = false;
+  private $cgIntFrmId = false;
+  private $enctype = 'multipart/form-data';
+  private $fieldErrors = array();
+  private $fields = array();
+  private $formErrors = array();
+  private $id = false;
+  private $messages = array();
+  private $method = 'post';
+  private $name = false;
+  private $postValues = false;
+  private $replaceAcents = array(
+  private $rules = array();
+  private $success = false;
+  private $validationObj = null;
+
+  private function phpIni2Bytes( $size ) {
+  public function addFieldRuleError( $fieldName, $ruleName, $msgRuleError = false ) {
+  public function addFormError( $msgText, $msgClass = false ) {
+  public function evaluateRule( $ruleName, $value, $fieldName, $ruleParams ) {
+  public function existErrors() {
+  public function existFieldErrors( $fieldName ) {
+  public function getFieldParam( $fieldName, $paramName ) {
+  public function getFieldsNamesArray(){
+  public function getFieldType( $fieldName ) {
+  public function getFieldValue( $fieldName ) {
+  public function getHtmlClose() {
+  public function getHtmlField( $fieldName ) {
+  public function getHtmlFieldArray( $fieldName ) {
+  public function getHtmlFields() {
+  public function getHtmlFieldsArray() {
+  public function getHtmlForm() {
+  public function getHtmpOpen() {
+  public function getIntFrmId() {
+  public function getJqueryValidationJS() {
+  public function getJVErrors() {
+  public function getSuccess() {
+  public function getValuesArray(){
+  public function isEmptyFieldValue( $fieldName ) {
+  public function isRequiredField( $fieldName ) {
+  public function issetValidationObj() {
+  public function jsonFormError() {
+  public function jsonFormOk() {
+  public function loadFromSession( $cgIntFrmId ) {
+  public function loadPostValues( $formPost ) {
+  public function loadVOValues( $dataVO ) {
+  public function saveToSession() {
+  public function secureFileName( $fileName ) {
+  public function serialize() {
+  public function setField( $fieldName, $params = false ) {
+  public function setFieldParam( $fieldName, $paramName, $value ) {
+  public function setFieldValue( $fieldName, $fieldValue ){
+  public function setSuccess( $success ) {
+  public function setValidationMsg( $fieldName, $msg ) {
+  public function setValidationObj( $validationObj ) {
+  public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
+  public function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName ) {
+  public function unserialize( $dataSerialized ) {
+  public function validateField( $fieldName ) {
+  public function validateForm() {
+
+**/
 
 
 } // class FormController implements Serializable
