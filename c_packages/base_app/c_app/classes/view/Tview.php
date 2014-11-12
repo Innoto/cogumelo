@@ -30,9 +30,6 @@ class Tview extends View
 
     table::autoIncludes();
 
-    $_POST['search'] = '';
-    //$_POST['filters'] = array();
-
 
     Cogumelo::load('controller/LostController.php');
     $lostControl =  new LostController();
@@ -41,7 +38,7 @@ class Tview extends View
     $tabla = new TableController( $lostControl, $_POST );
 
     // establecemos pestañas, así como o key identificativo á hora de filtrar
-    $tabla->setTabs('lostProvince', array('1'=>'A Coruña', '2'=>'Lugo'), '2' );
+    $tabla->setTabs('lostProvince', array('1'=>'A Coruña', '2'=>'Lugo', '*'=> 'Toda Galicia' ), '*');
 
 
     // set id search reference.
