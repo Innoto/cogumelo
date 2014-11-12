@@ -61,7 +61,7 @@ class TableController{
     }
 
     // search box
-    if(  $postdata['search'] != '') {
+    if(  $postdata['search'] != 'false') {
       $this->clientData['search'] = $postdata['search'];
     }
     else {
@@ -69,10 +69,8 @@ class TableController{
     }
     
     $this->clientData['action'] = $postdata['action'];
-
-
-    
   }
+
 
   /*
   * Set table col
@@ -96,7 +94,7 @@ class TableController{
   * @return void
   */
   function colRule($colId, $regexp, $finalContent) {
-    if(array_key_exists($colId, $this->colsDef)) {
+    if( array_key_exists($colId, $this->colsDef) ) {
       $this->colsDef[$colId]['rules'][] = array('regexp' => $regexp, 'finalContent' => $finalContent );
     }
     else {
@@ -144,10 +142,31 @@ class TableController{
       $retFilters[ $this->searchId ] = $this->clientData['search'];
     }
 
-    $retFilters[ $this->tabs['tabsKey'] ] = $this->currentTab;
+    if($this->currentTab != '*'){
+      $retFilters[ $this->tabs['tabsKey'] ] = $this->currentTab;
+    }
 
     return $retFilters; 
   }
+
+  /*
+  * set List method for controller
+  * @param string $listMethod method name
+  * @return void
+  */
+  function setListMethodAlias($listMethod) {
+    $this->controllerMethodAlias['list'] = $listMethod;
+  }
+
+  /*
+  * set Count method for controller
+  * @param string $countMethod method name
+  * @return void
+  */
+  function setCountMethodAlias($countMethod) {
+    $this->controllerMethodAlias['count'] = $countMethod;
+  }
+
 
   /*
   * set Search id for DAO filters

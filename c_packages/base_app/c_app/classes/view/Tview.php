@@ -10,7 +10,7 @@ class Tview extends View
   }
 
   /**
-  * Evaluar las condiciones de acceso y reportar si se puede continuar
+  * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
   function accessCheck() {
@@ -30,9 +30,6 @@ class Tview extends View
 
     table::autoIncludes();
 
-    $_POST['search'] = '';
-    //$_POST['filters'] = array();
-
 
     Cogumelo::load('controller/LostController.php');
     $lostControl =  new LostController();
@@ -41,7 +38,7 @@ class Tview extends View
     $tabla = new TableController( $lostControl, $_POST );
 
     // establecemos pestañas, así como o key identificativo á hora de filtrar
-    $tabla->setTabs('lostProvince', array('1'=>'A Coruña', '2'=>'Lugo'), '2' );
+    $tabla->setTabs('lostProvince', array('1'=>'A Coruña', '2'=>'Lugo', '*'=> 'Toda Galicia' ), '*');
 
 
     // set id search reference.
@@ -52,7 +49,9 @@ class Tview extends View
     $tabla->setActionMethod('Mover a Lla Coruña', 'moveToAcoruna', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>1) )');
     $tabla->setActionMethod('Mover a Lugo', 'moveToLugo', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>2) )');
 
-    
+    // set list Count methods in controller
+    $tabla->setListMethodAlias('listItems');
+    $tabla->setCountMethodAlias('listCount');
 
     // Nome das columnas
     //$tabla->setCol('id', 'Id');
