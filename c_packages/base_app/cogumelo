@@ -4,12 +4,15 @@
   // CARGO COGUMELO, É PRECISO FACER UNS CANTOS APAÑOS
   //
 
-  // Project location
-  define('SITE_PATH', getcwd().'/c_app/');
   $_SERVER['HTTPS'] = false;
   $_SERVER['HTTP_HOST'] = '';
   $_SERVER['REQUEST_URI'] = 'cogumelo shell script';
   $_SERVER['REMOTE_ADDR'] = "local_shell";
+
+  // Project location
+  define( 'WEB_BASE_PATH',getcwd().'/httpdocs' );
+  define( 'APP_BASE_PATH', getcwd().'/c_app' );
+  define( 'SITE_PATH', APP_BASE_PATH.'/' );
 
   // cogumelo core Location
   set_include_path('.:'.SITE_PATH);
@@ -154,48 +157,71 @@
   }
 
   function createTables(){
-
-
-
     $develdbcontrol = new DevelDBController();
     $develdbcontrol->createTables();
   }
 
-  function setPermissions(){
-    exec('mkdir -p c_app/tmp/templates_c');
-    exec('mkdir -p c_app/log');
-    exec('mkdir -p c_app/backups');
-    exec('mkdir -p httpdocs/mediaCache');
 
-    exec('sudo chown -R $USER:www-data httpdocs');
-    exec('chmod -R go-rwx,g+rX httpdocs');
+  function makeAppPaths() {
+    $md = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
+      MEDIASERVER_TMP_CACHE_PATH, WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH,
+      LOGDIR, FORM_FILES_TMP_PATH, FORM_FILES_APP_PATH, BCK );
 
-    exec('sudo chown -R $USER:www-data c_app');
-    exec('chmod -R g-x,o-wx,g+rwX,o+rX c_app');
-    exec('chmod -R ug+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache');
+    foreach( $md as $dir ) {
+      if( !is_dir( $dir ) ) {
+        if( !mkdir( $dir, 0777, true ) ) {
+          echo 'ERROR: Imposible crear el dirirectorio: '.$dir."\n";
+        }
+      }
+    }
+  }
 
-    exec('sudo chown $USER:$USER c_app/backups');
-    exec('chmod -R go-rwx c_app/backups');
+
+  function setPermissions() {
+    makeAppPaths();
+
+    exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
+      APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+      MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
+      LOGDIR.' '.FORM_FILES_TMP_PATH.' '.FORM_FILES_APP_PATH );
+
+    exec( 'chmod -R g-wx,g+rX,o-rwx '.WEB_BASE_PATH );
+
+    exec( 'chmod -R g-wx,g+rX,o-rwx '.APP_BASE_PATH );
+
+    // Path que necesitan escritura
+    exec( 'chmod -R ug+rwX '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+      MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
+      LOGDIR.' '.FORM_FILES_TMP_PATH.' '.FORM_FILES_APP_PATH );
+
+    // Solo usuario administrador
+    exec( 'sudo chown $USER:$USER '.BCK );
+    exec( 'chmod -R go-rwx '.BCK );
 
     echo "Permissions ready!\n";
   }
 
 
   function setPermissionsDevel(){
-    exec('mkdir -p c_app/tmp/templates_c');
-    exec('mkdir -p c_app/log');
-    exec('mkdir -p c_app/backups');
-    exec('mkdir -p httpdocs/mediaCache');
+    makeAppPaths();
 
-    exec('sudo chown -R $USER:www-data httpdocs');
-    exec('chmod -R u-x,go-wx,ugo+rX httpdocs');
+    exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
+      APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+      MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
+      LOGDIR.' '.FORM_FILES_TMP_PATH.' '.FORM_FILES_APP_PATH );
 
-    exec('sudo chown -R $USER:www-data c_app');
-    exec('chmod -R go-wx,go+rX c_app');
-    exec('chmod -R ug+rwX,o+rX c_app/tmp c_app/log httpdocs/mediaCache httpdocs/test_upload');
+    exec( 'chmod -R u-x,go-wx,ugo+rX '.WEB_BASE_PATH );
 
-    exec('sudo chown $USER:$USER c_app/backups');
-    exec('chmod -R go-rwx c_app/backups');
+    exec( 'chmod -R go-wx,go+rX '.APP_BASE_PATH );
+
+    // Path que necesitan escritura
+    exec( 'chmod -R ug+rwX,o+rX '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+      MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
+      LOGDIR.' '.FORM_FILES_TMP_PATH.' '.FORM_FILES_APP_PATH );
+
+    // Solo usuario administrador
+    exec( 'sudo chown $USER:$USER '.BCK );
+    exec( 'chmod -R go-rwx '.BCK );
 
     echo "Permissions ready!\n";
   }
@@ -346,7 +372,7 @@
     foreach($all_files_js as $i => $dir){
       if (strpos($dir,'/c_modules/')===false && strpos($dir,'/modules/')===false
           && strpos($dir,'/vendor/')===false && strpos($dir,'/vendorServer/')===false
-          && strpos($dir,'/pluggins/')===false && strpos($dir,'/jquery-validation/')===false 
+          && strpos($dir,'/pluggins/')===false && strpos($dir,'/jquery-validation/')===false
           && strpos($dir,'/tmp/')===false){ // We exclude files from modules, tmp and vendorServer
             $files_js[$i] = $dir->getRealPath();
       }

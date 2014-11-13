@@ -716,12 +716,22 @@ class FormController implements Serializable {
     foreach( $this->getFieldsNamesArray() as $fieldName ){
       if( $this->getFieldType( $fieldName ) === 'file' && !$this->isEmptyFieldValue( $fieldName ) ) {
         error_log( 'FILE: Almacenando File Field: '.$fieldName );
-        $destDir = $this->getFieldParam( $fieldName, 'destDir' );
         $fileStatus = $this->getFieldParam( $fieldName, 'fileStatus' );
         error_log( print_r( $fileStatus, true ) );
         $fileFieldValue = $this->getFieldValue( $fieldName );
         // $fileStatus['tmpFile'] = 'name'=>'', 'originalName'=>'', 'absLocation'=>'', 'type'=>'', 'size'=>''
         $fileName = $this->secureFileName( $fileStatus['tmpFile']['originalName'] );
+
+        $destDir = FORM_FILES_APP_PATH . $this->getFieldParam( $fieldName, 'destDir' );
+        if( !is_dir( $destDir ) ) {
+          /**
+          // TODO: CAMBIAR PERMISOS 0777
+          **/
+          if( !mkdir( $destDir, 0777, true ) ) {
+            $error = 'Imposible crear el dir. necesario: '.$destDir; error_log($error);
+          }
+        }
+
         error_log( 'FILE: movendo ' . $fileStatus['tmpFile']['absLocation'] . ' a ' . $destDir.$fileName );
 
         /**
@@ -753,24 +763,20 @@ class FormController implements Serializable {
     $result = false;
     $error = false;
 
-    // PARA TEST !!!
-    $tmpCgmlFormDir = $_SERVER['DOCUMENT_ROOT'].'test_upload/'; // DEFINIDO EN SETUP !!!
-    // PARA TEST !!!
-
-    $tmpCgmlFormDir = $tmpCgmlFormDir . preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getIntFrmId() ) . '/';
-    if( !is_dir( $tmpCgmlFormDir ) ) {
+    $tmpCgmlFormPath = FORM_FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getIntFrmId() );
+    if( !is_dir( $tmpCgmlFormPath ) ) {
       /**
       // TODO: CAMBIAR PERMISOS 0777
       **/
-      if( !mkdir( $tmpCgmlFormDir, 0777, true ) ) {
-        $error = 'Imposible crear el dir. necesario: '.$tmpCgmlFormDir; error_log($error);
+      if( !mkdir( $tmpCgmlFormPath, 0777, true ) ) {
+        $error = 'Imposible crear el dir. necesario: '.$tmpCgmlFormPath; error_log($error);
       }
     }
 
     if( !$error ) {
       $secureName = $this->secureFileName( $fileName );
 
-      $tmpLocationCgml = $tmpCgmlFormDir . $secureName;
+      $tmpLocationCgml = $tmpCgmlFormPath .'/'. $secureName;
       /**
       // TODO: FALTA VER QUE NON SE PISE UN ANTERIOR!!!
       **/
