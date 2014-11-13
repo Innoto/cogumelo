@@ -44,7 +44,7 @@ class FormModTest extends View
       'destDir' => '/porto' ) );
 
     $form->setValidationRule( 'inputFicheiro', 'minfilesize', 1024 );
-    $form->setValidationRule( 'inputFicheiro', 'accept', 'image/*' );
+    $form->setValidationRule( 'inputFicheiro', 'accept', 'image/gif' );
     //$form->setValidationRule( 'inputFicheiro', 'required' );
 
     /*

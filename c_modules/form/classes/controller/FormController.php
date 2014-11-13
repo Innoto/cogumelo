@@ -1045,14 +1045,16 @@ class FormController implements Serializable {
    *
    * @return string JSON
    **/
-  public function jsonFormOk() {
-
-    return json_encode(
-      array(
-        'result' => 'ok',
-        'success' => $this->getSuccess()
-      )
+  public function jsonFormOk( $moreInfo = false ) {
+    $result = array(
+      'result' => 'ok',
+      'success' => $this->getSuccess()
     );
+    if( $moreInfo !== false ) {
+      $result['moreInfo'] = $moreInfo;
+    }
+
+    return json_encode( $result );
   }
 
 
@@ -1061,14 +1063,16 @@ class FormController implements Serializable {
    *
    * @return string JSON
    **/
-  public function jsonFormError() {
-
-    return json_encode(
-      array(
-        'result' => 'error',
-        'jvErrors' => $this->getJVErrors()
-      )
+  public function jsonFormError( $moreInfo = false ) {
+    $result = array(
+      'result' => 'error',
+      'jvErrors' => $this->getJVErrors()
     );
+    if( $moreInfo !== false ) {
+      $result['moreInfo'] = $moreInfo;
+    }
+
+    return json_encode( $result );
   }
 
 
