@@ -724,23 +724,24 @@ class FormController implements Serializable {
         // $fileStatus['tmpFile'] = 'name'=>'', 'originalName'=>'', 'absLocation'=>'', 'type'=>'', 'size'=>''
         $fileName = $this->secureFileName( $fileStatus['tmpFile']['originalName'] );
 
-        $destDir = MOD_FORM_FILES_APP_PATH . $this->getFieldParam( $fieldName, 'destDir' );
-        if( !is_dir( $destDir ) ) {
+        $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+        $fullDestPath = MOD_FORM_FILES_APP_PATH . $destDir;
+        if( !is_dir( $fullDestPath ) ) {
           /**
           // TODO: CAMBIAR PERMISOS 0777
           **/
-          if( !mkdir( $destDir, 0777, true ) ) {
-            $error = 'Imposible crear el dir. necesario: '.$destDir; error_log($error);
+          if( !mkdir( $fullDestPath, 0777, true ) ) {
+            $error = 'Imposible crear el dir. necesario: '.$fullDestPath; error_log($error);
           }
         }
 
-        error_log( 'FILE: movendo ' . $fileStatus['tmpFile']['absLocation'] . ' a ' . $destDir.$fileName );
+        error_log( 'FILE: movendo ' . $fileStatus['tmpFile']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
 
         /**
         // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
         */
 
-        rename( $fileStatus['tmpFile']['absLocation'], $destDir.$fileName );
+        rename( $fileStatus['tmpFile']['absLocation'], $fullDestPath.'/'.$fileName );
 
         /**
         // TODO: FALTA GUARDA LOS DATOS DEFINITIVOS DEL FICHERO!!!

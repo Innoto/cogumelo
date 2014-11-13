@@ -231,13 +231,19 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       console.log( 'successHandler', $jsonData, $textStatus, $jqXHR );
       $( '#loaded_n_total' ).html( '' );
       $( '#progressBar' ).val( 0 );
-      $( '#status' ).html( $textStatus );
+      $( '#status' ).html( $jsonData.success );
 
-      // Cambios en el input procesado para indicar OK y otras opciones
-      $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'green' );
-      $(' #' + $jsonData[ 'idForm' ] + ' input[name=' + $jsonData[ 'fieldName' ] + ']' ).replaceWith(
-        '<span class="fileUploadOK">"' + $jsonData[ 'fileName' ] + '" uploaded OK</span>'
-      );
+      if( $jsonData.success!='error' ) {
+        // Cambios en el input procesado para indicar OK y otras opciones
+        $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'green' );
+        $(' #' + $jsonData[ 'idForm' ] + ' input[name=' + $jsonData[ 'fieldName' ] + ']' ).replaceWith(
+          '<span class="fileUploadOK">"' + $jsonData[ 'fileName' ] + '" uploaded OK</span>'
+        );
+      }
+      else {
+        // Cambios en el input procesado para indicar OK y otras opciones
+        $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'red' );
+      }
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
       console.log( 'errorHandler', $jqXHR, $textStatus, $errorThrown );

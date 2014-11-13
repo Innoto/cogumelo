@@ -34,7 +34,11 @@ class FormFileUpload extends View
     error_log( 'FILES:' ); error_log( print_r( $_FILES, true ) );
     error_log( 'POST:' ); error_log( print_r( $_POST, true ) );
 
-    if( isset( $_FILES['ajaxFileUpload'], $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'] ) ) {
+    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'], $_FILES['ajaxFileUpload'] ) ) {
+      $idForm = $_POST['idForm'];
+      $cgIntFrmId = $_POST[ 'cgIntFrmId' ];
+      $fieldName = $_POST[ 'fieldName' ];
+
       $fileName     = $_FILES['ajaxFileUpload']['name'];     // The file name
       $fileTmpLoc   = $_FILES['ajaxFileUpload']['tmp_name']; // File in the PHP tmp folder
       $fileType     = $_FILES['ajaxFileUpload']['type'];     // The type of file it is
@@ -47,6 +51,7 @@ class FormFileUpload extends View
           // Todo OK, no hay error
           break;
         case UPLOAD_ERR_INI_SIZE:
+          $form->addFieldRuleError( 'check1', 'cogumelo', 'Un mensaxe de error de campo' );
           $error = "El tamaño del fichero ha superado el límite establecido en el servidor.";
           break;
         case UPLOAD_ERR_FORM_SIZE:
@@ -101,13 +106,9 @@ class FormFileUpload extends View
       if( !$error ) {
 
         // Recuperamos formObj y validamos el fichero temporal
-        if( $form->loadFromSession( $_POST[ 'cgIntFrmId' ] ) &&
-          $form->getFieldType( $_POST[ 'fieldName' ] ) === 'file' )
-        {
-
+        if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' ) {
           // Creamos un objeto con los validadores y lo asociamos
           $form->setValidationObj( new FormValidators() );
-          $fieldName = $_POST[ 'fieldName' ];
           $tmpFileFieldValue = array(
             'name' => $fileName,
             'originalName' => $fileName,
@@ -156,9 +157,9 @@ class FormFileUpload extends View
               $form->saveToSession();
             } // else - if( !$tmpCgmlFileLocation )
           } // else - if( !$form->validateField( $fieldName ) )
-        } // if( $form->loadFromSession( $_POST[ 'cgIntFrmId' ] ) ) {
+        } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
         else {
-          $error = 'Los datos del formulario no han llegado bien al servidor. FORM'; error_log($error);
+          $error = 'Los datos del fichero no han llegado bien al servidor. FORM'; error_log($error);
         }
 
 
