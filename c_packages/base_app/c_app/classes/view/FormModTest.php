@@ -42,7 +42,8 @@ class FormModTest extends View
 
     $form->setField( 'inputFicheiro', array( 'type' => 'file', 'id' => 'inputFicheiro',
       'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro',
-      'destDir' => $_SERVER['DOCUMENT_ROOT'].'test_upload/0---OK/' ) );
+      'destDir' => '/porto' ) );
+
     $form->setValidationRule( 'inputFicheiro', 'minfilesize', 1024 );
     //$form->setValidationRule( 'inputFicheiro', 'accept', 'text/plain' );
     //$form->setValidationRule( 'inputFicheiro', 'required' );

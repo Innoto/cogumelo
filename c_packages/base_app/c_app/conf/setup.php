@@ -1,12 +1,12 @@
 <?php
 
 if( develEnviroment() ) {
-  error_log( 'CONFIGURACION: setup.dev.php' );
+  //error_log( 'CONFIGURACION: setup.dev.php' );
   define( 'IS_DEVEL_ENV', true );
   require_once('setup.dev.php');
 }
 else {
-  error_log( 'CONFIGURACION: setup.final.php' );
+  //error_log( 'CONFIGURACION: setup.final.php' );
   define( 'IS_DEVEL_ENV', false );
   require_once('setup.final.php');
 }

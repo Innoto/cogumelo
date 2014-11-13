@@ -28,7 +28,7 @@ function setValidateForm( idForm, rules, messages ) {
     //groups: { ungrupo: "input1 input2" },
 
     errorPlacement: function( place, element ) {
-      console.log( 'errorPlacement:' );
+      console.log( 'Executando validate.errorPlacement:' );
       console.log( place, element );
       $msgContainer = $( '#JQVMC-'+place.attr('id')+', .JQVMC-'+place.attr('id') );
       if ( $msgContainer.length > 0 ) {
@@ -44,6 +44,7 @@ function setValidateForm( idForm, rules, messages ) {
     messages: messages,
     submitHandler:
       function ( form ) {
+        console.log( 'Executando validate.submitHandler...' );
         $( form ).find( '[type="submit"]' ).attr("disabled", "disabled");
         $.ajax( {
            contentType: 'application/json', processData: false,
@@ -52,6 +53,7 @@ function setValidateForm( idForm, rules, messages ) {
            dataType : 'json'
         } )
         .done( function ( response ) {
+          console.log( 'Executando validate.submitHandler.done...' );
           console.log( response );
           if( response.result === 'ok' ) {
             var successActions = response.success;
