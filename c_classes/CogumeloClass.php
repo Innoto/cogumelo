@@ -5,6 +5,7 @@ require_once(COGUMELO_LOCATION.'/c_classes/c_controller/ModuleController.php');
 require_once(COGUMELO_LOCATION.'/c_classes/c_controller/DependencesController.php');
 
 
+
 class CogumeloClass extends Singleton
 {
   public $request;
@@ -188,7 +189,16 @@ class CogumeloClass extends Singleton
   }
 
   static function getUserInfo() {
-    //return $this->userinfoString;
+    if(class_exists('UserSessionController')) {
+    require_once(ModuleController::getRealFilePath('classes/controller/UserSessionController.php', 'user'));
+    $userSessionControl = new UserSessionController();
+    $user = $userSessionControl->getUser();
+      $res = $user->getter('login');
+    }
+    else {
+      $res = "";
+    }
+    return $res;
   }
 
 

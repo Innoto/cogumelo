@@ -70,8 +70,12 @@ class MysqlDevelDBDAO extends MysqlDAO
     $this->execSQL($connection, $strSQL, array() );
   }
   function insertTableValues($connection, $vo_name){
-    $strSQL = $this->getInsertTableSQL($connection, $vo_name);
-    $this->execSQL($connection, $strSQL, array() );
+    $res = $this->getInsertTableSQL($connection, $vo_name);
+    if(!empty($res)) {
+      foreach ($res as $resKey => $resValue) {
+        $this->execSQL($connection, $resValue['strSQL'], $resValue['valuesSQL']);
+      }
+    }
   }
 
 
@@ -121,22 +125,37 @@ class MysqlDevelDBDAO extends MysqlDAO
     return $strSQL;
   }
 
-  function getInsertTableSQL($connection, $vo_name, $vo_route) {
+  function getInsertTableSQL($connection, $vo_name, $vo_route = false ) {
     $VO = new $vo_name();
     $primarykey = $VO->getFirstPrimarykeyId();
-    $strSQL = "";
+    $valuesSQL = array();
+    $res = array();
 
-    foreach ($VO::$insertValues as $insertKey => $insertValue) {
-      if(array_key_exists($primarykey, $insertValue)) {
-        $strSQL .= "INSERT INTO ".$VO::$tableName." (".implode(',', array_keys($insertValue)). ")\n VALUES (".$this->getQuestionMarks($insertValue)."); \n";
+    if(isset($VO::$insertValues)){
 
-        /*INSERT INTO table_name (column1,column2,column3,...)
-        VALUES (value1,value2,value3,...);*/
-      }
-      else {
+      foreach ($VO::$insertValues as $insertKey => $insertValue) {
+        if(array_key_exists($primarykey, $insertValue)) {
+          $insertArrayValues = $insertValue;
+          unset($insertArrayValues[$primarykey]);
+          $insertStringValues = implode(',', array_keys($insertArrayValues));
+          $valuesSQL = array_values($insertArrayValues);
+          $infoSQLValues = implode(',', array_values($insertArrayValues));
 
+          $strSQL = "INSERT INTO ".$VO::$tableName." (".$insertStringValues. ") VALUES (".$this->getQuestionMarks($insertArrayValues)."); ";
+          $infoSQL = "INSERT INTO ".$VO::$tableName." (".$insertStringValues. ") VALUES (".$infoSQLValues."); ";
+
+          array_push($res, array('strSQL' => $strSQL, 'valuesSQL' => $valuesSQL, 'infoSQL' => $infoSQL ));
+        }
+        else {
+          $valuesSQL = array_values($insertValue);
+          $infoSQLValues = implode(',', array_values($insertValue));
+          $strSQL = "INSERT INTO ".$VO::$tableName." (".implode(',', array_keys($insertValue)). ") VALUES (".$this->getQuestionMarks($insertValue)."); ";
+          $infoSQL = "INSERT INTO ".$VO::$tableName." (".implode(',', array_keys($insertValue)). ") VALUES (".$infoSQLValues."); ";
+          array_push($res, array('strSQL' => $strSQL, 'valuesSQL' => $valuesSQL, 'infoSQL' => $infoSQL ));
+        }
       }
     }
+    return $res;
   }
 
 }

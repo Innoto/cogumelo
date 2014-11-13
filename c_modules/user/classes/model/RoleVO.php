@@ -28,8 +28,7 @@ class RoleVO extends VO
     array('name' => 'user', 'description' => 'User'),
     array('name' => 'admin', 'description' => 'Admin'),
     array('name' => 'gestor', 'description' => 'Gestor'),
-    array('name' => 'editor', 'description' => 'Editor'),
-
+    array('name' => 'editor', 'description' => 'Editor')
   );
 
   function __construct($datarray = array())

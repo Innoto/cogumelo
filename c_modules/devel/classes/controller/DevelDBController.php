@@ -14,7 +14,7 @@ class  DevelDBController extends DataController
 
 
   function __construct($usuario=false, $password = false, $DB = false)
-  { 
+  {
     $this->data = new Facade("DevelDB", "devel");
 
     if($usuario) {
@@ -22,13 +22,14 @@ class  DevelDBController extends DataController
     }
   }
 
-  
+
   function createTables(){
 
     $returnStrArray = array();
     foreach($this->listVOs() as $vo) {
       $returnStrArray[] = $this->data->dropTable($vo);
       $returnStrArray[] = $this->data->createTable($vo);
+      $returnStrArray[] = $this->data->insertTableValues($vo);
     }
 
     return $returnStrArray;
@@ -42,6 +43,14 @@ class  DevelDBController extends DataController
       $returnStrArray[] = "#VO File: ".$this->voReferences[$vo].$vo.".php";
       $returnStrArray[] = $this->data->getDropSQL($vo, $this->voReferences[$vo]);
       $returnStrArray[] = $this->data->getTableSQL($vo, $this->voReferences[$vo].$vo.".php");
+
+      $resInsert = $this->data->getInsertTableSQL($vo, $this->voReferences[$vo].$vo.".php");
+
+      if(!empty($resInsert)) {
+        foreach ($resInsert as $resInsertKey => $resInsertValue) {
+          $returnStrArray[] = $resInsertValue['infoSQL'];
+        }
+      }
 
     }
 
@@ -90,7 +99,7 @@ class  DevelDBController extends DataController
       }
       closedir($handle);
     }
-    
+
 
     return $vos;
   }
