@@ -43,7 +43,7 @@ class FormController implements Serializable {
 
 
   /**
-   * Guarda todos los datos importantes en un array y lo serializa
+   * Recupera todos los datos importantes en un array serializado
    *
    * @return string
    **/
@@ -67,7 +67,7 @@ class FormController implements Serializable {
 
 
   /**
-   * Recupera todos los datos importantes desde el string serializado
+   * Carga todos los datos importantes desde el string serializado
    *
    * @param string $dataSerialized Datos del form serializados
    **/
@@ -90,19 +90,16 @@ class FormController implements Serializable {
 
   /**
    * Guarda todos los datos importantes (serializados) en sesion
-   *
-   * @return string
    **/
   public function saveToSession() {
     $formSessionId = 'CGFSI_'.$this->getIntFrmId();
     $_SESSION[ $formSessionId ] = $this->serialize();
-    return $formSessionId;
+    //return $formSessionId;
   }
 
 
   /**
-   * Recupera de sesion todos los datos importantes (serializados)
-   *
+   * Recupera de sesion todos los datos importantes
    * @param string $cgIntFrmId ID interno del formulario
    * @return boolean
    **/
