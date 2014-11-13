@@ -45,7 +45,8 @@ function cogumeloTable( tableId, tableUrl ) {
   that.pagersPrevious = $('.'+tableId+'.tableContainer .tablePaginator .tablePreviousPage');
   that.pagersNext = $('.'+tableId+'.tableContainer .tablePaginator .tableNextPage'); 
   that.actionSelect = $('.'+tableId+'.tableContainer .tableActions .actionSelect'); 
-  that.searchButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button'); 
+  that.searchButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.search'); 
+  that.searchClearButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.clear'); 
 
   that.interfaceAction = function( status ){
 
@@ -54,13 +55,21 @@ function cogumeloTable( tableId, tableUrl ) {
         that.showTableStatus = status;
         that.filters.hide();
         that.resumeFilters.show();
-      break;
+        break;
       case "openFilters":
         that.showTableStatus = status;
         that.filters.show();
         that.resumeFilters.hide();
-      break;
+        break;
+      case "search":
+        that.searchClearButton.show();
+        break
+      case "unsearch":
+        that.searchClearButton.hide();
+        break;
       case "closeFilters":
+        that.filters.hide();
+        break;
       case "default":
       default:
         that.showTableStatus = status;
@@ -360,11 +369,20 @@ function cogumeloTable( tableId, tableUrl ) {
   }
 
   that.actionSearch = function( searchText ) {
-    that.search = searchText;
-    that.load();
-    //that.interfaceAction('filtered');
+    if( searchText != '' ) {
+      that.search = searchText;
+      that.load();
+      that.interfaceAction('search');
+    }
   }
 
+
+  that.searchClear = function() {
+    that.searchInput.val('');
+    that.search = false;
+    that.load();
+    that.interfaceAction('unsearch');
+  }
 
   // EVENTS
 
@@ -392,6 +410,12 @@ function cogumeloTable( tableId, tableUrl ) {
   that.searchForm.on("submit", function(){
     that.actionSearch( that.searchInput.val() );
   });
+
+  // search clear
+  that.searchClearButton.on("click", function(){
+    that.searchClear();
+  });
+
 
   // pager events
   that.pagersCurrent.on("change", function( inputCurrentPage ){
