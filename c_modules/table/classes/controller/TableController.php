@@ -20,6 +20,11 @@ class TableController{
       'list' => 'listItems',
       'count' => 'listCount'
       );
+  var $exports = array( 
+      '0'=> array('name'=>'Export', 'controller'=>''),
+      'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
+      'xls' => array('name'=>'Excell', 'controller'=>'XlsExportTableController')
+      );
   var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
   var $tabs = false;
   var $searchId = 'tableSearch';
@@ -29,7 +34,7 @@ class TableController{
 
   /*
   * @param object $control: is the data controller  
-  * @param array $data  generally is the full $_POST data variable
+  * @param array $data  generally is htme full $_POST data variable
   */
   function __construct($control, $postdata)
   {
@@ -159,6 +164,17 @@ class TableController{
   }
 
   /*
+  * set exoport controller
+  * @param string $id for selector option reference
+  * @param string $name to display in selector
+  * @param string $controller class name
+  * @return void
+  */
+  function setExportController($id, $name, $controller) {
+    $this->exports[$id] = array('name' => $name , 'method' => $controller);
+  }
+
+  /*
   * set Count method for controller
   * @param string $countMethod method name
   * @return void
@@ -216,6 +232,23 @@ class TableController{
 
     return $actList;
   }
+
+
+
+  /*
+  * get export actions for client
+  * @return array exports
+  */
+  function getExportsForClient() {
+    
+    $retExports = array();
+
+    foreach ($this->exports as $eKey => $export) {
+      $retExports[$eKey] =  $export;
+    }
+    return $retExports;
+  }
+
 
   /*
   * Turn order objects from table in array readable by DAO
@@ -284,6 +317,7 @@ class TableController{
     echo '"colsDef":'.json_encode($this->colsIntoArray() ).',';
     echo '"tabs":'.json_encode($this->tabs).',';
     echo '"filters":'.json_encode($this->filters).',';
+    echo '"exports":'.json_encode($this->getExportsForClient()) . ',';
     echo '"actions":'.json_encode($this->getActionsForClient()) . ',';
     echo '"rowsEachPage":'. $this->rowsEachPage .',';
     echo '"totalRows":'. $totalRows.',';

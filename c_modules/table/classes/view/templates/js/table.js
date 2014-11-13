@@ -36,7 +36,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.allTableCheckBoxesQstr = '.'+tableId+'.tableContainer .tableClass .eachRowCheckBox';  
   that.searchForm = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form');   
   that.searchInput = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form input'); 
-
+  
 
   // buttons and action elements
   that.openFiltersButton = $('.'+tableId+'.tableContainer .openFilters');
@@ -45,6 +45,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.pagersPrevious = $('.'+tableId+'.tableContainer .tablePaginator .tablePreviousPage');
   that.pagersNext = $('.'+tableId+'.tableContainer .tablePaginator .tableNextPage'); 
   that.actionSelect = $('.'+tableId+'.tableContainer .tableActions .actionSelect'); 
+  that.exportSelect = $('.'+tableId+'.tableContainer .exportContainer .exportSelect');   
   that.searchButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.search'); 
   that.searchClearButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.clear'); 
 
@@ -119,6 +120,7 @@ function cogumeloTable( tableId, tableUrl ) {
         that.clearData();
         that.initTabValues();
         that.setActionValues();
+        that.setExportValues();
         that.initOrderValues();
         that.setHeaders();
         that.setRows();
@@ -162,6 +164,16 @@ function cogumeloTable( tableId, tableUrl ) {
       that.actionSelect.append('<option value='+i+'> ' + e + '</option>');
     });
 
+  }
+
+  that.setExportValues = function() {
+
+    that.exportSelect.html("");
+
+    $.each(that.tableData.exports, function(i,e) {
+      that.exportSelect.append('<option value='+i+'> ' + e.name + '</option>');
+    });    
+    
   }
 
   that.initOrderValues = function() {
@@ -399,6 +411,11 @@ function cogumeloTable( tableId, tableUrl ) {
   // Action select
   that.actionSelect.on("change", function( ){
     that.actionOnSelectedRows();
+  });
+
+  // Export select
+  that.exportSelect.on("change", function( ){
+    alert('export');
   });
 
   // tabs change
