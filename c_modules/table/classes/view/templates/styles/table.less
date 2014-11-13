@@ -13,6 +13,7 @@
 @tableFontSize:                     14px;
 
 @buttonSearchBck: #1E90FF;
+@buttonClearSearchBck: red;
 @buttonSearchColor: #fff;
 
 @buttonMoreFiltersBck: #1E90ff;
@@ -40,6 +41,14 @@
       input{
         width: 65%;
         max-width: 500px;
+      }
+
+      button.clear{
+        margin-top: -2px;
+        margin-left: -4px;
+        width: 10px;
+        max-width: 120px;
+        .btnFormat(@buttonClearSearchBck, @buttonSearchColor);
       }
 
       button{
