@@ -21,6 +21,9 @@ function cogumeloTable( tableId, tableUrl ) {
   that.tableData = false;
   that.currentPage = 1;
 
+  // search and filters
+  that.search = false;
+
 
   // table elements
   that.filters = $('.'+tableId+'.tableContainer .tableMoreFilters');
@@ -31,15 +34,20 @@ function cogumeloTable( tableId, tableUrl ) {
   that.pagersCurrent = $('.'+tableId+'.tableContainer .tablePaginator .tablePage input');  
   that.headTableCheckBoxQstr = '.'+tableId+'.tableContainer .tableClass .headCheckBox';
   that.allTableCheckBoxesQstr = '.'+tableId+'.tableContainer .tableClass .eachRowCheckBox';  
+  that.searchForm = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form');   
+  that.searchInput = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form input'); 
   
+
   // buttons and action elements
   that.openFiltersButton = $('.'+tableId+'.tableContainer .openFilters');
   that.closeFiltersButton = $('.'+tableId+'.tableContainer .closeFilters');
   that.anyColHeaderQstr = '.'+tableId+'.tableContainer table.tableClass tr th';
   that.pagersPrevious = $('.'+tableId+'.tableContainer .tablePaginator .tablePreviousPage');
   that.pagersNext = $('.'+tableId+'.tableContainer .tablePaginator .tableNextPage'); 
-
-
+  that.actionSelect = $('.'+tableId+'.tableContainer .tableActions .actionSelect'); 
+  that.exportSelect = $('.'+tableId+'.tableContainer .exportContainer .exportSelect');   
+  that.searchButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.search'); 
+  that.searchClearButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.clear'); 
 
   that.interfaceAction = function( status ){
 
@@ -48,13 +56,21 @@ function cogumeloTable( tableId, tableUrl ) {
         that.showTableStatus = status;
         that.filters.hide();
         that.resumeFilters.show();
-      break;
+        break;
       case "openFilters":
         that.showTableStatus = status;
         that.filters.show();
         that.resumeFilters.hide();
-      break;
+        break;
+      case "search":
+        that.searchClearButton.show();
+        break
+      case "unsearch":
+        that.searchClearButton.hide();
+        break;
       case "closeFilters":
+        that.filters.hide();
+        break;
       case "default":
       default:
         that.showTableStatus = status;
@@ -66,7 +82,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
 
-  that.load = function() {
+  that.load = function( doAction ) {
 
     // range
     if( !that.tableData ) {
@@ -77,6 +93,14 @@ function cogumeloTable( tableId, tableUrl ) {
       var currentRange = [ (that.currentPage-1)*parseInt(that.tableData.rowsEachPage), that.tableData.rowsEachPage ];
     }
 
+    // action
+    if( typeof doAction == 'undefined' ){
+      var action = {action: 'list', keys: false};
+    }
+    else {
+      var action = doAction;
+    }
+
 
     $.ajax({
       url: tableUrl ,
@@ -84,7 +108,10 @@ function cogumeloTable( tableId, tableUrl ) {
       data: {
         tab : that.tabsContent.val(),
         order: that.order,
-        range: currentRange
+        range: currentRange,
+        action: action,
+        filters: false,
+        search: that.search 
 
       },
       success: function(tableData) {
@@ -92,6 +119,8 @@ function cogumeloTable( tableId, tableUrl ) {
 
         that.clearData();
         that.initTabValues();
+        that.setActionValues();
+        that.setExportValues();
         that.initOrderValues();
         that.setHeaders();
         that.setRows();
@@ -125,6 +154,26 @@ function cogumeloTable( tableId, tableUrl ) {
       });
 
     }
+  }
+
+  that.setActionValues = function() {
+
+    that.actionSelect.html("");
+
+    $.each(that.tableData.actions, function(i,e) {
+      that.actionSelect.append('<option value='+i+'> ' + e + '</option>');
+    });
+
+  }
+
+  that.setExportValues = function() {
+
+    that.exportSelect.html("");
+
+    $.each(that.tableData.exports, function(i,e) {
+      that.exportSelect.append('<option value='+i+'> ' + e.name + '</option>');
+    });    
+    
   }
 
   that.initOrderValues = function() {
@@ -282,10 +331,14 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.setRows = function(){
     var trows = '';
-    
+    var evenClass='';
+
     $.each(that.tableData.table , function( rowIndex, row ) {
-      trows += '<tr>';
-      trows += '<td> <input class="eachRowCheckBox" key="'+row.rowReferenceKey+'" type="checkbox"> </td>';
+      if(evenClass == '') { evenClass='even'; } else { evenClass=''; }
+
+
+      trows += '<tr class="' + evenClass + '">';
+      trows += '<td> <input class="eachRowCheckBox" rowReferenceKey="'+row.rowReferenceKey+'" type="checkbox"> </td>';
 
       $.each( row, function( i, e ){
         if( i != 'rowReferenceKey' ){
@@ -305,6 +358,44 @@ function cogumeloTable( tableId, tableUrl ) {
     });
   }
 
+
+  that.actionOnSelectedRows = function() {
+
+    var selectedRows = [];
+
+    $(that.allTableCheckBoxesQstr).each( function(i,e){
+
+      if( $(e).prop('checked') ){
+        selectedRows.push( $(e).attr('rowReferenceKey') );
+      }
+    });
+
+
+    if( that.actionSelect.val() != '0' && selectedRows.length > 0 ){
+      that.load( {action: that.actionSelect.val(), keys: selectedRows} );
+    }
+    else {
+      that.load();
+    }
+
+  }
+
+  that.actionSearch = function( searchText ) {
+    if( searchText != '' ) {
+      that.search = searchText;
+      that.load();
+      that.interfaceAction('search');
+    }
+  }
+
+
+  that.searchClear = function() {
+    that.searchInput.val('');
+    that.search = false;
+    that.load();
+    that.interfaceAction('unsearch');
+  }
+
   // EVENTS
 
   // click open filters
@@ -317,10 +408,31 @@ function cogumeloTable( tableId, tableUrl ) {
     that.interfaceAction('closeFilters');
   });
 
+  // Action select
+  that.actionSelect.on("change", function( ){
+    that.actionOnSelectedRows();
+  });
+
+  // Export select
+  that.exportSelect.on("change", function( ){
+    alert('export');
+  });
+
   // tabs change
   that.tabsContent.on("change", function(){
     that.load();
   });
+
+  // search
+  that.searchForm.on("submit", function(){
+    that.actionSearch( that.searchInput.val() );
+  });
+
+  // search clear
+  that.searchClearButton.on("click", function(){
+    that.searchClear();
+  });
+
 
   // pager events
   that.pagersCurrent.on("change", function( inputCurrentPage ){
@@ -334,6 +446,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.pagersNext.on("click", function(){
     that.setPager(that.currentPage + 1);
   });
+
 
   // FIRST TIME 
   that.interfaceAction('default');

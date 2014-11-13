@@ -13,6 +13,10 @@ class user extends Module
   );
 
   public $includesCommon = array(
+    'controller/UserController.php',
+    'controller/UserAccessController.php',
+    'model/UserVO.php',
+    'model/RoleVO.php'
 
   );
 

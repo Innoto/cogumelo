@@ -16,21 +16,25 @@ class TableController{
   var $control = false;
   var $clientData = array();
   var $colsDef = array();
-  var $allowMethods = array(
+  var $controllerMethodAlias = array(
       'list' => 'listItems',
-      'count' => 'listCount',
-      'delete' => false,
-      'chageStatus' => false
+      'count' => 'listCount'
       );
-
+  var $exports = array( 
+      '0'=> array('name'=>'Export', 'controller'=>''),
+      'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
+      'xls' => array('name'=>'Excell', 'controller'=>'XlsExportTableController')
+      );
+  var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
   var $tabs = false;
+  var $searchId = 'tableSearch';
   var $currentTab = false;
   var $filters = array();
-  var $rowsEachPage = 5;
+  var $rowsEachPage = 50;
 
   /*
   * @param object $control: is the data controller  
-  * @param array $data  generally is the full $_POST data variable
+  * @param array $data  generally is htme full $_POST data variable
   */
   function __construct($control, $postdata)
   {
@@ -52,12 +56,26 @@ class TableController{
     else {
       $this->clientData['range'] = array(0, $this->rowsEachPage );
     }
-    
-    $this->clientData['method'] = $postdata['method'];
-    $this->clientData['filters'] = $postdata['filters'];
 
+    // filters
+    if( $postdata['filters'] != 'false' ) {
+      $this->clientData['filters'] = $postdata['filters'];
+    }
+    else {
+      $this->clientData['filters'] = false;
+    }
+
+    // search box
+    if(  $postdata['search'] != 'false') {
+      $this->clientData['search'] = $postdata['search'];
+    }
+    else {
+      $this->clientData['search'] = false;
+    }
     
+    $this->clientData['action'] = $postdata['action'];
   }
+
 
   /*
   * Set table col
@@ -81,7 +99,7 @@ class TableController{
   * @return void
   */
   function colRule($colId, $regexp, $finalContent) {
-    if(array_key_exists($colId, $this->colsDef)) {
+    if( array_key_exists($colId, $this->colsDef) ) {
       $this->colsDef[$colId]['rules'][] = array('regexp' => $regexp, 'finalContent' => $finalContent );
     }
     else {
@@ -89,16 +107,6 @@ class TableController{
     }
   }
 
-  /*
-  * Set table action over on selected rows
-  *
-  * @param string actionId reference for action
-  * @param array ids of selected rows
-  * @return void
-  */
-  function setAction( $actionId, $rows = array() ) {
-
-  }  
 
   /*
   * Set tabs
@@ -133,18 +141,112 @@ class TableController{
   * @return array
   */
   function getFilters() {
-    return array($this->tabs['tabsKey'] => $this->currentTab);
+    $retFilters = array();
+    
+    if( $this->clientData['search'] ) {
+      $retFilters[ $this->searchId ] = $this->clientData['search'];
+    }
+
+    if($this->currentTab != '*'){
+      $retFilters[ $this->tabs['tabsKey'] ] = $this->currentTab;
+    }
+
+    return $retFilters; 
   }
 
   /*
-  * Data methods to allow in table
-  *
-  * @param string $methodAlias name of method for tableController
-  * @param string $method name of method in controller
+  * set List method for controller
+  * @param string $listMethod method name
   * @return void
   */
-  function addAllowMethod( $methodAlias, $method  ) {
-    $this->allowMethods[$methodAlias] = $method;
+  function setListMethodAlias($listMethod) {
+    $this->controllerMethodAlias['list'] = $listMethod;
+  }
+
+  /*
+  * set exoport controller
+  * @param string $id for selector option reference
+  * @param string $name to display in selector
+  * @param string $controller class name
+  * @return void
+  */
+  function setExportController($id, $name, $controller) {
+    $this->exports[$id] = array('name' => $name , 'method' => $controller);
+  }
+
+  /*
+  * set Count method for controller
+  * @param string $countMethod method name
+  * @return void
+  */
+  function setCountMethodAlias($countMethod) {
+    $this->controllerMethodAlias['count'] = $countMethod;
+  }
+
+
+  /*
+  * set Search id for DAO filters
+  * @param string $searchId
+  * @return void
+  */
+  function setSearchRefId( $searchId ) {
+    $this->searchId = $searchId;
+  }
+
+  /*
+  * Data actions to allow in table
+  *
+  * @param string $actionAlias name of action for tableController
+  * @param string $action name of action in controller
+  * @return void
+  */
+  function setControllerMethodAlias( $methodAlias, $method  ) {
+    $this->controllerMethodAlias[$methodAlias] = $method;
+  }
+
+  /*
+  * Add Actions to the table and relate it with controller Method
+  *
+  * @param string $name to display it in table action selector
+  * @param string $id for action
+  * @param string $actionMethod method execution with variables iside
+  * @return void
+  */
+  function setActionMethod( $name, $id, $actionMethod) {
+    $this->actions[$id] = array('name' => $name, 'actionMethod' => $actionMethod);
+  }
+
+
+  /*
+  * Get simple action list for client side
+  *
+  * @return array list of available actions 
+  */
+  function getActionsForClient() {
+
+    $actList = array();
+
+    foreach ($this->actions as $key => $value) {
+      $actList[$key] = $value['name'];
+    }
+
+    return $actList;
+  }
+
+
+
+  /*
+  * get export actions for client
+  * @return array exports
+  */
+  function getExportsForClient() {
+    
+    $retExports = array();
+
+    foreach ($this->exports as $eKey => $export) {
+      $retExports[$eKey] =  $export;
+    }
+    return $retExports;
   }
 
 
@@ -186,15 +288,25 @@ class TableController{
   * @return string JSON with table
   */
   function returnTableJson() {
-    // if is executing a method ( like delete or update) and have permissions to do it
-    if( $this->clientData['method']['name'] != 'list' )
-    {
-      eval( '$this->control->'. $this->clientData['method']['name']. '('.$this->clientData['method']['value'].')');
+    // if is executing a action ( like delete or update) and have permissions to do it
+    if( 
+      $this->clientData['action']['action'] != 'list' && 
+      $this->clientData['action']['action'] != 'count'  && 
+      array_key_exists( $this->clientData['action']['action'], $this->actions ) 
+    ){
+
+      // get primary key
+      $refVO = new $this->control->voClass();
+      $primaryKey = $refVO->getFirstPrimarykeyId();
+
+      foreach( $this->clientData['action']['keys'] as $rowId) {
+        eval( '$this->control->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
+      }
     }
 
     // doing a query to the controller
-    eval('$lista = $this->control->'. $this->allowMethods['list'].'( $this->getFilters() , $this->clientData["range"], $this->orderIntoArray() );');
-    eval('$totalRows = $this->control->'. $this->allowMethods['count'].'( $this->getFilters() );');
+    eval('$lista = $this->control->'. $this->controllerMethodAlias['list'].'( $this->getFilters() , $this->clientData["range"], $this->orderIntoArray() );');
+    eval('$totalRows = $this->control->'. $this->controllerMethodAlias['count'].'( $this->getFilters() );');
 
 
     // printing json table...
@@ -205,6 +317,8 @@ class TableController{
     echo '"colsDef":'.json_encode($this->colsIntoArray() ).',';
     echo '"tabs":'.json_encode($this->tabs).',';
     echo '"filters":'.json_encode($this->filters).',';
+    echo '"exports":'.json_encode($this->getExportsForClient()) . ',';
+    echo '"actions":'.json_encode($this->getActionsForClient()) . ',';
     echo '"rowsEachPage":'. $this->rowsEachPage .',';
     echo '"totalRows":'. $totalRows.',';
     $coma = '';

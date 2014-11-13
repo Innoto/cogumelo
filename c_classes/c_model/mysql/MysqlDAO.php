@@ -389,5 +389,12 @@ class MysqlDAO extends DAO
     }
   }
 
+  //
+  // @Return nº '?'
+  //
+  function getQuestionMarks( $elements ){
+    $qm = str_repeat( '?, ', count($elements)-1 ) . '?';
+    return $qm;
+  }
+
 }
-?>

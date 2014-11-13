@@ -10,7 +10,7 @@ class Tview extends View
   }
 
   /**
-  * Evaluar las condiciones de acceso y reportar si se puede continuar
+  * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
   function accessCheck() {
@@ -27,29 +27,9 @@ class Tview extends View
   }
 
   function tableData() {
-    /*$this->template->addClientStyles('styles/table.less');
-    $this->template->addClientScript('js/table.js');
-    $this->template->setTpl('table.tpl');
-    $this->template->exec();*/
-
 
     table::autoIncludes();
 
-//var_dump($_POST);
-    // POST DE PEGA
-    $_POST['method'] = array('name' => 'list', 'value', false);
-  //  $_POST['tab'] = false;
-    $_POST['filters'] = array();
-    //$_POST['range'] = array(0,50);
-    //$_POST['order'];
-/*
-    $_POST['cogumeloTable'] = '{'.
-      '  "method":{ "name" : "list", "value": false},' .
-      '  "filters": [],' .
-      '  "range": [ 0, 50 ],' .
-      '  "order": [{"key": "id", "value": -1}, {"key": "lostName", "value": 1 }] '.
-      '}';
-*/
 
     Cogumelo::load('controller/LostController.php');
     $lostControl =  new LostController();
@@ -58,14 +38,44 @@ class Tview extends View
     $tabla = new TableController( $lostControl, $_POST );
 
     // establecemos pestañas, así como o key identificativo á hora de filtrar
-    $tabla->setTabs('lostProvince', array('1'=>'A Coruña', '2'=>'Lugo'), '2' );
+    $tabla->setTabs('lostProvince', array('1'=>'A Coruña', '2'=>'Lugo', '*'=> 'Toda Galicia' ), '*');
 
 
-    // establecemos os table filters 
+    // set id search reference.
+    $tabla->setSearchRefId('tableSearch');
 
-   /* $tabla->setFilters(
-      array()
-    );*/
+    // set table Actions
+    $tabla->setActionMethod('Borrar', 'delete', 'deleteFromId($rowId)');
+    $tabla->setActionMethod('Mover a Lla Coruña', 'moveToAcoruna', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>1) )');
+    $tabla->setActionMethod('Mover a Lugo', 'moveToLugo', 'updateFromArray( array($primaryKey=>$rowId,  "lostProvince"=>2) )');
+
+    // set list Count methods in controller
+    $tabla->setListMethodAlias('listItems');
+    $tabla->setCountMethodAlias('listCount');
+
+    // Nome das columnas
+    //$tabla->setCol('id', 'Id');
+    $tabla->setCol('lostSurname', 'Apelido');
+    $tabla->setCol('lostName', 'Nome');
+    $tabla->setCol('lostMail', 'Correo');
+    $tabla->setCol('lostProvince', 'Provincia');
+    $tabla->setCol('lostPhone', 'Teléfono');
+
+    // establecer reglas a campo concreto con expresions regulares
+    $tabla->colRule('lostProvince', '#1#', 'A Coruña');
+    $tabla->colRule('lostProvince', '#2#', 'Lugo');
+
+    // imprimimos o JSON da taboa
+    $tabla->returnTableJson();
+    
+
+
+  } // function loadForm()
+}
+
+
+
+
 
 /*    
     $tabla->setFilters(
@@ -88,27 +98,3 @@ class Tview extends View
       )
     );
 */
-
-    
-
-    // Nome das columnas
-    //$tabla->setCol('id', 'Id');
-    $tabla->setCol('lostSurname', 'Apelido');
-    $tabla->setCol('lostName', 'Nome');
-    $tabla->setCol('lostMail', 'Correo');
-    $tabla->setCol('lostProvince', 'Provincia');
-    $tabla->setCol('lostPhone', 'Teléfono');
-
-    // establecer reglas a campo concreto con expresions regulares
-    $tabla->colRule('lostProvince', '#1#', 'A Coruña');
-    $tabla->colRule('lostProvince', '#2#', 'Lugo');
-
-
-    // imprimimos o JSON da taboa
-    $tabla->returnTableJson();
-    
-
-
-  } // function loadForm()
-}
-

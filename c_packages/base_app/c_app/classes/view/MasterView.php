@@ -5,7 +5,7 @@ common::autoIncludes();
 Cogumelo::autoIncludes();
 
 /**
-* Clase Master de la que extenderemos todos los View
+* Clase Master to extend other application methods
 */
 class MasterView extends View
 {
@@ -15,7 +15,7 @@ class MasterView extends View
   }
 
   /**
-  * Evaluar las condiciones de acceso y reportar si se puede continuar
+  * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
   function accessCheck() {

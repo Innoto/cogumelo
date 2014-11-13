@@ -1,11 +1,9 @@
 <?php
 Cogumelo::load('c_view/View.php');
-user::load('controller/UserController.php');
-user::load('controller/UserAccessController.php');
-user::load('model/UserVO.php');
 
 common::autoIncludes();
 form::autoIncludes();
+user::autoIncludes();
 
 
 class UserView extends View
@@ -16,7 +14,7 @@ class UserView extends View
   }
 
   /**
-  * Evaluar las condiciones de acceso y reportar si se puede continuar
+  * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
   function accessCheck() {
@@ -60,47 +58,34 @@ class UserView extends View
       $postData = json_decode( $postDataJson, true );
     }
     //error_log( print_r( $postData, true ) );
-    if( isset( $postData[ 'cgIntFrmId' ] ) ) {
-      // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-      $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
-      // Creamos un objeto con los validadores y lo asociamos
-      $form->setValidationObj( new FormValidators() );
-      $form->validateForm();
+    // Creamos un objeto recuperandolo de session y añadiendo los datos POST
+    $form = new FormController( false, false, $postData );
+    // Creamos un objeto con los validadores y lo asociamos
+    $form->setValidationObj( new FormValidators() );
+    $form->validateForm();
 
-      //Si todo esta OK!
-      if( sizeof( $form->getJVErrors() ) == 0 ){
-        $valuesArray = $form->getValuesArray();
-        $userAccessControl = new UserAccessController();
-        $res = $userAccessControl->userLogin($valuesArray['userLogin'], $valuesArray['userPassword']);
+    //Si todo esta OK!
+    if( !$form->existErrors() ){
+      $valuesArray = $form->getValuesArray();
+      $userAccessControl = new UserAccessController();
+      $res = $userAccessControl->userLogin($valuesArray['userLogin'], $valuesArray['userPassword']);
 
-        if(!$res){
-          $form->addJVError('.ffn-login', 'El campo login o password es erróneo');
-        }
+      if(!$res){
+        $form->addFieldRuleError('userLogin', 'cogumelo', '');
+        $form->addFieldRuleError('userPassword', 'cogumelo', '');
+        $form->addFormError('El login y/o contraseña son erróneos');
       }
-
-      if( sizeof( $form->getJVErrors() ) > 0 ) {
-        echo json_encode(
-          array(
-            'success' => 'error',
-            'jvErrors' => $form->getJVErrors(),
-            'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
-          )
-        );
-      }
-      else {
-        echo json_encode( array( 'success' => 'success') );
-      }
-
-    } //if( isset( $postData[ 'cgIntFrmId' ] ) )
-    else {
-      echo json_encode(
-        array(
-          'success' => 'error',
-          'error' => 'Los datos del formulario no han llegado bien al servidor. NO SE HAN GUARDADO.'
-        )
-      );
     }
+
+    if( $form->existErrors() ) {
+      echo $form->jsonFormError();
+    }
+    else {
+      echo $form->jsonFormOk();
+    }
+
   }
+
   //END Login
 
   function registerForm() {
@@ -114,7 +99,8 @@ class UserView extends View
     $form->setField( 'name', array( 'placeholder' => 'Nombre' ) );
     $form->setField( 'surname', array( 'placeholder' => 'Apellidos' ) );
     $form->setField( 'email', array( 'placeholder' => 'Email' ) );
-    $form->setField( 'role', array( 'placeholder' => 'Rol' ) );
+    $form->setField( 'role', array( 'type' => 'reserved', 'value' => ROLE_USER ));
+
     $form->setField( 'description', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
     $form->setField( 'avatar', array( 'placeholder' => 'Avatar' ) );
     $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Registrar' ) );
@@ -152,56 +138,42 @@ class UserView extends View
       $postData = json_decode( $postDataJson, true );
     }
     //error_log( print_r( $postData, true ) );
-    if( isset( $postData[ 'cgIntFrmId' ] ) ) {
-      // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-      $form = new FormController( false, false, $postData[ 'cgIntFrmId' ], $postData );
-      // Creamos un objeto con los validadores y lo asociamos
-      $form->setValidationObj( new FormValidators() );
 
-      $form->validateForm();
+    // Creamos un objeto recuperandolo de session y añadiendo los datos POST
+    $form = new FormController( false, false, $postData );
+    // Creamos un objeto con los validadores y lo asociamos
+    $form->setValidationObj( new FormValidators() );
 
-      //Si todo esta OK!
-      if( sizeof( $form->getJVErrors() ) == 0 ){
+    $form->validateForm();
 
-        //Validaciones
-        $valuesArray = $form->getValuesArray();
+    //Si todo esta OK!
+    if( !$form->existErrors() ){
 
-        $userControl = new UserController();
-        $loginExist = $userControl->find($valuesArray['login'], 'login');
+      //Validaciones
+      $valuesArray = $form->getValuesArray();
 
-        if($loginExist){
-          $form->addJVError('.ffn-login', 'El campo login específicado ya esta en uso.');
-        }
+      $userControl = new UserController();
+      $loginExist = $userControl->find($valuesArray['login'], 'login');
 
-        $valuesArray['password'] = sha1($valuesArray['password']);
-        unset($valuesArray['password2']);
-        $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
-
-        $res = $userControl->createFromArray($valuesArray);
+      if($loginExist){
+        $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
       }
 
-      if( sizeof( $form->getJVErrors() ) > 0 ) {
-        echo json_encode(
-          array(
-            'success' => 'error',
-            'jvErrors' => $form->getJVErrors(),
-            'formError' => 'El servidor no considera válidos los datos. NO SE HAN GUARDADO.'
-          )
-        );
-      }
-      else {
-        echo json_encode( array( 'success' => 'success') );
-      }
+      $valuesArray['password'] = sha1($valuesArray['password']);
+      unset($valuesArray['password2']);
+      $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
 
-    } //if( isset( $postData[ 'cgIntFrmId' ] ) )
-    else {
-      echo json_encode(
-        array(
-          'success' => 'error',
-          'error' => 'Los datos del formulario no han llegado bien al servidor. NO SE HAN GUARDADO.'
-        )
-      );
+      $res = $userControl->createFromArray($valuesArray);
     }
+
+    if( $form->existErrors() ) {
+      echo $form->jsonFormError();
+    }
+    else {
+      echo $form->jsonFormOk();
+    }
+
+
   }
 
 }

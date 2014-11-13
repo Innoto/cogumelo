@@ -12,9 +12,7 @@ class MysqlLostDAO extends MysqlDAO
 {
   var $VO = "LostVO";
   var $filters = array(
-    'find' => "name  LIKE CONCAT('%',?,'%') OR login LIKE CONCAT('%', ?, '%')",
+    'tableSearch' => "lostName  LIKE CONCAT('%',?,'%') OR lostSurname  LIKE CONCAT('%',?,'%')",
     'lostProvince' => "lostProvince = ?"
   );
-  
-
 }

@@ -27,10 +27,10 @@ class TableView {
           <select>
 
           </select>
-          <button class="openFilters">+Filtros</button>
+          <button class="openFilters">+Filters</button>
         </div>
         <div class="tableSearch clearfix">
-          <input type="text"><button>Search</button>
+          <form  onsubmit="return false;"><input type="text"><button type="button" class="clear" style="display:none;">X</button><button class="search" type="submit">Search</button></form>
         </div>
       </div>
       <div class="tableMoreFilters clearfix" style="display:none;">
@@ -144,23 +144,24 @@ class TableView {
           </div>
 
           <div class="buttonsContainer">
-            <button class="clearFilters">Eliminar filtros</button>
-            <button class="closeFilters">Cerrar</button>
+            <button class="clearFilters">Clear filters</button>
+            <button class="closeFilters">Close</button>
           </div>
         </div>
       </div>
       <div class="tableResumeFilters clearfix">
         <span>Estas filtrando por: (Categoria 1, Aceptado).</span>
-        <button class="clearFilters">Eliminar filtros</button>
+        <button class="clearFilters">Clear filters</button>
       </div>
       <div class="tableActions clearfix">
         <div class="addElem"><img src="media/module/table/img/add.png" alt="Add"></div>
-        <div class="exportContainer"><img src="media/module/table/img/export.png" alt="Export"></div>
-        <select>
-          <option value="0">Acciones</option>
-          <option value="delete">Borrar</option>
-          <option value="move1">Mover a (A Coru&ntilde;a)</option>
-          <option value="move2">Mover a (A Lugo)</option>                    
+        <div class="exportContainer">
+          <select class="exportSelect">
+
+          </select>
+        </div>
+        <select class="actionSelect">
+
         </select>
         <!-- Paginador -->
         <div class="tablePaginator">

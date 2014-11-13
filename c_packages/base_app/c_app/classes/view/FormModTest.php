@@ -16,8 +16,7 @@ class FormModTest extends View
 
 
   /**
-  * Evaluar las condiciones de acceso y reportar si se puede continuar
-  *
+  * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
   function accessCheck() {
