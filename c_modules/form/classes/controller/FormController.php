@@ -1,6 +1,11 @@
 <?php
 
 
+/**
+ * undocumented class
+ *
+ * @package default
+ **/
 class FormController implements Serializable {
 
 
@@ -719,7 +724,7 @@ class FormController implements Serializable {
         // $fileStatus['tmpFile'] = 'name'=>'', 'originalName'=>'', 'absLocation'=>'', 'type'=>'', 'size'=>''
         $fileName = $this->secureFileName( $fileStatus['tmpFile']['originalName'] );
 
-        $destDir = FORM_FILES_APP_PATH . $this->getFieldParam( $fieldName, 'destDir' );
+        $destDir = MOD_FORM_FILES_APP_PATH . $this->getFieldParam( $fieldName, 'destDir' );
         if( !is_dir( $destDir ) ) {
           /**
           // TODO: CAMBIAR PERMISOS 0777
@@ -760,7 +765,7 @@ class FormController implements Serializable {
     $result = false;
     $error = false;
 
-    $tmpCgmlFormPath = FORM_FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getIntFrmId() );
+    $tmpCgmlFormPath = MOD_FORM_FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getIntFrmId() );
     if( !is_dir( $tmpCgmlFormPath ) ) {
       /**
       // TODO: CAMBIAR PERMISOS 0777
@@ -1157,4 +1162,4 @@ class FormController implements Serializable {
 **/
 
 
-} // class FormController implements Serializable
+} // END FormController class

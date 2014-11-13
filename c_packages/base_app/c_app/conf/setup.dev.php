@@ -8,7 +8,24 @@
  * SITE_PATH - App Path (declarado en index.php)
  *
  * IS_DEVEL_ENV - Indica si estamos en el entorno de desarrollo (declarado en setup.php)
+ *
+ *
+ * Normas de estilo:
+ *
+ * * Nombres:
+ * - Inicia por MOD_NOMBREMODULO_ para modulos
+ * - Finalizan en _PATH para rutas
+ *
+ * * Valores:
+ * - Las rutas no finalizan en /
+ * - Las URL no finalizan en /
+ *
  */
+
+
+
+
+
 
 
 //
@@ -46,6 +63,7 @@ require_once( APP_BASE_PATH.'/conf/memcached.setup.php' );  //memcached options
 //  Url settings
 //
 
+// TODO: Cuidado porque no se admite un puerto
 define( 'SITE_PROTOCOL', isset( $_SERVER['HTTPS'] ) ? 'https' : 'http' );
 define( 'SITE_HOST', SITE_PROTOCOL.'://'.$_SERVER['HTTP_HOST']);  // solo HOST sin ('/')
 define( 'SITE_FOLDER', '/' );  // SITE_FOLDER STARTS AND ENDS WITH SLASH ('/')
@@ -91,7 +109,7 @@ define( 'MEDIASERVER_COMPILE_LESS', false );
 
 
 //
-//  Modules
+//  Module load
 //
 
 global $C_ENABLED_MODULES;
@@ -106,11 +124,17 @@ $C_INDEX_MODULES  = array( 'mediaserver', 'i18nGetLang', 'user', 'form', 'devel'
 //  Logs
 //
 
-define( 'BCK', APP_BASE_PATH.'/backups/' ); //backups directory
 define( 'LOGDIR', APP_BASE_PATH.'/log/' ); //log files directory
 define( 'LOG_RAW_SQL', false ); // Log RAW all SQL ¡WARNING! application passwords will dump into log files
 define( 'DEBUG', true ); // Set Debug mode to log debug messages on log
 define( 'ERRORS', true ); // Display errors on screen. If you use devel module, you might disable it
+
+
+//
+// Backups
+//
+
+define( 'BCK', APP_BASE_PATH.'/backups/' ); //backups directory
 
 
 //
@@ -135,8 +159,8 @@ define( 'LANG_AVAILABLE', 'gl,es,en' );
 //  Form Mod - Files conf.
 //
 
-define( 'FORM_FILES_TMP_PATH', APP_TMP_PATH.'/formFiles' );
-define( 'FORM_FILES_APP_PATH', APP_BASE_PATH.'/../formFiles' );
+define( 'MOD_FORM_FILES_TMP_PATH', APP_TMP_PATH.'/formFiles' );
+define( 'MOD_FORM_FILES_APP_PATH', APP_BASE_PATH.'/../formFiles' );
 //define( 'FORM_FILES_APP_PATH', WEB_BASE_PATH.'/formFiles' );
 
 
