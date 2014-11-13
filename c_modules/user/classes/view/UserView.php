@@ -1,11 +1,9 @@
 <?php
 Cogumelo::load('c_view/View.php');
-user::load('controller/UserController.php');
-user::load('controller/UserAccessController.php');
-user::load('model/UserVO.php');
 
 common::autoIncludes();
 form::autoIncludes();
+user::autoIncludes();
 
 
 class UserView extends View
@@ -101,7 +99,7 @@ class UserView extends View
     $form->setField( 'name', array( 'placeholder' => 'Nombre' ) );
     $form->setField( 'surname', array( 'placeholder' => 'Apellidos' ) );
     $form->setField( 'email', array( 'placeholder' => 'Email' ) );
-    $form->setField( 'role', array( 'type' => 'reserved', 'value' => '10' ));
+    $form->setField( 'role', array( 'type' => 'reserved', 'value' => ROLE_USER ));
 
     $form->setField( 'description', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
     $form->setField( 'avatar', array( 'placeholder' => 'Avatar' ) );

@@ -2,6 +2,9 @@
 
 Cogumelo::load('c_model/VO.php');
 
+define("ROLE_SUPERADMIN", "10");
+define("ROLE_USER", "11");
+
 class RoleVO extends VO
 {
   static $tableName = 'role';
@@ -26,9 +29,6 @@ class RoleVO extends VO
   static $insertValues = array(
     array('name' => 'superAdmin', 'description' => 'SuperAdmin'),
     array('name' => 'user', 'description' => 'User'),
-    array('name' => 'admin', 'description' => 'Admin'),
-    array('name' => 'gestor', 'description' => 'Gestor'),
-    array('name' => 'editor', 'description' => 'Editor')
   );
 
   function __construct($datarray = array())
