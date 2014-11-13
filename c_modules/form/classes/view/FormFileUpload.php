@@ -2,8 +2,9 @@
 
 
 Cogumelo::load('c_view/View.php');
-Cogumelo::load('c_controller/FormControllerV2.php');
-Cogumelo::load('c_controller/FormValidators.php');
+common::autoIncludes();
+form::autoIncludes();
+
 
 class FormFileUpload extends View
 {
@@ -27,12 +28,13 @@ class FormFileUpload extends View
     error_log( 'fileUpload FormFileUpload');
     error_log( '--------------------------------' );error_log( '--------------------------------' );
 
+    $form = new FormController();
     $error = false;
 
     error_log( 'FILES:' ); error_log( print_r( $_FILES, true ) );
     error_log( 'POST:' ); error_log( print_r( $_POST, true ) );
 
-    if( isset( $_FILES['ajaxFileUpload'] ) ) {
+    if( isset( $_FILES['ajaxFileUpload'], $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'] ) ) {
       $fileName     = $_FILES['ajaxFileUpload']['name'];     // The file name
       $fileTmpLoc   = $_FILES['ajaxFileUpload']['tmp_name']; // File in the PHP tmp folder
       $fileType     = $_FILES['ajaxFileUpload']['type'];     // The type of file it is
@@ -40,7 +42,7 @@ class FormFileUpload extends View
       $fileErrorMsg = $_FILES['ajaxFileUpload']['error'];    // 0 for false... and 1 for true
 
       // Aviso de error PHP
-      switch ($fileErrorMsg) {
+      switch( $fileErrorMsg ) {
         case UPLOAD_ERR_OK:
           // Todo OK, no hay error
           break;
@@ -83,7 +85,7 @@ class FormFileUpload extends View
       // Verificando el MIME_TYPE del fichero intermedio
       if( !$error ) {
         $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
-        $fileTypePhp = finfo_file($finfo, $fileTmpLoc);
+        $fileTypePhp = finfo_file( $finfo, $fileTmpLoc );
         if( $fileTypePhp !== false ) {
           if( $fileType !== $fileTypePhp ) {
             error_log( 'ALERTA: Los MIME_TYPE reportados por el navegador y PHP difieren: '.$fileType.' != '.$fileTypePhp );
@@ -96,91 +98,77 @@ class FormFileUpload extends View
         }
       }
 
-      // Recuperamos formObj y validamos el fichero temporal
       if( !$error ) {
-        if( isset( $_POST[ 'cgIntFrmId' ] ) ) {
-          $cgIntFrmId = $_POST[ 'cgIntFrmId' ];
-          $fieldName = $_POST[ 'fieldName' ];
 
-          // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-          $form = new FormControllerV2( false, false, $cgIntFrmId, false );
+        // Recuperamos formObj y validamos el fichero temporal
+        if( $form->loadFromSession( $_POST[ 'cgIntFrmId' ] ) &&
+          $form->getFieldType( $_POST[ 'fieldName' ] ) === 'file' )
+        {
+
           // Creamos un objeto con los validadores y lo asociamos
           $form->setValidationObj( new FormValidators() );
+          $fieldName = $_POST[ 'fieldName' ];
+          $tmpFileFieldValue = array(
+            'name' => $fileName,
+            'originalName' => $fileName,
+            'absLocation' => $fileTmpLoc,
+            'type' => $fileType,
+            'size' => $fileSize
+          );
 
+          // Almacenamos los datos temporales en el formObj para validarlos
+          $form->setFieldValue( $fieldName, $tmpFileFieldValue );
 
-          // Cargar fichero en formObj
-          if( $form->getFieldType( $fieldName ) !== 'file' ) {
-            $error = "El campo no es de tipo FILE."; error_log($error);
+          // Validar input del fichero
+          if( !$form->validateField( $fieldName ) ) {
+            $jvErrors = $form->getJVErrors();
+            $error = 'El fichero no cumple las reglas de validación establecidas.'; error_log($error);
           }
           else {
-            $tmpExt = '';
-            $tmpExtPos = strrpos( $fileName, '.' );
-            if( $tmpExtPos > 0 ) { // Not FALSE or 0
-              $tmpExt = substr( $fileName, 1+$tmpExtPos );
-              if( ( mb_strlen( $tmpExt, 'UTF-8' ) > 5 ) || ( preg_match( '/^[-0-9A-Z_\.]+$/i', $tmpExt ) !== 1 ) ) {
-                error_log( 'ALERTA: La Extensión del fichero parece anormal: '.$tmpExt );
-              }
-            }
-
-            $tmpFileFieldValue = array(
-              'name' => $fileName,
-              'originalName' => $fileName,
-              'absLocation' => $fileTmpLoc,
-              'type' => $fileType,
-              'size' => $fileSize
-            );
-
-            // Almacenamos los datos temporales en el fomrObj para validarlos
-            $form->setFieldValue( $fieldName, $tmpFileFieldValue );
-
-            // Validar input del fichero
-            if( !$form->validateField( $fieldName ) ) {
-              $jvErrors = $form->getJVErrors();
-              $error = 'El fichero no cumple las reglas de validación establecidas.'; error_log($error);
+            // El fichero ha superado las validaciones. Ajustamos sus valores finales y los almacenamos.
+            $tmpCgmlFileLocation = $form->tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName );
+            if( $tmpCgmlFileLocation === false ) {
+              $error = 'Fallo de move_uploaded_file movendo ('.$fileTmpLoc.')'; error_log($error);
             }
             else {
-              // El fichero ha superado las validaciones. Ajustamos sus valores finales y los almacenamos.
+              $tmpFileFieldValue[ 'absLocation' ] = $tmpCgmlFileLocation;
 
-              $tmpCgmlFileLocation = $form->tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName );
+              $fileFieldValue = $form->getFieldValue( $fieldName );
+              $fileStatus = $form->getFieldParam( $fieldName, 'fileStatus' );
 
-              if( !$tmpCgmlFileLocation ) {
-                $error = 'Fallo de move_uploaded_file movendo ('.$fileTmpLoc.')'; error_log($error);
+              /*
+              if( $fileFieldValue === false ) {
+                // No existe fichero previo
+              */
+                $fileFieldValue = $tmpFileFieldValue;
+                $fileStatus[ 'tmpFile' ] = $tmpFileFieldValue;
+              /*
               }
               else {
-                $tmpFileFieldValue[ 'absLocation' ] = $tmpCgmlFileLocation;
+                // Existe valor previo. Previsión de actualizar
+              }
+              */
 
-                $fileFieldValue = $form->getFieldValue( $fieldName );
-                $fileStatus = $form->getFieldParam( $fieldName, 'fileStatus' );
+              $form->setFieldValue( $fieldName, $fileFieldValue );
+              $form->setFieldParam( $fieldName, 'fileStatus', $fileStatus );
 
-                /*
-                if( $fileFieldValue === false ) {
-                  // No existe fichero previo
-                */
-                  $fileFieldValue = $tmpFileFieldValue;
-                  $fileStatus[ 'tmpFile' ] = $tmpFileFieldValue;
-                /*
-                }
-                else {
-                  // Existe valor previo. Previsión de actualizar
-                }
-                */
-
-                $form->setFieldValue( $fieldName, $fileFieldValue );
-                $form->setFieldParam( $fieldName, 'fileStatus', $fileStatus );
-
-                // Persistimos formObj para cuando se envíe el formulario completo
-                $form->saveToSession();
-              } // else - if( !$tmpCgmlFileLocation )
-            } // else - if( !$form->validateField( $fieldName ) )
-          } // else - if( $form->getFieldType( $fieldName ) !== 'file' )
-        } // if( isset( $_POST[ 'cgIntFrmId' ] ) )
+              // Persistimos formObj para cuando se envíe el formulario completo
+              $form->saveToSession();
+            } // else - if( !$tmpCgmlFileLocation )
+          } // else - if( !$form->validateField( $fieldName ) )
+        } // if( $form->loadFromSession( $_POST[ 'cgIntFrmId' ] ) ) {
         else {
-          $error = 'Los datos del formulario no han llegado bien al servidor. NO SE HAN GUARDADO.'; error_log($error);
+          $error = 'Los datos del formulario no han llegado bien al servidor. FORM'; error_log($error);
         }
+
+
       } // if( !$error ) // Recuperamos formObj y validamos el fichero temporal
-    } // if( isset( $_FILES['ajaxFileUpload'] ) )
+
+
+
+    } // if( isset( ... ) )
     else { // no parece haber fichero
-      $error = 'No ha llegado el fichero o lo ha hecho con errores.'; error_log($error);
+      $error = 'No han llegado los datos o lo ha hecho con errores. ISSET'; error_log($error);
     }
 
 
@@ -203,47 +191,47 @@ class FormFileUpload extends View
   } // function fileUpload() {
 
 
-/**
+  /**
 
-pasos
+  pasos
 
-1.- Sube o ficheiro + ver que existe en tmp e ten tamaño
-http://php.net/manual/es/function.is-uploaded-file.php
-http://es1.php.net/manual/en/function.filesize.php
-Controlar upload_max_filesize e post_max_size
-To upload large files, this value must be larger than upload_max_filesize.
-If memory limit is enabled by your configure script, memory_limit also affects file uploading.
-Generally speaking, memory_limit should be larger than post_max_size.
+  1.- Sube o ficheiro + ver que existe en tmp e ten tamaño
+  http://php.net/manual/es/function.is-uploaded-file.php
+  http://es1.php.net/manual/en/function.filesize.php
+  Controlar upload_max_filesize e post_max_size
+  To upload large files, this value must be larger than upload_max_filesize.
+  If memory limit is enabled by your configure script, memory_limit also affects file uploading.
+  Generally speaking, memory_limit should be larger than post_max_size.
 
-2.- Validadores - Se non valida, eliminar en form e en srv.
-http://es1.php.net/manual/en/function.finfo-file.php
-$finfo = new finfo(FILEINFO_MIME_TYPE);
-$finfo->file($_FILES['upfile']['tmp_name'])
+  2.- Validadores - Se non valida, eliminar en form e en srv.
+  http://es1.php.net/manual/en/function.finfo-file.php
+  $finfo = new finfo(FILEINFO_MIME_TYPE);
+  $finfo->file($_FILES['upfile']['tmp_name'])
 
-3.- Establecer o seu destino temporal e definitivo: ruta e nome (evitando colisions)
-make sure that the file name not bigger than 250 characters.
-mb_strlen($filename,"UTF-8") > 225
-make sure the file name in English characters, numbers and (_-.) symbols.
-preg_match("`^[-0-9A-Z_\.]+$`i",$filename)
-http://php.net/manual/es/ini.core.php#ini.open-basedir
-http://php.net/pathinfo
-http://es1.php.net/manual/en/function.chmod.php
-http://es1.php.net/manual/en/function.move-uploaded-file.php
-http://php.net/manual/en/function.sha1-file.php
+  3.- Establecer o seu destino temporal e definitivo: ruta e nome (evitando colisions)
+  make sure that the file name not bigger than 250 characters.
+  mb_strlen($filename,"UTF-8") > 225
+  make sure the file name in English characters, numbers and (_-.) symbols.
+  preg_match("`^[-0-9A-Z_\.]+$`i",$filename)
+  http://php.net/manual/es/ini.core.php#ini.open-basedir
+  http://php.net/pathinfo
+  http://es1.php.net/manual/en/function.chmod.php
+  http://es1.php.net/manual/en/function.move-uploaded-file.php
+  http://php.net/manual/en/function.sha1-file.php
 
-4.- Gardar todo no obj FORM e voltalo a meter na sesion
-
-
-
-SEGURIDADE EXTERNA
-
-You can use .htaccess to stop working some scripts as in example php file in your upload path.
-use :
-AddHandler cgi-script .php .pl .jsp .asp .sh .cgi
-Options -ExecCGI
+  4.- Gardar todo no obj FORM e voltalo a meter na sesion
 
 
-**/
+
+  SEGURIDADE EXTERNA
+
+  You can use .htaccess to stop working some scripts as in example php file in your upload path.
+  use :
+  AddHandler cgi-script .php .pl .jsp .asp .sh .cgi
+  Options -ExecCGI
+
+
+  **/
 
 
 
