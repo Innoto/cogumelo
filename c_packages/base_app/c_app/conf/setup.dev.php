@@ -143,7 +143,7 @@ define( 'BCK', APP_BASE_PATH.'/backups/' ); //backups directory
 
 define( 'MOD_DEVEL_ALLOW_ACCESS', true );
 define( 'MOD_DEVEL_URL_DIR', 'devel' );
-define( 'DEVEL_PASSWORD', 'develpassword' );
+define( 'MOD_DEVEL_PASSWORD', 'develpassword' );
 
 
 //
