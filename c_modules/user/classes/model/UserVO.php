@@ -2,6 +2,7 @@
 
 Cogumelo::load('c_model/VO.php');
 
+
 class UserVO extends VO
 {
   static $tableName = 'user';
@@ -47,9 +48,10 @@ class UserVO extends VO
       'size' => '300'
     ),
     'avatar'=> array(
-      'name' => 'Descripción',
-      'type' => 'INT',
-      'size' => '10'
+      'desc' => 'File',
+      'type'=>'FOREIGN',
+      'vo' => 'FiledataVO',
+      'key' => 'id'
     ),
     'timeLastLogin' => array(
       'name' => 'Último acceso',

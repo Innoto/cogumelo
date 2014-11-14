@@ -2,7 +2,7 @@
 
 Cogumelo::load('c_controller/DataController.php');
 user::load('model/UserVO.php');
-
+filedata::load('model/FiledataVO.php');
 
 //
 // User Controller Class
@@ -13,6 +13,7 @@ class  UserController extends DataController
 
   function __construct()
   {
+
     $this->data = new Facade("User", "user"); //In module user
     $this->voClass = 'UserVO';
   }

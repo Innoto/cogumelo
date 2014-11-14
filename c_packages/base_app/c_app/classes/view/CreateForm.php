@@ -162,12 +162,21 @@ class CreateForm extends View
     //error_log( print_r( $postData, true ) );
 
     // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-    $form = new FormController( false, false, $postData );
-    // Creamos un objeto con los validadores
-    $validator = new FormValidators();
+    $form = new FormController();
+    // Leemos el input del navegador y recuperamos FORM de sesion añadiendole los datos enviados
+    if( $form->loadPostInput() ) {
+      // Creamos un objeto con los validadores y lo asociamos
+      $form->setValidationObj( new FormValidators() );
 
-    // y lo asociamos
-    $form->setValidationObj( $validator );
+      // $form->setValidationRule( 'input2', 'maxlength', '10' ); // CAMBIANDO AS REGLAS
+      $form->validateForm();
+
+      //$form->addFieldRuleError( 'check1', 'cogumelo', 'Un mensaxe de error de campo' );
+      //$form->addFormError( 'Ola meu... ERROR porque SI ;-)' );
+    }
+    else {
+      $form->addFormError( 'El servidor no considera válidos los datos recividos.', 'formError' );
+    }
 
     //$form->setValidationRule('lostDate', 'uppercase', '1');
 
