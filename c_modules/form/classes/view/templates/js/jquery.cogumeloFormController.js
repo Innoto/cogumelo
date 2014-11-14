@@ -28,7 +28,7 @@ function setValidateForm( idForm, rules, messages ) {
     //groups: { ungrupo: "input1 input2" },
 
     errorPlacement: function( place, element ) {
-      console.log( 'errorPlacement:' );
+      console.log( 'Executando validate.errorPlacement:' );
       console.log( place, element );
       $msgContainer = $( '#JQVMC-'+place.attr('id')+', .JQVMC-'+place.attr('id') );
       if ( $msgContainer.length > 0 ) {
@@ -44,6 +44,7 @@ function setValidateForm( idForm, rules, messages ) {
     messages: messages,
     submitHandler:
       function ( form ) {
+        console.log( 'Executando validate.submitHandler...' );
         $( form ).find( '[type="submit"]' ).attr("disabled", "disabled");
         $.ajax( {
            contentType: 'application/json', processData: false,
@@ -52,6 +53,7 @@ function setValidateForm( idForm, rules, messages ) {
            dataType : 'json'
         } )
         .done( function ( response ) {
+          console.log( 'Executando validate.submitHandler.done...' );
           console.log( response );
           if( response.result === 'ok' ) {
             var successActions = response.success;
@@ -226,16 +228,65 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       // $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
     },
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-      console.log( 'successHandler', $jsonData, $textStatus, $jqXHR );
+      console.log( 'Executando uploadFile.success...' );
+      console.log( 'jsonData: ', $jsonData );
+      console.log( 'jqXHR: ', $jqXHR );
       $( '#loaded_n_total' ).html( '' );
       $( '#progressBar' ).val( 0 );
-      $( '#status' ).html( $textStatus );
+      $( '#status' ).html( $jsonData.success );
 
-      // Cambios en el input procesado para indicar OK y otras opciones
-      $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'green' );
-      $(' #' + $jsonData[ 'idForm' ] + ' input[name=' + $jsonData[ 'fieldName' ] + ']' ).replaceWith(
-        '<span class="fileUploadOK">"' + $jsonData[ 'fileName' ] + '" uploaded OK</span>'
-      );
+      $validateForm = getFormInfo( $jsonData.moreInfo.idForm );
+
+      console.log( $validateForm );
+      if( $jsonData.result === 'ok' ) {
+        $(' #' + $jsonData.moreInfo.idForm + ' .ffn-' + $jsonData.moreInfo.fieldName ).css( 'color', 'green' );
+        $(' #' + $jsonData.moreInfo.idForm + ' input[name=' + $jsonData.moreInfo.fieldName + ']' ).replaceWith(
+          '<span class="fileUploadOK">"' + $jsonData.moreInfo.fileName + '" uploaded OK</span>'
+        );
+      }
+      else {
+        console.log( 'ERROR' );
+        for(var i in $jsonData.jvErrors) {
+          errObj = $jsonData.jvErrors[i];
+          console.log( errObj );
+
+          if( errObj[ 'fieldName' ] !== false ) {
+            if( errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] === false ) {
+              $defMess = $validateForm.defaultMessage( errObj['fieldName'], errObj['ruleName'] );
+              if( typeof $defMess !== "string" ) {
+                $defMess = $defMess( errObj['ruleParams'] );
+              }
+              errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] = $defMess;
+            }
+            console.log( errObj[ 'JVshowErrors' ] );
+            $validateForm.showErrors( errObj[ 'JVshowErrors' ] );
+            console.log( 'Msg cargado...' );
+          }
+          else {
+            console.log( errObj[ 'JVshowErrors' ] );
+            showErrorsValidateForm( $( form ), errObj[ 'JVshowErrors' ][ 'msgText'], errObj[ 'JVshowErrors' ][ 'msgClass' ] );
+            console.log( 'Msg cargado...' );
+          }
+
+        }
+        // if( $jsonData.formError !== '' ) $validateForm.showErrors( {"submit": $jsonData.formError} );
+      }
+
+
+
+      /*
+      if( $jsonData.success!='error' ) {
+        // Cambios en el input procesado para indicar OK y otras opciones
+        $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'green' );
+        $(' #' + $jsonData[ 'idForm' ] + ' input[name=' + $jsonData[ 'fieldName' ] + ']' ).replaceWith(
+          '<span class="fileUploadOK">"' + $jsonData[ 'fileName' ] + '" uploaded OK</span>'
+        );
+      }
+      else {
+        // Cambios en el input procesado para indicar OK y otras opciones
+        $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'red' );
+      }
+      */
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
       console.log( 'errorHandler', $jqXHR, $textStatus, $errorThrown );
@@ -246,187 +297,4 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
-*** FICHEROS ***
-**/
-
-/*
-function bindFormInputFiles( idForm ) {
-  console.log( 'bindFormInputFiles' );
-
-  // Check for the various File API support.
-  if( !(window.File && window.FileReader && window.FileList && window.Blob) ) {
-    alert('Tu navegador no soporta alguna de las características necesarias para el envío de ficheros.');
-  }
-
-  $( '#' + idForm + ' input:file' ).on( 'change', processInputFieldFile );
-
-  // Setup the dnd listeners.
-  //var dropZone = document.getElementById('drop_zone');
-  //dropZone.addEventListener('dragover', handleDragOver, false);
-  //dropZone.addEventListener('drop', handleFileDrop, false);
-}
-
-
-// Ficheros seleccionados con el boton
-function processInputFieldFile( evt ) {
-  console.log( 'processInputFieldFile' );
-  console.log( evt );
-
-  var files = evt.target.files; // FileList object
-
-  var valid = checkInputFieldFile( files, evt.target.form.id, evt.target.name );
-
-  var cgIntFrmId = $( '#' + evt.target.form.id ).attr('sg');
-
-  if( valid ) {
-    for (var i = 0, file; file = files[i]; i++) {
-      uploadFile( file, evt.target.form.id, evt.target.name, cgIntFrmId );
-    } // for files[i]
-  }
-}
-
-*/
-
-/*
-// Ficheros "soltados" sobre un area
-function handleFileDrop(evt) {
-  console.log( 'handleFileDrop' );
-  console.log( evt );
-  evt.stopPropagation();
-  evt.preventDefault();
-  var files = evt.dataTransfer.files; // FileList object.
-  checkInputFieldFile( files, evt.target.form.id );
-}
-function handleDragOver(evt) {
-  evt.stopPropagation();
-  evt.preventDefault();
-  evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-}
-*/
-
-/*
-function checkInputFieldFile( files, idForm, fieldName ) {
-  console.log( 'checkInputFieldFile' );
-
-  var $validateForm = getFormInfo( idForm );
-  var valRes = $validateForm.element( 'input[name='+fieldName+']' );
-
-  console.log( 'checkInputFieldFile - valRes: ', valRes );
-
-  for (var i = 0, f; f = files[i]; i++) {
-    console.log( f );
-
-    // Only process image files.
-    if( window.File && window.FileReader && f.type.match('^image/.*') ) {
-      var reader = new FileReader();
-      // Closure to capture the file information.
-      reader.onload = (function cargado(theFile) {
-        return function procesando(e) {
-          console.log( 'Procesando e' );
-          console.log( e );
-          // Render thumbnail.
-          var span = document.createElement('div');
-          span.innerHTML = ['<strong>', escape(theFile.name), '</strong> (',
-            theFile.type || 'n/a', ') - ',
-            theFile.size, ' bytes, last modified: ',
-            theFile.lastModifiedDate ? theFile.lastModifiedDate.toLocaleDateString() : 'n/a',
-            '<br><img border="1" style="max-width:50px; max-height:50px;" src="', e.target.result,
-            '" title="', escape(theFile.name), '"/>'].join('');
-          document.getElementById('list').insertBefore(span, null);
-        };
-      })(f);
-
-      // Read in the image file as a data URL.
-      reader.readAsDataURL(f);
-    }
-    else {
-      var span = document.createElement('div');
-      span.innerHTML = ['<strong>', escape(f.name), '</strong> (',
-        f.type || 'n/a', ') - ',
-        f.size, ' bytes, last modified: ',
-        f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a'].join('');
-      document.getElementById('list').insertBefore(span, null);
-    }
-
-
-  } // for files[i]
-
-  return valRes;
-} // function procesarFiles
-*/
-
-
-/* Video Tutorial: http://www.youtube.com/watch?v=EraNFJiY0Eg */
-/*
-function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
-  console.log( 'uploadFile: ', file );
-
-  var formdata = new FormData();
-  formdata.append("ajaxFileUpload", file);
-  formdata.append("idForm", idForm);
-  formdata.append("fieldName", fieldName);
-  formdata.append("cgIntFrmId", cgIntFrmId);
-
-  var ajax = new XMLHttpRequest();
-  ajax.upload.addEventListener("progress", progressHandler, false);
-  ajax.addEventListener("load", completeHandler, false);
-  ajax.addEventListener("error", errorHandler, false);
-  ajax.addEventListener("abort", abortHandler, false);
-  ajax.open("POST", "/ajax_file_uploadV2");
-  ajax.send(formdata);
-
-  ajax.onreadystatechange = function() {
-    console.log( 'onreadystatechange: ', ajax );
-  }
-
-}
-*/
-
-/*
-function progressHandler(event) {
-  console.log( 'progressHandler' );
-  console.log( event );
-  document.getElementById("loaded_n_total").innerHTML = "Uploaded "+event.loaded+" bytes of "+event.total;
-  var percent = (event.loaded / event.total) * 100;
-  document.getElementById("progressBar").value = Math.round(percent);
-  document.getElementById("status").innerHTML = Math.round(percent)+"% uploaded... please wait";
-}
-
-function completeHandler(event) {
-  console.log( 'completeHandler' );
-  console.log( event );
-  document.getElementById("loaded_n_total").innerHTML = "";
-  document.getElementById("progressBar").value = 0;
-  document.getElementById("status").innerHTML = event.target.responseText;
-
-  $fileField = $(' #' + event.target[ 'idForm' ] + ' input[name=' + event.target[ 'fieldName' ] + ']' );
-  console.log($fileField);
-}
-
-function errorHandler(event) {
-  console.log( 'errorHandler' );
-  console.log( event );
-  document.getElementById("status").innerHTML = "Upload Failed";
-}
-
-function abortHandler(event) {
-  console.log( 'abortHandler' );
-  console.log( event );
-  document.getElementById("status").innerHTML = "Upload Aborted";
-}
-*/
 
