@@ -190,10 +190,14 @@ class CogumeloClass extends Singleton
 
   static function getUserInfo() {
     if(class_exists('UserSessionController')) {
-    require_once(ModuleController::getRealFilePath('classes/controller/UserSessionController.php', 'user'));
-    $userSessionControl = new UserSessionController();
-    $user = $userSessionControl->getUser();
-      $res = $user->getter('login');
+      require_once(ModuleController::getRealFilePath('classes/controller/UserSessionController.php', 'user'));
+      $userSessionControl = new UserSessionController();
+      if($user = $userSessionControl->getUser()) {
+        $res = $user->getter('login');
+      }
+      else{
+        $res = "";
+      }
     }
     else {
       $res = "";
