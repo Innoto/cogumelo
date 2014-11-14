@@ -18,6 +18,7 @@ class Cogumelo extends CogumeloClass
   function __construct() {
     parent::__construct();
 
+
     /*probandoMailing*/
     $this->addUrlPatterns( '#^probandomailing$#', 'view:MailingView::probandoMailing');
 
@@ -28,7 +29,6 @@ class Cogumelo extends CogumeloClass
     $this->addUrlPatterns( '#^deletefostform#', 'view:CreateForm::deleteLostForm' );
 
     /*table*/
-
     $this->addUrlPatterns( '#^tableinterfacedata$#', 'view:Tview::tableData');
     $this->addUrlPatterns( '#^tableInterface$#', 'view:Tview::main');
 
@@ -39,17 +39,6 @@ class Cogumelo extends CogumeloClass
     $this->addUrlPatterns( '#^form-mod-test$#', 'view:FormModTest::loadForm' );
     $this->addUrlPatterns( '#^form-mod-action$#', 'view:FormModTest::actionForm' );
 
-    /*FormsTest*/
-    $this->addUrlPatterns( '#^loadform$#', 'view:Forms::loadForm' );
-    $this->addUrlPatterns( '#^actionform$#', 'view:FormAction::actionForm' );
-    $this->addUrlPatterns( '#^ajax_file_upload_parser$#', 'view:Forms::ajaxUpload' );
-    $this->addUrlPatterns( '#^omeuphp$#', 'view:Forms::phpinfo' );
-
-    /*FormsTestV2*/
-    $this->addUrlPatterns( '#^loadformV2$#', 'view:FormsTestV2::loadForm' );
-    $this->addUrlPatterns( '#^actionformV2$#', 'view:FormsTestV2::actionForm' );
-    $this->addUrlPatterns( '#^ajax_file_uploadV2$#', 'view:FormsTestV2::ajaxUpload' );
-
     /*Adminview*/
     $this->addUrlPatterns( '#^getobj$#', 'view:Adminview::getobj' );
     $this->addUrlPatterns( '#^setobj$#', 'view:Adminview::setobj' );
@@ -57,7 +46,6 @@ class Cogumelo extends CogumeloClass
     /*MasterView*/
     $this->addUrlPatterns( '#^404$#', 'view:MasterView::page404' );
     $this->addUrlPatterns( '#^$#', 'view:MasterView::master' ); // App home url
-
 
 
   }

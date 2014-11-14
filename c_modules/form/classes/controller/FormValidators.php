@@ -205,6 +205,7 @@ class FormValidators extends FormValidatorsExtender {
   }
 
 
+  // http://jqueryvalidation.org/accept-method
   private function val_accept( $value, $param ) {
     if( !is_array( $param ) ) {
       // Split param on commas in case we have multiple types we can accept
@@ -212,13 +213,13 @@ class FormValidators extends FormValidatorsExtender {
       $param = explode( ',', $param );
     }
 
+    // TODO: Cambiar in_array por regex
     return in_array( $value[ 'type' ], $param );
   }
 
 
+  // http://jqueryvalidation.org/extension-method
   private function val_extension( $value, $param ) {
-    // Older "accept" file extension method. Old docs: http://docs.jquery.com/Plugins/Validation/Methods/accept
-
     if( !is_array( $param ) ) {
       // Split param on commas in case we have multiple extensions we can accept
       $param = str_replace( ' ', '', $param );
@@ -229,11 +230,9 @@ class FormValidators extends FormValidatorsExtender {
     $tmpExtPos = strrpos( $value[ 'name' ], '.' );
     if( $tmpExtPos > 0 ) { // Not FALSE or 0
       $tmpExt = substr( $value[ 'name' ], 1+$tmpExtPos );
-      if( ( mb_strlen( $tmpExt, 'UTF-8' ) > 5 ) || ( preg_match( '/^[-0-9A-Z_\.]+$/i', $tmpExt ) !== 1 ) ) {
-        error_log( 'ALERTA: La Extensión del fichero parece anormal: '.$tmpExt );
-      }
     }
 
+    // TODO: Cambiar in_array por regex
     return in_array( $tmpExt, $param );
   }
 

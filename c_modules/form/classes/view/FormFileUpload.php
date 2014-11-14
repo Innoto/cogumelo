@@ -34,7 +34,12 @@ class FormFileUpload extends View
     error_log( 'FILES:' ); error_log( print_r( $_FILES, true ) );
     error_log( 'POST:' ); error_log( print_r( $_POST, true ) );
 
-    if( isset( $_FILES['ajaxFileUpload'], $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'] ) ) {
+    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'], $_FILES['ajaxFileUpload'] ) ) {
+
+      $idForm     = $_POST['idForm'];
+      $cgIntFrmId = $_POST['cgIntFrmId'];
+      $fieldName  = $_POST['fieldName'];
+
       $fileName     = $_FILES['ajaxFileUpload']['name'];     // The file name
       $fileTmpLoc   = $_FILES['ajaxFileUpload']['tmp_name']; // File in the PHP tmp folder
       $fileType     = $_FILES['ajaxFileUpload']['type'];     // The type of file it is
@@ -47,43 +52,43 @@ class FormFileUpload extends View
           // Todo OK, no hay error
           break;
         case UPLOAD_ERR_INI_SIZE:
-          $error = "El tamaño del fichero ha superado el límite establecido en el servidor.";
+          $form->addFieldRuleError( $fieldName, 'cogumelo', 'El tamaño del fichero ha superado el límite establecido en el servidor.' );
           break;
         case UPLOAD_ERR_FORM_SIZE:
-          $error = "El tamaño del fichero ha superado el límite establecido para este campo.";
+          $form->addFieldRuleError( $fieldName, 'cogumelo', 'El tamaño del fichero ha superado el límite establecido para este campo.' );
           break;
         case UPLOAD_ERR_PARTIAL:
-          $error = "La subida del fichero no se ha completado.";
+          $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero no se ha completado.' );
           break;
         case UPLOAD_ERR_NO_FILE:
-          $error = "No se ha subido el fichero.";
+          $form->addFieldRuleError( $fieldName, 'cogumelo', 'No se ha subido el fichero.' );
           break;
         case UPLOAD_ERR_NO_TMP_DIR:
-          $error = "La subida del fichero ha fallado. (6)";
+          $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero ha fallado. (6)' );
           break;
         case UPLOAD_ERR_CANT_WRITE:
-          $error = "La subida del fichero ha fallado. (7)";
+          $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero ha fallado. (7)' );
           break;
         case UPLOAD_ERR_EXTENSION:
-          $error = "La subida del fichero ha fallado. (8)";
+          $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero ha fallado. (8)' );
           break;
         default:
-          $error = "La subida del fichero ha fallado.";
+          $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero ha fallado.' );
           break;
       }
 
       // Datos enviados fuera de rango
-      if( !$error && $fileSize < 1 ) {
-        $error = "El tamaño del fichero parece ser cero (0)."; error_log($error);
+      if( !$form->existErrors() && $fileSize < 1 ) {
+        $form->addFieldRuleError( $fieldName, 'cogumelo', 'El tamaño del fichero parece ser cero (0).' );
       }
 
       // Verificando la existencia y tamaño del fichero intermedio
-      if( !$error && ( !is_uploaded_file( $fileTmpLoc ) || filesize( $fileTmpLoc ) !== $fileSize ) ) {
-        $error = "El fichero temporal parece incorrecto o sin datos."; error_log($error);
+      if( !$form->existErrors() && ( !is_uploaded_file( $fileTmpLoc ) || filesize( $fileTmpLoc ) !== $fileSize ) ) {
+        $form->addFieldRuleError( $fieldName, 'cogumelo', 'El fichero temporal parece incorrecto o sin datos.' );
       }
 
       // Verificando el MIME_TYPE del fichero intermedio
-      if( !$error ) {
+      if( !$form->existErrors() ) {
         $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
         $fileTypePhp = finfo_file( $finfo, $fileTmpLoc );
         if( $fileTypePhp !== false ) {
@@ -98,16 +103,12 @@ class FormFileUpload extends View
         }
       }
 
-      if( !$error ) {
+      if( !$form->existErrors() ) {
 
         // Recuperamos formObj y validamos el fichero temporal
-        if( $form->loadFromSession( $_POST[ 'cgIntFrmId' ] ) &&
-          $form->getFieldType( $_POST[ 'fieldName' ] ) === 'file' )
-        {
-
+        if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' ) {
           // Creamos un objeto con los validadores y lo asociamos
           $form->setValidationObj( new FormValidators() );
-          $fieldName = $_POST[ 'fieldName' ];
           $tmpFileFieldValue = array(
             'name' => $fileName,
             'originalName' => $fileName,
@@ -120,15 +121,13 @@ class FormFileUpload extends View
           $form->setFieldValue( $fieldName, $tmpFileFieldValue );
 
           // Validar input del fichero
-          if( !$form->validateField( $fieldName ) ) {
-            $jvErrors = $form->getJVErrors();
-            $error = 'El fichero no cumple las reglas de validación establecidas.'; error_log($error);
-          }
-          else {
+          $form->validateField( $fieldName );
+
+          if( !$form->existErrors() ) {
             // El fichero ha superado las validaciones. Ajustamos sus valores finales y los almacenamos.
             $tmpCgmlFileLocation = $form->tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName );
             if( $tmpCgmlFileLocation === false ) {
-              $error = 'Fallo de move_uploaded_file movendo ('.$fileTmpLoc.')'; error_log($error);
+              $form->addFieldRuleError( $fieldName, 'cogumelo', 'Fallo de move_uploaded_file movendo ('.$fileTmpLoc.')' );
             }
             else {
               $tmpFileFieldValue[ 'absLocation' ] = $tmpCgmlFileLocation;
@@ -155,10 +154,10 @@ class FormFileUpload extends View
               // Persistimos formObj para cuando se envíe el formulario completo
               $form->saveToSession();
             } // else - if( !$tmpCgmlFileLocation )
-          } // else - if( !$form->validateField( $fieldName ) )
-        } // if( $form->loadFromSession( $_POST[ 'cgIntFrmId' ] ) ) {
+          } // if( !$form->existErrors() )
+        } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
         else {
-          $error = 'Los datos del formulario no han llegado bien al servidor. FORM'; error_log($error);
+          $form->addFieldRuleError( $fieldName, 'cogumelo', 'Los datos del fichero no han llegado bien al servidor. FORM' );
         }
 
 
@@ -168,25 +167,37 @@ class FormFileUpload extends View
 
     } // if( isset( ... ) )
     else { // no parece haber fichero
-      $error = 'No han llegado los datos o lo ha hecho con errores. ISSET'; error_log($error);
+      $form->addFieldRuleError( $fieldName, 'cogumelo', 'No han llegado los datos o lo ha hecho con errores. ISSET' );
     }
 
 
     // Notificamos el resultado al UI
-    if( $error === false ) {
+    if( !$form->existErrors() ) {
+      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName, 'fileName' => $tmpFileFieldValue['name'],
+        'fileSize' => $tmpFileFieldValue['size'], 'fileType' => $tmpFileFieldValue['type'] );
+      header('Content-Type: application/json; charset=utf-8');
+      echo $form->jsonFormOk( $moreInfo );
+    }
+    else {
+      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName );
+      header('Content-Type: application/json; charset=utf-8');
+      echo $form->jsonFormError( $moreInfo );
+    }
+    /*
+    if( !$form->existErrors() ) {
       // OK: Los datos procesados son $tmpFileFieldValue
-      $respond = array( 'success' => 'success', 'fileName' => $tmpFileFieldValue[ 'name' ],
-        'fileSize' => $tmpFileFieldValue[ 'size' ], 'fileType' => $tmpFileFieldValue[ 'type' ] );
+      $respond = array( 'success' => 'success', 'fileName' => $tmpFileFieldValue['name'],
+        'fileSize' => $tmpFileFieldValue['size'], 'fileType' => $tmpFileFieldValue['type'] );
     }
     else {
       $respond = array( 'success' => 'error', 'error' => 'fileUpload: ERROR: '.$error );
     }
-    $respond[ 'idForm' ] = $_POST[ 'idForm' ];
-    $respond[ 'fieldName' ] = $_POST[ 'fieldName' ];
+    $respond['idForm'] = $_POST['idForm'];
+    $respond['fieldName'] = $_POST['fieldName'];
 
-    header('Content-Type: application/json; charset=utf-8');
     echo json_encode($respond);
     error_log( print_r( json_encode($respond), true ) );
+    */
 
   } // function fileUpload() {
 

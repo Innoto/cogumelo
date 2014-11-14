@@ -228,16 +228,65 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       // $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
     },
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-      console.log( 'successHandler', $jsonData, $textStatus, $jqXHR );
+      console.log( 'Executando uploadFile.success...' );
+      console.log( 'jsonData: ', $jsonData );
+      console.log( 'jqXHR: ', $jqXHR );
       $( '#loaded_n_total' ).html( '' );
       $( '#progressBar' ).val( 0 );
-      $( '#status' ).html( $textStatus );
+      $( '#status' ).html( $jsonData.success );
 
-      // Cambios en el input procesado para indicar OK y otras opciones
-      $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'green' );
-      $(' #' + $jsonData[ 'idForm' ] + ' input[name=' + $jsonData[ 'fieldName' ] + ']' ).replaceWith(
-        '<span class="fileUploadOK">"' + $jsonData[ 'fileName' ] + '" uploaded OK</span>'
-      );
+      $validateForm = getFormInfo( $jsonData.moreInfo.idForm );
+
+      console.log( $validateForm );
+      if( $jsonData.result === 'ok' ) {
+        $(' #' + $jsonData.moreInfo.idForm + ' .ffn-' + $jsonData.moreInfo.fieldName ).css( 'color', 'green' );
+        $(' #' + $jsonData.moreInfo.idForm + ' input[name=' + $jsonData.moreInfo.fieldName + ']' ).replaceWith(
+          '<span class="fileUploadOK">"' + $jsonData.moreInfo.fileName + '" uploaded OK</span>'
+        );
+      }
+      else {
+        console.log( 'ERROR' );
+        for(var i in $jsonData.jvErrors) {
+          errObj = $jsonData.jvErrors[i];
+          console.log( errObj );
+
+          if( errObj[ 'fieldName' ] !== false ) {
+            if( errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] === false ) {
+              $defMess = $validateForm.defaultMessage( errObj['fieldName'], errObj['ruleName'] );
+              if( typeof $defMess !== "string" ) {
+                $defMess = $defMess( errObj['ruleParams'] );
+              }
+              errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] = $defMess;
+            }
+            console.log( errObj[ 'JVshowErrors' ] );
+            $validateForm.showErrors( errObj[ 'JVshowErrors' ] );
+            console.log( 'Msg cargado...' );
+          }
+          else {
+            console.log( errObj[ 'JVshowErrors' ] );
+            showErrorsValidateForm( $( form ), errObj[ 'JVshowErrors' ][ 'msgText'], errObj[ 'JVshowErrors' ][ 'msgClass' ] );
+            console.log( 'Msg cargado...' );
+          }
+
+        }
+        // if( $jsonData.formError !== '' ) $validateForm.showErrors( {"submit": $jsonData.formError} );
+      }
+
+
+
+      /*
+      if( $jsonData.success!='error' ) {
+        // Cambios en el input procesado para indicar OK y otras opciones
+        $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'green' );
+        $(' #' + $jsonData[ 'idForm' ] + ' input[name=' + $jsonData[ 'fieldName' ] + ']' ).replaceWith(
+          '<span class="fileUploadOK">"' + $jsonData[ 'fileName' ] + '" uploaded OK</span>'
+        );
+      }
+      else {
+        // Cambios en el input procesado para indicar OK y otras opciones
+        $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'red' );
+      }
+      */
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
       console.log( 'errorHandler', $jqXHR, $textStatus, $errorThrown );

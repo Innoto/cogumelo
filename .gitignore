@@ -3,3 +3,4 @@
 /c_packages/base_app/bower.json
 /c_packages/base_app/composer.json
 *.log
+/phpdoc/

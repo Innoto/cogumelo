@@ -1,6 +1,11 @@
 <?php
 
 
+/**
+ * undocumented class
+ *
+ * @package default
+ **/
 class FormController implements Serializable {
 
 
@@ -719,23 +724,24 @@ class FormController implements Serializable {
         // $fileStatus['tmpFile'] = 'name'=>'', 'originalName'=>'', 'absLocation'=>'', 'type'=>'', 'size'=>''
         $fileName = $this->secureFileName( $fileStatus['tmpFile']['originalName'] );
 
-        $destDir = FORM_FILES_APP_PATH . $this->getFieldParam( $fieldName, 'destDir' );
-        if( !is_dir( $destDir ) ) {
+        $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+        $fullDestPath = MOD_FORM_FILES_APP_PATH . $destDir;
+        if( !is_dir( $fullDestPath ) ) {
           /**
           // TODO: CAMBIAR PERMISOS 0777
           **/
-          if( !mkdir( $destDir, 0777, true ) ) {
-            $error = 'Imposible crear el dir. necesario: '.$destDir; error_log($error);
+          if( !mkdir( $fullDestPath, 0777, true ) ) {
+            $error = 'Imposible crear el dir. necesario: '.$fullDestPath; error_log($error);
           }
         }
 
-        error_log( 'FILE: movendo ' . $fileStatus['tmpFile']['absLocation'] . ' a ' . $destDir.$fileName );
+        error_log( 'FILE: movendo ' . $fileStatus['tmpFile']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
 
         /**
         // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
         */
 
-        rename( $fileStatus['tmpFile']['absLocation'], $destDir.$fileName );
+        rename( $fileStatus['tmpFile']['absLocation'], $fullDestPath.'/'.$fileName );
 
         /**
         // TODO: FALTA GUARDA LOS DATOS DEFINITIVOS DEL FICHERO!!!
@@ -760,7 +766,7 @@ class FormController implements Serializable {
     $result = false;
     $error = false;
 
-    $tmpCgmlFormPath = FORM_FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getIntFrmId() );
+    $tmpCgmlFormPath = MOD_FORM_FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getIntFrmId() );
     if( !is_dir( $tmpCgmlFormPath ) ) {
       /**
       // TODO: CAMBIAR PERMISOS 0777
@@ -1039,14 +1045,16 @@ class FormController implements Serializable {
    *
    * @return string JSON
    **/
-  public function jsonFormOk() {
-
-    return json_encode(
-      array(
-        'result' => 'ok',
-        'success' => $this->getSuccess()
-      )
+  public function jsonFormOk( $moreInfo = false ) {
+    $result = array(
+      'result' => 'ok',
+      'success' => $this->getSuccess()
     );
+    if( $moreInfo !== false ) {
+      $result['moreInfo'] = $moreInfo;
+    }
+
+    return json_encode( $result );
   }
 
 
@@ -1055,14 +1063,16 @@ class FormController implements Serializable {
    *
    * @return string JSON
    **/
-  public function jsonFormError() {
-
-    return json_encode(
-      array(
-        'result' => 'error',
-        'jvErrors' => $this->getJVErrors()
-      )
+  public function jsonFormError( $moreInfo = false ) {
+    $result = array(
+      'result' => 'error',
+      'jvErrors' => $this->getJVErrors()
     );
+    if( $moreInfo !== false ) {
+      $result['moreInfo'] = $moreInfo;
+    }
+
+    return json_encode( $result );
   }
 
 
@@ -1157,4 +1167,4 @@ class FormController implements Serializable {
 **/
 
 
-} // class FormController implements Serializable
+} // END FormController class
