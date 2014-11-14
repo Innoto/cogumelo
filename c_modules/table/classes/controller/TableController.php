@@ -20,6 +20,7 @@ class TableController{
       'list' => 'listItems',
       'count' => 'listCount'
       );
+  var $export = false;
   var $exports = array( 
       '0'=> array('name'=>'Export', 'controller'=>''),
       'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
@@ -36,44 +37,51 @@ class TableController{
   * @param object $control: is the data controller  
   * @param array $data  generally is htme full $_POST data variable
   */
-  function __construct($control, $postdata)
+  function __construct($control)
   {
 
+
+    $clientdata = $_POST;
     $this->control = $control;
 
+
+    if( $clientdata['exportType'] != 'false' ) {
+      $this->export = $clientdata['exportType'];
+    }
+
     // set orders
-    $this->clientData['order'] = $postdata['order'];
+    $this->clientData['order'] = $clientdata['order'];
 
     // set tabs
-    if($postdata['tab']) {
-      $this->currentTab = $postdata['tab'];
+    if( $clientdata['tab'] ) {
+      $this->currentTab = $clientdata['tab'];
     }
 
     // set ranges
-    if( $postdata['range'] != false ){
-      $this->clientData['range'] = $postdata['range'];
+    if( $clientdata['range'] != false ){
+      $this->clientData['range'] = $clientdata['range'];
     }
     else {
       $this->clientData['range'] = array(0, $this->rowsEachPage );
     }
 
     // filters
-    if( $postdata['filters'] != 'false' ) {
-      $this->clientData['filters'] = $postdata['filters'];
+    if( $clientdata['filters'] != 'false' ) {
+      $this->clientData['filters'] = $clientdata['filters'];
     }
     else {
       $this->clientData['filters'] = false;
     }
 
     // search box
-    if(  $postdata['search'] != 'false') {
-      $this->clientData['search'] = $postdata['search'];
+    if(  $clientdata['search'] != 'false') {
+      $this->clientData['search'] = $clientdata['search'];
     }
     else {
       $this->clientData['search'] = false;
     }
     
-    $this->clientData['action'] = $postdata['action'];
+    $this->clientData['action'] = $clientdata['action'];
   }
 
 
@@ -284,10 +292,35 @@ class TableController{
   }
 
 
-  /*
-  * @return string JSON with table
+  /* exec table
+  * @return void
   */
-  function returnTableJson() {
+  function exec() {
+
+    if( $this->export ) {
+      $this->execExport();
+    }
+    else {
+      $this->execJsonTable();
+    }
+  }
+
+  /* execExport table
+  * @return void
+  */
+  function execExport() {
+    header("Content-type: text/csv");
+    header("Content-Disposition: attachment; filename=". $this->currentTab .".csv");
+    header("Pragma: no-cache");
+    header("Expires: 0");
+
+    echo "record1,record2,record3\n";
+  }
+
+  /* execJsonTable table
+  * @return void
+  */
+  function execJsonTable() {
     // if is executing a action ( like delete or update) and have permissions to do it
     if( 
       $this->clientData['action']['action'] != 'list' && 

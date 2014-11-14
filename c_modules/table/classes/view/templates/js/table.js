@@ -106,6 +106,7 @@ function cogumeloTable( tableId, tableUrl ) {
       url: tableUrl ,
       type: 'POST',
       data: {
+        exportType: false,
         tab : that.tabsContent.val(),
         order: that.order,
         range: currentRange,
@@ -358,6 +359,57 @@ function cogumeloTable( tableId, tableUrl ) {
     });
   }
 
+  that.actionExport = function() {
+
+    if(that.exportSelect.val() != '0') {
+
+      // range
+      var currentRange = null;
+      // action
+      var action = {action: 'list', keys: false};
+/*
+      $.post(
+        tableUrl, 
+        {
+          exportType: that.exportSelect.val(),
+          tab : that.tabsContent.val(),
+          order: that.order,
+          range: currentRange,
+          action: action,
+          filters: false,
+          search: that.search 
+        }, 
+        function(result){
+          //var binUrl = retData.url;
+          //console.log(retData);
+
+          var blob=new Blob([result]);
+  
+          var link=document.createElement('a');
+          link.href=window.URL.createObjectURL(blob);
+          link.download="myFileName.json";
+          link.click();
+      }); 
+*/
+
+      $.fileDownload(tableUrl, {
+          httpMethod: "POST",
+          data: {
+            exportType: that.exportSelect.val(),
+            tab : that.tabsContent.val(),
+            order: that.order,
+            range: currentRange,
+            action: action,
+            filters: false,
+            search: that.search 
+          }
+      });
+
+
+        
+      that.exportSelect.val('0')
+    }
+  }
 
   that.actionOnSelectedRows = function() {
 
@@ -379,6 +431,8 @@ function cogumeloTable( tableId, tableUrl ) {
     }
 
   }
+
+
 
   that.actionSearch = function( searchText ) {
     if( searchText != '' ) {
@@ -415,7 +469,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
   // Export select
   that.exportSelect.on("change", function( ){
-    alert('export');
+    that.actionExport()
   });
 
   // tabs change

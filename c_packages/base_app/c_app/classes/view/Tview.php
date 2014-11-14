@@ -34,8 +34,8 @@ class Tview extends View
     Cogumelo::load('controller/LostController.php');
     $lostControl =  new LostController();
 
-    // creamos obxecto taboa pasandolle o POST
-    $tabla = new TableController( $lostControl, $_POST );
+    // creamos obxecto taboa
+    $tabla = new TableController( $lostControl );
 
     // establecemos pestañas, así como o key identificativo á hora de filtrar
     $tabla->setTabs('lostProvince', array('1'=>'A Coruña', '2'=>'Lugo', '*'=> 'Toda Galicia' ), '*');
@@ -66,7 +66,7 @@ class Tview extends View
     $tabla->colRule('lostProvince', '#2#', 'Lugo');
 
     // imprimimos o JSON da taboa
-    $tabla->returnTableJson();
+    $tabla->exec();
     
 
 
