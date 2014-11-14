@@ -124,7 +124,7 @@ class CogumeloClass extends Singleton
     $error_msg = 'Warning: '.$errstr.' on file "'.$errfile.'" line:'.$errline;
 
     if(DEBUG){
-      self::objDebug(debug_backtrace(), $error_msg );
+      self::console(debug_backtrace(), $error_msg );
     }
 
     self::error($error_msg);
@@ -137,7 +137,7 @@ class CogumeloClass extends Singleton
     if($last_error!=null) {
       $error_msg = 'Fatal error: '.$last_error['message'].' on file "'.$last_error['file'].'" line: '.$last_error['line'];
       if(DEBUG) {
-        self::objDebug($last_error, $error_msg);
+        self::console($last_error, $error_msg);
       }
       self::error($error_msg);
     }
@@ -245,7 +245,7 @@ class CogumeloClass extends Singleton
     return $result_array;
   }
 
-  static function objDebug($obj, $comment='') {
+  static function console($obj, $comment='') {
     return self::objDebugPush($obj, $comment);
   }
 
