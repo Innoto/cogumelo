@@ -2,7 +2,7 @@
 
 Cogumelo::load('c_controller/DataController.php');
 user::load('model/UserVO.php');
-
+filedata::autoIncludes();
 
 //
 // User Controller Class
@@ -22,13 +22,13 @@ class  UserController extends DataController
   //
   function updatePassword($id, $password)
   {
-      $data = $this->data->updatePassword($id, $password);
-      if($data) {
-        Cogumelo::log("UpdatePassword SUCCEED with ID=".$id, "UserLog");
-      }
-      else{
-        Cogumelo::log("UpdatePassword FAILED with ID=".$id, "UserLog");
-      }
+    $data = $this->data->updatePassword($id, $password);
+    if($data) {
+      Cogumelo::log("UpdatePassword SUCCEED with ID=".$id, "UserLog");
+    }
+    else{
+      Cogumelo::log("UpdatePassword FAILED with ID=".$id, "UserLog");
+    }
     return $data;
   }
 
@@ -45,5 +45,14 @@ class  UserController extends DataController
     }
 
     return $data;
+  }
+
+  function createRelTmp($user){
+
+    Cogumelo::console( $user );
+
+    $filedataControl = new FiledataController();
+    $idfiledata = $filedataControl->create();
+    $data = $this->data->create($user);
   }
 }

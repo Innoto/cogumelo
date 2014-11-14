@@ -79,7 +79,7 @@ class Cousadmin extends View
     testmodule::load('model/CousaVO');
 
     $vo = new CousaVO();
-    //Cogumelo::objDebug($vo);
+    //Cogumelo::console($vo);
     echo($vo->keysToString(false));
     echo "<pre>";
     var_dump( $vo->getJoinArray() );

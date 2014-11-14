@@ -59,10 +59,22 @@ class UserView extends View
     }
     //error_log( print_r( $postData, true ) );
     // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-    $form = new FormController( false, false, $postData );
-    // Creamos un objeto con los validadores y lo asociamos
-    $form->setValidationObj( new FormValidators() );
-    $form->validateForm();
+    $form = new FormController();
+
+    // Leemos el input del navegador y recuperamos FORM de sesion añadiendole los datos enviados
+    if( $form->loadPostInput() ) {
+      // Creamos un objeto con los validadores y lo asociamos
+      $form->setValidationObj( new FormValidators() );
+
+      // $form->setValidationRule( 'input2', 'maxlength', '10' ); // CAMBIANDO AS REGLAS
+      $form->validateForm();
+
+      //$form->addFieldRuleError( 'check1', 'cogumelo', 'Un mensaxe de error de campo' );
+      //$form->addFormError( 'Ola meu... ERROR porque SI ;-)' );
+    }
+    else {
+      $form->addFormError( 'El servidor no considera válidos los datos recividos.', 'formError' );
+    }
 
     //Si todo esta OK!
     if( !$form->existErrors() ){
@@ -92,6 +104,9 @@ class UserView extends View
 
     $form = new FormController( 'registerForm', '/user/sendregisterform' ); //actionform
 
+    $form->setSuccess( 'accept', 'Bienvenido' );
+    $form->setSuccess( 'redirect', '/' );
+
 
     $form->setField( 'login', array( 'placeholder' => 'Login' ) );
     $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña' ) );
@@ -102,7 +117,10 @@ class UserView extends View
     $form->setField( 'role', array( 'type' => 'reserved', 'value' => ROLE_USER ));
 
     $form->setField( 'description', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
-    $form->setField( 'avatar', array( 'placeholder' => 'Avatar' ) );
+    $form->setField( 'avatar', array( 'type' => 'file', 'id' => 'inputFicheiro',
+      'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro',
+      'destDir' => '/users' ) );
+
     $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Registrar' ) );
 
     /******************************************************************************************** VALIDATIONS */
@@ -110,6 +128,10 @@ class UserView extends View
     $form->setValidationRule( 'email', 'required' );
     $form->setValidationRule( 'password', 'required' );
     $form->setValidationRule( 'password2', 'required' );
+
+    $form->setValidationRule( 'avatar', 'minfilesize', 1024 );
+    $form->setValidationRule( 'avatar', 'accept', 'image/png' );
+    $form->setValidationRule( 'avatar', 'required' );
 
     $form->setValidationRule( 'password', 'equalTo', '#password2' );
     $form->setValidationRule( 'email', 'email' );
@@ -140,11 +162,21 @@ class UserView extends View
     //error_log( print_r( $postData, true ) );
 
     // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-    $form = new FormController( false, false, $postData );
-    // Creamos un objeto con los validadores y lo asociamos
-    $form->setValidationObj( new FormValidators() );
+    $form = new FormController();
+    // Leemos el input del navegador y recuperamos FORM de sesion añadiendole los datos enviados
+    if( $form->loadPostInput() ) {
+      // Creamos un objeto con los validadores y lo asociamos
+      $form->setValidationObj( new FormValidators() );
 
-    $form->validateForm();
+      // $form->setValidationRule( 'input2', 'maxlength', '10' ); // CAMBIANDO AS REGLAS
+      $form->validateForm();
+
+      //$form->addFieldRuleError( 'check1', 'cogumelo', 'Un mensaxe de error de campo' );
+      //$form->addFormError( 'Ola meu... ERROR porque SI ;-)' );
+    }
+    else {
+      $form->addFormError( 'El servidor no considera válidos los datos recividos.', 'formError' );
+    }
 
     //Si todo esta OK!
     if( !$form->existErrors() ){
