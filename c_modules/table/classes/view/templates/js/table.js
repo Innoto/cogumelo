@@ -336,14 +336,15 @@ function cogumeloTable( tableId, tableUrl ) {
 
     $.each(that.tableData.table , function( rowIndex, row ) {
       if(evenClass == '') { evenClass='even'; } else { evenClass=''; }
-
-
+console.log(row.tableUrlString);
+      tUrl = row.tableUrlString;
       trows += '<tr class="' + evenClass + '">';
       trows += '<td> <input class="eachRowCheckBox" rowReferenceKey="'+row.rowReferenceKey+'" type="checkbox"> </td>';
 
+
       $.each( row, function( i, e ){
-        if( i != 'rowReferenceKey' ){
-          trows += '<td>' + e +'</td>';
+        if( i != 'rowReferenceKey' && i != 'tableUrlString' ){
+          trows += '<td  onclick="window.location=\''+ tUrl + '\';">' + e +'</td>';
         }
       });
 

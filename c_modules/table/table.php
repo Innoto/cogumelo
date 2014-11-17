@@ -21,7 +21,10 @@ class table extends Module
   );
 
   public $includesCommon = array(
-
+    'controller/ExportTableController.php',
+    'controller/CsvExportTableController.php',
+    'controller/XlsExportTableController.php',
+    'controller/TableController.php',
     'controller/TableController.php',
     'view/TableView.php',
     'js/table.js',

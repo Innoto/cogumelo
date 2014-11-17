@@ -16,6 +16,10 @@ class TableController{
   var $control = false;
   var $clientData = array();
   var $colsDef = array();
+
+  var $eachRowUrl = '';
+  var $newItemUrl = '';
+
   var $controllerMethodAlias = array(
       'list' => 'listItems',
       'count' => 'listCount'
@@ -309,13 +313,29 @@ class TableController{
   * @return void
   */
   function execExport() {
-    header("Content-type: text/csv");
-    header("Content-Disposition: attachment; filename=". $this->currentTab .".csv");
-    header("Pragma: no-cache");
-    header("Expires: 0");
-
-    echo "record1,record2,record3\n";
+    $fileName = str_replace( ' ', '_', $this->tabs['tabs'][$this->currentTab] );
+    eval('$lista = $this->control->'. $this->controllerMethodAlias['list'].'( $this->getFilters() , false, $this->orderIntoArray() );');
+    new $this->exports[$this->export]['controller']( $this, $fileName, $lista );
   }
+
+
+  /* setEachRowUrl url when click in row
+  * @param string $url 
+  * @return void
+  */
+  function setEachRowUrl($url) {
+    $this->eachRowUrl = $url;
+  }
+
+  /* setNewItemUrl url 
+  * @param string $url 
+  * @return void
+  */
+  function setNewItemUrl($url) {
+    $this->newItemUrl = $url;
+  }
+
+
 
   /* execJsonTable table
   * @return void
@@ -366,6 +386,8 @@ class TableController{
         $row = array();
             
         $row['rowReferenceKey'] = $rowVO->getter( $rowVO->getFirstPrimarykeyId() ); 
+        $rowId = $row['rowReferenceKey'];
+        eval('$row["tableUrlString"] = '.$this->eachRowUrl.';');
         foreach($this->colsDef as $colDefKey => $colDef){
           $row[$colDefKey] = $rowVO->getter($colDefKey);
         }

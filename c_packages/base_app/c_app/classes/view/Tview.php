@@ -53,6 +53,11 @@ class Tview extends View
     $tabla->setListMethodAlias('listItems');
     $tabla->setCountMethodAlias('listCount');
 
+
+    // set Urls
+    $tabla->setEachRowUrl('"/tablaformulario/".$rowId');
+    $tabla->setNewItemUrl('/tablanuevo/');
+
     // Nome das columnas
     //$tabla->setCol('id', 'Id');
     $tabla->setCol('lostSurname', 'Apelido');
