@@ -180,7 +180,9 @@ class MysqlDAO extends DAO
 
     $filter = array($key.'FindMethod' => $search);
 
-    if($res = $this->listItems($connectionControl, $filter, false, false, false, $resolveDependences, $cache) ) {
+    $res = $this->listItems($connectionControl, $filter, false, false, false, $resolveDependences, $cache);
+
+    if( $res != COGUMELO_ERROR ) {
       return $res->fetch();
     }
     else
@@ -227,7 +229,9 @@ class MysqlDAO extends DAO
       else{
 
         // With cache, but not cached yet. Caching ...
-        if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values'])) {
+        $res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']);
+
+        if( $res != COGUMELO_ERROR ) {
           Cogumelo::debug('Using cache: cache Set with ID: '.$queryId );
           $daoresult = new MysqlDAOResult( $this->VO , $res);
           $cached->setCache($queryId, $daoresult->fetchAll_RAW() );
@@ -240,7 +244,9 @@ class MysqlDAO extends DAO
     else
     {
       //  Without cache!
-      if($res = $this->execSQL($connectionControl,$strSQL, $whereArray['values'])){
+      $res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']);
+
+      if( $res != COGUMELO_ERROR ){
         $daoresult = new MysqlDAOResult( $this->VO , $res);
       }
       else{
@@ -280,8 +286,8 @@ class MysqlDAO extends DAO
     $VO = new $this->VO();
     $StrSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
 
-
-    if( $res = $this->execSQL($connectionControl,$StrSQL, $whereArray['values']) )  {
+    $res = $this->execSQL($connectionControl,$StrSQL, $whereArray['values']);
+    if( $res != COGUMELO_ERROR )  {
 
         //$res->fetch_assoc();
         $row = $res->fetch_assoc();
@@ -320,13 +326,11 @@ class MysqlDAO extends DAO
 
     $strSQL = "INSERT INTO `".$VOobj::$tableName."` (".$campos.") VALUES(".substr($answrs,1).");";
 
-
-    if($res = $this->execSQL($connectionControl, $strSQL, $valArray)) {
-
+    $res = $this->execSQL($connectionControl, $strSQL, $valArray);
+    if($res != COGUMELO_ERROR) {
       $VOobj->setter($VOobj->getFirstPrimarykeyId(), $connectionControl->db->insert_id);
 
       return $VOobj;
-
     }
     else {
       return null;
@@ -358,7 +362,8 @@ class MysqlDAO extends DAO
 
     $strSQL = "UPDATE `".$VOobj::$tableName."` SET ".substr($setvalues, 1)." WHERE `".$VOobj->getFirstPrimarykeyId()."`= ?;";
 
-    if($res = $this->execSQL($connectionControl, $strSQL, $valArray)) {
+    $res = $this->execSQL($connectionControl, $strSQL, $valArray);
+    if( $res != COGUMELO_ERROR ) {
       return $VOobj;
     }
     else {
@@ -381,7 +386,8 @@ class MysqlDAO extends DAO
     // SQL Query
     $strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$VO->getFirstPrimarykeyId()."` IN (".$nums_list.") ;";
 
-    if( $this->execSQL($connectionControl, $strSQL, $arrayPkeyIdValue) ){
+    $res = $this->execSQL($connectionControl, $strSQL, $arrayPkeyIdValue);
+    if( $res != COGUMELO_ERROR ){
       return $true;
     }
     else {

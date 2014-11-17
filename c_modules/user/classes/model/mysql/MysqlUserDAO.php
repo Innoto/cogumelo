@@ -25,7 +25,7 @@ class MysqlUserDAO extends MysqlDAO
   function authenticateUser($connectionControl, $login, $password)
   {
 
-    Cogumelo::objdebug($password);
+    Cogumelo::console($password);
     // SQL Query
     $strSQL = "SELECT * FROM `user` WHERE `login` = ? and `password` = ? ;";
 

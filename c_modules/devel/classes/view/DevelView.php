@@ -26,7 +26,7 @@ class DevelView extends View
       RequestController::redirect(SITE_URL_CURRENT.'');
     }
     else {
-      if ( !isset($_SERVER['PHP_AUTH_PW']) || $_SERVER['PHP_AUTH_PW']!= DEVEL_PASSWORD ) {
+      if ( !isset($_SERVER['PHP_AUTH_PW']) || $_SERVER['PHP_AUTH_PW']!= MOD_DEVEL_PASSWORD ) {
         header('WWW-Authenticate: Basic realm="Cogumelo Devel Confirm"');
         header('HTTP/1.0 401 Unauthorized');
         echo 'Acceso Denegado.';
@@ -207,7 +207,9 @@ class DevelView extends View
     }
   }
 
+  function develPhpInfo(){
+    phpinfo();
+  }
+
 }
-
-
 

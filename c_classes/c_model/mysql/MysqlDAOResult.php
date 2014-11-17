@@ -26,9 +26,9 @@ class MysqlDAOResult extends DAOResult {
       $ret_obj = $this->cacheFetch();
     }
     else {
-      if( 
-        is_object( $this->result ) && 
-        $row = $this->result->fetch_assoc() 
+      if(
+        is_object( $this->result ) &&
+        $row = $this->result->fetch_assoc()
       ) {
         $ret_obj = $this->VOGenerator( $row );
       }
@@ -58,9 +58,9 @@ class MysqlDAOResult extends DAOResult {
     }
 
     $this->resetFetch();
-    
+
     return $list;
-    
+
   }
 
   // count total numer of query result
@@ -82,7 +82,7 @@ class MysqlDAOResult extends DAOResult {
   // Returns: Obj/false
   function VOGenerator($row) // antes utilizaba & na variable res
   {
-    //Cogumelo::objDebug($row);
+    //Cogumelo::console($row);
     return new $this->VO($row);
 
   }
@@ -95,10 +95,10 @@ class MysqlDAOResult extends DAOResult {
     while( $row = $this->result->fetch_assoc() ) {
       $list[] = $row;
     }
-    
+
     $this->resetFetch();
 
-    return $list; 
+    return $list;
   }
 
   function resetFetch() {

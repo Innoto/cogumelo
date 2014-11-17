@@ -348,11 +348,7 @@ class FormController implements Serializable {
    * @return string
    **/
   public function getHtmlFields() {
-    $html = '';
-    foreach( $this->fields as $fieldName => $fieldParams ) {
-      $html .= '<div class="ffn-'.$fieldName.'">'.$this->getHtmlField($fieldName)."</div>\n";
-    }
-    return $html;
+    return implode( "\n", $this->getHtmlFieldsArray() );
   }
 
 
@@ -364,7 +360,7 @@ class FormController implements Serializable {
   public function getHtmlFieldsArray() {
     $html = array();
     foreach( $this->fields as $fieldName => $fieldParams ) {
-      $html[] = '<div class="ffn-'.$fieldName.'">'.$this->getHtmlField($fieldName)."</div>\n";
+      $html[] = '<div class="mFormFieldCont ffn-'.$fieldName.'">'.$this->getHtmlField( $fieldName ).'</div>';
     }
     return $html;
   }

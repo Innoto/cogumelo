@@ -102,7 +102,7 @@ define( 'SMARTY_CACHE', APP_TMP_PATH.'/cache' );
 
 define( 'MEDIASERVER_REFRESH_CACHE', true ); // false for best performance in final server
 define( 'MEDIASERVER_HOST', '/' );
-define( 'MEDIASERVER_MINIMIFY_FILES', true ); // minimify js and css files
+define( 'MEDIASERVER_MINIMIFY_FILES', false ); // minimify js and css files
 define( 'MEDIASERVER_TMP_CACHE_PATH', APP_TMP_PATH.'/mediaCache' );
 define( 'MEDIASERVER_FINAL_CACHE_PATH', 'mediaCache' );
 define( 'MEDIASERVER_COMPILE_LESS', false );
@@ -115,7 +115,7 @@ define( 'MEDIASERVER_COMPILE_LESS', false );
 global $C_ENABLED_MODULES;
 global $C_INDEX_MODULES;
 
-$C_ENABLED_MODULES = array( 'mediaserver', 'i18nGetLang', 'common', 'devel', 'form', 'table', 'user' );
+$C_ENABLED_MODULES = array( 'mediaserver', 'i18nGetLang', 'common', 'devel', 'filedata', 'form', 'table', 'user' );
 // before c_app/Cogumelo.php execution
 $C_INDEX_MODULES  = array( 'mediaserver', 'i18nGetLang', 'user', 'form', 'devel' ); // DEVEL SIEMPRE DE ULTIMO!!!
 
@@ -143,7 +143,7 @@ define( 'BCK', APP_BASE_PATH.'/backups/' ); //backups directory
 
 define( 'MOD_DEVEL_ALLOW_ACCESS', true );
 define( 'MOD_DEVEL_URL_DIR', 'devel' );
-define( 'DEVEL_PASSWORD', 'develpassword' );
+define( 'MOD_DEVEL_PASSWORD', 'develpassword' );
 
 
 //

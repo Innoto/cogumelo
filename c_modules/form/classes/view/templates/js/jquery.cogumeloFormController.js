@@ -222,7 +222,6 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       }
       return myXhr;
     },
-    //Ajax events
     beforeSend: function beforeSendHandler( $jqXHR, $settings ) {
       console.log( 'beforeSendHandler', $jqXHR, $settings );
       // $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
@@ -239,10 +238,19 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 
       console.log( $validateForm );
       if( $jsonData.result === 'ok' ) {
-        $(' #' + $jsonData.moreInfo.idForm + ' .ffn-' + $jsonData.moreInfo.fieldName ).css( 'color', 'green' );
-        $(' #' + $jsonData.moreInfo.idForm + ' input[name=' + $jsonData.moreInfo.fieldName + ']' ).replaceWith(
-          '<span class="fileUploadOK">"' + $jsonData.moreInfo.fileName + '" uploaded OK</span>'
-        );
+
+        $fileFieldCont = $(' #' + $jsonData.moreInfo.idForm + ' .ffn-' + $jsonData.moreInfo.fieldName );
+        $fileField = $(' #' + $jsonData.moreInfo.idForm + ' input[name=' + $jsonData.moreInfo.fieldName + ']' );
+        fileObj = $fileField['0'].files['0'];
+        // console.log( 'fileField: ', $fileField );
+
+        $fileFieldCont.css( 'color', 'green' );
+        $fileField.replaceWith( '<span class="fileUploadOK">"' + $jsonData.moreInfo.fileName + '" uploaded OK</span>' );
+
+        // Only process image files.
+        if( fileObj.type.match('image.*') && fileObj.size < 5000000 ) {
+          loadImageTh( fileObj, $fileFieldCont );
+        }
       }
       else {
         console.log( 'ERROR' );
@@ -293,6 +301,29 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
     }
   });
+
+
+  function loadImageTh( fileObj, $container ) {
+    var imageReader = new FileReader();
+
+    // Closure to capture the file information.
+    imageReader.onload = (
+      function cargado( fileLoaded ) {
+        // console.log( 'cargado', fileLoaded );
+        return(
+          function procesando( evnt ) {
+            // console.log( 'procesando', evnt );
+            $container.append('<div class="imageTh"><img class="imageTh" border="1" ' +
+              ' style="max-width:50px; max-height:50px;" src="' + evnt.target.result + '"/>');
+          }
+        );
+      }
+    )( fileObj );
+
+    // Read in the image file as a data URL.
+    imageReader.readAsDataURL( fileObj );
+  }
+
 
 }
 
