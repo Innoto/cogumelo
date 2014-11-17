@@ -195,7 +195,8 @@ class UserView extends View
       unset($valuesArray['password2']);
       $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
 
-      $res = $userControl->createFromArray($valuesArray);
+      //$res = $userControl->createFromArray($valuesArray);
+      $res = $userControl->createRelTmp($valuesArray);
     }
 
     if( $form->existErrors() ) {
