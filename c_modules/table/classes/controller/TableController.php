@@ -366,7 +366,8 @@ class TableController{
 
     header("Content-Type: application/json"); //return only JSON data
     
-    echo "{";
+    echo '{';
+    echo '"newItemUrl": "'.$this->newItemUrl.'",';
     echo '"colsDef":'.json_encode($this->colsIntoArray() ).',';
     echo '"tabs":'.json_encode($this->tabs).',';
     echo '"filters":'.json_encode($this->filters).',';
