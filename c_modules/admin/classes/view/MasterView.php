@@ -6,7 +6,7 @@ common::autoIncludes();
 //user::autoIncludes();
 
 
-class UserView extends View
+class MasterView extends View
 {
 
   function __construct($base_dir){
