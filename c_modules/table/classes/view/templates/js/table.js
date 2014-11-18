@@ -48,6 +48,9 @@ function cogumeloTable( tableId, tableUrl ) {
   that.exportSelect = $('.'+tableId+'.tableContainer .exportContainer .exportSelect');   
   that.searchButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.search'); 
   that.searchClearButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.clear'); 
+  that.addNewItem = $('.'+tableId+'.tableContainer .addElem'); 
+  
+
 
   that.interfaceAction = function( status ){
 
@@ -337,13 +340,14 @@ function cogumeloTable( tableId, tableUrl ) {
     $.each(that.tableData.table , function( rowIndex, row ) {
       if(evenClass == '') { evenClass='even'; } else { evenClass=''; }
 
-
+      tUrl = row.tableUrlString;
       trows += '<tr class="' + evenClass + '">';
       trows += '<td> <input class="eachRowCheckBox" rowReferenceKey="'+row.rowReferenceKey+'" type="checkbox"> </td>';
 
+
       $.each( row, function( i, e ){
-        if( i != 'rowReferenceKey' ){
-          trows += '<td>' + e +'</td>';
+        if( i != 'rowReferenceKey' && i != 'tableUrlString' ){
+          trows += '<td  onclick="window.location=\''+ tUrl + '\';">' + e +'</td>';
         }
       });
 
@@ -485,6 +489,11 @@ function cogumeloTable( tableId, tableUrl ) {
   // search clear
   that.searchClearButton.on("click", function(){
     that.searchClear();
+  });
+
+  // add new element
+  that.addNewItem.on("click", function(){
+    window.location = that.tableData.newItemUrl;
   });
 
 

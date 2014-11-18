@@ -49,10 +49,18 @@ class  UserController extends DataController
 
   function createRelTmp($user){
 
-    Cogumelo::console( $user );
-
     $filedataControl = new FiledataController();
-    $idfiledata = $filedataControl->create();
-    $data = $this->data->create($user);
+    $filedata = $filedataControl->create($user['avatar']);
+
+    var_dump($filedata);
+
+    if($filedata){
+      $user['avatar'] = $filedata->getter('id');
+    }
+    else {
+      $user['avatar'] = "";
+    }
+
+    $data = $this->create($user);
   }
 }
