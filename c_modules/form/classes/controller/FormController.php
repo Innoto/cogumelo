@@ -33,6 +33,13 @@ class FormController implements Serializable {
   );
 
 
+
+  /**
+   * Recupera todos los datos importantes en un array serializado
+   *
+   * @param string $name Name del formulario
+   * @param string $action Action del formulario
+   **/
   function __construct( $name = false, $action = false ) {
     error_log( 'Instanciando FormController sen datos de POST' );
     if( $name !== false ) {
@@ -105,6 +112,7 @@ class FormController implements Serializable {
 
   /**
    * Recupera de sesion todos los datos importantes
+   *
    * @param string $cgIntFrmId ID interno del formulario
    * @return boolean
    **/
@@ -330,7 +338,8 @@ class FormController implements Serializable {
   public function getHtmpOpen() {
     $html='';
 
-    $html .= '<form name="'.$this->name.'" id="'.$this->id.'" sg="'.$this->getIntFrmId().'"';
+    $html .= '<form name="'.$this->name.'" id="'.$this->id.'" sg="'.$this->getIntFrmId().'" ';
+    $html .= ' class="'.MOD_FORM_CSS_PRE.' '.MOD_FORM_CSS_PRE.'-form-'.$this->name.'" ';
     if( $this->action ) {
       $html .= ' action="'.$this->action.'"';
     }
@@ -360,7 +369,8 @@ class FormController implements Serializable {
   public function getHtmlFieldsArray() {
     $html = array();
     foreach( $this->fields as $fieldName => $fieldParams ) {
-      $html[] = '<div class="mFormFieldCont ffn-'.$fieldName.'">'.$this->getHtmlField( $fieldName ).'</div>';
+      $html[] = '<div class="'.MOD_FORM_CSS_PRE.'-wrap '.MOD_FORM_CSS_PRE.'-field-'.$fieldName.'">'.
+        $this->getHtmlField( $fieldName ).'</div>';
     }
     return $html;
   }
@@ -426,14 +436,14 @@ class FormController implements Serializable {
     if( isset( $field['label'] ) ) {
       $html['label'] = '<label';
       $html['label'] .= isset( $field['id'] ) ? ' for="'.$field['id'].'"' : '';
-      $html['label'] .= isset( $field['class'] ) ? ' class="'.$field['class'].'"' : '';
+      $html['label'] .= ' class="'.MOD_FORM_CSS_PRE.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
       $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
       $html['label'] .= '>'.$field['label'].'</label>';
     }
 
     $attribs = '';
     $attribs .= isset( $field['id'] )    ? ' id="'.$field['id'].'"' : '';
-    $attribs .= isset( $field['class'] ) ? ' class="'.$field['class'].'"' : '';
+    $attribs .= ' class="'.MOD_FORM_CSS_PRE.'-field'.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
     $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
     $attribs .= isset( $field['title'] ) ? ' title="'.$field['title'].'"' : '';
     $attribs .= isset( $field['placeholder'] ) ? ' placeholder="'.$field['placeholder'].'"' : '';
