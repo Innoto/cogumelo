@@ -208,7 +208,7 @@
     exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
       APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
       MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
-      LOGDIR.' '.FORM_FILES_TMP_PATH.' '.FORM_FILES_APP_PATH );
+      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH );
 
     exec( 'chmod -R u-x,go-wx,ugo+rX '.WEB_BASE_PATH );
 
@@ -217,7 +217,7 @@
     // Path que necesitan escritura
     exec( 'chmod -R ug+rwX,o+rX '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
       MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
-      LOGDIR.' '.FORM_FILES_TMP_PATH.' '.FORM_FILES_APP_PATH );
+      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH );
 
     // Solo usuario administrador
     exec( 'sudo chown $USER:$USER '.BCK );

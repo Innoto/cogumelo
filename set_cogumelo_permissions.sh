@@ -1,5 +1,7 @@
 #!/bin/bash
 
+cd /home/proxectos/cogumelo
+
 CGUSER=$USER
 CGSERV=www-data
 
