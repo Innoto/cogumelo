@@ -8,10 +8,10 @@
     {$js_includes}
 
     <style>
-      div.mFormFieldCont { border:1px dashed; margin:5px; padding:5px; }
+      div.cgmMForm-wrap { border:1px dashed; margin:5px; padding:5px; }
       label { display:block; }
       label.error, .formError { color:red; border:2px solid red; }
-      .ffn-inputFicheiro { background-color:#FFD; }
+      .cgmMForm-inputFicheiro { background-color:#FFD; }
     </style>
   </head>
   <body>
