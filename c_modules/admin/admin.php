@@ -17,7 +17,7 @@ class admin extends Module
     ),
     array(
      "id" => "font-awesome",
-     "params" => array(),
+     "params" => array("font-awesome-4.2.0"),
      "installer" => "manual",
      "includes" => array("css/font-awesome.min.css")
     ),
@@ -35,13 +35,13 @@ class admin extends Module
     ),
     array(
      "id" =>"respond",
-     "params" => array(),
+     "params" => array("Respond-master"),
      "installer" => "manual",
      "includes" => array("respond.js")
     ),
     array(
      "id" =>"morris",
-     "params" => array(),
+     "params" => array("morris.js-0.5.1"),
      "installer" => "manual",
      "includes" => array("morris.js", "morris.css")
     )
