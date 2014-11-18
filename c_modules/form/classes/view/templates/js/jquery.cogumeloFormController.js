@@ -239,7 +239,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       console.log( $validateForm );
       if( $jsonData.result === 'ok' ) {
 
-        $fileFieldCont = $(' #' + $jsonData.moreInfo.idForm + ' .ffn-' + $jsonData.moreInfo.fieldName );
+        $fileFieldCont = $(' #' + $jsonData.moreInfo.idForm + ' .cgmMForm-field-' + $jsonData.moreInfo.fieldName );
         $fileField = $(' #' + $jsonData.moreInfo.idForm + ' input[name=' + $jsonData.moreInfo.fieldName + ']' );
         fileObj = $fileField['0'].files['0'];
         // console.log( 'fileField: ', $fileField );

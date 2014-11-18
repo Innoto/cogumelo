@@ -15,7 +15,8 @@ class UserVO extends VO
     'login' => array(
       'name' => 'Login',
       'type' => 'CHAR',
-      'size' => '10'
+      'size' => '10',
+      'unique' => true
     ),
     'password'=> array(
       'name' => 'Contraseña',

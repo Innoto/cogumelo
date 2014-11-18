@@ -443,7 +443,7 @@ class FormController implements Serializable {
 
     $attribs = '';
     $attribs .= isset( $field['id'] )    ? ' id="'.$field['id'].'"' : '';
-    $attribs .= ' class="'.MOD_FORM_CSS_PRE.'-field'.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
+    $attribs .= ' class="'.MOD_FORM_CSS_PRE.'-field '.MOD_FORM_CSS_PRE.'-field-'.$field['name'].( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
     $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
     $attribs .= isset( $field['title'] ) ? ' title="'.$field['title'].'"' : '';
     $attribs .= isset( $field['placeholder'] ) ? ' placeholder="'.$field['placeholder'].'"' : '';
