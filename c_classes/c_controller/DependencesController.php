@@ -11,6 +11,7 @@ Class DependencesController {
   //
   var $allDependencesComposer = array();
   var $allDependencesBower = array();
+  var $allDependencesManual = array();
 
   function installDependences()
   {
@@ -18,14 +19,10 @@ Class DependencesController {
     Cogumelo::load('c_controller/ModuleController.php');
 
     $this->loadDependences();
-    //Descomentar para ver las depen a instalar
-    //error_log( print_r( "ALLBOWER", true));
-    //error_log( print_r( $allDependencesBower, true));
-    //error_log( print_r( "ALLCOMPOSER", true));
-    //error_log( print_r( $allDependencesComposer, true));
 
     $this->installDependencesBower($this->allDependencesBower);
     $this->installDependencesComposer($this->allDependencesComposer);
+    $this->installDependencesManual($this->allDependencesManual);
   }
 
   function loadDependences(){
@@ -63,10 +60,13 @@ Class DependencesController {
       //Diferenciamos entre instaladores
       switch($dependence['installer']){
         case "composer":
-          $this->pushDependencesComposer($dependence);
+          $this->pushDependencesComposer ($dependence);
         break;
         case "bower":
-          $this->pushDependencesBower($dependence);
+          $this->pushDependencesBower ($dependence);
+        break;
+        case "manual":
+          $this->pushDependencesManual ($dependence);
         break;
       }
     }   // end foreach
@@ -104,6 +104,21 @@ Class DependencesController {
     }
   }
 
+
+
+  function pushDependencesManual ($dependence) {
+    if(!array_key_exists($dependence['id'], $this->allDependencesManual)){
+      $this->allDependencesManual[$dependence['id']] = array($dependence['params']);
+    }
+    else{
+      $diffAllDepend = array_diff($dependence['params'] , $this->allDependencesManual[$dependence['id']][0]);
+
+      if(!empty($diffAllDepend)){
+        array_push($this->allDependencesManual[$dependence['id']], array_diff($dependence['params'] , $this->allDependencesManual[$dependence['id']][0])  );
+      }
+    }
+  }
+
   function installDependencesBower($dependences)
   {
     //Instala las dependecias con Bower
@@ -134,7 +149,7 @@ Class DependencesController {
   function installDependencesComposer($dependences)
   {
 
-    $finalArrayDep = array("require" => array(), "config" => array("vendor-dir" => "httpdocs/vendorServer"));
+    $finalArrayDep = array("require" => array(), "config" => array("vendor-dir" => DEPEN_COMPOSER_PATH));
     foreach( $dependences as $depKey => $dep ){
       foreach( $dep as $params ){
         $finalArrayDep['require'][$params[0]] = $params[1];
@@ -148,6 +163,25 @@ Class DependencesController {
     exec('php composer.phar update');
     echo("If the folder does not appear vendorServer dependencies run 'php composer.phar update' or 'composer update' and resolves conflicts.\n");
 
+  }
+
+  function installDependencesManual($dependences)
+  {
+    echo "Manual dependences \n";
+
+    if( !is_dir( DEPEN_MANUAL_PATH ) ) {
+      if( !mkdir( DEPEN_MANUAL_PATH, 0777, true ) ) {
+        echo "The destination folder does not exist and have permission to create \n";
+      }
+    }
+
+    foreach( $dependences as $depKey => $dep ){
+      foreach( $dep as $params ) {
+        echo "Installing ".$params[0]."\n";
+        $manualCmd = 'cp -r '.DEPEN_MANUAL_REPOSITORY.'/'.$params[0].' '.DEPEN_MANUAL_PATH.'/';
+        exec($manualCmd);
+      }
+    }
   }
 
 

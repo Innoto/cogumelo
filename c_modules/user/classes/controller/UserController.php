@@ -52,8 +52,6 @@ class  UserController extends DataController
     $filedataControl = new FiledataController();
     $filedata = $filedataControl->create($user['avatar']);
 
-    var_dump($filedata);
-
     if($filedata){
       $user['avatar'] = $filedata->getter('id');
     }
