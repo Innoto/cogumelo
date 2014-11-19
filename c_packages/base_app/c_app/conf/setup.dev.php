@@ -100,12 +100,16 @@ define( 'SMARTY_CACHE', APP_TMP_PATH.'/cache' );
 //	Media server
 //
 
+global $MEDIASERVER_LESS_VARIABLES;
+
+$MEDIASERVER_LESS_VARIABLES = array('variable1' =>'blue',  'variable2'=>'red', 'variable3'=>'blue;' );
 define( 'MEDIASERVER_REFRESH_CACHE', true ); // false for best performance in final server
 define( 'MEDIASERVER_HOST', '/' );
 define( 'MEDIASERVER_MINIMIFY_FILES', false ); // minimify js and css files
 define( 'MEDIASERVER_TMP_CACHE_PATH', APP_TMP_PATH.'/mediaCache' );
 define( 'MEDIASERVER_FINAL_CACHE_PATH', 'mediaCache' );
-define( 'MEDIASERVER_COMPILE_LESS', false );
+define( 'MEDIASERVER_COMPILE_LESS', true );
+
 
 
 //
