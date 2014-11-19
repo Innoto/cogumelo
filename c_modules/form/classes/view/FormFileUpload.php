@@ -119,6 +119,7 @@ class FormFileUpload extends View
           $fileFieldValuePrev = $form->getFieldValue( $fieldName );
 
           $tmpFileFieldValue = array(
+            'status' => 'LOAD',
             'validate' => array(
               'name' => $fileName,
               'originalName' => $fileName,

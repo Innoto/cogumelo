@@ -257,6 +257,37 @@ class FormController implements Serializable {
         $this->fields[ $key ][ 'value' ] = $val;
       }
     }
+
+    // Preparando datos de ficheros en fileFields para validar
+    foreach( $this->getFieldsNamesArray() as $fieldName ){
+      if( $this->getFieldType( $fieldName ) === 'file' && !$this->isEmptyFieldValue( $fieldName ) ) {
+
+        $fileFieldValue = $this->getFieldValue( $fieldName );
+        error_log( 'loadPostValues: Preparando File Field: '.$fieldName );
+        error_log( print_r( $fileFieldValue, true ) );
+
+        switch( $fileFieldValue['status'] ) {
+          case 'LOAD':
+            $fileFieldValue['validate'] = $fileFieldValue['temp'];
+            error_log( 'loadPostValues: LOAD -> temp' );
+            error_log( print_r( $fileFieldValue, true ) );
+            break;
+          case 'REPLACE':
+            $fileFieldValue['validate'] = $fileFieldValue['temp'];
+            error_log( 'loadPostValues: REPLACE -> temp' );
+            error_log( print_r( $fileFieldValue, true ) );
+            break;
+          case 'EXIST':
+            $fileFieldValue['validate'] = $fileFieldValue['prev'];
+            error_log( 'loadPostValues: EXIST -> prev' );
+            error_log( print_r( $fileFieldValue, true ) );
+            break;
+        }
+
+        $this->setFieldValue( $fieldName, $fileFieldValue );
+      }
+    }
+
   }
 
 
@@ -392,7 +423,7 @@ class FormController implements Serializable {
     $html .= $this->getHtmlFields()."\n";
     $html .= $this->getHtmlClose()."\n";
 
-    $html .= $this->getJqueryValidationJS()."\n";
+    $html .= $this->getScriptCode()."\n";
 
     return $html;
   }
@@ -623,7 +654,7 @@ class FormController implements Serializable {
    *
    * @return string
    **/
-  public function getJqueryValidationJS() {
+  public function getScriptCode() {
     $html = '';
 
     $separador = '';
@@ -653,7 +684,7 @@ class FormController implements Serializable {
     $html .= '<!-- Validate form '.$this->getName().' - END -->'."\n";
 
     return $html;
-  } // function getJqueryValidationJS
+  } // function getScriptCode
 
 
   /**
@@ -770,11 +801,16 @@ class FormController implements Serializable {
     $value = $this->getFieldValue( $fieldName );
     $type = $this->getFieldType( $fieldName );
 
-    if( is_array( $value ) ) {
-      $empty = ( sizeof( $value ) <= 0 );
+    if( $type !== 'file' ) {
+      if( is_array( $value ) ) {
+        $empty = ( sizeof( $value ) <= 0 );
+      }
+      else {
+        $empty = ( $value === false || $value === '' );
+      }
     }
     else {
-      $empty = ( $value === false || $value === '' );
+      $empty = !( isset( $value['status'] ) && $value['status'] !== false && $value['status'] !== 'DELETE' );
     }
 
     return $empty;
@@ -789,42 +825,76 @@ class FormController implements Serializable {
   public function processFileFields() {
     $result = true;
 
-    foreach( $this->getFieldsNamesArray() as $fieldName ){
-      if( $this->getFieldType( $fieldName ) === 'file' && !$this->isEmptyFieldValue( $fieldName ) ) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+      if( $this->getFieldType( $fieldName ) === 'file' ) {
         error_log( 'FILE: Almacenando File Field: '.$fieldName );
-        $fileStatus = $this->getFieldParam( $fieldName, 'fileStatus' );
+
         $fileFieldValue = $this->getFieldValue( $fieldName );
+        error_log( print_r( $fileFieldValue, true ) );
 
-        error_log( print_r( $fileStatus, true ) );
+        if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false ) {
+          switch( $fileFieldValue['status'] ) {
+            case 'LOAD':
+              error_log( 'processFileFields: LOAD' );
 
-        // $fileStatus['tmpFile'] = 'name'=>'', 'originalName'=>'', 'absLocation'=>'', 'type'=>'', 'size'=>''
-        $fileName = $this->secureFileName( $fileStatus['tmpFile']['originalName'] );
+              $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
+              $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+              $fullDestPath = MOD_FORM_FILES_APP_PATH . $destDir;
+              if( !is_dir( $fullDestPath ) ) {
+                // TODO: CAMBIAR PERMISOS 0777
+                if( !mkdir( $fullDestPath, 0777, true ) ) {
+                  $error = 'Imposible crear el dir. necesario: '.$fullDestPath; error_log($error);
+                }
+              }
+              error_log( 'FILE: movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+              // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
+              rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName );
 
-        $destDir = $this->getFieldParam( $fieldName, 'destDir' );
-        $fullDestPath = MOD_FORM_FILES_APP_PATH . $destDir;
-        if( !is_dir( $fullDestPath ) ) {
-          /**
-          // TODO: CAMBIAR PERMISOS 0777
-          **/
-          if( !mkdir( $fullDestPath, 0777, true ) ) {
-            $error = 'Imposible crear el dir. necesario: '.$fullDestPath; error_log($error);
+              break;
+            case 'REPLACE':
+              error_log( 'processFileFields: REPLACE' );
+              break;
+            case 'DELETE':
+              error_log( 'processFileFields: DELETE' );
+              break;
+            case 'EXIST':
+              error_log( 'processFileFields: EXIST - NADA QUE HACER' );
+              break;
           }
-        }
+        } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false )
 
-        error_log( 'FILE: movendo ' . $fileStatus['tmpFile']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
-
-        /**
-        // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-        */
-
-        rename( $fileStatus['tmpFile']['absLocation'], $fullDestPath.'/'.$fileName );
-
-        /**
         // TODO: FALTA GUARDA LOS DATOS DEFINITIVOS DEL FICHERO!!!
-        En caso de fallo $result = false;
-        **/
-      }
-    }
+        // En caso de fallo $result = false;
+      } // if( $this->getFieldType( $fieldName ) === 'file' )
+    } // foreach( $this->getFieldsNamesArray() as $fieldName )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     return $result;
   } // function processFileFields

@@ -37,15 +37,15 @@ class FormModTest extends View
     $form = new FormController( 'probaPorto', '/form-mod-action' );
 
     $form->setSuccess( 'accept', 'Gracias por participar' );
-    $form->setSuccess( 'redirect', '/' );
+    $form->setSuccess( 'redirect', '/form-mod-test' );
 
     $form->setField( 'inputFicheiro', array( 'type' => 'file', 'id' => 'inputFicheiro',
-      'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro',
+      'placeholder' => 'Escolle un ficheiro JPG', 'label' => 'Colle un ficheiro JPG',
       'destDir' => '/porto' ) );
 
     $form->setValidationRule( 'inputFicheiro', 'minfilesize', 1024 );
-    $form->setValidationRule( 'inputFicheiro', 'accept', 'image/gif' );
-    //$form->setValidationRule( 'inputFicheiro', 'required' );
+    $form->setValidationRule( 'inputFicheiro', 'accept', 'image/jpeg' );
+    $form->setValidationRule( 'inputFicheiro', 'required' );
 
     /*
     $form->setField( 'select1', array( 'type' => 'select', 'label' => 'Meu Select',
@@ -57,8 +57,7 @@ class FormModTest extends View
     $form->setValidationRule( 'input2', 'required' );
     $form->setValidationRule( 'input2', 'minlength', '8' );
 
-    $form->setField( 'check1', array( 'type' => 'checkbox', 'label' => 'Meu checkbox',
-      'value' => array( '1', 'asdf' ),
+    $form->setField( 'check1', array( 'type' => 'checkbox', 'label' => 'Meu checkbox', 'value' => array( '1', 'asdf' ),
       'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
       ) );
     $form->setValidationRule( 'check1', 'required' );
@@ -77,7 +76,7 @@ class FormModTest extends View
     $this->template->assign( 'formOpen', $form->getHtmpOpen() );
     $this->template->assign( 'formFields', $form->getHtmlFields() );
     $this->template->assign( 'formClose', $form->getHtmlClose() );
-    $this->template->assign( 'formValidations', $form->getJqueryValidationJS() );
+    $this->template->assign( 'formValidations', $form->getScriptCode() );
 
     $this->template->setTpl( 'formModTest.tpl' );
     $this->template->exec();
