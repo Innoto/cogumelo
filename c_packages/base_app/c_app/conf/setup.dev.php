@@ -165,3 +165,11 @@ define( 'MOD_FORM_FILES_APP_PATH', APP_BASE_PATH.'/../formFiles' );
 //define( 'FORM_FILES_APP_PATH', WEB_BASE_PATH.'/formFiles' );
 
 
+//
+// Dependences PATH
+//
+define( 'DEPEN_COMPOSER_PATH', WEB_BASE_PATH.'/vendor/composer' );
+define( 'DEPEN_BOWER_PATH', WEB_BASE_PATH.'/vendor/bower' );
+define( 'DEPEN_MANUAL_PATH', WEB_BASE_PATH.'/vendor/manual' );
+
+define( 'DEPEN_MANUAL_REPOSITORY', COGUMELO_LOCATION.'/c_packages/vendorPackages' );
