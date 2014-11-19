@@ -1,17 +1,23 @@
 <?php
 
+error_reporting( -1 );
+
 
 /**
- * undocumented class
+ * Gestión de formularios. Campos, Validaciones, Html, Ficheros, ...
  *
- * @package default
+ * @package Module Form
  **/
 class FormController implements Serializable {
 
+  /**
+   * Prefijo para marcar las clases CSS creadas por automaticamente
+   **/
+  const CSS_PRE = MOD_FORM_CSS_PRE;
 
   private $name = false;
   private $id = false;
-  private $cgIntFrmId = false;
+  private $tokenId = false;
   private $action = false;
   private $success = false;
   private $method = 'post';
@@ -35,22 +41,94 @@ class FormController implements Serializable {
 
 
   /**
-   * Recupera todos los datos importantes en un array serializado
+   * Constructor. Crea el TokenId y, si se envian, establece Name y Action del formulario
    *
    * @param string $name Name del formulario
    * @param string $action Action del formulario
    **/
   function __construct( $name = false, $action = false ) {
-    error_log( 'Instanciando FormController sen datos de POST' );
+    $this->createTokenId();
     if( $name !== false ) {
-      $this->name = $name;
-      $this->id = $name;
+      $this->setName( $name );
     }
     if( $action !== false ) {
-      $this->action = $action;
+      $this->setAction( $action );
     }
-    $this->cgIntFrmId = crypt( uniqid().'---'.session_id(), 'cf' );
-    $this->setField( 'cgIntFrmId', array( 'type' => 'text', 'value' => $this->cgIntFrmId ) );
+  }
+
+
+  /**
+   * Crea el TokenId único y lo guarda un campo del formulario. NO es el id del FORM.
+   *
+   * @param string $action Action del formulario
+   * @return string
+   **/
+  function createTokenId() {
+    $this->tokenId = crypt( uniqid().'---'.session_id(), 'cf' );
+    $this->setField( 'cgIntFrmId', array( 'type' => 'text', 'value' => $this->tokenId ) );
+
+    return $this->tokenId;
+  }
+
+  /**
+   * Recupera el TokenId único del formulario. Si no existe, se crea. NO es el id del FORM.
+   *
+   * @return string
+   **/
+  function getTokenId() {
+    $tokenId = $this->tokenId;
+    if( $tokenId === false ) {
+      $tokenId = $this->createTokenId();
+    }
+    return $tokenId;
+  }
+
+  /**
+   * Establece el Name e Id del formulario
+   *
+   * @param string $action Action del formulario
+   * @return string
+   **/
+  function setName( $name = false ) {
+    $this->name = $name;
+    $this->id = $name;
+  }
+
+  /**
+   * Recupera el Name del formulario
+   *
+   * @return string
+   **/
+  function getName() {
+    return $this->name;
+  }
+
+  /**
+   * Recupera el Id del formulario
+   *
+   * @return string
+   **/
+  function getId() {
+    return $this->id;
+  }
+
+  /**
+   * Establece el Action del formulario
+   *
+   * @param string $action Action del formulario
+   * @return string
+   **/
+  function setAction( $action ) {
+    $this->action = $action;
+  }
+
+  /**
+   * Recupera el Action del formulario
+   *
+   * @return string
+   **/
+  function getAction() {
+    return $this->action;
   }
 
 
@@ -64,7 +142,7 @@ class FormController implements Serializable {
 
     $data[] = $this->name;
     $data[] = $this->id;
-    $data[] = $this->cgIntFrmId;
+    $data[] = $this->tokenId;
     $data[] = $this->action;
     $data[] = $this->success;
     $data[] = $this->method;
@@ -88,7 +166,7 @@ class FormController implements Serializable {
 
     $this->name = array_shift( $data );
     $this->id = array_shift( $data );
-    $this->cgIntFrmId = array_shift( $data );
+    $this->tokenId = array_shift( $data );
     $this->action = array_shift( $data );
     $this->success = array_shift( $data );
     $this->method = array_shift( $data );
@@ -104,7 +182,7 @@ class FormController implements Serializable {
    * Guarda todos los datos importantes (serializados) en sesion
    **/
   public function saveToSession() {
-    $formSessionId = 'CGFSI_'.$this->getIntFrmId();
+    $formSessionId = 'CGFSI_'.$this->getTokenId();
     $_SESSION[ $formSessionId ] = $this->serialize();
     //return $formSessionId;
   }
@@ -113,15 +191,15 @@ class FormController implements Serializable {
   /**
    * Recupera de sesion todos los datos importantes
    *
-   * @param string $cgIntFrmId ID interno del formulario
+   * @param string $tokenId ID interno del formulario
    * @return boolean
    **/
-  public function loadFromSession( $cgIntFrmId ) {
+  public function loadFromSession( $tokenId ) {
     $result = false;
-    $formSessionId = 'CGFSI_'.$cgIntFrmId;
+    $formSessionId = 'CGFSI_'.$tokenId;
     if( isset( $_SESSION[ $formSessionId ] ) ) {
       $this->unserialize( $_SESSION[ $formSessionId ] );
-      $result = ( $this->cgIntFrmId === $cgIntFrmId );
+      $result = ( $this->tokenId === $tokenId );
     }
     return $result;
   }
@@ -303,16 +381,6 @@ class FormController implements Serializable {
 
 
   /**
-   * Recupera el ID interno del form
-   *
-   * @return string
-   **/
-  public function getIntFrmId() {
-    return $this->cgIntFrmId;
-  }
-
-
-  /**
    * Recupera todo el html y js que forman el form
    *
    * @return string
@@ -338,8 +406,8 @@ class FormController implements Serializable {
   public function getHtmpOpen() {
     $html='';
 
-    $html .= '<form name="'.$this->name.'" id="'.$this->id.'" sg="'.$this->getIntFrmId().'" ';
-    $html .= ' class="'.MOD_FORM_CSS_PRE.' '.MOD_FORM_CSS_PRE.'-form-'.$this->name.'" ';
+    $html .= '<form name="'.$this->getName().'" id="'.$this->id.'" sg="'.$this->getTokenId().'" ';
+    $html .= ' class="'.self::CSS_PRE.' '.self::CSS_PRE.'-form-'.$this->getName().'" ';
     if( $this->action ) {
       $html .= ' action="'.$this->action.'"';
     }
@@ -369,7 +437,7 @@ class FormController implements Serializable {
   public function getHtmlFieldsArray() {
     $html = array();
     foreach( $this->fields as $fieldName => $fieldParams ) {
-      $html[] = '<div class="'.MOD_FORM_CSS_PRE.'-wrap '.MOD_FORM_CSS_PRE.'-field-'.$fieldName.'">'.
+      $html[] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.'">'.
         $this->getHtmlField( $fieldName ).'</div>';
     }
     return $html;
@@ -436,14 +504,14 @@ class FormController implements Serializable {
     if( isset( $field['label'] ) ) {
       $html['label'] = '<label';
       $html['label'] .= isset( $field['id'] ) ? ' for="'.$field['id'].'"' : '';
-      $html['label'] .= ' class="'.MOD_FORM_CSS_PRE.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
+      $html['label'] .= ' class="'.self::CSS_PRE.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
       $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
       $html['label'] .= '>'.$field['label'].'</label>';
     }
 
     $attribs = '';
     $attribs .= isset( $field['id'] )    ? ' id="'.$field['id'].'"' : '';
-    $attribs .= ' class="'.MOD_FORM_CSS_PRE.'-field '.MOD_FORM_CSS_PRE.'-field-'.$field['name'].( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
+    $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$field['name'].( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
     $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
     $attribs .= isset( $field['title'] ) ? ' title="'.$field['title'].'"' : '';
     $attribs .= isset( $field['placeholder'] ) ? ' placeholder="'.$field['placeholder'].'"' : '';
@@ -545,7 +613,7 @@ class FormController implements Serializable {
    * @return string
    **/
   public function getHtmlClose() {
-    $html = '</form><!-- '.$this->name.' -->';
+    $html = '</form><!-- '.$this->getName().' -->';
     return $html;
   }
 
@@ -560,7 +628,7 @@ class FormController implements Serializable {
 
     $separador = '';
 
-    $html .= '<!-- Validate form '.$this->name.' -->'."\n";
+    $html .= '<!-- Validate form '.$this->getName().' -->'."\n";
     $html .= '<script>'."\n";
 
     $html .= '$().ready(function() {'."\n";
@@ -582,7 +650,7 @@ class FormController implements Serializable {
     $html .= '});'."\n";
     $html .= '</script>'."\n";
 
-    $html .= '<!-- Validate form '.$this->name.' - END -->'."\n";
+    $html .= '<!-- Validate form '.$this->getName().' - END -->'."\n";
 
     return $html;
   } // function getJqueryValidationJS
@@ -601,7 +669,7 @@ class FormController implements Serializable {
     }
 
     return $fieldsValuesArray;
-  }// fuction getValuesArray
+  } // fuction getValuesArray
 
 
   /**
@@ -725,8 +793,10 @@ class FormController implements Serializable {
       if( $this->getFieldType( $fieldName ) === 'file' && !$this->isEmptyFieldValue( $fieldName ) ) {
         error_log( 'FILE: Almacenando File Field: '.$fieldName );
         $fileStatus = $this->getFieldParam( $fieldName, 'fileStatus' );
-        error_log( print_r( $fileStatus, true ) );
         $fileFieldValue = $this->getFieldValue( $fieldName );
+
+        error_log( print_r( $fileStatus, true ) );
+
         // $fileStatus['tmpFile'] = 'name'=>'', 'originalName'=>'', 'absLocation'=>'', 'type'=>'', 'size'=>''
         $fileName = $this->secureFileName( $fileStatus['tmpFile']['originalName'] );
 
@@ -757,7 +827,7 @@ class FormController implements Serializable {
     }
 
     return $result;
-  }
+  } // function processFileFields
 
 
   /**
@@ -772,7 +842,7 @@ class FormController implements Serializable {
     $result = false;
     $error = false;
 
-    $tmpCgmlFormPath = MOD_FORM_FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getIntFrmId() );
+    $tmpCgmlFormPath = MOD_FORM_FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getTokenId() );
     if( !is_dir( $tmpCgmlFormPath ) ) {
       /**
       // TODO: CAMBIAR PERMISOS 0777
@@ -801,7 +871,7 @@ class FormController implements Serializable {
     error_log( 'tmpPhpFile2tmpFormFile ERROR: '.$error );
     error_log( 'tmpPhpFile2tmpFormFile RET: '.$result );
     return $result;
-  }
+  } // function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName )
 
 
   /**
@@ -865,6 +935,12 @@ class FormController implements Serializable {
    * @return boolean
    **/
   public function issetValidationObj() {
+
+    // Si no hay un validador definido, intentamos cargar los validadores predefinidos
+    if( $this->validationObj === null ) {
+      $this->setValidationObj( new FormValidators() );
+    }
+
     return( $this->validationObj !== null );
   }
 
@@ -959,7 +1035,7 @@ class FormController implements Serializable {
       $fieldValues = $this->getFieldValue( $fieldName );
 
       // Hay que tener cuidado con ciertos fieldValues con estructura de array pero que son un único elemento
-      if( !is_array( $fieldValues ) || ( $fieldType === 'file' && isset( $fieldValues[ 'name' ] ) ) ) {
+      if( !is_array( $fieldValues ) || ( $fieldType === 'file' && isset( $fieldValues['validate']['name'] ) ) ) {
         $fieldValues = array( $fieldValues );
       }
 
@@ -1102,75 +1178,6 @@ class FormController implements Serializable {
     return( isset( $this->fieldErrors[ $fieldName ] ) || sizeof( $this->formErrors[ $fieldName ] ) > 0 );
   }
 
-
-/**
-
-
-class FormController implements Serializable {
-  function __construct( $name = false, $action = false, $formPost = false ) {
-
-  private $action = false;
-  private $cgIntFrmId = false;
-  private $enctype = 'multipart/form-data';
-  private $fieldErrors = array();
-  private $fields = array();
-  private $formErrors = array();
-  private $id = false;
-  private $messages = array();
-  private $method = 'post';
-  private $name = false;
-  private $postValues = false;
-  private $replaceAcents = array(
-  private $rules = array();
-  private $success = false;
-  private $validationObj = null;
-
-  private function phpIni2Bytes( $size ) {
-  public function addFieldRuleError( $fieldName, $ruleName, $msgRuleError = false ) {
-  public function addFormError( $msgText, $msgClass = false ) {
-  public function evaluateRule( $ruleName, $value, $fieldName, $ruleParams ) {
-  public function existErrors() {
-  public function existFieldErrors( $fieldName ) {
-  public function getFieldParam( $fieldName, $paramName ) {
-  public function getFieldsNamesArray(){
-  public function getFieldType( $fieldName ) {
-  public function getFieldValue( $fieldName ) {
-  public function getHtmlClose() {
-  public function getHtmlField( $fieldName ) {
-  public function getHtmlFieldArray( $fieldName ) {
-  public function getHtmlFields() {
-  public function getHtmlFieldsArray() {
-  public function getHtmlForm() {
-  public function getHtmpOpen() {
-  public function getIntFrmId() {
-  public function getJqueryValidationJS() {
-  public function getJVErrors() {
-  public function getSuccess() {
-  public function getValuesArray(){
-  public function isEmptyFieldValue( $fieldName ) {
-  public function isRequiredField( $fieldName ) {
-  public function issetValidationObj() {
-  public function jsonFormError() {
-  public function jsonFormOk() {
-  public function loadFromSession( $cgIntFrmId ) {
-  public function loadPostValues( $formPost ) {
-  public function loadVOValues( $dataVO ) {
-  public function saveToSession() {
-  public function secureFileName( $fileName ) {
-  public function serialize() {
-  public function setField( $fieldName, $params = false ) {
-  public function setFieldParam( $fieldName, $paramName, $value ) {
-  public function setFieldValue( $fieldName, $fieldValue ){
-  public function setSuccess( $success ) {
-  public function setValidationMsg( $fieldName, $msg ) {
-  public function setValidationObj( $validationObj ) {
-  public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
-  public function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName ) {
-  public function unserialize( $dataSerialized ) {
-  public function validateField( $fieldName ) {
-  public function validateForm() {
-
-**/
 
 
 } // END FormController class

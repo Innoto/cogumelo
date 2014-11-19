@@ -74,12 +74,12 @@ class FormModTest extends View
     // Una vez que hemos definido todo, guardamos el form en sesion
     $form->saveToSession();
 
-    $this->template->assign("formOpen", $form->getHtmpOpen());
-    $this->template->assign("formFields", $form->getHtmlFieldsArray());
-    $this->template->assign("formClose", $form->getHtmlClose());
-    $this->template->assign("formValidations", $form->getJqueryValidationJS());
+    $this->template->assign( 'formOpen', $form->getHtmpOpen() );
+    $this->template->assign( 'formFields', $form->getHtmlFields() );
+    $this->template->assign( 'formClose', $form->getHtmlClose() );
+    $this->template->assign( 'formValidations', $form->getJqueryValidationJS() );
 
-    $this->template->setTpl('formModTest.tpl');
+    $this->template->setTpl( 'formModTest.tpl' );
     $this->template->exec();
 
   } // function loadForm()
@@ -95,6 +95,41 @@ class FormModTest extends View
     error_log( 'FormModTest: actionForm');
     error_log( '--------------------------------' );error_log( '--------------------------------' );
 
+    $form = new FormController();
+
+    if( $form->loadPostInput() ) {
+      $form->validateForm();
+    }
+    else {
+      $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
+    }
+
+    if( !$form->existErrors() ) {
+      if( !$form->processFileFields() ) {
+        $form->addFormError( 'Ha sucedido un problema con los ficheros adjuntos. Puede que sea necesario subirlos otra vez.', 'formError' );
+      }
+    }
+
+    if( !$form->existErrors() ) {
+      echo $form->jsonFormOk();
+    }
+    else {
+      $form->addFormError( 'NO SE HAN GUARDADO LOS DATOS.','formError' );
+      echo $form->jsonFormError();
+    }
+
+  }
+
+
+  /**
+  * Evalua el envio del formulario y reporta posibles errores
+  *
+  */
+  function actionFormEjemplo2() {
+    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( 'FormModTest: actionForm');
+    error_log( '--------------------------------' );error_log( '--------------------------------' );
+
     // Creamos un objeto FORM sin datos
     $form = new FormController();
 
@@ -103,14 +138,15 @@ class FormModTest extends View
       // Creamos un objeto con los validadores y lo asociamos
       $form->setValidationObj( new FormValidators() );
 
-      // $form->setValidationRule( 'input2', 'maxlength', '10' ); // CAMBIANDO AS REGLAS
+      $form->setValidationRule( 'input2', 'maxlength', '10' ); // CAMBIANDO AS REGLAS
+
       $form->validateForm();
 
       //$form->addFieldRuleError( 'check1', 'cogumelo', 'Un mensaxe de error de campo' );
       //$form->addFormError( 'Ola meu... ERROR porque SI ;-)' );
     }
     else {
-      $form->addFormError( 'El servidor no considera válidos los datos recividos.', 'formError' );
+      $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
     }
 
     if( !$form->existErrors() ) {

@@ -6,6 +6,11 @@ common::autoIncludes();
 form::autoIncludes();
 
 
+/**
+ * Gestión de ficheros en formularios. Subir o borrar ficheros en campos de formulario.
+ *
+ * @package Module Form
+ **/
 class FormFileUpload extends View
 {
 
@@ -109,52 +114,100 @@ class FormFileUpload extends View
         if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' ) {
           // Creamos un objeto con los validadores y lo asociamos
           $form->setValidationObj( new FormValidators() );
+
+          // Guardamos los datos previos del campo
+          $fileFieldValuePrev = $form->getFieldValue( $fieldName );
+
           $tmpFileFieldValue = array(
-            'name' => $fileName,
-            'originalName' => $fileName,
-            'absLocation' => $fileTmpLoc,
-            'type' => $fileType,
-            'size' => $fileSize
+            'validate' => array(
+              'name' => $fileName,
+              'originalName' => $fileName,
+              'absLocation' => $fileTmpLoc,
+              'type' => $fileType,
+              'size' => $fileSize
+            )
           );
 
           // Almacenamos los datos temporales en el formObj para validarlos
           $form->setFieldValue( $fieldName, $tmpFileFieldValue );
+
+          error_log( 'FU: Validando ficheiro subido...' );
+          error_log( print_r( $form->getFieldValue( $fieldName ), true ) );
 
           // Validar input del fichero
           $form->validateField( $fieldName );
 
           if( !$form->existErrors() ) {
             // El fichero ha superado las validaciones. Ajustamos sus valores finales y los almacenamos.
+            error_log( 'FU: Validado o ficheiro subido...' );
+
             $tmpCgmlFileLocation = $form->tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName );
             if( $tmpCgmlFileLocation === false ) {
+              error_log( 'FU: Validado pero NON movido.' );
+
               $form->addFieldRuleError( $fieldName, 'cogumelo', 'Fallo de move_uploaded_file movendo ('.$fileTmpLoc.')' );
             }
             else {
-              $tmpFileFieldValue[ 'absLocation' ] = $tmpCgmlFileLocation;
+              // El fichero subido ha pasado todos los controles. Vamos a registrarlo según proceda
+              error_log( 'FU: Validado e movido...' );
 
-              $fileFieldValue = $form->getFieldValue( $fieldName );
-              $fileStatus = $form->getFieldParam( $fieldName, 'fileStatus' );
+              if( isset( $fileFieldValuePrev['status'] ) && $fileFieldValuePrev['status'] !== false ) {
+                if( $fileFieldValuePrev['status'] === 'DELETE' ) {
+                  error_log( 'FU: Todo OK e estado REPLACE...' );
 
-              /*
-              if( $fileFieldValue === false ) {
-                // No existe fichero previo
-              */
-                $fileFieldValue = $tmpFileFieldValue;
-                $fileStatus[ 'tmpFile' ] = $tmpFileFieldValue;
-              /*
+                  $fileFieldValuePrev['status'] = 'REPLACE';
+                  $fileFieldValuePrev['temp'] = array(
+                    'name' => $fileName,
+                    'originalName' => $fileName,
+                    'absLocation' => $tmpCgmlFileLocation,
+                    'type' => $fileType,
+                    'size' => $fileSize
+                  );
+                }
+                else {
+                  error_log( 'FU: Validado pero status erroneo: ' . $fileFieldValuePrev['status'] );
+
+                  $form->addFieldRuleError( $fieldName, 'cogumelo', 'Intento de sobreescribir un fichero existente' );
+                }
               }
               else {
-                // Existe valor previo. Previsión de actualizar
+                error_log( 'FU: Todo OK e estado LOAD...' );
+
+                $fileFieldValuePrev = array(
+                  'status' => 'LOAD',
+                  'temp' => array(
+                    'name' => $fileName,
+                    'originalName' => $fileName,
+                    'absLocation' => $tmpCgmlFileLocation,
+                    'type' => $fileType,
+                    'size' => $fileSize
+                  )
+                );
               }
-              */
 
-              $form->setFieldValue( $fieldName, $fileFieldValue );
-              $form->setFieldParam( $fieldName, 'fileStatus', $fileStatus );
 
-              // Persistimos formObj para cuando se envíe el formulario completo
-              $form->saveToSession();
+              if( !$form->existErrors() ) {
+                error_log( 'FU: Todo OK con el ficheiro subido... Se persiste...' );
+
+                $form->setFieldValue( $fieldName, $fileFieldValuePrev );
+                // Persistimos formObj para cuando se envíe el formulario completo
+                $form->saveToSession();
+              }
+              else {
+                error_log( 'FU: Como ha fallado, eliminamos: ' . $tmpCgmlFileLocation );
+
+                unlink( $tmpCgmlFileLocation );
+              }
+
+
             } // else - if( !$tmpCgmlFileLocation )
           } // if( !$form->existErrors() )
+          else {
+            // El fichero NO ha superado las validaciones.
+            error_log( 'FU: NON Valida o ficheiro subido...' );
+            // Los errores ya estan cargados en FORM
+          }
+
         } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
         else {
           $form->addFieldRuleError( $fieldName, 'cogumelo', 'Los datos del fichero no han llegado bien al servidor. FORM' );
@@ -173,8 +226,8 @@ class FormFileUpload extends View
 
     // Notificamos el resultado al UI
     if( !$form->existErrors() ) {
-      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName, 'fileName' => $tmpFileFieldValue['name'],
-        'fileSize' => $tmpFileFieldValue['size'], 'fileType' => $tmpFileFieldValue['type'] );
+      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName, 'fileName' => $fileFieldValuePrev['temp']['name'],
+        'fileSize' => $fileFieldValuePrev['temp']['size'], 'fileType' => $fileFieldValuePrev['temp']['type'] );
       header('Content-Type: application/json; charset=utf-8');
       echo $form->jsonFormOk( $moreInfo );
     }
@@ -183,26 +236,104 @@ class FormFileUpload extends View
       header('Content-Type: application/json; charset=utf-8');
       echo $form->jsonFormError( $moreInfo );
     }
-    /*
-    if( !$form->existErrors() ) {
-      // OK: Los datos procesados son $tmpFileFieldValue
-      $respond = array( 'success' => 'success', 'fileName' => $tmpFileFieldValue['name'],
-        'fileSize' => $tmpFileFieldValue['size'], 'fileType' => $tmpFileFieldValue['type'] );
-    }
-    else {
-      $respond = array( 'success' => 'error', 'error' => 'fileUpload: ERROR: '.$error );
-    }
-    $respond['idForm'] = $_POST['idForm'];
-    $respond['fieldName'] = $_POST['fieldName'];
-
-    echo json_encode($respond);
-    error_log( print_r( json_encode($respond), true ) );
-    */
 
   } // function fileUpload() {
 
 
-  /**
+
+  function fileDelete() {
+    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( 'fileDelete FormFileUpload');
+    error_log( '--------------------------------' );error_log( '--------------------------------' );
+
+    $form = new FormController();
+    $error = false;
+
+    error_log( 'POST:' ); error_log( print_r( $_POST, true ) );
+
+    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'] ) ) {
+
+      $idForm     = $_POST['idForm'];
+      $cgIntFrmId = $_POST['cgIntFrmId'];
+      $fieldName  = $_POST['fieldName'];
+
+      // Recuperamos formObj y validamos el fichero temporal
+      if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' ) {
+
+        // Guardamos los datos previos del campo
+        $fileFieldValuePrev = $form->getFieldValue( $fieldName );
+
+
+        if( isset( $fileFieldValuePrev['status'] ) && $fileFieldValuePrev['status'] !== false ) {
+          switch( $fileFieldValuePrev['status'] ) {
+            case 'EXIST':
+              error_log( 'FDelete: EXIST - Marcamos para borrar: '.$fileFieldValuePrev['prev']['absLocation'] );
+
+              $fileFieldValuePrev['status'] = 'DELETE';
+              break;
+            case 'REPLACE':
+              error_log( 'FDelete: REPLACE - Borramos: '.$fileFieldValuePrev['temp']['absLocation'] );
+
+              $fileFieldValuePrev['status'] = 'DELETE';
+              unlink( $fileFieldValuePrev['temp']['absLocation'] );
+              $fileFieldValuePrev['temp'] = null;
+              break;
+            default:
+              error_log( 'FDelete: Intentando borrar con status erroneo: ' . $fileFieldValuePrev['status'] );
+
+              $form->addFieldRuleError( $fieldName, 'cogumelo', 'Intento de sobreescribir un fichero existente' );
+              break;
+          }
+
+        }
+        else {
+          error_log( 'FDelete: Intentando eliminar un fichero sin estado.' );
+
+          $form->addFieldRuleError( $fieldName, 'cogumelo', 'Intento de borrar un fichero inexistente' );
+        }
+
+
+        if( !$form->existErrors() ) {
+          error_log( 'FDelete: OK. Guardando el nuevo estado... Se persiste...' . $fileFieldValuePrev['status'] );
+
+          $form->setFieldValue( $fieldName, $fileFieldValuePrev );
+          // Persistimos formObj para cuando se envíe el formulario completo
+          $form->saveToSession();
+        }
+        else {
+          error_log( 'FDelete: El borrado ha fallado. Se mantiene el estado.' );
+        }
+
+      } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
+      else {
+        $form->addFieldRuleError( $fieldName, 'cogumelo', 'Los datos del fichero no han llegado bien al servidor. FORM' );
+      }
+
+    } // if( isset( ... ) )
+    else { // no parece haber fichero
+      $form->addFieldRuleError( $fieldName, 'cogumelo', 'No han llegado los datos o lo ha hecho con errores. ISSET' );
+    }
+
+
+    // Notificamos el resultado al UI
+    if( !$form->existErrors() ) {
+      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName );
+      header('Content-Type: application/json; charset=utf-8');
+      echo $form->jsonFormOk( $moreInfo );
+    }
+    else {
+      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName );
+      header('Content-Type: application/json; charset=utf-8');
+      echo $form->jsonFormError( $moreInfo );
+    }
+
+  } // function fileDelete() {
+
+
+
+
+
+/**
 
   pasos
 
@@ -242,7 +373,7 @@ class FormFileUpload extends View
   Options -ExecCGI
 
 
-  **/
+**/
 
 
 
