@@ -232,14 +232,17 @@ Class DependencesController {
         else if( $includeElement['installer'] == 'composer' ) {
           $include_folder = $includeElement['params'][0];
         }
+        else if( $includeElement['installer'] == 'manual' ) {
+          $include_folder = $includeElement['params'][0];
+        }
 
         if( sizeof( $includeElement['includes'] ) > 0 ) {
           foreach( $includeElement['includes'] as $includeFile ) {
 
             switch ($this->typeIncludeFile( $includeFile )) {
               case 'serverScript':
-                Cogumelo::debug( 'Including vendor:'.SITE_PATH.'../httpdocs/vendorServer/'.$include_folder.'/'.$includeFile );
-                require_once( SITE_PATH.'../httpdocs/vendorServer/'.$include_folder.'/'.$includeFile );
+                //Cogumelo::debug( 'Including vendor:'.SITE_PATH.'../httpdocs/vendorServer/'.$include_folder.'/'.$includeFile );
+                require_once( DEPEN_COMPOSER_PATH.'/'.$include_folder.'/'.$includeFile );
                 break;
               case 'clientScript':
                 $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor' );
