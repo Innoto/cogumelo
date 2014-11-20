@@ -39,6 +39,14 @@ Class Template extends Smarty
     if($module == 'vendor') {
       $base_path = MEDIASERVER_HOST.'vendor/';
     }
+    else
+    if($module == 'vendor/bower') {
+      $base_path = MEDIASERVER_HOST.'vendor/bower';
+    }
+    else
+    if($module == 'vendor/manual') {
+      $base_path = MEDIASERVER_HOST.'vendor/manual';
+    }
     else {
       $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/module/'.$module.'/';
     }
@@ -66,6 +74,14 @@ Class Template extends Smarty
     else
     if($module == 'vendor') {
       $base_path = MEDIASERVER_HOST.'vendor/';
+    }
+    else
+    if($module == 'vendor/bower') {
+      $base_path = MEDIASERVER_HOST.'vendor/bower';
+    }
+    else
+    if($module == 'vendor/manual') {
+      $base_path = MEDIASERVER_HOST.'vendor/manual';
     }
     else {
       $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/module/'.$module.'/';
