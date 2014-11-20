@@ -118,8 +118,17 @@ Class Template extends Smarty
         }
       }
 
-      $this->assign('css_includes', $this->css_autoincludes. $this->css_includes );
-      $this->assign('js_includes', $this->lessClientCompiler() . $this->js_autoincludes . $this->js_includes );
+      // conf Variables
+      $lessConfInclude = '';
+      $jsConfInclude = '<script type="text/javascript" src="'.MEDIASERVER_HOST.MOD_MEDIASERVER_URL_DIR.'/jsConfConstants.js'.'"></script>'."\n";
+
+      if( MEDIASERVER_COMPILE_LESS == false ){
+        $lessConfInclude = '<link rel="stylesheet/less" type="text/css" href="'.MEDIASERVER_HOST.MOD_MEDIASERVER_URL_DIR.'/lessConfConstants.less'.'">'."\n";
+      }
+
+      // assign
+      $this->assign('css_includes', $lessConfInclude.$this->css_autoincludes. $this->css_includes );
+      $this->assign('js_includes', $jsConfInclude.$this->lessClientCompiler() . $this->js_autoincludes . $this->js_includes );
 
       if( file_exists($this->tpl) ) {
         $this->display($this->tpl);
