@@ -18,9 +18,7 @@
 
     {$formOpen}
 
-      {foreach from=$formFields key=key item=field}
-        {$field}
-      {/foreach}
+      {$formFields}
 
       <div id="subidas" style="background-color:#EEE;">
       <div id="list">Info: </div>

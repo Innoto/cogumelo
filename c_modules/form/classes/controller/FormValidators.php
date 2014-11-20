@@ -4,6 +4,11 @@
 form::load('controller/FormValidatorsExtender.php');
 
 
+/**
+ * Evaluadores de las reglas de validación de campos de formulario.
+ *
+ * @package Module Form
+ **/
 class FormValidators extends FormValidatorsExtender {
 
   private $methods = array();
@@ -196,12 +201,12 @@ class FormValidators extends FormValidatorsExtender {
 
 
   private function val_maxfilesize( $value, $param ) {
-    return( $value[ 'size' ] <= $param );
+    return( $value['validate'][ 'size' ] <= $param );
   }
 
 
   private function val_minfilesize( $value, $param ) {
-    return( $value[ 'size' ] >= $param );
+    return( $value['validate'][ 'size' ] >= $param );
   }
 
 
@@ -214,7 +219,7 @@ class FormValidators extends FormValidatorsExtender {
     }
 
     // TODO: Cambiar in_array por regex
-    return in_array( $value[ 'type' ], $param );
+    return in_array( $value['validate'][ 'type' ], $param );
   }
 
 
@@ -227,17 +232,14 @@ class FormValidators extends FormValidatorsExtender {
     }
 
     $tmpExt = '';
-    $tmpExtPos = strrpos( $value[ 'name' ], '.' );
+    $tmpExtPos = strrpos( $value['validate'][ 'name' ], '.' );
     if( $tmpExtPos > 0 ) { // Not FALSE or 0
-      $tmpExt = substr( $value[ 'name' ], 1+$tmpExtPos );
+      $tmpExt = substr( $value['validate'][ 'name' ], 1+$tmpExtPos );
     }
 
     // TODO: Cambiar in_array por regex
     return in_array( $tmpExt, $param );
   }
-
-
-
 
 
 

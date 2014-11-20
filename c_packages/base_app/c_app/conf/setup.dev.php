@@ -121,9 +121,9 @@ define( 'MEDIASERVER_COMPILE_LESS', false );
 global $C_ENABLED_MODULES;
 global $C_INDEX_MODULES;
 
-$C_ENABLED_MODULES = array( 'mediaserver', 'i18nGetLang', 'common', 'devel', 'filedata', 'form', 'table', 'user' );
+$C_ENABLED_MODULES = array( 'mediaserver', 'i18nGetLang', 'common', 'devel', 'admin', 'filedata', 'form', 'table', 'user' );
 // before c_app/Cogumelo.php execution
-$C_INDEX_MODULES  = array( 'mediaserver', 'i18nGetLang', 'user', 'form', 'devel' ); // DEVEL SIEMPRE DE ULTIMO!!!
+$C_INDEX_MODULES  = array( 'mediaserver', 'i18nGetLang', 'user', 'form', 'admin', 'devel' ); // DEVEL SIEMPRE DE ULTIMO!!!
 
 
 //
@@ -171,3 +171,11 @@ define( 'MOD_FORM_FILES_APP_PATH', APP_BASE_PATH.'/../formFiles' );
 //define( 'FORM_FILES_APP_PATH', WEB_BASE_PATH.'/formFiles' );
 
 
+//
+// Dependences PATH
+//
+define( 'DEPEN_COMPOSER_PATH', WEB_BASE_PATH.'/vendor/composer' );
+define( 'DEPEN_BOWER_PATH', WEB_BASE_PATH.'/vendor/bower' );
+define( 'DEPEN_MANUAL_PATH', WEB_BASE_PATH.'/vendor/manual' );
+
+define( 'DEPEN_MANUAL_REPOSITORY', COGUMELO_LOCATION.'/c_packages/vendorPackages' );

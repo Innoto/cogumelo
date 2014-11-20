@@ -16,7 +16,6 @@ class CogumeloClass extends Singleton
   protected $userinfoString = '';
 
 
-
   public $dependences = array();
   public $includesCommon = array();
 

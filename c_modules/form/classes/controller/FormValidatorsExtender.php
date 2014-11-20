@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * Ampliación de los evaluadores de las reglas de validación de campos de formulario.
+ *
+ * @package Module Form
+ **/
 class FormValidatorsExtender {
 
 /*
