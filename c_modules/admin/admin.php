@@ -13,7 +13,7 @@ class admin extends Module
      "id" => "bootstrap",
      "params" => array("bootstrap"),
      "installer" => "bower",
-     "includes" => array("dist/bootstrap.min.css", "dist/bootstrap.min.js")
+     "includes" => array("dist/css/bootstrap.min.css", "dist/js/bootstrap.min.js")
     ),
     array(
      "id" => "font-awesome",
@@ -25,7 +25,7 @@ class admin extends Module
      "id" =>"metismenu",
      "params" => array("metisMenu"),
      "installer" => "bower",
-     "includes" => array("src/metisMenu.min.css", "src/metisMenu.min.js")
+     "includes" => array("dist/metisMenu.min.css", "dist/metisMenu.min.js")
     ),
     array(
      "id" =>"html5shiv",

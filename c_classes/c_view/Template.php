@@ -165,7 +165,7 @@ Class Template extends Smarty
     if( !MEDIASERVER_COMPILE_LESS ){
       $ret =  "\n".'<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
               'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
-              '<script type="text/javascript" src="/vendor/bower/less/dist/less-1.7.5.min.js"></script>';
+              '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>';
     }
 
     return $ret;
