@@ -2,6 +2,7 @@
 Cogumelo::load('c_view/View.php');
 
 common::autoIncludes();
+admin::autoIncludes();
 //form::autoIncludes();
 //user::autoIncludes();
 
@@ -22,7 +23,8 @@ class MasterView extends View
   }
 
   function main(){
-    echo "hola";
+    $this->template->setTpl('loginForm.tpl', 'admin');
+    $this->template->exec();
   }
 }
 

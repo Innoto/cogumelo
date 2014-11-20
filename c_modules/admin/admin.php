@@ -25,19 +25,19 @@ class admin extends Module
      "id" =>"metismenu",
      "params" => array("metisMenu"),
      "installer" => "bower",
-     "includes" => array("metisMenu.min.css", "metisMenu.min.js")
+     "includes" => array("src/metisMenu.min.css", "src/metisMenu.min.js")
     ),
     array(
      "id" =>"html5shiv",
      "params" => array("html5shiv --save-dev"),
      "installer" => "bower",
-     "includes" => array("html5shiv.js")
+     "includes" => array("dist/html5shiv.js")
     ),
     array(
      "id" =>"respond",
      "params" => array("Respond-master"),
      "installer" => "manual",
-     "includes" => array("respond.js")
+     "includes" => array("src/respond.js")
     ),
     array(
      "id" =>"morris",

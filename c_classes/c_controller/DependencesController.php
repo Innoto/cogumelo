@@ -227,12 +227,15 @@ Class DependencesController {
         $include_folder = '';
 
         if( $includeElement['installer'] == 'bower' ) {
+          $installer = 'bower';
           $include_folder = $includeElement['id'];
         }
         else if( $includeElement['installer'] == 'composer' ) {
+          $installer = 'composer';
           $include_folder = $includeElement['params'][0];
         }
         else if( $includeElement['installer'] == 'manual' ) {
+          $installer = 'manual';
           $include_folder = $includeElement['params'][0];
         }
 
@@ -245,11 +248,12 @@ Class DependencesController {
                 require_once( DEPEN_COMPOSER_PATH.'/'.$include_folder.'/'.$includeFile );
                 break;
               case 'clientScript':
-                $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor' );
+
+                $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor/'.$installer );
 
                 break;
               case 'styles':
-                $this->addIncludeCSS( $include_folder.'/'.$includeFile, 'vendor' );
+                $this->addIncludeCSS( $include_folder.'/'.$includeFile, 'vendor/'.$installer );
                 break;
             }
 
