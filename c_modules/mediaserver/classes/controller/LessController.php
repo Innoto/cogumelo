@@ -23,6 +23,11 @@ class LessController {
     // set includes dir
     $this->less->setImportDir( $lessTmpDir );
 
+    // set less variables (Defined in setup)
+    global $MEDIASERVER_LESS_VARIABLES;
+
+    $this->less->setVariables( $MEDIASERVER_LESS_VARIABLES ) ;
+
     try {
       $this->less->checkedCompile( $lessTmpDir.$moduleName.'/classes/view/templates/'.$lessFilePath, $resultFilePath );
     } catch (Exception $ex) {
