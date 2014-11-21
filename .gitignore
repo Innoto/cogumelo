@@ -1,8 +1,8 @@
 /phpdoc/
-/c_packages/base_app/c_app/tmp/templates_c/*.tpl.php
-/c_packages/base_app/c_app/log/*.log
-/c_packages/base_app/bower.json
-/c_packages/base_app/composer.json
-/c_packages/base_app/httpdocs/vendor/
-/c_packages/base_app/httpdocs/vendorServer/
+/c_packages/sampleApp/app/tmp/templates_c/*.tpl.php
+/c_packages/sampleApp/app/log/*.log
+/c_packages/sampleApp/bower.json
+/c_packages/sampleApp/composer.json
+/c_packages/sampleApp/httpdocs/vendor/
+/c_packages/sampleApp/httpdocs/vendorServer/
 *.log
