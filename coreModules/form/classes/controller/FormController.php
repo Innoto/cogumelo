@@ -7,13 +7,15 @@ error_reporting( -1 );
  * Gestión de formularios. Campos, Validaciones, Html, Ficheros, ...
  *
  * @package Module Form
- **/
+ */
 class FormController implements Serializable {
 
-  /**
-   * Prefijo para marcar las clases CSS creadas por automaticamente
-   **/
+  /** Prefijo para marcar las clases CSS creadas automaticamente */
   const CSS_PRE = MOD_FORM_CSS_PRE;
+  /** Ruta a partir de la que se crean los directorios y ficheros subidos */
+  const FILES_APP_PATH = MOD_FORM_FILES_APP_PATH;
+  /** Ruta a partir de la que se crean los directorios y ficheros temporales subidos */
+  const FILES_TMP_PATH = MOD_FORM_FILES_TMP_PATH;
 
   private $name = false;
   private $id = false;
@@ -468,8 +470,9 @@ class FormController implements Serializable {
   public function getHtmlFieldsArray() {
     $html = array();
     foreach( $this->fields as $fieldName => $fieldParams ) {
-      $html[] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.'">'.
-        $this->getHtmlField( $fieldName ).'</div>';
+      $html[] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.
+        ( $fieldParams['type'] === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
+        '">'.$this->getHtmlField( $fieldName ).'</div>';
     }
     return $html;
   }
@@ -538,6 +541,14 @@ class FormController implements Serializable {
       $html['label'] .= ' class="'.self::CSS_PRE.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
       $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
       $html['label'] .= '>'.$field['label'].'</label>';
+    }
+
+
+    if( !isset( $field['class'] ) ) {
+      $field['class'] = '';
+    }
+    if( $field['type'] === 'file' ) {
+      $field['class'] .= ' '.self::CSS_PRE.'-fileField';
     }
 
     $attribs = '';
@@ -853,7 +864,7 @@ class FormController implements Serializable {
 
               $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
               $destDir = $this->getFieldParam( $fieldName, 'destDir' );
-              $fullDestPath = MOD_FORM_FILES_APP_PATH . $destDir;
+              $fullDestPath = self::FILES_APP_PATH . $destDir;
               if( !is_dir( $fullDestPath ) ) {
                 // TODO: CAMBIAR PERMISOS 0777
                 if( !mkdir( $fullDestPath, 0777, true ) ) {
@@ -912,7 +923,7 @@ class FormController implements Serializable {
     $result = false;
     $error = false;
 
-    $tmpCgmlFormPath = MOD_FORM_FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getTokenId() );
+    $tmpCgmlFormPath = self::FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getTokenId() );
     if( !is_dir( $tmpCgmlFormPath ) ) {
       /**
       // TODO: CAMBIAR PERMISOS 0777

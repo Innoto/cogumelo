@@ -138,7 +138,7 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
 
 
 /**
-*** FICHEROS JQuery ***
+*** FICHEROS ***
 **/
 
 function bindFormInputFiles( idForm ) {
@@ -151,7 +151,7 @@ function bindFormInputFiles( idForm ) {
   }
 
   $( '#' + idForm + ' input:file' ).on( 'change', processInputFieldFile );
-}
+} // function bindFormInputFiles( idForm )
 
 
 function processInputFieldFile( evnt ) {
@@ -168,7 +168,7 @@ function processInputFieldFile( evnt ) {
       uploadFile( file, evnt.target.form.id, evnt.target.name, cgIntFrmId );
     }
   }
-}
+} // function processInputFieldFile( evnt )
 
 
 
@@ -187,6 +187,7 @@ function checkInputFieldFile( files, idForm, fieldName ) {
 
   return valRes;
 } // function procesarFiles
+
 
 
 function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
@@ -239,17 +240,25 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       console.log( $validateForm );
       if( $jsonData.result === 'ok' ) {
 
-        $fileFieldCont = $(' #' + $jsonData.moreInfo.idForm + ' .cgmMForm-field-' + $jsonData.moreInfo.fieldName );
-        $fileField = $(' #' + $jsonData.moreInfo.idForm + ' input[name=' + $jsonData.moreInfo.fieldName + ']' );
+        $fileFieldWrap = $( '#' + $jsonData.moreInfo.idForm + ' .cgmMForm-field-' + $jsonData.moreInfo.fieldName );
+        $fileField = $( '#' + $jsonData.moreInfo.idForm + ' input[name=' + $jsonData.moreInfo.fieldName + ']' );
         fileObj = $fileField['0'].files['0'];
         // console.log( 'fileField: ', $fileField );
 
-        $fileFieldCont.css( 'color', 'green' );
+        $fileFieldWrap.css( 'color', 'green' );
         $fileField.replaceWith( '<span class="fileUploadOK">"' + $jsonData.moreInfo.fileName + '" uploaded OK</span>' );
+
+        $fileFieldWrap.append(
+          $( '<spam>' )
+            .attr( 'fieldName', $jsonData.moreInfo.fieldName )
+            .addClass( 'formFileDelete' )
+            .text( ' * BORRAR * ' )
+            .on("click", deleteFormFileEvent )
+        );
 
         // Only process image files.
         if( fileObj.type.match('image.*') && fileObj.size < 5000000 ) {
-          loadImageTh( fileObj, $fileFieldCont );
+          loadImageTh( fileObj, $fileFieldWrap );
         }
       }
       else {
@@ -280,21 +289,6 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
         // if( $jsonData.formError !== '' ) $validateForm.showErrors( {"submit": $jsonData.formError} );
       }
 
-
-
-      /*
-      if( $jsonData.success!='error' ) {
-        // Cambios en el input procesado para indicar OK y otras opciones
-        $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'green' );
-        $(' #' + $jsonData[ 'idForm' ] + ' input[name=' + $jsonData[ 'fieldName' ] + ']' ).replaceWith(
-          '<span class="fileUploadOK">"' + $jsonData[ 'fileName' ] + '" uploaded OK</span>'
-        );
-      }
-      else {
-        // Cambios en el input procesado para indicar OK y otras opciones
-        $(' #' + $jsonData[ 'idForm' ] + ' .ffn-' + $jsonData[ 'fieldName' ] ).css( 'color', 'red' );
-      }
-      */
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
       console.log( 'errorHandler', $jqXHR, $textStatus, $errorThrown );
@@ -302,30 +296,96 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
     }
   });
 
+} // function uploadFile( file, idForm, fieldName, cgIntFrmId )
 
-  function loadImageTh( fileObj, $container ) {
-    var imageReader = new FileReader();
 
-    // Closure to capture the file information.
-    imageReader.onload = (
-      function cargado( fileLoaded ) {
-        // console.log( 'cargado', fileLoaded );
-        return(
-          function procesando( evnt ) {
-            // console.log( 'procesando', evnt );
-            $container.append('<div class="imageTh"><img class="imageTh" border="1" ' +
-              ' style="max-width:50px; max-height:50px;" src="' + evnt.target.result + '"/>');
-          }
-        );
-      }
-    )( fileObj );
 
-    // Read in the image file as a data URL.
-    imageReader.readAsDataURL( fileObj );
+function loadImageTh( fileObj, $container ) {
+  var imageReader = new FileReader();
+
+  // Closure to capture the file information.
+  imageReader.onload = (
+    function cargado( fileLoaded ) {
+      // console.log( 'cargado', fileLoaded );
+      return(
+        function procesando( evnt ) {
+          // console.log( 'procesando', evnt );
+          $container.append('<div class="imageTh"><img class="imageTh" border="1" ' +
+            ' style="max-width:50px; max-height:50px;" src="' + evnt.target.result + '"/>');
+        }
+      );
+    }
+  )( fileObj );
+
+  // Read in the image file as a data URL.
+  imageReader.readAsDataURL( fileObj );
+} // function loadImageTh( fileObj, $container )
+
+
+
+function deleteFormFileEvent( evnt ) {
+  console.log( 'deleteFormFileEvent' );
+  console.log( evnt );
+  //console.log( evnt.target.attr( 'fieldName' ) );
+
+  /*
+  var files = evnt.target.files; // FileList object
+
+  var valid = checkInputFieldFile( files, evnt.target.form.id, evnt.target.name );
+
+  if( valid ) {
+    var cgIntFrmId = $( '#' + evnt.target.form.id ).attr('sg');
+    for (var i = 0, file; file = files[i]; i++) {
+      uploadFile( file, evnt.target.form.id, evnt.target.name, cgIntFrmId );
+    }
   }
+  */
+
+} // function deleteFormFileEvent( evnt )
 
 
-}
+
+function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
+  console.log( 'deleteFile: ', file );
+
+  var formData = new FormData();
+  formData.append( 'execute', 'delete');
+  formData.append( 'idForm', idForm);
+  formData.append( 'fieldName', fieldName);
+  formData.append( 'cgIntFrmId', cgIntFrmId);
+
+  $.ajax( {
+    url: '/cgml-form-file-upload', type: 'POST',
+    data: formData, cache: false
+  } )
+  .done( function ( response ) {
+    console.log( 'Executando deleteFormFile.done...' );
+    console.log( response );
+    if( response.result === 'ok' ) {
+      var successActions = response.success;
+      console.log( successActions )
+
+      alert( 'Fichero borrado OK' );
+    }
+    else {
+      console.log( 'deleteFormFile.done...ERROR' );
+      for(var i in response.jvErrors) {
+        errObj = response.jvErrors[i];
+        console.log( errObj );
+
+        if( errObj[ 'fieldName' ] !== false ) {
 
 
+
+        }
+        else {
+          console.log( errObj[ 'JVshowErrors' ] );
+          showErrorsValidateForm( $( form ), errObj[ 'JVshowErrors' ][ 'msgText'], errObj[ 'JVshowErrors' ][ 'msgClass' ] );
+          console.log( 'Msg cargado...' );
+        }
+
+      } // for
+    }
+  } );
+} // function deleteFormFile( idForm, fieldName, cgIntFrmId )
 

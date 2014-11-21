@@ -29,8 +29,18 @@ class FormFileUpload extends View
 
 
   function fileUpload() {
+    if( isset( $_POST['execute'] ) && $_POST['execute'] === 'delete' ) {
+      $this->deleteFormFile();
+    }
+    else {
+      $this->uploadFormFile();
+    }
+  }
+
+
+  function uploadFormFile() {
     error_log( '--------------------------------' );error_log( '--------------------------------' );
-    error_log( 'fileUpload FormFileUpload');
+    error_log( ' FormFileUpload - uploadFormFile');
     error_log( '--------------------------------' );error_log( '--------------------------------' );
 
     $form = new FormController();
@@ -238,13 +248,13 @@ class FormFileUpload extends View
       echo $form->jsonFormError( $moreInfo );
     }
 
-  } // function fileUpload() {
+  } // function uploadFormFile() {
 
 
 
-  function fileDelete() {
+  function deleteFormFile() {
     error_log( '--------------------------------' );error_log( '--------------------------------' );
-    error_log( 'fileDelete FormFileUpload');
+    error_log( ' FormFileUpload - deleteFormFile');
     error_log( '--------------------------------' );error_log( '--------------------------------' );
 
     $form = new FormController();
@@ -328,7 +338,7 @@ class FormFileUpload extends View
       echo $form->jsonFormError( $moreInfo );
     }
 
-  } // function fileDelete() {
+  } // function deleteFormFile() {
 
 
 
