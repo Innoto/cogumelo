@@ -64,6 +64,7 @@ require_once( APP_BASE_PATH.'/conf/memcached.setup.php' );  //memcached options
 //
 
 // TODO: Cuidado porque no se admite un puerto
+define( 'COGUMELO_ADMINSCRIPT_URL', 'http://cogumeloapp/cogumelo-server.php');
 define( 'SITE_PROTOCOL', isset( $_SERVER['HTTPS'] ) ? 'https' : 'http' );
 define( 'SITE_HOST', SITE_PROTOCOL.'://'.$_SERVER['HTTP_HOST']);  // solo HOST sin ('/')
 define( 'SITE_FOLDER', '/' );  // SITE_FOLDER STARTS AND ENDS WITH SLASH ('/')

@@ -95,13 +95,13 @@
         break;
 
         case 'generateTranslations':
-          require_once(COGUMELO_LOCATION."/c_packages/sampleApp/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
+          require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
           generateTranslations();
           echo "The files.po are ready to be edited!\n";
         break;
 
         case 'compileTranslations':
-          require_once(COGUMELO_LOCATION."/c_packages/sampleApp/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
+          require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
           compileTranslations();
           echo "The files.mo are ready to be used!\n";
         break;
@@ -259,7 +259,7 @@
     */
   function generateTranslations(){
     // Prepare the enviroment to localize the project
-    $textdomain="c_cogumelo";
+    $textdomain="cogumelo";
 
     $locale= 'es_ES';
 
@@ -290,13 +290,13 @@
     if (is_dir($dir_path)){
       $handle = opendir($dir_path);
       while ($file = readdir($handle)) {
-        if ($file=='c_cogumelo_php.po'){
+        if ($file=='cogumelo_php.po'){
           $existPHP = true;
         }
-        if ($file=='c_cogumelo_tpl.po'){
+        if ($file=='cogumelo_tpl.po'){
           $existTPL = true;
         }
-        if ($file=='c_cogumelo_js.po'){
+        if ($file=='cogumelo_js.po'){
           $existJS = true;
         }
         if ($existPHP && $existTPL && $existJS)
@@ -439,7 +439,7 @@
   */
   function compileTranslations(){
     $dir_path = SITE_PATH.'conf/i18n/';
-    $textdomain="c_cogumelo";
+    $textdomain="cogumelo";
 
   }
 
