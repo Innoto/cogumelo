@@ -40,7 +40,7 @@ define( 'APP_TMP_PATH', APP_BASE_PATH.'/tmp' );
 //
 
 define( 'COGUMELO_LOCATION', '/home/proxectos/cogumelo' );
-
+define( 'COGUMELO_DIST_LOCATION', false );
 
 //
 //  DB
@@ -122,7 +122,6 @@ global $C_ENABLED_MODULES;
 global $C_INDEX_MODULES;
 
 $C_ENABLED_MODULES = array( 'mediaserver', 'i18nGetLang', 'common', 'devel', 'admin', 'filedata', 'form', 'table', 'user' );
-// before c_app/Cogumelo.php execution
 $C_INDEX_MODULES  = array( 'mediaserver', 'i18nGetLang', 'user', 'form', 'admin', 'devel' ); // DEVEL SIEMPRE DE ULTIMO!!!
 
 
