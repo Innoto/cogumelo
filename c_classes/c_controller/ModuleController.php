@@ -90,29 +90,37 @@ class ModuleController
 
 
   static function getRealFilePath($file_relative_path, $module = false) {
+    $retPath = false;
+
     if(!$module) {
-      return  SITE_PATH.$file_relative_path;
+      $retPath = SITE_PATH.$file_relative_path;
     }
     else {
       global $C_ENABLED_MODULES;
       if(in_array($module, $C_ENABLED_MODULES)) {
-        if( file_exists(SITE_PATH.'/modules/'.$module.'/'.$file_relative_path) ) { //check if exist on app module
-          return SITE_PATH.'/modules/'.$module.'/'.$file_relative_path;
+
+        // APP modules
+        if( file_exists(SITE_PATH.'/modules/'.$module.'/'.$file_relative_path) ) { 
+          $retPath = SITE_PATH.'/modules/'.$module.'/'.$file_relative_path;
+        }
+        // DIST modules
+        else if( COGUMELO_DIST_LOCATION != false && file_exists( COGUMELO_LOCATION.'/distModules/'.$module.'/'.$file_relative_path ) ) {
+          $retPath = COGUMELO_LOCATION.'/distModules/'.$module.'/'.$file_relative_path;
+        }        
+        // CORE modules
+        else if( file_exists( COGUMELO_LOCATION.'/c_modules/'.$module.'/'.$file_relative_path ) ) {
+          $retPath = COGUMELO_LOCATION.'/c_modules/'.$module.'/'.$file_relative_path;
         }
         else {
-          if( file_exists( COGUMELO_LOCATION.'/c_modules/'.$module.'/'.$file_relative_path ) ) { //check if exist on core module
-            return  COGUMELO_LOCATION.'/c_modules/'.$module.'/'.$file_relative_path;
-          }
-          else {
-            Cogumelo::error("ModuleController: '".$file_relative_path."'' not found into module '".$module."' ");
-          }
+          Cogumelo::error("ModuleController: '".$file_relative_path."'' not found into module '".$module."' ");
         }
+
       }
       else {
         Cogumelo::error('ModuleController: Module named as "'.$module.'" is not enabled. Add it to $C_ENABLED_MODULES setup.php array' );
       }
     }
-    return false;
+    return $retPath;
   }
 
 

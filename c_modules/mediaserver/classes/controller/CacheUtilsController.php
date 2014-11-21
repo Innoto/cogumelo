@@ -72,6 +72,15 @@ class CacheUtilsController {
           $destino 
         );
 
+        // DIST modules
+        if( COGUMELO_DIST_LOCATION != false ) {
+          self::copyLessTmpdir( 
+            COGUMELO_LOCATION.'/c_modules/',
+            $moduleName.'/'.$cacheableFolder, 
+            $destino 
+          );
+        }
+
         // app modules
         self::copyLessTmpdir( 
           SITE_PATH.'/modules/',
