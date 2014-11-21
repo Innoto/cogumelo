@@ -13,7 +13,7 @@ class admin extends Module
      "id" => "bootstrap",
      "params" => array("bootstrap"),
      "installer" => "bower",
-     "includes" => array("dist/bootstrap.min.css", "dist/bootstrap.min.js")
+     "includes" => array("dist/css/bootstrap.min.css", "dist/js/bootstrap.min.js")
     ),
     array(
      "id" => "font-awesome",
@@ -25,19 +25,19 @@ class admin extends Module
      "id" =>"metismenu",
      "params" => array("metisMenu"),
      "installer" => "bower",
-     "includes" => array("metisMenu.min.css", "metisMenu.min.js")
+     "includes" => array("dist/metisMenu.min.css", "dist/metisMenu.min.js")
     ),
     array(
      "id" =>"html5shiv",
      "params" => array("html5shiv --save-dev"),
      "installer" => "bower",
-     "includes" => array("html5shiv.js")
+     "includes" => array("dist/html5shiv.js")
     ),
     array(
      "id" =>"respond",
-     "params" => array("Respond-master"),
-     "installer" => "manual",
-     "includes" => array("respond.js")
+     "params" => array("respond"),
+     "installer" => "bower",
+     "includes" => array("src/respond.js")
     ),
     array(
      "id" =>"morris",
@@ -49,7 +49,8 @@ class admin extends Module
   );
 
   public $includesCommon = array(
-
+    'styles/adminBase.less',
+    'styles/admin.less'
   );
 
   function __construct() {

@@ -40,7 +40,7 @@ define( 'APP_TMP_PATH', APP_BASE_PATH.'/tmp' );
 //
 
 define( 'COGUMELO_LOCATION', '/home/proxectos/cogumelo' );
-
+define( 'COGUMELO_DIST_LOCATION', false );
 
 //
 //  DB
@@ -103,7 +103,7 @@ define( 'SMARTY_CACHE', APP_TMP_PATH.'/cache' );
 global $MEDIASERVER_LESS_CONSTANTS;
 global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
 
-$MEDIASERVER_LESS_CONSTANTS = array('variable1' =>1,  'variable2'=>'red', 'variable3'=>'blue;' );
+$MEDIASERVER_LESS_CONSTANTS = array('variable1' =>1,  'variable2'=>'red', 'variable3'=>'blue' );
 $MEDIASERVER_JAVASCRIPT_CONSTANTS = array('variable1' =>5,  'variable2'=>'red', 'variable3'=>'blue;' );
 define( 'MEDIASERVER_REFRESH_CACHE', true ); // false for best performance in final server
 define( 'MEDIASERVER_HOST', '/' );
@@ -122,7 +122,6 @@ global $C_ENABLED_MODULES;
 global $C_INDEX_MODULES;
 
 $C_ENABLED_MODULES = array( 'mediaserver', 'i18nGetLang', 'common', 'devel', 'admin', 'filedata', 'form', 'table', 'user' );
-// before c_app/Cogumelo.php execution
 $C_INDEX_MODULES  = array( 'mediaserver', 'i18nGetLang', 'user', 'form', 'admin', 'devel' ); // DEVEL SIEMPRE DE ULTIMO!!!
 
 

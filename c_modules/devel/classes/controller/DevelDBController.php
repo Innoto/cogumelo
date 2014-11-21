@@ -57,16 +57,21 @@ class  DevelDBController extends DataController
     return $returnStrArray;
   }
 
+
+  // list VOs with priority
   function listVOs() {
     $voarray = array();
 
-    // VOs iinto application
+    // VOs into APP
     $voarray = array_merge($voarray, $this->scanVOs( SITE_PATH.'classes/model/') ) ; // scan app model dir
 
-    // VOs from Module
     global $C_ENABLED_MODULES;
     foreach($C_ENABLED_MODULES as $modulename) {
+      // modules into APP
       $voarray = array_merge($voarray, $this->scanVOs( SITE_PATH.'../modules/'.$modulename.'/classes/model/'));
+      // modules into DIST
+      $voarray = array_merge($voarray, $this->scanVOs( COGUMELO_LOCATION.'/distModules/'.$modulename.'/classes/model/'));
+      // modules into COGUMELO 
       $voarray = array_merge($voarray, $this->scanVOs( COGUMELO_LOCATION.'/c_modules/'.$modulename.'/classes/model/'));
     }
 
