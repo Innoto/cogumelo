@@ -49,7 +49,8 @@ class admin extends Module
   );
 
   public $includesCommon = array(
-
+    'styles/adminBase.less',
+    'styles/admin.less'
   );
 
   function __construct() {
