@@ -35,8 +35,8 @@ class admin extends Module
     ),
     array(
      "id" =>"respond",
-     "params" => array("Respond-master"),
-     "installer" => "manual",
+     "params" => array("respond"),
+     "installer" => "bower",
      "includes" => array("src/respond.js")
     ),
     array(
