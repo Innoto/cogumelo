@@ -12,8 +12,8 @@ chmod -R u-x,g-wx,o-wx,u+rwX,go+rX *
 chmod 700 set_cogumelo_permissions.sh
 
 
-chmod 700 c_packages/sampleApp/cogumelo
-cd c_packages/sampleApp/
+chmod 700 packages/sampleApp/cogumelo
+cd packages/sampleApp/
 ./cogumelo setPermissions
 
 
