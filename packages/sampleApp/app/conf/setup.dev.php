@@ -178,4 +178,4 @@ define( 'DEPEN_COMPOSER_PATH', WEB_BASE_PATH.'/vendor/composer' );
 define( 'DEPEN_BOWER_PATH', WEB_BASE_PATH.'/vendor/bower' );
 define( 'DEPEN_MANUAL_PATH', WEB_BASE_PATH.'/vendor/manual' );
 
-define( 'DEPEN_MANUAL_REPOSITORY', COGUMELO_LOCATION.'/c_packages/vendorPackages' );
+define( 'DEPEN_MANUAL_REPOSITORY', COGUMELO_LOCATION.'/packages/vendorPackages' );
