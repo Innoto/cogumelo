@@ -1,7 +1,4 @@
 <?php
-  //
-  // CARGO COGUMELO, É PRECISO FACER UNS CANTOS APAÑOS
-  //
 
   require_once(COGUMELO_LOCATION."/coreClasses/CogumeloClass.php");
   require_once(SITE_PATH."/Cogumelo.php");
