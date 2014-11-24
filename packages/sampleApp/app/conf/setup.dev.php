@@ -105,7 +105,7 @@ global $MEDIASERVER_LESS_CONSTANTS;
 global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
 
 $MEDIASERVER_LESS_CONSTANTS = array('variable1' =>1,  'variable2'=>'red', 'variable3'=>'blue' );
-$MEDIASERVER_JAVASCRIPT_CONSTANTS = array('variable1' =>5,  'variable2'=>'red', 'variable3'=>'blue;' );
+$MEDIASERVER_JAVASCRIPT_CONSTANTS = array('variable1' =>5,  'variable2'=>'red', 'variable3'=>'blue' );
 define( 'MEDIASERVER_REFRESH_CACHE', true ); // false for best performance in final server
 define( 'MEDIASERVER_HOST', '/' );
 define( 'MEDIASERVER_MINIMIFY_FILES', false ); // minimify js and css files

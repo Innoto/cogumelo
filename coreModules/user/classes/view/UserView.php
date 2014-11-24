@@ -21,14 +21,19 @@ class UserView extends View
     return true;
   }
 
-
+  /**
+   *
+   * Example login form
+   * @return void
+   *
+   **/
 
   function loginForm() {
 
     $form = $this->loginFormDefine();
     $loginHtml = $this->loginFormGet( $form );
 
-    $this->template->assign("loginHtml", $loginHtml);
+    $this->template->assign('loginHtml', $loginHtml);
 
     $this->template->setTpl('loginFormExample.tpl', 'user');
     $this->template->exec();
@@ -82,34 +87,43 @@ class UserView extends View
     return $loginHtml;
   } // function loginFormGet()
 
+  /**
+   *
+   * Example of an external action login
+   *
+   * @return void
+   *
+   **/
 
   function sendLoginForm() {
 
-    $formError = false;
-    $postData = null;
+    $form = $this->actionLoginForm();
 
-    $postDataJson = file_get_contents('php://input');
-    //error_log( $postDataJson );
-    if( $postDataJson !== false && strpos( $postDataJson, '{' )===0 ) {
-      $postData = json_decode( $postDataJson, true );
-    }
-    //error_log( print_r( $postData, true ) );
-    // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-    $form = new FormController();
-
-    // Leemos el input del navegador y recuperamos FORM de sesion añadiendole los datos enviados
-    if( $form->loadPostInput() ) {
-      // Creamos un objeto con los validadores y lo asociamos
-      $form->setValidationObj( new FormValidators() );
-
-      // $form->setValidationRule( 'input2', 'maxlength', '10' ); // CAMBIANDO AS REGLAS
-      $form->validateForm();
-
-      //$form->addFieldRuleError( 'check1', 'cogumelo', 'Un mensaxe de error de campo' );
-      //$form->addFormError( 'Ola meu... ERROR porque SI ;-)' );
+    if( $form->existErrors() ) {
+      echo $form->jsonFormError();
     }
     else {
-      $form->addFormError( 'El servidor no considera válidos los datos recividos.', 'formError' );
+      echo $form->jsonFormOk();
+    }
+
+  }
+
+  /**
+   *
+   * Returns necessary html form
+   * @param $form
+   * @return string
+   *
+   **/
+
+  function actionLoginForm(){
+    $form = new FormController();
+
+    if( $form->loadPostInput() ) {
+      $form->validateForm();
+    }
+    else {
+      $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
     }
 
     //Si todo esta OK!
@@ -125,16 +139,54 @@ class UserView extends View
       }
     }
 
-    if( $form->existErrors() ) {
-      echo $form->jsonFormError();
-    }
-    else {
-      echo $form->jsonFormOk();
-    }
-
+    return $form;
   }
 
-  //END Login
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   function registerForm() {
 
