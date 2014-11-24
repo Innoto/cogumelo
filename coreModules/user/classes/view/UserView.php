@@ -25,26 +25,62 @@ class UserView extends View
 
   function loginForm() {
 
+    $form = $this->loginFormDefine();
+    $loginHtml = $this->loginFormGet( $form );
+
+    $this->template->assign("loginHtml", $loginHtml);
+
+    $this->template->setTpl('loginFormExample.tpl', 'user');
+    $this->template->exec();
+
+  } // function loadForm()
+
+
+
+  /**
+   *
+   * Create form fields and validations
+   * @return object
+   *
+   **/
+
+  function loginFormDefine() {
+
     $form = new FormController( 'loginForm', '/user/sendloginform' ); //actionform
     $form->setField( 'userLogin', array( 'placeholder' => 'Login' ));
     $form->setField( 'userPassword', array( 'type' => 'password', 'placeholder' => 'Contraseña') );
     $form->setField( 'loginSubmit', array( 'type' => 'submit', 'value' => 'Entrar' ) );
-
     /************************************************************** VALIDATIONS */
     $form->setValidationRule( 'userLogin', 'required' );
     $form->setValidationRule( 'userPassword', 'required' );
+
+    return $form;
+  } // function loginFormDefine()
+
+
+
+  /**
+   *
+   * Returns necessary html form
+   * @param $form
+   * @return string
+   *
+   **/
+
+  function loginFormGet( $form ) {
 
     $form->saveToSession();
 
     $this->template->assign("loginFormOpen", $form->getHtmpOpen());
     $this->template->assign("loginFormFields", $form->getHtmlFieldsArray());
     $this->template->assign("loginFormClose", $form->getHtmlClose());
-    $this->template->assign("loginFormValidations", $form->getJqueryValidationJS());
+    $this->template->assign("loginFormValidations", $form->getScriptCode());
 
     $this->template->setTpl('loginForm.tpl', 'user');
-    $this->template->exec();
+    $loginHtml = $this->template->execToString();
 
-  } // function loadForm()
+    return $loginHtml;
+  } // function loginFormGet()
 
 
   function sendLoginForm() {
@@ -141,7 +177,7 @@ class UserView extends View
     $this->template->assign("registerFormOpen", $form->getHtmpOpen());
     $this->template->assign("registerFormFields", $form->getHtmlFieldsArray());
     $this->template->assign("registerFormClose", $form->getHtmlClose());
-    $this->template->assign("registerFormValidations", $form->getJqueryValidationJS());
+    $this->template->assign("registerFormValidations", $form->getScriptCode());
 
     $this->template->setTpl('registerForm.tpl', 'user');
     $this->template->exec();
