@@ -14,7 +14,7 @@ chmod 700 set_cogumelo_permissions.sh
 
 chmod 700 packages/sampleApp/cogumelo
 cd packages/sampleApp/
-./cogumelo setPermissions
+./cogumelo setPermissionsDevel
 
 
 echo -e "\n\n  READY. Enjoy :)  \n\n"
