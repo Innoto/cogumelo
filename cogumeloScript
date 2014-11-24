@@ -46,6 +46,11 @@
           echo "\nGenerated db tables\n";
         break;
 
+        case 'initModules': // execute ::moduleRc() of all modules
+          initModules();
+          echo "\nModules initialized\n";
+        break;
+
         case 'bckDB': // do the backup of the db
           if ($argc>2){
             $file = $argv[2].'.sql';//name of the backup file
@@ -123,6 +128,7 @@
           setPermissionsDevel           to set the files/folders permission
           createDB                      to create a database
           createTables                  to generate the tables
+          initModules                   to execute '::moduleRc()' of all modules
           bckDB                         to do a DB backup (optional arg: filename)
           restoreDB                     to restore a database
           installDependences            to install all modules dependencies
@@ -142,6 +148,15 @@
     $develdbcontrol->createTables();
   }
 
+  function initModules() {
+    global $C_ENABLED_MODULES;
+
+
+    foreach($C_ENABLED_MODULES as $moduleName) {
+      require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+      eval($moduleName.'::moduleRc();');
+    }
+  }
 
   function makeAppPaths() {
     $md = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
