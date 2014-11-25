@@ -152,7 +152,7 @@ class FormController implements Serializable {
     $data[] = $this->fields;
     $data[] = $this->rules;
     $data[] = $this->messages;
-    $data[] = $this->postValues;
+    // $data[] = $this->postValues;
 
     return serialize( $data );
   }
@@ -176,7 +176,7 @@ class FormController implements Serializable {
     $this->fields = array_shift( $data );
     $this->rules = array_shift( $data );
     $this->messages = array_shift( $data );
-    $this->postValues = array_shift( $data );
+    // $this->postValues = array_shift( $data );
   }
 
 
@@ -253,46 +253,38 @@ class FormController implements Serializable {
    * @param array $formPost Datos enviados por el navegador convertidos a array
    **/
   public function loadPostValues( $formPost ) {
-    $this->postValues = $formPost;
+    // $this->postValues = $formPost;
 
-    foreach( $formPost as $fieldName => $val ) {
-      if( $this->isFieldDefined( $fieldName ) ) {
-        if( $this->getFieldType( $fieldName ) !== 'file' ) {
-          $this->setFieldValue( $fieldName, $val );
-        }
+    // Importando los datos del form e integrando los datos de ficheros subidos
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+
+      if( $this->getFieldType( $fieldName ) !== 'file' ) {
+        error_log( 'Cargando '. $fieldName .' con valor '. print_r( $formPost[ $fieldName ], true ) );
+        $this->setFieldValue( $fieldName, $formPost[ $fieldName ] );
       }
       else {
-        error_log( 'ERROR (loadPostValues): El campo del formulario '. $fieldName .' no esta definido');
-      }
-    }
-
-    // Preparando datos de ficheros en fileFields para validar
-    foreach( $this->getFieldsNamesArray() as $fieldName ) {
-      if( $this->getFieldType( $fieldName ) === 'file' && !$this->isEmptyFieldValue( $fieldName ) ) {
-
-        $fileFieldValue = $this->getFieldValue( $fieldName );
-        // error_log( 'loadPostValues: Preparando File Field: '.$fieldName );
-        // error_log( print_r( $fileFieldValue, true ) );
-
-        switch( $fileFieldValue['status'] ) {
-          case 'LOAD':
-            $fileFieldValue['validate'] = $fileFieldValue['temp'];
-            // error_log( 'loadPostValues: LOAD -> temp' );
-            // error_log( print_r( $fileFieldValue, true ) );
-            break;
-          case 'REPLACE':
-            $fileFieldValue['validate'] = $fileFieldValue['temp'];
-            // error_log( 'loadPostValues: REPLACE -> temp' );
-            // error_log( print_r( $fileFieldValue, true ) );
-            break;
-          case 'EXIST':
-            $fileFieldValue['validate'] = $fileFieldValue['prev'];
-            // error_log( 'loadPostValues: EXIST -> prev' );
-            // error_log( print_r( $fileFieldValue, true ) );
-            break;
+        if( !$this->isEmptyFieldValue( $fieldName ) ) {
+          error_log( 'Cargando fileField '. $fieldName );
+          $fileFieldValue = $this->getFieldValue( $fieldName );
+          switch( $fileFieldValue['status'] ) {
+            case 'LOAD':
+              $fileFieldValue['validate'] = $fileFieldValue['temp'];
+              // error_log( 'loadPostValues: LOAD -> temp' );
+              // error_log( print_r( $fileFieldValue, true ) );
+              break;
+            case 'REPLACE':
+              $fileFieldValue['validate'] = $fileFieldValue['temp'];
+              // error_log( 'loadPostValues: REPLACE -> temp' );
+              // error_log( print_r( $fileFieldValue, true ) );
+              break;
+            case 'EXIST':
+              $fileFieldValue['validate'] = $fileFieldValue['prev'];
+              // error_log( 'loadPostValues: EXIST -> prev' );
+              // error_log( print_r( $fileFieldValue, true ) );
+              break;
+          }
+          $this->setFieldValue( $fieldName, $fileFieldValue );
         }
-
-        $this->setFieldValue( $fieldName, $fileFieldValue );
       }
     }
 
