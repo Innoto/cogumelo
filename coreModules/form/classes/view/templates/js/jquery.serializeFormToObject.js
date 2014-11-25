@@ -1,7 +1,5 @@
 $.fn.serializeFormToObject = function () {
 
-  console.log( 'serializeFormToObject... ' );
-
   var o = {};
   var a = this.serializeArray();
 
@@ -19,13 +17,10 @@ $.fn.serializeFormToObject = function () {
 
   this.find(':input').each(
     function(i, elem) {
-      console.log( elem.name );
-      if( o[elem.name] === undefined ) {
+      if( elem.type !== 'file' && o[elem.name] === undefined ) {
         o[elem.name] = false;
       }
-    });
-
-  console.log( o );
+  });
 
   return o;
 };
