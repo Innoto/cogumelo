@@ -863,7 +863,10 @@ class FormController implements Serializable {
 
               $fileFieldValue['values'] = $fileFieldValue['validate'];
               $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
-              error_log( 'FILE final: ' . print_r( $fileFieldValue['values'], true ) );
+
+              $this->setFieldValue( $fieldName, $fileFieldValue );
+
+              error_log( 'FILE final (values): ' . print_r( $fileFieldValue['values'], true ) );
               break;
             case 'REPLACE':
               error_log( 'processFileFields: REPLACE' );
