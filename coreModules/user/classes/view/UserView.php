@@ -110,9 +110,8 @@ class UserView extends View
 
   /**
    *
-   * Returns necessary html form
-   * @param $form
-   * @return string
+   * Assigns the forms validations
+   * @return $form
    *
    **/
 
@@ -150,45 +149,32 @@ class UserView extends View
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  /**
+   *
+   * Example register form
+   * @return void
+   *
+   **/
   function registerForm() {
+    $form = $this->registerFormDefine();
+    $registerHtml = $this->registerFormGet( $form );
+
+    $this->template->assign('registerHtml', $registerHtml);
+
+    $this->template->setTpl('registerFormExample.tpl', 'user');
+    $this->template->exec();
+
+
+  } // function loadForm()
+
+  /**
+   *
+   * Create form fields and validations
+   * @return object
+   *
+   **/
+
+  function registerFormDefine() {
 
     $form = new FormController( 'registerForm', '/user/sendregisterform' ); //actionform
 
@@ -224,6 +210,17 @@ class UserView extends View
     $form->setValidationRule( 'password', 'equalTo', '#password2' );
     $form->setValidationRule( 'email', 'email' );
 
+    return $form;
+  }
+
+   /**
+   *
+   * Returns necessary html form
+   * @param $form
+   * @return string
+   *
+   **/
+  function registerFormGet($form) {
     $form->saveToSession();
 
     $this->template->assign("registerFormOpen", $form->getHtmpOpen());
@@ -232,40 +229,49 @@ class UserView extends View
     $this->template->assign("registerFormValidations", $form->getScriptCode());
 
     $this->template->setTpl('registerForm.tpl', 'user');
-    $this->template->exec();
 
-  } // function loadForm()
+    return $this->template->execToString();
+  }
 
-
+  /**
+   *
+   * Example of an external action register
+   *
+   * @return void
+   *
+   **/
   function sendRegisterForm() {
 
-    $formError = false;
-    $postData = null;
+    $form = $this->actionRegisterForm();
+    $this->registerOk($form);
 
-    $postDataJson = file_get_contents('php://input');
-    //error_log( $postDataJson );
-    if( $postDataJson !== false && strpos( $postDataJson, '{' )===0 ) {
-      $postData = json_decode( $postDataJson, true );
-    }
-    //error_log( print_r( $postData, true ) );
-
-    // Creamos un objeto recuperandolo de session y añadiendo los datos POST
-    $form = new FormController();
-    // Leemos el input del navegador y recuperamos FORM de sesion añadiendole los datos enviados
-    if( $form->loadPostInput() ) {
-      // Creamos un objeto con los validadores y lo asociamos
-      $form->setValidationObj( new FormValidators() );
-
-      // $form->setValidationRule( 'input2', 'maxlength', '10' ); // CAMBIANDO AS REGLAS
-      $form->validateForm();
-
-      //$form->addFieldRuleError( 'check1', 'cogumelo', 'Un mensaxe de error de campo' );
-      //$form->addFormError( 'Ola meu... ERROR porque SI ;-)' );
+    if( $form->existErrors() ) {
+      echo $form->jsonFormError();
     }
     else {
-      $form->addFormError( 'El servidor no considera válidos los datos recividos.', 'formError' );
+      echo $form->jsonFormOk();
     }
+  }
 
+  /**
+   *
+   * Assigns the forms validations
+   * @return $form
+   *
+   **/
+  function actionRegisterForm() {
+    $form = new FormController();
+    if( $form->loadPostInput() ) {
+      $form->validateForm();
+    }
+    else {
+      $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
+    }
+    return $form;
+  }
+
+
+  function registerOk( $form ) {
     //Si todo esta OK!
     if( !$form->existErrors() ){
 
@@ -283,17 +289,10 @@ class UserView extends View
       unset($valuesArray['password2']);
       $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
 
+      Cogumelo::console($valuesArray);
       //$res = $userControl->createFromArray($valuesArray);
       $res = $userControl->createRelTmp($valuesArray);
     }
-
-    if( $form->existErrors() ) {
-      echo $form->jsonFormError();
-    }
-    else {
-      echo $form->jsonFormOk();
-    }
-
 
   }
 
