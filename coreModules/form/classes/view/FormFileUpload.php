@@ -39,9 +39,9 @@ class FormFileUpload extends View
 
 
   function uploadFormFile() {
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
     error_log( ' FormFileUpload - uploadFormFile');
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
 
     $form = new FormController();
     $error = false;
@@ -253,9 +253,9 @@ class FormFileUpload extends View
 
 
   function deleteFormFile() {
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
     error_log( ' FormFileUpload - deleteFormFile');
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
 
     $form = new FormController();
     $error = false;
