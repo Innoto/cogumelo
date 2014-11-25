@@ -216,10 +216,10 @@ class FormController implements Serializable {
     $result = false;
 
     $postDataJson = file_get_contents( 'php://input' );
-    error_log( $postDataJson );
+    // error_log( $postDataJson );
     if( $postDataJson !== false && strpos( $postDataJson, '{' )===0 ) {
       $postData = json_decode( $postDataJson, true );
-      error_log( print_r( $postData, true ) );
+      // error_log( print_r( $postData, true ) );
 
       // recuperamos FORM de sesion y añadimos los datos enviados
       if( $this->loadPostSession( $postData ) ) {
@@ -265,24 +265,24 @@ class FormController implements Serializable {
       if( $this->getFieldType( $fieldName ) === 'file' && !$this->isEmptyFieldValue( $fieldName ) ) {
 
         $fileFieldValue = $this->getFieldValue( $fieldName );
-        error_log( 'loadPostValues: Preparando File Field: '.$fieldName );
-        error_log( print_r( $fileFieldValue, true ) );
+        // error_log( 'loadPostValues: Preparando File Field: '.$fieldName );
+        // error_log( print_r( $fileFieldValue, true ) );
 
         switch( $fileFieldValue['status'] ) {
           case 'LOAD':
             $fileFieldValue['validate'] = $fileFieldValue['temp'];
-            error_log( 'loadPostValues: LOAD -> temp' );
-            error_log( print_r( $fileFieldValue, true ) );
+            // error_log( 'loadPostValues: LOAD -> temp' );
+            // error_log( print_r( $fileFieldValue, true ) );
             break;
           case 'REPLACE':
             $fileFieldValue['validate'] = $fileFieldValue['temp'];
-            error_log( 'loadPostValues: REPLACE -> temp' );
-            error_log( print_r( $fileFieldValue, true ) );
+            // error_log( 'loadPostValues: REPLACE -> temp' );
+            // error_log( print_r( $fileFieldValue, true ) );
             break;
           case 'EXIST':
             $fileFieldValue['validate'] = $fileFieldValue['prev'];
-            error_log( 'loadPostValues: EXIST -> prev' );
-            error_log( print_r( $fileFieldValue, true ) );
+            // error_log( 'loadPostValues: EXIST -> prev' );
+            // error_log( print_r( $fileFieldValue, true ) );
             break;
         }
 
@@ -374,7 +374,7 @@ class FormController implements Serializable {
    * @param string $success Contenido del evento: Msg, url, ...
    **/
   public function setSuccess( $name, $success ) {
-    error_log( 'setSuccess: name='. $name . ' success=' .  $success );
+    //error_log( 'setSuccess: name='. $name . ' success=' .  $success );
     $this->success[ $name ] = $success;
   }
 
@@ -385,7 +385,7 @@ class FormController implements Serializable {
    * @return array
    **/
   public function getSuccess() {
-    error_log( 'getSuccess: ' . print_r( $this->success, true ) );
+    // error_log( 'getSuccess: ' . print_r( $this->success, true ) );
     return $this->success;
   }
 
@@ -863,6 +863,7 @@ class FormController implements Serializable {
 
               $fileFieldValue['values'] = $fileFieldValue['validate'];
               $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
+              error_log( 'FILE final: ' . print_r( $fileFieldValue['values'], true ) );
               break;
             case 'REPLACE':
               error_log( 'processFileFields: REPLACE' );
@@ -893,7 +894,7 @@ class FormController implements Serializable {
    * @return string Fichero temporal de la App. En caso de error: false
    **/
   public function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName ) {
-    error_log( 'tmpPhpFile2tmpFormFile: '.$fileTmpLoc.' --- '.$fileName);
+    // error_log( 'tmpPhpFile2tmpFormFile: '.$fileTmpLoc.' --- '.$fileName);
     $result = false;
     $error = false;
 
@@ -923,8 +924,8 @@ class FormController implements Serializable {
       }
     }
 
-    error_log( 'tmpPhpFile2tmpFormFile ERROR: '.$error );
-    error_log( 'tmpPhpFile2tmpFormFile RET: '.$result );
+    // error_log( 'tmpPhpFile2tmpFormFile ERROR: '.$error );
+    // error_log( 'tmpPhpFile2tmpFormFile RET: '.$result );
     return $result;
   } // function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName )
 
@@ -959,7 +960,7 @@ class FormController implements Serializable {
       $fileName = substr( $fileName, 0, $maxLength );
     }
 
-    error_log( 'secureFileName RET: '.$fileName );
+    // error_log( 'secureFileName RET: '.$fileName );
     return $fileName;
   }
 
@@ -1040,7 +1041,7 @@ class FormController implements Serializable {
    * @return boolean
    **/
   public function validateForm() {
-    error_log( 'validateForm:' );
+    // error_log( 'validateForm:' );
 
     $formValidated = true;
 
@@ -1068,18 +1069,18 @@ class FormController implements Serializable {
    * @return boolean
    **/
   public function validateField( $fieldName ) {
-    error_log( 'validateField: '.$fieldName );
+    // error_log( 'validateField: '.$fieldName );
     $fieldValidated = true;
 
     if( $this->isEmptyFieldValue( $fieldName ) ) {
       if( $this->isRequiredField( $fieldName ) ) {
-        error_log( 'evaluateRule: VACIO e required = fallo' );
+        error_log( 'ERROR: evaluateRule( '.$fieldName.', VACIO, required, ...  )' );
         $this->addFieldRuleError( $fieldName, 'required' );
         //$this->fieldErrors[ $fieldName ][ 'required' ] = false;
         $fieldValidated = false;
       }
       else {
-        error_log( 'evaluateRule: VACIO e non required = ok' );
+        //error_log( 'evaluateRule: VACIO e non required = ok' );
         $fieldValidated = true;
       }
     } // if( $this->isEmptyFieldValue( $fieldName ) )
@@ -1097,12 +1098,12 @@ class FormController implements Serializable {
       foreach( $fieldValues as $value ) {
         $fieldValidateValue = false;
 
-        error_log( 'validando '.$fieldName.' = '.print_r( $value, true ) );
+        //error_log( 'validando '.$fieldName.' = '.print_r( $value, true ) );
 
-        error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
+        //error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
         $fieldValidateValue = true;
         foreach( $fieldRules as $ruleName => $ruleParams ) {
-          error_log( 'evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
+          //error_log( 'evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
 
           if( $ruleName === 'equalTo' ) {
             $fieldRuleValidate = ( $value === $this->getFieldValue( str_replace('#', '', $ruleParams )) );
@@ -1110,9 +1111,10 @@ class FormController implements Serializable {
           else {
             $fieldRuleValidate = $this->evaluateRule( $fieldName, $value, $ruleName, $ruleParams );
           }
-          error_log( 'evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
+          //error_log( 'evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
 
           if( !$fieldRuleValidate ) {
+            error_log( 'ERROR: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
             $this->addFieldRuleError( $fieldName, $ruleName );
             //$this->fieldErrors[ $fieldName ][ $ruleName ] = $fieldRuleValidate;
           }
@@ -1137,6 +1139,7 @@ class FormController implements Serializable {
    * @return TYPE
    **/
   public function addFormError( $msgText, $msgClass = false ) {
+    error_log( "addFormError: $msgText, $msgClass" );
     $this->formErrors[] = array( 'msgText' => $msgText, 'msgClass' => $msgClass );
   }
 
