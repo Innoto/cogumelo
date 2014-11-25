@@ -27,7 +27,7 @@ class devel extends Module
      "id" =>"less",
      "params" => array("less"),
      "installer" => "bower",
-     "includes" => array("dist/less-1.7.5.min.js")
+     "includes" => array("dist/less.min.js")
    ),
 
    // COMPOSER

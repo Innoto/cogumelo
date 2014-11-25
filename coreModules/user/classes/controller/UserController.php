@@ -50,7 +50,7 @@ class  UserController extends DataController
   function createRelTmp($user){
 
     $filedataControl = new FiledataController();
-    $filedata = $filedataControl->create($user['avatar']);
+    $filedata = $filedataControl->create($user['avatar']['values']);
 
     if($filedata){
       $user['avatar'] = $filedata->getter('id');

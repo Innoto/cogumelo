@@ -267,29 +267,37 @@ class UserView extends View
     else {
       $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
     }
+
+    if( !$form->existErrors() ){
+      //Validaciones extra
+
+      $userControl = new UserController();
+      $loginExist = $userControl->find( $form->getFieldValue('login'), 'login');
+
+      if($loginExist){
+        $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
+      }
+    }
+
     return $form;
   }
 
 
   function registerOk( $form ) {
     //Si todo esta OK!
+
+    if( !$form->processFileFields() ) {
+      $form->addFormError( 'Ha sucedido un problema con los ficheros adjuntos. Puede que sea necesario subirlos otra vez.', 'formError' );
+    }
+
     if( !$form->existErrors() ){
-
-      //Validaciones
       $valuesArray = $form->getValuesArray();
-
-      $userControl = new UserController();
-      $loginExist = $userControl->find($valuesArray['login'], 'login');
-
-      if($loginExist){
-        $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
-      }
-
       $valuesArray['password'] = sha1($valuesArray['password']);
       unset($valuesArray['password2']);
       $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
 
       Cogumelo::console($valuesArray);
+      $userControl = new UserController();
       //$res = $userControl->createFromArray($valuesArray);
       $res = $userControl->createRelTmp($valuesArray);
     }
