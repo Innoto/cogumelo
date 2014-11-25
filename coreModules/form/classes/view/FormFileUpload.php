@@ -46,8 +46,8 @@ class FormFileUpload extends View
     $form = new FormController();
     $error = false;
 
-    error_log( 'FILES:' ); error_log( print_r( $_FILES, true ) );
-    error_log( 'POST:' ); error_log( print_r( $_POST, true ) );
+    // error_log( 'FILES:' ); error_log( print_r( $_FILES, true ) );
+    // error_log( 'POST:' ); error_log( print_r( $_POST, true ) );
 
     if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'], $_FILES['ajaxFileUpload'] ) ) {
 
@@ -142,25 +142,24 @@ class FormFileUpload extends View
           // Almacenamos los datos temporales en el formObj para validarlos
           $form->setFieldValue( $fieldName, $tmpFileFieldValue );
 
-          error_log( 'FU: Validando ficheiro subido...' );
-          error_log( print_r( $form->getFieldValue( $fieldName ), true ) );
+          // error_log( 'FU: Validando ficheiro subido...' );
+          // error_log( print_r( $form->getFieldValue( $fieldName ), true ) );
 
           // Validar input del fichero
           $form->validateField( $fieldName );
 
           if( !$form->existErrors() ) {
             // El fichero ha superado las validaciones. Ajustamos sus valores finales y los almacenamos.
-            error_log( 'FU: Validado o ficheiro subido...' );
+            // error_log( 'FU: Validado o ficheiro subido...' );
 
             $tmpCgmlFileLocation = $form->tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName );
             if( $tmpCgmlFileLocation === false ) {
-              error_log( 'FU: Validado pero NON movido.' );
-
-              $form->addFieldRuleError( $fieldName, 'cogumelo', 'Fallo de move_uploaded_file movendo ('.$fileTmpLoc.')' );
+              error_log( 'FU: Fallo de move_uploaded_file movendo '.$fieldName.': ('.$fileTmpLoc.')' );
+              $form->addFieldRuleError( $fieldName, 'cogumelo', 'Fallo guardando el fichero.' );
             }
             else {
               // El fichero subido ha pasado todos los controles. Vamos a registrarlo según proceda
-              error_log( 'FU: Validado e movido...' );
+              // error_log( 'FU: Validado e movido...' );
 
               if( isset( $fileFieldValuePrev['status'] ) && $fileFieldValuePrev['status'] !== false ) {
                 if( $fileFieldValuePrev['status'] === 'DELETE' ) {
@@ -177,7 +176,6 @@ class FormFileUpload extends View
                 }
                 else {
                   error_log( 'FU: Validado pero status erroneo: ' . $fileFieldValuePrev['status'] );
-
                   $form->addFieldRuleError( $fieldName, 'cogumelo', 'Intento de sobreescribir un fichero existente' );
                 }
               }
@@ -198,7 +196,7 @@ class FormFileUpload extends View
 
 
               if( !$form->existErrors() ) {
-                error_log( 'FU: Todo OK con el ficheiro subido... Se persiste...' );
+                // error_log( 'FU: Todo OK con el ficheiro subido... Se persiste...' );
 
                 $form->setFieldValue( $fieldName, $fileFieldValuePrev );
                 // Persistimos formObj para cuando se envíe el formulario completo
@@ -206,7 +204,6 @@ class FormFileUpload extends View
               }
               else {
                 error_log( 'FU: Como ha fallado, eliminamos: ' . $tmpCgmlFileLocation );
-
                 unlink( $tmpCgmlFileLocation );
               }
 
@@ -215,8 +212,8 @@ class FormFileUpload extends View
           } // if( !$form->existErrors() )
           else {
             // El fichero NO ha superado las validaciones.
-            error_log( 'FU: NON Valida o ficheiro subido...' );
             // Los errores ya estan cargados en FORM
+            error_log( 'FU: NON Valida o ficheiro subido...' );
           }
 
         } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )

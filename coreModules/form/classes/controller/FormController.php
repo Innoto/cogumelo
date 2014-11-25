@@ -259,12 +259,10 @@ class FormController implements Serializable {
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
 
       if( $this->getFieldType( $fieldName ) !== 'file' ) {
-        error_log( 'Cargando '. $fieldName .' con valor '. print_r( $formPost[ $fieldName ], true ) );
         $this->setFieldValue( $fieldName, $formPost[ $fieldName ] );
       }
       else {
         if( !$this->isEmptyFieldValue( $fieldName ) ) {
-          error_log( 'Cargando fileField '. $fieldName );
           $fileFieldValue = $this->getFieldValue( $fieldName );
           switch( $fileFieldValue['status'] ) {
             case 'LOAD':
@@ -848,15 +846,15 @@ class FormController implements Serializable {
 
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
       if( $this->getFieldType( $fieldName ) === 'file' ) {
-        error_log( 'FILE: Almacenando File Field: '.$fieldName );
+        // error_log( 'FILE: Almacenando fileField: '.$fieldName );
 
         $fileFieldValue = $this->getFieldValue( $fieldName );
-        error_log( print_r( $fileFieldValue, true ) );
+        // error_log( print_r( $fileFieldValue, true ) );
 
         if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false ) {
           switch( $fileFieldValue['status'] ) {
             case 'LOAD':
-              error_log( 'processFileFields: LOAD' );
+              // error_log( 'processFileFields: LOAD' );
 
               $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
               $destDir = $this->getFieldParam( $fieldName, 'destDir' );
@@ -864,28 +862,42 @@ class FormController implements Serializable {
               if( !is_dir( $fullDestPath ) ) {
                 // TODO: CAMBIAR PERMISOS 0777
                 if( !mkdir( $fullDestPath, 0777, true ) ) {
-                  $error = 'Imposible crear el dir. necesario: '.$fullDestPath; error_log($error);
+                  $error = 'Imposible crear el directorio necesario.';
+                  $this->addFieldRuleError( $fieldName, 'cogumelo', $error );
+                  error_log($error . $fullDestPath );
                 }
               }
-              error_log( 'FILE: movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
-              // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-              rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName );
 
-              $fileFieldValue['values'] = $fileFieldValue['validate'];
-              $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
+              if( !$this->existErrors() ) {
+                // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
+                if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
+                  $error = 'Imposible mover el fichero al directorio adecuado.';
+                  $this->addFieldRuleError( $fieldName, 'cogumelo', $error );
+                  error_log($error . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                }
+              }
 
-              $this->setFieldValue( $fieldName, $fileFieldValue );
-
-              error_log( 'FILE final (values): ' . print_r( $fileFieldValue['values'], true ) );
+              if( !$this->existErrors() ) {
+                $fileFieldValue['values'] = $fileFieldValue['validate'];
+                $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
+                $this->setFieldValue( $fieldName, $fileFieldValue );
+                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue['values'], true ) );
+              }
               break;
             case 'REPLACE':
               error_log( 'processFileFields: REPLACE' );
+
+              // TODO: EJECUTAR LOS PASOS PARA EL ESTADO REPLACE!!!
+
               break;
             case 'DELETE':
               error_log( 'processFileFields: DELETE' );
+
+              // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
+
               break;
             case 'EXIST':
-              error_log( 'processFileFields: EXIST - NADA QUE HACER' );
+              error_log( 'processFileFields OK: EXIST - NADA QUE HACER' );
               break;
           }
         } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false )
@@ -950,7 +962,7 @@ class FormController implements Serializable {
    * @return string
    **/
   public function secureFileName( $fileName ) {
-    error_log( 'secureFileName: '.$fileName );
+    // error_log( 'secureFileName: '.$fileName );
     $maxLength = 200;
 
     $fileName = str_replace( $this->replaceAcents[ 'from' ], $this->replaceAcents[ 'to' ], $fileName );
