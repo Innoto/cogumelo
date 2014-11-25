@@ -254,14 +254,15 @@ class FormController implements Serializable {
    **/
   public function loadPostValues( $formPost ) {
     $this->postValues = $formPost;
-    foreach( $formPost as $key => $val ){
-      if( array_key_exists( $key, $this->fields ) ){
-        $this->fields[ $key ][ 'value' ] = $val;
+
+    foreach( $formPost as $fieldName => $val ) {
+      if( $this->isFieldDefined( $fieldName ) && $this->getFieldType( $fieldName ) !== 'file' ) {
+        $this->setFieldValue( $fieldName, $val );
       }
     }
 
     // Preparando datos de ficheros en fileFields para validar
-    foreach( $this->getFieldsNamesArray() as $fieldName ){
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
       if( $this->getFieldType( $fieldName ) === 'file' && !$this->isEmptyFieldValue( $fieldName ) ) {
 
         $fileFieldValue = $this->getFieldValue( $fieldName );
@@ -726,6 +727,18 @@ class FormController implements Serializable {
     }
 
     return $fieldsNamesArray;
+  }
+
+
+  /**
+   * Verifica si se ha definido un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @return boolean
+   **/
+  public function isFieldDefined( $fieldName ){
+
+    return array_key_exists( $fieldName, $this->fields );
   }
 
 

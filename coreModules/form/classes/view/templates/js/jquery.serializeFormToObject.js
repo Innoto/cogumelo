@@ -17,7 +17,7 @@ $.fn.serializeFormToObject = function () {
 
   this.find(':input').each(
     function(i, elem) {
-      if( elem.type !== 'file' && o[elem.name] === undefined ) {
+      if( o[elem.name] === undefined ) {
         o[elem.name] = false;
       }
   });
