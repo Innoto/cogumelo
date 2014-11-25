@@ -1,22 +1,46 @@
 
+/*
+  Gestión de informacion en cliente
+*/
+
 var CogumeloForms = [];
 
-
-function setFormInfo( idForm, $validateForm ) {
-  CogumeloForms[ CogumeloForms.length ] = { idForm: idForm, validateForm: $validateForm };
-}
-
-
-function getFormInfo( idForm ) {
-  $validateForm = null;
-  for (var i = CogumeloForms.length - 1; i >= 0; i--) {
+function getFormInfoIndex( idForm ) {
+  var index = false;
+  for( var i = CogumeloForms.length - 1; i >= 0; i-- ) {
     if( CogumeloForms[i].idForm === idForm ) {
-      $validateForm = CogumeloForms[i].validateForm;
+      index = i;
       break;
     }
   };
-  return $validateForm
+  return index;
 }
+
+function setFormInfo( idForm, key, value ) {
+  var index = getFormInfoIndex( idForm );
+  if( index === false ) {
+    index = CogumeloForms.length;
+    CogumeloForms[ index ] = { idForm: idForm };
+  }
+  CogumeloForms[ index ][ key ] = value;
+  console.log( 'setFormInfo: ', key, value );
+}
+
+function getFormInfo( idForm, key ) {
+  var value = false;
+  var index = getFormInfoIndex( idForm );
+
+  if( index !== false ) {
+    value = CogumeloForms[ index ][ key ];
+  }
+
+  return value;
+}
+
+/*
+  Gestión de informacion en cliente (FIN)
+*/
+
 
 
 function setValidateForm( idForm, rules, messages ) {
@@ -25,7 +49,7 @@ function setValidateForm( idForm, rules, messages ) {
 
     // debug: true,
 
-    //groups: { ungrupo: "input1 input2" },
+    //groups: { ungrupo: 'input1 input2' },
 
     errorPlacement: function( place, element ) {
       console.log( 'Executando validate.errorPlacement:' );
@@ -39,13 +63,13 @@ function setValidateForm( idForm, rules, messages ) {
       }
     },
 
-    errorClass: "formError",
+    errorClass: 'formError',
     rules: rules,
     messages: messages,
     submitHandler:
       function ( form ) {
         console.log( 'Executando validate.submitHandler...' );
-        $( form ).find( '[type="submit"]' ).attr("disabled", "disabled");
+        $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
         $.ajax( {
            contentType: 'application/json', processData: false,
            data: JSON.stringify( $( form ).serializeFormToObject() ),
@@ -76,7 +100,7 @@ function setValidateForm( idForm, rules, messages ) {
               if( errObj[ 'fieldName' ] !== false ) {
                 if( errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] === false ) {
                   $defMess = $validateForm.defaultMessage( errObj['fieldName'], errObj['ruleName'] );
-                  if( typeof $defMess !== "string" ) {
+                  if( typeof $defMess !== 'string' ) {
                     $defMess = $defMess( errObj['ruleParams'] );
                   }
                   errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] = $defMess;
@@ -92,9 +116,9 @@ function setValidateForm( idForm, rules, messages ) {
               }
 
             }
-            // if( response.formError !== '' ) $validateForm.showErrors( {"submit": response.formError} );
+            // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
           }
-          $( form ).find( '[type="submit"]' ).removeAttr("disabled");
+          $( form ).find( '[type="submit"]' ).removeAttr('disabled');
         } );
         return false; // required to block normal submit since you used ajax
       }
@@ -103,11 +127,11 @@ function setValidateForm( idForm, rules, messages ) {
 
   // Bind input file fields: Validate, send, show, ...
   if( $( '#'+idForm+' input:file' ).length > 0 ) {
-    bindFormInputFiles( idForm );
+    bindFormInputFileFields( idForm );
   }
 
   // Save validate instance for this Form
-  setFormInfo( idForm, $validateForm );
+  setFormInfo( idForm, 'validateForm', $validateForm );
 
   return $validateForm
 } // function
@@ -130,7 +154,6 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
   else {
     $form.append( msgLabel );
   }
-
 }
 
 
@@ -141,8 +164,8 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
 *** FICHEROS ***
 **/
 
-function bindFormInputFiles( idForm ) {
-  console.log( 'bindFormInputFiles' );
+function bindFormInputFileFields( idForm ) {
+  console.log( 'bindFormInputFileFields' );
 
   // Check for the various File API support.
   if( !window.File ) {
@@ -150,17 +173,25 @@ function bindFormInputFiles( idForm ) {
     alert('Tu navegador aún no soporta el API File para el envío de ficheros. Actualiza a versiones recientes...');
   }
 
-  $( '#' + idForm + ' input:file' ).on( 'change', processInputFieldFile );
-} // function bindFormInputFiles( idForm )
+  $inputFileFields = $( '#' + idForm + ' input:file' );
+  $inputFileFields.each( function( index, inputFileField ) {
+    //console.log( 'inputFileFields: ', inputFileField );
+    //console.log( 'inputFileFields $: ', $( inputFileField ).attr('name') );
+    setFormInfo( idForm, 'inputFileFieldCopy-'+$( inputFileField ).attr('name'), $( inputFileField ).clone() );
+  });
 
 
-function processInputFieldFile( evnt ) {
-  console.log( 'processInputFieldFile' );
+  $inputFileFields.on( 'change', processInputFileField );
+} // function bindFormInputFileFields( idForm )
+
+
+function processInputFileField( evnt ) {
+  console.log( 'processInputFileField' );
   console.log( evnt );
 
   var files = evnt.target.files; // FileList object
 
-  var valid = checkInputFieldFile( files, evnt.target.form.id, evnt.target.name );
+  var valid = checkInputFileField( files, evnt.target.form.id, evnt.target.name );
 
   if( valid ) {
     var cgIntFrmId = $( '#' + evnt.target.form.id ).attr('sg');
@@ -168,16 +199,16 @@ function processInputFieldFile( evnt ) {
       uploadFile( file, evnt.target.form.id, evnt.target.name, cgIntFrmId );
     }
   }
-} // function processInputFieldFile( evnt )
+} // function processInputFileField( evnt )
 
 
 
-function checkInputFieldFile( files, idForm, fieldName ) {
-  console.log( 'checkInputFieldFile' );
+function checkInputFileField( files, idForm, fieldName ) {
+  console.log( 'checkInputFileField' );
 
-  var $validateForm = getFormInfo( idForm );
+  var $validateForm = getFormInfo( idForm, 'validateForm' );
   var valRes = $validateForm.element( 'input[name=' + fieldName + ']' );
-  console.log( 'checkInputFieldFile - valRes: ', valRes );
+  console.log( 'checkInputFileField - valRes: ', valRes );
 
   // Mostrando informacion obtenida del navegador
   for( var i = 0, f; f = files[i]; i++ ) {
@@ -194,10 +225,10 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
   console.log( 'uploadFile: ', file );
 
   var formData = new FormData();
-  formData.append("ajaxFileUpload", file);
-  formData.append("idForm", idForm);
-  formData.append("fieldName", fieldName);
-  formData.append("cgIntFrmId", cgIntFrmId);
+  formData.append( 'ajaxFileUpload', file );
+  formData.append( 'idForm', idForm );
+  formData.append( 'fieldName', fieldName );
+  formData.append( 'cgIntFrmId', cgIntFrmId );
 
   $.ajax({
     url: '/cgml-form-file-upload', type: 'POST',
@@ -235,34 +266,17 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       $( '#progressBar' ).val( 0 );
       $( '#status' ).html( $jsonData.success );
 
-      $validateForm = getFormInfo( $jsonData.moreInfo.idForm );
-
-      console.log( $validateForm );
       if( $jsonData.result === 'ok' ) {
 
-        $fileFieldWrap = $( '#' + $jsonData.moreInfo.idForm + ' .cgmMForm-field-' + $jsonData.moreInfo.fieldName );
-        $fileField = $( '#' + $jsonData.moreInfo.idForm + ' input[name=' + $jsonData.moreInfo.fieldName + ']' );
-        fileObj = $fileField['0'].files['0'];
-        // console.log( 'fileField: ', $fileField );
+        fileFieldToOk( $jsonData.moreInfo.idForm, $jsonData.moreInfo.fieldName );
 
-        $fileFieldWrap.css( 'color', 'green' );
-        $fileField.replaceWith( '<span class="fileUploadOK">"' + $jsonData.moreInfo.fileName + '" uploaded OK</span>' );
-
-        $fileFieldWrap.append(
-          $( '<spam>' )
-            .attr( 'fieldName', $jsonData.moreInfo.fieldName )
-            .addClass( 'formFileDelete' )
-            .text( ' * BORRAR * ' )
-            .on("click", deleteFormFileEvent )
-        );
-
-        // Only process image files.
-        if( fileObj.type.match('image.*') && fileObj.size < 5000000 ) {
-          loadImageTh( fileObj, $fileFieldWrap );
-        }
       }
       else {
         console.log( 'ERROR' );
+
+        $validateForm = getFormInfo( $jsonData.moreInfo.idForm, 'validateForm' );
+        console.log( $validateForm );
+
         for(var i in $jsonData.jvErrors) {
           errObj = $jsonData.jvErrors[i];
           console.log( errObj );
@@ -270,7 +284,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
           if( errObj[ 'fieldName' ] !== false ) {
             if( errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] === false ) {
               $defMess = $validateForm.defaultMessage( errObj['fieldName'], errObj['ruleName'] );
-              if( typeof $defMess !== "string" ) {
+              if( typeof $defMess !== 'string' ) {
                 $defMess = $defMess( errObj['ruleParams'] );
               }
               errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] = $defMess;
@@ -286,7 +300,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
           }
 
         }
-        // if( $jsonData.formError !== '' ) $validateForm.showErrors( {"submit": $jsonData.formError} );
+        // if( $jsonData.formError !== '' ) $validateForm.showErrors( {'submit': $jsonData.formError} );
       }
 
     },
@@ -295,77 +309,47 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
     }
   });
-
 } // function uploadFile( file, idForm, fieldName, cgIntFrmId )
-
-
-
-function loadImageTh( fileObj, $container ) {
-  var imageReader = new FileReader();
-
-  // Closure to capture the file information.
-  imageReader.onload = (
-    function cargado( fileLoaded ) {
-      // console.log( 'cargado', fileLoaded );
-      return(
-        function procesando( evnt ) {
-          // console.log( 'procesando', evnt );
-          $container.append('<div class="imageTh"><img class="imageTh" border="1" ' +
-            ' style="max-width:50px; max-height:50px;" src="' + evnt.target.result + '"/>');
-        }
-      );
-    }
-  )( fileObj );
-
-  // Read in the image file as a data URL.
-  imageReader.readAsDataURL( fileObj );
-} // function loadImageTh( fileObj, $container )
 
 
 
 function deleteFormFileEvent( evnt ) {
   console.log( 'deleteFormFileEvent' );
   console.log( evnt );
-  //console.log( evnt.target.attr( 'fieldName' ) );
 
-  /*
-  var files = evnt.target.files; // FileList object
+  $fileField = $( evnt.target );
+  $form = $fileField.parents( 'form' );
+  var idForm = $form.attr( 'id' );
+  var fieldName = $fileField.attr( 'fieldName' );
+  var cgIntFrmId = $form.attr( 'sg' );
 
-  var valid = checkInputFieldFile( files, evnt.target.form.id, evnt.target.name );
-
-  if( valid ) {
-    var cgIntFrmId = $( '#' + evnt.target.form.id ).attr('sg');
-    for (var i = 0, file; file = files[i]; i++) {
-      uploadFile( file, evnt.target.form.id, evnt.target.name, cgIntFrmId );
-    }
-  }
-  */
-
+  deleteFormFile( idForm, fieldName, cgIntFrmId );
 } // function deleteFormFileEvent( evnt )
 
 
 
 function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
-  console.log( 'deleteFile: ', file );
+  console.log( 'deleteFormFile: ', idForm, fieldName, cgIntFrmId );
 
   var formData = new FormData();
-  formData.append( 'execute', 'delete');
-  formData.append( 'idForm', idForm);
-  formData.append( 'fieldName', fieldName);
-  formData.append( 'cgIntFrmId', cgIntFrmId);
+  formData.append( 'execute', 'delete' );
+  formData.append( 'idForm', idForm );
+  formData.append( 'fieldName', fieldName );
+  formData.append( 'cgIntFrmId', cgIntFrmId );
 
   $.ajax( {
     url: '/cgml-form-file-upload', type: 'POST',
-    data: formData, cache: false
+    data: formData,
+    //Options to tell jQuery not to process data or worry about content-type.
+    cache: false, contentType: false, processData: false
   } )
   .done( function ( response ) {
     console.log( 'Executando deleteFormFile.done...' );
     console.log( response );
     if( response.result === 'ok' ) {
-      var successActions = response.success;
-      console.log( successActions )
 
-      alert( 'Fichero borrado OK' );
+      fileFieldToInput( idForm, fieldName );
+
     }
     else {
       console.log( 'deleteFormFile.done...ERROR' );
@@ -388,4 +372,71 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
     }
   } );
 } // function deleteFormFile( idForm, fieldName, cgIntFrmId )
+
+
+
+function fileFieldToOk( idForm, fieldName ) {
+  $fileFieldWrap = $( '#' + idForm + ' .cgmMForm-field-' + fieldName );
+  $fileField = $( '#' + idForm + ' input[name=' + fieldName + ']' );
+  fileObj = $fileField['0'].files['0'];
+  console.log( 'fileField: ', fileObj );
+
+  $fileField.attr( 'readonly', 'readonly' );
+  $fileField.prop( 'disabled', true );
+  $fileField.hide();
+
+  $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileObj.name + '" uploaded OK</span>' );
+  $fileFieldWrap.append(
+    $( '<div>' )
+      .attr( 'fieldName', fieldName )
+      .addClass( 'fileUploadOK formFileDelete' )
+      .text( ' * BORRAR * ' )
+      .on('click', deleteFormFileEvent )
+  );
+  // Only process image files.
+  if( fileObj.type.match('image.*') && fileObj.size < 5000000 ) {
+    loadImageTh( fileObj, $fileFieldWrap );
+  }
+}
+
+
+function fileFieldToInput( idForm, fieldName ) {
+  console.log( 'fileFieldToInput: ', idForm, fieldName );
+
+
+  $fileField = $( '#' + idForm + ' input[name=' + fieldName + ']' );
+
+  $( '#' + idForm + ' .cgmMForm-field-' + fieldName + ' .fileUploadOK').remove();
+
+  $fileField.removeAttr( 'readonly' );
+  $fileField.removeProp( 'disabled' );
+  $fileField.val( null );
+  $fileField.show();
+
+
+  //$inputFileField = getFormInfo( idForm, 'inputFileFieldCopy-'+fieldName );
+  //console.log( $inputFileField );
+  //$fileFieldWrap.html( $inputFileField );
+}
+
+
+function loadImageTh( fileObj, $container ) {
+  var imageReader = new FileReader();
+  // Closure to capture the file information.
+  imageReader.onload = (
+    function cargado( fileLoaded ) {
+      // console.log( 'cargado', fileLoaded );
+      return(
+        function procesando( evnt ) {
+          // console.log( 'procesando', evnt );
+          $container.append('<div class="fileUploadOK imageTh"><img class="imageTh" border="1" ' +
+            ' style="max-width:50px; max-height:50px;" src="' + evnt.target.result + '"/></div>');
+        }
+      );
+    }
+  )( fileObj );
+
+  // Read in the image file as a data URL.
+  imageReader.readAsDataURL( fileObj );
+} // function loadImageTh( fileObj, $container )
 

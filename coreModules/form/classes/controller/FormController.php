@@ -673,7 +673,7 @@ class FormController implements Serializable {
     $html .= '<!-- Validate form '.$this->getName().' -->'."\n";
     $html .= '<script>'."\n";
 
-    $html .= '$().ready(function() {'."\n";
+    $html .= '$( document ).ready( function() {'."\n";
 
     $html .= '  $validateForm_'.$this->id.' = setValidateForm( "'.$this->id.'", ';
     $html .= ( count( $this->rules ) > 0 ) ? json_encode( $this->rules ) : 'false';

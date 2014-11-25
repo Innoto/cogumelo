@@ -277,6 +277,12 @@ class FormFileUpload extends View
 
         if( isset( $fileFieldValuePrev['status'] ) && $fileFieldValuePrev['status'] !== false ) {
           switch( $fileFieldValuePrev['status'] ) {
+            case 'LOAD':
+              error_log( 'FDelete: LOAD - Borramos: '.$fileFieldValuePrev['temp']['absLocation'] );
+
+              unlink( $fileFieldValuePrev['temp']['absLocation'] );
+              $fileFieldValuePrev = null;
+              break;
             case 'EXIST':
               error_log( 'FDelete: EXIST - Marcamos para borrar: '.$fileFieldValuePrev['prev']['absLocation'] );
 
