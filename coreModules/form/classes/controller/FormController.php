@@ -862,7 +862,7 @@ class FormController implements Serializable {
               rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName );
 
               $fileFieldValue['values'] = $fileFieldValue['validate'];
-              $fileFieldValue['values']['absLocation'] = $fullDestPath.'/'.$fileName;
+              $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
               break;
             case 'REPLACE':
               error_log( 'processFileFields: REPLACE' );
