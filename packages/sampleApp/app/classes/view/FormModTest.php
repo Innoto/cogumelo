@@ -30,9 +30,9 @@ class FormModTest extends View
   *
   */
   function loadForm() {
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
     error_log( 'FormModTest: loadForm');
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
 
     $form = new FormController( 'probaPorto', '/form-mod-action' );
 
@@ -90,9 +90,9 @@ class FormModTest extends View
   *
   */
   function actionForm() {
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
     error_log( 'FormModTest: actionForm');
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
 
     $form = new FormController();
 
@@ -125,9 +125,9 @@ class FormModTest extends View
   *
   */
   function actionFormEjemplo2() {
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
     error_log( 'FormModTest: actionForm');
-    error_log( '--------------------------------' );error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
 
     // Creamos un objeto FORM sin datos
     $form = new FormController();
