@@ -836,20 +836,6 @@ class FormController implements Serializable {
   public function processFileFields() {
     $result = true;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
       if( $this->getFieldType( $fieldName ) === 'file' ) {
         error_log( 'FILE: Almacenando File Field: '.$fieldName );
@@ -875,6 +861,8 @@ class FormController implements Serializable {
               // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
               rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName );
 
+              $fileFieldValue['values'] = $fileFieldValue['validate'];
+              $fileFieldValue['values']['absLocation'] = $fullDestPath.'/'.$fileName;
               break;
             case 'REPLACE':
               error_log( 'processFileFields: REPLACE' );
@@ -892,20 +880,6 @@ class FormController implements Serializable {
         // En caso de fallo $result = false;
       } // if( $this->getFieldType( $fieldName ) === 'file' )
     } // foreach( $this->getFieldsNamesArray() as $fieldName )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     return $result;
   } // function processFileFields
