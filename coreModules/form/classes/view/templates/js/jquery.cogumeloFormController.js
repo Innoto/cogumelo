@@ -167,7 +167,7 @@ function bindFormInputFileFields( idForm ) {
     alert('Tu navegador aún no soporta el API File para el envío de ficheros. Actualiza a versiones recientes...');
   }
 
-  $inputFileFields.on( 'change', processInputFileField );
+  $( '#' + idForm + ' input:file' ).on( 'change', processInputFileField );
 } // function bindFormInputFileFields( idForm )
 
 
