@@ -1,22 +1,19 @@
-# Exclude log directory
-app/log/
 
-# Exclude backups directory
-app/backups
+# logs
+/app/log/
 
-# Exclude templates directory
-app/tmp/*
-app/tmp/templates_c/
+# backups
+/app/backups/
 
-# mediaserver caches
-httpdocs/mediaCache/
-httpdocs/vendor/
+# temp
+/app/tmp/
 
-/bower.json
-composer.json
-composer.lock
+# mediaserver and dependences
+/httpdocs/mediaCache/
+/httpdocs/vendor/
+/bower.*
+/composer.*
 
-#Exclude temp files container
-formFiles/*
+# temp form files
+/formFiles/
 
-*.log
