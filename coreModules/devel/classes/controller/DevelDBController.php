@@ -70,7 +70,7 @@ class  DevelDBController extends DataController
       // modules into APP
       $voarray = array_merge($voarray, $this->scanVOs( SITE_PATH.'../modules/'.$modulename.'/classes/model/'));
       // modules into DIST
-      $voarray = array_merge($voarray, $this->scanVOs( COGUMELO_LOCATION.'/distModules/'.$modulename.'/classes/model/'));
+      $voarray = array_merge($voarray, $this->scanVOs( COGUMELO_DIST_LOCATION.'/distModules/'.$modulename.'/classes/model/'));
       // modules into COGUMELO 
       $voarray = array_merge($voarray, $this->scanVOs( COGUMELO_LOCATION.'/coreModules/'.$modulename.'/classes/model/'));
     }

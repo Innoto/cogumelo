@@ -116,6 +116,16 @@ Class Template extends Smarty
   }
 
 
+
+  function execToString() {
+    ob_start();
+    $this->exec();
+    $result = ob_get_clean();
+    return $result;
+  }
+
+
+
   function exec() {
     if($this->tpl) {
 

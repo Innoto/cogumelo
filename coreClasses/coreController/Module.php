@@ -45,6 +45,10 @@ class Module
   }
 
 
+  static function moduleRc(){
+
+  }
+
 //
 // Metodos duplicados en CogumeloClass.php
 // (Ini)
