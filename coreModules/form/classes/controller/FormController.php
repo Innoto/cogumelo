@@ -256,8 +256,13 @@ class FormController implements Serializable {
     $this->postValues = $formPost;
 
     foreach( $formPost as $fieldName => $val ) {
-      if( $this->isFieldDefined( $fieldName ) && $this->getFieldType( $fieldName ) !== 'file' ) {
-        $this->setFieldValue( $fieldName, $val );
+      if( $this->isFieldDefined( $fieldName ) ) {
+        if( $this->getFieldType( $fieldName ) !== 'file' ) {
+          $this->setFieldValue( $fieldName, $val );
+        }
+      }
+      else {
+        error_log( 'ERROR (loadPostValues): El campo del formulario '. $fieldName .' no esta definido');
       }
     }
 
