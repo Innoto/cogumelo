@@ -9,7 +9,8 @@ user::autoIncludes();
 class UserView extends View
 {
 
-  function __construct($base_dir){
+
+  function __construct($base_dir = false){
     parent::__construct($base_dir);
   }
 
