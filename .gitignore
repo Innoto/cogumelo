@@ -1,8 +1,4 @@
+
+# PHP Documentor info
 /phpdoc/
-/packages/sampleApp/app/tmp/templates_c/*.tpl.php
-/packages/sampleApp/app/log/*.log
-/packages/sampleApp/bower.json
-/packages/sampleApp/composer.json
-/packages/sampleApp/httpdocs/vendor/
-/packages/sampleApp/httpdocs/vendorServer/
-*.log
+

@@ -49,7 +49,7 @@ class FormController implements Serializable {
    * @param string $action Action del formulario
    **/
   function __construct( $name = false, $action = false ) {
-    $this->createTokenId();
+    $this->getTokenId();
     if( $name !== false ) {
       $this->setName( $name );
     }
@@ -60,29 +60,16 @@ class FormController implements Serializable {
 
 
   /**
-   * Crea el TokenId único y lo guarda un campo del formulario. NO es el id del FORM.
-   *
-   * @param string $action Action del formulario
-   * @return string
-   **/
-  function createTokenId() {
-    $this->tokenId = crypt( uniqid().'---'.session_id(), 'cf' );
-    $this->setField( 'cgIntFrmId', array( 'type' => 'text', 'value' => $this->tokenId ) );
-
-    return $this->tokenId;
-  }
-
-  /**
    * Recupera el TokenId único del formulario. Si no existe, se crea. NO es el id del FORM.
    *
    * @return string
    **/
-  function getTokenId() {
-    $tokenId = $this->tokenId;
-    if( $tokenId === false ) {
-      $tokenId = $this->createTokenId();
+  public function getTokenId() {
+    if( $this->tokenId === false ) {
+      $this->tokenId = crypt( uniqid().'---'.session_id(), 'cf' );
+      $this->setField( 'cgIntFrmId', array( 'type' => 'text', 'value' => $this->tokenId ) );
     }
-    return $tokenId;
+    return $this->tokenId;
   }
 
   /**
@@ -91,7 +78,7 @@ class FormController implements Serializable {
    * @param string $action Action del formulario
    * @return string
    **/
-  function setName( $name = false ) {
+  public function setName( $name = false ) {
     $this->name = $name;
     $this->id = $name;
   }
@@ -101,7 +88,7 @@ class FormController implements Serializable {
    *
    * @return string
    **/
-  function getName() {
+  public function getName() {
     return $this->name;
   }
 
@@ -110,7 +97,7 @@ class FormController implements Serializable {
    *
    * @return string
    **/
-  function getId() {
+  public function getId() {
     return $this->id;
   }
 
@@ -120,7 +107,7 @@ class FormController implements Serializable {
    * @param string $action Action del formulario
    * @return string
    **/
-  function setAction( $action ) {
+  public function setAction( $action ) {
     $this->action = $action;
   }
 
@@ -129,7 +116,7 @@ class FormController implements Serializable {
    *
    * @return string
    **/
-  function getAction() {
+  public function getAction() {
     return $this->action;
   }
 
@@ -152,7 +139,7 @@ class FormController implements Serializable {
     $data[] = $this->fields;
     $data[] = $this->rules;
     $data[] = $this->messages;
-    $data[] = $this->postValues;
+    // $data[] = $this->postValues;
 
     return serialize( $data );
   }
@@ -176,7 +163,7 @@ class FormController implements Serializable {
     $this->fields = array_shift( $data );
     $this->rules = array_shift( $data );
     $this->messages = array_shift( $data );
-    $this->postValues = array_shift( $data );
+    // $this->postValues = array_shift( $data );
   }
 
 
@@ -253,43 +240,38 @@ class FormController implements Serializable {
    * @param array $formPost Datos enviados por el navegador convertidos a array
    **/
   public function loadPostValues( $formPost ) {
-    $this->postValues = $formPost;
-    foreach( $formPost as $key => $val ){
-      if( array_key_exists( $key, $this->fields ) ){
-        $this->fields[ $key ][ 'value' ] = $val;
+    // $this->postValues = $formPost;
+
+    // Importando los datos del form e integrando los datos de ficheros subidos
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+
+      if( $this->getFieldType( $fieldName ) !== 'file' ) {
+        $this->setFieldValue( $fieldName, $formPost[ $fieldName ] );
       }
-    }
-
-    // Preparando datos de ficheros en fileFields para validar
-    foreach( $this->getFieldsNamesArray() as $fieldName ){
-      if( $this->getFieldType( $fieldName ) === 'file' && !$this->isEmptyFieldValue( $fieldName ) ) {
-
-        $fileFieldValue = $this->getFieldValue( $fieldName );
-        // error_log( 'loadPostValues: Preparando File Field: '.$fieldName );
-        // error_log( print_r( $fileFieldValue, true ) );
-
-        switch( $fileFieldValue['status'] ) {
-          case 'LOAD':
-            $fileFieldValue['validate'] = $fileFieldValue['temp'];
-            // error_log( 'loadPostValues: LOAD -> temp' );
-            // error_log( print_r( $fileFieldValue, true ) );
-            break;
-          case 'REPLACE':
-            $fileFieldValue['validate'] = $fileFieldValue['temp'];
-            // error_log( 'loadPostValues: REPLACE -> temp' );
-            // error_log( print_r( $fileFieldValue, true ) );
-            break;
-          case 'EXIST':
-            $fileFieldValue['validate'] = $fileFieldValue['prev'];
-            // error_log( 'loadPostValues: EXIST -> prev' );
-            // error_log( print_r( $fileFieldValue, true ) );
-            break;
+      else {
+        if( !$this->isEmptyFieldValue( $fieldName ) ) {
+          $fileFieldValue = $this->getFieldValue( $fieldName );
+          switch( $fileFieldValue['status'] ) {
+            case 'LOAD':
+              $fileFieldValue['validate'] = $fileFieldValue['temp'];
+              // error_log( 'loadPostValues: LOAD -> temp' );
+              // error_log( print_r( $fileFieldValue, true ) );
+              break;
+            case 'REPLACE':
+              $fileFieldValue['validate'] = $fileFieldValue['temp'];
+              // error_log( 'loadPostValues: REPLACE -> temp' );
+              // error_log( print_r( $fileFieldValue, true ) );
+              break;
+            case 'EXIST':
+              $fileFieldValue['validate'] = $fileFieldValue['prev'];
+              // error_log( 'loadPostValues: EXIST -> prev' );
+              // error_log( print_r( $fileFieldValue, true ) );
+              break;
+          }
+          $this->setFieldValue( $fieldName, $fileFieldValue );
         }
-
-        $this->setFieldValue( $fieldName, $fileFieldValue );
       }
     }
-
   }
 
 
@@ -351,6 +333,152 @@ class FormController implements Serializable {
 
 
   /**
+   * Recupera el tipo de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @return string
+   **/
+  public function getFieldType( $fieldName ) {
+    return $this->getFieldParam( $fieldName, 'type' );
+  }
+
+
+  /**
+   * Establece un parametro de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $paramName Nombre del parametro
+   * @param mixed $value Valor del parametro
+   **/
+  public function setFieldParam( $fieldName, $paramName, $value ) {
+    if(array_key_exists($fieldName, $this->fields)){
+      $this->fields[ $fieldName ][ $paramName ] = $value;
+    }
+    else {
+      error_log( 'Intentando almacenar un parámetro ('.$paramName.') en un campo inexistente: '.$fieldName );
+    }
+  }
+
+
+  /**
+   * Recupera un parametro de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $paramName Nombre del parametro
+   * @return mixed
+   **/
+  public function getFieldParam( $fieldName, $paramName ) {
+    $value = null;
+
+    if( array_key_exists( $fieldName, $this->fields ) &&
+      array_key_exists( $paramName, $this->fields[ $fieldName ] ) &&
+      isset( $this->fields[ $fieldName ][$paramName] ) )
+    {
+      $value = $this->fields[ $fieldName ][ $paramName ];
+    }
+
+    return $value;
+  }
+
+
+  /**
+   * Verifica si se ha definido un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @return boolean
+   **/
+  public function isFieldDefined( $fieldName ){
+    return array_key_exists( $fieldName, $this->fields );
+  }
+
+
+  /**
+   * Recupera los nombres de todos los campos
+   *
+   * @return TYPE
+   **/
+  public function getFieldsNamesArray(){
+    $fieldsNamesArray = array();
+    foreach( $this->fields as $key => $val ){
+      array_push( $fieldsNamesArray, $key);
+    }
+
+    return $fieldsNamesArray;
+  }
+
+
+  /**
+   * Establece el valor de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @param mixed $fieldValue Valor del campo
+   **/
+  public function setFieldValue( $fieldName, $fieldValue ){
+    $this->setFieldParam( $fieldName, 'value', $fieldValue );
+  }
+
+
+  /**
+   * Recupera el valor de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @return mixed
+   **/
+  public function getFieldValue( $fieldName ) {
+    return $this->getFieldParam( $fieldName, 'value' );
+  }
+
+
+  /**
+   * Recupera los valores de todos los campos
+   *
+   * @return array
+   **/
+  public function getValuesArray(){
+    $fieldsValuesArray = array();
+    $fieldsNamesArray = $this->getFieldsNamesArray();
+    foreach( $fieldsNamesArray as $fieldsName ){
+      $fieldsValuesArray[ $fieldsName ] = $this->getFieldValue( $fieldsName );
+    }
+
+    return $fieldsValuesArray;
+  } // fuction getValuesArray
+
+
+  /**
+   * Verifica si el valor de un campo es vacio
+   *
+   * @param string $fieldName Nombre del campo
+   * @return boolean
+   **/
+  public function isEmptyFieldValue( $fieldName ) {
+    $empty = true;
+
+    $value = $this->getFieldValue( $fieldName );
+    $type = $this->getFieldType( $fieldName );
+
+    if( $type !== 'file' ) {
+      if( is_array( $value ) ) {
+        $empty = ( sizeof( $value ) <= 0 );
+      }
+      else {
+        $empty = ( $value === false || $value === '' );
+      }
+    }
+    else {
+      $empty = !( isset( $value['status'] ) && $value['status'] !== false && $value['status'] !== 'DELETE' );
+    }
+
+    return $empty;
+  }
+
+
+  /**
+  Ficheros
+  **/
+
+
+  /**
    * Convierte el tamaño de memoria de formato php.ini a bytes
    *
    * @param string $size Tamaño de la memoria configurada en php.ini
@@ -368,49 +496,167 @@ class FormController implements Serializable {
 
 
   /**
-   * Añade tareas para ejecutar en el navegador al finalizar bien el submit
+   * Procesa los ficheros temporales del form para colocarlos en su lugar definitivo y registrarlos
    *
-   * @param string $name Clave del suceso: accept, redirect, ...
-   * @param string $success Contenido del evento: Msg, url, ...
+   * @return boolean
    **/
-  public function setSuccess( $name, $success ) {
-    //error_log( 'setSuccess: name='. $name . ' success=' .  $success );
-    $this->success[ $name ] = $success;
+  public function processFileFields() {
+    $result = true;
+
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+      if( $this->getFieldType( $fieldName ) === 'file' ) {
+        // error_log( 'FILE: Almacenando fileField: '.$fieldName );
+
+        $fileFieldValue = $this->getFieldValue( $fieldName );
+        // error_log( print_r( $fileFieldValue, true ) );
+
+        if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false ) {
+          switch( $fileFieldValue['status'] ) {
+            case 'LOAD':
+              // error_log( 'processFileFields: LOAD' );
+
+              $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
+              $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+              $fullDestPath = self::FILES_APP_PATH . $destDir;
+              if( !is_dir( $fullDestPath ) ) {
+                // TODO: CAMBIAR PERMISOS 0777
+                if( !mkdir( $fullDestPath, 0777, true ) ) {
+                  $error = 'Imposible crear el directorio necesario.';
+                  $this->addFieldRuleError( $fieldName, 'cogumelo', $error );
+                  error_log($error . $fullDestPath );
+                }
+              }
+
+              if( !$this->existErrors() ) {
+                // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
+                if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
+                  $error = 'Imposible mover el fichero al directorio adecuado.';
+                  $this->addFieldRuleError( $fieldName, 'cogumelo', $error );
+                  error_log($error . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                }
+              }
+
+              if( !$this->existErrors() ) {
+                $fileFieldValue['values'] = $fileFieldValue['validate'];
+                $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
+                $this->setFieldValue( $fieldName, $fileFieldValue );
+                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue['values'], true ) );
+              }
+              break;
+            case 'REPLACE':
+              error_log( 'processFileFields: REPLACE' );
+
+              // TODO: EJECUTAR LOS PASOS PARA EL ESTADO REPLACE!!!
+
+              break;
+            case 'DELETE':
+              error_log( 'processFileFields: DELETE' );
+
+              // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
+
+              break;
+            case 'EXIST':
+              error_log( 'processFileFields OK: EXIST - NADA QUE HACER' );
+              break;
+          }
+        } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false )
+
+        // TODO: FALTA GUARDA LOS DATOS DEFINITIVOS DEL FICHERO!!!
+        // En caso de fallo $result = false;
+      } // if( $this->getFieldType( $fieldName ) === 'file' )
+    } // foreach( $this->getFieldsNamesArray() as $fieldName )
+
+    return $result;
+  } // function processFileFields
+
+
+  /**
+   * Mover con seguridad un fichero del tmp de PHP al tmp de nuestra aplicacion
+   *
+   * @param string $fileTmpLoc Fichero temporal de PHP
+   * @param string $fileName Nombre del fichero
+   * @return string Fichero temporal de la App. En caso de error: false
+   **/
+  public function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName ) {
+    // error_log( 'tmpPhpFile2tmpFormFile: '.$fileTmpLoc.' --- '.$fileName);
+    $result = false;
+    $error = false;
+
+    $tmpCgmlFormPath = self::FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getTokenId() );
+    if( !is_dir( $tmpCgmlFormPath ) ) {
+      /**
+      // TODO: CAMBIAR PERMISOS 0777
+      **/
+      if( !mkdir( $tmpCgmlFormPath, 0777, true ) ) {
+        $error = 'Imposible crear el dir. necesario: '.$tmpCgmlFormPath; error_log($error);
+      }
+    }
+
+    if( !$error ) {
+      $secureName = $this->secureFileName( $fileName );
+
+      $tmpLocationCgml = $tmpCgmlFormPath .'/'. $secureName;
+      /**
+      // TODO: FALTA VER QUE NON SE PISE UN ANTERIOR!!!
+      **/
+
+      if( !move_uploaded_file( $fileTmpLoc, $tmpLocationCgml ) ) {
+        $error = 'Fallo de move_uploaded_file pasando ('.$fileTmpLoc.') a ('.$tmpLocationCgml.')'; error_log($error);
+      }
+      else {
+        $result = $tmpLocationCgml;
+      }
+    }
+
+    // error_log( 'tmpPhpFile2tmpFormFile ERROR: '.$error );
+    // error_log( 'tmpPhpFile2tmpFormFile RET: '.$result );
+    return $result;
+  } // function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName )
+
+
+  /**
+   * Crea un nombre de fichero seguro a partir del nombre de fichero deseado
+   *
+   * @param string $fileName Nombre del campo
+   * @return string
+   **/
+  public function secureFileName( $fileName ) {
+    // error_log( 'secureFileName: '.$fileName );
+    $maxLength = 200;
+
+    $fileName = str_replace( $this->replaceAcents[ 'from' ], $this->replaceAcents[ 'to' ], $fileName );
+    $fileName = preg_replace( '/[^0-9a-z_\.-]/i', '_', $fileName );
+
+    $sobran = mb_strlen( $fileName, 'UTF-8' ) - $maxLength;
+    if( $sobran < 0 ) {
+      $sobran = 0;
+    }
+
+    $tmpExtPos = strrpos( $fileName, '.' );
+    if( $tmpExtPos > 0 && ( $tmpExtPos - $sobran ) >= 8 ) {
+      // Si hay extensión y al cortar el nombre quedan 8 o más letras, recorto solo el nombre
+      $tmpName = substr( $fileName, 0, $tmpExtPos - $sobran );
+      $tmpExt = substr( $fileName, 1 + $tmpExtPos );
+      $fileName = $tmpName . '.' . $tmpExt;
+    }
+    else {
+      // Recote por el final
+      $fileName = substr( $fileName, 0, $maxLength );
+    }
+
+    // error_log( 'secureFileName RET: '.$fileName );
+    return $fileName;
   }
 
 
   /**
-   * Recupera las tareas que se han definido para el navegador al finalizar bien el submit
-   *
-   * @return array
-   **/
-  public function getSuccess() {
-    // error_log( 'getSuccess: ' . print_r( $this->success, true ) );
-    return $this->success;
-  }
+  Ficheros (FIN)
+  **/
 
 
   /**
-   * Establece una regla de validacion para un campo
-   *
-   * @param string $fieldName Nombre del campo
-   * @param string $ruleName Nombre de la regla
-   * @param mixed $ruleParams
-   **/
-  public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
-    $this->rules[$fieldName][$ruleName] = $ruleParams;
-  }
-
-
-  /**
-   * Establece el mensaje para un campo para el JQueryValidate
-   *
-   * @param string $fieldName Nombre del campo
-   * @param string $msg
-   **/
-  public function setValidationMsg( $fieldName, $msg ) {
-    $this->messages[$fieldName] = $msg;
-  }
+  HTML y JS
+  **/
 
 
   /**
@@ -699,283 +945,121 @@ class FormController implements Serializable {
 
 
   /**
-   * Recupera los valores de todos los campos
+   * Añade tareas para ejecutar en el navegador al finalizar bien el submit
+   *
+   * @param string $name Clave del suceso: accept, redirect, ...
+   * @param string $success Contenido del evento: Msg, url, ...
+   **/
+  public function setSuccess( $name, $success ) {
+    //error_log( 'setSuccess: name='. $name . ' success=' .  $success );
+    $this->success[ $name ] = $success;
+  }
+
+
+  /**
+   * Recupera las tareas que se han definido para el navegador al finalizar bien el submit
    *
    * @return array
    **/
-  public function getValuesArray(){
-    $fieldsValuesArray = array();
-    $fieldsNamesArray = $this->getFieldsNamesArray();
-    foreach( $fieldsNamesArray as $fieldsName ){
-      $fieldsValuesArray[ $fieldsName ] = $this->getFieldValue( $fieldsName );
+  public function getSuccess() {
+    // error_log( 'getSuccess: ' . print_r( $this->success, true ) );
+    return $this->success;
+  }
+
+
+  /**
+   * Recupera un JSON de OK con los sucesos que hay que lanzar en el navegador
+   *
+   * @return string JSON
+   **/
+  public function jsonFormOk( $moreInfo = false ) {
+    $result = array(
+      'result' => 'ok',
+      'success' => $this->getSuccess()
+    );
+    if( $moreInfo !== false ) {
+      $result['moreInfo'] = $moreInfo;
     }
 
-    return $fieldsValuesArray;
-  } // fuction getValuesArray
+    return json_encode( $result );
+  }
 
 
   /**
-   * Recupera los nombres de todos los campos
+   * Recupera un JSON de ERROR con los errores que hay que mostrar en el navegador
    *
-   * @return TYPE
+   * @return string JSON
    **/
-  public function getFieldsNamesArray(){
-    $fieldsNamesArray = array();
-    foreach( $this->fields as $key => $val ){
-      array_push( $fieldsNamesArray, $key);
+  public function jsonFormError( $moreInfo = false ) {
+    $jvErrors = array();
+
+    foreach( $this->fieldErrors as $fieldName => $fieldRules ) {
+      foreach( $fieldRules as $ruleName => $msgRuleError ) {
+        $ruleParams = isset( $this->rules[ $fieldName ][ $ruleName ] ) ? $this->rules[ $fieldName ][ $ruleName ] : false;
+        $jvErrors[] = array( 'fieldName' => $fieldName, 'ruleName' => $ruleName,
+          'ruleParams' => $ruleParams, 'JVshowErrors' => array( $fieldName => $msgRuleError ) );
+      }
     }
 
-    return $fieldsNamesArray;
-  }
-
-
-  /**
-   * Recupera un parametro de un campo
-   *
-   * @param string $fieldName Nombre del campo
-   * @param string $paramName Nombre del parametro
-   * @return mixed
-   **/
-  public function getFieldParam( $fieldName, $paramName ) {
-    $value = null;
-
-    if( array_key_exists( $fieldName, $this->fields ) &&
-      array_key_exists( $paramName, $this->fields[ $fieldName ] ) &&
-      isset( $this->fields[ $fieldName ][$paramName] ) )
-    {
-      $value = $this->fields[ $fieldName ][ $paramName ];
+    foreach( $this->formErrors as $formError ) {
+      // Errores globales (no referidos a un field determinado)
+      $jvErrors[] = array( 'fieldName' => false, 'JVshowErrors' => $formError );
     }
 
-    return $value;
-  }
-
-
-  /**
-   * Recupera el tipo de un campo
-   *
-   * @param string $fieldName Nombre del campo
-   * @return string
-   **/
-  public function getFieldType( $fieldName ) {
-    return $this->getFieldParam( $fieldName, 'type' );
-  }
-
-
-  /**
-   * Recupera el valor de un campo
-   *
-   * @param string $fieldName Nombre del campo
-   * @return mixed
-   **/
-  public function getFieldValue( $fieldName ) {
-    return $this->getFieldParam( $fieldName, 'value' );
-  }
-
-
-  /**
-   * Establece un parametro de un campo
-   *
-   * @param string $fieldName Nombre del campo
-   * @param string $paramName Nombre del parametro
-   * @param mixed $value Valor del parametro
-   **/
-  public function setFieldParam( $fieldName, $paramName, $value ) {
-    if(array_key_exists($fieldName, $this->fields)){
-      $this->fields[ $fieldName ][ $paramName ] = $value;
+    $result = array(
+      'result' => 'error',
+      'jvErrors' => $jvErrors
+    );
+    if( $moreInfo !== false ) {
+      $result['moreInfo'] = $moreInfo;
     }
-    else {
-      error_log( 'Intentando almacenar un parámetro ('.$paramName.') en un campo inexistente: '.$fieldName );
-    }
+
+    return json_encode( $result );
   }
 
 
   /**
-   * Establece el valor de un campo
+  HTML y JS (FIN)
+  **/
+
+
+  /**
+  Validaciones y gestion de errores
+  **/
+
+
+  /**
+   * Establece una regla de validacion para un campo
    *
    * @param string $fieldName Nombre del campo
-   * @param mixed $fieldValue Valor del campo
+   * @param string $ruleName Nombre de la regla
+   * @param mixed $ruleParams
    **/
-  public function setFieldValue( $fieldName, $fieldValue ){
-    $this->setFieldParam( $fieldName, 'value', $fieldValue );
+  public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
+    $this->rules[$fieldName][$ruleName] = $ruleParams;
   }
 
 
   /**
-   * Verifica si el valor de un campo es vacio
+   * Establece el mensaje para un campo para el JQueryValidate
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $msg
+   **/
+  public function setValidationMsg( $fieldName, $msg ) {
+    $this->messages[$fieldName] = $msg;
+  }
+
+
+  /**
+   * Verifica si el campo es obligatorio
    *
    * @param string $fieldName Nombre del campo
    * @return boolean
    **/
-  public function isEmptyFieldValue( $fieldName ) {
-    $empty = true;
-
-    $value = $this->getFieldValue( $fieldName );
-    $type = $this->getFieldType( $fieldName );
-
-    if( $type !== 'file' ) {
-      if( is_array( $value ) ) {
-        $empty = ( sizeof( $value ) <= 0 );
-      }
-      else {
-        $empty = ( $value === false || $value === '' );
-      }
-    }
-    else {
-      $empty = !( isset( $value['status'] ) && $value['status'] !== false && $value['status'] !== 'DELETE' );
-    }
-
-    return $empty;
+  public function isRequiredField( $fieldName ) {
+    return isset( $this->rules[ $fieldName ][ 'required' ] );
   }
-
-
-  /**
-   * Procesa los ficheros temporales del form para colocarlos en su lugar definitivo y registrarlos
-   *
-   * @return boolean
-   **/
-  public function processFileFields() {
-    $result = true;
-
-    foreach( $this->getFieldsNamesArray() as $fieldName ) {
-      if( $this->getFieldType( $fieldName ) === 'file' ) {
-        error_log( 'FILE: Almacenando File Field: '.$fieldName );
-
-        $fileFieldValue = $this->getFieldValue( $fieldName );
-        error_log( print_r( $fileFieldValue, true ) );
-
-        if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false ) {
-          switch( $fileFieldValue['status'] ) {
-            case 'LOAD':
-              error_log( 'processFileFields: LOAD' );
-
-              $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
-              $destDir = $this->getFieldParam( $fieldName, 'destDir' );
-              $fullDestPath = self::FILES_APP_PATH . $destDir;
-              if( !is_dir( $fullDestPath ) ) {
-                // TODO: CAMBIAR PERMISOS 0777
-                if( !mkdir( $fullDestPath, 0777, true ) ) {
-                  $error = 'Imposible crear el dir. necesario: '.$fullDestPath; error_log($error);
-                }
-              }
-              error_log( 'FILE: movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
-              // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-              rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName );
-
-              $fileFieldValue['values'] = $fileFieldValue['validate'];
-              $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
-
-              $this->setFieldValue( $fieldName, $fileFieldValue );
-
-              error_log( 'FILE final (values): ' . print_r( $fileFieldValue['values'], true ) );
-              break;
-            case 'REPLACE':
-              error_log( 'processFileFields: REPLACE' );
-              break;
-            case 'DELETE':
-              error_log( 'processFileFields: DELETE' );
-              break;
-            case 'EXIST':
-              error_log( 'processFileFields: EXIST - NADA QUE HACER' );
-              break;
-          }
-        } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false )
-
-        // TODO: FALTA GUARDA LOS DATOS DEFINITIVOS DEL FICHERO!!!
-        // En caso de fallo $result = false;
-      } // if( $this->getFieldType( $fieldName ) === 'file' )
-    } // foreach( $this->getFieldsNamesArray() as $fieldName )
-
-    return $result;
-  } // function processFileFields
-
-
-  /**
-   * Mover con seguridad un fichero del tmp de PHP al tmp de nuestra aplicacion
-   *
-   * @param string $fileTmpLoc Fichero temporal de PHP
-   * @param string $fileName Nombre del fichero
-   * @return string Fichero temporal de la App. En caso de error: false
-   **/
-  public function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName ) {
-    // error_log( 'tmpPhpFile2tmpFormFile: '.$fileTmpLoc.' --- '.$fileName);
-    $result = false;
-    $error = false;
-
-    $tmpCgmlFormPath = self::FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getTokenId() );
-    if( !is_dir( $tmpCgmlFormPath ) ) {
-      /**
-      // TODO: CAMBIAR PERMISOS 0777
-      **/
-      if( !mkdir( $tmpCgmlFormPath, 0777, true ) ) {
-        $error = 'Imposible crear el dir. necesario: '.$tmpCgmlFormPath; error_log($error);
-      }
-    }
-
-    if( !$error ) {
-      $secureName = $this->secureFileName( $fileName );
-
-      $tmpLocationCgml = $tmpCgmlFormPath .'/'. $secureName;
-      /**
-      // TODO: FALTA VER QUE NON SE PISE UN ANTERIOR!!!
-      **/
-
-      if( !move_uploaded_file( $fileTmpLoc, $tmpLocationCgml ) ) {
-        $error = 'Fallo de move_uploaded_file pasando ('.$fileTmpLoc.') a ('.$tmpLocationCgml.')'; error_log($error);
-      }
-      else {
-        $result = $tmpLocationCgml;
-      }
-    }
-
-    // error_log( 'tmpPhpFile2tmpFormFile ERROR: '.$error );
-    // error_log( 'tmpPhpFile2tmpFormFile RET: '.$result );
-    return $result;
-  } // function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName )
-
-
-  /**
-   * Crea un nombre de fichero seguro a partir del nombre de fichero deseado
-   *
-   * @param string $fileName Nombre del campo
-   * @return string
-   **/
-  public function secureFileName( $fileName ) {
-    error_log( 'secureFileName: '.$fileName );
-    $maxLength = 200;
-
-    $fileName = str_replace( $this->replaceAcents[ 'from' ], $this->replaceAcents[ 'to' ], $fileName );
-    $fileName = preg_replace( '/[^0-9a-z_\.-]/i', '_', $fileName );
-
-    $sobran = mb_strlen( $fileName, 'UTF-8' ) - $maxLength;
-    if( $sobran < 0 ) {
-      $sobran = 0;
-    }
-
-    $tmpExtPos = strrpos( $fileName, '.' );
-    if( $tmpExtPos > 0 && ( $tmpExtPos - $sobran ) >= 8 ) {
-      // Si hay extensión y al cortar el nombre quedan 8 o más letras, recorto solo el nombre
-      $tmpName = substr( $fileName, 0, $tmpExtPos - $sobran );
-      $tmpExt = substr( $fileName, 1 + $tmpExtPos );
-      $fileName = $tmpName . '.' . $tmpExt;
-    }
-    else {
-      // Recote por el final
-      $fileName = substr( $fileName, 0, $maxLength );
-    }
-
-    // error_log( 'secureFileName RET: '.$fileName );
-    return $fileName;
-  }
-
-
-
-
-
-/**
-  ***********************************************************
-  VALIDATION
-  ***********************************************************
-**/
 
 
   /**
@@ -993,7 +1077,7 @@ class FormController implements Serializable {
    *
    * @return boolean
    **/
-  public function issetValidationObj() {
+  private function issetValidationObj() {
 
     // Si no hay un validador definido, intentamos cargar los validadores predefinidos
     if( $this->validationObj === null ) {
@@ -1001,17 +1085,6 @@ class FormController implements Serializable {
     }
 
     return( $this->validationObj !== null );
-  }
-
-
-  /**
-   * Verifica si el campo es obligatorio
-   *
-   * @param string $fieldName Nombre del campo
-   * @return boolean
-   **/
-  public function isRequiredField( $fieldName ) {
-    return isset( $this->rules[ $fieldName ][ 'required' ] );
   }
 
 
@@ -1160,66 +1233,6 @@ class FormController implements Serializable {
 
 
   /**
-   * Recupera todos los errores que se han añadido
-   *
-   * @return array
-   **/
-  public function getJVErrors() {
-    $errors = array();
-
-    foreach( $this->fieldErrors as $fieldName => $fieldRules ) {
-      foreach( $fieldRules as $ruleName => $msgRuleError ) {
-        $ruleParams = isset( $this->rules[ $fieldName ][ $ruleName ] ) ? $this->rules[ $fieldName ][ $ruleName ] : false;
-        $errors[] = array( 'fieldName' => $fieldName, 'ruleName' => $ruleName, 'ruleParams' => $ruleParams, 'JVshowErrors' => array( $fieldName => $msgRuleError ) );
-      }
-    }
-
-    foreach( $this->formErrors as $formError ) {
-      // Errores globales (no referidos a un field determinado)
-      $errors[] = array( 'fieldName' => false, 'JVshowErrors' => $formError );
-    }
-
-    return $errors;
-  }
-
-
-  /**
-   * Recupera un JSON de OK con los sucesos que hay que lanzar en el navegador
-   *
-   * @return string JSON
-   **/
-  public function jsonFormOk( $moreInfo = false ) {
-    $result = array(
-      'result' => 'ok',
-      'success' => $this->getSuccess()
-    );
-    if( $moreInfo !== false ) {
-      $result['moreInfo'] = $moreInfo;
-    }
-
-    return json_encode( $result );
-  }
-
-
-  /**
-   * Recupera un JSON de ERROR con los errores que hay que mostrar en el navegador
-   *
-   * @return string JSON
-   **/
-  public function jsonFormError( $moreInfo = false ) {
-    $result = array(
-      'result' => 'error',
-      'jvErrors' => $this->getJVErrors()
-    );
-    if( $moreInfo !== false ) {
-      $result['moreInfo'] = $moreInfo;
-    }
-
-    return json_encode( $result );
-  }
-
-
-  /**
    * Verifica si se han añadido errores
    *
    * @return boolean
@@ -1238,6 +1251,11 @@ class FormController implements Serializable {
   public function existFieldErrors( $fieldName ) {
     return( isset( $this->fieldErrors[ $fieldName ] ) || sizeof( $this->formErrors[ $fieldName ] ) > 0 );
   }
+
+
+  /**
+  Validaciones y gestion de errores (FIN)
+  **/
 
 
 

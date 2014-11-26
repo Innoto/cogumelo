@@ -3,12 +3,12 @@
   Gestión de informacion en cliente
 */
 
-var CogumeloForms = [];
+var cogumeloFormControllerFormsInfo = [];
 
 function getFormInfoIndex( idForm ) {
   var index = false;
-  for( var i = CogumeloForms.length - 1; i >= 0; i-- ) {
-    if( CogumeloForms[i].idForm === idForm ) {
+  for( var i = cogumeloFormControllerFormsInfo.length - 1; i >= 0; i-- ) {
+    if( cogumeloFormControllerFormsInfo[i].idForm === idForm ) {
       index = i;
       break;
     }
@@ -19,10 +19,10 @@ function getFormInfoIndex( idForm ) {
 function setFormInfo( idForm, key, value ) {
   var index = getFormInfoIndex( idForm );
   if( index === false ) {
-    index = CogumeloForms.length;
-    CogumeloForms[ index ] = { idForm: idForm };
+    index = cogumeloFormControllerFormsInfo.length;
+    cogumeloFormControllerFormsInfo[ index ] = { idForm: idForm };
   }
-  CogumeloForms[ index ][ key ] = value;
+  cogumeloFormControllerFormsInfo[ index ][ key ] = value;
 }
 
 function getFormInfo( idForm, key ) {
@@ -30,7 +30,7 @@ function getFormInfo( idForm, key ) {
   var index = getFormInfoIndex( idForm );
 
   if( index !== false ) {
-    value = CogumeloForms[ index ][ key ];
+    value = cogumeloFormControllerFormsInfo[ index ][ key ];
   }
 
   return value;
