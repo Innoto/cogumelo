@@ -49,7 +49,7 @@ class FormController implements Serializable {
    * @param string $action Action del formulario
    **/
   function __construct( $name = false, $action = false ) {
-    $this->createTokenId();
+    $this->getTokenId();
     if( $name !== false ) {
       $this->setName( $name );
     }
