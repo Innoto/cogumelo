@@ -6,13 +6,13 @@ define( 'APP_BASE_PATH', getcwd().'/../app' );
 define( 'SITE_PATH', APP_BASE_PATH.'/' );
 
 // Include cogumelo core Location
-set_include_path( '.:'.SITE_PATH );
+set_include_path( '.:'.SITE_PATH.':'.get_include_path() );
 
-require_once( 'conf/setup.php' );
-
+require_once( SITE_PATH.'/conf/setup.php' );
 
 require_once( COGUMELO_LOCATION.'/coreClasses/CogumeloClass.php' );
 require_once( COGUMELO_LOCATION.'/coreClasses/coreController/DependencesController.php' );
+
 require_once( SITE_PATH.'/Cogumelo.php' );
 
 // resolving vendor includes
