@@ -55,12 +55,14 @@ Class Template extends Smarty
     $include_chain = "\n".'<script type="text/javascript" src="'.$base_path.$file_path.'"></script>';
 
     if( $is_autoinclude ){
-
+      if ( strpos( $this->js_autoincludes, $include_chain ) === false ) {
         $this->js_autoincludes .= $include_chain;
-
+      }
     }
     else {
-      $this->js_includes .= $include_chain;
+      if ( strpos( $this->js_includes, $include_chain ) === false ) {
+        $this->js_includes .= $include_chain;
+      }
     }
 
   }
@@ -99,15 +101,14 @@ Class Template extends Smarty
     $include_chain = "\n".'<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.'">';
 
     if( $is_autoinclude ) {
-      //if($module == 'vendor'){
-      //  $this->css_autoincludes = $include_chain.$this->css_autoincludes;
-      //}
-      //else{
+      if ( strpos( $this->css_autoincludes, $include_chain ) === false ) {
         $this->css_autoincludes .= $include_chain;
-      //}
+      }
     }
     else {
-      $this->css_includes .= $include_chain;
+      if ( strpos( $this->css_includes, $include_chain ) === false ) {
+        $this->css_includes .= $include_chain;
+      }
     }
   }
 
