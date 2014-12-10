@@ -263,7 +263,9 @@ class FormController implements Serializable {
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
 
       if( $this->getFieldType( $fieldName ) !== 'file' ) {
-        $this->setFieldValue( $fieldName, $formPost[ $fieldName ] );
+        if( isset( $formPost[ $fieldName ] ) ) {
+          $this->setFieldValue( $fieldName, $formPost[ $fieldName ] );
+        }
       }
       else {
         if( !$this->isEmptyFieldValue( $fieldName ) ) {
