@@ -159,7 +159,7 @@ Class VO
       }
     }
     else{
-      Cogumelo::debug("key '". $getterkey ."' doesn't exist in VO::". $setterVO::$tableName);
+      //Cogumelo::debug("key '". $getterkey ."' doesn't exist in VO::". $setterVO::$tableName);
     }
 
     return $value;
