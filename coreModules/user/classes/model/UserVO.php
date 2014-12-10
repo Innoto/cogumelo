@@ -2,6 +2,10 @@
 
 Cogumelo::load('coreModel/VO.php');
 
+define( 'USER_STATUS_ACTIVE', 1 );
+define( 'USER_STATUS_WAITING', 2 );
+define( 'USER_STATUS_LOCKED', 3 );
+
 
 class UserVO extends VO
 {
@@ -48,6 +52,11 @@ class UserVO extends VO
       'type' => 'TEXT',
       'size' => '300'
     ),
+    'status'=> array(
+      'name' => 'Estado',
+      'type' => 'INT',
+      'size' => '10'
+    ),
     'avatar'=> array(
       'desc' => 'File',
       'type'=>'FOREIGN',
@@ -69,6 +78,16 @@ class UserVO extends VO
   function __construct($datarray = array())
   {
     parent::__construct($datarray);
+  }
+
+  function isActive(){
+    return $this->status === USER_STATUS_ACTIVE;
+  }
+  function isWaiting(){
+    return $this->status === USER_STATUS_WAITING;
+  }
+  function isLocked(){
+    return $this->status === USER_STATUS_LOCKED;
   }
 
 }
