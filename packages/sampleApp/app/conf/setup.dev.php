@@ -111,7 +111,7 @@ define( 'MEDIASERVER_HOST', '/' );
 define( 'MEDIASERVER_MINIMIFY_FILES', false ); // minimify js and css files
 define( 'MEDIASERVER_TMP_CACHE_PATH', APP_TMP_PATH.'/mediaCache' );
 define( 'MEDIASERVER_FINAL_CACHE_PATH', 'mediaCache' );
-define( 'MEDIASERVER_COMPILE_LESS', false );
+define( 'MEDIASERVER_COMPILE_LESS', true );
 
 
 
