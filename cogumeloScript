@@ -144,6 +144,11 @@
   }
 
   function createTables(){
+    global $C_ENABLED_MODULES;
+
+    foreach($C_ENABLED_MODULES as $moduleName) {
+      require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+    }
     $develdbcontrol = new DevelDBController();
     $develdbcontrol->createTables();
   }
