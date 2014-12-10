@@ -189,7 +189,6 @@ class UserView extends View
     $form->setField( 'name', array( 'placeholder' => 'Nombre' ) );
     $form->setField( 'surname', array( 'placeholder' => 'Apellidos' ) );
     $form->setField( 'email', array( 'placeholder' => 'Email' ) );
-    $form->setField( 'role', array( 'type' => 'reserved', 'value' => ROLE_USER ));
 
     $form->setField( 'description', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
     $form->setField( 'avatar', array( 'type' => 'file', 'id' => 'inputFicheiro',
@@ -295,9 +294,10 @@ class UserView extends View
       $valuesArray = $form->getValuesArray();
       $valuesArray['password'] = sha1($valuesArray['password']);
       unset($valuesArray['password2']);
+      $valuesArray['status'] = USER_STATUS_WAITING;
+      $valuesArray['role'] = ROLE_USER;
       $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
 
-      Cogumelo::console($valuesArray);
       $userControl = new UserController();
       //$res = $userControl->createFromArray($valuesArray);
       $res = $userControl->createRelTmp($valuesArray);
