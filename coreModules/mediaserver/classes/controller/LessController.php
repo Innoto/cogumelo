@@ -24,9 +24,9 @@ class LessController {
     $this->less->setImportDir( $lessTmpDir );
 
     // set less variables (Defined in setup)
-    global $MEDIASERVER_LESS_VARIABLES;
+    global $MEDIASERVER_LESS_CONSTANTS;
 
-    $this->less->setVariables( $MEDIASERVER_LESS_VARIABLES ) ;
+    $this->less->setVariables( $MEDIASERVER_LESS_CONSTANTS ) ;
 
     try {
       $this->less->checkedCompile( $lessTmpDir.$moduleName.'/classes/view/templates/'.$lessFilePath, $resultFilePath );
