@@ -1,6 +1,23 @@
 <?php
 
 error_reporting( -1 );
+/**
+ *
+ * CAMBIOS
+
+jsonFormError - getJsonFormError
+jsonFormOk - getJsonFormOk
+setValidationRule - setFieldRule
+getValuesArray - getFieldsValueArray
+getFieldsNamesArray - getFieldNamesArray
+getHtmlForm - getHtmlAllForm
+
+evaluateRule - validateRule
+addFieldRuleError: FACHADA como addFieldError=addFieldRuleError( $fieldName, 'cogumelo', $msgRuleError)
+
+isFieldDefined - isDefinedField
+
+*/
 
 
 /**
