@@ -12,20 +12,20 @@ class RolePermissionVO extends VO
       'primarykey' => true,
       'autoincrement' => true
     ),
-    'roleId' => array(
+
+    'role' => array(
       'name' => 'Role',
-      'type' => 'INT'
-    )
+      'type'=>'FOREIGN',
+      'vo' => 'RoleVO',
+      'key' => 'id'
+    ),
 
-    /*,
-
-    'permissions' => array(
-      'name' => 'Permissions',
+    'permission' => array(
+      'name' => 'Permission',
       'type'=>'FOREIGN',
       'vo' => 'PermissionVO',
       'key' => 'id'
-    )
-    */
+    )    
   );
 
   function __construct($datarray = array())

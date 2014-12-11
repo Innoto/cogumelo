@@ -66,12 +66,6 @@ class UserVO extends VO
     ),
 
     // reltaionships
-    'roles'=> array(
-      'name' => 'Roles',
-      'type'=>'FOREIGN',
-      'vo' => 'UserRoleVO',
-      'key' => 'userId'
-    ),
     'avatar'=> array(
       'name' => 'Avatar',
       'type'=>'FOREIGN',

@@ -24,12 +24,6 @@ class RoleVO extends VO
       'name' => 'Descripción',
       'type' => 'TEXT',
       'size' => '300'
-    ),
-    'permissions' => array(
-      'name' => 'Permissions',
-      'type'=>'FOREIGN',
-      'vo' => 'RolePermissionVO',
-      'key' => 'roleId'
     )
   );
 

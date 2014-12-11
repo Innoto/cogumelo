@@ -14,12 +14,19 @@ class UserRoleVO extends VO
       'primarykey' => true,
       'autoincrement' => true
     ),
-    'userId' => array(
+    'user'=> array(
       'name' => 'User',
-      'type' => 'INT'
+      'type'=>'FOREIGN',
+      'vo' => 'UserVO',
+      'key' => 'id'
+    ),
+    'role'=> array(
+      'name' => 'Role',
+      'type'=>'FOREIGN',
+      'vo' => 'RoleVO',
+      'key' => 'id'
     )
   );
-
 
   function __construct($datarray = array())
   {
