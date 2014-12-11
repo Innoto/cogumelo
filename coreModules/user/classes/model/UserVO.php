@@ -12,6 +12,7 @@ define( 'USER_STATUS_LOCKED', 3 );
 
 class UserVO extends VO
 {
+  static $relatedVOs = array('UserRoleVO', 'FiledataVO');
   static $tableName = 'user_user';
   static $cols = array(
     'id' => array(
@@ -60,18 +61,17 @@ class UserVO extends VO
       'name' => 'Último acceso',
       'type'=>'DATETIME'
     ),
-    'timeCreateUser' => array(
-      'name' => 'Fechas de creación',
-      'type' => 'DATETIME'
-    ),
-
-    // reltaionships
     'avatar'=> array(
       'name' => 'Avatar',
       'type'=>'FOREIGN',
       'vo' => 'FiledataVO',
       'key' => 'id'
+    ),
+    'timeCreateUser' => array(
+      'name' => 'Fechas de creación',
+      'type' => 'DATETIME'
     )
+
 
   );
 

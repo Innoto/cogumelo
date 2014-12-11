@@ -5,6 +5,7 @@ user::load('model/PermissionVO.php');
 
 class RolePermissionVO extends VO
 {
+  static $relatedVOs = array('RoleVO', 'PermissionVO');
   static $tableName = 'user_rolePermission';
   static $cols = array(
     'id' => array(
