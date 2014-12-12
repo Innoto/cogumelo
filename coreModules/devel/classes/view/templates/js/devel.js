@@ -67,13 +67,13 @@ function botonBinds(){
 function drawERScheme() {
 
   var dat = [
-    {name: 'FileVO', relationship: [], module:'file'},
-    {name: 'UserVO', relationship: ['FileVO'], module:'user'},
-    {name: 'UserRoleVO', relationship: ['UserVO', 'RoleVO'], module:'user'},
-    {name: 'RoleVO', relationship: [], module:'user'},
-    {name: 'RolePermissionVO', relationship: ['RoleVO', 'PermissionVO'], module:'user'},
-    {name: 'PermissionVO', relationship: [], module:'user'},
-    {name: 'becaVO', relationship: ['UserVO'], module:'becascanada'}
+    {name: 'FileVO', relationship: [], module:'file', elements: 7},
+    {name: 'UserVO', relationship: ['FileVO'], module:'user', elements: 11},
+    {name: 'UserRoleVO', relationship: ['UserVO', 'RoleVO'], module:'user', elements: 3},
+    {name: 'RoleVO', relationship: [], module:'user', elements:4},
+    {name: 'RolePermissionVO', relationship: ['RoleVO', 'PermissionVO'], module:'user', elements: 3},
+    {name: 'PermissionVO', relationship: [], module:'user', elements:4},
+    {name: 'becaVO', relationship: ['UserVO'], module:'app', elements:20}
   ];
 
 
@@ -86,7 +86,7 @@ function drawERScheme() {
     var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
 
     // add scheme nodes
-    diagramDataObj.nodes.push( { name: e.name, color: randomColor} );
+    diagramDataObj.nodes.push( { name: e.name, color: randomColor, elements: e.elements} );
 
     // add scheme relationship
     $.each( e.relationship, function( i2, e2 ){

@@ -40,7 +40,7 @@ function drawERD(  svgDiv,  graphData, cola) {
         .data(graph.nodes)
       .enter().append("circle")
         .attr("class", "node")
-        .attr("r", 10)
+        .attr("r", function (d) { return 2 * d.elements})
         .style("fill", function (d) { return d.color})
         .call(cola.drag);
 
