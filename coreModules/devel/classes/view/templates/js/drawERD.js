@@ -3,7 +3,7 @@ function drawERD(  svgDiv,  graphData, cola) {
 
 
    var width = 800,
-      height = 25 * graphData.nodes.length;
+      height =  25 * graphData.nodes.length + 50*graphData.links.length ;
 
 
 

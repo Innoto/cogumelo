@@ -328,9 +328,10 @@
   <!-- ****************************************************************************************************************  -->
   <div id="dbsql_container" class="container" style="display:none;">
 
-    <fieldset>
+    <fieldset class="erDiagram">
       <legend>Relationship</legend>
-      <div class="erDiagram" id="svgDiv"></div>
+      <div class="legend"></div>
+      <div id="svgDiv"></div>
     </fieldset>
     <fieldset>
       <legend>SQL</legend>
