@@ -12,7 +12,7 @@ function getFormInfoIndex( idForm ) {
       index = i;
       break;
     }
-  };
+  }
   return index;
 }
 
@@ -80,13 +80,13 @@ function setValidateForm( idForm, rules, messages ) {
           console.log( response );
           if( response.result === 'ok' ) {
             var successActions = response.success;
-            console.log( successActions )
-            if ( successActions[ 'accept' ] ) {
-              alert( successActions[ 'accept' ] );
+            console.log( successActions );
+            if ( successActions.accept ) {
+              alert( successActions.accept );
             }
-            if ( successActions[ 'redirect' ] ) {
+            if ( successActions.redirect ) {
               // Usando replace no permite volver a la pagina del form
-              window.location.replace( successActions[ 'redirect' ] );
+              window.location.replace( successActions.redirect );
             }
             // alert( 'Form Submit OK' );
           }
@@ -96,20 +96,20 @@ function setValidateForm( idForm, rules, messages ) {
               errObj = response.jvErrors[i];
               console.log( errObj );
 
-              if( errObj[ 'fieldName' ] !== false ) {
-                if( errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] === false ) {
-                  $defMess = $validateForm.defaultMessage( errObj['fieldName'], errObj['ruleName'] );
+              if( errObj.fieldName !== false ) {
+                if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
+                  $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
                   if( typeof $defMess !== 'string' ) {
-                    $defMess = $defMess( errObj['ruleParams'] );
+                    $defMess = $defMess( errObj.ruleParams );
                   }
-                  errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] = $defMess;
+                  errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
                 }
-                console.log( errObj[ 'JVshowErrors' ] );
-                $validateForm.showErrors( errObj[ 'JVshowErrors' ] );
+                console.log( errObj.JVshowErrors );
+                $validateForm.showErrors( errObj.JVshowErrors );
               }
               else {
-                console.log( errObj[ 'JVshowErrors' ] );
-                showErrorsValidateForm( $( form ), errObj[ 'JVshowErrors' ][ 'msgText'], errObj[ 'JVshowErrors' ][ 'msgClass' ] );
+                console.log( errObj.JVshowErrors );
+                showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
               }
 
             }
@@ -129,7 +129,7 @@ function setValidateForm( idForm, rules, messages ) {
   // Save validate instance for this Form
   setFormInfo( idForm, 'validateForm', $validateForm );
 
-  return $validateForm
+  return $validateForm;
 } // function
 
 
@@ -254,20 +254,20 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
           errObj = $jsonData.jvErrors[i];
           console.log( errObj );
 
-          if( errObj[ 'fieldName' ] !== false ) {
-            if( errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] === false ) {
-              $defMess = $validateForm.defaultMessage( errObj['fieldName'], errObj['ruleName'] );
+          if( errObj.fieldName !== false ) {
+            if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
+              $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
               if( typeof $defMess !== 'string' ) {
-                $defMess = $defMess( errObj['ruleParams'] );
+                $defMess = $defMess( errObj.ruleParams );
               }
-              errObj[ 'JVshowErrors' ][ errObj[ 'fieldName' ] ] = $defMess;
+              errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
             }
-            console.log( errObj[ 'JVshowErrors' ] );
-            $validateForm.showErrors( errObj[ 'JVshowErrors' ] );
+            console.log( errObj.JVshowErrors );
+            $validateForm.showErrors( errObj.JVshowErrors );
           }
           else {
-            console.log( errObj[ 'JVshowErrors' ] );
-            showErrorsValidateForm( $( form ), errObj[ 'JVshowErrors' ][ 'msgText'], errObj[ 'JVshowErrors' ][ 'msgClass' ] );
+            console.log( errObj.JVshowErrors );
+            showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
           }
 
         }
@@ -323,14 +323,14 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
         errObj = response.jvErrors[i];
         console.log( errObj );
 
-        if( errObj[ 'fieldName' ] !== false ) {
+        if( errObj.fieldName !== false ) {
 
 
 
         }
         else {
-          console.log( errObj[ 'JVshowErrors' ] );
-          showErrorsValidateForm( $( form ), errObj[ 'JVshowErrors' ][ 'msgText'], errObj[ 'JVshowErrors' ][ 'msgClass' ] );
+          console.log( errObj.JVshowErrors );
+          showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
         }
 
       } // for
@@ -343,7 +343,7 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 function fileFieldToOk( idForm, fieldName ) {
   $fileFieldWrap = $( '#' + idForm + ' .cgmMForm-field-' + fieldName );
   $fileField = $( '#' + idForm + ' input[name=' + fieldName + ']' );
-  fileObj = $fileField['0'].files['0'];
+  fileObj = $fileField[0].files[0];
 
   $fileField.attr( 'readonly', 'readonly' );
   $fileField.prop( 'disabled', true );
