@@ -4,7 +4,7 @@ Cogumelo::load('coreModel/VO.php');
 
 class FiledataVO extends VO
 {
-  static $tableName = 'filedata';
+  static $tableName = 'filedata_filedata';
   static $cols = array(
     'id' => array(
       'type' => 'INT',

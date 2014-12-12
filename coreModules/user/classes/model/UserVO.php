@@ -1,6 +1,9 @@
 <?php
 
 Cogumelo::load('coreModel/VO.php');
+filedata::load('model/FiledataVO.php');
+user::load('model/UserRoleVO.php');
+
 
 define( 'USER_STATUS_ACTIVE', 1 );
 define( 'USER_STATUS_WAITING', 2 );
@@ -9,7 +12,7 @@ define( 'USER_STATUS_LOCKED', 3 );
 
 class UserVO extends VO
 {
-  static $tableName = 'user';
+  static $tableName = 'user_user';
   static $cols = array(
     'id' => array(
       'type' => 'INT',
@@ -42,11 +45,7 @@ class UserVO extends VO
       'type' => 'CHAR',
       'size' => '50'
     ),
-    'role'=> array(
-      'name' => 'Rol',
-      'type' => 'INT',
-      'size' => '10'
-    ),
+
     'description'=> array(
       'name' => 'Descripción',
       'type' => 'TEXT',
@@ -57,12 +56,6 @@ class UserVO extends VO
       'type' => 'INT',
       'size' => '10'
     ),
-    'avatar'=> array(
-      'desc' => 'File',
-      'type'=>'FOREIGN',
-      'vo' => 'FiledataVO',
-      'key' => 'id'
-    ),
     'timeLastLogin' => array(
       'name' => 'Último acceso',
       'type'=>'DATETIME'
@@ -70,7 +63,16 @@ class UserVO extends VO
     'timeCreateUser' => array(
       'name' => 'Fechas de creación',
       'type' => 'DATETIME'
+    ),
+
+    // reltaionships
+    'avatar'=> array(
+      'name' => 'Avatar',
+      'type'=>'FOREIGN',
+      'vo' => 'FiledataVO',
+      'key' => 'id'
     )
+
   );
 
 

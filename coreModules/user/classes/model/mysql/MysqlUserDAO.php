@@ -11,6 +11,7 @@ user::load('model/UserVO.php');
 class MysqlUserDAO extends MysqlDAO
 {
   var $VO = "UserVO";
+
   var $filters = array(
       'find' => "name  LIKE CONCAT('%',?,'%') OR login LIKE CONCAT('%', ?, '%')",
       'edadmax' => "edad <= ?",
@@ -24,10 +25,10 @@ class MysqlUserDAO extends MysqlDAO
   //  Return: UserVO (null if 0 rows)
   function authenticateUser($connectionControl, $login, $password)
   {
+    $objVO  = new $this->VO();
 
-    Cogumelo::console($password);
     // SQL Query
-    $strSQL = "SELECT * FROM `user` WHERE `login` = ? and `password` = ? ;";
+    $strSQL = "SELECT * FROM `".$objVO::$tableName."` WHERE `login` = ? and `password` = ? ;";
 
     if( $res = $this->execSQL($connectionControl, $strSQL, array($login, $password)) ) {
 
@@ -44,37 +45,13 @@ class MysqlUserDAO extends MysqlDAO
 
   }
 
-/*
-  //
-  //  Use an UserVO to update a User password.
-  //
-  function updatePassword($connection, $user)
-  {
-    // SQL Query
-    $StrSQL = sprintf("UPDATE `user` SET
-        password = SHA1('%s')
-      WHERE `id` = %s ;",
-      $connection->real_escape_string($user->getter('password')),
-      $connection->real_escape_string($user->getter('id'))
-    );
-
-    // Secure SQL Query (not real)
-    $StrSQLSecure = sprintf("UPDATE `user` SET
-        password = SHA1('XXX')
-      WHERE `id` = %s ;",
-      $user->getter('id')
-    );
-
-    return MysqlDAOutils::execSQL($connection, $StrSQL, $StrSQLSecure);
-  }
-*/
-
   //
   //  Use an UserVO to update User last login
   //
   function updateTimeLogin($connectionControl, $id, $date)
   {
-    $strSQL = "UPDATE `user` SET timeLastLogin = ? WHERE `id` = ? ;";
+    $objVO  = new $this->VO();
+    $strSQL = "UPDATE `".$objVO::$tableName."` SET timeLastLogin = ? WHERE `id` = ? ;";
     $res = $this->execSQL($connectionControl, $strSQL, array($date, $id));
     return $res;
   }
