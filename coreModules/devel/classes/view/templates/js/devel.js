@@ -98,14 +98,12 @@ function drawERScheme() {
         }
       });
 
-      console.log(e.name, relTo);
 
       //console.log( dat.indexOf( e2.name ) );
       diagramDataObj.links.push( { source: i, target:relTo } );
     });
 
 
-console.log(diagramDataObj.links)
 
     // add to legend
     if( !$('#dbsql_container .erDiagram .legend').find('.'+e.module).length ) {
