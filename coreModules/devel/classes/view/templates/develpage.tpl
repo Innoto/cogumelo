@@ -33,8 +33,30 @@
   {/literal}
 
 
+
+
+
+
+
+
+  <style>
+    .node {
+      stroke: #fff;
+      stroke-width: 1.5px;
+    }
+
+    .link {
+      stroke: #999;
+      stroke-opacity: .8;
+    }
+  </style>
+
+
+
 </head>
+
 <body>
+
 <div id="header">
   <img id="logo" src="/media/module/devel/img/cogumelo_logo.png" >
   <h1>DEVEL</h1>
@@ -305,6 +327,11 @@
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
   <div id="dbsql_container" class="container" style="display:none;">
+
+    <fieldset>
+      <legend>Relationship</legend>
+      <div class="erDiagram" id="svgDiv"></div>
+    </fieldset>
     <fieldset>
       <legend>SQL</legend>
       <div class="infoSQL">{foreach $data_sql as $item}{$item}{/foreach}</div>
