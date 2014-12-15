@@ -9,11 +9,11 @@ Cogumelo::load('coreModel/VOUtils.php');
 class  DevelDBController extends DataController
 {
   var $data;
-  var $voUtils;
+  var $voUtilControl;
 
   function __construct($usuario=false, $password = false, $DB = false)
   {
-    $this->voUtils = new VOUtils();
+    $this->voUtilControl = new VOUtils();
     $this->data = new Facade("DevelDB", "devel");
 
     if($usuario) {
@@ -38,12 +38,12 @@ class  DevelDBController extends DataController
   function getTablesSQL(){
     $returnStrArray = array();
 
-    foreach( $this->voUtils->listVOs() as $vo) {
-      $returnStrArray[] = "#VO File: ".$this->voUtils->voReferences[$vo].$vo.".php";
-      $returnStrArray[] = $this->data->getDropSQL($vo, $this->voUtils->voReferences[$vo]);
-      $returnStrArray[] = $this->data->getTableSQL($vo, $this->voUtils->voReferences[$vo].$vo.".php");
+    foreach( $this->voUtilControl->listVOs() as $voKey => $vo) {
+      $returnStrArray[] = "#VO File: ".$vo['path'].".php";
+      $returnStrArray[] = $this->data->getDropSQL( $voKey, $vo['path'].".php" );
+      $returnStrArray[] = $this->data->getTableSQL( $voKey, $vo['path'].".php");
 
-      $resInsert = $this->data->getInsertTableSQL($vo, $this->voUtils->voReferences[$vo].$vo.".php");
+      $resInsert = $this->data->getInsertTableSQL( $voKey, $vo['path'].".php");
 
       if(!empty($resInsert)) {
         foreach ($resInsert as $resInsertKey => $resInsertValue) {

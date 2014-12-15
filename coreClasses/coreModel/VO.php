@@ -50,6 +50,10 @@ Class VO
   }
 
 
+  function getCols(){
+    return $this::$cols;
+  }
+
   function setRelationshipVOs() {
     foreach( $this::$cols as $colKey => $col ) {
       if( $col['type'] == 'FOREIGN' ){

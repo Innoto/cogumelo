@@ -68,6 +68,13 @@ class DevelView extends View
   }
 
   function DBSQL(){
+
+    // ER diagram data
+    Cogumelo::load('coreModel/VOUtils.php');
+    $voUtil = new VOUtils();
+    $this->template->assign('erData', json_encode($voUtil->getAllRelationshipRef()) );
+
+    // SQL code
     $data_sql = $this->get_sql_tables();
     foreach ($data_sql as $k => $v) {
       $data_sql[$k] = SqlFormatter::format($v);

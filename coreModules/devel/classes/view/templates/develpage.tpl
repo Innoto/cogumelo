@@ -24,18 +24,17 @@
 
   {$js_includes}
 
-  {literal}
   <script>
+
+    var erData = {$erData};
+
+    {literal}
     function hideContainer(){
-        $(".container").hide();
+      $(".container").hide();
     }
-  </script>
-  {/literal}
 
-
-
-
-
+    {/literal}
+</script>
 
 
 

@@ -66,22 +66,11 @@ function botonBinds(){
 
 function drawERScheme() {
 
-  var dat = [
-    {name: 'FileVO', relationship: [], module:'file', elements: 7},
-    {name: 'UserVO', relationship: ['FileVO'], module:'user', elements: 11},
-    {name: 'UserRoleVO', relationship: ['UserVO', 'RoleVO'], module:'user', elements: 3},
-    {name: 'RoleVO', relationship: [], module:'user', elements:4},
-    {name: 'RolePermissionVO', relationship: ['RoleVO', 'PermissionVO'], module:'user', elements: 3},
-    {name: 'PermissionVO', relationship: [], module:'user', elements:4},
-    {name: 'becaVO', relationship: ['UserVO'], module:'app', elements:20}
-  ];
-
-
   var diagramDataObj = {nodes:[],links:[]};
 
   //links:[{source:12, target:10}];
 
-  $.each(dat, function(i,e) {
+  $.each(erData, function(i,e) {
 
     var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
 
@@ -92,7 +81,7 @@ function drawERScheme() {
     $.each( e.relationship, function( i2, e2 ){
 
       var relTo = 0;
-      $.each(dat, function(i3,e3) { 
+      $.each( erData, function(i3,e3) { 
         if(e3.name == e2) {
           relTo = i3;
         }
