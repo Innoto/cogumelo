@@ -13,7 +13,6 @@ class  DevelDBController extends DataController
 
   function __construct($usuario=false, $password = false, $DB = false)
   {
-    $this->voUtilControl = new VOUtils();
     $this->data = new Facade("DevelDB", "devel");
 
     if($usuario) {
@@ -25,7 +24,7 @@ class  DevelDBController extends DataController
   function createTables(){
 
     $returnStrArray = array();
-    foreach( $this->voUtils->listVOs() as $vo) {
+    foreach( VOUtils::listVOs() as $vo) {
       $returnStrArray[] = $this->data->dropTable($vo);
       $returnStrArray[] = $this->data->createTable($vo);
       $returnStrArray[] = $this->data->insertTableValues($vo);
@@ -38,7 +37,7 @@ class  DevelDBController extends DataController
   function getTablesSQL(){
     $returnStrArray = array();
 
-    foreach( $this->voUtilControl->listVOs() as $voKey => $vo) {
+    foreach( VOUtils::listVOs() as $voKey => $vo) {
       $returnStrArray[] = "#VO File: ".$vo['path'].".php";
       $returnStrArray[] = $this->data->getDropSQL( $voKey, $vo['path'].".php" );
       $returnStrArray[] = $this->data->getTableSQL( $voKey, $vo['path'].".php");

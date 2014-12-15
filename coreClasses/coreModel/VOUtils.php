@@ -3,21 +3,21 @@
   class VOUtils {
 
   // list VOs with priority
-  function listVOs() {
+  static function listVOs() {
 
     $voarray = array();
 
     // VOs into APP
-    $voarray = $this->mergeVOs($voarray, SITE_PATH.'classes/model/' ); // scan app model dir
+    $voarray = self::mergeVOs($voarray, SITE_PATH.'classes/model/' ); // scan app model dir
 
     global $C_ENABLED_MODULES;
     foreach($C_ENABLED_MODULES as $modulename) {
       // modules into APP
-      $voarray = $this->mergeVOs($voarray, SITE_PATH.'../modules/'.$modulename.'/classes/model/', $modulename );
+      $voarray = self::mergeVOs($voarray, SITE_PATH.'../modules/'.$modulename.'/classes/model/', $modulename );
       // modules into DIST
-      $voarray = $this->mergeVOs($voarray, COGUMELO_DIST_LOCATION.'/distModules/'.$modulename.'/classes/model/', $modulename );
+      $voarray = self::mergeVOs($voarray, COGUMELO_DIST_LOCATION.'/distModules/'.$modulename.'/classes/model/', $modulename );
       // modules into COGUMELO 
-      $voarray = $this->mergeVOs($voarray, COGUMELO_LOCATION.'/coreModules/'.$modulename.'/classes/model/', $modulename );
+      $voarray = self::mergeVOs($voarray, COGUMELO_LOCATION.'/coreModules/'.$modulename.'/classes/model/', $modulename );
     }
 
 
@@ -25,7 +25,7 @@
   }
 
   
-  function mergeVOs($voarray, $dir, $modulename='app') {
+  static function mergeVOs($voarray, $dir, $modulename='app') {
     $vos = array();
 
     // VO's from APP
@@ -56,7 +56,7 @@
 
 
 
-  function getVORelationship( $VOInstance ) {
+  static function getVORelationship( $VOInstance ) {
     $relationships = array();
 
     if( sizeof( $VOInstance->getCols() ) > 0 ) {
@@ -72,15 +72,15 @@
 
 
 
-  function getAllRelationshipRef() {
+  static function getAllRelationshipRef() {
 
     $ret = array();
 
-    foreach ( $this->listVOs() as $voName=>$voDef) {
+    foreach ( self::listVOs() as $voName=>$voDef) {
       $vo = new $voName();
       $ret[] = array( 
                       'name' => $voName, 
-                      'relationship' => $this->getVORelationship( $vo ), 
+                      'relationship' => self::getVORelationship( $vo ), 
                       'elements' => sizeof( $vo->getCols() ),
                       'module' => $voDef['module']
                     );
