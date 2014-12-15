@@ -177,7 +177,7 @@ function processInputFileField( evnt ) {
 
   if( valid ) {
     var cgIntFrmId = $( '#' + evnt.target.form.id ).attr('sg');
-    for (var i = 0, file; file = files[i]; i++) {
+    for (var i = 0, file; (file = files[i]); i++) {
       uploadFile( file, evnt.target.form.id, evnt.target.name, cgIntFrmId );
     }
   }
@@ -190,7 +190,7 @@ function checkInputFileField( files, idForm, fieldName ) {
   var valRes = $validateForm.element( 'input[name=' + fieldName + ']' );
 
   // Mostrando informacion obtenida del navegador
-  for( var i = 0, f; f = files[i]; i++ ) {
+  for( var i = 0, f; (f = files[i]); i++ ) {
     $('#list').before( '<div>' + escape(f.name) + ' (' + f.type + ') ' + f.size + ' bytes</div>' );
   }
 

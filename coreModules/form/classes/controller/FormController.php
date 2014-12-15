@@ -65,7 +65,7 @@ class FormController implements Serializable {
    * @param string $name Name del formulario
    * @param string $action Action del formulario
    **/
-  function __construct( $name = false, $action = false ) {
+  public function __construct( $name = false, $action = false ) {
     $this->getTokenId();
     if( $name !== false ) {
       $this->setName( $name );
@@ -370,7 +370,7 @@ class FormController implements Serializable {
    * @param mixed $value Valor del parametro
    **/
   public function setFieldParam( $fieldName, $paramName, $value ) {
-    if(array_key_exists($fieldName, $this->fields)){
+    if(array_key_exists($fieldName, $this->fields)) {
       $this->fields[ $fieldName ][ $paramName ] = $value;
     }
     else {
@@ -406,7 +406,7 @@ class FormController implements Serializable {
    * @param string $fieldName Nombre del campo
    * @return boolean
    **/
-  public function isFieldDefined( $fieldName ){
+  public function isFieldDefined( $fieldName ) {
     return array_key_exists( $fieldName, $this->fields );
   }
 
@@ -416,9 +416,9 @@ class FormController implements Serializable {
    *
    * @return TYPE
    **/
-  public function getFieldsNamesArray(){
+  public function getFieldsNamesArray() {
     $fieldsNamesArray = array();
-    foreach( $this->fields as $key => $val ){
+    foreach( $this->fields as $key => $val ) {
       array_push( $fieldsNamesArray, $key);
     }
 
@@ -432,7 +432,7 @@ class FormController implements Serializable {
    * @param string $fieldName Nombre del campo
    * @param mixed $fieldValue Valor del campo
    **/
-  public function setFieldValue( $fieldName, $fieldValue ){
+  public function setFieldValue( $fieldName, $fieldValue ) {
     $this->setFieldParam( $fieldName, 'value', $fieldValue );
   }
 
@@ -453,10 +453,10 @@ class FormController implements Serializable {
    *
    * @return array
    **/
-  public function getValuesArray(){
+  public function getValuesArray() {
     $fieldsValuesArray = array();
     $fieldsNamesArray = $this->getFieldsNamesArray();
-    foreach( $fieldsNamesArray as $fieldsName ){
+    foreach( $fieldsNamesArray as $fieldsName ) {
       $fieldsValuesArray[ $fieldsName ] = $this->getFieldValue( $fieldsName );
     }
 
@@ -607,7 +607,8 @@ class FormController implements Serializable {
       // TODO: CAMBIAR PERMISOS 0777
       **/
       if( !mkdir( $tmpCgmlFormPath, 0777, true ) ) {
-        $error = 'Imposible crear el dir. necesario: '.$tmpCgmlFormPath; error_log($error);
+        $error = 'Imposible crear el dir. necesario: '.$tmpCgmlFormPath;
+        error_log($error);
       }
     }
 
@@ -818,7 +819,8 @@ class FormController implements Serializable {
 
     $attribs = '';
     $attribs .= isset( $field['id'] )    ? ' id="'.$field['id'].'"' : '';
-    $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$field['name'].( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
+    $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$field['name'].
+      ( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
     $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
     $attribs .= isset( $field['title'] ) ? ' title="'.$field['title'].'"' : '';
     $attribs .= isset( $field['placeholder'] ) ? ' placeholder="'.$field['placeholder'].'"' : '';
@@ -935,8 +937,8 @@ class FormController implements Serializable {
 
     $separador = '';
 
-    $html .= '<!-- Validate form '.$this->getName().' -->'."\n";
-    $html .= '<script>'."\n";
+    $html .= '<!-- Validate form ' . $this->getName() . ' -->' . "\n";
+    $html .= '<script>' . "\n";
 
     $html .= '$( document ).ready( function() {'."\n";
 
@@ -987,11 +989,53 @@ class FormController implements Serializable {
 
 
   /**
+   * Recupera un JSON con el Ok o los errores que hay que enviar al navegador
+   *
+   * @return string JSON
+   **/
+  public function getJsonResponse( $moreInfo = false ) {
+    $json = '';
+    if( !$this->existErrors() ) {
+      $json = $this->jsonFormOk( $moreInfo );
+    }
+    else {
+      $this->addFormError( 'NO SE HAN GUARDADO LOS DATOS.', 'formError' );
+      $json = $this->jsonFormError( $moreInfo );
+    }
+
+    return $json;
+  }
+
+
+  /**
+   * Envía el JSON con el Ok o los errores al navegador
+   *
+   * @return string JSON
+   **/
+  public function sendJsonResponse( $moreInfo = false ) {
+    $json = $this->getJsonResponse( $moreInfo );
+    echo $json;
+
+    return $json;
+  }
+
+
+  /**
    * Recupera un JSON de OK con los sucesos que hay que lanzar en el navegador
    *
    * @return string JSON
    **/
   public function jsonFormOk( $moreInfo = false ) {
+    $this->getJsonOk( $moreInfo );
+  }
+
+  /**
+   * Recupera un JSON de OK con los sucesos que hay que lanzar en el navegador
+   *
+   * @return string JSON
+   **/
+
+  public function getJsonOk( $moreInfo = false ) {
     $result = array(
       'result' => 'ok',
       'success' => $this->getSuccess()
@@ -1010,6 +1054,16 @@ class FormController implements Serializable {
    * @return string JSON
    **/
   public function jsonFormError( $moreInfo = false ) {
+    $this->getJsonError( $moreInfo );
+  }
+
+
+  /**
+   * Recupera un JSON de ERROR con los errores que hay que mostrar en el navegador
+   *
+   * @return string JSON
+   **/
+  public function getJsonError( $moreInfo = false ) {
     $jvErrors = array();
 
     foreach( $this->fieldErrors as $fieldName => $fieldRules ) {

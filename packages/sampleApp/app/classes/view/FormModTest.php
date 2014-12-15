@@ -10,7 +10,7 @@ class FormModTest extends View
 {
 
 
-  function __construct($base_dir){
+  public function __construct( $base_dir ) {
     parent::__construct($base_dir);
   }
 
@@ -19,7 +19,7 @@ class FormModTest extends View
   * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
-  function accessCheck() {
+  public function accessCheck() {
     return true;
   }
 
@@ -29,7 +29,7 @@ class FormModTest extends View
   * Defino y muestro un formulario
   *
   */
-  function loadForm() {
+  public function loadForm() {
     error_log( '--------------------------------' );
     error_log( 'FormModTest: loadForm');
     error_log( '--------------------------------' );
@@ -89,7 +89,7 @@ class FormModTest extends View
   * Evalua el envio del formulario y reporta posibles errores
   *
   */
-  function actionForm() {
+  public function actionForm() {
     error_log( '--------------------------------' );
     error_log( 'FormModTest: actionForm');
     error_log( '--------------------------------' );
@@ -105,7 +105,8 @@ class FormModTest extends View
 
     if( !$form->existErrors() ) {
       if( !$form->processFileFields() ) {
-        $form->addFormError( 'Ha sucedido un problema con los ficheros adjuntos. Puede que sea necesario subirlos otra vez.', 'formError' );
+        $form->addFormError( 'Ha sucedido un problema con los ficheros adjuntos. Puede que sea '.
+          'necesario subirlos otra vez.', 'formError' );
       }
     }
 
@@ -124,7 +125,7 @@ class FormModTest extends View
   * Evalua el envio del formulario y reporta posibles errores
   *
   */
-  function actionFormEjemplo2() {
+  public function actionFormEjemplo2() {
     error_log( '--------------------------------' );
     error_log( 'FormModTest: actionForm');
     error_log( '--------------------------------' );
@@ -151,7 +152,8 @@ class FormModTest extends View
     if( !$form->existErrors() ) {
       // Validacion OK. Falta procesar File Fields
       if( !$form->processFileFields() ) {
-        $form->addFormError( 'Ha sucedido un problema con los ficheros adjuntos. Puede que sea necesario subirlos otra vez.', 'formError' );
+        $form->addFormError( 'Ha sucedido un problema con los ficheros adjuntos. Puede que sea '.
+          'necesario subirlos otra vez.', 'formError' );
       }
     }
 
