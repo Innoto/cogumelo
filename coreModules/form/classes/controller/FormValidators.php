@@ -5,16 +5,15 @@ form::load('controller/FormValidatorsExtender.php');
 
 
 /**
- * Evaluadores de las reglas de validación de campos de formulario.
- *
- * @package Module Form
- **/
+  Evaluadores de las reglas de validación de campos de formulario.
+  @package Module Form
+*/
 class FormValidators extends FormValidatorsExtender {
 
   private $methods = array();
   private $messages = array();
 
-  function __construct(){
+  public function __construct(){
   } //function __construct
 
 
@@ -35,19 +34,20 @@ class FormValidators extends FormValidatorsExtender {
     $this->messages = array_shift( $data );
   }
 
+
+
   /*
-  // Base: http://jqueryvalidation.org/
+    Base: http://jqueryvalidation.org/
   */
 
   /**
-   * Verifica si el valor de un campo cumple una regla segun los parametros establecidos
-   *
-   * @param string $fieldName Nombre del campo
-   * @param string $fieldValue Valor del campo
-   * @param string $ruleName Nombre de la regla
-   * @param mixed $ruleParams Parametros de la regla (opcional)
-   * @return boolean
-   **/
+    Verifica si el valor de un campo cumple una regla segun los parametros establecidos
+    @param string $fieldName Nombre del campo
+    @param string $fieldValue Valor del campo
+    @param string $ruleName Nombre de la regla
+    @param mixed $ruleParams Parametros de la regla (opcional)
+    @return boolean
+  */
   public function evaluateRule( $fieldName, $fieldValue, $ruleName, $ruleParams ) {
     $validate = false;
 
@@ -65,18 +65,20 @@ class FormValidators extends FormValidatorsExtender {
 
 
   /**
-   * Metodos de validacion
-   *
-   * @param mixed $value
-   * @param mixed $param (optinal)
-   * @return bool $validate
-   **/
-
+    Metodos de validacion
+    @param mixed $value
+    @param mixed $param (optinal)
+    @return bool $validate
+  */
+  private function val_regex( $value, $param ) {
+    $validate = ( preg_match( $param, $value ) === 1 );
+    return $validate;
+  }
 
   private function val_required( $value ) {
     $validate = true;
     if( is_array( $value ) ) {
-      $validate = ( sizeof( $value ) > 0 );
+      $validate = ( count( $value ) > 0 );
     }
     else {
       $validate = ( $value !== false && $value !== '' );
@@ -84,14 +86,10 @@ class FormValidators extends FormValidatorsExtender {
     return $validate;
   }
 
-  private function val_regex( $value, $param ) {
-    return preg_match( $param, $value ) === 1;
-  }
-
   private function val_email( $value ) {
-    return preg_match( '/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9]'.
-      '(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/',
-      $value ) === 1;
+    $regex = '/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9]'.
+      '(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/';
+    return( preg_match( $regex, $value ) === 1 );
   }
 
   private function val_url( $value ) {
@@ -99,18 +97,17 @@ class FormValidators extends FormValidatorsExtender {
     $azP2 = $azP.'|\d|-|\.|_|~';
     $rx2 = '%[\da-f]{2})|[!\$&\'\(\)\*\+,;=]|:';
     $rx3 = '\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]';
-    return preg_match( '/^(https?|s?ftp):\/\/'.
+    $regex = '/^(https?|s?ftp):\/\/'.
       '(((('.$azP2.')|('.$rx2.')*@)?((('.$rx3.')\.('.$rx3.')\.('.$rx3.')\.('.$rx3.'))|'.
       '((('.$azP.'|\d)|(('.$azP.'|\d)('.$azP2.')*('.$azP.'|\d)))\.)+'.
       '(('.$azP.')|(('.$azP.')('.$azP2.')*('.$azP.')))\.?)(:\d*)?)'.
       '(\/((('.$azP2.')|('.$rx2.'|@)+(\/(('.$azP2.')|('.$rx2.'|@)*)*)?)?'.
-      '(\?((('.$azP2.')|('.$rx2.'|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((('.$azP2.')|('.$rx2.'|@)|\/|\?)*)?$/i',
-      $value ) === 1;
+      '(\?((('.$azP2.')|('.$rx2.'|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((('.$azP2.')|('.$rx2.'|@)|\/|\?)*)?$/i';
+    return( preg_match( $regex, $value ) === 1 );
   }
 
   private function val_date( $value ) {
     /*
-     *
     */
     return false;
   }
@@ -161,7 +158,6 @@ class FormValidators extends FormValidatorsExtender {
 
   private function val_creditcard( $value ) {
     /*
-     *
     */
     return false;
   }
@@ -219,6 +215,7 @@ class FormValidators extends FormValidatorsExtender {
     }
 
     // TODO: Cambiar in_array por regex
+
     return in_array( $value['validate'][ 'type' ], $param );
   }
 
@@ -238,10 +235,9 @@ class FormValidators extends FormValidatorsExtender {
     }
 
     // TODO: Cambiar in_array por regex
+
     return in_array( $tmpExt, $param );
   }
-
-
 
 
 

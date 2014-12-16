@@ -9,15 +9,14 @@ form::autoIncludes();
 class FormModTest extends View
 {
 
-
   public function __construct( $base_dir ) {
     parent::__construct($base_dir);
   }
 
 
   /**
-  * Evaluate the access conditions and report if can continue
-  * @return bool : true -> Access allowed
+    Evaluate the access conditions and report if can continue
+    @return bool : true -> Access allowed
   */
   public function accessCheck() {
     return true;
@@ -26,8 +25,7 @@ class FormModTest extends View
 
 
   /**
-  * Defino y muestro un formulario
-  *
+    Defino y muestro un formulario
   */
   public function loadForm() {
     error_log( '--------------------------------' );
@@ -86,8 +84,7 @@ class FormModTest extends View
 
 
   /**
-  * Evalua el envio del formulario y reporta posibles errores
-  *
+    Evalua el envio del formulario y reporta posibles errores
   */
   public function actionForm() {
     error_log( '--------------------------------' );
@@ -122,8 +119,7 @@ class FormModTest extends View
 
 
   /**
-  * Evalua el envio del formulario y reporta posibles errores
-  *
+    Evalua el envio del formulario y reporta posibles errores
   */
   public function actionFormEjemplo2() {
     error_log( '--------------------------------' );
