@@ -992,7 +992,7 @@ class FormController implements Serializable {
     @return string JSON
   */
   public function jsonFormOk( $moreInfo = false ) {
-    $this->getJsonOk( $moreInfo );
+    return $this->getJsonOk( $moreInfo );
   }
 
   /**
@@ -1018,7 +1018,7 @@ class FormController implements Serializable {
     @return string JSON
   */
   public function jsonFormError( $moreInfo = false ) {
-    $this->getJsonError( $moreInfo );
+    return $this->getJsonError( $moreInfo );
   }
 
 
