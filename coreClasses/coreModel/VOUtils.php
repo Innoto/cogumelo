@@ -56,7 +56,7 @@
 
 
 
-  static function getVORelationship( $VOInstance ) {
+  static function getVORelScheme( $VOInstance ) {
     $relationships = array();
 
     if( sizeof( $VOInstance->getCols() ) > 0 ) {
@@ -72,7 +72,7 @@
 
 
 
-  static function getAllRelationshipRef() {
+  static function getAllRelScheme() {
 
     $ret = array();
 
@@ -80,7 +80,7 @@
       $vo = new $voName();
       $ret[] = array( 
                       'name' => $voName, 
-                      'relationship' => self::getVORelationship( $vo ), 
+                      'relationship' => self::getVORelScheme( $vo ), 
                       'elements' => sizeof( $vo->getCols() ),
                       'module' => $voDef['module']
                     );
@@ -90,4 +90,43 @@
     return $ret;
   }
 
+
+
+
+
+  static function createModelRelTreeFiles() {
+
+  }
+
+  static function getRelTree( $vo ) {
+    Cogumelo::error('No dependence files, please execute ./cogumelo updateModelRelationship');
+  }
+
+
 }
+
+/*
+  
+  SUPER CONSULTA!!!!
+
+select user_user.id, user_user.login, concat('[', group_concat( user_role_json.permission) , ']' ) from user_user
+left join user_userRole ON user_userRole.user = user_user.id
+left join (
+  select user_role.id as id, concat('{ "user_role.id": "', user_role.id, '","user_role.name": "', user_role.name, '", "user_role.permission": [', group_concat(user_permission_json.permission), ']}') as permission from user_role
+  left join user_rolePermission ON user_rolePermission.role = user_role.id
+  left join (
+    select 
+      user_permission.id as id,
+      concat(
+        '{',
+          '"user_permission.id": "',user_permission.id, '",',
+          '"user_permission.name": "',user_permission.name, '"',
+        '}'
+      ) as permission
+  from user_permission) as user_permission_json ON user_permission_json.id = user_rolePermission.permission
+  group by user_role.id
+
+) as user_role_json ON user_role_json.id = user_userRole.role
+group by user_user.id
+
+*/

@@ -71,7 +71,7 @@ class DevelView extends View
 
     // ER diagram data
     Cogumelo::load('coreModel/VOUtils.php');
-    $this->template->assign('erData', json_encode(VOUtils::getAllRelationshipRef()) );
+    $this->template->assign('erData', json_encode(VOUtils::getAllRelScheme()) );
 
     // SQL code
     $data_sql = $this->get_sql_tables();
