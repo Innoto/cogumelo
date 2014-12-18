@@ -115,25 +115,27 @@
       }//end switch
   }//end parameters handler
   else{
-    echo "Not enough arguments. Try:";
+    echo "You have to write an option:";
     printOptions();
   }
 
 
   function printOptions(){
     echo "\n
-          flush                         to remove temporary files
-          generateClientCaches          to cache all js, css, compiled less and other client files
-          setPermissions                to set the files/folders permission
-          setPermissionsDevel           to set the files/folders permission
-          createDB                      to create a database
-          createTables                  to generate the tables
-          initModules                   to execute '::moduleRc()' of all modules
-          bckDB                         to do a DB backup (optional arg: filename)
-          restoreDB                     to restore a database
-          installDependences            to install all modules dependencies
-          generateTranslations          to get all the web text into a file.po
-          compileTranslations           to compile file.po and get the translations ready
+      * flush                   Remove temporary files
+      * generateClientCaches    Cache all js, css, compiled less and other client files
+      * setPermissions          Set the files/folders permission
+      * setPermissionsDevel     Set the files/folders permission
+      * generateModel           Execute all options below in the same order
+        - createDB                Create a database
+        - createRelSchemes        Generate relationship tmp files
+        - createTables            Generate the tables
+        - initModules             Execute '::moduleRc()' of all modules
+      * bckDB                       Do a DB backup (optional arg: filename)
+      * restoreDB                   Restore a database
+      * installDependences          Install all modules dependencies
+      * generateTranslations        Get all the web text into a file.po
+      * compileTranslations         Compile file.po and get the translations ready
     \n\n";
   }
 

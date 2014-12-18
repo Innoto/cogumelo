@@ -54,9 +54,23 @@
     return array_merge( $voarray , $vos );
   }
 
+/*
+  static function getVORelFull( $VOInstance ) {
+    $relationships = array();
 
+    if( sizeof( $VOInstance->getCols() ) > 0 ) {
+      foreach ( $VOInstance->getCols() as $attr ) {
 
-  static function getVORelScheme( $VOInstance ) {
+        }
+      }
+    }
+
+    return $relationships;
+  }
+
+*/
+
+  static function getVORelSimple( $VOInstance ) {
     $relationships = array();
 
     if( sizeof( $VOInstance->getCols() ) > 0 ) {
@@ -80,7 +94,7 @@
       $vo = new $voName();
       $ret[] = array( 
                       'name' => $voName, 
-                      'relationship' => self::getVORelScheme( $vo ), 
+                      'relationship' => self::getVORelSimple( $vo ), 
                       'elements' => sizeof( $vo->getCols() ),
                       'module' => $voDef['module']
                     );
