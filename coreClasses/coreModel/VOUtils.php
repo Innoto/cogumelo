@@ -54,23 +54,8 @@
     return array_merge( $voarray , $vos );
   }
 
-/*
-  static function getVORelFull( $VOInstance ) {
-    $relationships = array();
 
-    if( sizeof( $VOInstance->getCols() ) > 0 ) {
-      foreach ( $VOInstance->getCols() as $attr ) {
-
-        }
-      }
-    }
-
-    return $relationships;
-  }
-
-*/
-
-  static function getVORelSimple( $VOInstance ) {
+  static function getVOConnections( $VOInstance ) {
     $relationships = array();
 
     if( sizeof( $VOInstance->getCols() ) > 0 ) {
@@ -92,14 +77,13 @@
 
     foreach ( self::listVOs() as $voName=>$voDef) {
       $vo = new $voName();
-      $ret[] = array( 
+      $ret[ $voName ] = array( 
                       'name' => $voName, 
-                      'relationship' => self::getVORelSimple( $vo ), 
+                      'relationship' => self::getVOConnections( $vo ), 
                       'elements' => sizeof( $vo->getCols() ),
                       'module' => $voDef['module']
                     );
     }
-
 
     return $ret;
   }
@@ -107,9 +91,33 @@
 
 
 
+  static function getVORelationship( $voName ) {
+
+    $relArray = array('vo' => $voName, 'relationship' => array() );
+
+    $allVOsRel = self::getAllRelScheme();
+
+    if( sizeof( $allVOsRel ) > 0) {
+      foreach( $allVOsRel as $roRel ) {
+        if(  
+          in_array( $roRel['name'], $allVOsRel[$voName]['relationship']) ||    // relation from this to other VO
+          in_array( $voName, $roRel['relationship'] )                         // relation fron other to this VO
+        ) {
+            $relArray['relationship'][] = self::getVORelationship( $roRel['name'] );
+          }
+      }
+    }
+
+    return $relArray;
+  }
+
+
 
   static function createModelRelTreeFiles() {
 
+    foreach( self::listVOs() as $voName => $vo) {
+      file_put_contents( APP_TMP_PATH.'/modelRelationship/'.$voName.'.json' , json_encode(self::getVORelationship($voName)) );
+    }
   }
 
   static function getRelTree( $vo ) {

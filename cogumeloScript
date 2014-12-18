@@ -40,6 +40,9 @@
           createDB($user, $passwd);
           fwrite(STDOUT, "\n--\n");
         break;
+        case 'createRelSchemes': 
+          createRelSchemes();
+          break;
 
         case 'createTables': // create database tables
           createTables();
@@ -144,6 +147,22 @@
     $develdbcontrol->createSchemaDB();
     echo "\nDatase created!\n";
   }
+
+
+  function createRelSchemes() {
+    Cogumelo::load('coreModel/VOUtils.php');
+
+    $dir = APP_TMP_PATH.'/modelRelationship';
+
+    if( !is_dir( $dir ) ) {
+      if( !mkdir( $dir, 0777, true ) ) {
+        echo 'ERROR: Imposible crear el dirirectorio: '.$dir."\n";
+      }
+    }
+
+    VOUtils::createModelRelTreeFiles();
+  }
+
 
   function createTables(){
     global $C_ENABLED_MODULES;
