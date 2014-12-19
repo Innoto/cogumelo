@@ -7,7 +7,6 @@ user::load('model/RoleVO.php');
 
 class UserRoleVO extends VO
 {
-  static $relatedVOs = array('UserVO', 'RoleVO');
   static $tableName = 'user_userRole';
   static $cols = array(
     'id' => array(

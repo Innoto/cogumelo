@@ -4,7 +4,6 @@ Cogumelo::load('coreModel/VO.php');
 
 class PermissionVO extends VO
 {
-  static $relatedVOs = array('RolePermissionVO');  
   static $tableName = 'user_permission';
   static $cols = array(
     'id' => array(

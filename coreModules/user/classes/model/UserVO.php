@@ -2,7 +2,6 @@
 
 Cogumelo::load('coreModel/VO.php');
 filedata::load('model/FiledataVO.php');
-user::load('model/UserRoleVO.php');
 
 
 define( 'USER_STATUS_ACTIVE', 1 );
@@ -12,7 +11,6 @@ define( 'USER_STATUS_LOCKED', 3 );
 
 class UserVO extends VO
 {
-  static $relatedVOs = array('UserRoleVO', 'FiledataVO');
   static $tableName = 'user_user';
   static $cols = array(
     'id' => array(

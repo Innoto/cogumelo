@@ -55,12 +55,27 @@
   }
 
 
+  static function getVOColsWhithoutForeigns($voName) {
+    $retCols = array();
+
+    $vo = new $voName();
+
+    foreach( $vo->getCols() as $colK => $col ) {
+      if( $col['type'] != 'FOREIGN' ) {
+        $retCols[] = $colK;
+      }
+    }
+
+    return $retCols;
+  }
+
   static function getVOConnections( $VOInstance ) {
     $relationships = array();
 
     if( sizeof( $VOInstance->getCols() ) > 0 ) {
       foreach ( $VOInstance->getCols() as $attr ) {
         if( array_key_exists( 'type', $attr ) && $attr['type'] == 'FOREIGN' ){
+
           $relationships[] =  $attr['vo'];
         }
       }
@@ -93,7 +108,12 @@
 
   static function getVORelationship( $voName, $voOriginName=false ) {
 
-    $relArray = array('vo' => $voName, 'relationship' => array() );
+
+    $relArray = array('vo' => $voName);
+
+    if( $voOriginName ) {
+      $relArray['cols'] = self::getVOColsWhithoutForeigns( $voName );
+    }
 
     $allVOsRel = self::getAllRelScheme();
 
@@ -101,8 +121,8 @@
       foreach( $allVOsRel as $roRel ) {
         if(  
           (
-            in_array( $roRel['name'], $allVOsRel[$voName]['relationship']) ||             // relation from this to other VO
-            in_array( $voName, $roRel['relationship'] )                     // relation fron other to this VO
+            in_array( $roRel['name'], $allVOsRel[$voName]['relationship']) ||   // relation from this to other VO
+            in_array( $voName, $roRel['relationship'] )                         // relation fron other to this VO
           ) && 
           $roRel['name'] != $voOriginName
         ) {

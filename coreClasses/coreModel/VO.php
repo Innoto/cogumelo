@@ -53,8 +53,6 @@ Class VO
     return $this::$cols;
   }
 
-
-
   // set an attribute
   function setter($setterkey, $value = false)
   {
