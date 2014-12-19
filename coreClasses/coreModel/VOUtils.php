@@ -91,7 +91,7 @@
 
 
 
-  static function getVORelationship( $voName ) {
+  static function getVORelationship( $voName, $voOriginName=false ) {
 
     $relArray = array('vo' => $voName, 'relationship' => array() );
 
@@ -100,10 +100,13 @@
     if( sizeof( $allVOsRel ) > 0) {
       foreach( $allVOsRel as $roRel ) {
         if(  
-          in_array( $roRel['name'], $allVOsRel[$voName]['relationship']) ||    // relation from this to other VO
-          in_array( $voName, $roRel['relationship'] )                         // relation fron other to this VO
+          (
+            in_array( $roRel['name'], $allVOsRel[$voName]['relationship']) ||             // relation from this to other VO
+            in_array( $voName, $roRel['relationship'] )                     // relation fron other to this VO
+          ) && 
+          $roRel['name'] != $voOriginName
         ) {
-            $relArray['relationship'][] = self::getVORelationship( $roRel['name'] );
+            $relArray['relationship'][] = self::getVORelationship( $roRel['name'], $voName );
           }
       }
     }

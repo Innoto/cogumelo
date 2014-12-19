@@ -150,6 +150,13 @@
 
 
   function createRelSchemes() {
+
+    global $C_ENABLED_MODULES;
+
+    foreach($C_ENABLED_MODULES as $moduleName) {
+      require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+    }
+
     Cogumelo::load('coreModel/VOUtils.php');
 
     $dir = APP_TMP_PATH.'/modelRelationship';
