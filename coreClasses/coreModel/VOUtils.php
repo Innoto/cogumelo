@@ -144,7 +144,18 @@
   }
 
   static function getRelTree( $vo ) {
-    Cogumelo::error('No dependence files, please execute ./cogumelo updateModelRelationship');
+    $ret = false;
+
+    $voJSONPath = APP_TMP_PATH.'/modelRelationship/'.$voName.'.json';
+
+    if( file_exists( $voJSONPath ) ) {
+      $ret = json_decode( file_get_contents( $voJSONPath ) );
+    }
+    else{
+      Cogumelo::error('No dependence file:('.$voJSONPath.') for "'.$vo.'", please execute ./cogumelo createRelSchemes');
+    }
+
+    return $ret;
   }
 
 
