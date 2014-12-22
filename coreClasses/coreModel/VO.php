@@ -1,10 +1,14 @@
 <?php
 
+// load all VO's
+Cogumelo::load('coreModel/VOUtils.php');
+VOUtils::includeVOs();
+
 Class VO
 {
 
-  var $attributes = array();
-  var $relationship = array();
+  var $data = array();
+  var $dataRelationship = array();
 
   function __construct(array $datarray){
 
@@ -53,29 +57,21 @@ Class VO
     return $this::$cols;
   }
 
-  // set an attribute
+  function getTableName(){
+    return $this::$tableName;
+  }
+
+  // set an data attribute
   function setter($setterkey, $value = false)
   {
 
-    if( preg_match('#^(.*?)\.(.*)$#', $setterkey, $setter_data) ) {
-      $tableName = $setter_data[1];
-      $columnKey = $setter_data[2];
-    }
-    else {
-      $tableName = $this::$tableName;
-      $columnKey = $setterkey;
-    }
 
-    // choose VO
-    $setterVO = $this->getDependenceVO($tableName);
-
-    // set values
-    if( $tableName == $setterVO::$tableName && in_array($columnKey, array_keys($setterVO::$cols)) ){
-      $this->markRelationshipAsUsed( $tableName );
-      $setterVO->attributes[$columnKey] = $value;
+    if( array_key_exists($setterkey, $this->getCols()) ) {
+      // set values
+      $setterVO->data[$setterkey] = $value;
     }
     else{
-      Cogumelo::debug("key '". $setterkey ."' doesn't exist in VO::". $setterVO::$tableName);
+      Cogumelo::debug("key '". $setterkey ."' not exist in VO::". $this::$tableName);
     }
   }
 
@@ -87,33 +83,31 @@ Class VO
 
     $value = null;
 
-    if( preg_match('#^(.*?)\.(.*)$#', $getterkey, $getter_data) ) {
-      $tableName = $getter_data[1];
-      $columnKey = $getter_data[2];
+    // get values
+    if( array_key_exists($getterkey, $this->data) ) {
+        $value = $this->data[$getterkey];
     }
     else {
-      $tableName = $this::$tableName;
-      $columnKey = $getterkey;
-    }
-
-    // choose VO
-    $getterVO = $this->getDependenceVO($tableName);
-
-    // get values
-    if( $tableName == $getterVO::$tableName && in_array($columnKey, array_keys($getterVO::$cols)) ){
-      $this->markRelationshipAsUsed( $tableName );
-      if( array_key_exists($columnKey, $getterVO->attributes) ) {
-        $value = $getterVO->attributes[$columnKey];
-      }
-    }
-    else{
-      //Cogumelo::debug("key '". $getterkey ."' doesn't exist in VO::". $setterVO::$tableName);
+      Cogumelo::debug("key '". $getterkey ."' not exist in VO::". $this::$tableName);
     }
 
     return $value;
-
   }
 
+
+  function getRelData() {
+    return $this->dataRelationship;
+  }
+
+
+  function getRelScheme() {
+    return VOUtils::getVORelationship();
+  }
+
+  // Is NM Table when only have other VO references or primary key in cols
+  function isNMTable() {
+
+  }
 
 
   function toString(){

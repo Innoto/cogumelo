@@ -108,8 +108,8 @@
 
   static function getVORelationship( $voName, $voOriginName=false ) {
 
-
-    $relArray = array('vo' => $voName);
+    $vo = new $voName();
+    $relArray = array('vo' => $voName, 'table' => $vo::$tableName );
 
     if( $voOriginName ) {
       $relArray['cols'] = self::getVOColsWhithoutForeigns( $voName );
@@ -143,6 +143,8 @@
     }
   }
 
+
+
   static function getRelTree( $vo ) {
     $ret = false;
 
@@ -156,6 +158,11 @@
     }
 
     return $ret;
+  }
+
+
+  static function includeVOs() {
+    // incluir todos VO's
   }
 
 
