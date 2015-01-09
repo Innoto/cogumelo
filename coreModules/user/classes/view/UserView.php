@@ -168,6 +168,33 @@ class UserView extends View
 
   } // function loadForm()
 
+
+
+
+
+
+  /**
+  *
+  * Update user form
+  * @param request(id)
+  * @return Form Html
+  *
+  **/
+  function userUpdateFormDefine( $request ){
+
+    $userControl = new UserController();
+    $dataVO = $userControl->find( $request[1] );
+
+    if(!$dataVO){
+      Cogumelo::redirect( SITE_URL.'404' );
+    }
+
+    $form = $this->userFormDefine( $dataVO );
+    return $form;
+  }
+
+
+
   /**
    *
    * Create form fields and validations
@@ -175,17 +202,22 @@ class UserView extends View
    *
    **/
 
-  function registerFormDefine() {
+  function userFormDefine( $dataVO = '' ) {
 
     $form = new FormController( 'registerForm', '/user/sendregisterform' ); //actionform
 
     $form->setSuccess( 'accept', 'Bienvenido' );
     $form->setSuccess( 'redirect', '/' );
 
+    $form->setField( 'id', array( 'type' => 'reserved', 'value' => false ) );
 
     $form->setField( 'login', array( 'placeholder' => 'Login' ) );
-    $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña' ) );
-    $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => 'Repite contraseña' ) );
+    //Esto es para verificar si es un create
+    if(!isset($dataVO) || $dataVO == ''){
+      $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña' ) );
+      $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => 'Repite contraseña' ) );
+    }
+
     $form->setField( 'name', array( 'placeholder' => 'Nombre' ) );
     $form->setField( 'surname', array( 'placeholder' => 'Apellidos' ) );
     $form->setField( 'email', array( 'placeholder' => 'Email' ) );
@@ -195,20 +227,26 @@ class UserView extends View
       'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro',
       'destDir' => '/users' ) );
 
-    $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Registrar' ) );
+    $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
 
     /******************************************************************************************** VALIDATIONS */
     $form->setValidationRule( 'login', 'required' );
     $form->setValidationRule( 'email', 'required' );
-    $form->setValidationRule( 'password', 'required' );
-    $form->setValidationRule( 'password2', 'required' );
 
+    //Esto es para verificar si es un create
+    if(!isset($dataVO) || $dataVO == ''){
+      $form->setValidationRule( 'password', 'required' );
+      $form->setValidationRule( 'password2', 'required' );
+      $form->setValidationRule( 'password', 'equalTo', '#password2' );
+    }
     $form->setValidationRule( 'avatar', 'minfilesize', 1024 );
     $form->setValidationRule( 'avatar', 'accept', 'image/png' );
-    $form->setValidationRule( 'avatar', 'required' );
+    //$form->setValidationRule( 'avatar', 'required' );
 
-    $form->setValidationRule( 'password', 'equalTo', '#password2' );
+
     $form->setValidationRule( 'email', 'email' );
+
+    $form->loadVOValues( $dataVO );
 
     return $form;
   }
@@ -220,7 +258,7 @@ class UserView extends View
    * @return string
    *
    **/
-  function registerFormGet($form) {
+  function userFormGet($form) {
     $form->saveToSession();
 
     $this->template->assign("registerFormOpen", $form->getHtmpOpen());
@@ -228,7 +266,7 @@ class UserView extends View
     $this->template->assign("registerFormClose", $form->getHtmlClose());
     $this->template->assign("registerFormValidations", $form->getScriptCode());
 
-    $this->template->setTpl('registerForm.tpl', 'user');
+    $this->template->setTpl('userForm.tpl', 'user');
 
     return $this->template->execToString();
   }
@@ -240,7 +278,7 @@ class UserView extends View
    * @return void
    *
    **/
-  function sendRegisterForm() {
+  function sendUserForm() {
 
     $form = $this->actionRegisterForm();
     $this->registerOk($form);
@@ -259,7 +297,7 @@ class UserView extends View
    * @return $form
    *
    **/
-  function actionRegisterForm() {
+  function actionUserForm() {
     $form = new FormController();
     if( $form->loadPostInput() ) {
       $form->validateForm();
@@ -269,13 +307,25 @@ class UserView extends View
     }
 
     if( !$form->existErrors() ){
+      $valuesArray = $form->getValuesArray();
       //Validaciones extra
-
       $userControl = new UserController();
-      $loginExist = $userControl->find( $form->getFieldValue('login'), 'login');
+      // Donde diferenciamos si es un update o un create para validar el login
+      if( isset($valuesArray['id']) && $valuesArray['id'] ){
+        $user = $userControl->find( $valuesArray['id'] );
+        if($valuesArray['login'] !== $user->getter('login')){
+          $loginExist = $userControl->find( $form->getFieldValue('login'), 'login');
+          if($loginExist){
+            $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
+          }
+        }
 
-      if($loginExist){
-        $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
+      }else{
+        // Create: comprobamos si el login existe y si existe mostramos error.
+        $loginExist = $userControl->find( $form->getFieldValue('login'), 'login');
+        if($loginExist){
+          $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
+        }
       }
     }
 
@@ -283,7 +333,7 @@ class UserView extends View
   }
 
 
-  function registerOk( $form ) {
+  function userFormOk( $form ) {
     //Si todo esta OK!
 
     if( !$form->processFileFields() ) {
@@ -292,17 +342,23 @@ class UserView extends View
 
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
-      $valuesArray['password'] = sha1($valuesArray['password']);
-      unset($valuesArray['password2']);
       $valuesArray['status'] = USER_STATUS_WAITING;
       $valuesArray['role'] = ROLE_USER;
-      $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
 
       $userControl = new UserController();
-      //$res = $userControl->createFromArray($valuesArray);
-      $res = $userControl->createRelTmp($valuesArray);
-    }
+       // Donde diferenciamos si es un update o un create
+      if( isset($valuesArray['id']) && $valuesArray['id'] ){
+        $res = $userControl->updateFromArray( $valuesArray );
+      }else{
+        $valuesArray['password'] = sha1($valuesArray['password']);
+        unset($valuesArray['password2']);
+        $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
+        //$res = $userControl->createFromArray($valuesArray);
+        $res = $userControl->createRelTmp( $valuesArray );
+      }
 
+    }
+    return $res;
   }
 
 }

@@ -24,7 +24,7 @@ class user extends Module
   function __construct() {
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/loginform$#', 'view:UserView::loginForm' );
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/sendloginform$#', 'view:UserView::sendLoginForm' );
-    $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/registerform$#', 'view:UserView::registerForm' );
-    $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/sendregisterform$#', 'view:UserView::sendRegisterForm' );
+    $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/registerform$#', 'view:UserView::userForm' );
+    $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/sendregisterform$#', 'view:UserView::sendUserForm' );
   }
 }
