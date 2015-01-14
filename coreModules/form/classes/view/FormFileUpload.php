@@ -59,43 +59,12 @@ class FormFileUpload extends View
       $fileTmpLoc   = $_FILES['ajaxFileUpload']['tmp_name']; // File in the PHP tmp folder
       $fileType     = $_FILES['ajaxFileUpload']['type'];     // The type of file it is
       $fileSize     = $_FILES['ajaxFileUpload']['size'];     // File size in bytes
-      $fileErrorMsg = $_FILES['ajaxFileUpload']['error'];    // 0 for false... and 1 for true
+      $fileErrorId  = $_FILES['ajaxFileUpload']['error'];    // UPLOAD_ERR_OK o errores
+
 
       // Aviso de error PHP
-      switch( $fileErrorMsg ) {
-        case UPLOAD_ERR_OK:
-          // Todo OK, no hay error
-          break;
-        case UPLOAD_ERR_INI_SIZE:
-          $form->addFieldRuleError( $fieldName, 'cogumelo',
-            'El tamaño del fichero ha superado el límite establecido en el servidor.' );
-          break;
-        case UPLOAD_ERR_FORM_SIZE:
-          $form->addFieldRuleError( $fieldName, 'cogumelo',
-            'El tamaño del fichero ha superado el límite establecido para este campo.' );
-          break;
-        case UPLOAD_ERR_PARTIAL:
-          $form->addFieldRuleError( $fieldName, 'cogumelo',
-            'La subida del fichero no se ha completado.' );
-          break;
-        case UPLOAD_ERR_NO_FILE:
-          $form->addFieldRuleError( $fieldName, 'cogumelo', 'No se ha subido el fichero.' );
-          break;
-        case UPLOAD_ERR_NO_TMP_DIR:
-          $form->addFieldRuleError( $fieldName, 'cogumelo',
-            'La subida del fichero ha fallado. (6)' );
-          break;
-        case UPLOAD_ERR_CANT_WRITE:
-          $form->addFieldRuleError( $fieldName, 'cogumelo',
-            'La subida del fichero ha fallado. (7)' );
-          break;
-        case UPLOAD_ERR_EXTENSION:
-          $form->addFieldRuleError( $fieldName, 'cogumelo',
-            'La subida del fichero ha fallado. (8)' );
-          break;
-        default:
-          $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero ha fallado.' );
-          break;
+      if( $fileErrorId !== UPLOAD_ERR_OK ) {
+        $form->addFieldRuleError( $fieldName, 'cogumelo', $this->getFileErrorMsg( $fileErrorId ) );
       }
 
       // Datos enviados fuera de rango
@@ -116,7 +85,8 @@ class FormFileUpload extends View
         $fileTypePhp = finfo_file( $finfo, $fileTmpLoc );
         if( $fileTypePhp !== false ) {
           if( $fileType !== $fileTypePhp ) {
-            error_log( 'ALERTA: Los MIME_TYPE reportados por el navegador y PHP difieren: '.$fileType.' != '.$fileTypePhp );
+            error_log( 'ALERTA: Los MIME_TYPE reportados por el navegador y PHP difieren: '.
+              $fileType.' != '.$fileTypePhp );
             error_log( 'ALERTA: Damos preferencia a PHP. Puede variar la validación JS/PHP' );
             $fileType = $fileTypePhp;
           }
@@ -130,12 +100,9 @@ class FormFileUpload extends View
 
         // Recuperamos formObj y validamos el fichero temporal
         if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' ) {
-          // Creamos un objeto con los validadores y lo asociamos
-          $form->setValidationObj( new FormValidators() );
-
           // Guardamos los datos previos del campo
           $fileFieldValuePrev = $form->getFieldValue( $fieldName );
-
+          // Creamos un objeto temporal para validarlo
           $tmpFileFieldValue = array(
             'status' => 'LOAD',
             'validate' => array(
@@ -146,13 +113,8 @@ class FormFileUpload extends View
               'size' => $fileSize
             )
           );
-
           // Almacenamos los datos temporales en el formObj para validarlos
           $form->setFieldValue( $fieldName, $tmpFileFieldValue );
-
-          // error_log( 'FU: Validando ficheiro subido...' );
-          // error_log( print_r( $form->getFieldValue( $fieldName ), true ) );
-
           // Validar input del fichero
           $form->validateField( $fieldName );
 
@@ -361,6 +323,50 @@ class FormFileUpload extends View
 
   } // function deleteFormFile() {
 
+
+
+  /**
+   * Obtiene el texto de error en funcion del codigo
+   *
+   * @param  int $fileErrorId
+   * @return string $msgError
+   **/
+  private function getFileErrorMsg( $fileErrorId ) {
+    $msgError = '';
+
+    // Aviso de error PHP
+    switch( $fileErrorId ) {
+      case UPLOAD_ERR_OK:
+        // OK, no hay error
+        break;
+      case UPLOAD_ERR_INI_SIZE:
+        $msgError = 'El tamaño del fichero ha superado el límite establecido en el servidor.';
+        break;
+      case UPLOAD_ERR_FORM_SIZE:
+        $msgError = 'El tamaño del fichero ha superado el límite establecido para este campo.';
+        break;
+      case UPLOAD_ERR_PARTIAL:
+        $msgError = 'La subida del fichero no se ha completado.';
+        break;
+      case UPLOAD_ERR_NO_FILE:
+        $msgError = 'No se ha subido el fichero.';
+        break;
+      case UPLOAD_ERR_NO_TMP_DIR:
+        $msgError = 'La subida del fichero ha fallado. (6)';
+        break;
+      case UPLOAD_ERR_CANT_WRITE:
+        $msgError = 'La subida del fichero ha fallado. (7)';
+        break;
+      case UPLOAD_ERR_EXTENSION:
+        $msgError = 'La subida del fichero ha fallado. (8)';
+        break;
+      default:
+        $msgError = 'La subida del fichero ha fallado.';
+        break;
+    }
+
+    return $msgError;
+  }
 
 
 
