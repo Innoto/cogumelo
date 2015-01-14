@@ -1033,7 +1033,7 @@ class FormController implements Serializable {
     foreach( $this->fieldErrors as $fieldName => $fieldRules ) {
       foreach( $fieldRules as $ruleName => $msgRuleError ) {
         $ruleParams = false;
-        if( isset( $this->rules[ $fieldName ][ $ruleName ] ) {
+        if( isset( $this->rules[ $fieldName ][ $ruleName ] ) ) {
           $ruleParams = $this->rules[ $fieldName ][ $ruleName ];
         }
         $jvErrors[] = array( 'fieldName' => $fieldName, 'ruleName' => $ruleName,
