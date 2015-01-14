@@ -14,21 +14,21 @@ form::autoIncludes();
 class FormFileUpload extends View
 {
 
-  function __construct($base_dir){
-    parent::__construct($base_dir);
+  public function __construct( $base_dir ) {
+    parent::__construct( $base_dir );
   }
 
   /**
   * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
-  function accessCheck() {
+  public function accessCheck() {
     return true;
   }
 
 
 
-  function fileUpload() {
+  public function fileUpload() {
     if( isset( $_POST['execute'] ) && $_POST['execute'] === 'delete' ) {
       $this->deleteFormFile();
     }
@@ -38,9 +38,9 @@ class FormFileUpload extends View
   }
 
 
-  function uploadFormFile() {
+  public function uploadFormFile() {
     error_log( '--------------------------------' );
-    error_log( ' FormFileUpload - uploadFormFile');
+    error_log( ' FormFileUpload - uploadFormFile' );
     error_log( '--------------------------------' );
 
     $form = new FormController();
@@ -67,25 +67,31 @@ class FormFileUpload extends View
           // Todo OK, no hay error
           break;
         case UPLOAD_ERR_INI_SIZE:
-          $form->addFieldRuleError( $fieldName, 'cogumelo', 'El tamaño del fichero ha superado el límite establecido en el servidor.' );
+          $form->addFieldRuleError( $fieldName, 'cogumelo',
+            'El tamaño del fichero ha superado el límite establecido en el servidor.' );
           break;
         case UPLOAD_ERR_FORM_SIZE:
-          $form->addFieldRuleError( $fieldName, 'cogumelo', 'El tamaño del fichero ha superado el límite establecido para este campo.' );
+          $form->addFieldRuleError( $fieldName, 'cogumelo',
+            'El tamaño del fichero ha superado el límite establecido para este campo.' );
           break;
         case UPLOAD_ERR_PARTIAL:
-          $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero no se ha completado.' );
+          $form->addFieldRuleError( $fieldName, 'cogumelo',
+            'La subida del fichero no se ha completado.' );
           break;
         case UPLOAD_ERR_NO_FILE:
           $form->addFieldRuleError( $fieldName, 'cogumelo', 'No se ha subido el fichero.' );
           break;
         case UPLOAD_ERR_NO_TMP_DIR:
-          $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero ha fallado. (6)' );
+          $form->addFieldRuleError( $fieldName, 'cogumelo',
+            'La subida del fichero ha fallado. (6)' );
           break;
         case UPLOAD_ERR_CANT_WRITE:
-          $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero ha fallado. (7)' );
+          $form->addFieldRuleError( $fieldName, 'cogumelo',
+            'La subida del fichero ha fallado. (7)' );
           break;
         case UPLOAD_ERR_EXTENSION:
-          $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero ha fallado. (8)' );
+          $form->addFieldRuleError( $fieldName, 'cogumelo',
+            'La subida del fichero ha fallado. (8)' );
           break;
         default:
           $form->addFieldRuleError( $fieldName, 'cogumelo', 'La subida del fichero ha fallado.' );
@@ -94,12 +100,14 @@ class FormFileUpload extends View
 
       // Datos enviados fuera de rango
       if( !$form->existErrors() && $fileSize < 1 ) {
-        $form->addFieldRuleError( $fieldName, 'cogumelo', 'El tamaño del fichero parece ser cero (0).' );
+        $form->addFieldRuleError( $fieldName, 'cogumelo',
+          'El tamaño del fichero parece ser cero (0).' );
       }
 
       // Verificando la existencia y tamaño del fichero intermedio
       if( !$form->existErrors() && ( !is_uploaded_file( $fileTmpLoc ) || filesize( $fileTmpLoc ) !== $fileSize ) ) {
-        $form->addFieldRuleError( $fieldName, 'cogumelo', 'El fichero temporal parece incorrecto o sin datos.' );
+        $form->addFieldRuleError( $fieldName, 'cogumelo',
+          'El fichero temporal parece incorrecto o sin datos.' );
       }
 
       // Verificando el MIME_TYPE del fichero intermedio
@@ -176,7 +184,8 @@ class FormFileUpload extends View
                 }
                 else {
                   error_log( 'FU: Validado pero status erroneo: ' . $fileFieldValuePrev['status'] );
-                  $form->addFieldRuleError( $fieldName, 'cogumelo', 'Intento de sobreescribir un fichero existente' );
+                  $form->addFieldRuleError( $fieldName, 'cogumelo',
+                    'Intento de sobreescribir un fichero existente' );
                 }
               }
               else {
@@ -218,7 +227,8 @@ class FormFileUpload extends View
 
         } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
         else {
-          $form->addFieldRuleError( $fieldName, 'cogumelo', 'Los datos del fichero no han llegado bien al servidor. FORM' );
+          $form->addFieldRuleError( $fieldName, 'cogumelo',
+            'Los datos del fichero no han llegado bien al servidor. FORM' );
         }
 
 
@@ -228,14 +238,17 @@ class FormFileUpload extends View
 
     } // if( isset( ... ) )
     else { // no parece haber fichero
-      $form->addFieldRuleError( $fieldName, 'cogumelo', 'No han llegado los datos o lo ha hecho con errores. ISSET' );
+      $form->addFieldRuleError( $fieldName, 'cogumelo',
+        'No han llegado los datos o lo ha hecho con errores. ISSET' );
     }
 
 
     // Notificamos el resultado al UI
     if( !$form->existErrors() ) {
-      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName, 'fileName' => $fileFieldValuePrev['temp']['name'],
-        'fileSize' => $fileFieldValuePrev['temp']['size'], 'fileType' => $fileFieldValuePrev['temp']['type'] );
+      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName,
+        'fileName' => $fileFieldValuePrev['temp']['name'],
+        'fileSize' => $fileFieldValuePrev['temp']['size'],
+        'fileType' => $fileFieldValuePrev['temp']['type'] );
       header('Content-Type: application/json; charset=utf-8');
       echo $form->jsonFormOk( $moreInfo );
     }
@@ -249,15 +262,16 @@ class FormFileUpload extends View
 
 
 
-  function deleteFormFile() {
+  public function deleteFormFile() {
     error_log( '--------------------------------' );
-    error_log( ' FormFileUpload - deleteFormFile');
+    error_log( ' FormFileUpload - deleteFormFile' );
     error_log( '--------------------------------' );
 
     $form = new FormController();
     $error = false;
 
-    error_log( 'POST:' ); error_log( print_r( $_POST, true ) );
+    error_log( 'POST:' );
+    error_log( print_r( $_POST, true ) );
 
     if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'] ) ) {
 
@@ -295,7 +309,8 @@ class FormFileUpload extends View
             default:
               error_log( 'FDelete: Intentando borrar con status erroneo: ' . $fileFieldValuePrev['status'] );
 
-              $form->addFieldRuleError( $fieldName, 'cogumelo', 'Intento de sobreescribir un fichero existente' );
+              $form->addFieldRuleError( $fieldName, 'cogumelo',
+                'Intento de sobreescribir un fichero existente' );
               break;
           }
 
@@ -303,7 +318,8 @@ class FormFileUpload extends View
         else {
           error_log( 'FDelete: Intentando eliminar un fichero sin estado.' );
 
-          $form->addFieldRuleError( $fieldName, 'cogumelo', 'Intento de borrar un fichero inexistente' );
+          $form->addFieldRuleError( $fieldName, 'cogumelo',
+            'Intento de borrar un fichero inexistente' );
         }
 
 
@@ -320,12 +336,14 @@ class FormFileUpload extends View
 
       } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
       else {
-        $form->addFieldRuleError( $fieldName, 'cogumelo', 'Los datos del fichero no han llegado bien al servidor. FORM' );
+        $form->addFieldRuleError( $fieldName, 'cogumelo',
+          'Los datos del fichero no han llegado bien al servidor. FORM' );
       }
 
     } // if( isset( ... ) )
     else { // no parece haber fichero
-      $form->addFieldRuleError( $fieldName, 'cogumelo', 'No han llegado los datos o lo ha hecho con errores. ISSET' );
+      $form->addFieldRuleError( $fieldName, 'cogumelo',
+        'No han llegado los datos o lo ha hecho con errores. ISSET' );
     }
 
 

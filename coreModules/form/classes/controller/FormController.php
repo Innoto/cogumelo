@@ -849,8 +849,10 @@ class FormController implements Serializable {
         if( isset( $field['value'] ) ) {
           $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
           foreach( $values as $val ) {
-            $html['options'][$val]['input'] = str_replace( 'name="'.$field['name'].'" value="'.$val.'"',
-              'name="'.$field['name'].'" value="'.$val.'" checked="checked"', $html['options'][$val]['input'] );
+            $html['options'][$val]['input'] = str_replace(
+              'name="'.$field['name'].'" value="'.$val.'"',
+              'name="'.$field['name'].'" value="'.$val.'" checked="checked"',
+              $html['options'][$val]['input'] );
             if( $field['type']=='radio' ) {
               break; // Radio solo puede tener 1 valor
             }
@@ -919,12 +921,11 @@ class FormController implements Serializable {
     $html .= ( count( $this->messages ) > 0 ) ? json_encode( $this->messages ) : 'false';
     $html .= ' );'."\n";
 
-    /*
-    if( count( $this->messages ) > 0 ) {
-      $html .= $separador.'    messages: '.json_encode( $this->messages )."\n";
-      $separador = '    ,'."\n";
-    }
-    */
+    // if( count( $this->messages ) > 0 ) {
+    //   $html .= $separador.'    messages: '.json_encode( $this->messages )."\n";
+    //   $separador = '    ,'."\n";
+    // }
+
     $html .= '  console.log( $validateForm_'.$this->id.' );'."\n";
 
     $html .= '});'."\n";
@@ -1031,7 +1032,10 @@ class FormController implements Serializable {
 
     foreach( $this->fieldErrors as $fieldName => $fieldRules ) {
       foreach( $fieldRules as $ruleName => $msgRuleError ) {
-        $ruleParams = isset( $this->rules[ $fieldName ][ $ruleName ] ) ? $this->rules[ $fieldName ][ $ruleName ] : false;
+        $ruleParams = false;
+        if( isset( $this->rules[ $fieldName ][ $ruleName ] ) {
+          $ruleParams = $this->rules[ $fieldName ][ $ruleName ];
+        }
         $jvErrors[] = array( 'fieldName' => $fieldName, 'ruleName' => $ruleName,
           'ruleParams' => $ruleParams, 'JVshowErrors' => array( $fieldName => $msgRuleError ) );
       }
