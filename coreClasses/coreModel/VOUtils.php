@@ -55,28 +55,31 @@
   }
 
 
-  static function getVOColsWhithoutForeigns($voName) {
+  static function getVOCols($voName) {
     $retCols = array();
 
     $vo = new $voName();
 
     foreach( $vo->getCols() as $colK => $col ) {
-      if( $col['type'] != 'FOREIGN' ) {
         $retCols[] = $colK;
-      }
     }
 
     return $retCols;
   }
 
-  static function getVOConnections( $VOInstance ) {
+  static function getVOConnections( $VOInstance, $includeKeys= false ) {
     $relationships = array();
 
     if( sizeof( $VOInstance->getCols() ) > 0 ) {
       foreach ( $VOInstance->getCols() as $attr ) {
         if( array_key_exists( 'type', $attr ) && $attr['type'] == 'FOREIGN' ){
 
-          $relationships[] =  $attr['vo'];
+          if( !$includeKeys ) {
+            $relationships[] =  $attr['vo'];
+          }
+          else {
+            $relationships[ $attr['vo'] ] =  array('parent' => $attr['id'], 'related'=>$attr['key'] );
+          }
         }
       }
     }
@@ -95,6 +98,7 @@
       $ret[ $voName ] = array( 
                       'name' => $voName, 
                       'relationship' => self::getVOConnections( $vo ), 
+                      //'extendedRelationship' => self::getVOConnections( $vo, true ),
                       'elements' => sizeof( $vo->getCols() ),
                       'module' => $voDef['module']
                     );
@@ -106,14 +110,19 @@
 
 
 
-  static function getVORelationship( $voName, $voOriginName=false ) {
+  static function getVORelationship( $voName, $voOriginName=false, $relKeys=false ) {
 
     $vo = new $voName();
-    $relArray = array('vo' => $voName, 'table' => $vo::$tableName );
+    $relArray = array(
+                        'vo' => $voName, 
+                        'table' => $vo::$tableName,
+                      );
 
-    if( $voOriginName ) {
-      $relArray['cols'] = self::getVOColsWhithoutForeigns( $voName );
-    }
+
+       
+    $relArray['cols'] = self::getVOCols( $voName );
+
+
 
     $allVOsRel = self::getAllRelScheme();
 
@@ -126,7 +135,14 @@
           ) && 
           $roRel['name'] != $voOriginName
         ) {
-            $relArray['relationship'][] = self::getVORelationship( $roRel['name'], $voName );
+            $relArray['relationship'][] = self::getVORelationship( 
+                                                                    $roRel['name'], 
+                                                                    array(
+                                                                      'parentTable'=>$vo::$tableName//, 
+                                                                     // 'parent'=>$roRel['extendedRelationship']['parent'], 
+                                                                     // 'related'=>$roRel['extendedRelationship']['related']  
+                                                                    )
+                                                                  );
           }
       }
     }
