@@ -8,7 +8,7 @@ Class VO
 {
 
   var $data = array();
-  var $dataRelationship = array();
+  static $isM2M = false;
 
   function __construct(array $datarray){
 

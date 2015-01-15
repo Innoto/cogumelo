@@ -110,11 +110,12 @@
 
 
 
-  static function getVORelationship( $voName, $parentInfo=array( 'parentVO' => false, 'parentTable'=>false, 'parent'=>false, 'related'=>false ) ) {
+  static function getVORelationship( $voName, $parentInfo=array( 'parentVO' => false, 'parentTable'=>false, 'parentId'=>false, 'relatedWithId'=>false ) ) {
 
     $vo = new $voName();
     $relArray = array(
                         'vo' => $voName, 
+                        'isM2M' => $vo::$isM2M,
                         'table' => $vo::$tableName
                       );
     $relArray = array_merge( $relArray, $parentInfo);
@@ -139,19 +140,19 @@
             $sonParentArray = array(
              'parentVO' => $voName, 
              'parentTable'=> $vo::$tableName, 
-             'parent'=>false, 
-             'related'=>false 
+             'parentId'=>false, 
+             'relatedWithId'=>false 
             );
 
             if( sizeof($allVOsRel[$voName]['extendedRelationship']) != 0 ) {
               if( array_key_exists( $roRel['name'], $allVOsRel[$voName]['extendedRelationship'] ) ) {
 
-                $sonParentArray['parent'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['parent'];
-                $sonParentArray['related'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['related'];
+                $sonParentArray['parentId'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['parent'];
+                $sonParentArray['relatedWithId'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['related'];
               }
               else {
-                $sonParentArray['parent'] = $roRel['extendedRelationship'][$voName]['related'];
-                $sonParentArray['related']  = $roRel['extendedRelationship'][$voName]['parent'];
+                $sonParentArray['parentId'] = $roRel['extendedRelationship'][$voName]['related'];
+                $sonParentArray['relatedWithId']  = $roRel['extendedRelationship'][$voName]['parent'];
               }
             }
 

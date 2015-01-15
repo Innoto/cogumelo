@@ -9,35 +9,39 @@ class MysqlDAORelationship extends DAORelationship
   function joins($vo, $relFrom, $relTo) {
     $joinList = '';
 
-    foreach( $vo['relationship'] $voRel) {
+    foreach( $vo['relationship'] as $voRel) {
 
-      if( $voRel['type'] == 'M2M' ) {
-        $joinList .= leftJoin( selectConcat($voRel) );
-        $joinList .= leftJoin( selectGroupConcat( $voRel, joins( $voRel ) ) );
+
+      if( sizeof($voRel['relationship']) == 0  ) {
+        // FINAL
+        $joinList .= $this->leftJoin( $this->selectConcat($voRel) );
       }
-      else 
-      if( $voRel['type'] == 'FINAL' ){
-        $joinList .= leftJoin( selectConcat($voRel) );
+      else if( $vo['isM2M'] == true ) {
+        // M2M table
+        $joinList .= $this->leftJoin( $this->selectConcat($voRel) );
+        $joinList .= $this->leftJoin( $this->selectGroupConcat( $voRel, $this->joins( $voRel ) ) );
       }
       else {
-        $joinList .= leftJoin( selectGroupConcat( $voRel, joins( $voRel ) )  );
+        // Any table
+        $joinList .= $this->leftJoin( $this->selectGroupConcat( $voRel, $this->joins( $voRel ) )  );
       }
-
+      
       return $joinList;
     }
   }
 
 
-  function leftJoin($select, $as, $onFrom, $onTo ) {
-    return " LEFT JOIN ( ".$select." ) as ".$as." ON ".$onFrom."_serialized = ".$onTo;
+  function leftJoin($select, $parentTable, $parentId, $sonTable, $sonId ) {
+    return " LEFT JOIN ( ".$select." ) as ".$sonTable."_serialized  ON ".$sonTable."_serialized.".$sonId." = ".$parentTable.".".$parentId;
   }
+
 
   function selectConcat( $vo ) {
-    return "SELECT " . cols($vo) . ", concat('{ " . jsonCols() . " }' ) as ".$vo['table']." from ".$vo['table']." GROUP BY " . $vo['table'] . "." . $vo['pk'];
+    return "SELECT " . $this->cols($vo) . ", concat('{ " . $this->jsonCols() . " }' ) as ".$vo['table']." from ".$vo['table']." GROUP BY " . $vo['table'] . "." . $vo['pk'];
   }
 
-  function selectGroupConcat($vo, $joins) {
-    return "SELECT " .cols($vo). " , concat('{ ". jsonCols($vo) .", ". getGroupConcats( $vo ) ."}') as ".$vo['table']." from ".$vo['table']. $joins. " GROUP BY " . $vo['table'] . "." . $vo['pk'];
+  function selectGroupConcat($vo, $joins, $relKey) {
+    return "SELECT " .$this->cols($vo). " , concat('{ ". $this->jsonCols($vo) .", ". $this->getGroupConcats( $vo ) ."}') as ".$vo['table']." from ".$vo['table']. $joins. " GROUP BY " . $vo['table'] . "." . $vo['relatedWithId'];
   }
 
 
@@ -47,7 +51,7 @@ class MysqlDAORelationship extends DAORelationship
   }
 
   function cols($vo) {
-    return "campo, campo, campo";
+    return implode(',', $vo['cols']);
   }
 
   function getGroupConcats ($vo) {
