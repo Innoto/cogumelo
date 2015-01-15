@@ -71,14 +71,14 @@
     $relationships = array();
 
     if( sizeof( $VOInstance->getCols() ) > 0 ) {
-      foreach ( $VOInstance->getCols() as $attr ) {
+      foreach ( $VOInstance->getCols() as $attrKey=>$attr ) {
         if( array_key_exists( 'type', $attr ) && $attr['type'] == 'FOREIGN' ){
 
           if( !$includeKeys ) {
             $relationships[] =  $attr['vo'];
           }
           else {
-            $relationships[ $attr['vo'] ] =  array('parent' => $attr['id'], 'related'=>$attr['key'] );
+            $relationships[ $attr['vo'] ] =  array('parent' => $attrKey, 'related'=>$attr['key'] );
           }
         }
       }
@@ -98,7 +98,7 @@
       $ret[ $voName ] = array( 
                       'name' => $voName, 
                       'relationship' => self::getVOConnections( $vo ), 
-                      //'extendedRelationship' => self::getVOConnections( $vo, true ),
+                      'extendedRelationship' => self::getVOConnections( $vo, true ),
                       'elements' => sizeof( $vo->getCols() ),
                       'module' => $voDef['module']
                     );
@@ -110,16 +110,15 @@
 
 
 
-  static function getVORelationship( $voName, $voOriginName=false, $relKeys=false ) {
+  static function getVORelationship( $voName, $parentInfo=array( 'parentVO' => false, 'parentTable'=>false, 'parent'=>false, 'related'=>false ) ) {
 
     $vo = new $voName();
     $relArray = array(
                         'vo' => $voName, 
-                        'table' => $vo::$tableName,
+                        'table' => $vo::$tableName
                       );
+    $relArray = array_merge( $relArray, $parentInfo);
 
-
-       
     $relArray['cols'] = self::getVOCols( $voName );
 
 
@@ -133,16 +132,30 @@
             in_array( $roRel['name'], $allVOsRel[$voName]['relationship']) ||   // relation from this to other VO
             in_array( $voName, $roRel['relationship'] )                         // relation fron other to this VO
           ) && 
-          $roRel['name'] != $voOriginName
+          ($parentInfo['parentVO'] == false || $roRel['name'] != $parentInfo['parentVO'])
         ) {
-            $relArray['relationship'][] = self::getVORelationship( 
-                                                                    $roRel['name'], 
-                                                                    array(
-                                                                      'parentTable'=>$vo::$tableName//, 
-                                                                     // 'parent'=>$roRel['extendedRelationship']['parent'], 
-                                                                     // 'related'=>$roRel['extendedRelationship']['related']  
-                                                                    )
-                                                                  );
+
+
+            $sonParentArray = array(
+             'parentVO' => $voName, 
+             'parentTable'=> $vo::$tableName, 
+             'parent'=>false, 
+             'related'=>false 
+            );
+
+            if( sizeof($allVOsRel[$voName]['extendedRelationship']) != 0 ) {
+              if( array_key_exists( $roRel['name'], $allVOsRel[$voName]['extendedRelationship'] ) ) {
+
+                $sonParentArray['parent'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['parent'];
+                $sonParentArray['related'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['related'];
+              }
+              else {
+                $sonParentArray['parent'] = $roRel['extendedRelationship'][$voName]['related'];
+                $sonParentArray['related']  = $roRel['extendedRelationship'][$voName]['parent'];
+              }
+            }
+
+            $relArray['relationship'][] = self::getVORelationship( $roRel['name'], $sonParentArray );
           }
       }
     }
