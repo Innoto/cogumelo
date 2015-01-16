@@ -15,7 +15,7 @@ class MysqlDAORelationship
         // FINAL
         $joinList .= $this->leftJoin( $this->selectConcat($voRel), $voRel );
       }
-      else if( $vo->isM2M == true ) {
+      else if( $voRel->isM2M == true ) {
         // M2M table
         $joinList .= $this->leftJoin( $this->selectConcat($voRel), $voRel );
         $joinList .= $this->leftJoin( $this->selectGroupConcat( $voRel, $this->joins( $voRel ) ), $voRel );
@@ -25,8 +25,9 @@ class MysqlDAORelationship
         $joinList .= $this->leftJoin( $this->selectGroupConcat( $voRel, $this->joins( $voRel ) ), $voRel );
       }
       
-      return $joinList;
     }
+
+    return $joinList;
   }
 
 
@@ -40,14 +41,21 @@ class MysqlDAORelationship
     return "SELECT " . $this->cols($vo) . ", concat('{ " . $this->jsonCols($vo) . " }' ) as ".$vo->table." from ".$vo->table." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
-  function selectGroupConcat($vo, $joins, $relKey) {
+  function selectGroupConcat( $vo, $joins ) {
     return "SELECT " .$this->cols($vo). " , concat('{ ". $this->jsonCols($vo) .", ". $this->getGroupConcats( $vo ) ."}') as ".$vo->table." from ".$vo->table. $joins. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
 
 
   function jsonCols($vo) {
-    return '"campo":campo, "campo":campo, "campo":campo';
+
+    $returnCols = '';
+
+    foreach($vo->cols as $col) {
+      $returnCols .= "\"".$vo->table.".".$col."\": \"',".$vo->table.".".$col.", '\", ";
+    }
+
+    return $returnCols;
   }
 
   function cols($vo) {
