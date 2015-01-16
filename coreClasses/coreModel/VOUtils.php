@@ -116,7 +116,8 @@
     $relArray = array(
                         'vo' => $voName, 
                         'isM2M' => $vo::$isM2M,
-                        'table' => $vo::$tableName
+                        'table' => $vo::$tableName,
+                        'relationship' => array()
                       );
     $relArray = array_merge( $relArray, $parentInfo);
 
@@ -167,6 +168,12 @@
 
 
   static function createModelRelTreeFiles() {
+    Cogumelo::load('coreModel/mysql/MysqlDAORelationship.php');
+
+    $mrel = new MysqlDAORelationship();
+    $vo = file_get_contents("/home/pblanco/proxectos/cogumelo/packages/sampleApp/app/tmp/modelRelationship/UserVO.json");
+
+    echo $mrel->joins(json_decode($vo));
 
     foreach( self::listVOs() as $voName => $vo) {
       file_put_contents( APP_TMP_PATH.'/modelRelationship/'.$voName.'.json' , json_encode(self::getVORelationship($voName)) );
