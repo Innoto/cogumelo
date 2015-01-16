@@ -15,11 +15,6 @@ class MysqlDAORelationship
         // FINAL
         $joinList .= $this->leftJoin( $this->selectConcat($voRel), $voRel );
       }
-      else if( $voRel->isM2M == true ) {
-        // M2M table
-        $joinList .= $this->leftJoin( $this->selectConcat($voRel), $voRel );
-        $joinList .= $this->leftJoin( $this->selectGroupConcat( $voRel, $this->joins( $voRel ) ), $voRel );
-      }
       else {
         // Any table
         $joinList .= $this->leftJoin( $this->selectGroupConcat( $voRel, $this->joins( $voRel ) ), $voRel );
@@ -38,11 +33,11 @@ class MysqlDAORelationship
 
 
   function selectConcat( $vo ) {
-    return "SELECT " . $this->cols($vo) . ", concat('{ " . $this->jsonCols($vo) . " }' ) as ".$vo->table." from ".$vo->table." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+    return "SELECT " . $this->cols($vo) . ", concat('{ " . $this->jsonCols($vo) . " }' ) as ".$vo->table." from ".$vo->table." GROUP BY " . $vo->parentTable . "." . $vo->parentId;
   }
 
   function selectGroupConcat( $vo, $joins ) {
-    return "SELECT " .$this->cols($vo). " , concat('{ ". $this->jsonCols($vo) .", ". $this->getGroupConcats( $vo ) ."}') as ".$vo->table." from ".$vo->table. $joins. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+    return "SELECT " .$this->cols($vo). " , concat('{ ". $this->jsonCols($vo) .", ". $this->getGroupConcats( $vo ) ."}') as ".$vo->table." from ".$vo->table." ". $joins. " GROUP BY " . $vo->parentTable . "." . $vo->parentId;
   }
 
 
@@ -52,7 +47,7 @@ class MysqlDAORelationship
     $returnCols = '';
 
     foreach($vo->cols as $col) {
-      $returnCols .= "\"".$vo->table.".".$col."\": \"',".$vo->table.".".$col.", '\", ";
+      $returnCols .="\"".$vo->table.".".$col."\": \"',".$vo->table.".".$col.", '\", ";
     }
 
     return $returnCols;
@@ -66,12 +61,9 @@ class MysqlDAORelationship
     $groupConcats = '';
 
     foreach( $vo->relationship as $voRel) {
-      /*if( $voRel['type'] != 'M2M' ) {
-      }*/
+      $groupConcats .= $voRel->parentTable.".".$voRel->parentId.": [', group_concat(".$voRel->table."_json.".$voRel->table."), ']";
     }
     
-    $groupConcats = "user_role.user_permission: [', group_concat(user_permission_serialized.user_permission), ']";
-
     return $groupConcats;
   }
 

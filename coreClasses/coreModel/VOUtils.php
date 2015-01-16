@@ -246,3 +246,18 @@ select user_user.id, user_user.login, concat('[', group_concat( user_role_json.u
   ) as user_role_json ON user_role_json.id = user_userRole.role
 group by user_user.id
 */
+/*
+select user_user.id, user_user.login, concat('[', group_concat( user_role_json.user_permission) , ']' ) from user_user
+  left join user_userRole ON user_userRole.user = user_user.id
+  left join (
+    select user_role.id as id, concat('{ "user_role.id": "', user_role.id, '","user_role.name": "', user_role.name, '", "user_role.user_permission": [', group_concat(user_rolePermission_serialized.user_rolePermission,', ', user_permission_serialized.user_permission ), ']}') as user_permission from user_role
+      left join ( 
+        select user_rolePermission.id as id, role, permission, concat('{ "user_rolePermission.id": "',user_rolePermission.id, '", "user_rolePermission.role": "',user_rolePermission.role, '", "user_rolePermission.permission": "',user_rolePermission.permission, '"  }' ) as user_rolePermission from user_rolePermission group by  user_rolePermission.id
+      ) as user_rolePermission_serialized ON user_rolePermission_serialized.role = user_role.id
+      left join (
+        select user_permission.id as id, concat('{ "user_permission.id": "',user_permission.id, '", "user_permission.name": "',user_permission.name, '" }' ) as user_permission from user_permission group by user_permission.id
+      ) as user_permission_serialized  ON user_permission_serialized.id = user_rolePermission_serialized.permission
+    group by user_role.id
+
+  ) as user_role_json ON user_role_json.id = user_userRole.role
+group by user_user.id*/
