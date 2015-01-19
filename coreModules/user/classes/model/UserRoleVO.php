@@ -8,7 +8,6 @@ user::load('model/RoleVO.php');
 class UserRoleVO extends VO
 {
   static $tableName = 'user_userRole';
-  static $isM2M = true;  
   static $cols = array(
     'id' => array(
       'type' => 'INT',

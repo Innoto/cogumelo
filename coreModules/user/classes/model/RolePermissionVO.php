@@ -6,7 +6,6 @@ user::load('model/PermissionVO.php');
 class RolePermissionVO extends VO
 {
   static $tableName = 'user_rolePermission';
-  static $isM2M = true;
   static $cols = array(
     'id' => array(
       'type' => 'INT',

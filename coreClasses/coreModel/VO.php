@@ -8,7 +8,6 @@ Class VO
 {
 
   var $data = array();
-  static $isM2M = false;
 
   function __construct(array $datarray){
 
