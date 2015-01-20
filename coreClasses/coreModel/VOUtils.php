@@ -143,25 +143,16 @@
              'relatedWithId'=> 'NO' 
             );
 
-            //if( sizeof($allVOsRel[$voName]['extendedRelationship']) != 0 ) {
-              if( array_key_exists( $roRel['name'], $allVOsRel[$voName]['extendedRelationship'] ) ) {
 
-                $sonParentArray['parentId'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['parent'];
-                $sonParentArray['relatedWithId'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['related'];
-              }
-              else {
-                $sonParentArray['parentId'] = $roRel['extendedRelationship'][$voName]['related'];
-                $sonParentArray['relatedWithId']  = $roRel['extendedRelationship'][$voName]['parent'];
-              }
-            //}
-
-
-            if($sonParentArray['parentId'] == 'NO') {
-              echo "\n\nanalicemos esto\n\n";
-              var_dump( $roRel['extendedRelationship'][$voName]['parent'] );
-              exit;
+            if( array_key_exists( $roRel['name'], $allVOsRel[$voName]['extendedRelationship'] ) ) {
+              $sonParentArray['parentId'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['parent'];
+              $sonParentArray['relatedWithId'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['related'];
             }
-
+            else {
+              $sonParentArray['parentId'] = $roRel['extendedRelationship'][$voName]['related'];
+              $sonParentArray['relatedWithId']  = $roRel['extendedRelationship'][$voName]['parent'];
+            }
+            
             $relArray['relationship'][] = self::getVORelationship( $roRel['name'], $sonParentArray );
           }
       }

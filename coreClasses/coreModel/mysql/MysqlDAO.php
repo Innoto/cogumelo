@@ -170,6 +170,9 @@ class MysqlDAO extends DAO
   //
   function find(&$connectionControl, $search, $key = false,  $resolveDependences = false, $cache = false)
   {
+
+    $ret = null;
+
     $VO = new $this->VO();
 
     if(!$key) {
@@ -183,11 +186,10 @@ class MysqlDAO extends DAO
     $res = $this->listItems($connectionControl, $filter, false, false, false, $resolveDependences, $cache);
 
     if( $res != COGUMELO_ERROR ) {
-      return $res->fetch();
+      $ret = $res->fetch();
     }
-    else
-      return null;
 
+    return $ret;
   }
 
   //
@@ -209,12 +211,18 @@ class MysqlDAO extends DAO
     // range string
     $rangeSTR = ($range != array() && is_array($range) )? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
 
-    // join SQL
-    $joinSTR = $this->JoinSQL($VO, $resolveDependences);
 
 
-    $strSQL = "SELECT ".$VO->getKeysToString($fields, $resolveDependences )." FROM `" . $VO::$tableName ."` ". $joinSTR . $whereArray['string'].$orderSTR.$rangeSTR.";";
 
+    $strSQL = "SELECT ".
+              $VO->getKeysToString($fields, $resolveDependences ) .
+              " FROM `" . 
+              $VO::$tableName ."` " . 
+              MysqlDAORelationship::JoinSQL($VO, resolveDependences) . 
+              $whereArray['string'] . $orderSTR . $rangeSTR . ";";
+
+echo $strSQL;
+exit;
 
     if ( $cache && DB_ALLOW_CACHE  )
     {
@@ -257,18 +265,6 @@ class MysqlDAO extends DAO
     return $daoresult;
 
 
-  }
-
-  function JoinSQL($VO, $resolveDependences) {
-    $resSQL = '';
-
-    if( $resolveDependences ) {
-      foreach($VO->getJoinArray() as $join){
-        $resSQL = ' LEFT JOIN '.$join['table'].' ON '.implode('=', $join['relationship'] );
-      }
-    }
-
-    return $resSQL;
   }
 
 

@@ -5,14 +5,15 @@ class MysqlDAORelationship
 {
 
 
+  function getVOJoins() {
+    
+  }
+
   function joins($vo) {
     $joinList = '';
 
-
-
-//var_dump($vo);
     foreach( $vo->relationship as $voRel) {
-var_dump($voRel);
+
       if( sizeof($voRel->relationship) == 0  ) {
         // FINAL
         $joinList .= $this->leftJoin( $this->selectConcat($voRel), $voRel );
