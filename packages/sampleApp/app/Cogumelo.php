@@ -15,7 +15,7 @@ class Cogumelo extends CogumeloClass
   public $includesCommon = array();
 
 
-  function __construct() {
+  public function __construct() {
     parent::__construct();
 
 
@@ -38,6 +38,10 @@ class Cogumelo extends CogumeloClass
     /*FormModTest*/
     $this->addUrlPatterns( '#^form-mod-test$#', 'view:FormModTest::loadForm' );
     $this->addUrlPatterns( '#^form-mod-action$#', 'view:FormModTest::actionForm' );
+
+    /*FormGroupTest*/
+    $this->addUrlPatterns( '#^form-group-test$#', 'view:FormGroupTest::loadForm' );
+    $this->addUrlPatterns( '#^form-group-action$#', 'view:FormGroupTest::actionForm' );
 
     /*Adminview*/
     $this->addUrlPatterns( '#^getobj$#', 'view:Adminview::getobj' );

@@ -49,6 +49,7 @@ class FormController implements Serializable {
   private $enctype = 'multipart/form-data';
   private $fields = array();
   private $rules = array();
+  private $groups = array();
   private $messages = array();
 
   // POST submit
@@ -153,6 +154,7 @@ class FormController implements Serializable {
     $data[] = $this->enctype;
     $data[] = $this->fields;
     $data[] = $this->rules;
+    $data[] = $this->groups;
     $data[] = $this->messages;
     // $data[] = $this->postValues;
 
@@ -176,6 +178,7 @@ class FormController implements Serializable {
     $this->enctype = array_shift( $data );
     $this->fields = array_shift( $data );
     $this->rules = array_shift( $data );
+    $this->groups = array_shift( $data );
     $this->messages = array_shift( $data );
     // $this->postValues = array_shift( $data );
   }
@@ -307,10 +310,10 @@ class FormController implements Serializable {
       cols, rows, multiple, readonly, ...
   */
   public function setField( $fieldName, $params = false ) {
-    $this->fields[$fieldName]['name'] = $fieldName;
+    $this->fields[ $fieldName ][ 'name' ] = $fieldName;
     if( $params ) {
       foreach( $params as $key => $value ) {
-        $this->fields[$fieldName][$key] = $value;
+        $this->fields[ $fieldName ][ $key ] = $value;
       }
     }
     if( !isset( $this->fields[$fieldName]['type'] ) ) {
@@ -379,7 +382,7 @@ class FormController implements Serializable {
 
     if( array_key_exists( $fieldName, $this->fields ) &&
       array_key_exists( $paramName, $this->fields[ $fieldName ] ) &&
-      isset( $this->fields[ $fieldName ][$paramName] ) )
+      isset( $this->fields[ $fieldName ][ $paramName ] ) )
     {
       $value = $this->fields[ $fieldName ][ $paramName ];
     }
@@ -472,6 +475,235 @@ class FormController implements Serializable {
 
     return $empty;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /**
+    Inicializa un grupo
+    @param string $groupName Nombre del grupo
+  */
+  private function initGroup( $groupName ) {
+    $this->groups[ $groupName ][ 'show' ] = 1;
+    $this->groups[ $groupName ][ 'min' ] = 1;
+    $this->groups[ $groupName ][ 'max' ] = 1;
+    $this->groups[ $groupName ][ 'fields' ] = array();
+    $this->groups[ $groupName ][ 'idElments' ] = array();
+  }
+
+
+  /**
+    Define el grupo de un campo
+    @param string $fieldName Nombre del campo
+    @param string $groupName Nombre del grupo
+  */
+  public function setFieldGroup( $fieldName, $groupName ) {
+    if( !$this->inGroup( $fieldName, $groupName ) ) {
+      if( !$this->issetGroup( $groupName ) ) {
+        $this->initGroup( $groupName );
+      }
+      $this->groups[ $groupName ][ 'fields' ][] = $fieldName;
+    }
+  }
+
+
+  /**
+    Recupera el grupo de un campo
+    @param string $fieldName Nombre del campo
+    @return string Nombre del grupo
+  */
+  public function getFieldGroup( $fieldName ) {
+    $groupNameResult = false;
+
+    $groups = $this->getGroupNames();
+
+    if( $groups !== false ) {
+      foreach( $groups as $groupName ) {
+        if( $this->inGroup( $fieldName, $groupName ) ) {
+          $groupNameResult = $groupName;
+          break;
+        }
+      }
+    }
+
+    return $groupNameResult;
+  }
+
+
+  /**
+    Recupera los campos de un grupo
+    @param string $groupName Nombre del campo
+    @return array
+  */
+  public function getGroupFields( $groupName ) {
+    $fieldNames = false;
+
+    if( $this->issetGroup( $groupName ) ) {
+      $fieldNames = $this->groups[ $groupName ][ 'fields' ];
+    }
+
+    return $fieldNames;
+  }
+
+
+  /**
+    Recupera los nombres de los grupos
+    @return array
+  */
+  public function getGroupNames() {
+    $groups = false;
+
+    if( count( $this->groups ) > 0 ) {
+      $groups = array_keys( $this->groups );
+    }
+
+    return( $groups );
+  }
+
+
+  /**
+    Define los limites min y/o max de repeticiones de un grupo
+    @param string $groupName Nombre del grupo
+    @param string $min Numero min. de copias de grupo
+    @param string $max Opcional - Numero max. de copias de grupo
+  */
+  public function setGroupLimits( $groupName, $show, $min = 'notExist', $max = 'notExist' ) {
+
+    if( !$this->issetGroup( $groupName ) ) {
+      $this->initGroup( $groupName );
+    }
+
+    // Controles
+    if( !( $show >= 0 ) ) {
+      $show = 1;
+    }
+    if( $show > 0 && $min === 'notExist' && $max === 'notExist' ) {
+      $min = $show;
+      $max = $show;
+    }
+    else {
+      if( !( $min >= 0 ) ) {
+        $min = 1;
+      }
+      if( !( $max > 0 ) ) {
+        $max = false;
+      }
+    }
+
+    // Correciones
+    if( $max !== false && $max < $min ) {
+      $max = $min;
+    }
+    if( $max !== false && $show > $max ) {
+      $show = $max;
+    }
+    if( $show < $min ) {
+      $show = $min;
+    }
+
+    $this->groups[ $groupName ][ 'show' ] = $show;
+    $this->groups[ $groupName ][ 'min' ] = $min;
+    $this->groups[ $groupName ][ 'max' ] = $max;
+  }
+
+
+  /**
+    Recupera los parametros show, min y max de repeticiones de un grupo
+    @param string $groupName Nombre del grupo
+    @return array
+  */
+  public function getGroupLimits( $groupName ) {
+    $limits = false;
+
+    if( $this->issetGroup( $groupName ) ) {
+      $limits = array(
+        'show' => $this->groups[ $groupName ][ 'show' ],
+        'min'  => $this->groups[ $groupName ][ 'min' ],
+        'max'  => $this->groups[ $groupName ][ 'max' ],
+      );
+    }
+
+    return $limits;
+  }
+
+
+  /**
+    Añade un Id de instancia de grupo al grupo
+    @param string $groupName Nombre del grupo
+    @param string $idElem Identificador de una instancia del grupo
+  */
+  public function addGroupIdElem( $groupName, $idElem ) {
+    if( $this->issetGroup( $groupName ) ) {
+      $this->groups[ $groupName ][ 'idElments' ][ $idElem ] = true;
+    }
+  }
+
+
+  /**
+    Verifica si existe un grupo
+    @param string $groupName Nombre del grupo
+    @return boolean
+  */
+  public function issetGroup( $groupName ) {
+    return(
+      isset( $this->groups[ $groupName ] ) &&
+      isset( $this->groups[ $groupName ][ 'fields' ] ) &&
+      count( $this->groups[ $groupName ][ 'fields' ] ) > 0
+    );
+  }
+
+
+  /**
+    Verifica si un campo pertenece a un grupo
+    @param string $fieldName Nombre del campo
+    @param string $groupName Nombre del grupo
+    @return boolean
+  */
+  public function inGroup( $fieldName, $groupName ) {
+    return( $this->issetGroup( $groupName ) && in_array( $fieldName, $this->groups[ $groupName ][ 'fields' ] ) );
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   /*
@@ -658,14 +890,14 @@ class FormController implements Serializable {
 
 
   /**
-    Recupera todo el html y js que forman el form
+    Recupera el html y js que forman el form
     @return string
   */
   public function getHtmlForm() {
     $html='';
 
     $html .= $this->getHtmpOpen()."\n";
-    $html .= $this->getHtmlFields()."\n";
+    $html .= $this->getHtmlFieldsAndGroups()."\n";
     $html .= $this->getHtmlClose()."\n";
 
     $html .= $this->getScriptCode()."\n";
@@ -704,16 +936,140 @@ class FormController implements Serializable {
   }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /**
+    Recupera el html de todos los campos del form
+    @return string
+  */
+  public function getHtmlFieldsAndGroups() {
+    $html = '';
+
+    $loadedGroups = array();
+    $htmlFields = $this->getHtmlFieldsArray();
+
+    foreach( $htmlFields as $fieldName => $htmlField ) {
+      $groupName = $this->getFieldGroup( $fieldName );
+
+      if( $groupName !== false ) {
+        if( !in_array( $groupName, $loadedGroups ) ) {
+          // Si el grupo del campo no ha sido procesado cargamos los campos del grupo juntos
+          $loadedGroups[] = $groupName;
+          $html .= $this->getHtmlGroup( $groupName )."\n";
+        }
+      }
+      else {
+        $html .= $htmlField."\n";
+      }
+    }
+
+    return $html;
+  }
+
+
+  /**
+    Recupera el html de un grupo del form
+    @return string
+  */
+  public function getHtmlGroup( $groupName ) {
+    $html = '';
+
+    if( $this->issetGroup( $groupName ) ) {
+      $html = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-group-'.$groupName.'">'."\n";
+      $html .= '<label>Grupo '.$groupName.'</label>'."\n";
+
+      $groupLimits = $this->getGroupLimits( $groupName );
+
+      if( $groupLimits[ 'min' ]===1 && $groupLimits[ 'max' ]===1 ) {
+        $html .= $this->getHtmlGroupElement( $groupName );
+      }
+      else {
+        for( $groupNumElem = 1; $groupNumElem <= $groupLimits[ 'show' ]; $groupNumElem++ ) {
+          $html .= $this->getHtmlGroupElement( $groupName, $groupNumElem );
+        }
+      }
+
+      $html .= '</div><!-- /'.self::CSS_PRE.'-group-'.$groupName.' -->';
+    }
+
+    return $html;
+  }
+
+
+  /**
+    Recupera el html de una instancia de un grupo del form
+    @return string
+  */
+  public function getHtmlGroupElement( $groupName, $nElem = false ) {
+    $html = '';
+
+    if( $this->issetGroup( $groupName ) ) {
+      if( $nElem !== false ) {
+        $this->addGroupIdElem( $groupName, $nElem );
+      }
+
+      $groupFieldNames = $this->getGroupFields( $groupName );
+      $html .= '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-groupElem'.
+        ( $nElem !== false ? ' '.self::CSS_PRE.'-groupElem_C_'.$nElem : '' ).
+        '">';
+      $html .= implode( "\n", $this->getHtmlGroupFieldsArray( $groupFieldNames, $nElem ) );
+      $html .= '</div>';
+    }
+
+    return $html;
+  }
+
+
   /**
     Recupera el html de todos los campos del form (por campos)
     @return array
   */
   public function getHtmlFieldsArray() {
     $html = array();
-    foreach( $this->fields as $fieldName => $fieldParams ) {
-      $html[] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.
-        ( $fieldParams['type'] === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
+
+    $fieldNames = $this->getFieldsNamesArray();
+    foreach( $fieldNames as $fieldName ) {
+      $html[ $fieldName ] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.
+        ( $this->getFieldType( $fieldName ) === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
         '">'.$this->getHtmlField( $fieldName ).'</div>';
+    }
+    return $html;
+  }
+
+
+  /**
+    Recupera el html de todos los campos del form (por campos)
+    @return array
+  */
+  public function getHtmlGroupFieldsArray( $fieldNames, $nElem = false ) {
+    $html = array();
+
+    foreach( $fieldNames as $fieldName ) {
+      if( $nElem !== false ) {
+        if( $this->getFieldParam( $fieldName, 'firstElem' ) !== null ) {
+          $this->setFieldParam( $fieldName, 'firstElem', $nElem );
+        }
+        $this->setFieldParam( $fieldName, 'lastElem', $nElem );
+      }
+      $html[ $fieldName ] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.
+        ( $this->getFieldType( $fieldName ) === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
+        '">'.$this->getHtmlField( $fieldName, $nElem ).'</div>';
     }
     return $html;
   }
@@ -724,10 +1080,12 @@ class FormController implements Serializable {
     @param string $fieldName Nombre del campo
     @return string
   */
-  public function getHtmlField( $fieldName ) {
+  public function getHtmlField( $fieldName, $nElem = false ) {
     $html = '';
 
-    $htmlFieldArray = $this->getHtmlFieldArray( $fieldName );
+    $myFieldName = $nElem!==false ? $fieldName.'_C_'.$nElem : $fieldName;
+
+    $htmlFieldArray = $this->getHtmlFieldArray( $fieldName, $nElem );
 
     if( isset( $htmlFieldArray['label'] ) ) {
       $html .= $htmlFieldArray['label']."\n";
@@ -746,7 +1104,7 @@ class FormController implements Serializable {
           //$html .= $inputAndText['input'].$inputAndText['label'];
           $html .= '<label>'.$inputAndText['input'].$inputAndText['text'].'</label>';
         }
-        $html .= '<span class="JQVMC-'.$fieldName.'-error JQVMC-error"></span>';
+        $html .= '<span class="JQVMC-'.$myFieldName.'-error JQVMC-error"></span>';
         break;
       case 'textarea':
         $html .= $htmlFieldArray['inputOpen'] . $htmlFieldArray['value'] . $htmlFieldArray['inputClose'];
@@ -767,16 +1125,21 @@ class FormController implements Serializable {
     @param string $fieldName Nombre del campo
     @return array
   */
-  public function getHtmlFieldArray( $fieldName ) {
+  public function getHtmlFieldArray( $fieldName, $nElem = false ) {
     $html = array();
 
-    $field = $this->fields[$fieldName];
+    $field = $this->fields[ $fieldName ];
+
+    $myFieldName = $nElem!==false ? $fieldName.'_C_'.$nElem : $fieldName;
+    if( isset( $field['id'] ) ) {
+      $myFielId = $nElem!==false ? $field['id'].'_C_'.$nElem : $field['id'];
+    }
 
     $html['fieldType'] = $field['type'];
 
     if( isset( $field['label'] ) ) {
       $html['label'] = '<label';
-      $html['label'] .= isset( $field['id'] ) ? ' for="'.$field['id'].'"' : '';
+      $html['label'] .= isset( $myFielId ) ? ' for="'.$myFielId.'"' : '';
       $html['label'] .= ' class="'.self::CSS_PRE.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
       $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
       $html['label'] .= '>'.$field['label'].'</label>';
@@ -791,9 +1154,11 @@ class FormController implements Serializable {
     }
 
     $attribs = '';
-    $attribs .= isset( $field['id'] )    ? ' id="'.$field['id'].'"' : '';
+    $attribs .= isset( $myFielId )    ? ' id="'.$myFielId.'"' : '';
     $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$field['name'].
-      ( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
+      ( $nElem ? ' '.self::CSS_PRE.'-field-'.$myFieldName : '' ).
+      ( isset( $field['class'] ) ? ' '.$field['class'] : '' ).
+      '"';
     $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
     $attribs .= isset( $field['title'] ) ? ' title="'.$field['title'].'"' : '';
     $attribs .= isset( $field['placeholder'] ) ? ' placeholder="'.$field['placeholder'].'"' : '';
@@ -808,7 +1173,7 @@ class FormController implements Serializable {
 
     switch( $field['type'] ) {
       case 'select':
-        $html['inputOpen'] = '<select name="'.$field['name'].'"'. $attribs.'>';
+        $html['inputOpen'] = '<select name="'.$myFieldName.'"'. $attribs.'>';
 
         $html['options'] = array();
         foreach( $field['options'] as $val => $text ) {
@@ -829,7 +1194,7 @@ class FormController implements Serializable {
           }
         }
 
-        $html['inputClose'] = '</select><!-- select '.$field['name'].' -->';
+        $html['inputClose'] = '</select><!-- select '.$myFieldName.' -->';
 
         // Creamos ya la regla que controla el contenido
         $this->setValidationRule( $field['name'], 'inArray', array_keys( $field['options'] ) );
@@ -840,7 +1205,7 @@ class FormController implements Serializable {
         $html['options'] = array();
         foreach( $field['options'] as $val => $text ) {
           $html['options'][$val] = array();
-          $html['options'][$val]['input'] = '<input name="'.$field['name'].'" value="'.$val.'"'.
+          $html['options'][$val]['input'] = '<input name="'.$myFieldName.'" value="'.$val.'"'.
             ' type="'.$field['type'].'"'.$attribs.'>';
           $html['options'][$val]['text'] = $text;
           $html['options'][$val]['label'] = $text!='' ? '<label>'.$text.'</label>' : '';
@@ -850,8 +1215,8 @@ class FormController implements Serializable {
           $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
           foreach( $values as $val ) {
             $html['options'][$val]['input'] = str_replace(
-              'name="'.$field['name'].'" value="'.$val.'"',
-              'name="'.$field['name'].'" value="'.$val.'" checked="checked"',
+              'name="'.$myFieldName.'" value="'.$val.'"',
+              'name="'.$myFieldName.'" value="'.$val.'" checked="checked"',
               $html['options'][$val]['input'] );
             if( $field['type']=='radio' ) {
               break; // Radio solo puede tener 1 valor
@@ -864,13 +1229,13 @@ class FormController implements Serializable {
         break;
 
       case 'textarea':
-        $html['inputOpen'] = '<textarea name="'.$field['name'].'"'.$attribs.'>';
+        $html['inputOpen'] = '<textarea name="'.$myFieldName.'"'.$attribs.'>';
         $html['value'] = isset( $field['value'] ) ? $field['value'] : '';
         $html['inputClose'] = '</textarea>';
         break;
 
       case 'file':
-        $html['input'] = '<input name="'.$field['name'].'"';
+        $html['input'] = '<input name="'.$myFieldName.'"';
         $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
         $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
         break;
@@ -881,14 +1246,51 @@ class FormController implements Serializable {
       default:
         // button, file, hidden, password, range, text, color, date, datetime, datetime-local,
         // email, image, month, number, search, tel, time, url, week
-        $html['input'] = '<input name="'.$field['name'].'"';
+        $html['input'] = '<input name="'.$myFieldName.'"';
         $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
         $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
         break;
     }
 
+    if( $fieldName !== $myFieldName ) {
+      $this->cloneRules( $fieldName, $myFieldName );
+      $this->saveToSession();
+    }
+
     return $html;
   } // function getHtmlFieldArray
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   /**
@@ -899,42 +1301,6 @@ class FormController implements Serializable {
     $html = '</form><!-- '.$this->getName().' -->';
     return $html;
   }
-
-
-  /**
-    Recupera el html con el JS del form
-    @return string
-  */
-  public function getScriptCode() {
-    $html = '';
-
-    $separador = '';
-
-    $html .= '<!-- Validate form ' . $this->getName() . ' -->' . "\n";
-    $html .= '<script>' . "\n";
-
-    $html .= '$( document ).ready( function() {'."\n";
-
-    $html .= '  $validateForm_' . $this->id . ' = setValidateForm( "' . $this->id . '", ';
-    $html .= ( count( $this->rules ) > 0 ) ? json_encode( $this->rules ) : 'false';
-    $html .= ', ';
-    $html .= ( count( $this->messages ) > 0 ) ? json_encode( $this->messages ) : 'false';
-    $html .= ' );'."\n";
-
-    // if( count( $this->messages ) > 0 ) {
-    //   $html .= $separador.'    messages: '.json_encode( $this->messages )."\n";
-    //   $separador = '    ,'."\n";
-    // }
-
-    $html .= '  console.log( $validateForm_'.$this->id.' );'."\n";
-
-    $html .= '});'."\n";
-    $html .= '</script>'."\n";
-
-    $html .= '<!-- Validate form '.$this->getName().' - END -->'."\n";
-
-    return $html;
-  } // function getScriptCode
 
 
   /**
@@ -1000,7 +1366,6 @@ class FormController implements Serializable {
     Recupera un JSON de OK con los sucesos que hay que lanzar en el navegador
     @return string JSON
   */
-
   public function getJsonOk( $moreInfo = false ) {
     $result = array(
       'result' => 'ok',
@@ -1075,7 +1440,38 @@ class FormController implements Serializable {
     @param mixed $ruleParams
   */
   public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
-    $this->rules[$fieldName][$ruleName] = $ruleParams;
+    $this->rules[ $fieldName ][ $ruleName ] = $ruleParams;
+  }
+
+
+  /**
+    Recupera las reglas de validacion para un campo
+    @param string $fieldName Nombre del campo
+    @param array
+  */
+  public function getValidationRules( $fieldName ) {
+    $fieldRules = false;
+    if( isset( $this->rules[ $fieldName ] ) ) {
+      $fieldRules = $this->rules[ $fieldName ];
+    }
+    return $fieldRules;
+  }
+
+
+  /**
+    Copia todas las reglas de un campo a otro
+    @param string $fieldNameFrom Nombre del campo
+    @param string $fieldNameTo Nombre del campo
+  */
+  public function cloneRules( $fieldNameFrom, $fieldNameTo ) {
+    error_log( 'cloneRules: '.$fieldNameFrom.', '.$fieldNameTo );
+    $fieldRules = $this->getValidationRules( $fieldNameFrom );
+    if( is_array( $fieldRules ) ) {
+      foreach( $fieldRules as $ruleName => $ruleParams ) {
+        error_log( 'cloneRules: '.$ruleName );
+        $this->setValidationRule( $fieldNameTo, $ruleName, $ruleParams );
+      }
+    }
   }
 
 
@@ -1145,22 +1541,43 @@ class FormController implements Serializable {
   }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /**
     Verifica que se cumplen todas las reglas establecidas
     @return boolean
   */
   public function validateForm() {
-    // error_log( 'validateForm:' );
+    error_log( 'validateForm:' );
 
     $formValidated = true;
 
     // Tienen que existir los validadores y los valores del form
     if( $this->issetValidationObj() ) {
       foreach( $this->rules as $fieldName => $fieldRules ) {
-        $fieldValidated = $this->validateField( $fieldName );
-        $formValidated = $formValidated && $fieldValidated;
+        error_log( 'validateForm: campo: '.$fieldName );
+        if( $this->getFieldParam( $fieldName, 'lastElem' ) === null ) {
+          // Procesamos los campos que no son raiz de campos multiples
+          $fieldValidated = $this->validateField( $fieldName );
+          $formValidated = $formValidated && $fieldValidated;
+        }
       } // foreach( $this->rules as $fieldName => $fieldRules )
-
     } // if( $this->issetValidationObj() )
     else {
       $formValidated = false;
@@ -1171,13 +1588,40 @@ class FormController implements Serializable {
   } // function validateForm()
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /**
     Verifica que se cumplen las reglas establecidas para un campo
     @param string $fieldName Nombre del campo
     @return boolean
   */
   public function validateField( $fieldName ) {
-    // error_log( 'validateField: '.$fieldName );
+    error_log( 'validateField: '.$fieldName );
     $fieldValidated = true;
 
     if( $this->isEmptyFieldValue( $fieldName ) ) {
@@ -1194,7 +1638,7 @@ class FormController implements Serializable {
     } // if( $this->isEmptyFieldValue( $fieldName ) )
     else {
 
-      $fieldRules = $this->rules[ $fieldName ];
+      $fieldRules = $this->getValidationRules( $fieldName );
       $fieldType = $this->getFieldType( $fieldName );
       $fieldValues = $this->getFieldValue( $fieldName );
 
@@ -1284,6 +1728,43 @@ class FormController implements Serializable {
   /*
   Validaciones y gestion de errores (FIN)
   */
+
+
+
+  /**
+    Recupera el html con el JS del form
+    @return string
+  */
+  public function getScriptCode() {
+    $html = '';
+
+    $separador = '';
+
+    $html .= '<!-- Validate form ' . $this->getName() . ' -->' . "\n";
+    $html .= '<script>' . "\n";
+
+    $html .= '$( document ).ready( function() {'."\n";
+
+    $html .= '  $validateForm_' . $this->id . ' = setValidateForm( "' . $this->id . '", ';
+    $html .= ( count( $this->rules ) > 0 ) ? json_encode( $this->rules ) : 'false';
+    $html .= ', ';
+    $html .= ( count( $this->messages ) > 0 ) ? json_encode( $this->messages ) : 'false';
+    $html .= ' );'."\n";
+
+    // if( count( $this->messages ) > 0 ) {
+    //   $html .= $separador.'    messages: '.json_encode( $this->messages )."\n";
+    //   $separador = '    ,'."\n";
+    // }
+
+    $html .= '  console.log( $validateForm_'.$this->id.' );'."\n";
+
+    $html .= '});'."\n";
+    $html .= '</script>'."\n";
+
+    $html .= '<!-- Validate form '.$this->getName().' - END -->'."\n";
+
+    return $html;
+  } // function getScriptCode
 
 
 
