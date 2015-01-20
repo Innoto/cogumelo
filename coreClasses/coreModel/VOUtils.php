@@ -178,7 +178,7 @@
     $mrel = new MysqlDAORelationship();
     $vo = file_get_contents("/home/pblanco/proxectos/cogumelo/packages/sampleApp/app/tmp/modelRelationship/UserVO.json");
 
-    echo $mrel->joins(json_decode($vo));
+    var_dump( $mrel->joins(json_decode($vo)) );
 
     foreach( self::listVOs() as $voName => $vo) {
       file_put_contents( APP_TMP_PATH.'/modelRelationship/'.$voName.'.json' , json_encode(self::getVORelationship($voName)) );
@@ -204,7 +204,7 @@
 
 
   static function includeVOs() {
-    // incluir todos VO's
+
   }
 
 
