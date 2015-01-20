@@ -8,7 +8,11 @@ class MysqlDAORelationship
   function joins($vo) {
     $joinList = '';
 
+
+
+//var_dump($vo);
     foreach( $vo->relationship as $voRel) {
+var_dump($voRel);
       if( sizeof($voRel->relationship) == 0  ) {
         // FINAL
         $joinList .= $this->leftJoin( $this->selectConcat($voRel), $voRel );
@@ -25,15 +29,15 @@ class MysqlDAORelationship
 
 
   function leftJoin($select, $sonVo ) {
-    return " \n LEFT JOIN ( ".$select." ) as ".$sonVo->table."_serialized  ON ".$sonVo->table."_serialized.".$sonVo->relatedWithId." = ".$sonVo->parentTable.".".$sonVo->parentId;
+    return " LEFT JOIN ( ".$select." ) as ".$sonVo->table."_serialized  ON ".$sonVo->table."_serialized.".$sonVo->relatedWithId." = ".$sonVo->parentTable.".".$sonVo->parentId;
   }
 
   function selectConcat( $vo ) {
-    return "\n SELECT " . $this->cols($vo) . ", concat('{', " . $this->jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+    return " SELECT " . $this->cols($vo) . ", concat('{', " . $this->jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
   function selectGroupConcat( $vo, $joins ) {
-    return "\nSELECT " .$this->cols($vo). " , concat('{', ". $this->jsonCols($vo) ." ". $this->getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+    return " SELECT " .$this->cols($vo). " , concat('{', ". $this->jsonCols($vo) ." ". $this->getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
   function jsonCols($vo) {

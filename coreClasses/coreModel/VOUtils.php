@@ -120,7 +120,7 @@
     $relArray = array_merge( $relArray, $parentInfo);
 
     $relArray['cols'] = self::getVOCols( $voName );
-    $retArray['relationship'] = array();
+    $relArray['relationship'] = array();
 
 
     $allVOsRel = self::getAllRelScheme();
@@ -178,7 +178,9 @@
     $mrel = new MysqlDAORelationship();
     $vo = file_get_contents("/home/pblanco/proxectos/cogumelo/packages/sampleApp/app/tmp/modelRelationship/UserVO.json");
 
-    var_dump( $mrel->joins(json_decode($vo)) );
+    //var_dump( 
+    $mrel->joins(json_decode($vo)) ;
+    //);
 
     foreach( self::listVOs() as $voName => $vo) {
       file_put_contents( APP_TMP_PATH.'/modelRelationship/'.$voName.'.json' , json_encode(self::getVORelationship($voName)) );
@@ -204,7 +206,7 @@
 
 
   static function includeVOs() {
-
+    self::listVOs();
   }
 
 
