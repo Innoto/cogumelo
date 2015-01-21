@@ -4,23 +4,30 @@
 class MysqlDAORelationship 
 {
 
-
-  function getVOJoins() {
+  static function getVOJoins( $VOClass, $resolveDependences ) {
     
+    $ret = '';
+
+    if( $resolveDependences ) {
+      VOUtils::includeVOs();
+      $ret = self::joins( VOUtils::getRelObj($VOClass) );
+    }
+
+    return $ret;
   }
 
-  function joins($vo) {
+  static function joins($vo) {
     $joinList = '';
 
     foreach( $vo->relationship as $voRel) {
 
       if( sizeof($voRel->relationship) == 0  ) {
         // FINAL
-        $joinList .= $this->leftJoin( $this->selectConcat($voRel), $voRel );
+        $joinList .= self::leftJoin( self::selectConcat($voRel), $voRel );
       }
       else {
         // Any table
-        $joinList .= $this->leftJoin( $this->selectGroupConcat( $voRel, $this->joins( $voRel ) ), $voRel );
+        $joinList .= self::leftJoin( self::selectGroupConcat( $voRel, self::joins( $voRel ) ), $voRel );
       }
       
     }
@@ -29,19 +36,19 @@ class MysqlDAORelationship
   }
 
 
-  function leftJoin($select, $sonVo ) {
+  static function leftJoin($select, $sonVo ) {
     return " LEFT JOIN ( ".$select." ) as ".$sonVo->table."_serialized  ON ".$sonVo->table."_serialized.".$sonVo->relatedWithId." = ".$sonVo->parentTable.".".$sonVo->parentId;
   }
 
-  function selectConcat( $vo ) {
-    return " SELECT " . $this->cols($vo) . ", concat('{', " . $this->jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+  static function selectConcat( $vo ) {
+    return " SELECT " . self::cols($vo) . ", concat('{', " . self::jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
-  function selectGroupConcat( $vo, $joins ) {
-    return " SELECT " .$this->cols($vo). " , concat('{', ". $this->jsonCols($vo) ." ". $this->getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+  static function selectGroupConcat( $vo, $joins ) {
+    return " SELECT " .self::cols($vo). " , concat('{', ". self::jsonCols($vo) ." ". self::getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
-  function jsonCols($vo) {
+  static function jsonCols($vo) {
     $returnCols = '';
     $coma = '';
 
@@ -53,7 +60,7 @@ class MysqlDAORelationship
     return $returnCols;
   }
 
-  function cols($vo) {
+  static function cols($vo) {
     $returnCols = '';
     $coma = '';
 
@@ -65,7 +72,7 @@ class MysqlDAORelationship
     return $returnCols;
   }
 
-  function getGroupConcats ($vo) {
+  static function getGroupConcats ($vo) {
     $groupConcats = '';
 
     foreach( $vo->relationship as $voRel) {

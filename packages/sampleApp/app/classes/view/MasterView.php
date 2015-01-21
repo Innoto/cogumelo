@@ -31,12 +31,17 @@ class MasterView extends View
 
     $this->common();
     $this->template->exec();
-
   }
 
   function common() {
     $this->template->addClientScript('js/default.js');
     $this->template->setTpl('default.tpl');
+  }
+
+  function testdata(){
+    user::load('controller/UserController.php');
+    $userControl = new UserController();
+    $userControl->listItems(false, false, false, false, true);
   }
 
   function page404() {

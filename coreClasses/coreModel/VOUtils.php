@@ -1,5 +1,9 @@
 <?php 
 
+  global $COGUMELO_RELATIONSHIP_MODEL;
+  $COGUMELO_RELATIONSHIP_MODEL = array();
+
+
   class VOUtils {
 
   // list VOs with priority
@@ -167,11 +171,6 @@
     Cogumelo::load('coreModel/mysql/MysqlDAORelationship.php');
 
     $mrel = new MysqlDAORelationship();
-    $vo = file_get_contents("/home/pblanco/proxectos/cogumelo/packages/sampleApp/app/tmp/modelRelationship/UserVO.json");
-
-    //var_dump( 
-    $mrel->joins(json_decode($vo)) ;
-    //);
 
     foreach( self::listVOs() as $voName => $vo) {
       file_put_contents( APP_TMP_PATH.'/modelRelationship/'.$voName.'.json' , json_encode(self::getVORelationship($voName)) );
@@ -201,61 +200,34 @@
   }
 
 
+  static function getRelkeys($nameVO) {
+
+    $voRel = self::getRelObj($nameVO);
+    $relKeys = array();
+
+
+    if( sizeof($voRel->relationship) > 0 ) {
+      foreach ($voRel->relationship as $voName => $rel) {
+        $relKeys[] = $rel->table;
+      }
+    }
+
+    return $relKeys;
+  }
+
+  static function getRelObj($nameVO) {
+    global $COGUMELO_RELATIONSHIP_MODEL;
+    
+
+    if( !array_key_exists($nameVO, $COGUMELO_RELATIONSHIP_MODEL) ) {
+      $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ] = json_decode( 
+                    file_get_contents(APP_TMP_PATH.'/modelRelationship/UserVO.json') 
+                  );
+    }
+
+    return $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
+  }
+
 }
 
-/*
-  
-  SUPER CONSULTA!!!!
 
-select user_user.id, user_user.login, concat('[', group_concat( user_role_json.permission) , ']' ) from user_user
-left join user_userRole ON user_userRole.user = user_user.id
-left join (
-  select user_role.id as id, concat('{ "user_role.id": "', user_role.id, '","user_role.name": "', user_role.name, '", "user_role.permission": [', group_concat(user_permission_json.permission), ']}') as permission from user_role
-  left join user_rolePermission ON user_rolePermission.role = user_role.id
-  left join (
-    select 
-      user_permission.id as id,
-      concat(
-        '{',
-          '"user_permission.id": "',user_permission.id, '",',
-          '"user_permission.name": "',user_permission.name, '"',
-        '}'
-      ) as permission
-  from user_permission) as user_permission_json ON user_permission_json.id = user_rolePermission.permission
-  group by user_role.id
-
-) as user_role_json ON user_role_json.id = user_userRole.role
-group by user_user.id
-
-*/
-/*
-select user_user.id, user_user.login, concat('[', group_concat( user_role_json.user_permission) , ']' ) from user_user
-  left join user_userRole ON user_userRole.user = user_user.id
-  left join (
-    select user_role.id as id, concat('{ "user_role.id": "', user_role.id, '","user_role.name": "', user_role.name, '", "user_role.user_permission": [', group_concat(user_permission_serialized.user_permission), ']}') as user_permission from user_role
-      left join ( 
-        select user_rolePermission.id as id, role, permission, concat('{ "user_rolePermission.id": "',user_rolePermission.id, '", "user_rolePermission.role": "',user_rolePermission.role, '", "user_rolePermission.permission": "',user_rolePermission.permission, '"  }' ) as user_rolePermission from user_rolePermission group by  user_rolePermission.id
-      ) as user_rolePermission_serialized ON user_rolePermission_serialized.role = user_role.id
-      left join (
-        select user_permission.id as id, concat('{ "user_permission.id": "',user_permission.id, '", "user_permission.name": "',user_permission.name, '" }' ) as user_permission from user_permission group by user_permission.id
-      ) as user_permission_serialized  ON user_permission_serialized.id = user_rolePermission_serialized.permission
-    group by user_role.id
-
-  ) as user_role_json ON user_role_json.id = user_userRole.role
-group by user_user.id
-*/
-/*
-select user_user.id, user_user.login, concat('[', group_concat( user_role_json.user_permission) , ']' ) from user_user
-  left join user_userRole ON user_userRole.user = user_user.id
-  left join (
-    select user_role.id as id, concat('{ "user_role.id": "', user_role.id, '","user_role.name": "', user_role.name, '", "user_role.user_permission": [', group_concat(user_rolePermission_serialized.user_rolePermission,', ', user_permission_serialized.user_permission ), ']}') as user_permission from user_role
-      left join ( 
-        select user_rolePermission.id as id, role, permission, concat('{ "user_rolePermission.id": "',user_rolePermission.id, '", "user_rolePermission.role": "',user_rolePermission.role, '", "user_rolePermission.permission": "',user_rolePermission.permission, '"  }' ) as user_rolePermission from user_rolePermission group by  user_rolePermission.id
-      ) as user_rolePermission_serialized ON user_rolePermission_serialized.role = user_role.id
-      left join (
-        select user_permission.id as id, concat('{ "user_permission.id": "',user_permission.id, '", "user_permission.name": "',user_permission.name, '" }' ) as user_permission from user_permission group by user_permission.id
-      ) as user_permission_serialized  ON user_permission_serialized.id = user_rolePermission_serialized.permission
-    group by user_role.id
-
-  ) as user_role_json ON user_role_json.id = user_userRole.role
-group by user_user.id*/

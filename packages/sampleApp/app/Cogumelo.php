@@ -33,11 +33,13 @@ class Cogumelo extends CogumeloClass
     $this->addUrlPatterns( '#^tableInterface$#', 'view:Tview::main');
 
     /*i18n*/
-    $this->addUrlPatterns( '#^test#', 'view:Testi18n::translate' );
+   // $this->addUrlPatterns( '#^test#', 'view:Testi18n::translate' );
 
     /*FormModTest*/
     $this->addUrlPatterns( '#^form-mod-test$#', 'view:FormModTest::loadForm' );
     $this->addUrlPatterns( '#^form-mod-action$#', 'view:FormModTest::actionForm' );
+
+    $this->addUrlPatterns( '#^testdata$#', 'view:MasterView::testdata' );
 
     /*Adminview*/
     $this->addUrlPatterns( '#^getobj$#', 'view:Adminview::getobj' );

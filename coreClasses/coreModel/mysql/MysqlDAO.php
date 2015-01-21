@@ -2,6 +2,7 @@
 
 Cogumelo::load('coreController/Cache.php');
 Cogumelo::load('coreModel/DAO.php');
+Cogumelo::load('coreModel/mysql/MysqlDAORelationship.php');
 Cogumelo::load('coreModel/mysql/MysqlDAOResult.php');
 
 
@@ -218,7 +219,7 @@ class MysqlDAO extends DAO
               $VO->getKeysToString($fields, $resolveDependences ) .
               " FROM `" . 
               $VO::$tableName ."` " . 
-              MysqlDAORelationship::JoinSQL($VO, resolveDependences) . 
+              MysqlDAORelationship::getVOJoins( $this->VO, $resolveDependences) . 
               $whereArray['string'] . $orderSTR . $rangeSTR . ";";
 
 echo $strSQL;

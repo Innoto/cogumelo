@@ -93,30 +93,30 @@ Class VO
     return $value;
   }
 
+  function getKeysToString( $fields, $resolveDependences=false ) {
+    $retFields = array();
 
-  function getRelData() {
-    return $this->dataRelationship;
-  }
-
-
-  function getRelScheme() {
-    return VOUtils::getVORelationship();
-  }
-
-  // Is NM Table when only have other VO references or primary key in cols
-  function isNMTable() {
-
-  }
-
-
-  function toString(){
-    $str = "\n " . $keyId. ': ' .$this->getter($keyId);
-    foreach(array_keys($this->cools) as $k) {
-      $str .= "\n " . $this->cools[$k] . ': ' .$this->getter($k);
+    // main vo Fields
+    if( !$fields ) {
+      $retFields = array_merge($retFields, array_keys( $this->getCols() ) );
+    }
+    else {
+      $retFields = array_merge($retFields, $fields );
     }
 
-    return $str;
+    foreach($retFields as $fkey => $retF )  {
+      $retFields[$fkey] = $this->getTableName().'.'.$retF;
+    }
+
+    // relationship cols
+    if( $resolveDependences ) {
+      $retFields = array_merge($retFields, VOUtils::getRelKeys( get_class( $this ) ) );
+    }
+
+
+    return implode(', ', $retFields);
   }
+
 
 }
 

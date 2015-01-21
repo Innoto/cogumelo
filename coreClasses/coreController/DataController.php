@@ -49,11 +49,11 @@ abstract class DataController {
   * @param array $order order for query
   * @apram boolean $cache true means cache is enabled
   */
-	function listItems($filters = false, $range = false, $order = false, $fields = false, $cache = false)
+	function listItems($filters = false, $range = false, $order = false, $fields = false, $resolveDependences = false, $cache = false)
 	{
 
 		Cogumelo::debug( "Called listItems on ".get_called_class() );
-		$data = $this->data->listItems($filters, $range, $order, $fields, $cache);
+		$data = $this->data->listItems($filters, $range, $order, $fields, $resolveDependences, $cache);
 
 		return $data;
 	}
