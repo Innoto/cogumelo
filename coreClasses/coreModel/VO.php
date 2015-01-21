@@ -10,7 +10,8 @@ Class VO
   var $data = array();
 
   function __construct(array $datarray){
-
+    echo "<pre>";
+var_dump($datarray);
     // Common developer errors
     if(!isset($this::$tableName)){
       Cogumelo::error('all VO Must have declared an $this::$tableName');

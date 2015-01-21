@@ -222,8 +222,7 @@ class MysqlDAO extends DAO
               MysqlDAORelationship::getVOJoins( $this->VO, $resolveDependences) . 
               $whereArray['string'] . $orderSTR . $rangeSTR . ";";
 
-echo $strSQL;
-exit;
+
 
     if ( $cache && DB_ALLOW_CACHE  )
     {
