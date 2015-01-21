@@ -39,11 +39,13 @@ class MasterView extends View
   }
 
   function testdata(){
+    echo "<pre>";
     user::load('controller/UserController.php');
     $userControl = new UserController();
     $users = $userControl->listItems(false, false, false, false, true);
     $users->fetch() ;
     $users->fetch() ;    
+    var_dump($users->fetch() );    
   }
 
   function page404() {

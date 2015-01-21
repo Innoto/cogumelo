@@ -8,10 +8,10 @@ Class VO
 {
 
   var $data = array();
+  var $depKeys = array();
 
   function __construct(array $datarray){
-    echo "<pre>";
-var_dump($datarray);
+
     // Common developer errors
     if(!isset($this::$tableName)){
       Cogumelo::error('all VO Must have declared an $this::$tableName');
@@ -27,14 +27,20 @@ var_dump($datarray);
     }
 
     $this->setVarList($datarray);
-
+    $this->depKeys = VOUtils::getRelVOs( get_class( $this ) );
   }
+
 
   // set variable list (initializes entity)
   function setVarList(array $datarray) {
     // rest of variables
     foreach($datarray as $datakey=>$data) {
-        $this->setter($datakey, $data);
+      if( in_array( $datakey , $this->depKeys) ){
+
+      }
+      else {
+        $this->setter( $datakey, $data );
+      }
     }
   }
 
@@ -68,7 +74,7 @@ var_dump($datarray);
 
     if( array_key_exists($setterkey, $this->getCols()) ) {
       // set values
-      $setterVO->data[$setterkey] = $value;
+      $this->data[$setterkey] = $value;
     }
     else{
       Cogumelo::debug("key '". $setterkey ."' not exist in VO::". $this::$tableName);
