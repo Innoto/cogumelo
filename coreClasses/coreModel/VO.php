@@ -41,7 +41,7 @@ Class VO
       // set dependence VOs
       if( array_key_exists( $datakey , $this->depKeys) ){
         if( $data ) {
-          $this->depData[] = $this->setVOfromJSON( $this->depKeys[$datakey], $data );
+          $this->setVOfromJSON( $this->depKeys[$datakey], $data );
         }
       }
       // set cols
@@ -53,11 +53,21 @@ Class VO
 
 
   function setVOfromJSON( $voName, $jsonData ) {
-    if(! $retData = json_decode($jsonData) ){
+
+    if(! $data = json_decode($jsonData) ){
       Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
     }
 
-    return (array) $retData;
+    if( is_array($jsonData) ) {
+      foreach( $data as $de ) {
+        $this->depData[] = (array) $de;
+      }
+    }
+    else
+    {
+      $this->depData[] = (array) $data;
+    }
+
   }
 
 
