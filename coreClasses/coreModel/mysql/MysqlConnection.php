@@ -42,11 +42,12 @@ class MysqlConnection extends Connection
       if($this->db == false) {
           @$this->db = new mysqli(DB_HOSTNAME ,$this->DB_USER , $this->DB_PASSWORD, $this->DB_NAME,  DB_PORT);
 
-
-          if ($this->db->connect_error)
+          if ($this->db->connect_error) {
               Cogumelo::debug(mysqli_connect_error());
-          else
+          }
+          else {
               Cogumelo::debug("MYSQLI: Connection Stablished to ".DB_HOSTNAME);
+          }
           
           @mysqli_query($this->db ,"START TRANSACTION;");
       }

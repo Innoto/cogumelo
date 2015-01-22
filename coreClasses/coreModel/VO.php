@@ -6,12 +6,15 @@ VOUtils::includeVOs();
 
 Class VO
 {
-
+  var $name = '';
   var $data = array();
+  var $depData = array();
   var $depKeys = array();
 
   function __construct(array $datarray){
 
+    // get class name
+    $this->name = get_class( $this );
     // Common developer errors
     if(!isset($this::$tableName)){
       Cogumelo::error('all VO Must have declared an $this::$tableName');
@@ -26,8 +29,8 @@ Class VO
       return false;
     }
 
-    $this->setVarList($datarray);
-    $this->depKeys = VOUtils::getRelVOs( get_class( $this ) );
+    $this->depKeys = VOUtils::getRelKeys( $this->name, true );
+    $this->setVarList( $datarray );
   }
 
 
@@ -35,13 +38,26 @@ Class VO
   function setVarList(array $datarray) {
     // rest of variables
     foreach($datarray as $datakey=>$data) {
-      if( in_array( $datakey , $this->depKeys) ){
-
+      // set dependence VOs
+      if( array_key_exists( $datakey , $this->depKeys) ){
+        if( $data ) {
+          $this->depData[] = $this->setVOfromJSON( $this->depKeys[$datakey], $data );
+        }
       }
+      // set cols
       else {
         $this->setter( $datakey, $data );
       }
     }
+  }
+
+
+  function setVOfromJSON( $voName, $jsonData ) {
+    if(! $retData = json_decode($jsonData) ){
+      Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
+    }
+
+    return (array) $retData;
   }
 
 
@@ -117,7 +133,7 @@ Class VO
 
     // relationship cols
     if( $resolveDependences ) {
-      $retFields = array_merge($retFields, VOUtils::getRelKeys( get_class( $this ) ) );
+      $retFields = array_merge($retFields, VOUtils::getRelKeys(  $this->name ) );
     }
 
 

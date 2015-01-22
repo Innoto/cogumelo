@@ -200,7 +200,9 @@
   }
 
 
-  static function getRelVOs( $nameVO ) {
+
+
+  static function getRelkeys( $nameVO, $tableAsKey = false ) {
 
     $voRel = self::getRelObj( $nameVO );
     $relKeys = array();
@@ -208,22 +210,12 @@
 
     if( sizeof($voRel->relationship) > 0 ) {
       foreach ($voRel->relationship as $voName => $rel) {
-        $relKeys[] = $rel->vo;
-      }
-    }
-
-    return $relKeys;
-  }
-
-  static function getRelkeys( $nameVO ) {
-
-    $voRel = self::getRelObj( $nameVO );
-    $relKeys = array();
-
-
-    if( sizeof($voRel->relationship) > 0 ) {
-      foreach ($voRel->relationship as $voName => $rel) {
-        $relKeys[] = $rel->table;
+        if( $tableAsKey ){
+          $relKeys[$rel->table] = $rel->vo;  
+        }
+        else {
+          $relKeys[$rel->vo] = $rel->table;
+        }
       }
     }
 

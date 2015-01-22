@@ -213,7 +213,9 @@ class MysqlDAO extends DAO
     $rangeSTR = ($range != array() && is_array($range) )? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
 
 
-
+    if($resolveDependences) {
+      $this->execSQL($connectionControl,'SET group_concat_max_len='.DB_MYSQL_GROUPCONCAT_MAX_LEN.';');
+    }
 
     $strSQL = "SELECT ".
               $VO->getKeysToString($fields, $resolveDependences ) .
