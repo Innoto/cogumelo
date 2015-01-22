@@ -16,6 +16,7 @@ function getFormInfoIndex( idForm ) {
   return index;
 }
 
+
 function setFormInfo( idForm, key, value ) {
   var index = getFormInfoIndex( idForm );
   if( index === false ) {
@@ -24,6 +25,7 @@ function setFormInfo( idForm, key, value ) {
   }
   cogumeloFormControllerFormsInfo[ index ][ key ] = value;
 }
+
 
 function getFormInfo( idForm, key ) {
   var value = false;
@@ -36,10 +38,34 @@ function getFormInfo( idForm, key ) {
   return value;
 }
 
+
+function bindForm( idForm ) {
+  console.log( 'bindForm( '+idForm+' )' );
+  $inputFileFields = $( '#' + idForm + ' input:file' );
+  if( $inputFileFields.length ) {
+    if( !window.File ) {
+      // File - provides readonly information such as name, file size, mimetype
+      alert('Tu navegador aún no tiene soporte para el envío de ficheros HTML5. Actualiza a versiones recientes...');
+    }
+    $inputFileFields.on( 'change', processInputFileField );
+  }
+
+  $( '#' + idForm + ' .addGroupElement' ).on( 'click', addGroupElement ).css( 'cursor', 'pointer' );
+  $( '#' + idForm + ' .removeGroupElement' ).on( 'click', removeGroupElement ).css( 'cursor', 'pointer' );
+}
+
+
+function unbindForm( idForm ) {
+  console.log( 'unbindForm( '+idForm+' )' );
+  $( '#' + idForm + ' input:file' ).off( 'change' );
+  $( '#' + idForm + ' .addGroupElement' ).off( 'click' );
+  $( '#' + idForm + ' .removeGroupElement' ).off( 'click' );
+}
+
+
 /*
   Gestión de informacion en cliente (FIN)
 */
-
 
 
 function setValidateForm( idForm, rules, messages ) {
@@ -121,10 +147,8 @@ function setValidateForm( idForm, rules, messages ) {
       }
   });
 
-  // Bind input file fields: Validate, send, show, ...
-  if( $( '#'+idForm+' input:file' ).length > 0 ) {
-    bindFormInputFileFields( idForm );
-  }
+  // Bind file fields and group actions...
+  bindForm( idForm );
 
   // Save validate instance for this Form
   setFormInfo( idForm, 'validateForm', $validateForm );
@@ -155,21 +179,9 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
 
 
 
-
-/**
-*** FICHEROS ***
-**/
-
-function bindFormInputFileFields( idForm ) {
-
-  if( !window.File ) {
-    // File - provides readonly information such as name, file size, mimetype
-    alert('Tu navegador aún no soporta el API File para el envío de ficheros. Actualiza a versiones recientes...');
-  }
-
-  $( '#' + idForm + ' input:file' ).on( 'change', processInputFileField );
-} // function bindFormInputFileFields( idForm )
-
+/*
+***  FICHEROS  ***
+*/
 
 function processInputFileField( evnt ) {
   var files = evnt.target.files; // FileList object
@@ -184,7 +196,6 @@ function processInputFileField( evnt ) {
 } // function processInputFileField( evnt )
 
 
-
 function checkInputFileField( files, idForm, fieldName ) {
   var $validateForm = getFormInfo( idForm, 'validateForm' );
   var valRes = $validateForm.element( 'input[name=' + fieldName + ']' );
@@ -196,7 +207,6 @@ function checkInputFileField( files, idForm, fieldName ) {
 
   return valRes;
 } // function procesarFiles
-
 
 
 function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
@@ -283,7 +293,6 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 } // function uploadFile( file, idForm, fieldName, cgIntFrmId )
 
 
-
 function deleteFormFileEvent( evnt ) {
   $fileField = $( evnt.target );
   $form = $fileField.parents( 'form' );
@@ -293,7 +302,6 @@ function deleteFormFileEvent( evnt ) {
 
   deleteFormFile( idForm, fieldName, cgIntFrmId );
 } // function deleteFormFileEvent( evnt )
-
 
 
 function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
@@ -337,7 +345,6 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
     }
   } );
 } // function deleteFormFile( idForm, fieldName, cgIntFrmId )
-
 
 
 function fileFieldToOk( idForm, fieldName ) {
@@ -393,4 +400,155 @@ function loadImageTh( fileObj, $container ) {
   // Read in the image file as a data URL.
   imageReader.readAsDataURL( fileObj );
 } // function loadImageTh( fileObj, $container )
+
+
+
+
+
+
+
+
+
+
+/*
+***  Agrupaciones de campos  ***
+*/
+
+function addGroupElement( evnt ) {
+  console.log( 'addGroupElement:' );
+  console.log( evnt );
+
+  var myForm = evnt.target.closest("form");
+  var idForm = $( myForm ).attr('id');
+  var cgIntFrmId = $( myForm ).attr('sg');
+  var groupName = $( evnt.target ).attr('groupName');
+
+
+  var formData = new FormData();
+  formData.append( 'execute', 'getGroupElement' );
+  formData.append( 'idForm', idForm );
+  formData.append( 'cgIntFrmId', cgIntFrmId );
+  formData.append( 'groupName', groupName );
+
+  console.log( idForm );
+  console.log( cgIntFrmId );
+  console.log( groupName );
+
+  // Desactivamos los bins del form durante el proceso
+  unbindForm( idForm );
+
+  $.ajax({
+    url: '/cgml-form-group-element', type: 'POST',
+    // Form data
+    data: formData,
+    //Options to tell jQuery not to process data or worry about content-type.
+    cache: false, contentType: false, processData: false,
+    // Custom XMLHttpRequest
+    success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
+
+      console.log( 'getGroupElement success:' );
+      console.log( $jsonData );
+
+      if( $jsonData.result === 'ok' ) {
+        console.log( 'getGroupElement OK' );
+        console.log( $jsonData.moreInfo.idForm, $jsonData.moreInfo.groupName );
+
+        $( $jsonData.moreInfo.htmlGroupElement ).insertBefore(
+          '#' + $jsonData.moreInfo.idForm + ' .cgmMForm-group-' + groupName + ' .addGroupElement'
+        );
+
+        $.each( $jsonData.moreInfo.validationRules, function( fieldName, fieldRules ) {
+          console.log( fieldName, fieldRules );
+          $( '#' + $jsonData.moreInfo.idForm + ' .cgmMForm-field-' + fieldName ).rules( 'add', fieldRules );
+        });
+      }
+      else {
+        console.log( 'getGroupElement ERROR' );
+
+        $validateForm = getFormInfo( $jsonData.moreInfo.idForm, 'validateForm' );
+        console.log( $validateForm );
+
+      }
+
+      // Activamos los bins del form despues del proceso
+      bindForm( idForm );
+    },
+    error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
+      console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
+      $( '#status' ).html( 'ERROR: (' + $textStatus + ')' );
+
+      // Activamos los bins del form despues del proceso
+      bindForm( idForm );
+    }
+  });
+} // function addGroupElement
+
+
+function removeGroupElement( evnt ) {
+  console.log( 'removeGroupElement:' );
+  console.log( evnt );
+
+  var myForm = evnt.target.closest("form");
+  var idForm = $( myForm ).attr('id');
+  var cgIntFrmId = $( myForm ).attr('sg');
+  var groupName = $( evnt.target ).attr('groupName');
+  var groupIdElem = $( evnt.target ).attr('groupIdElem');
+  console.log( idForm );
+  console.log( cgIntFrmId );
+  console.log( groupName );
+  console.log( groupIdElem );
+
+  var formData = new FormData();
+  formData.append( 'execute', 'removeGroupElement' );
+  formData.append( 'idForm', idForm );
+  formData.append( 'cgIntFrmId', cgIntFrmId );
+  formData.append( 'groupName', groupName );
+  formData.append( 'groupIdElem', groupIdElem );
+
+  // Desactivamos los bins del form durante el proceso
+  unbindForm( idForm );
+
+  $.ajax({
+    url: '/cgml-form-group-element', type: 'POST',
+    // Form data
+    data: formData,
+    //Options to tell jQuery not to process data or worry about content-type.
+    cache: false, contentType: false, processData: false,
+    // Custom XMLHttpRequest
+    success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
+
+      console.log( 'removeGroupElement success:' );
+      console.log( $jsonData );
+
+      if( $jsonData.result === 'ok' ) {
+        console.log( 'removeGroupElement OK' );
+        console.log( $jsonData.moreInfo.idForm, $jsonData.moreInfo.groupName, $jsonData.moreInfo.groupIdElem );
+        console.log( '#' + $jsonData.moreInfo.idForm +
+          ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem );
+        $( '#' + $jsonData.moreInfo.idForm +
+          ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem ).remove();
+      }
+      else {
+        console.log( 'removeGroupElement ERROR' );
+
+        $validateForm = getFormInfo( $jsonData.moreInfo.idForm, 'validateForm' );
+        console.log( $validateForm );
+
+      }
+
+      // Activamos los bins del form despues del proceso
+      bindForm( idForm );
+    },
+    error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
+      console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
+      $( '#status' ).html( 'ERROR: (' + $textStatus + ')' );
+
+      // Activamos los bins del form despues del proceso
+      bindForm( idForm );
+    }
+  });
+} // function addGroupElement
+
+
+
 
