@@ -10,11 +10,13 @@ Class VO
   var $data = array();
   var $depData = array();
   var $depKeys = array();
+  var $relObj = false;
 
-  function __construct(array $datarray){
+  function __construct(array $datarray, $otherRelObj= false ){
 
     // get class name
     $this->name = get_class( $this );
+
     // Common developer errors
     if(!isset($this::$tableName)){
       Cogumelo::error('all VO Must have declared an $this::$tableName');
@@ -29,7 +31,16 @@ Class VO
       return false;
     }
 
-    $this->depKeys = VOUtils::getRelKeys( $this->name, true );
+
+    // seting relationship keys
+    if( $otherRelObj == false ) { 
+      $this->relObj = VOUtils::getRelObj( $this->name ) ;
+    }
+    else if( is_object( $otherRelObj ) ) {
+      $this->relObj = $otherRelObj;
+    }
+
+    $this->depKeys = VOUtils::getRelKeysByRelObj( $this->relObj, true );
     $this->setVarList( $datarray );
   }
 
@@ -37,11 +48,19 @@ Class VO
   // set variable list (initializes entity)
   function setVarList(array $datarray) {
     // rest of variables
-    foreach($datarray as $datakey=>$data) {
+    foreach($datarray as $k=>$data) {
+
+      if( preg_match('#(.*)\.(.*)#', $k ,$tAndkey) ){
+        $datakey = $tAndkey[2];
+      }
+      else {
+        $datakey = $k;
+      }
+
       // set dependence VOs
       if( array_key_exists( $datakey , $this->depKeys) ){
         if( $data ) {
-          $this->setVOfromJSON( $this->depKeys[$datakey], $data );
+          $this->setDepVOs( $data, $this->depKeys[$datakey], VOUtils::searchVOinRelObj( $this->depKeys[$datakey], $this->relObj) );
         }
       }
       // set cols
@@ -52,21 +71,24 @@ Class VO
   }
 
 
-  function setVOfromJSON( $voName, $jsonData ) {
+  function setDepVOs( $data, $voName, $relObj ) {
 
-    if(! $data = json_decode($jsonData) ){
-      Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
-    }
 
-    if( is_array($jsonData) ) {
-      foreach( $data as $de ) {
-        $this->depData[] = (array) $de;
+    if( is_array($data) ) {
+      foreach( $data as $d ) {
+        $this->depData[] = new  $voName( (array) $d, $relObj );
       }
     }
     else
     {
-      $this->depData[] = (array) $data;
+      // when is first rel decode it
+      if(! $d = json_decode($data) ){
+        Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
+      }
+
+      $this->depData[] = new $voName( (array) $d, $relObj );
     }
+  
 
   }
 

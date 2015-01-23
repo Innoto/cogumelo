@@ -204,9 +204,13 @@
 
   static function getRelkeys( $nameVO, $tableAsKey = false ) {
 
-    $voRel = self::getRelObj( $nameVO );
-    $relKeys = array();
+    return self::getRelKeysByRelObj( self::getRelObj( $nameVO ), $tableAsKey );
+  }
 
+
+  static function getRelKeysByRelObj( $voRel, $tableAsKey= false ) {
+
+    $relKeys = array();
 
     if( sizeof($voRel->relationship) > 0 ) {
       foreach ($voRel->relationship as $voName => $rel) {
@@ -222,6 +226,9 @@
     return $relKeys;
   }
 
+
+
+
   static function getRelObj($nameVO) {
     global $COGUMELO_RELATIONSHIP_MODEL;
     
@@ -233,6 +240,23 @@
     }
 
     return $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
+  }
+
+
+  static function searchVOinRelObj($voName, $relObj) {
+    $relObjSon = -1;
+
+    if( sizeof($relObj->relationship ) > 0 ){
+      foreach ($relObj->relationship as $candidate) {
+        if( $candidate->vo == $voName ){
+          $relObjSon = $candidate;
+          break;
+        }
+      }
+    }
+
+
+    return $relObjSon;
   }
 
 }

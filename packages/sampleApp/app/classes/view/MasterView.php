@@ -43,9 +43,11 @@ class MasterView extends View
     user::load('controller/UserController.php');
     $userControl = new UserController();
     $users = $userControl->listItems(false, false, false, false, true);
-    $users->fetch() ;
-    $users->fetch() ;    
-    var_dump($users->fetch() );    
+    //$users->fetch() ;
+    //$users->fetch() ;    
+    $user =$users->fetch();
+
+
   }
 
   function page404() {

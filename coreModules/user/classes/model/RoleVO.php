@@ -31,9 +31,9 @@ class RoleVO extends VO
     array('name' => 'user', 'description' => 'User'),
   );
 
-  function __construct($datarray = array())
+  function __construct($datarray = array(),  $otherRelObj= false )
   {
-    parent::__construct($datarray);
+    parent::__construct($datarray, $otherRelObj );
   }
 
 }
