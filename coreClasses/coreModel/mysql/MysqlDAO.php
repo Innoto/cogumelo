@@ -6,6 +6,11 @@ Cogumelo::load('coreModel/mysql/MysqlDAORelationship.php');
 Cogumelo::load('coreModel/mysql/MysqlDAOResult.php');
 
 
+/**
+* Mysql DAO (Abstract)
+*
+* @package Cogumelo Model
+*/
 class MysqlDAO extends DAO
 {
   var $VO;
@@ -13,6 +18,14 @@ class MysqlDAO extends DAO
   //
   // Creates an "ORDER BY" String from $ORDER array
   //
+
+  /**
+  * Composes order mysql String
+  * 
+  * @param array order array array('id1'=>-1, 'id2'=>1)
+  * 
+  * @return string
+  */
   function orderByString($ORDArray)
   {
     // Direction (ASC, DESC) Array

@@ -2,14 +2,10 @@
 
 
 /**
-* DataController Class
+* Data Controller (Abstract)
 *
-* abstract DataController class
-*
-* @author: pablinhob
+* @package Cogumelo Controller
 */
-
-
 Cogumelo::load("coreModel/Facade.php");
 
 
@@ -29,8 +25,12 @@ abstract class DataController {
 
 
   /**
+  * Find element by key
+  * 
   * @param mixed $id identifier
   * @param string $key vo key to set at id (false is VO primary key)
+  *
+  * @return object data VO
   */
 	function find($value, $key=false)
 	{
@@ -50,6 +50,8 @@ abstract class DataController {
   * @param array fields
   * @param boolean $resolveDependences
   * @param boolean $cache true means cache is enabled
+  * 
+  * @return array VO array
   */
 	function listItems($filters = false, $range = false, $order = false, $fields = false, $resolveDependences = false, $cache = false)
 	{
@@ -65,6 +67,8 @@ abstract class DataController {
   *	Count items from table
   *
   * @param array $filters array of filters
+  * 
+  * @return array VO array
 	*/
 	function listCount($filters = false)
 	{
@@ -80,6 +84,8 @@ abstract class DataController {
   *	create item
   *
   * @param mixed $data be (array) or (VO object)
+  * 
+  * @return object VO 
   */
 	function create($data)
 	{
@@ -97,6 +103,8 @@ abstract class DataController {
   * create item
   *
   * @param mixed $data is a array
+  * 
+  * @return array  VO array
   */
   function createFromArray($data){
     Cogumelo::debug( "Called create on ".get_called_class() );
@@ -111,6 +119,8 @@ abstract class DataController {
   *	update item
   *
   * @param mixed $data can be array or VO object
+  * 
+  * @return object  VO
   */
 	function update($data)
 	{
@@ -128,6 +138,8 @@ abstract class DataController {
   * update item from Array
   *
   * @param mixed $data is a array
+  * 
+  * @return object $data VO array
   */
   function updateFromArray($data)
   {
@@ -143,6 +155,8 @@ abstract class DataController {
   *	delete items
   *
   * @param mixed $id must be primary key of VO
+  * 
+  * @return boolean 
   */
 	function deleteFromIds($arrayIds)
 	{
@@ -156,6 +170,8 @@ abstract class DataController {
   * delete item
   *
   * @param mixed $id must be primary key of VO
+  * 
+  * @return boolean 
   */
 
   function deleteFromId($id){
@@ -171,6 +187,8 @@ abstract class DataController {
   * delete items
   *
   * @param array $arrayVoList from listItems
+  * 
+  * @return boolean 
   */
   function deleteFromList($arrayVoList){
 
