@@ -15,12 +15,9 @@ class MysqlDAO extends DAO
 {
   var $VO;
 
-  //
-  // Creates an "ORDER BY" String from $ORDER array
-  //
 
   /**
-  * Composes order mysql String
+  * Composes order mysql (ORDER BY) String
   * 
   * @param array order array array('id1'=>-1, 'id2'=>1)
   * 
@@ -51,8 +48,18 @@ class MysqlDAO extends DAO
 
 
   //
-  // Execute a SQL query command
+  // 
   //
+
+  /**
+  * Execute a SQL query command
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param string $sql query
+  * @param string $val_array value array
+  * 
+  * @return mixed
+  */
   function execSQL(&$connectionControl, $sql, $val_array = array())
   {
 
@@ -100,9 +107,14 @@ class MysqlDAO extends DAO
   }
 
 
-  //
-  // get string of chars according prepare type
-  // ex. i:integer, d:double, s:string, b:boolean
+
+  /**
+  * get string of chars according prepare type (ex. i:integer, d:double, s:string, b:boolean)
+  * 
+  * @param array $values_array 
+  * 
+  * @return string
+  */
   function getPrepareTypes($values_array){
 
     $return_str = "";
@@ -124,6 +136,14 @@ class MysqlDAO extends DAO
   //
   //  Chose filter SQL from
   //  returns an array( where_string ,variables_array )
+
+  /**
+  * Generates where clausule
+  * 
+  * @param array $fiters
+  * 
+  * @return string
+  */
   function getFilters($filters){
 
     $where_str = "";
@@ -180,8 +200,20 @@ class MysqlDAO extends DAO
 
 
   //
-  //  Generic Find by key
+  //  
   //
+
+  /**
+  * Generic Find by key
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param mixed $search search value
+  * @param string $key key to search (default is first primary key)
+  * @param boolean $resolveDependences if want to resolve relationship dependences
+  * @param boolean $cache save query result into cache
+  * 
+  * @return array VO array
+  */
   function find(&$connectionControl, $search, $key = false,  $resolveDependences = false, $cache = false)
   {
 

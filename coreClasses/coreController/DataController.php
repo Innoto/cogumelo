@@ -184,7 +184,7 @@ abstract class DataController {
   }
 
   /**
-  * delete items
+  * Delete items
   *
   * @param array $arrayVoList from listItems
   * 
