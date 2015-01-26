@@ -28,7 +28,7 @@ abstract class DataController {
 	}
 
 
-  /*
+  /**
   * @param mixed $id identifier
   * @param string $key vo key to set at id (false is VO primary key)
   */
@@ -41,13 +41,15 @@ abstract class DataController {
 	}
 
 
-  /*
+  /**
   *	List items from table
   *
   * @param array $filters array of filters
   * @param array $range two element array with result range ex. array(0,100)
   * @param array $order order for query
-  * @apram boolean $cache true means cache is enabled
+  * @param array fields
+  * @param boolean $resolveDependences
+  * @param boolean $cache true means cache is enabled
   */
 	function listItems($filters = false, $range = false, $order = false, $fields = false, $resolveDependences = false, $cache = false)
 	{
@@ -59,7 +61,7 @@ abstract class DataController {
 	}
 
 
-  /*
+  /**
   *	Count items from table
   *
   * @param array $filters array of filters
@@ -74,7 +76,7 @@ abstract class DataController {
 	}
 
 
-  /*
+  /**
   *	create item
   *
   * @param mixed $data be (array) or (VO object)
@@ -91,7 +93,7 @@ abstract class DataController {
 		return $data;
 	}
 
-  /*
+  /**
   * create item
   *
   * @param mixed $data is a array
@@ -105,7 +107,7 @@ abstract class DataController {
     return $data;
   }
 
-  /*
+  /**
   *	update item
   *
   * @param mixed $data can be array or VO object
@@ -122,8 +124,8 @@ abstract class DataController {
 		return $data;
 	}
 
-  /*
-  * update item
+  /**
+  * update item from Array
   *
   * @param mixed $data is a array
   */
@@ -137,7 +139,7 @@ abstract class DataController {
   }
 
 
-  /*
+  /**
   *	delete items
   *
   * @param mixed $id must be primary key of VO
@@ -150,7 +152,7 @@ abstract class DataController {
     return $data;
 	}
 
-  /*
+  /**
   * delete item
   *
   * @param mixed $id must be primary key of VO
@@ -165,12 +167,11 @@ abstract class DataController {
     return $data;
   }
 
-  /*
+  /**
   * delete items
   *
-  * @param mixed $VOarray from listItems
+  * @param array $arrayVoList from listItems
   */
-
   function deleteFromList($arrayVoList){
 
     $arrayIds = array();
