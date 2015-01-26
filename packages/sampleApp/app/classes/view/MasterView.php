@@ -47,6 +47,18 @@ class MasterView extends View
     //$users->fetch() ;    
     $user =$users->fetch();
 
+    //print_r( $user->getAllData());
+    $relaciones = $user->getDependencesByVO('PermissionVO');
+
+
+//var_dump(    $relaciones[0]->getAllData() );
+
+
+$relaciones[0]->setter('name', 'permisoquemedaagana') ;
+
+    $relaciones2 = $user->getDependencesByVO('PermissionVO');
+
+var_dump(    $relaciones2[0]->getAllData() );
 
   }
 

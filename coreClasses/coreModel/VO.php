@@ -173,5 +173,39 @@ Class VO
   }
 
 
+
+  function &getDependences() {
+    return $this->depData;
+  }
+
+  function getDependencesByVO( $voName ) {
+
+    $voArray = array();
+
+    foreach( $this->depData as &$depVO ){
+      if( $depVO->name == $voName ) {
+        $voArray[] = $depVO ;
+      }
+      else {
+        $voArray = array_merge($voArray, $depVO->getDependencesByVO($voName) );
+      }
+    }
+
+    return $voArray;
+  }
+
+
+
+  function getAllData() {
+
+    $relationshipArrayData = array();
+
+    foreach ( $this->getDependences()  as $dep ){
+       $relationshipArrayData[] = $dep->getAllData() ;
+    }
+
+    return array( 'name' => $this->name, 'data' => $this->data, 'relationship' =>$relationshipArrayData);
+  }
+
 }
 
