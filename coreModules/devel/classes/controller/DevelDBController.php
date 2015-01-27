@@ -13,7 +13,7 @@ class  DevelDBController extends DataController
 
   function __construct($usuario=false, $password = false, $DB = false)
   {
-    $this->data = new Facade("DevelDB", "devel");
+    $this->data = new Facade(false, "DevelDB", "devel");
 
     if($usuario) {
       $this->data->develMode($usuario, $password, $DB);

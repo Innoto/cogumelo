@@ -12,7 +12,7 @@ class  CousaController extends DataController
 
   function __construct()
   {   
-    $this->data = new Facade("Cousa", "testmodule");
+    $this->data = new Facade(false, "Cousa", "testmodule");
     $this->voClass = 'CousaVO';
   }
 }

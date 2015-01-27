@@ -38,13 +38,13 @@
       while (false !== ($file = readdir($handle))) {
         if ($file != "." && $file != "..") {
 
-          if(substr($file, -6) == 'VO.php'){
-            $class_vo_name = substr($file, 0,-4);
+          if(substr($file, -9) == 'Model.php' || substr($file, -6) == 'VO.php'){
+            $classVoName = substr($file, 0,-4);
 
             // prevent reload an existing vo in other place
-            if (!array_key_exists( $class_vo_name, $voarray )) {
+            if (!array_key_exists( $classVoName, $voarray )) {
               require_once($dir.$file);
-              $vos[ $class_vo_name ] = array('path' => $dir, 'module' => $modulename );
+              $vos[ $classVoName ] = array('path' => $dir, 'module' => $modulename );
             }
           }
         }

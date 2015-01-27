@@ -13,7 +13,7 @@ class  FiledataController extends DataController
 
   function __construct()
   {
-    $this->data = new Facade("Filedata", "filedata"); //In module user
+    $this->data = new Facade(false, "Filedata", "filedata"); //In module user
     $this->voClass = 'FiledataVO';
   }
 }
