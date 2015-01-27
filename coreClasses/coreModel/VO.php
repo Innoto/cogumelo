@@ -12,7 +12,7 @@ Class VO
   var $depKeys = array();
   var $relObj = false;
 
-  function __construct(array $datarray, $otherRelObj= false ){
+  function setData(array $datarray, $otherRelObj= false ){
 
     // get class name
     $this->name = get_class( $this );
@@ -90,6 +90,10 @@ Class VO
     }
   
 
+  }
+
+  function getVOClassName() {
+    return $this->name;
   }
 
 
