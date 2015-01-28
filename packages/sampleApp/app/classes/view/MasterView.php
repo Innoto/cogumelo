@@ -40,26 +40,17 @@ class MasterView extends View
 
   function testdata(){
     echo "<pre>";
-    user::load('controller/UserController.php');
-    $userControl = new UserController();
-    $users = $userControl->listItems(false, false, false, false, true);
-    //$users->fetch() ;
-    //$users->fetch() ;    
-    $user =$users->fetch();
-
-    //print_r( $user->getAllData());
-    $relaciones = $user->getDependencesByVO('PermissionVO');
 
 
-//var_dump(    $relaciones[0]->getAllData() );
+    user::load('model/UserModel.php');
+    
+    $user = new UserModel();
 
-
-$relaciones[0]->setter('name', 'permisoquemedaagana') ;
-
-    $relaciones2 = $user->getDependencesByVO('PermissionVO');
-
-var_dump(    $relaciones2[0]->getAllData() );
-
+    $users = $user->listItems();
+    while ($u  = $users->fetch() ) {
+      echo $u->getter('surname')."\n";  
+    }
+    
   }
 
   function page404() {

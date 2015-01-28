@@ -1,7 +1,6 @@
 <?php
-
+Cogumelo::load('coreModel/VO.php');
 Cogumelo::load('coreModel/Model.php');
-//filedata::load('model/FiledataModel.php');
 
 
 define( 'USER_STATUS_ACTIVE', 1 );
@@ -11,6 +10,7 @@ define( 'USER_STATUS_LOCKED', 3 );
 
 class UserModel extends Model
 {
+
   static $tableName = 'user_user';
   static $cols = array(
     'id' => array(
@@ -75,9 +75,8 @@ class UserModel extends Model
 
 
 
-  function __construct($datarray = array(),  $otherRelObj= false )
-  {
-    parent::__construct($datarray, $otherRelObj );
+  function __construct( $datarray= array(), $otherRelObj = false ) {
+    parent::__construct( $datarray, $otherRelObj );
   }
 
   function isActive(){

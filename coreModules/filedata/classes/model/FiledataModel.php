@@ -1,5 +1,6 @@
 <?php
 
+
 Cogumelo::load('coreModel/Model.php');
 
 class FiledataModel extends Model

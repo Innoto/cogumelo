@@ -14,7 +14,7 @@ Class Model extends VO {
   var $filters = array();
 
 
-  function __construct( $datarray= false, $otherRelObj = false ) {
+  function __construct( $datarray= array(), $otherRelObj = false ) {
     $this->setData( $datarray, $otherRelObj );
 
     if($this->customFacade) {
