@@ -417,7 +417,7 @@ class MysqlDAO extends DAO
   //
   //  Generic Delete from ID
   //
-  function deleteFromIds(&$connectionControl, $arrayPkeyIdValue)
+  function deleteFromKey(&$connectionControl, $key, $value)
   {
     $qs = array();
     foreach ($arrayPkeyIdValue as $id) {
@@ -427,7 +427,7 @@ class MysqlDAO extends DAO
 
     $VO = new $this->VO();
     // SQL Query
-    $strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$VO->getFirstPrimarykeyId()."` IN (".$nums_list.") ;";
+    $strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$key."` IN (".$nums_list.") ;";
 
     $res = $this->execSQL($connectionControl, $strSQL, $arrayPkeyIdValue);
     if( $res != COGUMELO_ERROR ){

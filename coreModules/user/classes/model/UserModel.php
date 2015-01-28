@@ -80,13 +80,13 @@ class UserModel extends Model
   }
 
   function isActive(){
-    return $this->status === USER_STATUS_ACTIVE;
+    return $this->getter('status') === USER_STATUS_ACTIVE;
   }
   function isWaiting(){
-    return $this->status === USER_STATUS_WAITING;
+    return $this->getter('status') === USER_STATUS_WAITING;
   }
   function isLocked(){
-    return $this->status === USER_STATUS_LOCKED;
+    return $this->getter('status') === USER_STATUS_LOCKED;
   }
 
 }

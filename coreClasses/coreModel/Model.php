@@ -1,7 +1,7 @@
 <?php
 
 Cogumelo::load('coreModel/VO.php');
-Cogumelo::load("coreModel/Facade.php");
+Cogumelo::load('coreModel/Facade.php');
 
 Class Model extends VO {
 
@@ -44,7 +44,7 @@ Class Model extends VO {
   */
   function listItems($filters = false, $range = false, $order = false, $fields = false, $resolveDependences = false, $cache = false)
   {
-    Cogumelo::debug( "Called listItems on ".get_called_class() );
+    Cogumelo::debug( 'Called listItems on '.get_called_class() );
     $data = $this->dataFacade->listItems($filters, $range, $order, $fields, $resolveDependences, $cache);
 
     return $data;
@@ -58,7 +58,7 @@ Class Model extends VO {
   */
   function listCount($filters = false)
   {
-    Cogumelo::debug( "Called listCount on ".get_called_class() );
+    Cogumelo::debug( 'Called listCount on '.get_called_class() );
     $data = $this->dataFacade->listCount($filters);
 
     return $data;
@@ -76,7 +76,7 @@ Class Model extends VO {
   */
   function create()
   {
-    Cogumelo::debug( "Called create on ".get_called_class() );
+    Cogumelo::debug( 'Called create on '.get_called_class() );
     return $this->dataFacade->Create($data);
   }
 
@@ -88,9 +88,16 @@ Class Model extends VO {
 
   function save()
   {
-    Cogumelo::debug( "Called update on ".get_called_class() );
-    return $this->dataFacade->Update($data);
+    Cogumelo::debug( 'Called update on '.get_called_class() );
+    return $this->dataFacade->Update($this->data);
   }
 
+  function delete( $resolveDependences = false ) {
+    Cogumelo::debug( 'Called delete on '.get_called_class().' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
+
+    $data = $this->dataFacade->deleteFromKey( $this->getFirstPrimarykeyId(), $this->getter( $this->getFirstPrimarykeyId() )  );
+
+    return $data;
+  }
 
 }
