@@ -168,9 +168,11 @@
 
 
   static function createModelRelTreeFiles() {
-    Cogumelo::load('coreModel/mysql/MysqlDAORelationship.php');
+    Cogumelo::load('coreModel/'.DB_ENGINE.'/'.ucfirst( DB_ENGINE ).'DAORelationship.php');
 
-    $mrel = new MysqlDAORelationship();
+    eval( '$mrel = new '.ucfirst( DB_ENGINE ).'DAORelationship();' );
+
+
 
     foreach( self::listVOs() as $voName => $vo) {
       file_put_contents( APP_TMP_PATH.'/modelRelationship/'.$voName.'.json' , json_encode(self::getVORelationship($voName)) );
@@ -209,16 +211,19 @@
 
 
   static function getRelKeysByRelObj( $voRel, $tableAsKey= false ) {
+    $relKeys = false;
 
-    $relKeys = array();
+    if($voRel) {
+      $relKeys = array();
 
-    if( sizeof($voRel->relationship) > 0 ) {
-      foreach ($voRel->relationship as $voName => $rel) {
-        if( $tableAsKey ){
-          $relKeys[$rel->table] = $rel->vo;  
-        }
-        else {
-          $relKeys[$rel->vo] = $rel->table;
+      if( sizeof($voRel->relationship) > 0 ) {
+        foreach ($voRel->relationship as $voName => $rel) {
+          if( $tableAsKey ){
+            $relKeys[$rel->table] = $rel->vo;  
+          }
+          else {
+            $relKeys[$rel->vo] = $rel->table;
+          }
         }
       }
     }
@@ -231,19 +236,28 @@
 
   static function getRelObj($nameVO) {
     global $COGUMELO_RELATIONSHIP_MODEL;
-    
+
+    $ret = false;
 
     if( !array_key_exists($nameVO, $COGUMELO_RELATIONSHIP_MODEL) ) {
-      $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ] = json_decode( 
-                    file_get_contents(APP_TMP_PATH.'/modelRelationship/UserVO.json') 
-                  );
+      if(file_exists( APP_TMP_PATH.'/modelRelationship/'.$nameVO.'.json' )){
+        $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ] = json_decode( 
+                    file_get_contents(APP_TMP_PATH.'/modelRelationship/'.$nameVO.'.json') 
+              );
+        $ret = $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
+      }
+
+    }
+    else {
+      $ret = $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
     }
 
-    return $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
+
+    return $ret;
   }
 
 
-  static function searchVOinRelObj($voName, $relObj) {
+  static function searhVOinRelObj($voName, $relObj) {
     $relObjSon = -1;
 
     if( sizeof($relObj->relationship ) > 0 ){

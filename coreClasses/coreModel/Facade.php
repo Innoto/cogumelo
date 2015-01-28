@@ -16,7 +16,7 @@ class Facade
 	var $develModeData = false;
 
 
-	function __construct( $voObj, $entity, $module=false )
+	function __construct( $voObj, $entity = false, $module=false )
 	{
 		$this->dao = DAO::Factory($voObj, $entity, $module);
 	}

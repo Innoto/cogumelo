@@ -131,8 +131,8 @@
       * setPermissionsDevel     Set the files/folders permission
       * generateModel           Execute all options below in the same order
         - createDB                Create a database
-        - createRelSchemes        Generate relationship tmp files
         - createTables            Generate the tables
+        - createRelSchemes        Generate relationship tmp files
         - initModules             Execute '::moduleRc()' of all modules
       * bckDB                       Do a DB backup (optional arg: filename)
       * restoreDB                   Restore a database
