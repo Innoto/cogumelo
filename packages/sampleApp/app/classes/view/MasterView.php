@@ -39,6 +39,8 @@ class MasterView extends View
   }
 
   function testdata(){
+    
+
     echo "<pre>";
 
 
@@ -46,11 +48,20 @@ class MasterView extends View
     
     $user = new UserModel();
 
-    $users = $user->listItems();
+    $users = $user->listItems( 
+      array(
+        'filters'=>array(),
+        'affectsDependences' => true 
+      ) 
+    );
+
     while ($u  = $users->fetch() ) {
-      echo $u->getter('surname')."\n";  
+      //$u->setter('name', 'novonome');
+      var_dump( $u->getAllData() );
+      //$u->delete();  
     }
     
+
   }
 
   function page404() {

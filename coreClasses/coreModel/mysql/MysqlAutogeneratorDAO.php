@@ -11,6 +11,7 @@ class MysqlAutogeneratorDAO extends MysqlDAO
   }
 
   function setFilters( $filters ) {
+  	// process here filters format if needed
 	$this->filters = $filters;
   }
 

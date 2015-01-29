@@ -419,19 +419,14 @@ class MysqlDAO extends DAO
   //
   function deleteFromKey(&$connectionControl, $key, $value)
   {
-    $qs = array();
-    foreach ($arrayPkeyIdValue as $id) {
-      $qs[]   = '?';
-    }
-    $nums_list = implode(',', $qs);
 
     $VO = new $this->VO();
     // SQL Query
-    $strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$key."` IN (".$nums_list.") ;";
+    $strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$key."`=? ;";
 
-    $res = $this->execSQL($connectionControl, $strSQL, $arrayPkeyIdValue);
+    $res = $this->execSQL($connectionControl, $strSQL, array($value));
     if( $res != COGUMELO_ERROR ){
-      return $true;
+      return true;
     }
     else {
       return null;

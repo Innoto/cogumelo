@@ -73,6 +73,11 @@ class UserModel extends Model
 
   );
 
+  var $filters = array(
+      'find' => "UPPER(surname)  LIKE CONCAT('%',UPPER(?),'%') OR login LIKE CONCAT('%', UPPER(?), '%')"
+//      'edadmax' => "edad <= ?",
+//      'edadmin' => "edad >= ?"
+    );
 
 
   function __construct( $datarray= array(), $otherRelObj = false ) {

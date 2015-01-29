@@ -33,19 +33,32 @@ Class Model extends VO {
   /**
   * List items from table
   *
-  * @param array $filters array of filters
-  * @param array $range two element array with result range ex. array(0,100)
-  * @param array $order order for query
-  * @param array fields
-  * @param boolean $resolveDependences
-  * @param boolean $cache true means cache is enabled
+  * @param array $parameters array of filters
   * 
   * @return array VO array
   */
-  function listItems($filters = false, $range = false, $order = false, $fields = false, $resolveDependences = false, $cache = false)
+  function listItems( array $parameters = array() )
   {
+
+    $p = array(
+        'filters' => false, 
+        'range' => false, 
+        'order' => false, 
+        'fields' => false, 
+        'dependences' => false, 
+        'cache' => false
+      );
+    $parameters =  array_merge($p, $parameters );
+
     Cogumelo::debug( 'Called listItems on '.get_called_class() );
-    $data = $this->dataFacade->listItems($filters, $range, $order, $fields, $resolveDependences, $cache);
+    $data = $this->dataFacade->listItems( 
+                                          $parameters['filters'], 
+                                          $parameters['range'], 
+                                          $parameters['order'], 
+                                          $parameters['fields'], 
+                                          $parameters['dependences'], 
+                                          $parameters['cache']
+                                        );
 
     return $data;
   }
@@ -56,8 +69,16 @@ Class Model extends VO {
   *
   * @return array VO array
   */
-  function listCount($filters = false)
+  function listCount( array $filters= array() )
   {
+
+    $p = array(
+        'filters' => false, 
+        'affectsDependences' => false, 
+        'cache' => false
+      );
+    $parameters =  array_merge($p, $parameters );
+
     Cogumelo::debug( 'Called listCount on '.get_called_class() );
     $data = $this->dataFacade->listCount($filters);
 
@@ -74,10 +95,16 @@ Class Model extends VO {
   *
   * @return object VO 
   */
-  function create()
+  function create(  array $filters= array() )
   {
+
+    $p = array(
+        'affectsDependences' => false
+      );
+    $parameters =  array_merge($p, $parameters );
+
     Cogumelo::debug( 'Called create on '.get_called_class() );
-    return $this->dataFacade->Create($data);
+    return $this->dataFacade->Create($this);
   }
 
   /**
@@ -86,13 +113,25 @@ Class Model extends VO {
   * @return object  VO
   */
 
-  function save()
+  function save(  array $parameters= array() )
   {
+
+    $p = array(
+        'affectsDependences' => false
+      );
+    $parameters =  array_merge($p, $parameters );
+
     Cogumelo::debug( 'Called update on '.get_called_class() );
-    return $this->dataFacade->Update($this->data);
+    return $this->dataFacade->Update($this);
   }
 
-  function delete( $resolveDependences = false ) {
+  function delete( array $parameters = array() ) {
+
+    $p = array(
+        'affectsDependences' => false
+      );
+    $parameters =  array_merge($p, $parameters );
+
     Cogumelo::debug( 'Called delete on '.get_called_class().' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
 
     $data = $this->dataFacade->deleteFromKey( $this->getFirstPrimarykeyId(), $this->getter( $this->getFirstPrimarykeyId() )  );
