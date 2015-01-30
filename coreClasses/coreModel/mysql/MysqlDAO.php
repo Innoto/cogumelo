@@ -19,7 +19,7 @@ class MysqlDAO extends DAO
   /**
   * Composes order mysql (ORDER BY) String
   * 
-  * @param array order array array('id1'=>-1, 'id2'=>1)
+  * @param array $ORDArray array('id1'=>-1, 'id2'=>1)
   * 
   * @return string
   */
