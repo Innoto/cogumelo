@@ -323,7 +323,7 @@
   * 
   * @return object
   */
-  static function searhVOinRelObj($voName, $relObj) {
+  static function searchVOinRelObj($voName, $relObj) {
     $relObjSon = -1;
 
     if( sizeof($relObj->relationship ) > 0 ){

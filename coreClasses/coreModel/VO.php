@@ -4,6 +4,8 @@
 Cogumelo::load('coreModel/VOUtils.php');
 VOUtils::includeVOs();
 
+
+
 Class VO
 {
   var $name = '';
@@ -119,9 +121,12 @@ Class VO
     return $this::$cols;
   }
 
+
+
   function getTableName(){
     return $this::$tableName;
   }
+
 
   // set an data attribute
   function setter($setterkey, $value = false)
@@ -155,6 +160,8 @@ Class VO
 
     return $value;
   }
+
+
 
   function getKeysToString( $fields, $resolveDependences=false ) {
     $retFields = array();
@@ -190,17 +197,44 @@ Class VO
 
     $voArray = array();
 
-    foreach( $this->depData as &$depVO ){
-      if( $depVO->name == $voName ) {
-        $voArray[] = $depVO ;
-      }
-      else {
-        $voArray = array_merge($voArray, $depVO->getDependencesByVO($voName) );
+
+    $depData = $this->depData();
+    if( sizeof($depData) > 0  ) {
+      foreach( $this->depData as &$depVO ){
+        if( $depVO->name == $voName ) {
+          $voArray[] = $depVO ;
+        }
+        else {
+          $voArray = array_merge($voArray, $depVO->getDependencesByVO($voName) );
+        }
       }
     }
 
     return $voArray;
   }
+
+
+
+  function getDepInLinearArray( &$vo, $vosArray = array() ) {
+
+    if( sizeof( $vosArray)>0 ) {
+      $voArrayKeys = array_keys( $vosArray );
+      $vosArray[] = array( 'ref' => $vo, 'parentKey' => end( $voArrayKeys ) );
+    }
+    else {
+      $vosArray[] = array( 'ref' => $vo, 'parentKey' => false );
+    }
+
+    $depData = $vo->depData;
+    if( sizeof($depData) > 0  ) {
+      foreach( $vo->depData as $depVO ){
+        $vosArray = $vo->getDepInLinearArray( $depVO, $vosArray ) ;
+      }
+    }
+
+    return $vosArray;
+  }
+
 
 
 

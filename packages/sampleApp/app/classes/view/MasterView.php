@@ -50,16 +50,18 @@ class MasterView extends View
 
     $users = $user->listItems( 
       array(
-        'filters'=>array(),
+        'filters'=>array('find'=>'pablo'),
         'affectsDependences' => true 
       ) 
     );
 
     while ($u  = $users->fetch() ) {
       //$u->setter('name', 'novonome');
-      var_dump( $u->getAllData() );
+      //var_dump( $u->getAllData() );
+      var_dump($u->getDepInLinearArray($u));
       //$u->delete();  
     }
+    
     
 
   }

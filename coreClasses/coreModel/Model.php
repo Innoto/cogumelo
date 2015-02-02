@@ -45,7 +45,7 @@ Class Model extends VO {
         'range' => false, 
         'order' => false, 
         'fields' => false, 
-        'dependences' => false, 
+        'affectsDependences' => false, 
         'cache' => false
       );
     $parameters =  array_merge($p, $parameters );
@@ -56,7 +56,7 @@ Class Model extends VO {
                                           $parameters['range'], 
                                           $parameters['order'], 
                                           $parameters['fields'], 
-                                          $parameters['dependences'], 
+                                          $parameters['affectsDependences'], 
                                           $parameters['cache']
                                         );
 
@@ -112,7 +112,6 @@ Class Model extends VO {
   *
   * @return object  VO
   */
-
   function save(  array $parameters= array() )
   {
 
@@ -132,11 +131,26 @@ Class Model extends VO {
       );
     $parameters =  array_merge($p, $parameters );
 
+
+
+
+    // delete all dependences ?
+    if($parameters['affectsDependences']) {
+      $depsInOrder = $this->getDepInLinearArray();
+
+      while( $selectDep = array_pop($depsInOrder) ) {
+          $selectDep->delete();
+      }
+
+    }
+
+
     Cogumelo::debug( 'Called delete on '.get_called_class().' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
 
     $data = $this->dataFacade->deleteFromKey( $this->getFirstPrimarykeyId(), $this->getter( $this->getFirstPrimarykeyId() )  );
 
     return $data;
   }
+
 
 }
