@@ -55,12 +55,20 @@ class MasterView extends View
       ) 
     );
 
-    while ($u  = $users->fetch() ) {
+/*    while ($u  = $users->fetch() ) {
       //$u->setter('name', 'novonome');
       //var_dump( $u->getAllData() );
       var_dump($u->getDepInLinearArray($u));
       //$u->delete();  
     }
+*/
+
+    $u  = $users->fetch();
+    $usD = $u->getDepInLinearArray($u);
+    $usD[2]['ref']->setter('description', 'SUPERDOMINATOR');
+    //var_dump($u->getAllData());
+
+
     
     
 
