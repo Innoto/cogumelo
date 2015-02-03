@@ -456,9 +456,13 @@ class MysqlDAO extends DAO
     }
   }
 
-  //
-  // @Return nº '?'
-  //
+  /**
+  * return list of question marks separated by comma
+  * 
+  * @param array $elements 
+  * 
+  * @return string
+  */
   function getQuestionMarks( $elements ){
     $qm = str_repeat( '?, ', count($elements)-1 ) . '?';
     return $qm;
