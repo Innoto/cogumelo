@@ -1,11 +1,11 @@
 <?php
 
 
- /**
-  * Abstract data access object 
-  *
-  * @package Cogumelo Model
-  */
+/**
+ * Abstract data access object 
+ *
+ * @package Cogumelo Model
+ */
 class DAO
 {
 
@@ -16,7 +16,6 @@ class DAO
   * @param string $entity name to use a handmade DAO
   * @param string $module when DAO is handmade, specify module name
   * 
-  *
   * @return object
   */
   public static function factory($voObj, $entity, $module)
