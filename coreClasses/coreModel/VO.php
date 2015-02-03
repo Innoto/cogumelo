@@ -5,7 +5,11 @@ Cogumelo::load('coreModel/VOUtils.php');
 VOUtils::includeVOs();
 
 
-
+/**
+ * Value Object (Used by the model)
+ *
+ * @package Cogumelo Model
+ */
 Class VO
 {
   var $name = '';

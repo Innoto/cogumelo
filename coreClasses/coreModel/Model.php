@@ -3,6 +3,12 @@
 Cogumelo::load('coreModel/VO.php');
 Cogumelo::load('coreModel/Facade.php');
 
+
+/**
+ * Merge of VO and Data controller concepts
+ *
+ * @package Cogumelo Model
+ */
 Class Model extends VO {
 
   var $dataFacade;
@@ -67,9 +73,11 @@ Class Model extends VO {
   /**
   * Count items from table
   *
+  * @param array $parameters array of filters
+  *
   * @return array VO array
   */
-  function listCount( array $filters= array() )
+  function listCount( array $parameters= array() )
   {
 
     $p = array(
@@ -93,9 +101,11 @@ Class Model extends VO {
   /**
   * create item
   *
+  * @param array $parameters array of filters
+  *
   * @return object VO 
   */
-  function create(  array $filters= array() )
+  function create(  array $parameters= array() )
   {
 
     $p = array(
@@ -109,6 +119,8 @@ Class Model extends VO {
 
   /**
   * save item
+  *
+  * @param array $parameters array of filters
   *
   * @return object  VO
   */
