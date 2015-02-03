@@ -1,8 +1,19 @@
 <?php
 
-
+/**
+ * Connection Abstract class 
+ *
+ * @package Cogumelo Model
+ */
 abstract class Connection
 {
+	/**
+	 * get connection object
+   *
+   * @param mixed $devel_data 
+   *
+   * @return object
+   */
 	public static function factory($devel_data = false)
 	{
 

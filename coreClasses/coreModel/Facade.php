@@ -62,7 +62,7 @@ class Facade
 	 * @param string $name the called method
 	 * @param array $args arguments
    *
-   * @return void
+   * @return mixed 
    */
 	function __call($name, $args){
 

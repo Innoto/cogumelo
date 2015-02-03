@@ -22,6 +22,14 @@ Class VO
     $this->setData( $datarray, $otherRelObj );
   }
 
+  /**
+   * Sets data of VO
+   *
+   * @param array $datarray array (data referenced by keys)
+   * @param object $otherRelObj internal use only
+   *
+   * @return void
+   */
   function setData(array $datarray, $otherRelObj= false ){
 
     // get class name
@@ -55,7 +63,13 @@ Class VO
   }
 
 
-  // set variable list (initializes entity)
+  /**
+   * set variable list (initializes entity)
+   *
+   * @param array $datarray array (data referenced by keys)
+   *
+   * @return object
+   */
   function setVarList(array $datarray) {
     // rest of variables
     foreach($datarray as $k=>$data) {
