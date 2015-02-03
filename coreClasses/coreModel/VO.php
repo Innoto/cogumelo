@@ -71,6 +71,7 @@ Class VO
    * @return object
    */
   function setVarList(array $datarray) {
+
     // rest of variables
     foreach($datarray as $k=>$data) {
 
@@ -95,6 +96,15 @@ Class VO
   }
 
 
+  /**
+   * set dependence VOs from data
+   *
+   * @param array $data 
+   * @param string $voName name of VO or Model
+   * @param object $relObj related object
+   *
+   * @return void
+   */
   function setDepVOs( $data, $voName, $relObj ) {
 
 
@@ -116,11 +126,22 @@ Class VO
 
   }
 
+
+  /**
+   * get VO or Model Name
+   *
+   * @return string
+   */
   function getVOClassName() {
     return $this->name;
   }
 
 
+  /**
+   * gets primary key id
+   *
+   * @return string
+   */
   function getFirstPrimarykeyId() {
 
     foreach($this::$cols as $cid => $col) {
@@ -135,22 +156,33 @@ Class VO
   }
 
 
+  /**
+   * get columns list
+   *
+   * @return array
+   */
   function getCols(){
     return $this::$cols;
   }
 
 
-
+  /**
+   * get BBDD table name
+   *
+   * @return string
+   */
   function getTableName(){
     return $this::$tableName;
   }
 
 
-  // set an data attribute
+  /**
+   * set any data attribute by key
+   *
+   * @return void
+   */
   function setter($setterkey, $value = false)
   {
-
-
     if( array_key_exists($setterkey, $this->getCols()) ) {
       // set values
       $this->data[$setterkey] = $value;
@@ -162,7 +194,11 @@ Class VO
 
 
 
-  // get an attribute
+  /**
+   * get any data attribute by key
+   *
+   * @return mixed
+   */
   function getter($getterkey)
   {
 
@@ -181,6 +217,11 @@ Class VO
 
 
 
+  /**
+   * get key list into string
+   *
+   * @return string
+   */
   function getKeysToString( $fields, $resolveDependences=false ) {
     $retFields = array();
 
@@ -206,7 +247,11 @@ Class VO
   }
 
 
-
+  /**
+   * dependence data 
+   *
+   * @return array
+   */
   function &getDependences() {
     return $this->depData;
   }
@@ -232,7 +277,11 @@ Class VO
   }
 
 
-
+  /**
+   * get all dependences in no nested array
+   *
+   * @return array
+   */
   function getDepInLinearArray( &$vo, $vosArray = array() ) {
 
     if( sizeof( $vosArray)>0 ) {
@@ -255,7 +304,11 @@ Class VO
 
 
 
-
+  /**
+   * get nested array with data (including loaded dependences)
+   *
+   * @return array
+   */
   function getAllData() {
 
     $relationshipArrayData = array();
