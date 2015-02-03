@@ -1,12 +1,24 @@
 <?php
 
 
-//
-// DAO Superclass
-//
-
+ /**
+  * Abstract data access object 
+  *
+  * @package Cogumelo Model
+  */
 class DAO
 {
+
+  /**
+  * Factory
+  * 
+  * @param object $voObj vo for the autogenerator 
+  * @param string $entity name to use a handmade DAO
+  * @param string $module when DAO is handmade, specify module name
+  * 
+  *
+  * @return object
+  */
   public static function factory($voObj, $entity, $module)
   {
     
