@@ -136,6 +136,14 @@ Class Model extends VO {
     return $this->dataFacade->Update($this);
   }
 
+
+  /**
+  * delete item
+  *
+  * @param array $parameters array of filters
+  *
+  * @return object  VO
+  */
   function delete( array $parameters = array() ) {
 
     $p = array(
