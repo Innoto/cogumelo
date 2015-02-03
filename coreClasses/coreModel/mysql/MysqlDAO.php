@@ -205,7 +205,7 @@ class MysqlDAO extends DAO
   * @param boolean $resolveDependences if want to resolve relationship dependences
   * @param boolean $cache save query result into cache
   * 
-  * @return array VO array
+  * @return object
   */
   function find(&$connectionControl, $search, $key = false,  $resolveDependences = false, $cache = false)
   {
@@ -231,10 +231,20 @@ class MysqlDAO extends DAO
     return $ret;
   }
 
-  //
-  //  Generic listItems
-  //
-  //  Return: array [array_list, number_of_rows]
+
+  /**
+  * Generic List ittems
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param array $filters filters array
+  * @param array $range query range
+  * @param array $order order array
+  * @param array 
+  * @param boolean $resolveDependences if want to resolve relationship dependences
+  * @param boolean $cache save query result into cache
+  * 
+  * @return object
+  */
   function listItems(&$connectionControl, $filters, $range, $order, $fields, $resolveDependences = false, $cache = false)
   {
 
@@ -308,10 +318,14 @@ class MysqlDAO extends DAO
   }
 
 
-  //
-  //  Generic listCount
-  //
-  //  Return: array [array_list, number_of_rows]
+  /**
+  * Generic List Count
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param array $filters filters array
+  * 
+  * @return integer
+  */
   function listCount(&$connectionControl, $filters)
   {
 
@@ -335,9 +349,14 @@ class MysqlDAO extends DAO
   }
 
 
-  //
-  //  Generic Create
-  //
+  /**
+  * Insert record
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param object $voObj VO or Model object
+  * 
+  * @return mixed
+  */
   function create(&$connectionControl, $VOobj)
   {
 
@@ -373,9 +392,14 @@ class MysqlDAO extends DAO
     }
   }
 
-  //
-  //  Generic Update
-  // return: Vo updated from DB
+  /**
+  * Update record
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param object $voObj VO or Model object
+  * 
+  * @return mixed
+  */
   function update(&$connectionControl, $VOobj)
   {
 
@@ -407,9 +431,15 @@ class MysqlDAO extends DAO
     }
   }
 
-  //
-  //  Generic Delete from ID
-  //
+  /**
+  * delete from key
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param string $key key to search
+  * @param mixed $value value to search
+  * 
+  * @return boolean
+  */
   function deleteFromKey(&$connectionControl, $key, $value)
   {
 
