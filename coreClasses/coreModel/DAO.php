@@ -45,4 +45,3 @@ class DAO
     return $daoObjReturn;
   }
 }
-?>
