@@ -132,11 +132,6 @@ class MysqlDAO extends DAO
   }
 
 
-
-  //
-  //  Chose filter SQL from
-  //  returns an array( where_string ,variables_array )
-
   /**
   * Generates where clausule
   * 

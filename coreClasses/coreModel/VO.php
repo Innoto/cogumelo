@@ -282,7 +282,11 @@ Class VO
    *
    * @return array
    */
-  function getDepInLinearArray( &$vo, $vosArray = array() ) {
+  function getDepInLinearArray( &$vo = false, $vosArray = array() ) {
+
+    if(!$vo){
+      $vo = $this;
+    }
 
     if( sizeof( $vosArray)>0 ) {
       $voArrayKeys = array_keys( $vosArray );

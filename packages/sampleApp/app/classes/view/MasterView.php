@@ -63,13 +63,21 @@ class MasterView extends View
     }
 */
 
+
+/*
     $u  = $users->fetch();
     $usD = $u->getDepInLinearArray($u);
     $usD[2]['ref']->setter('description', 'SUPERDOMINATOR');
     //var_dump($u->getAllData());
-
+*/
 
     
+    $u  = $users->fetch();
+    //var_dump($u->getAllData());
+    //$u->delete( array('affectsDependences'=>true) );
+    //$usD = $u->getDepInLinearArray($u);
+
+
     
 
   }

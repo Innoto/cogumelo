@@ -152,24 +152,22 @@ Class Model extends VO {
     $parameters =  array_merge($p, $parameters );
 
 
-
-
-    // delete all dependences ?
+    // Delete all dependences
     if($parameters['affectsDependences']) {
       $depsInOrder = $this->getDepInLinearArray();
 
       while( $selectDep = array_pop($depsInOrder) ) {
-          $selectDep->delete();
+          Cogumelo::debug( 'Called delete on '.get_called_class().' with "'.$selectDep['ref']->getFirstPrimarykeyId().'" = '. $selectDep['ref']->getter( $selectDep['ref']->getFirstPrimarykeyId() ) );
+          $selectDep['ref']->dataFacade->deleteFromKey( $selectDep['ref']->getFirstPrimarykeyId(), $selectDep['ref']->getter( $selectDep['ref']->getFirstPrimarykeyId() )  );
       }
-
+    }
+    // Delete only this Model
+    else {
+      Cogumelo::debug( 'Called delete on '.get_called_class().' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
+      $this->dataFacade->deleteFromKey( $this->getFirstPrimarykeyId(), $this->getter( $this->getFirstPrimarykeyId() )  );
     }
 
-
-    Cogumelo::debug( 'Called delete on '.get_called_class().' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
-
-    $data = $this->dataFacade->deleteFromKey( $this->getFirstPrimarykeyId(), $this->getter( $this->getFirstPrimarykeyId() )  );
-
-    return $data;
+    return true;
   }
 
 
