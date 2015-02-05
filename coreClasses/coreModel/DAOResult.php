@@ -1,6 +1,10 @@
 <?php
 
-
+/**
+ * Result interface from DAO 
+ *
+ * @package Cogumelo Model
+ */
 abstract class DAOResult {
 
   var $cacheFetchIndex = 0;
@@ -12,6 +16,12 @@ abstract class DAOResult {
   abstract function fetchAllRaw();
   abstract function resetFetch();
 
+
+  /**
+  * Fetch when query is cached
+  * 
+  * @return object
+  */
   function cacheFetch() {
 
     if (array_key_exists($this->cacheFetchIndex, $this->cache)) {
@@ -27,6 +37,11 @@ abstract class DAOResult {
   
   }
 
+  /**
+  *  Fetch all when query is cached
+  * 
+  * @return array
+  */
   function cacheFetchAll() {
     $list = array();
 
@@ -38,6 +53,11 @@ abstract class DAOResult {
     return $list;
   }
 
+  /**
+  * Count elements from caches
+  * 
+  * @return int
+  */
   function cache_count() {
     return count($this->cache);
   }

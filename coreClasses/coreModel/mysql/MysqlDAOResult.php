@@ -3,13 +3,26 @@
 Cogumelo::load('coreModel/DAOResult.php');
 
 
+/**
+ * DAO Result Mysql
+ *
+ * @package Cogumelo Model
+ */
 class MysqlDAOResult extends DAOResult {
 
   var $result;
   var $VO;
   var $cache = false;
 
-
+  /**
+   * Sets data of VO
+   *
+   * @param object $voObj 
+   * @param object $result 
+   * @param boolean $isCacheResult
+   *
+   * @return object
+   */
   function __construct($voObj, $result, $isCachedResult = false) {
     $this->VO = $voObj;
     $this->result = $result;
@@ -19,7 +32,12 @@ class MysqlDAOResult extends DAOResult {
   }
 
 
-  // fetch just one result
+
+  /**
+   * fetch just one result
+   *
+   * @return object
+   */
   function fetch() {
 
     if($this->cache){ // is cached query ?
@@ -41,7 +59,11 @@ class MysqlDAOResult extends DAOResult {
   }
 
 
-  // resturn an VO array with all the result rows
+  /**
+   * array of VOs
+   *
+   * @return array
+   */
   function fetchAll() {
 
     if($this->cache){ // is cached query ?
@@ -63,7 +85,11 @@ class MysqlDAOResult extends DAOResult {
 
   }
 
-  // count total numer of query result
+  /**
+   * count result
+   *
+   * @return integer
+   */
   function count() {
 
     if($this->cache){ // is cached query ?
@@ -77,16 +103,22 @@ class MysqlDAOResult extends DAOResult {
   }
 
 
-  //
-  // Creates an VO from a query result;
-  // Returns: Obj/false
+  /**
+   * Creates an VO os Model from a query result
+   *
+   * @return object
+   */  
   function VOGenerator($row) // antes utilizaba & na variable res
   {
-    //Cogumelo::console($row);
     return new $this->VO($row);
-
   }
 
+
+  /**
+   * Query result without VO or Model declaration
+   *
+   * @return array
+   */  
   function fetchAllRaw() {
 
         //$this->reset_fetch();
@@ -101,6 +133,12 @@ class MysqlDAOResult extends DAOResult {
     return $list;
   }
 
+
+  /**
+   * Reset fetch
+   *
+   * @return void
+   */  
   function resetFetch() {
      //return mysql_data_seek($this->result ,0);
      $this->result->data_seek(0);

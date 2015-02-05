@@ -3,7 +3,7 @@ $(document).ready(function(){
   $( "#logs_tabs" ).tabs(); 
   readLogs();
   autoLoadDebugger();
-  
+  drawERScheme();
   botonBinds();
 });
 
@@ -60,3 +60,55 @@ function botonBinds(){
     $('.debugItemsContainer').html('');
   });
 }
+
+
+
+
+function drawERScheme() {
+
+  var diagramDataObj = {nodes:[],links:[]};
+
+  //links:[{source:12, target:10}];
+
+  $.each(erData, function(i,e) {
+
+    var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+
+    // add scheme nodes
+    diagramDataObj.nodes.push( { name: e.name, color: randomColor, elements: e.elements} );
+
+    // add scheme relationship
+    $.each( e.relationship, function( i2, e2 ){
+
+      var relTo = 0;
+      $.each( erData, function(i3,e3) { 
+        if(e3.name == e2) {
+          relTo = i3;
+        }
+      });
+
+
+      //console.log( dat.indexOf( e2.name ) );
+      diagramDataObj.links.push( { source: i, target:relTo } );
+    });
+
+
+
+    // add to legend
+    if( !$('#dbsql_container .erDiagram .legend').find('.'+e.module).length ) {
+      $('#dbsql_container .erDiagram .legend').append('<div class="module ' + e.module + '"> <b>'+ e.module +'</b></div>');
+    }
+
+    $('#dbsql_container .erDiagram .legend').find('.module.' +e.module).append('<div><div class="colorlegend" style="background-color:'+randomColor+';"></div><div>'+e.name+'</div></div>');
+
+  });
+
+
+
+  drawERD(  
+    '#svgDiv',
+    diagramDataObj,
+        cola
+    );
+}
+

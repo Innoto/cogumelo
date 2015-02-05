@@ -31,12 +31,55 @@ class MasterView extends View
 
     $this->common();
     $this->template->exec();
-
   }
 
   function common() {
     $this->template->addClientScript('js/default.js');
     $this->template->setTpl('default.tpl');
+  }
+
+  function testdata(){
+    
+
+    echo "<pre>";
+
+
+    user::load('model/UserModel.php');
+    
+    $user = new UserModel();
+
+    $users = $user->listItems( 
+      array(
+        'filters'=>array('find'=>'pablo'),
+        'affectsDependences' => true 
+      ) 
+    );
+
+/*    while ($u  = $users->fetch() ) {
+      //$u->setter('name', 'novonome');
+      //var_dump( $u->getAllData() );
+      var_dump($u->getDepInLinearArray($u));
+      //$u->delete();  
+    }
+*/
+
+
+/*
+    $u  = $users->fetch();
+    $usD = $u->getDepInLinearArray($u);
+    $usD[2]['ref']->setter('description', 'SUPERDOMINATOR');
+    //var_dump($u->getAllData());
+*/
+
+    
+    $u  = $users->fetch();
+    //var_dump($u->getAllData());
+    //$u->delete( array('affectsDependences'=>true) );
+    //$usD = $u->getDepInLinearArray($u);
+
+
+    
+
   }
 
   function page404() {
