@@ -1,5 +1,5 @@
 <?php
-
+Cogumelo::load('coreModel/VO.php');
 Cogumelo::load('coreModel/Model.php');
 
 define("ROLE_SUPERADMIN", "10");

@@ -49,7 +49,8 @@ class MasterView extends View
     $user = new UserModel();
 
     $u = $user->find( array('value'=>13 ) );
-    var_dump($u->getter('surname'));
+    $u->setter('surname', 'Mamón');
+    $u->save();
 /*
     $users = $user->listItems( 
       array(

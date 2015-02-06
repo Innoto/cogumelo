@@ -166,8 +166,31 @@ Class Model extends VO {
       );
     $parameters =  array_merge($p, $parameters );
 
-    Cogumelo::debug( 'Called update on '.get_called_class() );
-    return $this->dataFacade->Update($this);
+
+    // Save all dependences
+    if($parameters['affectsDependences']) {
+     /* $depsInOrder = $this->getDepInLinearArray();
+
+      while( $selectDep = array_pop($depsInOrder) ) {
+          //Cogumelo::debug( 'Called delete on '.get_called_class().' with "'.$selectDep['ref']->getFirstPrimarykeyId().'" = '. $selectDep['ref']->getter( $selectDep['ref']->getFirstPrimarykeyId() ) );
+          //$selectDep['ref']->dataFacade->deleteFromKey( $selectDep['ref']->getFirstPrimarykeyId(), $selectDep['ref']->getter( $selectDep['ref']->getFirstPrimarykeyId() )  );
+      Cogumelo::debug( 'Called update on '.get_called_class() ); 
+
+      }*/
+    }
+    // Save only this Model
+    else {
+
+      Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
+      return $this->dataFacade->Update($this);
+    }
+
+
+
+
+
+
+
   }
 
 

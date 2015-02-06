@@ -198,6 +198,9 @@ Class VO
   /**
    * set any data attribute by key
    *
+   * @param mixed $setterkey
+   * @param mixed $value 
+   * 
    * @return void
    */
   function setter($setterkey, $value = false)
@@ -218,16 +221,16 @@ Class VO
    * @return void
    */
   function depSetter( $voObj ){
-/*    $found = false;
+    $found = false;
     $voName = $voObj->getVOClassName();
 
     foreach( $this->relObj->relationship as $rel ){
-      if( $rel->vo == voObj) {
+      if( $rel->vo == $voName ) {
 
       }
     }
 
-    return $found;*/
+    return $found;
   }
 
 

@@ -1,8 +1,8 @@
 <?php
 
 
+Cogumelo::load('coreModel/VO.php');
 Cogumelo::load('coreModel/Model.php');
-//user::load('model/RoleModel.php');
 
 
 class UserRoleModel extends Model
