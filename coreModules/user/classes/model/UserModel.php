@@ -1,8 +1,6 @@
 <?php
-
 Cogumelo::load('coreModel/VO.php');
-filedata::load('model/FiledataVO.php');
-user::load('model/UserRoleVO.php');
+Cogumelo::load('coreModel/Model.php');
 
 
 define( 'USER_STATUS_ACTIVE', 1 );
@@ -10,8 +8,9 @@ define( 'USER_STATUS_WAITING', 2 );
 define( 'USER_STATUS_LOCKED', 3 );
 
 
-class UserVO extends VO
+class UserModel extends Model
 {
+
   static $tableName = 'user_user';
   static $cols = array(
     'id' => array(
@@ -60,36 +59,39 @@ class UserVO extends VO
       'name' => 'Último acceso',
       'type'=>'DATETIME'
     ),
-    'timeCreateUser' => array(
-      'name' => 'Fechas de creación',
-      'type' => 'DATETIME'
-    ),
-
-    // reltaionships
     'avatar'=> array(
       'name' => 'Avatar',
       'type'=>'FOREIGN',
-      'vo' => 'FiledataVO',
+      'vo' => 'FiledataModel',
       'key' => 'id'
+    ),
+    'timeCreateUser' => array(
+      'name' => 'Fechas de creación',
+      'type' => 'DATETIME'
     )
+
 
   );
 
+  var $filters = array(
+      'find' => "UPPER(surname)  LIKE CONCAT('%',UPPER(?),'%') OR login LIKE CONCAT('%', UPPER(?), '%')"
+//      'edadmax' => "edad <= ?",
+//      'edadmin' => "edad >= ?"
+    );
 
 
-  function __construct($datarray = array())
-  {
-    parent::__construct($datarray);
+  function __construct( $datarray= array(), $otherRelObj = false ) {
+    parent::__construct( $datarray, $otherRelObj );
   }
 
   function isActive(){
-    return $this->status === USER_STATUS_ACTIVE;
+    return $this->getter('status') === USER_STATUS_ACTIVE;
   }
   function isWaiting(){
-    return $this->status === USER_STATUS_WAITING;
+    return $this->getter('status') === USER_STATUS_WAITING;
   }
   function isLocked(){
-    return $this->status === USER_STATUS_LOCKED;
+    return $this->getter('status') === USER_STATUS_LOCKED;
   }
 
 }

@@ -1,8 +1,8 @@
 <?php
 
-Cogumelo::load('coreModel/VO.php');
+Cogumelo::load('coreModel/Model.php');
 
-class PermissionVO extends VO
+class PermissionModel extends Model
 {
   static $tableName = 'user_permission';
   static $cols = array(
@@ -19,9 +19,9 @@ class PermissionVO extends VO
     )
   );
 
-  function __construct($datarray = array())
+  function __construct($datarray = array(),  $otherRelObj= false )
   {
-    parent::__construct($datarray);
+    parent::__construct($datarray, $otherRelObj );
   }
 
 }

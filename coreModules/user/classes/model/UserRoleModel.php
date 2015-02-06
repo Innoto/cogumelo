@@ -1,11 +1,11 @@
 <?php
 
 
-Cogumelo::load('coreModel/VO.php');
-user::load('model/RoleVO.php');
+Cogumelo::load('coreModel/Model.php');
+//user::load('model/RoleModel.php');
 
 
-class UserRoleVO extends VO
+class UserRoleModel extends Model
 {
   static $tableName = 'user_userRole';
   static $cols = array(
@@ -17,20 +17,20 @@ class UserRoleVO extends VO
     'user'=> array(
       'name' => 'User',
       'type'=>'FOREIGN',
-      'vo' => 'UserVO',
+      'vo' => 'UserModel',
       'key' => 'id'
     ),
     'role'=> array(
       'name' => 'Role',
       'type'=>'FOREIGN',
-      'vo' => 'RoleVO',
+      'vo' => 'RoleModel',
       'key' => 'id'
     )
   );
 
-  function __construct($datarray = array())
+  function __construct($datarray = array(),  $otherRelObj= false )
   {
-    parent::__construct($datarray);
+    parent::__construct($datarray, $otherRelObj );
   }
 
 }

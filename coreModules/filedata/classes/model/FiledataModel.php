@@ -1,8 +1,9 @@
 <?php
 
-Cogumelo::load('coreModel/VO.php');
 
-class FiledataVO extends VO
+Cogumelo::load('coreModel/Model.php');
+
+class FiledataModel extends Model
 {
   static $tableName = 'filedata_filedata';
   static $cols = array(

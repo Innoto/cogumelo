@@ -30,6 +30,19 @@ class devel extends Module
      "includes" => array("dist/less.min.js")
    ),
 
+   array(
+     "id" =>"d3",
+     "params" => array("d3"),
+     "installer" => "bower",
+     "includes" => array("d3.js")
+   ),  
+   array(
+     "id" =>"webcola",
+     "params" => array("webcola#3.0.0"),
+     "installer" => "bower",
+     "includes" => array("WebCola/cola.v3.min.js")
+   ),   
+
    // COMPOSER
    array(
      "id" => "kint",
@@ -50,7 +63,8 @@ class devel extends Module
     'controller/DevelDBController.php',
     'controller/UrlListController.php',
     'js/devel.js',
-    'styles/devel.less'
+    'styles/devel.less',
+    'js/drawERD.js'
   );
 
   function __construct() {

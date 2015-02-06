@@ -24,17 +24,38 @@
 
   {$js_includes}
 
-  {literal}
   <script>
+
+    var erData = {$erData};
+
+    {literal}
     function hideContainer(){
-        $(".container").hide();
+      $(".container").hide();
     }
-  </script>
-  {/literal}
+
+    {/literal}
+</script>
+
+
+
+  <style>
+    .node {
+      stroke: #fff;
+      stroke-width: 1.5px;
+    }
+
+    .link {
+      stroke: #999;
+      stroke-opacity: .8;
+    }
+  </style>
+
 
 
 </head>
+
 <body>
+
 <div id="header">
   <img id="logo" src="/media/module/devel/img/cogumelo_logo.png" >
   <h1>DEVEL</h1>
@@ -305,6 +326,12 @@
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
   <div id="dbsql_container" class="container" style="display:none;">
+
+    <fieldset class="erDiagram">
+      <legend>Relationship</legend>
+      <div class="legend"></div>
+      <div id="svgDiv"></div>
+    </fieldset>
     <fieldset>
       <legend>SQL</legend>
       <div class="infoSQL">{foreach $data_sql as $item}{$item}{/foreach}</div>

@@ -1,12 +1,39 @@
 <?php
 
+// load all VO's
+Cogumelo::load('coreModel/VOUtils.php');
+VOUtils::includeVOs();
+
+
+/**
+ * Value Object (Used by the model)
+ *
+ * @package Cogumelo Model
+ */
 Class VO
 {
+  var $name = '';
+  var $data = array();
+  var $depData = array();
+  var $depKeys = array();
+  var $relObj = false;
 
-  var $attributes = array();
-  var $relationship = array();
+  function __construct(array $datarray, $otherRelObj= false ) {
+    $this->setData( $datarray, $otherRelObj );
+  }
 
-  function __construct(array $datarray){
+  /**
+   * Sets data of VO
+   *
+   * @param array $datarray array (data referenced by keys)
+   * @param object $otherRelObj internal use only
+   *
+   * @return void
+   */
+  function setData(array $datarray, $otherRelObj= false ){
+
+    // get class name
+    $this->name = get_class( $this );
 
     // Common developer errors
     if(!isset($this::$tableName)){
@@ -22,20 +49,99 @@ Class VO
       return false;
     }
 
-    $this->setRelationshipVOs();
-    $this->setVarList($datarray);
 
+    // seting relationship keys
+    if( $otherRelObj == false ) { 
+      $this->relObj = VOUtils::getRelObj( $this->name ) ;
+    }
+    else if( is_object( $otherRelObj ) ) {
+      $this->relObj = $otherRelObj;
+    }
+
+    $this->depKeys = VOUtils::getRelKeysByRelObj( $this->relObj, true );
+    $this->setVarList( $datarray );
   }
 
-  // set variable list (initializes entity)
+
+  /**
+   * set variable list (initializes entity)
+   *
+   * @param array $datarray array (data referenced by keys)
+   *
+   * @return object
+   */
   function setVarList(array $datarray) {
+
     // rest of variables
-    foreach($datarray as $datakey=>$data) {
-        $this->setter($datakey, $data);
+    foreach($datarray as $k=>$data) {
+
+      if( preg_match('#(.*)\.(.*)#', $k ,$tAndkey) ){
+        $datakey = $tAndkey[2];
+      }
+      else {
+        $datakey = $k;
+      }
+
+      // set dependence VOs
+      if( array_key_exists( $datakey , $this->depKeys) ){
+        if( $data ) {
+          $this->setDepVOs( $data, $this->depKeys[$datakey], VOUtils::searchVOinRelObj( $this->depKeys[$datakey], $this->relObj) );
+        }
+      }
+      // set cols
+      else {
+        $this->setter( $datakey, $data );
+      }
     }
   }
 
 
+  /**
+   * set dependence VOs from data
+   *
+   * @param array $data 
+   * @param string $voName name of VO or Model
+   * @param object $relObj related object
+   *
+   * @return void
+   */
+  function setDepVOs( $data, $voName, $relObj ) {
+
+
+    if( is_array($data) ) {
+      foreach( $data as $d ) {
+        $this->depData[] = new  $voName( (array) $d, $relObj );
+      }
+    }
+    else
+    {
+      // when is first rel decode it
+      if(! $d = json_decode($data) ){
+        Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
+      }
+
+      $this->depData[] = new $voName( (array) $d, $relObj );
+    }
+  
+
+  }
+
+
+  /**
+   * get VO or Model Name
+   *
+   * @return string
+   */
+  function getVOClassName() {
+    return $this->name;
+  }
+
+
+  /**
+   * gets primary key id
+   *
+   * @return string
+   */
   function getFirstPrimarykeyId() {
 
     foreach($this::$cols as $cid => $col) {
@@ -50,217 +156,172 @@ Class VO
   }
 
 
-  function setRelationshipVOs() {
-    foreach( $this::$cols as $colKey => $col ) {
-      if( $col['type'] == 'FOREIGN' ){
-        $colVO = new $col['vo']();
-
-        $this->relationship[$colKey] = array(
-                                              'parent_table' => $this::$tableName,
-                                              'parent_key' => $this::$tableName.'.'.$colKey,
-                                              'vo_key' => $colVO::$tableName.'.'.$col['key'],
-                                              'VO' => $colVO,
-                                              'used' => false
-                                            );
-
-
-        // look for circular relationship
-        if( count(
-              array_intersect(
-                array_keys( $this->relationship ),
-                array_keys( $colVO->relationship )
-              )
-            ) == 0
-        ){
-          $this->relationship = array_merge( $this->relationship, $colVO->relationship );
-        }
-        else
-        {
-          Cogumelo::error('Circular relationship on VO "'.$this->tableName.'", column: '.$colKey);
-          exit; // exits to prevent infinite loop
-        }
-      }
-    }
-  }
-
-  function getDependenceVO( $tableName ) {
-
-    $dependenceVO = false;
-
-    if( $this::$tableName == $tableName){
-      $dependenceVO = $this;
-    }
-    else {
-      if(! $dependenceVO = $this->relationship[$tableName]['VO']){
-        Cogumelo::error('VO relationship "'.$tableName.'" doesnt exist in VO::'.$this::$tableName);
-      }
-    }
-    return $dependenceVO;
-  }
-
-  function markRelationshipAsUsed( $tableName ) {
-    if( in_array($tableName, array_keys($this->relationship)) ){
-      $this->relationship[$tableName]['used'] = true;
-    }
+  /**
+   * get columns list
+   *
+   * @return array
+   */
+  function getCols(){
+    return $this::$cols;
   }
 
 
-  // set an attribute
+  /**
+   * get BBDD table name
+   *
+   * @return string
+   */
+  function getTableName(){
+    return $this::$tableName;
+  }
+
+
+  /**
+   * set any data attribute by key
+   *
+   * @return void
+   */
   function setter($setterkey, $value = false)
   {
-
-    if( preg_match('#^(.*?)\.(.*)$#', $setterkey, $setter_data) ) {
-      $tableName = $setter_data[1];
-      $columnKey = $setter_data[2];
-    }
-    else {
-      $tableName = $this::$tableName;
-      $columnKey = $setterkey;
-    }
-
-    // choose VO
-    $setterVO = $this->getDependenceVO($tableName);
-
-    // set values
-    if( $tableName == $setterVO::$tableName && in_array($columnKey, array_keys($setterVO::$cols)) ){
-      $this->markRelationshipAsUsed( $tableName );
-      $setterVO->attributes[$columnKey] = $value;
+    if( array_key_exists($setterkey, $this->getCols()) ) {
+      // set values
+      $this->data[$setterkey] = $value;
     }
     else{
-      Cogumelo::debug("key '". $setterkey ."' doesn't exist in VO::". $setterVO::$tableName);
+      Cogumelo::debug("key '". $setterkey ."' not exist in VO::". $this::$tableName);
     }
   }
 
 
 
-  // get an attribute
+  /**
+   * get any data attribute by key
+   *
+   * @return mixed
+   */
   function getter($getterkey)
   {
 
     $value = null;
 
-    if( preg_match('#^(.*?)\.(.*)$#', $getterkey, $getter_data) ) {
-      $tableName = $getter_data[1];
-      $columnKey = $getter_data[2];
+    // get values
+    if( array_key_exists($getterkey, $this->data) ) {
+        $value = $this->data[$getterkey];
     }
     else {
-      $tableName = $this::$tableName;
-      $columnKey = $getterkey;
-    }
-
-    // choose VO
-    $getterVO = $this->getDependenceVO($tableName);
-
-    // get values
-    if( $tableName == $getterVO::$tableName && in_array($columnKey, array_keys($getterVO::$cols)) ){
-      $this->markRelationshipAsUsed( $tableName );
-      if( array_key_exists($columnKey, $getterVO->attributes) ) {
-        $value = $getterVO->attributes[$columnKey];
-      }
-    }
-    else{
-      //Cogumelo::debug("key '". $getterkey ."' doesn't exist in VO::". $setterVO::$tableName);
+      Cogumelo::debug("key '". $getterkey ."' not exist in VO::". $this::$tableName);
     }
 
     return $value;
-
   }
 
 
-  function getJoinArray() {
 
-    $ret = array();
-    foreach ( $this->relationship as $rel ) {
-      array_push($ret,
-        array(
-          'table' => $rel['VO']::$tableName,
-          'relationship' => array( $rel['parent_key'], $rel['vo_key'] )
-        )
-      );
-    }
-     //array('table' => t, $relationship => r);
-    return $ret;
-  }
+  /**
+   * get key list into string
+   *
+   * @return string
+   */
+  function getKeysToString( $fields, $resolveDependences=false ) {
+    $retFields = array();
 
-  function getKeys($fields = false, $resolverelationship = false) {
-    $keys = array();
-
-    if( $resolverelationship ) {
-      $keys = $this->getDependenceKeys();
+    // main vo Fields
+    if( !$fields ) {
+      $retFields = array_merge($retFields, array_keys( $this->getCols() ) );
     }
     else {
-      $keys = array_keys($this::$cols);
+      $retFields = array_merge($retFields, $fields );
     }
 
-    if($fields){
-      $fieldsAllIn = true;
-      $fieldsError = array();
-      foreach ($fields as $field) {
-        if(!in_array($field, $keys)) {
-          $fieldsAllIn = false;
-          array_push($fieldsError, $field);
+    foreach($retFields as $fkey => $retF )  {
+      $retFields[$fkey] = $this->getTableName().'.'.$retF;
+    }
+
+    // relationship cols
+    if( $resolveDependences ) {
+      $retFields = array_merge($retFields, VOUtils::getRelKeys(  $this->name ) );
+    }
+
+
+    return implode(', ', $retFields);
+  }
+
+
+  /**
+   * dependence data 
+   *
+   * @return array
+   */
+  function &getDependences() {
+    return $this->depData;
+  }
+
+  function getDependencesByVO( $voName ) {
+
+    $voArray = array();
+
+
+    $depData = $this->depData();
+    if( sizeof($depData) > 0  ) {
+      foreach( $this->depData as &$depVO ){
+        if( $depVO->name == $voName ) {
+          $voArray[] = $depVO ;
+        }
+        else {
+          $voArray = array_merge($voArray, $depVO->getDependencesByVO($voName) );
         }
       }
-      if($fieldsAllIn){
-        if(!in_array($this->getFirstPrimarykeyId(), $fields)) {
-          array_push($fields, $this->getFirstPrimarykeyId());
-        }
-        $keys = $fields;
-      }else{
-        Cogumelo::error("These fields do not exist: ". implode(",", $fieldsError));
+    }
+
+    return $voArray;
+  }
+
+
+  /**
+   * get all dependences in no nested array
+   *
+   * @return array
+   */
+  function getDepInLinearArray( &$vo = false, $vosArray = array() ) {
+
+    if(!$vo){
+      $vo = $this;
+    }
+
+    if( sizeof( $vosArray)>0 ) {
+      $voArrayKeys = array_keys( $vosArray );
+      $vosArray[] = array( 'ref' => $vo, 'parentKey' => end( $voArrayKeys ) );
+    }
+    else {
+      $vosArray[] = array( 'ref' => $vo, 'parentKey' => false );
+    }
+
+    $depData = $vo->depData;
+    if( sizeof($depData) > 0  ) {
+      foreach( $vo->depData as $depVO ){
+        $vosArray = $vo->getDepInLinearArray( $depVO, $vosArray ) ;
       }
     }
-    return $keys;
-  }
 
-  function getKeysToString($fields = false, $resolverelationship = false) {
-
-    $strKeys = '';
-    $comma = '';
-
-    foreach( $this->getKeys($fields, $resolverelationship) as $k ) {
-      $strKeys .= $comma . $k . ' as `' . $k . '`';
-      $comma = ', ';
-    }
-
-    return $strKeys;
-  }
-
-  function getDependenceKeys() {
-
-    // get keys from this VO
-    $keys =  $this->dependenceKeys( $this ) ;
-
-    // get keys from relationship VO's
-    foreach( $this->relationship as $dependence) {
-      $keys = array_merge($keys, $this->dependenceKeys( $dependence['VO']));
-    }
-
-    return $keys;
+    return $vosArray;
   }
 
 
-  function dependenceKeys($voObj) {
 
-    $keys = array();
+  /**
+   * get nested array with data (including loaded dependences)
+   *
+   * @return array
+   */
+  function getAllData() {
 
+    $relationshipArrayData = array();
 
-    foreach($voObj::$cols as $colKey => $col) {
-      array_push( $keys, $voObj::$tableName . '.' . $colKey );
+    foreach ( $this->getDependences()  as $dep ){
+       $relationshipArrayData[] = $dep->getAllData() ;
     }
 
-
-
-    return $keys;
-  }
-
-  function toString(){
-    $str = "\n " . $keyId. ': ' .$this->getter($keyId);
-    foreach(array_keys($this->cools) as $k) {
-      $str .= "\n " . $this->cools[$k] . ': ' .$this->getter($k);
-    }
-
-    return $str;
+    return array( 'name' => $this->name, 'data' => $this->data, 'relationship' =>$relationshipArrayData);
   }
 
 }

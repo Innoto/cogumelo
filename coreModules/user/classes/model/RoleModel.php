@@ -1,12 +1,11 @@
 <?php
 
-Cogumelo::load('coreModel/VO.php');
-user::load('model/RolePermissionVO.php');
+Cogumelo::load('coreModel/Model.php');
 
 define("ROLE_SUPERADMIN", "10");
 define("ROLE_USER", "11");
 
-class RoleVO extends VO
+class RoleModel extends Model
 {
   static $tableName = 'user_role';
   static $cols = array(
@@ -32,9 +31,9 @@ class RoleVO extends VO
     array('name' => 'user', 'description' => 'User'),
   );
 
-  function __construct($datarray = array())
+  function __construct($datarray = array(),  $otherRelObj= false )
   {
-    parent::__construct($datarray);
+    parent::__construct($datarray, $otherRelObj );
   }
 
 }

@@ -2,16 +2,27 @@
 
 Cogumelo::load('coreController/Cache.php');
 Cogumelo::load('coreModel/DAO.php');
+Cogumelo::load('coreModel/mysql/MysqlDAORelationship.php');
 Cogumelo::load('coreModel/mysql/MysqlDAOResult.php');
 
 
+/**
+* Mysql DAO (Abstract)
+*
+* @package Cogumelo Model
+*/
 class MysqlDAO extends DAO
 {
   var $VO;
 
-  //
-  // Creates an "ORDER BY" String from $ORDER array
-  //
+
+  /**
+  * Composes order mysql (ORDER BY) String
+  * 
+  * @param array $ORDArray array('id1'=>-1, 'id2'=>1)
+  * 
+  * @return string
+  */
   function orderByString($ORDArray)
   {
     // Direction (ASC, DESC) Array
@@ -37,8 +48,18 @@ class MysqlDAO extends DAO
 
 
   //
-  // Execute a SQL query command
+  // 
   //
+
+  /**
+  * Execute a SQL query command
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param string $sql query
+  * @param string $val_array value array
+  * 
+  * @return mixed
+  */
   function execSQL(&$connectionControl, $sql, $val_array = array())
   {
 
@@ -86,9 +107,14 @@ class MysqlDAO extends DAO
   }
 
 
-  //
-  // get string of chars according prepare type
-  // ex. i:integer, d:double, s:string, b:boolean
+
+  /**
+  * get string of chars according prepare type (ex. i:integer, d:double, s:string, b:boolean)
+  * 
+  * @param array $values_array 
+  * 
+  * @return string
+  */
   function getPrepareTypes($values_array){
 
     $return_str = "";
@@ -106,10 +132,13 @@ class MysqlDAO extends DAO
   }
 
 
-
-  //
-  //  Chose filter SQL from
-  //  returns an array( where_string ,variables_array )
+  /**
+  * Generates where clausule
+  * 
+  * @param array $fiters
+  * 
+  * @return string
+  */
   function getFilters($filters){
 
     $where_str = "";
@@ -162,14 +191,22 @@ class MysqlDAO extends DAO
   }
 
 
-
-
-
-  //
-  //  Generic Find by key
-  //
+  /**
+  * Generic Find by key
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param mixed $search search value
+  * @param string $key key to search (default is first primary key)
+  * @param boolean $resolveDependences if want to resolve relationship dependences
+  * @param boolean $cache save query result into cache
+  * 
+  * @return object
+  */
   function find(&$connectionControl, $search, $key = false,  $resolveDependences = false, $cache = false)
   {
+
+    $ret = null;
+
     $VO = new $this->VO();
 
     if(!$key) {
@@ -183,17 +220,26 @@ class MysqlDAO extends DAO
     $res = $this->listItems($connectionControl, $filter, false, false, false, $resolveDependences, $cache);
 
     if( $res != COGUMELO_ERROR ) {
-      return $res->fetch();
+      $ret = $res->fetch();
     }
-    else
-      return null;
 
+    return $ret;
   }
 
-  //
-  //  Generic listItems
-  //
-  //  Return: array [array_list, number_of_rows]
+
+  /**
+  * Generic List ittems
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param array $filters filters array
+  * @param array $range query range
+  * @param array $order order array
+  * @param array 
+  * @param boolean $resolveDependences if want to resolve relationship dependences
+  * @param boolean $cache save query result into cache
+  * 
+  * @return object
+  */
   function listItems(&$connectionControl, $filters, $range, $order, $fields, $resolveDependences = false, $cache = false)
   {
 
@@ -209,11 +255,18 @@ class MysqlDAO extends DAO
     // range string
     $rangeSTR = ($range != array() && is_array($range) )? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
 
-    // join SQL
-    $joinSTR = $this->JoinSQL($VO, $resolveDependences);
 
+    if($resolveDependences) {
+      $this->execSQL($connectionControl,'SET group_concat_max_len='.DB_MYSQL_GROUPCONCAT_MAX_LEN.';');
+    }
 
-    $strSQL = "SELECT ".$VO->getKeysToString($fields, $resolveDependences )." FROM `" . $VO::$tableName ."` ". $joinSTR . $whereArray['string'].$orderSTR.$rangeSTR.";";
+    $strSQL = "SELECT ".
+              $VO->getKeysToString($fields, $resolveDependences ) .
+              " FROM `" . 
+              $VO::$tableName ."` " . 
+              MysqlDAORelationship::getVOJoins( $this->VO, $resolveDependences) . 
+              $whereArray['string'] . $orderSTR . $rangeSTR . ";";
+
 
 
     if ( $cache && DB_ALLOW_CACHE  )
@@ -259,23 +312,15 @@ class MysqlDAO extends DAO
 
   }
 
-  function JoinSQL($VO, $resolveDependences) {
-    $resSQL = '';
 
-    if( $resolveDependences ) {
-      foreach($VO->getJoinArray() as $join){
-        $resSQL = ' LEFT JOIN '.$join['table'].' ON '.implode('=', $join['relationship'] );
-      }
-    }
-
-    return $resSQL;
-  }
-
-
-  //
-  //  Generic listCount
-  //
-  //  Return: array [array_list, number_of_rows]
+  /**
+  * Generic List Count
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param array $filters filters array
+  * 
+  * @return integer
+  */
   function listCount(&$connectionControl, $filters)
   {
 
@@ -299,9 +344,14 @@ class MysqlDAO extends DAO
   }
 
 
-  //
-  //  Generic Create
-  //
+  /**
+  * Insert record
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param object $voObj VO or Model object
+  * 
+  * @return mixed
+  */
   function create(&$connectionControl, $VOobj)
   {
 
@@ -337,9 +387,14 @@ class MysqlDAO extends DAO
     }
   }
 
-  //
-  //  Generic Update
-  // return: Vo updated from DB
+  /**
+  * Update record
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param object $voObj VO or Model object
+  * 
+  * @return mixed
+  */
   function update(&$connectionControl, $VOobj)
   {
 
@@ -371,33 +426,38 @@ class MysqlDAO extends DAO
     }
   }
 
-  //
-  //  Generic Delete from ID
-  //
-  function deleteFromIds(&$connectionControl, $arrayPkeyIdValue)
+  /**
+  * delete from key
+  * 
+  * @param object $connectionControl mysqli connection object
+  * @param string $key key to search
+  * @param mixed $value value to search
+  * 
+  * @return boolean
+  */
+  function deleteFromKey(&$connectionControl, $key, $value)
   {
-    $qs = array();
-    foreach ($arrayPkeyIdValue as $id) {
-      $qs[]   = '?';
-    }
-    $nums_list = implode(',', $qs);
 
     $VO = new $this->VO();
     // SQL Query
-    $strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$VO->getFirstPrimarykeyId()."` IN (".$nums_list.") ;";
+    $strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$key."`=? ;";
 
-    $res = $this->execSQL($connectionControl, $strSQL, $arrayPkeyIdValue);
+    $res = $this->execSQL($connectionControl, $strSQL, array($value));
     if( $res != COGUMELO_ERROR ){
-      return $true;
+      return true;
     }
     else {
       return null;
     }
   }
 
-  //
-  // @Return nº '?'
-  //
+  /**
+  * return list of question marks separated by comma
+  * 
+  * @param array $elements 
+  * 
+  * @return string
+  */
   function getQuestionMarks( $elements ){
     $qm = str_repeat( '?, ', count($elements)-1 ) . '?';
     return $qm;
