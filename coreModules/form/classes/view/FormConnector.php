@@ -11,7 +11,7 @@ form::autoIncludes();
  *
  * @package Module Form
  **/
-class FormFileUpload extends View
+class FormConnector extends View
 {
 
   public function __construct( $base_dir ) {
@@ -28,6 +28,157 @@ class FormFileUpload extends View
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  public function groupElement() {
+    if( isset( $_POST['execute'] ) && $_POST['execute'] === 'removeGroupElement' ) {
+      $this->removeGroupElement();
+    }
+    else {
+      $this->getGroupElement();
+    }
+  }
+
+
+  private function getGroupElement() {
+    error_log( '---------------------------------' );
+    error_log( ' FormConnector - getGroupElement ' );
+    error_log( '---------------------------------' );
+
+    $groupIdElem = false; // Id de la nueva instancia del grupo
+    $htmlGroupElement = false; // HTML de la nueva instancia del grupo
+    $validationRules = false; // Reglas de validacion de la nueva instancia del grupo
+
+    $form = new FormController();
+
+    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['groupName'] ) ) {
+
+      $idForm     = $_POST['idForm'];
+      $cgIntFrmId = $_POST['cgIntFrmId'];
+      $groupName  = $_POST['groupName'];
+
+      // Recuperamos formObj y validamos el grupo
+      if( $form->loadFromSession( $cgIntFrmId ) && $form->issetGroup( $groupName ) ) {
+
+        $groupLimits = $form->getGroupLimits( $groupName );
+        $groupIdElems = $form->getGroupIdElems( $groupName );
+        if( $groupLimits[ 'max' ] > count( $groupIdElems ) ) {
+          $groupIdElem = $form->getNewGroupIdElem( $groupName );
+
+          $htmlGroupElement = $form->getHtmlGroupElement( $groupName, $groupIdElem );
+
+          foreach( $form->getGroupFields( $groupName ) as $fieldName ) {
+            $fieldRules = $form->getValidationRules( $fieldName );
+            if( $fieldRules !== false ) {
+              $validationRules[ $fieldName.'_C_'.$groupIdElem ] = $fieldRules;
+            }
+          }
+        }
+        else {
+          $form->addGroupRuleError( $groupName, 'cogumelo',
+            'Se ha alcanzado el número máximo de elementos permitidos: '.$groupLimits[ 'max' ].'>'.count( $groupIdElems ) );
+        }
+
+
+      }
+      else {
+        $form->addGroupRuleError( $groupName, 'cogumelo',
+          'No han llegado los datos o lo ha hecho con errores. LOAD' );
+      }
+
+    } // if( isset( ... ) )
+    else { // los datos no estan bien
+      $form->addGroupRuleError( $_POST['groupName'], 'cogumelo',
+        'No han llegado los datos o lo ha hecho con errores. ISSET' );
+    }
+
+
+    // Notificamos el resultado al UI
+    $moreInfo = array( 'idForm' => $idForm, 'groupName' => $_POST['groupName'] );
+    if( !$form->existErrors() ) {
+      $moreInfo[ 'groupIdElem' ] = $groupIdElem;
+      $moreInfo[ 'htmlGroupElement' ] = $htmlGroupElement;
+      $moreInfo[ 'validationRules' ] = $validationRules;
+    }
+    $form->sendJsonResponse( $moreInfo );
+  }
+
+
+  private function removeGroupElement() {
+    error_log( '------------------------------------' );
+    error_log( ' FormConnector - removeGroupElement ' );
+    error_log( '------------------------------------' );
+
+    $form = new FormController();
+
+    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['groupName'], $_POST['groupIdElem'] ) ) {
+
+      $idForm     = $_POST['idForm'];
+      $cgIntFrmId = $_POST['cgIntFrmId'];
+      $groupName  = $_POST['groupName'];
+      $groupIdElem  = $_POST['groupIdElem'];
+
+      // Recuperamos formObj y validamos el grupo
+      if( $form->loadFromSession( $cgIntFrmId ) && $form->issetGroup( $groupName ) ) {
+
+        $groupLimits = $form->getGroupLimits( $groupName );
+        $groupIdElems = $form->getGroupIdElems( $groupName );
+        if( $groupLimits[ 'min' ] < count( $groupIdElems ) ) {
+          if( !$form->removeGroupInstance( $groupName, $groupIdElem ) ) {
+            $form->addGroupRuleError( $groupName, 'cogumelo',
+              'Imposible eliminar el elemento. (' . $groupIdElem . ')' );
+          }
+        }
+        else {
+          $form->addGroupRuleError( $groupName, 'cogumelo',
+            'Se ha alcanzado el número máximo de elementos permitidos: '.$groupLimits[ 'min' ].'<'.count( $groupIdElems ) );
+        }
+
+      }
+      else {
+        $form->addGroupRuleError( $groupName, 'cogumelo',
+          'Los datos no son válidos.' );
+      }
+
+    } // if( isset( ... ) )
+    else { // los datos no estan bien
+      $form->addGroupRuleError( $_POST['groupName'], 'cogumelo',
+        'No han llegado los datos o lo ha hecho con errores. ISSET' );
+    }
+
+    // Notificamos el resultado al UI
+    $moreInfo = array( 'idForm' => $idForm, 'groupName' => $_POST['groupName'], 'groupIdElem' => $_POST['groupIdElem'] );
+    $form->sendJsonResponse( $moreInfo );
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   public function fileUpload() {
     if( isset( $_POST['execute'] ) && $_POST['execute'] === 'delete' ) {
       $this->deleteFormFile();
@@ -38,9 +189,9 @@ class FormFileUpload extends View
   }
 
 
-  public function uploadFormFile() {
+  private function uploadFormFile() {
     error_log( '--------------------------------' );
-    error_log( ' FormFileUpload - uploadFormFile' );
+    error_log( ' FormConnector - uploadFormFile' );
     error_log( '--------------------------------' );
 
     $form = new FormController();
@@ -167,7 +318,7 @@ class FormFileUpload extends View
 
 
               if( !$form->existErrors() ) {
-                // error_log( 'FU: Todo OK con el ficheiro subido... Se persiste...' );
+                // error_log( 'FU: OK con el ficheiro subido... Se persiste...' );
 
                 $form->setFieldValue( $fieldName, $fileFieldValuePrev );
                 // Persistimos formObj para cuando se envíe el formulario completo
@@ -200,14 +351,14 @@ class FormFileUpload extends View
 
     } // if( isset( ... ) )
     else { // no parece haber fichero
-      $form->addFieldRuleError( $fieldName, 'cogumelo',
+      $form->addFieldRuleError( $_POST['fieldName'], 'cogumelo',
         'No han llegado los datos o lo ha hecho con errores. ISSET' );
     }
 
 
     // Notificamos el resultado al UI
     if( !$form->existErrors() ) {
-      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName,
+      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'],
         'fileName' => $fileFieldValuePrev['temp']['name'],
         'fileSize' => $fileFieldValuePrev['temp']['size'],
         'fileType' => $fileFieldValuePrev['temp']['type'] );
@@ -215,18 +366,17 @@ class FormFileUpload extends View
       echo $form->jsonFormOk( $moreInfo );
     }
     else {
-      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName );
+      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'] );
       header('Content-Type: application/json; charset=utf-8');
       echo $form->jsonFormError( $moreInfo );
     }
-
   } // function uploadFormFile() {
 
 
 
-  public function deleteFormFile() {
+  private function deleteFormFile() {
     error_log( '--------------------------------' );
-    error_log( ' FormFileUpload - deleteFormFile' );
+    error_log( ' FormConnector - deleteFormFile' );
     error_log( '--------------------------------' );
 
     $form = new FormController();
@@ -304,31 +454,29 @@ class FormFileUpload extends View
 
     } // if( isset( ... ) )
     else { // no parece haber fichero
-      $form->addFieldRuleError( $fieldName, 'cogumelo',
+      $form->addFieldRuleError( $_POST['fieldName'], 'cogumelo',
         'No han llegado los datos o lo ha hecho con errores. ISSET' );
     }
 
 
     // Notificamos el resultado al UI
     if( !$form->existErrors() ) {
-      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName );
+      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'] );
       header('Content-Type: application/json; charset=utf-8');
       echo $form->jsonFormOk( $moreInfo );
     }
     else {
-      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $fieldName );
+      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'] );
       header('Content-Type: application/json; charset=utf-8');
       echo $form->jsonFormError( $moreInfo );
     }
-
   } // function deleteFormFile() {
 
 
 
   /**
    * Obtiene el texto de error en funcion del codigo
-   *
-   * @param  int $fileErrorId
+   * @param integer $fileErrorId
    * @return string $msgError
    **/
   private function getFileErrorMsg( $fileErrorId ) {
@@ -371,7 +519,7 @@ class FormFileUpload extends View
 
 
 
-/**
+/*
 
   pasos
 
@@ -399,7 +547,7 @@ class FormFileUpload extends View
   http://es1.php.net/manual/en/function.move-uploaded-file.php
   http://php.net/manual/en/function.sha1-file.php
 
-  4.- Gardar todo no obj FORM e voltalo a meter na sesion
+  4.- Gardar no obj FORM e voltalo a meter na sesion
 
 
 
@@ -409,12 +557,10 @@ class FormFileUpload extends View
   use :
   AddHandler cgi-script .php .pl .jsp .asp .sh .cgi
   Options -ExecCGI
-
-
-**/
+*/
 
 
 
 
 
-} // class FormFileUpload extends View
+} // class FormConnector extends View

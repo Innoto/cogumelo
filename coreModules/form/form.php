@@ -31,10 +31,9 @@ class form extends Module
   );
 
 
-  function __construct() {
-
-    $this->addUrlPatterns( '#^cgml-form-file-upload$#', 'view:FormFileUpload::fileUpload' );
-
+  public function __construct() {
+    $this->addUrlPatterns( '#^cgml-form-file-upload$#', 'view:FormConnector::fileUpload' );
+    $this->addUrlPatterns( '#^cgml-form-group-element$#', 'view:FormConnector::groupElement' );
   }
 
 
