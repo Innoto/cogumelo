@@ -1,12 +1,12 @@
 <?php
 
-Cogumelo::load('coreController/DataController.php');
 Cogumelo::load('coreModel/VOUtils.php');
+Cogumelo::load('coreModel/Facade.php');
 
 //
 // DevelUtilsDB Controller Class
 //
-class  DevelDBController extends DataController
+class  DevelDBController 
 {
   var $data;
   var $voUtilControl;
