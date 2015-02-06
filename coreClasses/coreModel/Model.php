@@ -43,6 +43,40 @@ Class Model extends VO {
   * 
   * @return array VO array
   */
+  function find( array $parameters = array() )
+  {
+
+    $p = array(
+        'value' => false,
+        'key' => $this->getFirstPrimarykeyId(),
+        'affectsDependences' => false, 
+        'cache' => false
+      );
+    $parameters =  array_merge($p, $parameters );
+
+
+    Cogumelo::debug( 'Called find on '.get_called_class() );
+    $data = $this->dataFacade->find( 
+                                          $parameters['value'], 
+                                          $parameters['key'], 
+                                          $parameters['affectsDependences'], 
+                                          $parameters['cache']
+                                        );
+
+    return $data;
+  }
+
+
+
+
+
+  /**
+  * List items from table
+  *
+  * @param array $parameters array of filters
+  * 
+  * @return array VO array
+  */
   function listItems( array $parameters = array() )
   {
 

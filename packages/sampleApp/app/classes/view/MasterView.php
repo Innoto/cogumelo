@@ -48,6 +48,9 @@ class MasterView extends View
     
     $user = new UserModel();
 
+    $u = $user->find( array('value'=>13 ) );
+    var_dump($u->getter('surname'));
+/*
     $users = $user->listItems( 
       array(
         'filters'=>array('find'=>'pablo'),
@@ -58,6 +61,7 @@ class MasterView extends View
     $u  = $users->fetch();
     $u->setter('name', 'Blanco');
     $u->save();
+*/
     //$u->delete(array( 'affectsDependences' => true ) );
 
 /*    while ($u  = $users->fetch() ) {

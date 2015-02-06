@@ -212,6 +212,24 @@ Class VO
   }
 
 
+  /**
+   * set data objct as dependence
+   *
+   * @return void
+   */
+  function depSetter( $voObj ){
+/*    $found = false;
+    $voName = $voObj->getVOClassName();
+
+    foreach( $this->relObj->relationship as $rel ){
+      if( $rel->vo == voObj) {
+
+      }
+    }
+
+    return $found;*/
+  }
+
 
   /**
    * get any data attribute by key
