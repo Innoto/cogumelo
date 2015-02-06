@@ -651,9 +651,107 @@ class FormController implements Serializable {
     @param string $idElem Identificador de una instancia del grupo
   */
   public function addGroupIdElem( $groupName, $idElem ) {
-    if( $this->issetGroup( $groupName ) ) {
-      $this->groups[ $groupName ][ 'idElments' ][ $idElem ] = true;
+    if( isset( $this->groups[ $groupName ][ 'idElments' ] ) ) {
+      $this->groups[ $groupName ][ 'idElments' ][] = $idElem;
     }
+  }
+
+
+  /**
+    Elimina un Id de instancia del grupo
+    @param string $groupName Nombre del grupo
+    @param string $idElem Identificador de una instancia del grupo
+  */
+  public function removeGroupIdElem( $groupName, $idElem ) {
+    $response = false;
+
+    if( $this->issetGroupIdElem( $groupName, $idElem ) ) {
+      $key = array_search( $idElem, $this->groups[ $groupName ][ 'idElments' ] );
+      if( $key !== false ) {
+        unset( $this->groups[ $groupName ][ 'idElments' ][ $key ] );
+        $response = true;
+      }
+    }
+
+    return $response;
+  }
+
+
+  /**
+    Genera un Id de instancia de grupo
+    @param string $groupName Nombre del grupo
+  */
+  public function getGroupIdElems( $groupName ) {
+    $idElems = false;
+
+    if( isset( $this->groups[ $groupName ][ 'idElments' ] ) ) {
+        $idElems = $this->groups[ $groupName ][ 'idElments' ];
+    }
+
+    return $idElems;
+  }
+
+
+  /**
+    Genera un Id de instancia de grupo
+    @param string $groupName Nombre del grupo
+  */
+  public function getNewGroupIdElem( $groupName ) {
+    $newId = 1;
+
+    if( isset( $this->groups[ $groupName ][ 'idElments' ] )
+      && count( $this->groups[ $groupName ][ 'idElments' ] ) > 0 ) {
+        $newId = 1 + max( $this->groups[ $groupName ][ 'idElments' ] );
+    }
+
+    return $newId;
+  }
+
+
+  /**
+    Recupera el primer Id de instancia del grupo
+    @param string $groupName Nombre del grupo
+  */
+  public function getFirstGroupIdElem( $groupName ) {
+    $idElem = false;
+
+    if( isset( $this->groups[ $groupName ][ 'idElments' ] )
+      && count( $this->groups[ $groupName ][ 'idElments' ] ) > 0 )
+    {
+      // $idElem = array_values( $this->groups[ $groupName ][ 'idElments' ] )[0];
+      $idElem = min( $this->groups[ $groupName ][ 'idElments' ] );
+    }
+
+    return $idElem;
+  }
+
+
+  /**
+    Recupera el ultimo Id de instancia del grupo
+    @param string $groupName Nombre del grupo
+  */
+  public function getLastGroupIdElem( $groupName ) {
+    $idElem = false;
+
+    if( isset( $this->groups[ $groupName ][ 'idElments' ] )
+      && count( $this->groups[ $groupName ][ 'idElments' ] ) > 0 )
+    {
+      $idElem = max( $this->groups[ $groupName ][ 'idElments' ] );
+    }
+
+    return $idElem;
+  }
+
+
+  /**
+    Verifica si existe un Id de instancia en el grupo
+    @param string $groupName Nombre del grupo
+    @param string $idElem Identificador de una instancia del grupo
+  */
+  public function issetGroupIdElem( $groupName, $idElem ) {
+
+    return( isset( $this->groups[ $groupName ][ 'idElments' ] )
+      && in_array( $idElem, $this->groups[ $groupName ][ 'idElments' ] ) );
   }
 
 
@@ -678,7 +776,34 @@ class FormController implements Serializable {
     @return boolean
   */
   public function inGroup( $fieldName, $groupName ) {
+
     return( $this->issetGroup( $groupName ) && in_array( $fieldName, $this->groups[ $groupName ][ 'fields' ] ) );
+  }
+
+
+  /**
+    Recupera el html de todos los campos del form (por campos)
+    @return array
+  */
+  public function removeGroupInstance( $groupName, $idElem ) {
+    $response = false;
+
+    if( $this->removeGroupIdElem( $groupName, $idElem ) ) {
+      $fieldNames = $this->getGroupFields( $groupName );
+      $firstElem = $this->getFirstGroupIdElem( $groupName );
+      $lastElem = $this->getLastGroupIdElem( $groupName );
+
+      foreach( $fieldNames as $fieldName ) {
+        $this->setFieldParam( $fieldName, 'firstElem', $firstElem );
+        $this->setFieldParam( $fieldName, 'lastElem', $lastElem );
+        $this->removeValidationRules( $fieldName.'_C_'.$idElem );
+      }
+
+      $this->saveToSession();
+      $response = true;
+    }
+
+    return $response;
   }
 
 
@@ -997,12 +1122,13 @@ class FormController implements Serializable {
       $groupLimits = $this->getGroupLimits( $groupName );
 
       if( $groupLimits[ 'min' ]===1 && $groupLimits[ 'max' ]===1 ) {
-        $html .= $this->getHtmlGroupElement( $groupName );
+        $html .= $this->getHtmlGroupElement( $groupName )."\n";
       }
       else {
-        for( $groupNumElem = 1; $groupNumElem <= $groupLimits[ 'show' ]; $groupNumElem++ ) {
-          $html .= $this->getHtmlGroupElement( $groupName, $groupNumElem );
+        for( $n = 1; $n <= $groupLimits[ 'show' ]; $n++ ) {
+          $html .= $this->getHtmlGroupElement( $groupName, $this->getNewGroupIdElem( $groupName ) )."\n";
         }
+        $html .= '<div class="addGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" groupName="'.$groupName.'">MAS</div>'."\n";
       }
 
       $html .= '</div><!-- /'.self::CSS_PRE.'-group-'.$groupName.' -->';
@@ -1016,19 +1142,23 @@ class FormController implements Serializable {
     Recupera el html de una instancia de un grupo del form
     @return string
   */
-  public function getHtmlGroupElement( $groupName, $nElem = false ) {
+  public function getHtmlGroupElement( $groupName, $idElem = false ) {
     $html = '';
 
     if( $this->issetGroup( $groupName ) ) {
-      if( $nElem !== false ) {
-        $this->addGroupIdElem( $groupName, $nElem );
+      if( $idElem !== false ) {
+        $this->addGroupIdElem( $groupName, $idElem );
       }
 
       $groupFieldNames = $this->getGroupFields( $groupName );
       $html .= '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-groupElem'.
-        ( $nElem !== false ? ' '.self::CSS_PRE.'-groupElem_C_'.$nElem : '' ).
-        '">';
-      $html .= implode( "\n", $this->getHtmlGroupFieldsArray( $groupFieldNames, $nElem ) );
+        ( $idElem !== false ? ' '.self::CSS_PRE.'-groupElem_C_'.$idElem : '' ).
+        '">'."\n";
+      $html .= implode( "\n", $this->getHtmlGroupFieldsArray( $groupFieldNames, $idElem ) )."\n";
+      if( $idElem !== false ) {
+        $html .= '<div class="removeGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" '.
+          'groupName="'.$groupName.'" groupIdElem="'.$idElem.'">QUITAR</div>'."\n";
+      }
       $html .= '</div>';
     }
 
@@ -1057,20 +1187,21 @@ class FormController implements Serializable {
     Recupera el html de todos los campos del form (por campos)
     @return array
   */
-  public function getHtmlGroupFieldsArray( $fieldNames, $nElem = false ) {
+  public function getHtmlGroupFieldsArray( $fieldNames, $idElem = false ) {
     $html = array();
 
     foreach( $fieldNames as $fieldName ) {
-      if( $nElem !== false ) {
+      if( $idElem !== false ) {
         if( $this->getFieldParam( $fieldName, 'firstElem' ) !== null ) {
-          $this->setFieldParam( $fieldName, 'firstElem', $nElem );
+          $this->setFieldParam( $fieldName, 'firstElem', $idElem );
         }
-        $this->setFieldParam( $fieldName, 'lastElem', $nElem );
+        $this->setFieldParam( $fieldName, 'lastElem', $idElem );
       }
       $html[ $fieldName ] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.
         ( $this->getFieldType( $fieldName ) === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
-        '">'.$this->getHtmlField( $fieldName, $nElem ).'</div>';
+        '">'.$this->getHtmlField( $fieldName, $idElem ).'</div>';
     }
+
     return $html;
   }
 
@@ -1080,12 +1211,12 @@ class FormController implements Serializable {
     @param string $fieldName Nombre del campo
     @return string
   */
-  public function getHtmlField( $fieldName, $nElem = false ) {
+  public function getHtmlField( $fieldName, $idElem = false ) {
     $html = '';
 
-    $myFieldName = $nElem!==false ? $fieldName.'_C_'.$nElem : $fieldName;
+    $myFieldName = $idElem!==false ? $fieldName.'_C_'.$idElem : $fieldName;
 
-    $htmlFieldArray = $this->getHtmlFieldArray( $fieldName, $nElem );
+    $htmlFieldArray = $this->getHtmlFieldArray( $fieldName, $idElem );
 
     if( isset( $htmlFieldArray['label'] ) ) {
       $html .= $htmlFieldArray['label']."\n";
@@ -1125,14 +1256,14 @@ class FormController implements Serializable {
     @param string $fieldName Nombre del campo
     @return array
   */
-  public function getHtmlFieldArray( $fieldName, $nElem = false ) {
+  public function getHtmlFieldArray( $fieldName, $idElem = false ) {
     $html = array();
 
     $field = $this->fields[ $fieldName ];
 
-    $myFieldName = $nElem!==false ? $fieldName.'_C_'.$nElem : $fieldName;
+    $myFieldName = $idElem!==false ? $fieldName.'_C_'.$idElem : $fieldName;
     if( isset( $field['id'] ) ) {
-      $myFielId = $nElem!==false ? $field['id'].'_C_'.$nElem : $field['id'];
+      $myFielId = $idElem!==false ? $field['id'].'_C_'.$idElem : $field['id'];
     }
 
     $html['fieldType'] = $field['type'];
@@ -1156,7 +1287,7 @@ class FormController implements Serializable {
     $attribs = '';
     $attribs .= isset( $myFielId )    ? ' id="'.$myFielId.'"' : '';
     $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$field['name'].
-      ( $nElem ? ' '.self::CSS_PRE.'-field-'.$myFieldName : '' ).
+      ( $idElem ? ' '.self::CSS_PRE.'-field-'.$myFieldName : '' ).
       ( isset( $field['class'] ) ? ' '.$field['class'] : '' ).
       '"';
     $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
@@ -1253,7 +1384,7 @@ class FormController implements Serializable {
     }
 
     if( $fieldName !== $myFieldName ) {
-      $this->cloneRules( $fieldName, $myFieldName );
+      $this->cloneValidationRules( $fieldName, $myFieldName );
       $this->saveToSession();
     }
 
@@ -1348,6 +1479,8 @@ class FormController implements Serializable {
   */
   public function sendJsonResponse( $moreInfo = false ) {
     $json = $this->getJsonResponse( $moreInfo );
+
+    header('Content-Type: application/json; charset=utf-8');
     echo $json;
 
     return $json;
@@ -1454,6 +1587,7 @@ class FormController implements Serializable {
     if( isset( $this->rules[ $fieldName ] ) ) {
       $fieldRules = $this->rules[ $fieldName ];
     }
+
     return $fieldRules;
   }
 
@@ -1463,14 +1597,27 @@ class FormController implements Serializable {
     @param string $fieldNameFrom Nombre del campo
     @param string $fieldNameTo Nombre del campo
   */
-  public function cloneRules( $fieldNameFrom, $fieldNameTo ) {
-    error_log( 'cloneRules: '.$fieldNameFrom.', '.$fieldNameTo );
+  public function cloneValidationRules( $fieldNameFrom, $fieldNameTo ) {
+    error_log( 'cloneValidationRules: '.$fieldNameFrom.', '.$fieldNameTo );
     $fieldRules = $this->getValidationRules( $fieldNameFrom );
     if( is_array( $fieldRules ) ) {
       foreach( $fieldRules as $ruleName => $ruleParams ) {
-        error_log( 'cloneRules: '.$ruleName );
+        error_log( 'cloneValidationRules: '.$ruleName );
         $this->setValidationRule( $fieldNameTo, $ruleName, $ruleParams );
       }
+    }
+  }
+
+
+  /**
+    Elimina todas las reglas de un campo
+    @param string $fieldName Nombre del campo
+  */
+  public function removeValidationRules( $fieldName ) {
+    error_log( 'removeValidationRules: '.$fieldName );
+
+    if( isset( $this->rules[ $fieldName ] ) ) {
+      unset( $this->rules[ $fieldName ] );
     }
   }
 
@@ -1694,6 +1841,7 @@ class FormController implements Serializable {
     $this->formErrors[] = array( 'msgText' => $msgText, 'msgClass' => $msgClass );
   }
 
+
   /**
     Añade un mensaje de error a un campo del formulario
     @param string $fieldName Nombre del campo
@@ -1703,6 +1851,18 @@ class FormController implements Serializable {
   public function addFieldRuleError( $fieldName, $ruleName, $msgRuleError = false ) {
     error_log( "addFieldRuleError: $fieldName, $ruleName, $msgRuleError " );
     $this->fieldErrors[ $fieldName ][ $ruleName ] = $msgRuleError;
+  }
+
+
+  /**
+    Añade un mensaje de error a un grupo del formulario
+    @param string $fieldName Nombre del campo
+    @param TYPE $paramName
+    @return TYPE
+  */
+  public function addGroupRuleError( $groupName, $ruleName, $msgRuleError = false ) {
+    error_log( "addGroupRuleError: $groupName, $ruleName, $msgRuleError " );
+    $this->fieldErrors[ $groupName ][ $ruleName ] = $msgRuleError;
   }
 
 

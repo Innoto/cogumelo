@@ -47,10 +47,12 @@ class FormGroupTest extends View
     $form->setField( 'inputGa', array( 'label' => 'inputGa' ) );
     $form->setField( 'inputGb', array( 'label' => 'inputGb', 'value' => 'algo' ) );
     $form->setValidationRule( 'inputGb', 'required' );
+    $form->setValidationRule( 'inputGb', 'minlength', '1' );
 
     $form->setFieldGroup( 'inputGa', 'grupoMeu' );
     $form->setFieldGroup( 'inputGb', 'grupoMeu' );
-    $form->setGroupLimits( 'grupoMeu', 3, 1, 4 );
+    $form->setGroupLimits( 'grupoMeu', 1 );
+    //$form->setGroupLimits( 'grupoMeu', 3, 1, 4 );
 
 
     /*

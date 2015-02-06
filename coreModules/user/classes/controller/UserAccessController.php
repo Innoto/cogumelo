@@ -5,8 +5,7 @@
 //
 
 user::load('controller/UserSessionController.php');
-user::load('controller/UserController.php');
-user::load('model/UserVO.php');
+user::load('model/UserModel.php');
 
 class UserAccessController
 {
@@ -26,8 +25,8 @@ class UserAccessController
   //
   function userLogin($login, $password)
   {
-    $usercontrol= new UserController();
-    if($logeduser = $usercontrol->authenticateUser( $login, $password )) {
+    $usermodel= new UserModel();
+    if($logeduser = $usermodel->authenticateUser( $login, $password )) {
       $this->sessioncontrol->setUser($logeduser);
       Cogumelo::log("Accepted User authentication: user ".$login." is logged", 'UserLog');
       return true;
