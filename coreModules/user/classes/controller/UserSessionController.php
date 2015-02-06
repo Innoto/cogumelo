@@ -5,7 +5,7 @@
 //
 
 Cogumelo::load('coreController/SessionController.php');
-user::load('model/UserVO.php');
+user::load('model/UserModel.php');
 
 class UserSessionController extends SessionController
 {
@@ -19,7 +19,7 @@ class UserSessionController extends SessionController
   }
 
   //
-  // Set userdata in the session from UserVO
+  // Set userdata in the session from UserModel
   //
   public function setUser($data)
   {
