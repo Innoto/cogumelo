@@ -55,6 +55,11 @@ class MasterView extends View
       ) 
     );
 
+    $u  = $users->fetch();
+    $u->setter('name', 'Blanco');
+    $u->save();
+    //$u->delete(array( 'affectsDependences' => true ) );
+
 /*    while ($u  = $users->fetch() ) {
       //$u->setter('name', 'novonome');
       //var_dump( $u->getAllData() );
@@ -72,8 +77,10 @@ class MasterView extends View
 */
 
     
-    $u  = $users->fetch();
-    var_dump($u);
+  //  $u  = $users->fetch();
+//    var_dump($u);
+
+
     //var_dump($u->getAllData());
     //$u->delete( array('affectsDependences'=>true) );
     //$usD = $u->getDepInLinearArray($u);

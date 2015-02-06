@@ -317,8 +317,15 @@ Class VO
 
     $depData = $vo->depData;
     if( sizeof($depData) > 0  ) {
-      foreach( $vo->depData as $depVO ){
-        $vosArray = $vo->getDepInLinearArray( $depVO, $vosArray ) ;
+      foreach( $depData as $depVO ){
+        if( is_array($depVO) ) {
+          foreach($depVO as $dVO) {
+            $vosArray = $vo->getDepInLinearArray( $dVO, $vosArray );
+          }
+        }
+        else {
+          $vosArray = $vo->getDepInLinearArray( $depVO, $vosArray );
+        }
       }
     }
 
