@@ -210,6 +210,7 @@ function checkInputFileField( files, idForm, fieldName ) {
 
 
 function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
+
   console.log( 'uploadFile: ', file );
 
   var formData = new FormData();
@@ -305,6 +306,7 @@ function deleteFormFileEvent( evnt ) {
 
 
 function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
+
   var formData = new FormData();
   formData.append( 'execute', 'delete' );
   formData.append( 'idForm', idForm );
@@ -348,6 +350,7 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 
 
 function fileFieldToOk( idForm, fieldName ) {
+
   $fileFieldWrap = $( '#' + idForm + ' .cgmMForm-field-' + fieldName );
   $fileField = $( '#' + idForm + ' input[name=' + fieldName + ']' );
   fileObj = $fileField[0].files[0];
@@ -372,6 +375,7 @@ function fileFieldToOk( idForm, fieldName ) {
 
 
 function fileFieldToInput( idForm, fieldName ) {
+
   $fileField = $( '#' + idForm + ' input[name=' + fieldName + ']' );
 
   $( '#' + idForm + ' .cgmMForm-field-' + fieldName + ' .fileUploadOK').remove();
@@ -415,6 +419,7 @@ function loadImageTh( fileObj, $container ) {
 */
 
 function addGroupElement( evnt ) {
+
   console.log( 'addGroupElement:' );
   console.log( evnt );
 
@@ -485,6 +490,7 @@ function addGroupElement( evnt ) {
 
 
 function removeGroupElement( evnt ) {
+
   console.log( 'removeGroupElement:' );
   console.log( evnt );
 
