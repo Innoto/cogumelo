@@ -24,10 +24,10 @@ class  DevelDBController
   function createTables(){
 
     $returnStrArray = array();
-    foreach( VOUtils::listVOs() as $vo) {
-      $returnStrArray[] = $this->data->dropTable($vo);
-      $returnStrArray[] = $this->data->createTable($vo);
-      $returnStrArray[] = $this->data->insertTableValues($vo);
+    foreach( VOUtils::listVOs() as $voKey => $vo) {
+      $returnStrArray[] = $this->data->dropTable($voKey);
+      $returnStrArray[] = $this->data->createTable($voKey);
+      $returnStrArray[] = $this->data->insertTableValues($voKey);
     }
 
     return $returnStrArray;
