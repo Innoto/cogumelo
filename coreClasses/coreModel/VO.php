@@ -110,7 +110,7 @@ Class VO
 
     if( is_array($data) ) {
       foreach( $data as $d ) {
-        $this->depData[] = new  $voName( (array) $d, $relObj );
+        $this->setDepVO($d, $voName, $relObj);
       }
     }
     else
@@ -120,10 +120,29 @@ Class VO
         Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
       }
 
-      $this->depData[] = new $voName( (array) $d, $relObj );
+      $this->setDepVO($d, $voName, $relObj);
     }
-  
+  }
 
+
+  /**
+   * set dependence VO from data
+   *
+   * @param object $dataVO 
+   * @param string $voName name of VO or Model
+   * @param object $relObj related object
+   *
+   * @return void
+   */
+  function setDepVO( $dataVO, $voName, $relObj  ) {
+    $attribute =  $relObj->parentId;
+
+    if( $this->isForeignKey( $attribute ) ){
+      $this->depData[ $attribute] = new $voName( (array) $dataVO, $relObj );
+    }
+    else {
+      $this->depData[ $attribute] = array( new $voName( (array) $dataVO, $relObj ) );
+    }
   }
 
 
@@ -306,6 +325,16 @@ Class VO
     return $vosArray;
   }
 
+
+  function isForeignKey( $key ) {
+    $res = false;
+    if( array_key_exists( 'type', $this::$cols[ $key ]) &&  $this::$cols[ $key ]['type'] == 'FOREIGN') {
+      $res = true;
+    }
+
+
+    return $res;
+  }
 
 
   /**

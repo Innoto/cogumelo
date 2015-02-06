@@ -73,6 +73,7 @@ class MasterView extends View
 
     
     $u  = $users->fetch();
+    var_dump($u);
     //var_dump($u->getAllData());
     //$u->delete( array('affectsDependences'=>true) );
     //$usD = $u->getDepInLinearArray($u);
