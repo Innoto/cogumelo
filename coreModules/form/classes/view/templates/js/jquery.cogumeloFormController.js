@@ -70,23 +70,27 @@ function unbindForm( idForm ) {
 
 function setValidateForm( idForm, rules, messages ) {
 
+  $.validator.setDefaults({
+    errorPlacement: function(error, element) {
+      console.log( 'Executando validate.errorPlacement:' );
+      console.log( error, element );
+      //console.log( 'Busco #JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
+      $msgContainer = $( '#JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
+      if ( $msgContainer.length > 0 ) {
+        $msgContainer.append( error );
+      }
+      else {
+        error.insertAfter( element );
+      }
+    }
+  });
+
+
   var $validateForm = $( '#'+idForm ).validate({
 
     // debug: true,
 
     //groups: { ungrupo: 'input1 input2' },
-
-    errorPlacement: function( place, element ) {
-      console.log( 'Executando validate.errorPlacement:' );
-      console.log( place, element );
-      $msgContainer = $( '#JQVMC-'+place.attr('id')+', .JQVMC-'+place.attr('id') );
-      if ( $msgContainer.length > 0 ) {
-        $msgContainer.append( place );
-      }
-      else {
-        place.insertAfter( element );
-      }
-    },
 
     errorClass: 'formError',
     rules: rules,
@@ -113,6 +117,12 @@ function setValidateForm( idForm, rules, messages ) {
             if ( successActions.redirect ) {
               // Usando replace no permite volver a la pagina del form
               window.location.replace( successActions.redirect );
+            }
+            if ( successActions.reload ) {
+              window.location.reload();
+            }
+            if ( successActions.resetForm ) {
+              $( form )[0].reset();
             }
             // alert( 'Form Submit OK' );
           }
@@ -197,6 +207,9 @@ function processInputFileField( evnt ) {
 
 
 function checkInputFileField( files, idForm, fieldName ) {
+  console.log('checkInputFileField()');
+  console.log( files );
+  console.log( fieldName );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
   var valRes = $validateForm.element( 'input[name=' + fieldName + ']' );
 
@@ -210,7 +223,6 @@ function checkInputFileField( files, idForm, fieldName ) {
 
 
 function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
-
   console.log( 'uploadFile: ', file );
 
   var formData = new FormData();
@@ -218,6 +230,8 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
   formData.append( 'idForm', idForm );
   formData.append( 'fieldName', fieldName );
   formData.append( 'cgIntFrmId', cgIntFrmId );
+
+  $( '#'+idForm+' .'+fieldName+'-info' ).show();
 
   $.ajax({
     url: '/cgml-form-file-upload', type: 'POST',
@@ -233,9 +247,14 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
           'progress',
           function progressHandler( evnt ) {
             var percent = Math.round( (evnt.loaded / evnt.total) * 100 );
-            $( '#progressBar' ).val( percent );
-            $( '#status' ).html( percent + '% uploaded... please wait' );
-            $( '#loaded_n_total' ).html( 'Uploaded ' + evnt.loaded + ' bytes of ' + evnt.total );
+
+            // TODO: Poñer idForm e fieldName
+            $( '.contact-file-info .wrap .progressBar' ).val( percent );
+            $( '.contact-file-info .wrap .status' ).html( 'Cargando el fichero...' );
+
+            //$( '#progressBar' ).val( percent );
+            //$( '#status' ).html( percent + '% uploaded... please wait' );
+            //$( '#loaded_n_total' ).html( 'Uploaded ' + evnt.loaded + ' bytes of ' + evnt.total );
           },
           false
         );
@@ -246,19 +265,22 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       // $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
     },
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-      $( '#loaded_n_total' ).html( '' );
-      $( '#progressBar' ).val( 0 );
-      $( '#status' ).html( $jsonData.success );
+      var idForm = $jsonData.moreInfo.idForm;
+      var fieldName = $jsonData.moreInfo.fieldName;
+      $( '#'+idForm+' .'+fieldName+'-info .wrap .progressBar' ).hide();
 
       if( $jsonData.result === 'ok' ) {
-
-        fileFieldToOk( $jsonData.moreInfo.idForm, $jsonData.moreInfo.fieldName );
-
+        $( '#'+idForm+' .'+fieldName+'-info .wrap .status' ).html(
+          'Fichero listo para enviar: ' +
+          '<span class="fileUploadOK">' + $jsonData.moreInfo.fileName + '</span>'
+        );
+        fileFieldToOk( idForm, fieldName );
       }
       else {
         console.log( 'uploadFile ERROR' );
+        $( '#'+idForm+' .'+fieldName+'-info .wrap .status' ).html( 'Error cargando el fichero.' );
 
-        $validateForm = getFormInfo( $jsonData.moreInfo.idForm, 'validateForm' );
+        $validateForm = getFormInfo( idForm, 'validateForm' );
         console.log( $validateForm );
 
         for(var i in $jsonData.jvErrors) {
@@ -288,7 +310,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
       console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
-      $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
+      $( '#'+idForm+' .'+fieldName+'-info .status' ).html( 'Upload Failed (' + $textStatus + ')' );
     }
   });
 } // function uploadFile( file, idForm, fieldName, cgIntFrmId )
@@ -306,7 +328,6 @@ function deleteFormFileEvent( evnt ) {
 
 
 function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
-
   var formData = new FormData();
   formData.append( 'execute', 'delete' );
   formData.append( 'idForm', idForm );
@@ -350,7 +371,6 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 
 
 function fileFieldToOk( idForm, fieldName ) {
-
   $fileFieldWrap = $( '#' + idForm + ' .cgmMForm-field-' + fieldName );
   $fileField = $( '#' + idForm + ' input[name=' + fieldName + ']' );
   fileObj = $fileField[0].files[0];
@@ -359,7 +379,10 @@ function fileFieldToOk( idForm, fieldName ) {
   $fileField.prop( 'disabled', true );
   $fileField.hide();
 
+  $( '#'+idForm+' #'+fieldName+'-error' ).hide();
+
   $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileObj.name + '" uploaded OK</span>' );
+  /*
   $fileFieldWrap.append(
     $( '<div>' )
       .attr( 'fieldName', fieldName )
@@ -371,11 +394,11 @@ function fileFieldToOk( idForm, fieldName ) {
   if( fileObj.type.match('image.*') && fileObj.size < 5000000 ) {
     loadImageTh( fileObj, $fileFieldWrap );
   }
+  */
 }
 
 
 function fileFieldToInput( idForm, fieldName ) {
-
   $fileField = $( '#' + idForm + ' input[name=' + fieldName + ']' );
 
   $( '#' + idForm + ' .cgmMForm-field-' + fieldName + ' .fileUploadOK').remove();
@@ -419,7 +442,6 @@ function loadImageTh( fileObj, $container ) {
 */
 
 function addGroupElement( evnt ) {
-
   console.log( 'addGroupElement:' );
   console.log( evnt );
 
@@ -490,7 +512,6 @@ function addGroupElement( evnt ) {
 
 
 function removeGroupElement( evnt ) {
-
   console.log( 'removeGroupElement:' );
   console.log( evnt );
 

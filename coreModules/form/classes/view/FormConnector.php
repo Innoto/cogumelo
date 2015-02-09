@@ -191,7 +191,7 @@ class FormConnector extends View
 
   private function uploadFormFile() {
     error_log( '--------------------------------' );
-    error_log( ' FormConnector - uploadFormFile' );
+    error_log( ' FormConnector - uploadFormFile ' );
     error_log( '--------------------------------' );
 
     $form = new FormController();
@@ -215,19 +215,21 @@ class FormConnector extends View
 
       // Aviso de error PHP
       if( $fileErrorId !== UPLOAD_ERR_OK ) {
-        $form->addFieldRuleError( $fieldName, 'cogumelo', $this->getFileErrorMsg( $fileErrorId ) );
+        $form->addFieldRuleError( $fieldName, 'cogumelo',
+          'La subida del fichero ha fallado. (SF-'.$fileErrorId.')' );
+        // $form->addFieldRuleError( $fieldName, 'cogumelo', $this->getFileErrorMsg( $fileErrorId ) );
       }
 
       // Datos enviados fuera de rango
       if( !$form->existErrors() && $fileSize < 1 ) {
         $form->addFieldRuleError( $fieldName, 'cogumelo',
-          'El tamaño del fichero parece ser cero (0).' );
+          'La subida del fichero ha fallado. (T0)' );
       }
 
       // Verificando la existencia y tamaño del fichero intermedio
       if( !$form->existErrors() && ( !is_uploaded_file( $fileTmpLoc ) || filesize( $fileTmpLoc ) !== $fileSize ) ) {
         $form->addFieldRuleError( $fieldName, 'cogumelo',
-          'El fichero temporal parece incorrecto o sin datos.' );
+          'La subida del fichero ha fallado. (T1)' );
       }
 
       // Verificando el MIME_TYPE del fichero intermedio
@@ -276,7 +278,8 @@ class FormConnector extends View
             $tmpCgmlFileLocation = $form->tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName );
             if( $tmpCgmlFileLocation === false ) {
               error_log( 'FU: Fallo de move_uploaded_file movendo '.$fieldName.': ('.$fileTmpLoc.')' );
-              $form->addFieldRuleError( $fieldName, 'cogumelo', 'Fallo guardando el fichero.' );
+              $form->addFieldRuleError( $fieldName, 'cogumelo',
+                'La subida del fichero ha fallado. (MU)' );
             }
             else {
               // El fichero subido ha pasado todos los controles. Vamos a registrarlo según proceda
@@ -298,7 +301,7 @@ class FormConnector extends View
                 else {
                   error_log( 'FU: Validado pero status erroneo: ' . $fileFieldValuePrev['status'] );
                   $form->addFieldRuleError( $fieldName, 'cogumelo',
-                    'Intento de sobreescribir un fichero existente' );
+                    'La subida del fichero ha fallado. (FE)' );
                 }
               }
               else {
@@ -341,24 +344,21 @@ class FormConnector extends View
         } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
         else {
           $form->addFieldRuleError( $fieldName, 'cogumelo',
-            'Los datos del fichero no han llegado bien al servidor. FORM' );
+            'La subida del fichero ha fallado. (FO)' );
         }
 
-
       } // if( !$error ) // Recuperamos formObj y validamos el fichero temporal
-
-
 
     } // if( isset( ... ) )
     else { // no parece haber fichero
       $form->addFieldRuleError( $_POST['fieldName'], 'cogumelo',
-        'No han llegado los datos o lo ha hecho con errores. ISSET' );
+        'La subida del fichero ha fallado. (IS)' );
     }
 
 
     // Notificamos el resultado al UI
     if( !$form->existErrors() ) {
-      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'],
+      $moreInfo = array( 'idForm' => $_POST['idForm'], 'fieldName' => $_POST['fieldName'],
         'fileName' => $fileFieldValuePrev['temp']['name'],
         'fileSize' => $fileFieldValuePrev['temp']['size'],
         'fileType' => $fileFieldValuePrev['temp']['type'] );
@@ -376,7 +376,7 @@ class FormConnector extends View
 
   private function deleteFormFile() {
     error_log( '--------------------------------' );
-    error_log( ' FormConnector - deleteFormFile' );
+    error_log( ' FormConnector - deleteFormFile ' );
     error_log( '--------------------------------' );
 
     $form = new FormController();
