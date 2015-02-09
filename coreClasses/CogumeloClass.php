@@ -202,6 +202,7 @@ class CogumeloClass extends Singleton
       $res = "";
     }
     return $res;
+
   }
 
 

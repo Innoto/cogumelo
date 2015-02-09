@@ -48,12 +48,27 @@ class MasterView extends View
     
     $user = new UserModel();
 
+    $u = $user->listItems( array('value'=>13, 'affectsDependences'=>true ) );
+    $u = $u->fetch();
+    //$u->fetch();
+   // $u->setter('surname', 'Mamón');
+//    $u->save();
+    echo $u->getter('name'). ' '.$u->getter('surname'). ' Con rol tipo:'. $u->getterDependence('id')[0]->getterDependence('role')->getter('name');
+
+
+/*
     $users = $user->listItems( 
       array(
         'filters'=>array('find'=>'pablo'),
         'affectsDependences' => true 
       ) 
     );
+
+    $u  = $users->fetch();
+    $u->setter('name', 'Blanco');
+    $u->save();
+*/
+    //$u->delete(array( 'affectsDependences' => true ) );
 
 /*    while ($u  = $users->fetch() ) {
       //$u->setter('name', 'novonome');
@@ -72,7 +87,10 @@ class MasterView extends View
 */
 
     
-    $u  = $users->fetch();
+  //  $u  = $users->fetch();
+//    var_dump($u);
+
+
     //var_dump($u->getAllData());
     //$u->delete( array('affectsDependences'=>true) );
     //$usD = $u->getDepInLinearArray($u);

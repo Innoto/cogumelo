@@ -110,7 +110,7 @@ Class VO
 
     if( is_array($data) ) {
       foreach( $data as $d ) {
-        $this->depData[] = new  $voName( (array) $d, $relObj );
+        $this->setDepVO($d, $voName, $relObj);
       }
     }
     else
@@ -120,10 +120,29 @@ Class VO
         Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
       }
 
-      $this->depData[] = new $voName( (array) $d, $relObj );
+      $this->setDepVO($d, $voName, $relObj);
     }
-  
+  }
 
+
+  /**
+   * set dependence VO from data
+   *
+   * @param object $dataVO 
+   * @param string $voName name of VO or Model
+   * @param object $relObj related object
+   *
+   * @return void
+   */
+  function setDepVO( $dataVO, $voName, $relObj  ) {
+    $attribute =  $relObj->parentId;
+
+    if( $this->isForeignKey( $attribute ) ){
+      $this->depData[ $attribute] = new $voName( (array) $dataVO, $relObj );
+    }
+    else {
+      $this->depData[ $attribute] = array( new $voName( (array) $dataVO, $relObj ) );
+    }
   }
 
 
@@ -179,6 +198,9 @@ Class VO
   /**
    * set any data attribute by key
    *
+   * @param mixed $setterkey
+   * @param mixed $value 
+   * 
    * @return void
    */
   function setter($setterkey, $value = false)
@@ -192,6 +214,24 @@ Class VO
     }
   }
 
+
+  /**
+   * set data objct as dependence
+   *
+   * @return void
+   */
+  function depSetter( $voObj ){
+    $found = false;
+    $voName = $voObj->getVOClassName();
+
+    foreach( $this->relObj->relationship as $rel ){
+      if( $rel->vo == $voName ) {
+
+      }
+    }
+
+    return $found;
+  }
 
 
   /**
@@ -256,24 +296,22 @@ Class VO
     return $this->depData;
   }
 
-  function getDependencesByVO( $voName ) {
 
-    $voArray = array();
+  /**
+   * dependence getter
+   * 
+   * @param string $reference reference key 
+   *
+   * @return array
+   */
+  function getterDependence( $reference ) {
+    $depReturn = false;
 
-
-    $depData = $this->depData();
-    if( sizeof($depData) > 0  ) {
-      foreach( $this->depData as &$depVO ){
-        if( $depVO->name == $voName ) {
-          $voArray[] = $depVO ;
-        }
-        else {
-          $voArray = array_merge($voArray, $depVO->getDependencesByVO($voName) );
-        }
-      }
+    if( array_key_exists($reference, $this->depData) ){
+      $depReturn = &$this->depData[ $reference ];
     }
 
-    return $voArray;
+    return $depReturn;
   }
 
 
@@ -298,14 +336,31 @@ Class VO
 
     $depData = $vo->depData;
     if( sizeof($depData) > 0  ) {
-      foreach( $vo->depData as $depVO ){
-        $vosArray = $vo->getDepInLinearArray( $depVO, $vosArray ) ;
+      foreach( $depData as $depVO ){
+        if( is_array($depVO) ) {
+          foreach($depVO as $dVO) {
+            $vosArray = $vo->getDepInLinearArray( $dVO, $vosArray );
+          }
+        }
+        else {
+          $vosArray = $vo->getDepInLinearArray( $depVO, $vosArray );
+        }
       }
     }
 
     return $vosArray;
   }
 
+
+  function isForeignKey( $key ) {
+    $res = false;
+    if( array_key_exists( 'type', $this::$cols[ $key ]) &&  $this::$cols[ $key ]['type'] == 'FOREIGN') {
+      $res = true;
+    }
+
+
+    return $res;
+  }
 
 
   /**

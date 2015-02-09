@@ -195,14 +195,14 @@ class MysqlDAO extends DAO
   * Generic Find by key
   * 
   * @param object $connectionControl mysqli connection object
-  * @param mixed $search search value
+  * @param mixed $value search value
   * @param string $key key to search (default is first primary key)
   * @param boolean $resolveDependences if want to resolve relationship dependences
   * @param boolean $cache save query result into cache
   * 
   * @return object
   */
-  function find(&$connectionControl, $search, $key = false,  $resolveDependences = false, $cache = false)
+  function find(&$connectionControl, $value, $key = false,  $resolveDependences = false, $cache = false)
   {
 
     $ret = null;
@@ -215,7 +215,7 @@ class MysqlDAO extends DAO
 
     $this->filters[$key.'FindMethod'] = $key.' = ?';
 
-    $filter = array($key.'FindMethod' => $search);
+    $filter = array($key.'FindMethod' => $value);
 
     $res = $this->listItems($connectionControl, $filter, false, false, false, $resolveDependences, $cache);
 

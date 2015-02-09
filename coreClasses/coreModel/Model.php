@@ -43,6 +43,40 @@ Class Model extends VO {
   * 
   * @return array VO array
   */
+  function find( array $parameters = array() )
+  {
+
+    $p = array(
+        'value' => false,
+        'key' => $this->getFirstPrimarykeyId(),
+        'affectsDependences' => false, 
+        'cache' => false
+      );
+    $parameters =  array_merge($p, $parameters );
+
+
+    Cogumelo::debug( 'Called find on '.get_called_class() );
+    $data = $this->dataFacade->find( 
+                                          $parameters['value'], 
+                                          $parameters['key'], 
+                                          $parameters['affectsDependences'], 
+                                          $parameters['cache']
+                                        );
+
+    return $data;
+  }
+
+
+
+
+
+  /**
+  * List items from table
+  *
+  * @param array $parameters array of filters
+  * 
+  * @return array VO array
+  */
   function listItems( array $parameters = array() )
   {
 
@@ -132,8 +166,22 @@ Class Model extends VO {
       );
     $parameters =  array_merge($p, $parameters );
 
-    Cogumelo::debug( 'Called update on '.get_called_class() );
-    return $this->dataFacade->Update($this);
+
+    // Save all dependences
+    if($parameters['affectsDependences']) {
+      $depsInOrder = $this->getDepInLinearArray();
+
+      while( $selectDep = array_pop($depsInOrder) ) {
+          Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$selectDep['ref']->getFirstPrimarykeyId().'" = '. $this->getter( $selectDep['ref']->getFirstPrimarykeyId() ) );
+          return $this->dataFacade->Update( $selectDep['ref'] );     
+      }
+    }
+    // Save only this Model
+    else {
+      Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
+      return $this->dataFacade->Update($this);
+    }
+
   }
 
 
