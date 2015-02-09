@@ -310,9 +310,6 @@ Class VO
     if( array_key_exists($reference, $this->depData) ){
       $depReturn = &$this->depData[ $reference ];
     }
-    else {
-      Cogumelo::error('Dependence "'.$reference.'" not found into '.$this->getVOClassName() );
-    }
 
     return $depReturn;
   }
