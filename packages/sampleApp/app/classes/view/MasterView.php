@@ -53,7 +53,7 @@ class MasterView extends View
     //$u->fetch();
    // $u->setter('surname', 'Mamón');
 //    $u->save();
-    echo $u->getter('name'). ' '.$u->getter('surname'). ' Con rol tipo:'. $u->getDependence('id')[0]->getDependence('role')->getter('name');
+    echo $u->getter('name'). ' '.$u->getter('surname'). ' Con rol tipo:'. $u->getterDependence('id')[0]->getterDependence('role')->getter('name');
 
 
 /*

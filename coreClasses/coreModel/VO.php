@@ -297,7 +297,14 @@ Class VO
   }
 
 
-  function getDependence( $reference ) {
+  /**
+   * dependence getter
+   * 
+   * @param string $reference reference key 
+   *
+   * @return array
+   */
+  function getterDependence( $reference ) {
     $depReturn = false;
 
     if( array_key_exists($reference, $this->depData) ){
