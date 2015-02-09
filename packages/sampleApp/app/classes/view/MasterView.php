@@ -48,9 +48,14 @@ class MasterView extends View
     
     $user = new UserModel();
 
-    $u = $user->find( array('value'=>13 ) );
-    $u->setter('surname', 'Mamón');
-    $u->save();
+    $u = $user->listItems( array('value'=>13, 'affectsDependences'=>true ) );
+    $u = $u->fetch();
+    //$u->fetch();
+   // $u->setter('surname', 'Mamón');
+//    $u->save();
+    echo $u->getter('name'). ' '.$u->getter('surname'). ' Con rol tipo:'. $u->getDependence('id')[0]->getDependence('role')->getter('name');
+
+
 /*
     $users = $user->listItems( 
       array(

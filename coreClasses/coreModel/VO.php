@@ -296,24 +296,18 @@ Class VO
     return $this->depData;
   }
 
-  function getDependencesByVO( $voName ) {
 
-    $voArray = array();
+  function getDependence( $reference ) {
+    $depReturn = false;
 
-
-    $depData = $this->depData();
-    if( sizeof($depData) > 0  ) {
-      foreach( $this->depData as &$depVO ){
-        if( $depVO->name == $voName ) {
-          $voArray[] = $depVO ;
-        }
-        else {
-          $voArray = array_merge($voArray, $depVO->getDependencesByVO($voName) );
-        }
-      }
+    if( array_key_exists($reference, $this->depData) ){
+      $depReturn = &$this->depData[ $reference ];
+    }
+    else {
+      Cogumelo::error('Dependence "'.$reference.'" not found into '.$this->getVOClassName() );
     }
 
-    return $voArray;
+    return $depReturn;
   }
 
 
