@@ -192,42 +192,6 @@ class MysqlDAO extends DAO
 
 
   /**
-  * Generic Find by key
-  * 
-  * @param object $connectionControl mysqli connection object
-  * @param mixed $value search value
-  * @param string $key key to search (default is first primary key)
-  * @param boolean $resolveDependences if want to resolve relationship dependences
-  * @param boolean $cache save query result into cache
-  * 
-  * @return object
-  */
-  function find(&$connectionControl, $value, $key = false,  $resolveDependences = false, $cache = false)
-  {
-
-    $ret = null;
-
-    $VO = new $this->VO();
-
-    if(!$key) {
-      $key = $VO->getFirstPrimarykeyId();
-    }
-
-    $this->filters[$key.'FindMethod'] = $key.' = ?';
-
-    $filter = array($key.'FindMethod' => $value);
-
-    $res = $this->listItems($connectionControl, $filter, false, false, false, $resolveDependences, $cache);
-
-    if( $res != COGUMELO_ERROR ) {
-      $ret = $res->fetch();
-    }
-
-    return $ret;
-  }
-
-
-  /**
   * Generic List ittems
   * 
   * @param object $connectionControl mysqli connection object

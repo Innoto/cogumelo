@@ -36,38 +36,6 @@ Class Model extends VO {
 
   }
 
-  /**
-  * List items from table
-  *
-  * @param array $parameters array of filters
-  *
-  * @return array VO array
-  */
-  function find( array $parameters = array() )
-  {
-
-    $p = array(
-        'value' => false,
-        'key' => $this->getFirstPrimarykeyId(),
-        'affectsDependences' => false,
-        'cache' => false
-      );
-    $parameters =  array_merge($p, $parameters );
-
-
-    Cogumelo::debug( 'Called find on '.get_called_class() );
-    $data = $this->dataFacade->find(
-                                          $parameters['value'],
-                                          $parameters['key'],
-                                          $parameters['affectsDependences'],
-                                          $parameters['cache']
-                                        );
-
-    return $data;
-  }
-
-
-
 
 
   /**
@@ -122,34 +90,30 @@ Class Model extends VO {
     $parameters =  array_merge($p, $parameters );
 
     Cogumelo::debug( 'Called listCount on '.get_called_class() );
-    $data = $this->dataFacade->listCount($filters);
+    $data = $this->dataFacade->listCount($p['filters']);
 
     return $data;
   }
 
   function getFilters(){
-    return $this->filters;
+    $filters = array();
+    // add automatic filters for (INT) and (CHAR or VARCHAR) values
+    foreach( $this::$cols as $colK => $col ) {
+      if( $col['type'] == 'INT') {
+        $filters[ $colK ] = $colK." = ?";
+      }
+      else
+      if( $col['type'] == 'CHAR' || $col['type'] == 'VARCHAR' ) {
+        $filters[ $colK ] = $colK." = '?'";
+      }
+    }
+
+    // then merge with other filters and return 
+    return array_merge( $filters, $this->filters);
   }
 
 
-  /**
-  * create item
-  *
-  * @param array $parameters array of filters
-  *
-  * @return object VO
-  */
-  function create(  array $parameters= array() )
-  {
 
-    $p = array(
-        'affectsDependences' => false
-      );
-    $parameters =  array_merge($p, $parameters );
-
-    Cogumelo::debug( 'Called create on '.get_called_class() );
-    return $this->dataFacade->Create($this);
-  }
 
   /**
   * save item
@@ -183,6 +147,53 @@ Class Model extends VO {
       return $this->dataFacade->Update($this);
     }
 
+  }
+
+  /**
+  * save item
+  *
+  * @param object $voObj voObject
+  *
+  * @return object  VO
+  */
+  private function saveOrUpdate( $voObj = false ){
+    $retObj = false; 
+
+    if(!$voObj) {
+      $voObj = $this;
+    }
+
+    if( $this->exist($voObj) ) {
+      $retObj = $this->dataFacade->Update( $voObj );
+    }
+    else {
+
+    }
+
+    return $retObj;
+  }
+
+  /**
+  * if VO exist
+  *
+  * @param object $voObj voObject
+  *
+  * @return boolean
+  */
+  function exist($voObj = false) {
+    $ret = false;
+
+    if(!$voObj) {
+      $voObj = $this;
+    }
+    
+    $filters = $voObj->data;
+
+    if( $this->listCount(array('filters'=> $filters)) ) {
+      $ret = true;
+    }
+
+    return $ret;
   }
 
 
