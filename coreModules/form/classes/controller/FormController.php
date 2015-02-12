@@ -145,17 +145,17 @@ class FormController implements Serializable {
   public function serialize() {
     $data = array();
 
-    $data[] = $this->name;
-    $data[] = $this->id;
-    $data[] = $this->tokenId;
-    $data[] = $this->action;
-    $data[] = $this->success;
-    $data[] = $this->method;
-    $data[] = $this->enctype;
-    $data[] = $this->fields;
-    $data[] = $this->rules;
-    $data[] = $this->groups;
-    $data[] = $this->messages;
+    $data[ 'name' ] = $this->name;
+    $data[ 'id' ] = $this->id;
+    $data[ 'tokenId' ] = $this->tokenId;
+    $data[ 'action' ] = $this->action;
+    $data[ 'success' ] = $this->success;
+    $data[ 'method' ] = $this->method;
+    $data[ 'enctype' ] = $this->enctype;
+    $data[ 'fields' ] = $this->fields;
+    $data[ 'rules' ] = $this->rules;
+    $data[ 'groups' ] = $this->groups;
+    $data[ 'messages' ] = $this->messages;
     // $data[] = $this->postValues;
 
     return serialize( $data );
@@ -169,17 +169,17 @@ class FormController implements Serializable {
   public function unserialize( $dataSerialized ) {
     $data = unserialize( $dataSerialized );
 
-    $this->name = array_shift( $data );
-    $this->id = array_shift( $data );
-    $this->tokenId = array_shift( $data );
-    $this->action = array_shift( $data );
-    $this->success = array_shift( $data );
-    $this->method = array_shift( $data );
-    $this->enctype = array_shift( $data );
-    $this->fields = array_shift( $data );
-    $this->rules = array_shift( $data );
-    $this->groups = array_shift( $data );
-    $this->messages = array_shift( $data );
+    $this->name = $data[ 'name' ];
+    $this->id = $data[ 'id' ];
+    $this->tokenId = $data[ 'tokenId' ];
+    $this->action = $data[ 'action' ];
+    $this->success = $data[ 'success' ];
+    $this->method = $data[ 'method' ];
+    $this->enctype = $data[ 'enctype' ];
+    $this->fields = $data[ 'fields' ];
+    $this->rules = $data[ 'rules' ];
+    $this->groups = $data[ 'groups' ];
+    $this->messages = $data[ 'messages' ];
     // $this->postValues = array_shift( $data );
   }
 
@@ -191,6 +191,25 @@ class FormController implements Serializable {
     $formSessionId = 'CGFSI_'.$this->getTokenId();
     $_SESSION[ $formSessionId ] = $this->serialize();
     //return $formSessionId;
+  }
+
+
+  /**
+    Actualiza los datos de un campo en sesion
+  */
+  public function updateFieldToSession( $fieldName ) {
+    $result = false;
+
+    $formSessionId = 'CGFSI_'.$this->getTokenId();
+
+    if( isset( $_SESSION[ $formSessionId ] ) ) {
+      $data = unserialize( $_SESSION[ $formSessionId ] );
+      $data[ 'fields' ][ $fieldName ] = $this->fields[ $fieldName ];
+      $_SESSION[ $formSessionId ] = serialize( $data );
+      $result = true;
+    }
+
+    return $result;
   }
 
 
@@ -900,8 +919,7 @@ class FormController implements Serializable {
                 $fileFieldValue['values'] = $fileFieldValue['validate'];
                 $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
                 $this->setFieldValue( $fieldName, $fileFieldValue );
-                // TODO: Crear saveFieldToSession() para evitar salvar algo que non se queira
-                $this->saveToSession();
+                $this->updateFieldToSession( $fieldName );
                 error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
               }
               break;
@@ -967,7 +985,7 @@ class FormController implements Serializable {
             $fileFieldValue['status'] = 'LOAD';
             unset( $fileFieldValue['values'] );
             $this->setFieldValue( $fieldName, $fileFieldValue );
-            $this->saveToSession();
+            $this->updateFieldToSession( $fieldName );
             error_log( 'Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
           }
 
