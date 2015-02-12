@@ -33,7 +33,6 @@ Class Model extends VO {
       $this->dataFacade = new Facade( $this );
     }
 
-
   }
 
 
@@ -84,13 +83,12 @@ Class Model extends VO {
 
     $p = array(
         'filters' => false,
-        'affectsDependences' => false,
         'cache' => false
       );
     $parameters =  array_merge($p, $parameters );
 
     Cogumelo::debug( 'Called listCount on '.get_called_class() );
-    $data = $this->dataFacade->listCount($p['filters']);
+    $data = $this->dataFacade->listCount( $parameters['filters']);
 
     return $data;
   }
@@ -98,7 +96,7 @@ Class Model extends VO {
   function getFilters(){
     $filters = array();
     // add automatic filters for (INT) and (CHAR or VARCHAR) values
-    foreach( $this::$cols as $colK => $col ) {
+    /*foreach( $this::$cols as $colK => $col ) {
       if( $col['type'] == 'INT') {
         $filters[ $colK ] = $colK." = ?";
       }
@@ -106,7 +104,7 @@ Class Model extends VO {
       if( $col['type'] == 'CHAR' || $col['type'] == 'VARCHAR' ) {
         $filters[ $colK ] = $colK." = '?'";
       }
-    }
+    }*/
 
     // then merge with other filters and return 
     return array_merge( $filters, $this->filters);
@@ -187,10 +185,11 @@ Class Model extends VO {
       $voObj = $this;
     }
     
-    $filters = $voObj->data;
+    if($filters = $voObj->data) {
 
-    if( $this->listCount(array('filters'=> $filters)) ) {
-      $ret = true;
+      if( $this->listCount( array('filters'=>$filters) ) ) {
+        $ret = true;
+      }
     }
 
     return $ret;

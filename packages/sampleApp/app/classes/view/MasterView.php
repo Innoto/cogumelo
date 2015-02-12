@@ -47,7 +47,10 @@ class MasterView extends View
     user::load('model/UserModel.php');
     
     $user = new UserModel();
-    echo $user->exist();
+    $user->setter('id', 13);
+    $user->setter('name', 'blanco');
+    echo "<br><br><br>";
+    var_dump( $user->exist() );
 
     //$u = $user->listItems( array('value'=>13, 'affectsDependences'=>false ) )->fetch();
     //echo $u->exist();
