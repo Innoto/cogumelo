@@ -1337,7 +1337,7 @@ class FormController implements Serializable {
       case 'radio':
         foreach( $htmlFieldArray['options'] as $inputAndText ) {
           //$html .= $inputAndText['input'].$inputAndText['label'];
-          $html .= '<label>'.$inputAndText['input'].$inputAndText['text'].'</label>';
+          $html .= '<label>'.$inputAndText['input'].'<span class="labelText">'.$inputAndText['text'].'</span></label>';
         }
         $html .= '<span class="JQVMC-'.$myFieldName.'-error JQVMC-error"></span>';
         break;
