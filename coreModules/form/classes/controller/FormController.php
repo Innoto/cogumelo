@@ -89,7 +89,7 @@ class FormController implements Serializable {
   public function getTokenId() {
     if( $this->tokenId === false ) {
       $this->tokenId = crypt( uniqid().'---'.session_id(), 'cf' );
-      $this->setField( 'cgIntFrmId', array( 'type' => 'text', 'value' => $this->tokenId ) );
+      $this->setField( 'cgIntFrmId', array( 'type' => 'hidden', 'value' => $this->tokenId ) );
     }
     return $this->tokenId;
   }
@@ -860,7 +860,7 @@ class FormController implements Serializable {
     $result = true;
 
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
-      if( $this->getFieldType( $fieldName ) === 'file' ) {
+      if( $result && $this->getFieldType( $fieldName ) === 'file' ) {
         // error_log( 'FILE: Almacenando fileField: '.$fieldName );
 
         $fileFieldValue = $this->getFieldValue( $fieldName );
@@ -877,26 +877,32 @@ class FormController implements Serializable {
               if( !is_dir( $fullDestPath ) ) {
                 // TODO: CAMBIAR PERMISOS 0777
                 if( !mkdir( $fullDestPath, 0777, true ) ) {
-                  $error = 'Imposible crear el directorio necesario.';
-                  $this->addFieldRuleError( $fieldName, 'cogumelo', $error );
-                  error_log($error . $fullDestPath );
+                  $result = false;
+                  $this->addFieldRuleError( $fieldName, 'cogumelo',
+                    'La subida del fichero ha fallado. (MD)' );
+                  error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
                 }
               }
 
               if( !$this->existErrors() ) {
                 // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
+                error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
                 if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
-                  $error = 'Imposible mover el fichero al directorio adecuado.';
-                  $this->addFieldRuleError( $fieldName, 'cogumelo', $error );
-                  error_log($error . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                  $result = false;
+                  $this->addFieldRuleError( $fieldName, 'cogumelo',
+                    'La subida del fichero ha fallado. (MF)' );
+                  error_log( 'Imposible mover el fichero al directorio adecuado.' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
                 }
               }
 
               if( !$this->existErrors() ) {
+                $fileFieldValue['status'] = 'LOADED';
                 $fileFieldValue['values'] = $fileFieldValue['validate'];
                 $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
                 $this->setFieldValue( $fieldName, $fileFieldValue );
-                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue['values'], true ) );
+                // TODO: Crear saveFieldToSession() para evitar salvar algo que non se queira
+                $this->saveToSession();
+                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
               }
               break;
             case 'REPLACE':
@@ -922,8 +928,88 @@ class FormController implements Serializable {
       } // if( $this->getFieldType( $fieldName ) === 'file' )
     } // foreach( $this->getFieldsNamesArray() as $fieldName )
 
+    if( !$result ) {
+      // Si algo ha fallado, desacemos los cambios
+      $this->revertFileFieldsLoaded();
+    }
+
     return $result;
   } // function processFileFields
+
+
+
+  /**
+    Procesa los ficheros temporales del form para pasarlos de su lugar definitivo al temporal
+    @return boolean
+  */
+  public function revertFileFieldsLoaded() {
+    $result = true;
+
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+      if( $this->getFieldType( $fieldName ) === 'file' ) {
+        error_log( 'FILE: Revertindo LOADED fileField: '.$fieldName );
+
+        $fileFieldValue = $this->getFieldValue( $fieldName );
+        error_log( print_r( $fileFieldValue, true ) );
+
+        if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] === 'LOADED' ) {
+          $absLocationActual = self::FILES_APP_PATH . $fileFieldValue['values']['absLocation'];
+          $absLocationAnterior = $fileFieldValue['validate']['absLocation'];
+
+          error_log( 'Devolvendo ' . $absLocationActual .' a '. $absLocationAnterior );
+          if( !rename( $absLocationActual, $absLocationAnterior ) ) {
+            $result = false;
+            $this->addFieldRuleError( $fieldName, 'cogumelo',
+              'La subida del fichero ha fallado. (MR)' );
+            error_log( 'Imposible devolver el fichero al directorio adecuado.' . $absLocationActual .' a '. $absLocationAnterior );
+          }
+          else {
+            $fileFieldValue['status'] = 'LOAD';
+            unset( $fileFieldValue['values'] );
+            $this->setFieldValue( $fieldName, $fileFieldValue );
+            $this->saveToSession();
+            error_log( 'Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
+          }
+
+        } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] === 'LOADED' )
+      } // if( $this->getFieldType( $fieldName ) === 'file' )
+    } // foreach( $this->getFieldsNamesArray() as $fieldName )
+
+    return $result;
+  } // function revertFileFieldsLoaded
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   /**
@@ -1439,7 +1525,7 @@ class FormController implements Serializable {
     @param string $name Clave del suceso: accept, redirect, ...
     @param string $success Contenido del evento: Msg, url, ...
   */
-  public function setSuccess( $name, $success ) {
+  public function setSuccess( $name, $success = true ) {
     //error_log( 'setSuccess: name='. $name . ' success=' .  $success );
     $this->success[ $name ] = $success;
   }
@@ -1465,7 +1551,7 @@ class FormController implements Serializable {
       $json = $this->jsonFormOk( $moreInfo );
     }
     else {
-      $this->addFormError( 'NO SE HAN GUARDADO LOS DATOS.', 'formError' );
+      // $this->addFormError( 'NO SE HAN GUARDADO LOS DATOS.', 'formError' );
       $json = $this->jsonFormError( $moreInfo );
     }
 

@@ -1,6 +1,6 @@
 $.fn.serializeFormToObject = function () {
-
   var o = {};
+
   var a = this.serializeArray();
 
   $.each( a, function () {
@@ -17,7 +17,7 @@ $.fn.serializeFormToObject = function () {
 
   this.find(':input').each(
     function(i, elem) {
-      if( o[elem.name] === undefined ) {
+      if( elem.name !== undefined && elem.name !== '' && o[elem.name] === undefined ) {
         o[elem.name] = false;
       }
   });
