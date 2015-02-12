@@ -47,13 +47,27 @@ class MasterView extends View
     user::load('model/UserModel.php');
     
     $user = new UserModel();
+    echo $user->exist();
 
-    $u = $user->listItems( array('value'=>13, 'affectsDependences'=>true ) );
-    $u = $u->fetch();
+    //$u = $user->listItems( array('value'=>13, 'affectsDependences'=>false ) )->fetch();
+    //echo $u->exist();
+
+
+
+/*
+    $u->setterDependence( new UserRoleModel( ) )->setterDependence( new RoleModel( array('nome' => 'fuker') ) )->setterDependence( new RolePermissionModel() )->setterDependence( new PermissionModel() ) ;
+
+
+    print_r( $u->getAllData() );
+*/
+
+
+
+
     //$u->fetch();
    // $u->setter('surname', 'Mamón');
 //    $u->save();
-    echo $u->getter('name'). ' '.$u->getter('surname'). ' Con rol tipo:'. $u->getterDependence('id')[0]->getterDependence('role')->getter('name');
+   // echo $u->getter('name'). ' '.$u->getter('surname'). ' Con rol tipo:'. $u->getterDependence('id')[0]->getterDependence('role')->getter('name');
 
 
 /*

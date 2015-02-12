@@ -27,46 +27,14 @@ Class Model extends VO {
       $this->dataFacade = new $customFacade();
     }
     if( $this->customDAO ) {
-      $this->dataFacade = new Facade( false,  $this->customDAO, $this->moduleDAO); 
+      $this->dataFacade = new Facade( false,  $this->customDAO, $this->moduleDAO);
     }
     else {
-      $this->dataFacade = new Facade( $this ); 
+      $this->dataFacade = new Facade( $this );
     }
 
-    
+
   }
-
-  /**
-  * List items from table
-  *
-  * @param array $parameters array of filters
-  * 
-  * @return array VO array
-  */
-  function find( array $parameters = array() )
-  {
-
-    $p = array(
-        'value' => false,
-        'key' => $this->getFirstPrimarykeyId(),
-        'affectsDependences' => false, 
-        'cache' => false
-      );
-    $parameters =  array_merge($p, $parameters );
-
-
-    Cogumelo::debug( 'Called find on '.get_called_class() );
-    $data = $this->dataFacade->find( 
-                                          $parameters['value'], 
-                                          $parameters['key'], 
-                                          $parameters['affectsDependences'], 
-                                          $parameters['cache']
-                                        );
-
-    return $data;
-  }
-
-
 
 
 
@@ -74,29 +42,29 @@ Class Model extends VO {
   * List items from table
   *
   * @param array $parameters array of filters
-  * 
+  *
   * @return array VO array
   */
   function listItems( array $parameters = array() )
   {
 
     $p = array(
-        'filters' => false, 
-        'range' => false, 
-        'order' => false, 
-        'fields' => false, 
-        'affectsDependences' => false, 
+        'filters' => false,
+        'range' => false,
+        'order' => false,
+        'fields' => false,
+        'affectsDependences' => false,
         'cache' => false
       );
     $parameters =  array_merge($p, $parameters );
 
     Cogumelo::debug( 'Called listItems on '.get_called_class() );
-    $data = $this->dataFacade->listItems( 
-                                          $parameters['filters'], 
-                                          $parameters['range'], 
-                                          $parameters['order'], 
-                                          $parameters['fields'], 
-                                          $parameters['affectsDependences'], 
+    $data = $this->dataFacade->listItems(
+                                          $parameters['filters'],
+                                          $parameters['range'],
+                                          $parameters['order'],
+                                          $parameters['fields'],
+                                          $parameters['affectsDependences'],
                                           $parameters['cache']
                                         );
 
@@ -115,41 +83,37 @@ Class Model extends VO {
   {
 
     $p = array(
-        'filters' => false, 
-        'affectsDependences' => false, 
+        'filters' => false,
+        'affectsDependences' => false,
         'cache' => false
       );
     $parameters =  array_merge($p, $parameters );
 
     Cogumelo::debug( 'Called listCount on '.get_called_class() );
-    $data = $this->dataFacade->listCount($filters);
+    $data = $this->dataFacade->listCount($p['filters']);
 
     return $data;
   }
 
   function getFilters(){
-    return $this->filters;
+    $filters = array();
+    // add automatic filters for (INT) and (CHAR or VARCHAR) values
+    foreach( $this::$cols as $colK => $col ) {
+      if( $col['type'] == 'INT') {
+        $filters[ $colK ] = $colK." = ?";
+      }
+      else
+      if( $col['type'] == 'CHAR' || $col['type'] == 'VARCHAR' ) {
+        $filters[ $colK ] = $colK." = '?'";
+      }
+    }
+
+    // then merge with other filters and return 
+    return array_merge( $filters, $this->filters);
   }
 
 
-  /**
-  * create item
-  *
-  * @param array $parameters array of filters
-  *
-  * @return object VO 
-  */
-  function create(  array $parameters= array() )
-  {
 
-    $p = array(
-        'affectsDependences' => false
-      );
-    $parameters =  array_merge($p, $parameters );
-
-    Cogumelo::debug( 'Called create on '.get_called_class() );
-    return $this->dataFacade->Create($this);
-  }
 
   /**
   * save item
@@ -172,8 +136,9 @@ Class Model extends VO {
       $depsInOrder = $this->getDepInLinearArray();
 
       while( $selectDep = array_pop($depsInOrder) ) {
+
           Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$selectDep['ref']->getFirstPrimarykeyId().'" = '. $this->getter( $selectDep['ref']->getFirstPrimarykeyId() ) );
-          return $this->dataFacade->Update( $selectDep['ref'] );     
+          return $this->dataFacade->Update( $selectDep['ref'] );
       }
     }
     // Save only this Model
@@ -182,6 +147,53 @@ Class Model extends VO {
       return $this->dataFacade->Update($this);
     }
 
+  }
+
+  /**
+  * save item
+  *
+  * @param object $voObj voObject
+  *
+  * @return object  VO
+  */
+  private function saveOrUpdate( $voObj = false ){
+    $retObj = false; 
+
+    if(!$voObj) {
+      $voObj = $this;
+    }
+
+    if( $this->exist($voObj) ) {
+      $retObj = $this->dataFacade->Update( $voObj );
+    }
+    else {
+
+    }
+
+    return $retObj;
+  }
+
+  /**
+  * if VO exist
+  *
+  * @param object $voObj voObject
+  *
+  * @return boolean
+  */
+  function exist($voObj = false) {
+    $ret = false;
+
+    if(!$voObj) {
+      $voObj = $this;
+    }
+    
+    $filters = $voObj->data;
+
+    if( $this->listCount(array('filters'=> $filters)) ) {
+      $ret = true;
+    }
+
+    return $ret;
   }
 
 
