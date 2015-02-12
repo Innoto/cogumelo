@@ -169,27 +169,19 @@ Class Model extends VO {
 
     // Save all dependences
     if($parameters['affectsDependences']) {
-     /* $depsInOrder = $this->getDepInLinearArray();
+      $depsInOrder = $this->getDepInLinearArray();
 
       while( $selectDep = array_pop($depsInOrder) ) {
-          //Cogumelo::debug( 'Called delete on '.get_called_class().' with "'.$selectDep['ref']->getFirstPrimarykeyId().'" = '. $selectDep['ref']->getter( $selectDep['ref']->getFirstPrimarykeyId() ) );
-          //$selectDep['ref']->dataFacade->deleteFromKey( $selectDep['ref']->getFirstPrimarykeyId(), $selectDep['ref']->getter( $selectDep['ref']->getFirstPrimarykeyId() )  );
-      Cogumelo::debug( 'Called update on '.get_called_class() );
 
-      }*/
+          Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$selectDep['ref']->getFirstPrimarykeyId().'" = '. $this->getter( $selectDep['ref']->getFirstPrimarykeyId() ) );
+          return $this->dataFacade->Update( $selectDep['ref'] );
+      }
     }
     // Save only this Model
     else {
-
       Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
       return $this->dataFacade->Update($this);
     }
-
-
-
-
-
-
 
   }
 

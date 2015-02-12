@@ -132,17 +132,22 @@ Class VO
    * @param string $voName name of VO or Model
    * @param object $relObj related object
    *
-   * @return void
+   * @return object
    */
-  function setDepVO( $dataVO, $voName, $relObj  ) {
+  function &setDepVO( $dataVO, $voName, $relObj  ) {
+    $retvO = false;
     $attribute =  $relObj->parentId;
 
     if( $this->isForeignKey( $attribute ) ){
-      $this->depData[ $attribute] = new $voName( (array) $dataVO, $relObj );
+      $retVO = new $voName( (array) $dataVO, $relObj );
+      $this->depData[ $attribute ] = $retVO;
     }
     else {
-      $this->depData[ $attribute] = array( new $voName( (array) $dataVO, $relObj ) );
+      $retVO = new $voName( (array) $dataVO, $relObj );
+      $this->depData[ $attribute] = array( $retVO );
     }
+
+    return $retVO;
   }
 
 
@@ -203,8 +208,7 @@ Class VO
    * 
    * @return void
    */
-  function setter($setterkey, $value = false)
-  {
+  function setter( $setterkey, $value = false ) {
     if( array_key_exists($setterkey, $this->getCols()) ) {
       // set values
       $this->data[$setterkey] = $value;
@@ -216,21 +220,48 @@ Class VO
 
 
   /**
-   * set data objct as dependence
+   * set data dependence
    *
+   * @param object $voObj VO or Model
+   * @param string $fk attribute name
+   * 
    * @return void
    */
-  function depSetter( $voObj ){
-    $found = false;
+  function setterDependence( $voObj, $fk = false ){
+    $retVO = false;
     $voName = $voObj->getVOClassName();
 
+    $references = array();
     foreach( $this->relObj->relationship as $rel ){
       if( $rel->vo == $voName ) {
-
+        $references[ $voName ] = $rel;
       }
     }
+    
+    // Dependence not exist
+    if( sizeof($references) == 0 ) {
+      Cogumelo::error( $voObj->getVOClassName() .' is not dependence of: '.$this->getVOClassName() );
+    }
+    else
+    if( sizeof($references) > 1 ) {
 
-    return $found;
+      // Dependence must be referenced by key id ( Same VO as dependency of two different keys )
+      if( !$fk ) {
+        Cogumelo::error( 'Various '.$voObj->getVOClassName() .' dependences into '.$this->getVOClassName().'. You must specify the foreign key reference.' );
+      }
+      else {
+        // developer specified id key, search for it into relationship reference object
+      }
+    }
+    else {
+      // dependence exist, we doesn't need specify by key
+      $retVO = $this->setDepVO( $voObj->data, $voName, array_pop( $references) );
+    }
+
+
+    //$this->refreshRelationshipKeyIds();
+
+    return $retVO;
   }
 
 
@@ -239,8 +270,7 @@ Class VO
    *
    * @return mixed
    */
-  function getter($getterkey)
-  {
+  function getter($getterkey) {
 
     $value = null;
 
@@ -253,6 +283,23 @@ Class VO
     }
 
     return $value;
+  }
+
+  /**
+   * dependence getter
+   * 
+   * @param string $reference reference key 
+   *
+   * @return array
+   */
+  function getterDependence( $reference ) {
+    $depReturn = false;
+
+    if( array_key_exists($reference, $this->depData) ){
+      $depReturn = &$this->depData[ $reference ];
+    }
+
+    return $depReturn;
   }
 
 
@@ -296,25 +343,6 @@ Class VO
     return $this->depData;
   }
 
-  function getDependencesByVO( $voName ) {
-
-    $voArray = array();
-
-
-    $depData = $this->depData();
-    if( sizeof($depData) > 0  ) {
-      foreach( $this->depData as &$depVO ){
-        if( $depVO->name == $voName ) {
-          $voArray[] = $depVO ;
-        }
-        else {
-          $voArray = array_merge($voArray, $depVO->getDependencesByVO($voName) );
-        }
-      }
-    }
-
-    return $voArray;
-  }
 
 
   /**
@@ -375,11 +403,42 @@ Class VO
     $relationshipArrayData = array();
 
     foreach ( $this->getDependences()  as $dep ){
-       $relationshipArrayData[] = $dep->getAllData() ;
+
+      if( is_array( $dep ) ){
+        $depA = array();
+        foreach( $dep as $d  ) {
+          $depA[] = $d->getAllData();
+        }
+        $relationshipArrayData[] = $depA;
+      }
+      else {
+        $relationshipArrayData[] = $dep->getAllData();
+      }
+
     }
 
-    return array( 'name' => $this->name, 'data' => $this->data, 'relationship' =>$relationshipArrayData);
+    return array( 'modelName' => $this->name, 'data' => $this->data, 'relationship' =>$relationshipArrayData);
   }
+
+
+
+  /**
+   * refresh all relationship ids from sons to parents
+   *
+   * @return void
+   */
+  /*function refreshRelationshipKeyIds() {
+    $deps = $this->getDepInLinearArray();
+
+    while( $dep = array_pop( $deps ) ){
+      $vo = $dep['ref'];
+      $voParent =$ deps[ $dep['parentKey'] ];
+
+
+-----------------------------------------------------------------------------------------++++++_+++-+liuoiuouuoiu
+
+    }
+  }*/
 
 }
 

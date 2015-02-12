@@ -1,7 +1,7 @@
 <?php
 
+Cogumelo::load('coreModel/VO.php');
 Cogumelo::load('coreModel/Model.php');
-//user::load('model/PermissionModel.php');
 
 class RolePermissionModel extends Model
 {
