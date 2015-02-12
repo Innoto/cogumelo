@@ -2,7 +2,8 @@ $( document ).ready(function() {
 
   $("#video").wallpaper({
     source: {
-      video: "//www.youtube.com/embed/CROwct3691Q"
+      //CROwct3691Q
+      video: "//www.youtube.com/embed/DhDRBgnysk8"
     }
   });
 
