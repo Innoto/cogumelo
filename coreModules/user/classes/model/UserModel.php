@@ -94,31 +94,45 @@ class UserModel extends Model
     return $this->getter('status') === USER_STATUS_LOCKED;
   }
 
-}
 
-
-
-/*
-Cogumelo::load('coreController/DataController.php');
-user::load('model/UserVO.php');
-filedata::autoIncludes();
-
-//
-// User Controller Class
-//
-class  UserController extends DataController
-{
-  var $data;
-
-  function __construct()
+  /**
+  * undocumented function
+  *
+  * @return void
+  * @author
+  **/
+  function authenticateUser($login, $password)
   {
-    $this->data = new Facade(false, "User", "user"); //In module user
-    $this->voClass = 'UserVO';
-  }
+    $userO = $this->find( array(
+        'value' => $login,
+        'key' => 'login'
+    ));
 
-  //
-  //  Update User password.
-  //
+    if( $userO ){
+      $data = ($userO->getter('password') == sha1($password)) ? true : false;
+    }
+    else{
+      $data = false;
+    }
+
+    if($data) {
+      Cogumelo::log("authenticateUser SUCCEED with login=".$login, "UserLog");
+      $userO->setter('timeLastLogin' , date("Y-m-d H:i:s", time()));
+      $userO->save();
+      $data = $userO;
+    }
+    else {
+      Cogumelo::log("authenticateUser FAILED with login=".$login.". User NOT authenticated", "UserLog");
+    }
+
+    return $data;
+  }
+  /**
+  * undocumented function
+  *
+  * @return void
+  * @author
+  **/
   function updatePassword($id, $password)
   {
     $data = $this->data->updatePassword($id, $password);
@@ -130,95 +144,5 @@ class  UserController extends DataController
     }
     return $data;
   }
+}
 
-  function authenticateUser($login, $password)
-  {
-    $data = $this->data->authenticateUser($login, sha1($password));
-
-    if($data) {
-      Cogumelo::log("authenticateUser SUCCEED with login=".$login, "UserLog");
-      $this->data->updateTimeLogin($data->getter('id'), date("Y-m-d H:i:s", time()));
-    }
-    else {
-      Cogumelo::log("authenticateUser FAILED with login=".$login.". User NOT authenticated", "UserLog");
-    }
-
-    return $data;
-  }
-
-  function createRelTmp($user){
-
-    $filedataControl = new FiledataController();
-    $filedata = $filedataControl->create($user['avatar']['values']);
-
-    if($filedata){
-      $user['avatar'] = $filedata->getter('id');
-    }
-    else {
-      $user['avatar'] = "";
-    }
-
-    $data = $this->create($user);
-  }
-}*/
-
-
-
-
-/*
-
-Cogumelo::load('coreModel/mysql/MysqlDAO.php');
-user::load('model/UserVO.php');
-
-//
-//  Mysql useradmin DAO
-//
-
-class MysqlUserDAO extends MysqlDAO
-{
-  var $VO = "UserVO";
-
-  var $filters = array(
-      'find' => "name  LIKE CONCAT('%',?,'%') OR login LIKE CONCAT('%', ?, '%')",
-      'edadmax' => "edad <= ?",
-      'edadmin' => "edad >= ?"
-    );
-
-
-  //
-  //  Authenticate user
-  //
-  //  Return: UserVO (null if 0 rows)
-  function authenticateUser($connectionControl, $login, $password)
-  {
-    $objVO  = new $this->VO();
-
-    // SQL Query
-    $strSQL = "SELECT * FROM `".$objVO::$tableName."` WHERE `login` = ? and `password` = ? ;";
-
-    if( $res = $this->execSQL($connectionControl, $strSQL, array($login, $password)) ) {
-
-      if($res->num_rows == 1){
-        return $this->find($connectionControl, $login, 'login');
-      }
-      else{
-        return false;
-      }
-    }
-    else{
-      return COGUMELO_ERROR;
-    }
-
-  }
-
-  //
-  //  Use an UserVO to update User last login
-  //
-  function updateTimeLogin($connectionControl, $id, $date)
-  {
-    $objVO  = new $this->VO();
-    $strSQL = "UPDATE `".$objVO::$tableName."` SET timeLastLogin = ? WHERE `id` = ? ;";
-    $res = $this->execSQL($connectionControl, $strSQL, array($date, $id));
-    return $res;
-  }
-}*/
