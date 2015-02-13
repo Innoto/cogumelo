@@ -79,7 +79,7 @@ class MysqlDAO extends DAO
       foreach($val_array as $ak=>$vk){
         $bind_vars_str .= ', $val_array['.$ak.']';
       }
-      
+
       // bind params
       if($bind_vars_type != "") {
         eval('$connectionControl->stmt->bind_param("'. $bind_vars_type .'"'. $bind_vars_str .');');

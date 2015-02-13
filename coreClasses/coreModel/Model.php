@@ -149,11 +149,9 @@ Class Model extends VO {
 
 
     if( $voObj->exist() ) {
-      //echo  $this->getVOClassName().":update ";
       $retObj = $this->dataFacade->Update( $voObj );
     }
     else {
-      //echo $this->getVOClassName().":create ";
       $retObj = $this->dataFacade->Create( $voObj );
     }
 
@@ -176,7 +174,9 @@ Class Model extends VO {
     
     if($filters = $voObj->data) {
 
-      if( $this->listCount( array('filters'=>$filters) ) ) {
+      $pkId = $this->getFirstPrimarykeyId();
+
+      if( $this->listCount( array('filters'=>array( $pkId=>$filters[ $pkId ] ) )) ) {
         $ret = true;
       }
     }
