@@ -52,17 +52,21 @@ class MasterView extends View
     echo "<br><br><br>";
     var_dump( $user->exist() );*/
 
-    $u = $user->listItems( array('value'=>13, 'affectsDependences'=>true ) )->fetch();
+    $u = $user->listItems( array('filters'=>array('login'=>'pablo'), 'affectsDependences'=>true ) )->fetch();
+   
+/*
     //$u->setter('surname', 'Pablo');
     //$u->save();
-//    $u->setterDependence( new UserRoleModel( ) )->setterDependence( new RoleModel( array('nome' => 'fuker') ) )->setterDependence( new RolePermissionModel() )->setterDependence( new PermissionModel() ) ;
+    //$u->setterDependence( new UserRoleModel( ) )->setterDependence( new RoleModel( array('nome' => 'fuker') ) )->setterDependence( new RolePermissionModel() )->setterDependence( new PermissionModel() ) ;
 
     $u->getterDependence('id')[0]->getterDependence('role')->setter('name', 'Usuariomierda');
     $u->save(array('affectsDependences' =>true));
     print_r( $u->getAllData() );
+*/
 
-
-
+    $u->setter('name', 'olr')->setter('surname', 'OPPPRr');
+    $u->save( array('affectsDependences'=>true) );
+    print_r( $u->getAllData() );
 
 
     //$u->fetch();
