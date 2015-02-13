@@ -154,7 +154,7 @@ Class Model extends VO {
     }
     else {
       //echo $this->getVOClassName().":create ";
-      //$retObj = $this->dataFacade->Create( $voObj );
+      $retObj = $this->dataFacade->Create( $voObj );
     }
 
     return $retObj;
