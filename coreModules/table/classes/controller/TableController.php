@@ -4,8 +4,8 @@
 /**
 * TableController Class
 *
-* This class provides a backend to comunicate a js-ajax table system 
-* with a cogumelo data controller, selecting what cools we want to show and 
+* This class provides a backend to comunicate a js-ajax table system
+* with a cogumelo data controller, selecting what cools we want to show and
 * what to do with data in special cases.
 *
 * @author: pablinhob
@@ -25,7 +25,7 @@ class TableController{
       'count' => 'listCount'
       );
   var $export = false;
-  var $exports = array( 
+  var $exports = array(
       '0'=> array('name'=>'Export', 'controller'=>''),
       'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
       'xls' => array('name'=>'Excell', 'controller'=>'XlsExportTableController')
@@ -38,7 +38,7 @@ class TableController{
   var $rowsEachPage = 50;
 
   /*
-  * @param object $control: is the data controller  
+  * @param object $control: is the data controller
   * @param array $data  generally is htme full $_POST data variable
   */
   function __construct($control)
@@ -84,7 +84,7 @@ class TableController{
     else {
       $this->clientData['search'] = false;
     }
-    
+
     $this->clientData['action'] = $clientdata['action'];
   }
 
@@ -97,7 +97,7 @@ class TableController{
   * @return void
   */
   function setCol($colId, $colName = false) {
-    $this->colsDef[$colId] = array('name' => $colName, 'rules' => array() ); 
+    $this->colsDef[$colId] = array('name' => $colName, 'rules' => array() );
   }
 
 
@@ -106,7 +106,7 @@ class TableController{
   *
   * @param string $colId id of col added with setCol method0
   * @param mixed $regexp the regular expression to match col's row value
-  * @param string $finalContent is the result that we want to provide when 
+  * @param string $finalContent is the result that we want to provide when
   *  variable $value matches (Usually a text). Can be too an operation with other cols
   * @return void
   */
@@ -139,7 +139,7 @@ class TableController{
   /*
   * Set filters array
   *
-  * @param array $filters 
+  * @param array $filters
   * @return void
   */
   function setFilters( $filters ) {
@@ -154,7 +154,7 @@ class TableController{
   */
   function getFilters() {
     $retFilters = array();
-    
+
     if( $this->clientData['search'] ) {
       $retFilters[ $this->searchId ] = $this->clientData['search'];
     }
@@ -163,7 +163,7 @@ class TableController{
       $retFilters[ $this->tabs['tabsKey'] ] = $this->currentTab;
     }
 
-    return $retFilters; 
+    return $retFilters;
   }
 
   /*
@@ -232,7 +232,7 @@ class TableController{
   /*
   * Get simple action list for client side
   *
-  * @return array list of available actions 
+  * @return array list of available actions
   */
   function getActionsForClient() {
 
@@ -252,7 +252,7 @@ class TableController{
   * @return array exports
   */
   function getExportsForClient() {
-    
+
     $retExports = array();
 
     foreach ($this->exports as $eKey => $export) {
@@ -314,21 +314,25 @@ class TableController{
   */
   function execExport() {
     $fileName = str_replace( ' ', '_', $this->tabs['tabs'][$this->currentTab] );
-    eval('$lista = $this->control->'. $this->controllerMethodAlias['list'].'( $this->getFilters() , false, $this->orderIntoArray() );');
+    $p = array(
+        'filters' =>  $this->getFilters(),
+        'order' => $this->orderIntoArray()
+    );
+    eval('$lista = $this->control->'. $this->controllerMethodAlias['list'].'( $p );');
     new $this->exports[$this->export]['controller']( $this, $fileName, $lista );
   }
 
 
   /* setEachRowUrl url when click in row
-  * @param string $url 
+  * @param string $url
   * @return void
   */
   function setEachRowUrl($url) {
     $this->eachRowUrl = $url;
   }
 
-  /* setNewItemUrl url 
-  * @param string $url 
+  /* setNewItemUrl url
+  * @param string $url
   * @return void
   */
   function setNewItemUrl($url) {
@@ -342,10 +346,10 @@ class TableController{
   */
   function execJsonTable() {
     // if is executing a action ( like delete or update) and have permissions to do it
-    if( 
-      $this->clientData['action']['action'] != 'list' && 
-      $this->clientData['action']['action'] != 'count'  && 
-      array_key_exists( $this->clientData['action']['action'], $this->actions ) 
+    if(
+      $this->clientData['action']['action'] != 'list' &&
+      $this->clientData['action']['action'] != 'count'  &&
+      array_key_exists( $this->clientData['action']['action'], $this->actions )
     ){
 
       // get primary key
@@ -358,14 +362,19 @@ class TableController{
     }
 
     // doing a query to the controller
-    eval('$lista = $this->control->'. $this->controllerMethodAlias['list'].'( $this->getFilters() , $this->clientData["range"], $this->orderIntoArray() );');
-    eval('$totalRows = $this->control->'. $this->controllerMethodAlias['count'].'( $this->getFilters() );');
+    $p = array(
+        'filters' =>  $this->getFilters(),
+        'range' => $this->clientData["range"],
+        'order' => $this->orderIntoArray()
+    );
+    eval('$lista = $this->control->'. $this->controllerMethodAlias['list'].'( $p );');
+    eval('$totalRows = $this->control->'. $this->controllerMethodAlias['count'].'( array( "filters" => $this->getFilters()) );');
 
 
     // printing json table...
 
     header("Content-Type: application/json"); //return only JSON data
-    
+
     echo '{';
     echo '"newItemUrl": "'.$this->newItemUrl.'",';
     echo '"colsDef":'.json_encode($this->colsIntoArray() ).',';
@@ -385,14 +394,14 @@ class TableController{
 
         // dump rowVO into row
         $row = array();
-            
-        $row['rowReferenceKey'] = $rowVO->getter( $rowVO->getFirstPrimarykeyId() ); 
+
+        $row['rowReferenceKey'] = $rowVO->getter( $rowVO->getFirstPrimarykeyId() );
         $rowId = $row['rowReferenceKey'];
         eval('$row["tableUrlString"] = '.$this->eachRowUrl.';');
         foreach($this->colsDef as $colDefKey => $colDef){
           $row[$colDefKey] = $rowVO->getter($colDefKey);
         }
-        
+
         // modify row value if have colRules
         foreach($this->colsDef as $colDefKey => $colDef) {
           // if have rules and matches with regexp
@@ -408,7 +417,7 @@ class TableController{
         }
 
 
-        echo json_encode($row); 
+        echo json_encode($row);
 
       }
     }
