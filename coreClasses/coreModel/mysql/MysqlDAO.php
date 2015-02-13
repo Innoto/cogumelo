@@ -79,8 +79,7 @@ class MysqlDAO extends DAO
       foreach($val_array as $ak=>$vk){
         $bind_vars_str .= ', $val_array['.$ak.']';
       }
-
-
+      
       // bind params
       if($bind_vars_type != "") {
         eval('$connectionControl->stmt->bind_param("'. $bind_vars_type .'"'. $bind_vars_str .');');
@@ -192,42 +191,6 @@ class MysqlDAO extends DAO
 
 
   /**
-  * Generic Find by key
-  * 
-  * @param object $connectionControl mysqli connection object
-  * @param mixed $value search value
-  * @param string $key key to search (default is first primary key)
-  * @param boolean $resolveDependences if want to resolve relationship dependences
-  * @param boolean $cache save query result into cache
-  * 
-  * @return object
-  */
-  function find(&$connectionControl, $value, $key = false,  $resolveDependences = false, $cache = false)
-  {
-
-    $ret = null;
-
-    $VO = new $this->VO();
-
-    if(!$key) {
-      $key = $VO->getFirstPrimarykeyId();
-    }
-
-    $this->filters[$key.'FindMethod'] = $key.' = ?';
-
-    $filter = array($key.'FindMethod' => $value);
-
-    $res = $this->listItems($connectionControl, $filter, false, false, false, $resolveDependences, $cache);
-
-    if( $res != COGUMELO_ERROR ) {
-      $ret = $res->fetch();
-    }
-
-    return $ret;
-  }
-
-
-  /**
   * Generic List ittems
   * 
   * @param object $connectionControl mysqli connection object
@@ -323,6 +286,7 @@ class MysqlDAO extends DAO
   */
   function listCount(&$connectionControl, $filters)
   {
+    $retVal = null;
 
     // where string and vars
     $whereArray = $this->getFilters($filters);
@@ -336,11 +300,10 @@ class MysqlDAO extends DAO
 
         //$res->fetch_assoc();
         $row = $res->fetch_assoc();
-        return $row['number_elements'];
+        $retVal = $row['number_elements'];
     }
-    else {
-      return null;
-    }
+
+    return $retVal;
   }
 
 

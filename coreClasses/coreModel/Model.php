@@ -33,40 +33,7 @@ Class Model extends VO {
       $this->dataFacade = new Facade( $this );
     }
 
-
   }
-
-  /**
-  * List items from table
-  *
-  * @param array $parameters array of filters
-  *
-  * @return array VO array
-  */
-  function find( array $parameters = array() )
-  {
-
-    $p = array(
-        'value' => false,
-        'key' => $this->getFirstPrimarykeyId(),
-        'affectsDependences' => false,
-        'cache' => false
-      );
-    $parameters =  array_merge($p, $parameters );
-
-
-    Cogumelo::debug( 'Called find on '.get_called_class() );
-    $data = $this->dataFacade->find(
-                                          $parameters['value'],
-                                          $parameters['key'],
-                                          $parameters['affectsDependences'],
-                                          $parameters['cache']
-                                        );
-
-    return $data;
-  }
-
-
 
 
 
@@ -116,13 +83,12 @@ Class Model extends VO {
 
     $p = array(
         'filters' => false,
-        'affectsDependences' => false,
         'cache' => false
       );
     $parameters =  array_merge($p, $parameters );
 
     Cogumelo::debug( 'Called listCount on '.get_called_class() );
-    $data = $this->dataFacade->listCount($filters);
+    $data = $this->dataFacade->listCount( $parameters['filters']);
 
     return $data;
   }
@@ -132,24 +98,7 @@ Class Model extends VO {
   }
 
 
-  /**
-  * create item
-  *
-  * @param array $parameters array of filters
-  *
-  * @return object VO
-  */
-  function create(  array $parameters= array() )
-  {
 
-    $p = array(
-        'affectsDependences' => false
-      );
-    $parameters =  array_merge($p, $parameters );
-
-    Cogumelo::debug( 'Called create on '.get_called_class() );
-    return $this->dataFacade->Create($this);
-  }
 
   /**
   * save item
@@ -158,7 +107,7 @@ Class Model extends VO {
   *
   * @return object  VO
   */
-  function save(  array $parameters= array() )
+  function save( array $parameters= array() )
   {
 
     $p = array(
@@ -172,17 +121,67 @@ Class Model extends VO {
       $depsInOrder = $this->getDepInLinearArray();
 
       while( $selectDep = array_pop($depsInOrder) ) {
-
-          Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$selectDep['ref']->getFirstPrimarykeyId().'" = '. $this->getter( $selectDep['ref']->getFirstPrimarykeyId() ) );
-          return $this->dataFacade->Update( $selectDep['ref'] );
+          $selectDep['ref']->save( array('affectsDependences' => false) );
       }
     }
     // Save only this Model
     else {
       Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
-      return $this->dataFacade->Update($this);
+      return $this->saveOrUpdate();
     }
 
+  }
+
+  /**
+  * save item
+  *
+  * @param object $voObj voObject
+  *
+  * @return object  VO
+  */
+  private function saveOrUpdate( $voObj = false ){
+    $retObj = false; 
+
+    if(!$voObj) {
+      $voObj = $this;
+    }
+
+
+
+    if( $voObj->exist() ) {
+      //echo  $this->getVOClassName().":update ";
+      $retObj = $this->dataFacade->Update( $voObj );
+    }
+    else {
+      //echo $this->getVOClassName().":create ";
+      //$retObj = $this->dataFacade->Create( $voObj );
+    }
+
+    return $retObj;
+  }
+
+  /**
+  * if VO exist
+  *
+  * @param object $voObj voObject
+  *
+  * @return boolean
+  */
+  function exist($voObj = false) {
+    $ret = false;
+
+    if(!$voObj) {
+      $voObj = $this;
+    }
+    
+    if($filters = $voObj->data) {
+
+      if( $this->listCount( array('filters'=>$filters) ) ) {
+        $ret = true;
+      }
+    }
+
+    return $ret;
   }
 
 

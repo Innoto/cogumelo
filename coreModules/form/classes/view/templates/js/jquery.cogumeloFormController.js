@@ -99,6 +99,7 @@ function setValidateForm( idForm, rules, messages ) {
       function ( form ) {
         console.log( 'Executando validate.submitHandler...' );
         $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
+        $( form ).find( '.submitRun' ).show();
         $.ajax( {
            contentType: 'application/json', processData: false,
            data: JSON.stringify( $( form ).serializeFormToObject() ),
@@ -111,6 +112,9 @@ function setValidateForm( idForm, rules, messages ) {
           if( response.result === 'ok' ) {
             var successActions = response.success;
             console.log( successActions );
+            if ( successActions.jsEval ) {
+              eval( successActions.jsEval );
+            }
             if ( successActions.accept ) {
               alert( successActions.accept );
             }
@@ -147,11 +151,12 @@ function setValidateForm( idForm, rules, messages ) {
                 console.log( errObj.JVshowErrors );
                 showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
               }
+            } // for(var i in response.jvErrors)
 
-            }
             // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
           }
           $( form ).find( '[type="submit"]' ).removeAttr('disabled');
+          $( form ).find( '.submitRun' ).hide();
         } );
         return false; // required to block normal submit since you used ajax
       }

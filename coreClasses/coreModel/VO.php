@@ -208,7 +208,7 @@ Class VO
    * 
    * @return void
    */
-  function setter( $setterkey, $value = false ) {
+  function &setter( $setterkey, $value = false ) {
     if( array_key_exists($setterkey, $this->getCols()) ) {
       // set values
       $this->data[$setterkey] = $value;
@@ -216,6 +216,8 @@ Class VO
     else{
       Cogumelo::debug("key '". $setterkey ."' not exist in VO::". $this::$tableName);
     }
+
+    return $this;
   }
 
 
