@@ -94,20 +94,7 @@ Class Model extends VO {
   }
 
   function getFilters(){
-    $filters = array();
-    // add automatic filters for (INT) and (CHAR or VARCHAR) values
-    /*foreach( $this::$cols as $colK => $col ) {
-      if( $col['type'] == 'INT') {
-        $filters[ $colK ] = $colK." = ?";
-      }
-      else
-      if( $col['type'] == 'CHAR' || $col['type'] == 'VARCHAR' ) {
-        $filters[ $colK ] = $colK." = '?'";
-      }
-    }*/
-
-    // then merge with other filters and return 
-    return array_merge( $filters, $this->filters);
+    return $this->filters;
   }
 
 
@@ -120,7 +107,7 @@ Class Model extends VO {
   *
   * @return object  VO
   */
-  function save(  array $parameters= array() )
+  function save( array $parameters= array() )
   {
 
     $p = array(
@@ -134,15 +121,13 @@ Class Model extends VO {
       $depsInOrder = $this->getDepInLinearArray();
 
       while( $selectDep = array_pop($depsInOrder) ) {
-
-          Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$selectDep['ref']->getFirstPrimarykeyId().'" = '. $this->getter( $selectDep['ref']->getFirstPrimarykeyId() ) );
-          return $this->dataFacade->Update( $selectDep['ref'] );
+          $selectDep['ref']->save( array('affectsDependences' => false) );
       }
     }
     // Save only this Model
     else {
       Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
-      return $this->dataFacade->Update($this);
+      return $this->saveOrUpdate();
     }
 
   }
@@ -161,11 +146,15 @@ Class Model extends VO {
       $voObj = $this;
     }
 
-    if( $this->exist($voObj) ) {
+
+
+    if( $voObj->exist() ) {
+      //echo  $this->getVOClassName().":update ";
       $retObj = $this->dataFacade->Update( $voObj );
     }
     else {
-
+      //echo $this->getVOClassName().":create ";
+      //$retObj = $this->dataFacade->Create( $voObj );
     }
 
     return $retObj;
