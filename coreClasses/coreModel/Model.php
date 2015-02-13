@@ -171,10 +171,10 @@ Class Model extends VO {
     if(!$voObj) {
       $voObj = $this;
     }
-    
-    if($filters = $voObj->data) {
 
-      $pkId = $this->getFirstPrimarykeyId();
+    $pkId = $this->getFirstPrimarykeyId();
+    
+    if( $voObj->getter($pkId) && $filters = $voObj->data) {
 
       if( $this->listCount( array('filters'=>array( $pkId=>$filters[ $pkId ] ) )) ) {
         $ret = true;
