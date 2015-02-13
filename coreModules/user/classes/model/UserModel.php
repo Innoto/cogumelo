@@ -103,10 +103,7 @@ class UserModel extends Model
   **/
   function authenticateUser($login, $password)
   {
-    $userO = $this->find( array(
-        'value' => $login,
-        'key' => 'login'
-    ));
+    $userO = $this->listItems( array('filters' => array('login' => $login)) )->fetch();
 
     if( $userO ){
       $data = ($userO->getter('password') == sha1($password)) ? true : false;
