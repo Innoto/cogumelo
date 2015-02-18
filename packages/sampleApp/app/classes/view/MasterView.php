@@ -45,15 +45,22 @@ class MasterView extends View
 
 
     user::load('model/UserModel.php');
-    
-    $user = new UserModel( ['login'=>'olateu', 'email'=>'ola@teu.com', 'surname'=>'pablo', 'name'=>'blanco' ] );
+  
+    $user = new UserModel();
+    $u = $user->listItems( array('affectsDependences'=>true));
+
+    var_dump( $u->fetch()->getAllData());
+
+      
+   /*
+   $user = new UserModel( ['login'=>'olateu', 'email'=>'ola@teu.com', 'surname'=>'pablo', 'name'=>'blanco' ] );
 
 
     $user->setterDependence( new UserRoleModel( ) )->setterDependence( new RoleModel( ['nome' => 'fuker', 'description'=>'A motherfuker'] ) )->setterDependence( new RolePermissionModel() )->setterDependence( new PermissionModel(['name'=>'fukinpermission']) ) ;
 
 
 $user->save(['affectsDependences'=>true]);
-    var_dump($user->getAllData() );
+    var_dump($user->getAllData() );*/
 
     //$user->setter('name','tal')->setter('surname', 'cual')->setter('login', 'puto')->save();
 
