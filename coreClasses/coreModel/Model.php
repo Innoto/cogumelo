@@ -118,11 +118,21 @@ Class Model extends VO {
 
     // Save all dependences
     if($parameters['affectsDependences']) {
-      $depsInOrder = $this->getDepInLinearArray();
+      $depsInOrder2 = $depsInOrder = $this->getDepInLinearArray();
 
+      // save first time to create keys
       while( $selectDep = array_pop($depsInOrder) ) {
           $selectDep['ref']->save( array('affectsDependences' => false) );
       }
+
+      // Update external keys of all VOs
+      $this->refreshRelationshipKeyIds();
+
+      // save second time to update keys in related VOs
+      while( $selectDep = array_pop($depsInOrder2) ) {
+          $selectDep['ref']->save( array('affectsDependences' => false) );
+      }
+
     }
     // Save only this Model
     else {
@@ -147,7 +157,10 @@ Class Model extends VO {
     }
 
 
-
+    if( $voObj->data == array() ) {
+      $retObj = $this;
+    }
+    else
     if( $voObj->exist() ) {
       $retObj = $this->dataFacade->Update( $voObj );
     }
@@ -159,7 +172,7 @@ Class Model extends VO {
   }
 
   /**
-  * if VO exist
+  * if VO exist in DDBB
   *
   * @param object $voObj voObject
   *
