@@ -1,6 +1,6 @@
-{$registerFormOpen}
-  {foreach from=$registerFormFields key=key item=field}
+{$userFormOpen}
+  {foreach from=$userFormFields key=key item=field}
     {$field}
   {/foreach}
-{$registerFormClose}
-{$registerFormValidations}
+{$userFormClose}
+{$userFormValidations}

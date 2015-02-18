@@ -172,7 +172,6 @@ class UserView extends View
 
 
 
-
   /**
   *
   * Update user form
@@ -182,8 +181,8 @@ class UserView extends View
   **/
   function userUpdateFormDefine( $request ){
 
-    $userControl = new UserController();
-    $dataVO = $userControl->find( $request[1] );
+    $user = new UserModel();
+    $dataVO = $user->listItems( array('filters' => array('id' => $request[1] )))->fetch();
 
     if(!$dataVO){
       Cogumelo::redirect( SITE_URL.'404' );
@@ -204,7 +203,7 @@ class UserView extends View
 
   function userFormDefine( $dataVO = '' ) {
 
-    $form = new FormController( 'registerForm', '/user/sendregisterform' ); //actionform
+    $form = new FormController( 'userForm', '/user/senduserform' ); //actionform
 
     $form->setSuccess( 'accept', 'Bienvenido' );
     $form->setSuccess( 'redirect', '/' );
@@ -251,6 +250,46 @@ class UserView extends View
     return $form;
   }
 
+  /**
+  *
+  * Update user password form
+  * @param request(id)
+  * @return Form Html
+  *
+  **/
+  function userChangePasswordFormDefine( $request ){
+
+    $user = new UserModel();
+    $dataVO = $user->listItems( array('filters' => array('id' => $request[1] )))->fetch();
+
+
+    if(!$dataVO){
+      Cogumelo::redirect( SITE_URL.'404' );
+    }
+
+    $form = new FormController( 'changePasswordForm', '/user/sendchangepasswordform' ); //actionform
+
+    $form->setSuccess( 'accept', 'Contraseña cambiada con exito.' );
+    $form->setSuccess( 'redirect', '/' );
+
+    $form->setField( 'id', array( 'type' => 'reserved', 'value' => false ) );
+
+    $form->setField( 'passwordOld', array( 'id' => 'passwordOld', 'type' => 'password', 'placeholder' => 'Contraseña antigua' ) );
+    $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña nueva' ) );
+    $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => 'Repite contraseña' ) );
+
+    $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
+
+    /******************************************************************************************** VALIDATIONS */
+
+    //Esto es para verificar si es un create
+    $form->setValidationRule( 'password', 'required' );
+    $form->setValidationRule( 'password2', 'required' );
+    $form->setValidationRule( 'password', 'equalTo', '#password2' );
+
+    return $form;
+  }
+
    /**
    *
    * Returns necessary html form
@@ -261,12 +300,31 @@ class UserView extends View
   function userFormGet($form) {
     $form->saveToSession();
 
-    $this->template->assign("registerFormOpen", $form->getHtmpOpen());
-    $this->template->assign("registerFormFields", $form->getHtmlFieldsArray());
-    $this->template->assign("registerFormClose", $form->getHtmlClose());
-    $this->template->assign("registerFormValidations", $form->getScriptCode());
+    $this->template->assign("userFormOpen", $form->getHtmpOpen());
+    $this->template->assign("userFormFields", $form->getHtmlFieldsArray());
+    $this->template->assign("userFormClose", $form->getHtmlClose());
+    $this->template->assign("userFormValidations", $form->getScriptCode());
 
     $this->template->setTpl('userForm.tpl', 'user');
+
+    return $this->template->execToString();
+  }
+  /**
+   *
+   * Returns necessary html form
+   * @param $form
+   * @return string
+   *
+   **/
+  function userChangePasswordFormGet($form) {
+    $form->saveToSession();
+
+    $this->template->assign("userChangePasswordFormOpen", $form->getHtmpOpen());
+    $this->template->assign("userChangePasswordFormFields", $form->getHtmlFieldsArray());
+    $this->template->assign("userChangePasswordFormClose", $form->getHtmlClose());
+    $this->template->assign("userChangePasswordFormValidations", $form->getScriptCode());
+
+    $this->template->setTpl('userChangePasswordForm.tpl', 'user');
 
     return $this->template->execToString();
   }
@@ -309,12 +367,15 @@ class UserView extends View
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
       //Validaciones extra
-      $userControl = new UserController();
+      $userControl = new UserModel();
       // Donde diferenciamos si es un update o un create para validar el login
+
+      $loginExist = $userControl->listItems( array('filters' => array('login' => $form->getFieldValue('login'))) )->fetch();
+
+
       if( isset($valuesArray['id']) && $valuesArray['id'] ){
-        $user = $userControl->find( $valuesArray['id'] );
+        $user = $userControl->listItems( array('filters' => array('id' => $valuesArray['id'])) )->fetch();
         if($valuesArray['login'] !== $user->getter('login')){
-          $loginExist = $userControl->find( $form->getFieldValue('login'), 'login');
           if($loginExist){
             $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
           }
@@ -322,7 +383,6 @@ class UserView extends View
 
       }else{
         // Create: comprobamos si el login existe y si existe mostramos error.
-        $loginExist = $userControl->find( $form->getFieldValue('login'), 'login');
         if($loginExist){
           $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
         }
@@ -345,20 +405,17 @@ class UserView extends View
       $valuesArray['status'] = USER_STATUS_WAITING;
       $valuesArray['role'] = ROLE_USER;
 
-      $userControl = new UserController();
        // Donde diferenciamos si es un update o un create
-      if( isset($valuesArray['id']) && $valuesArray['id'] ){
-        $res = $userControl->updateFromArray( $valuesArray );
-      }else{
+      if( !isset($valuesArray['id']) || !$valuesArray['id'] ){
         $valuesArray['password'] = sha1($valuesArray['password']);
         unset($valuesArray['password2']);
         $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
-        //$res = $userControl->createFromArray($valuesArray);
-        $res = $userControl->createRelTmp( $valuesArray );
       }
 
+      $user = new UserModel( $valuesArray );
+      $user->save();
     }
-    return $res;
+    return $user;
   }
 
 }
