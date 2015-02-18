@@ -440,18 +440,17 @@ Class VO
    *
    * @return void
    */
-  /*function refreshRelationshipKeyIds() {
+  function refreshRelationshipKeyIds() {
     $deps = $this->getDepInLinearArray();
 
     while( $dep = array_pop( $deps ) ){
       $vo = $dep['ref'];
-      $voParent =$ deps[ $dep['parentKey'] ];
+      $voParent =$deps[ $dep['parentKey'] ];
 
 
------------------------------------------------------------------------------------------++++++_+++-+liuoiuouuoiu
 
     }
-  }*/
+  }
 
 }
 
