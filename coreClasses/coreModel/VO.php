@@ -203,21 +203,32 @@ Class VO
   /**
    * set any data attribute by key
    *
-   * @param mixed $setterkey
+   * @param mixed $setterkey key or array 
    * @param mixed $value 
    * 
    * @return void
    */
   function &setter( $setterkey, $value = false ) {
+    $retObj = false;
+
+    if( is_array($setterkey) && $value == false ) {
+      foreach( $setterkey as $k => $e) {
+        $this->setter($k, $e);
+      }
+      $retObj = true;
+    }
+
+
     if( array_key_exists($setterkey, $this->getCols()) ) {
       // set values
       $this->data[$setterkey] = $value;
+      $retObj = $this;
     }
     else{
       Cogumelo::debug("key '". $setterkey ."' not exist in VO::". $this::$tableName);
     }
 
-    return $this;
+    return $retObj;
   }
 
 
