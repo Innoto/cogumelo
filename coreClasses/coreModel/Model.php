@@ -126,7 +126,7 @@ Class Model extends VO {
       }
 
       // Update external keys of all VOs
-      //$this->refreshRelationshipKeyIds();
+      $this->refreshRelationshipKeyIds();
 
       // save second time to update keys in related VOs
       while( $selectDep = array_pop($depsInOrder2) ) {

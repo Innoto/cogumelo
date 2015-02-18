@@ -317,6 +317,17 @@ Class VO
 
 
 
+  function getKeys() {
+
+    $retArray = array();
+
+    foreach( $this->getCols() as $cK => $c) {
+      $retArray[] = $cK;
+    }
+
+    return $retArray;
+  }
+
   /**
    * get key list into string
    *
@@ -444,11 +455,27 @@ Class VO
     $deps = $this->getDepInLinearArray();
 
     while( $dep = array_pop( $deps ) ){
-      $vo = $dep['ref'];
-      $voParent =$deps[ $dep['parentKey'] ];
+
+//      if( 
+//        array_key_exists('ref', $dep) 
+//      )
+
+      //$vo = $dep['ref'];
+      //$voParent =$deps[ $dep['parentKey'] ]['ref'];
+
+/*
+      if( $voParent->getter( $vo->relObj->parentId) ) {
+        $vo->setter( $vo->relObj->relatedWithId , $voParent->getter( $vo->relObj->parentId) );
+      }
+      else {
+        $voParent->setter( $vo->relObj->parentId , $vo->getter( $vo->relObj->relatedWithId  ) );
+      }
+*/
+//      echo "parent ".$voParent->getVOClassName().".". $vo->relObj->parentId.": ". $voParent->getter( $vo->relObj->parentId  ).'<br>';
 
 
-
+  //    echo "this ".$vo->getVOClassName().".".$vo->relObj->relatedWithId.": ". $vo->getter( $vo->relObj->relatedWithId  ).'<br>';
+      
     }
   }
 
