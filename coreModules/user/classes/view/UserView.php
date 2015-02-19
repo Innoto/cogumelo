@@ -338,7 +338,7 @@ class UserView extends View
    **/
   function sendUserForm() {
 
-    $form = $this->actionRegisterForm();
+    $form = $this->actionUserForm();
     $this->registerOk($form);
 
     if( $form->existErrors() ) {
@@ -369,10 +369,6 @@ class UserView extends View
       //Validaciones extra
       $userControl = new UserModel();
       // Donde diferenciamos si es un update o un create para validar el login
-var_dump($valuesArray);
-var_dump($form->getFieldValue('login'));
-var_dump($userControl->listItems( array('filters' => array('login' => $form->getFieldValue('login'))) ));
-exit;
       $loginExist = $userControl->listItems( array('filters' => array('login' => $form->getFieldValue('login'))) )->fetch();
 
 
