@@ -21,7 +21,7 @@ class MysqlDAORelationship
 
     if( $resolveDependences ) {
       VOUtils::includeVOs();
-      $ret = self::joins( VOUtils::getRelObj($VOClass) );
+      $ret = self::joins( VOUtils::getRelObj($VOClass, $resolveDependences) );
     }
 
     return $ret;

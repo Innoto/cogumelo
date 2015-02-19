@@ -292,7 +292,7 @@
   * 
   * @return object
   */
-  static function getRelObj($nameVO) {
+  static function getRelObj($nameVO, $resolveDependences = true) {
     global $COGUMELO_RELATIONSHIP_MODEL;
 
     $ret = false;
@@ -311,7 +311,46 @@
     }
 
 
+    return self::limitRelObj( $ret, $resolveDependences );
+  }
+
+
+  /**
+  * 
+  *  
+  * @return object
+  */
+  static function limitRelObj($relObj, $resolveDependences) {
+  
+      if( is_array( $resolveDependences ) ) {
+      $relObj['relationship'] = self::findInRelTree($relObj, $resolveDependences);
+    }
+
+    return $relObj;
+  }
+
+  static function findInRel( $relationships, $resolveDependences ) {
+    $ret = false;
+
+    if( sizeof($relationships) > 0 ) {
+      $newRelArray = array();
+      foreach( $relationships['relationship'] as $subRel ) {
+        if( in_array( $relTree->vo, $resolveDependences) ) {
+          $newRelArray[] =  self::findInRel( $relationships, $resolveDependences );
+        }
+      }
+      if( sizeof( $newRelArray ) > 0 ) {
+        $relationships['relationship'] = $newRelArray;
+        $ret = $relationships;
+      }
+    }
+
     return $ret;
+  }
+
+
+  static function voIsInRel( $relationships, $vos) {
+
   }
 
 
