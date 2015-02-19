@@ -47,12 +47,12 @@ class MasterView extends View
     user::load('model/UserModel.php');
   
     $user = new UserModel();
-    $u = $user->listItems( array('affectsDependences'=>true));
+    $u = $user->listItems( array('affectsDependences'=>true))->fetch();
 
-    var_dump( $u->fetch()->getAllData());
+    var_dump( $u->getAllData());
 
       
-   /*
+  /* 
    $user = new UserModel( ['login'=>'olateu', 'email'=>'ola@teu.com', 'surname'=>'pablo', 'name'=>'blanco' ] );
 
 
@@ -60,7 +60,16 @@ class MasterView extends View
 
 
 $user->save(['affectsDependences'=>true]);
-    var_dump($user->getAllData() );*/
+    var_dump($user->getAllData() );
+
+*/
+
+
+
+
+
+
+
 
     //$user->setter('name','tal')->setter('surname', 'cual')->setter('login', 'puto')->save();
 

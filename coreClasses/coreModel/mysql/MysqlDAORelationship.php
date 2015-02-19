@@ -105,7 +105,7 @@ class MysqlDAORelationship
     $coma = '';
 
     foreach($vo->cols as $col) {
-      $returnCols .= "'".$coma."\"".$vo->table.".".$col."\": ' ,'\"',".$vo->table.".".$col.",'\"', ";
+      $returnCols .= "'".$coma."\"".$vo->table.".".$col."\": ' ,'\"', COALESCE(".$vo->table.".".$col.", 'null'),'\"', ";
       $coma = ',';
     }
 
