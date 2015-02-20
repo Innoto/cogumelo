@@ -47,7 +47,7 @@ class MasterView extends View
     user::load('model/UserModel.php');
   
     $user = new UserModel();
-    $u = $user->listItems( array('affectsDependences'=>true))->fetch();
+    $u = $user->listItems( array('affectsDependences'=>array('UserRoleModel') ))->fetch();
 
     var_dump( $u->getAllData());
 

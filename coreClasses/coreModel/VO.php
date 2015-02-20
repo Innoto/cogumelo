@@ -350,7 +350,7 @@ Class VO
 
     // relationship cols
     if( $resolveDependences ) {
-      $retFields = array_merge($retFields, VOUtils::getRelKeys(  $this->name ) );
+      $retFields = array_merge($retFields, VOUtils::getRelKeys(  $this->name, false, $resolveDependences ) );
     }
 
 

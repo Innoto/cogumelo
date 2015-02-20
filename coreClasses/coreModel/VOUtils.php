@@ -247,9 +247,8 @@
   * 
   * @return array
   */
-  static function getRelkeys( $nameVO, $tableAsKey = false ) {
-
-    return self::getRelKeysByRelObj( self::getRelObj( $nameVO ), $tableAsKey );
+  static function getRelkeys( $nameVO, $tableAsKey = false, $resolveDependences=false ) {
+    return self::getRelKeysByRelObj( self::getRelObj( $nameVO, $resolveDependences ), $tableAsKey );
   }
 
 
@@ -322,35 +321,43 @@
   */
   static function limitRelObj($relObj, $resolveDependences) {
   
-      if( is_array( $resolveDependences ) ) {
-      $relObj['relationship'] = self::findInRelTree($relObj, $resolveDependences);
+    if( is_array( $resolveDependences ) ) {
+      $relObj->relationship = self::findInRel($relObj->relationship, $resolveDependences);
     }
 
     return $relObj;
   }
 
   static function findInRel( $relationships, $resolveDependences ) {
-    $ret = false;
-
+    $ret = array();
     if( sizeof($relationships) > 0 ) {
-      $newRelArray = array();
-      foreach( $relationships['relationship'] as $subRel ) {
-        if( in_array( $relTree->vo, $resolveDependences) ) {
-          $newRelArray[] =  self::findInRel( $relationships, $resolveDependences );
+      //$newRelArray = array();
+      foreach( $relationships as $relk => $rel ) {
+
+        if( !in_array( $rel->vo, $resolveDependences)  ){
+          unset( $relationships[ $relk ] );
+        }
+
+        if( !self::isInsideRel( $rel->relationship, $resolveDependences) ){
+          $relationships[ $relk ]->relationship = array();
         }
       }
-      if( sizeof( $newRelArray ) > 0 ) {
-        $relationships['relationship'] = $newRelArray;
-        $ret = $relationships;
+
+    }
+
+    return $relationships;
+  }
+
+
+  static function isInsideRel($relationship, $dependences) {
+    $ret = true;
+    foreach( $relationship as $rel ) {
+      if( in_array( $rel->vo, $dependences) ) {
+        $ret = true;
       }
     }
 
     return $ret;
-  }
-
-
-  static function voIsInRel( $relationships, $vos) {
-
   }
 
 
