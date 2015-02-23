@@ -3,7 +3,7 @@ $( document ).ready(function() {
   $("#video").wallpaper({
     source: {
       //CROwct3691Q
-      video: "//www.youtube.com/embed/DhDRBgnysk8"
+      video: "//www.youtube.com/embed/qrsUqThqfb4"
     }
   });
 

@@ -18,7 +18,6 @@ class MysqlAutogeneratorDAO extends MysqlDAO
    * @return void
    */
   function __construct($voObj) {
-    
     $this->VO = $voObj->getVOClassName();
     $this->setFilters( $voObj->getFilters() );
   }

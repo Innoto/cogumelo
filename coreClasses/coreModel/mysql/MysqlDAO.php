@@ -80,7 +80,6 @@ class MysqlDAO extends DAO
         $bind_vars_str .= ', $val_array['.$ak.']';
       }
 
-
       // bind params
       if($bind_vars_type != "") {
         eval('$connectionControl->stmt->bind_param("'. $bind_vars_type .'"'. $bind_vars_str .');');
@@ -287,6 +286,7 @@ class MysqlDAO extends DAO
   */
   function listCount(&$connectionControl, $filters)
   {
+    $retVal = null;
 
     // where string and vars
     $whereArray = $this->getFilters($filters);
@@ -300,11 +300,10 @@ class MysqlDAO extends DAO
 
         //$res->fetch_assoc();
         $row = $res->fetch_assoc();
-        return $row['number_elements'];
+        $retVal = $row['number_elements'];
     }
-    else {
-      return null;
-    }
+
+    return $retVal;
   }
 
 

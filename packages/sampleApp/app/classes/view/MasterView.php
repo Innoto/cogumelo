@@ -45,24 +45,58 @@ class MasterView extends View
 
 
     user::load('model/UserModel.php');
-    
+  
     $user = new UserModel();
-    echo $user->exist();
+    $u = $user->listItems( array('affectsDependences'=>array('UserRoleModel') ))->fetch();
 
-    //$u = $user->listItems( array('value'=>13, 'affectsDependences'=>false ) )->fetch();
-    //echo $u->exist();
+    var_dump( $u->getAllData());
 
-
-
-/*
-    $u->setterDependence( new UserRoleModel( ) )->setterDependence( new RoleModel( array('nome' => 'fuker') ) )->setterDependence( new RolePermissionModel() )->setterDependence( new PermissionModel() ) ;
+      
+  /* 
+   $user = new UserModel( ['login'=>'olateu', 'email'=>'ola@teu.com', 'surname'=>'pablo', 'name'=>'blanco' ] );
 
 
-    print_r( $u->getAllData() );
+    $user->setterDependence( new UserRoleModel( ) )->setterDependence( new RoleModel( ['nome' => 'fuker', 'description'=>'A motherfuker'] ) )->setterDependence( new RolePermissionModel() )->setterDependence( new PermissionModel(['name'=>'fukinpermission']) ) ;
+
+
+$user->save(['affectsDependences'=>true]);
+    var_dump($user->getAllData() );
+
 */
 
 
 
+
+
+
+
+
+    //$user->setter('name','tal')->setter('surname', 'cual')->setter('login', 'puto')->save();
+
+    //var_dump($user->getAllData());
+
+
+  /*  $user->setter('id', 13);
+    $user->setter('name', 'blanco');
+    echo "<br><br><br>";
+    var_dump( $user->exist() );*/
+
+    //$u = $user->listItems( array('filters'=>array('login'=>'pablo'), 'affectsDependences'=>true ) )->fetch();
+
+/*
+    //$u->setter('surname', 'Pablo');
+    //$u->save();
+    //$u->setterDependence( new UserRoleModel( ) )->setterDependence( new RoleModel( array('nome' => 'fuker') ) )->setterDependence( new RolePermissionModel() )->setterDependence( new PermissionModel() ) ;
+
+    $u->getterDependence('id')[0]->getterDependence('role')->setter('name', 'Usuariomierda');
+    $u->save(array('affectsDependences' =>true));
+    print_r( $u->getAllData() );
+*/
+/*
+    $u->setter('name', 'olr')->setter('surname', 'OPPPRr');
+    $u->save( array('affectsDependences'=>true) );
+    print_r( $u->getAllData() );
+*/
 
     //$u->fetch();
    // $u->setter('surname', 'Mamón');

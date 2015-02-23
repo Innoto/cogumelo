@@ -203,19 +203,32 @@ Class VO
   /**
    * set any data attribute by key
    *
-   * @param mixed $setterkey
+   * @param mixed $setterkey key or array 
    * @param mixed $value 
    * 
    * @return void
    */
-  function setter( $setterkey, $value = false ) {
+  function &setter( $setterkey, $value = false ) {
+    $retObj = false;
+
+    if( is_array($setterkey) && $value == false ) {
+      foreach( $setterkey as $k => $e) {
+        $this->setter($k, $e);
+      }
+      $retObj = true;
+    }
+
+
     if( array_key_exists($setterkey, $this->getCols()) ) {
       // set values
       $this->data[$setterkey] = $value;
+      $retObj = $this;
     }
     else{
       Cogumelo::debug("key '". $setterkey ."' not exist in VO::". $this::$tableName);
     }
+
+    return $retObj;
   }
 
 
@@ -304,6 +317,17 @@ Class VO
 
 
 
+  function getKeys() {
+
+    $retArray = array();
+
+    foreach( $this->getCols() as $cK => $c) {
+      $retArray[] = $cK;
+    }
+
+    return $retArray;
+  }
+
   /**
    * get key list into string
    *
@@ -326,7 +350,7 @@ Class VO
 
     // relationship cols
     if( $resolveDependences ) {
-      $retFields = array_merge($retFields, VOUtils::getRelKeys(  $this->name ) );
+      $retFields = array_merge($retFields, VOUtils::getRelKeys(  $this->name, false, $resolveDependences ) );
     }
 
 
@@ -427,18 +451,37 @@ Class VO
    *
    * @return void
    */
-  /*function refreshRelationshipKeyIds() {
+  function refreshRelationshipKeyIds() {
     $deps = $this->getDepInLinearArray();
 
     while( $dep = array_pop( $deps ) ){
-      $vo = $dep['ref'];
-      $voParent =$ deps[ $dep['parentKey'] ];
 
 
------------------------------------------------------------------------------------------++++++_+++-+liuoiuouuoiu
+      if( 
+        array_key_exists('ref', $dep) &&
+        array_key_exists('parentKey' , $dep) &&
+        $dep['parentKey'] !== false &&
+        array_key_exists( $dep['parentKey'], $deps) &&
+        array_key_exists('ref', $deps[ $dep['parentKey'] ])
+      ) {
 
+        $vo = $dep['ref'];
+        $voParent =$deps[ $dep['parentKey'] ]['ref'];
+
+
+        if( $voParent->getter( $vo->relObj->parentId) ) {
+          $vo->setter( $vo->relObj->relatedWithId , $voParent->getter( $vo->relObj->parentId) );
+        }
+        else {
+          $voParent->setter( $vo->relObj->parentId , $vo->getter( $vo->relObj->relatedWithId  ) );
+        }
+
+        echo "parent ".$voParent->getVOClassName().".". $vo->relObj->parentId.": ". $voParent->getter( $vo->relObj->parentId  ).'<br>';
+        echo "this ".$vo->getVOClassName().".".$vo->relObj->relatedWithId.": ". $vo->getter( $vo->relObj->relatedWithId  ).'<br><br>';
+        
+      }
     }
-  }*/
+  }
 
 }
 

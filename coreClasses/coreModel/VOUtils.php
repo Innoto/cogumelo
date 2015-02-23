@@ -247,9 +247,8 @@
   * 
   * @return array
   */
-  static function getRelkeys( $nameVO, $tableAsKey = false ) {
-
-    return self::getRelKeysByRelObj( self::getRelObj( $nameVO ), $tableAsKey );
+  static function getRelkeys( $nameVO, $tableAsKey = false, $resolveDependences=false ) {
+    return self::getRelKeysByRelObj( self::getRelObj( $nameVO, $resolveDependences ), $tableAsKey );
   }
 
 
@@ -292,7 +291,7 @@
   * 
   * @return object
   */
-  static function getRelObj($nameVO) {
+  static function getRelObj($nameVO, $resolveDependences = true) {
     global $COGUMELO_RELATIONSHIP_MODEL;
 
     $ret = false;
@@ -310,6 +309,53 @@
       $ret = $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
     }
 
+
+    return self::limitRelObj( $ret, $resolveDependences );
+  }
+
+
+  /**
+  * 
+  *  
+  * @return object
+  */
+  static function limitRelObj($relObj, $resolveDependences) {
+  
+    if( is_array( $resolveDependences ) ) {
+      $relObj->relationship = self::findInRel($relObj->relationship, $resolveDependences);
+    }
+
+    return $relObj;
+  }
+
+  static function findInRel( $relationships, $resolveDependences ) {
+    $ret = array();
+    if( sizeof($relationships) > 0 ) {
+      //$newRelArray = array();
+      foreach( $relationships as $relk => $rel ) {
+
+        if( !in_array( $rel->vo, $resolveDependences)  ){
+          unset( $relationships[ $relk ] );
+        }
+
+        if( !self::isInsideRel( $rel->relationship, $resolveDependences) ){
+          $relationships[ $relk ]->relationship = array();
+        }
+      }
+
+    }
+
+    return $relationships;
+  }
+
+
+  static function isInsideRel($relationship, $dependences) {
+    $ret = true;
+    foreach( $relationship as $rel ) {
+      if( in_array( $rel->vo, $dependences) ) {
+        $ret = true;
+      }
+    }
 
     return $ret;
   }

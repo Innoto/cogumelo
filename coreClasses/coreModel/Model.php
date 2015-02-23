@@ -33,7 +33,6 @@ Class Model extends VO {
       $this->dataFacade = new Facade( $this );
     }
 
-
   }
 
 
@@ -84,32 +83,18 @@ Class Model extends VO {
 
     $p = array(
         'filters' => false,
-        'affectsDependences' => false,
         'cache' => false
       );
     $parameters =  array_merge($p, $parameters );
 
     Cogumelo::debug( 'Called listCount on '.get_called_class() );
-    $data = $this->dataFacade->listCount($p['filters']);
+    $data = $this->dataFacade->listCount( $parameters['filters']);
 
     return $data;
   }
 
   function getFilters(){
-    $filters = array();
-    // add automatic filters for (INT) and (CHAR or VARCHAR) values
-    foreach( $this::$cols as $colK => $col ) {
-      if( $col['type'] == 'INT') {
-        $filters[ $colK ] = $colK." = ?";
-      }
-      else
-      if( $col['type'] == 'CHAR' || $col['type'] == 'VARCHAR' ) {
-        $filters[ $colK ] = $colK." = '?'";
-      }
-    }
-
-    // then merge with other filters and return 
-    return array_merge( $filters, $this->filters);
+    return $this->filters;
   }
 
 
@@ -122,7 +107,7 @@ Class Model extends VO {
   *
   * @return object  VO
   */
-  function save(  array $parameters= array() )
+  function save( array $parameters= array() )
   {
 
     $p = array(
@@ -133,18 +118,26 @@ Class Model extends VO {
 
     // Save all dependences
     if($parameters['affectsDependences']) {
-      $depsInOrder = $this->getDepInLinearArray();
+      $depsInOrder2 = $depsInOrder = $this->getDepInLinearArray();
 
+      // save first time to create keys
       while( $selectDep = array_pop($depsInOrder) ) {
-
-          Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$selectDep['ref']->getFirstPrimarykeyId().'" = '. $this->getter( $selectDep['ref']->getFirstPrimarykeyId() ) );
-          return $this->dataFacade->Update( $selectDep['ref'] );
+          $selectDep['ref']->save( array('affectsDependences' => false) );
       }
+
+      // Update external keys of all VOs
+      $this->refreshRelationshipKeyIds();
+
+      // save second time to update keys in related VOs
+      while( $selectDep = array_pop($depsInOrder2) ) {
+          $selectDep['ref']->save( array('affectsDependences' => false) );
+      }
+
     }
     // Save only this Model
     else {
       Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
-      return $this->dataFacade->Update($this);
+      return $this->saveOrUpdate();
     }
 
   }
@@ -163,18 +156,23 @@ Class Model extends VO {
       $voObj = $this;
     }
 
-    if( $this->exist($voObj) ) {
+
+    if( $voObj->data == array() ) {
+      $retObj = $this;
+    }
+    else
+    if( $voObj->exist() ) {
       $retObj = $this->dataFacade->Update( $voObj );
     }
     else {
-
+      $retObj = $this->dataFacade->Create( $voObj );
     }
 
     return $retObj;
   }
 
   /**
-  * if VO exist
+  * if VO exist in DDBB
   *
   * @param object $voObj voObject
   *
@@ -186,11 +184,14 @@ Class Model extends VO {
     if(!$voObj) {
       $voObj = $this;
     }
-    
-    $filters = $voObj->data;
 
-    if( $this->listCount(array('filters'=> $filters)) ) {
-      $ret = true;
+    $pkId = $this->getFirstPrimarykeyId();
+    
+    if( $voObj->getter($pkId) && $filters = $voObj->data) {
+
+      if( $this->listCount( array('filters'=>array( $pkId=>$filters[ $pkId ] ) )) ) {
+        $ret = true;
+      }
     }
 
     return $ret;

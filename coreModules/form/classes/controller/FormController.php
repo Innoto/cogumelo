@@ -316,6 +316,7 @@ class FormController implements Serializable {
   */
   public function loadVOValues( $dataVO ) {
     if( gettype( $dataVO ) == "object" ) {
+
       foreach( $dataVO->getKeys() as $keyVO ) {
         $this->setFieldValue( $keyVO, $dataVO->getter( $keyVO ) );
       }
