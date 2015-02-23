@@ -211,7 +211,7 @@ Class VO
   function &setter( $setterkey, $value = false ) {
     $retObj = false;
 
-    if( is_array($setterkey) && $value == false ) {
+    if( is_array($setterkey) && $value === false ) {
       foreach( $setterkey as $k => $e) {
         $this->setter($k, $e);
       }
@@ -221,7 +221,9 @@ Class VO
 
     if( array_key_exists($setterkey, $this->getCols()) ) {
       // set values
-      $this->data[$setterkey] = $value;
+      if( $value !== null ) {
+        $this->data[$setterkey] = $value;
+      }
       $retObj = $this;
     }
     else{

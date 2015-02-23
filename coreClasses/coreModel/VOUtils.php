@@ -345,50 +345,16 @@
   *  
   * @return object
   */
-
-
   static function limitRelObj($relObj, $resolveDependences) {
   
     if( is_array( $resolveDependences ) ) {
-      $relObj->relationship = self::findInRel($relObj->relationship, $resolveDependences);
+      
     }
 
     return $relObj;
   }
 
-  static function findInRel( $relationships, $resolveDependences ) {
-    $ret = array();
-    if( sizeof($relationships) > 0 ) {
-      //$newRelArray = array();
-      foreach( $relationships as $relk => $rel ) {
 
-        if( !in_array( $rel->vo, $resolveDependences)  ){
-          unset( $relationships[ $relk ] );
-        }
-
-        if( !self::isInsideRel( $rel->relationship, $resolveDependences) ){
-          $relationships[ $relk ]->relationship = array();
-        }
-      }
-
-    }
-
-    return $relationships;
-  }
-
-/*
-  static function isInsideRel($relationship, $dependences) {
-    $ret = true;
-    foreach( $relationship as $rel ) {
-      if( in_array( $rel->vo, $dependences) ) {
-        $ret = true;
-      }
-    }
-
-    return $ret;
-  }
-
-*/
   /**
   * Look if exist VO or Model name into relationship object
   *  
