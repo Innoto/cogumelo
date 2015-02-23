@@ -208,7 +208,7 @@ class UserView extends View
     $form->setSuccess( 'accept', 'Bienvenido' );
     $form->setSuccess( 'redirect', '/' );
 
-    $form->setField( 'id', array( 'type' => 'reserved', 'value' => false ) );
+    $form->setField( 'id', array( 'type' => 'reserved', 'value' => null ) );
 
     $form->setField( 'login', array( 'placeholder' => 'Login' ) );
     //Esto es para verificar si es un create
@@ -272,7 +272,7 @@ class UserView extends View
     $form->setSuccess( 'accept', 'Contraseña cambiada con exito.' );
     $form->setSuccess( 'redirect', '/' );
 
-    $form->setField( 'id', array( 'type' => 'reserved', 'value' => false ) );
+    $form->setField( 'id', array( 'type' => 'reserved', 'value' => $dataVO->getter('id') ));
 
     $form->setField( 'passwordOld', array( 'id' => 'passwordOld', 'type' => 'password', 'placeholder' => 'Contraseña antigua' ) );
     $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña nueva' ) );
@@ -283,9 +283,11 @@ class UserView extends View
     /******************************************************************************************** VALIDATIONS */
 
     //Esto es para verificar si es un create
+    $form->setValidationRule( 'passwordOld', 'required' );
     $form->setValidationRule( 'password', 'required' );
     $form->setValidationRule( 'password2', 'required' );
-    $form->setValidationRule( 'password', 'equalTo', '#password2' );
+
+     $form->setValidationRule( 'password2', 'equalTo', '#password' );
 
     return $form;
   }
@@ -412,10 +414,68 @@ class UserView extends View
       }
 
       $user = new UserModel( $valuesArray );
+
+var_dump($valuesArray);
+
       $user->save();
     }
     return $user;
   }
+
+
+
+
+  /**
+   *
+   * Assigns the forms validations
+   * @return $form
+   *
+   **/
+  function actionChangeUserPasswordForm() {
+    $form = new FormController();
+    if( $form->loadPostInput() ) {
+      $form->validateForm();
+    }
+    else {
+      $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
+    }
+
+    if( !$form->existErrors() ){
+      $valuesArray = $form->getValuesArray();
+      //Validaciones extra
+      $userControl = new UserModel();
+      // Donde diferenciamos si es un update o un create para validar el login
+      $user = $userControl->listItems( array('filters' => array('id' => $valuesArray['id'])) )->fetch();
+
+
+      if( !isset($valuesArray['id']) && !$user ){
+        $form->addFieldRuleError('id', 'cogumelo', 'Error usuario no identificado.');
+      }
+      elseif( sha1($valuesArray['passwordOld']) !==  $user->getter('password') ){
+        $form->addFieldRuleError('passwordOld', 'cogumelo', 'La contraseña antigua no coincide.');
+      }
+    }
+
+    return $form;
+  }
+
+
+  function changeUserPasswordFormOk( $form ) {
+    //Si todo esta OK!
+
+
+    if( !$form->existErrors() ){
+      $valuesArray = $form->getValuesArray();
+
+      $valuesArray['password'] = sha1($valuesArray['password']);
+      unset($valuesArray['password2']);
+
+      $user = new UserModel( $valuesArray );
+      $user->save();
+    }
+    return $user;
+  }
+
 
 }
 
