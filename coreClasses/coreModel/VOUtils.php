@@ -220,6 +220,28 @@
     return $relArray;
   }
 
+  /**
+  * Generate index for rel Object
+  *  
+  * @param object $voRel 
+  * 
+  * @return array
+  */
+  static function relIndex( $voRel, $parentArrayKey=false, $relsArray = array() ) {
+
+
+    $currentArrayKey = sizeof($relsArray);
+    $relsArray[] = array( 'voName' => $voRel['vo'], 'parentKey' => $parentArrayKey );
+
+
+    if( array_key_exists('relationship', $voRel) && sizeof( $voRel['relationship'] ) > 0  ) {
+      foreach( $voRel['relationship'] as $relVO ){
+          $relsArray = self::relIndex( $relVO, $currentArrayKey, $relsArray );
+      }
+    }
+
+    return $relsArray;
+  }
 
 
   /**
@@ -234,7 +256,11 @@
     eval( '$mrel = new '.ucfirst( DB_ENGINE ).'DAORelationship();' );
 
     foreach( self::listVOs() as $voName => $vo) {
-      file_put_contents( APP_TMP_PATH.'/modelRelationship/'.$voName.'.json' , json_encode(self::getVORelationship($voName)) );
+
+      $relVO = self::getVORelationship($voName);
+      //var_dump($relVO);
+      $relVO['index'] = self::relIndex($relVO);
+      file_put_contents( APP_TMP_PATH.'/modelRelationship/'.$voName.'.json' , json_encode(  $relVO  ) );
     }
   }
 
@@ -319,6 +345,8 @@
   *  
   * @return object
   */
+
+
   static function limitRelObj($relObj, $resolveDependences) {
   
     if( is_array( $resolveDependences ) ) {
@@ -348,7 +376,7 @@
     return $relationships;
   }
 
-
+/*
   static function isInsideRel($relationship, $dependences) {
     $ret = true;
     foreach( $relationship as $rel ) {
@@ -360,7 +388,7 @@
     return $ret;
   }
 
-
+*/
   /**
   * Look if exist VO or Model name into relationship object
   *  

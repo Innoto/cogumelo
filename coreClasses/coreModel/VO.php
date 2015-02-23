@@ -374,30 +374,26 @@ Class VO
    *
    * @return array
    */
-  function getDepInLinearArray( &$vo = false, $vosArray = array() ) {
+  function getDepInLinearArray( &$vo = false, $parentArrayKey=false, $vosArray = array() ) {
 
     if(!$vo){
       $vo = $this;
     }
 
-    if( sizeof( $vosArray)>0 ) {
-      $voArrayKeys = array_keys( $vosArray );
-      $vosArray[] = array( 'ref' => $vo, 'parentKey' => end( $voArrayKeys ) );
-    }
-    else {
-      $vosArray[] = array( 'ref' => $vo, 'parentKey' => false );
-    }
+    $currentArrayKey = sizeof($relsArray);
+    $vosArray[] = array( 'ref' => $vo, 'parentKey' => $parentArrayKey );
+
 
     $depData = $vo->depData;
     if( sizeof($depData) > 0  ) {
       foreach( $depData as $depVO ){
         if( is_array($depVO) ) {
           foreach($depVO as $dVO) {
-            $vosArray = $vo->getDepInLinearArray( $dVO, $vosArray );
+            $vosArray = $vo->getDepInLinearArray( $dVO, $currentArrayKey, $vosArray );
           }
         }
         else {
-          $vosArray = $vo->getDepInLinearArray( $depVO, $vosArray );
+          $vosArray = $vo->getDepInLinearArray( $depVO, $currentArrayKey, $vosArray );
         }
       }
     }
