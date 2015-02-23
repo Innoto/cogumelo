@@ -211,7 +211,7 @@ Class VO
   function &setter( $setterkey, $value = false ) {
     $retObj = false;
 
-    if( is_array($setterkey) && $value == false ) {
+    if( is_array($setterkey) && $value === false ) {
       foreach( $setterkey as $k => $e) {
         $this->setter($k, $e);
       }
@@ -221,7 +221,9 @@ Class VO
 
     if( array_key_exists($setterkey, $this->getCols()) ) {
       // set values
-      $this->data[$setterkey] = $value;
+      if( $value !== null ) {
+        $this->data[$setterkey] = $value;
+      }
       $retObj = $this;
     }
     else{
@@ -292,7 +294,7 @@ Class VO
         $value = $this->data[$getterkey];
     }
     else {
-      Cogumelo::debug("key '". $getterkey ."' not exist in VO::". $this::$tableName);
+      Cogumelo::debug("value '". $getterkey ."' not exist in VO::". $this::$tableName);
     }
 
     return $value;
@@ -374,30 +376,26 @@ Class VO
    *
    * @return array
    */
-  function getDepInLinearArray( &$vo = false, $vosArray = array() ) {
+  function getDepInLinearArray( &$vo = false, $parentArrayKey=false, $vosArray = array() ) {
 
     if(!$vo){
       $vo = $this;
     }
 
-    if( sizeof( $vosArray)>0 ) {
-      $voArrayKeys = array_keys( $vosArray );
-      $vosArray[] = array( 'ref' => $vo, 'parentKey' => end( $voArrayKeys ) );
-    }
-    else {
-      $vosArray[] = array( 'ref' => $vo, 'parentKey' => false );
-    }
+    $currentArrayKey = sizeof($relsArray);
+    $vosArray[] = array( 'ref' => $vo, 'parentKey' => $parentArrayKey );
+
 
     $depData = $vo->depData;
     if( sizeof($depData) > 0  ) {
       foreach( $depData as $depVO ){
         if( is_array($depVO) ) {
           foreach($depVO as $dVO) {
-            $vosArray = $vo->getDepInLinearArray( $dVO, $vosArray );
+            $vosArray = $vo->getDepInLinearArray( $dVO, $currentArrayKey, $vosArray );
           }
         }
         else {
-          $vosArray = $vo->getDepInLinearArray( $depVO, $vosArray );
+          $vosArray = $vo->getDepInLinearArray( $depVO, $currentArrayKey, $vosArray );
         }
       }
     }
