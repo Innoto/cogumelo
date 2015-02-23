@@ -87,10 +87,20 @@ class FormGroupTest extends View
     // Una vez que hemos definido all, guardamos el form en sesion
     $form->saveToSession();
 
+
+    $formBasura = new FormController( 'probaPorto', '/form-group-action' );
+    $formBasura->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor678' ) );
+    $formBasura->setField( 'submit', array( 'type' => 'submit', 'label' => 'Pulsa para enviar', 'value' => 'Manda' ) );
+    $formBasura->saveToSession();
+
+    $formVacio = new FormController();
+
     $this->template->assign( 'formOpen', $form->getHtmpOpen() );
     $this->template->assign( 'formFields', $form->getHtmlFieldsAndGroups() );
     $this->template->assign( 'formClose', $form->getHtmlClose() );
     $this->template->assign( 'formValidations', $form->getScriptCode() );
+
+    $this->template->assign( 'formBasura', $formBasura->getHtmlForm() );
 
     $this->template->setTpl( 'formGroupTest.tpl' );
     $this->template->exec();

@@ -72,7 +72,7 @@ class FormController implements Serializable {
     @param string $action Action del formulario
   */
   public function __construct( $name = false, $action = false ) {
-    $this->getTokenId();
+    $this->getTokenId( 'new'.$name.$action );
     if( $name !== false ) {
       $this->setName( $name );
     }
@@ -86,9 +86,10 @@ class FormController implements Serializable {
     Recupera el TokenId único del formulario. Si no existe, se crea. NO es el id del FORM.
     @return string
   */
-  public function getTokenId() {
+  public function getTokenId( $saltText = '' ) {
     if( $this->tokenId === false ) {
-      $this->tokenId = crypt( uniqid().'---'.session_id(), 'cf' );
+      $tmp = 'cf-'.uniqid().'-'.session_id().'-'.$saltText.rand(0,999);
+      $this->tokenId = sha1( $tmp );
       $this->setField( 'cgIntFrmId', array( 'type' => 'hidden', 'value' => $this->tokenId ) );
     }
     return $this->tokenId;
