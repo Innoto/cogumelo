@@ -294,7 +294,7 @@ Class VO
         $value = $this->data[$getterkey];
     }
     else {
-      Cogumelo::debug("key '". $getterkey ."' not exist in VO::". $this::$tableName);
+      Cogumelo::debug("value '". $getterkey ."' not exist in VO::". $this::$tableName);
     }
 
     return $value;
