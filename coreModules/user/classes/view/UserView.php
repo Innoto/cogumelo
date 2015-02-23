@@ -414,9 +414,6 @@ class UserView extends View
       }
 
       $user = new UserModel( $valuesArray );
-
-var_dump($valuesArray);
-
       $user->save();
     }
     return $user;
