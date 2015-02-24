@@ -382,7 +382,7 @@ Class VO
       $vo = $this;
     }
 
-    $currentArrayKey = sizeof($relsArray);
+    $currentArrayKey = sizeof($parentArrayKey);
     $vosArray[] = array( 'ref' => $vo, 'parentKey' => $parentArrayKey );
 
 
