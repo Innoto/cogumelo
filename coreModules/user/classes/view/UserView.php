@@ -3,6 +3,7 @@ Cogumelo::load('coreView/View.php');
 
 common::autoIncludes();
 form::autoIncludes();
+filedata::autoIncludes();
 user::autoIncludes();
 
 
@@ -183,7 +184,7 @@ class UserView extends View
 
     $user = new UserModel();
     $dataVO = $user->listItems( array('filters' => array('id' => $request[1] )))->fetch();
-
+Cogumelo::console($dataVO);
     if(!$dataVO){
       Cogumelo::redirect( SITE_URL.'404' );
     }
@@ -414,7 +415,8 @@ class UserView extends View
       }
 
       $user = new UserModel( $valuesArray );
-      $user->save();
+      $user->setterDependence( new FiledataModel( $valuesArray['avatar']['values'] ) );
+      $user->save( array( 'affectsDependences' => true ));
     }
     return $user;
   }
