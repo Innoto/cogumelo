@@ -341,18 +341,54 @@
 
 
   /**
-  * 
+  *  Limit the relObj acording list of VO names
   *  
+  * @param object $relObj
+  * @param mixed $resolveDependences
+  * 
   * @return object
   */
   static function limitRelObj($relObj, $resolveDependences) {
   
     if( is_array( $resolveDependences ) ) {
-      
+      /*$newRelObj = object();
+
+
+      foreach( $resolveDependences as $toResolve) {
+
+        $index = $relObj->index;
+
+
+
+      }*/
+
     }
 
     return $relObj;
   }
+
+/*
+
+  static function completeRelObject($originalRelObject, $newRelObj, $voToResolve ) {
+
+    $found = false;
+    $routeToResolve = array();
+
+    while( $e = array_pop( $originalRelObject->index ) ) {
+
+      if( $found == true ) {
+
+      }
+      else {
+        if( $e->voName == $voToResolve ) {
+          $found = true;
+        }
+      }
+
+    }
+  }
+
+*/
 
 
   /**
