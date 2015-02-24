@@ -221,7 +221,7 @@ Class VO
 
     if( array_key_exists($setterkey, $this->getCols()) ) {
       // set values
-      if( $value !== null ) {
+      if( $value !== null && !is_object($value) && !is_array($value) ) {
         $this->data[$setterkey] = $value;
       }
       $retObj = $this;
