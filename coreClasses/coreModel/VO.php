@@ -382,9 +382,10 @@ Class VO
       $vo = $this;
     }
 
-    $currentArrayKey = sizeof($parentArrayKey);
+    $currentArrayKey = sizeof($vosArray);
     $vosArray[] = array( 'ref' => $vo, 'parentKey' => $parentArrayKey );
 
+//var_dump( $vo->getVOClassName() );
 
     $depData = $vo->depData;
     if( sizeof($depData) > 0  ) {
@@ -454,18 +455,14 @@ Class VO
 
     while( $dep = array_pop( $deps ) ){
 
-
       if( 
-        array_key_exists('ref', $dep) &&
-        array_key_exists('parentKey' , $dep) &&
-        $dep['parentKey'] !== false &&
-        array_key_exists( $dep['parentKey'], $deps) &&
-        array_key_exists('ref', $deps[ $dep['parentKey'] ])
+        $dep['parentKey'] !== false 
       ) {
 
         $vo = $dep['ref'];
-        $voParent =$deps[ $dep['parentKey'] ]['ref'];
+  
 
+        $voParent = $deps[ $dep['parentKey'] ]['ref'];
 
         if( $voParent->getter( $vo->relObj->parentId) ) {
           $vo->setter( $vo->relObj->relatedWithId , $voParent->getter( $vo->relObj->parentId) );
@@ -473,10 +470,12 @@ Class VO
         else {
           $voParent->setter( $vo->relObj->parentId , $vo->getter( $vo->relObj->relatedWithId  ) );
         }
-
-        echo "parent ".$voParent->getVOClassName().".". $vo->relObj->parentId.": ". $voParent->getter( $vo->relObj->parentId  ).'<br>';
-        echo "this ".$vo->getVOClassName().".".$vo->relObj->relatedWithId.": ". $vo->getter( $vo->relObj->relatedWithId  ).'<br><br>';
         
+        //echo "this ".$vo->getVOClassName().".".$vo->relObj->relatedWithId.": ". $vo->getter( $vo->relObj->relatedWithId  ).'<br>';
+        //echo "parent ".$voParent->getVOClassName().".". $vo->relObj->parentId.": ". $voParent->getter( $vo->relObj->parentId  ).'<br><br>';
+
+
+
       }
     }
   }
