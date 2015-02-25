@@ -409,12 +409,16 @@ Cogumelo::console($dataVO);
 
        // Donde diferenciamos si es un update o un create
       if( !isset($valuesArray['id']) || !$valuesArray['id'] ){
-        $valuesArray['password'] = sha1($valuesArray['password']);
+        $password = $valuesArray['password'];
+        unset($valuesArray['password']);
         unset($valuesArray['password2']);
         $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
       }
 
       $user = new UserModel( $valuesArray );
+      if(isset($password)){
+        $user->setPassword( $password );
+      }
       $user->setterDependence( new FiledataModel( $valuesArray['avatar']['values'] ) );
       $user->save( array( 'affectsDependences' => true ));
     }
@@ -450,7 +454,7 @@ Cogumelo::console($dataVO);
       if( !isset($valuesArray['id']) && !$user ){
         $form->addFieldRuleError('id', 'cogumelo', 'Error usuario no identificado.');
       }
-      elseif( sha1($valuesArray['passwordOld']) !==  $user->getter('password') ){
+      elseif( !$user->equalPassword($valuesArray['passwordOld']) ){
         $form->addFieldRuleError('passwordOld', 'cogumelo', 'La contraseña antigua no coincide.');
       }
     }
@@ -466,10 +470,12 @@ Cogumelo::console($dataVO);
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
 
-      $valuesArray['password'] = sha1($valuesArray['password']);
+      $password = $valuesArray['password'];
+      unset($valuesArray['password']);
       unset($valuesArray['password2']);
 
       $user = new UserModel( $valuesArray );
+      $user->setPassword( $password );
       $user->save();
     }
     return $user;
