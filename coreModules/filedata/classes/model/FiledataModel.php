@@ -38,9 +38,8 @@ class FiledataModel extends Model
     )
   );
 
-  function __construct($datarray = array())
-  {
-    parent::__construct($datarray);
+  function __construct($datarray = array(), $otherRelObj = false ) {
+    parent::__construct( $datarray, $otherRelObj );
   }
 
 }

@@ -419,8 +419,13 @@ Cogumelo::console($dataVO);
       if(isset($password)){
         $user->setPassword( $password );
       }
+
+      //$file = new FiledataModel( $valuesArray['avatar']['values'] );
+      //$file->save();
       $user->setterDependence( new FiledataModel( $valuesArray['avatar']['values'] ) );
+      //var_dump($user->getAllData());
       $user->save( array( 'affectsDependences' => true ));
+      //var_dump($user->getAllData());
     }
     return $user;
   }

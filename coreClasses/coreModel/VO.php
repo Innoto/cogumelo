@@ -274,7 +274,7 @@ Class VO
     }
 
 
-    //$this->refreshRelationshipKeyIds();
+    $this->refreshRelationshipKeyIds();
 
     return $retVO;
   }
@@ -465,10 +465,11 @@ Class VO
         $voParent = $deps[ $dep['parentKey'] ]['ref'];
 
         if( $voParent->getter( $vo->relObj->parentId) ) {
-          $vo->setter( $vo->relObj->relatedWithId , $voParent->getter( $vo->relObj->parentId) );
+          $vo->setter( $voParent->relObj->relatedWithId , $voParent->getter( $vo->relObj->parentId) );
         }
-        else {
-          $voParent->setter( $vo->relObj->parentId , $vo->getter( $vo->relObj->relatedWithId  ) );
+        else
+        if( $vo->getter( $vo->relObj->relatedWithId) ) {
+          $voParent->setter( $vo->relObj->parentId , $vo->getter( $vo->relObj->relatedWithId  ) );       
         }
         
         //echo "this ".$vo->getVOClassName().".".$vo->relObj->relatedWithId.": ". $vo->getter( $vo->relObj->relatedWithId  ).'<br>';

@@ -52,13 +52,19 @@ class MasterView extends View
     var_dump( $u->getAllData());*/
 
       
-  
+  /*
   $user = new UserModel( ['login'=>'olasdfteu', 'email'=>'ola@teu.com', 'surname'=>'pablo', 'name'=>'blanco' ] );
-  $user->setterDependence( new UserRoleModel( ) )->setterDependence( new RoleModel( ['nome' => 'fukeer', 'description'=>'A motherfuker'] ) )->setterDependence( new RolePermissionModel() )->setterDependence( new PermissionModel(['name'=>'fukinpermission']) ) ;
+  $user->setterDependence( new UserRoleModel( ) )->setterDependence( new RoleModel( ['nome' => 'fukee/*r', 'description'=>'A motherfuker'] ) )->setterDependence( new RolePermissionModel() )->setterDependence( new PermissionModel(['name'=>'fukinpermission']) ) ;
   $user->save(['affectsDependences'=>true]);
   var_dump($user->getAllData() );
 
+*/
 
+      $user = new UserModel();
+      $user->setterDependence(  new FiledataModel() );
+      var_dump($user->depData);
+      //$user->save( array( 'affectsDependences' => true ));
+  
 
 
 
