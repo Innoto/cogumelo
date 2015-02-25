@@ -94,6 +94,15 @@ class UserModel extends Model
     return $this->getter('status') === USER_STATUS_LOCKED;
   }
 
+  function equalPassword( $password ){
+    return ($this->getter('password') === sha1($password));
+  }
+
+
+  function setPassword( $password ){
+    $this->setter('password', sha1($password));
+  }
+
 
   /**
   * undocumented function

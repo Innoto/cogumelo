@@ -12,8 +12,7 @@ class filedata extends Module
 
 
   public $includesCommon = array(
-    'controller/FiledataController.php',
-    'model/FiledataVO.php'
+    'model/FiledataModel.php'
   );
 
 
