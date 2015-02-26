@@ -184,7 +184,6 @@ class UserView extends View
 
     $user = new UserModel();
     $dataVO = $user->listItems( array('filters' => array('id' => $request[1] )))->fetch();
-Cogumelo::console($dataVO);
     if(!$dataVO){
       Cogumelo::redirect( SITE_URL.'404' );
     }
@@ -404,7 +403,7 @@ Cogumelo::console($dataVO);
 
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
-      $valuesArray['status'] = USER_STATUS_WAITING;
+      $valuesArray['active'] = 0;
       $valuesArray['role'] = ROLE_USER;
 
        // Donde diferenciamos si es un update o un create
