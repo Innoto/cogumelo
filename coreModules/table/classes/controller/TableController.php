@@ -33,7 +33,7 @@ class TableController{
   var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
   var $tabs = false;
   var $searchId = 'tableSearch';
-  var $currentTab = false;
+  var $currentTab = null;
   var $filters = array();
   var $rowsEachPage = 50;
 
@@ -129,7 +129,7 @@ class TableController{
   * @return void
   */
   function setTabs($tabsKey ,$tabs, $defaultKey) {
-    if( !$this->currentTab ) {
+    if( $this->currentTab === null) {
       $this->currentTab = $defaultKey;
     }
     $this->tabs = array('tabsKey' => $tabsKey, 'tabs' => $tabs, 'defaultKey' => $defaultKey);
