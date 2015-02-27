@@ -37,7 +37,7 @@ class TableController{
   var $filters = array();
   var $rowsEachPage = 50;
 
-  /*
+  /**
   * @param object $model: is the data model
   * @param array $data  generally is htme full $_POST data variable
   */
@@ -57,7 +57,7 @@ class TableController{
     $this->clientData['order'] = $clientdata['order'];
 
     // set tabs
-    if( $clientdata['tab'] !== null ) {
+    if( $clientdata['tab'] !== "" ) {
       $this->currentTab = $clientdata['tab'];
     }
 
@@ -89,7 +89,7 @@ class TableController{
   }
 
 
-  /*
+  /**
   * Set table col
   *
   * @param string $colId id of col in VO
@@ -101,7 +101,7 @@ class TableController{
   }
 
 
-  /*
+  /**
   * Set col Rules
   *
   * @param string $colId id of col added with setCol method0
@@ -120,7 +120,7 @@ class TableController{
   }
 
 
-  /*
+  /**
   * Set tabs
   *
   * @param string $tabsKey
@@ -136,7 +136,7 @@ class TableController{
   }
 
 
-  /*
+  /**
   * Set filters array
   *
   * @param array $filters
@@ -147,7 +147,7 @@ class TableController{
   }
 
 
-  /*
+  /**
   * Get filters
   *
   * @return array
@@ -166,7 +166,7 @@ class TableController{
     return $retFilters;
   }
 
-  /*
+  /**
   * set List method for controller
   * @param string $listMethod method name
   * @return void
@@ -175,7 +175,7 @@ class TableController{
     $this->controllerMethodAlias['list'] = $listMethod;
   }
 
-  /*
+  /**
   * set exoport controller
   * @param string $id for selector option reference
   * @param string $name to display in selector
@@ -186,7 +186,7 @@ class TableController{
     $this->exports[$id] = array('name' => $name , 'method' => $controller);
   }
 
-  /*
+  /**
   * set Count method for controller
   * @param string $countMethod method name
   * @return void
@@ -196,7 +196,7 @@ class TableController{
   }
 
 
-  /*
+  /**
   * set Search id for DAO filters
   * @param string $searchId
   * @return void
@@ -205,7 +205,7 @@ class TableController{
     $this->searchId = $searchId;
   }
 
-  /*
+  /**
   * Data actions to allow in table
   *
   * @param string $actionAlias name of action for tableController
@@ -216,7 +216,7 @@ class TableController{
     $this->controllerMethodAlias[$methodAlias] = $method;
   }
 
-  /*
+  /**
   * Add Actions to the table and relate it with controller Method
   *
   * @param string $name to display it in table action selector
@@ -229,7 +229,7 @@ class TableController{
   }
 
 
-  /*
+  /**
   * Get simple action list for client side
   *
   * @return array list of available actions
@@ -247,7 +247,7 @@ class TableController{
 
 
 
-  /*
+  /**
   * get export actions for client
   * @return array exports
   */
@@ -262,7 +262,7 @@ class TableController{
   }
 
 
-  /*
+  /**
   * Turn order objects from table in array readable by DAO
   *
   * @return array
@@ -280,7 +280,7 @@ class TableController{
     return $ordArray;
   }
 
-  /*
+  /**
   * Turn cols into array
   *
   * @return array
@@ -296,7 +296,8 @@ class TableController{
   }
 
 
-  /* exec table
+  /**
+  * exec table
   * @return void
   */
   function exec() {
@@ -309,7 +310,8 @@ class TableController{
     }
   }
 
-  /* execExport table
+  /**
+  * execExport table
   * @return void
   */
   function execExport() {
@@ -323,7 +325,8 @@ class TableController{
   }
 
 
-  /* setEachRowUrl url when click in row
+  /**
+  * setEachRowUrl url when click in row
   * @param string $url
   * @return void
   */
@@ -331,7 +334,8 @@ class TableController{
     $this->eachRowUrl = $url;
   }
 
-  /* setNewItemUrl url
+  /** 
+  * setNewItemUrl url
   * @param string $url
   * @return void
   */
@@ -341,7 +345,8 @@ class TableController{
 
 
 
-  /* execJsonTable table
+  /**
+  * execJsonTable table
   * @return void
   */
   function execJsonTable() {
