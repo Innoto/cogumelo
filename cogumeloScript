@@ -126,10 +126,14 @@
 
   function printOptions(){
     echo "\n
+   + Permissions and dependences
       * flush                   Remove temporary files
       * generateClientCaches    Cache all js, css, compiled less and other client files
       * setPermissions          Set the files/folders permission
       * setPermissionsDevel     Set the files/folders permission
+      * installDependences          Install all modules dependencies
+
+   + Database
       * generateModel           Execute all options below in the same order
         - createDB                Create a database
         - createTables            Generate the tables
@@ -137,7 +141,8 @@
         - initModules             Execute '::moduleRc()' of all modules
       * bckDB                       Do a DB backup (optional arg: filename)
       * restoreDB                   Restore a database
-      * installDependences          Install all modules dependencies
+
+   + Internationalization
       * generateTranslations        Get all the web text into a file.po
       * compileTranslations         Compile file.po and get the translations ready
     \n\n";
