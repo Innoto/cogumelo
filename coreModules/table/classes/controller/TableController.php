@@ -38,15 +38,15 @@ class TableController{
   var $rowsEachPage = 50;
 
   /*
-  * @param object $control: is the data controller
+  * @param object $model: is the data model
   * @param array $data  generally is htme full $_POST data variable
   */
-  function __construct($control)
+  function __construct($model)
   {
 
 
     $clientdata = $_POST;
-    $this->control = $control;
+    $this->model = $model;
 
 
     if( $clientdata['exportType'] != 'false' ) {
@@ -318,7 +318,7 @@ class TableController{
         'filters' =>  $this->getFilters(),
         'order' => $this->orderIntoArray()
     );
-    eval('$lista = $this->control->'. $this->controllerMethodAlias['list'].'( $p );');
+    eval('$lista = $this->model->'. $this->controllerMethodAlias['list'].'( $p );');
     new $this->exports[$this->export]['controller']( $this, $fileName, $lista );
   }
 
@@ -353,11 +353,11 @@ class TableController{
     ){
 
       // get primary key
-      $refVO = new $this->control->voClass();
+      eval( '$refVO = new '.$this->model->getVOClassName().'();');
       $primaryKey = $refVO->getFirstPrimarykeyId();
 
       foreach( $this->clientData['action']['keys'] as $rowId) {
-        eval( '$this->control->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
+        eval( '$this->model->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
       }
     }
 
@@ -367,8 +367,8 @@ class TableController{
         'range' => $this->clientData["range"],
         'order' => $this->orderIntoArray()
     );
-    eval('$lista = $this->control->'. $this->controllerMethodAlias['list'].'( $p );');
-    eval('$totalRows = $this->control->'. $this->controllerMethodAlias['count'].'( array( "filters" => $this->getFilters()) );');
+    eval('$lista = $this->model->'. $this->controllerMethodAlias['list'].'( $p );');
+    eval('$totalRows = $this->model->'. $this->controllerMethodAlias['count'].'( array( "filters" => $this->getFilters()) );');
 
 
     // printing json table...
