@@ -26,33 +26,34 @@
       switch($argv[1]){
         case 'setPermissions': // set the files/folders permission
           setPermissions();
-        break;
+          break;
 
         case 'setPermissionsDevel': // set the files/folders permission
           setPermissionsDevel();
-        break;
+          break;
+
+        case 'generateModel':
+          createDB();
+          createRelSchemes();
+          createTables();
+          initModules();
+          break;
 
         case 'createDB': // create database
-          $user =  ReadStdin("Enter an user with privileges:\n", '');
-          // Get the password
-          fwrite(STDOUT, "Enter the password:\n");
-          $passwd = getPassword(true);
-          createDB($user, $passwd);
-          fwrite(STDOUT, "\n--\n");
-        break;
+          createDB();
+          break;
         case 'createRelSchemes': 
           createRelSchemes();
           break;
 
         case 'createTables': // create database tables
           createTables();
-          echo "\nGenerated db tables\n";
-        break;
+          break;
 
         case 'initModules': // execute ::moduleRc() of all modules
           initModules();
-          echo "\nModules initialized\n";
-        break;
+
+          break;
 
         case 'bckDB': // do the backup of the db
           if ($argc>2){
@@ -63,7 +64,7 @@
           }
           $user =  ReadStdin('Enter an user with privileges: ', '');
           doBackup(DB_NAME, $user, $file);
-        break;
+          break;
 
         case 'restoreDB': // restore the backup of a given db
           if ($argc>2){
@@ -74,14 +75,14 @@
           else{
             echo "You must especify the database to restore\n";
           }
-        break;
+          break;
 
         case 'installDependences':
             Cogumelo::load('coreController/DependencesController.php');
 
             $dependencesControl = new DependencesController();
             $dependencesControl->installDependences();
-        break;
+          break;
 
         case 'generateTranslations':
           require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
@@ -93,24 +94,24 @@
           require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
           compileTranslations();
           echo "The files.mo are ready to be used!\n";
-        break;
+          break;
 
         /* We execute this two actions from web as we need to operate with the apache permissions*/
         case 'flush': // delete temporary files
            exec('wget -q --spider http://cogumelo/cogumelo-server.php?q=flush');
            echo "Temporary files deleted!\n";
-        break;
+          break;
 
         case 'rotateLogs':
             exec('wget -q --spider cogumelo/cogumelo-server.php?q=rotate_logs');
             echo "The logs have been stored\n";
-        break;
+          break;
 
         case 'generateClientCaches':
 //          setPermissions();
           exec('wget -q --spider cogumelo/cogumelo-server.php?q=client_caches');
           echo "All client cachés generated into 'httpdocs/mediacache/' folder \n";
-        break;
+          break;
         default:
           echo "Invalid parameter;try:";
           printOptions();
@@ -142,7 +143,14 @@
     \n\n";
   }
 
-  function createDB($user, $passwd){
+  function createDB(){
+
+    $user =  ReadStdin("Enter an user with privileges:\n", '');
+    // Get the password
+    fwrite(STDOUT, "Enter the password:\n");
+    $passwd = getPassword(true);
+    fwrite(STDOUT, "\n--\n");
+
     $develdbcontrol = new DevelDBController($user, $passwd);
     $develdbcontrol->createSchemaDB();
     echo "\nDatase created!\n";
@@ -179,6 +187,7 @@
     }
     $develdbcontrol = new DevelDBController();
     $develdbcontrol->createTables();
+    echo "\nGenerated db tables\n";
   }
 
   function initModules() {
@@ -188,6 +197,7 @@
       require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
       eval($moduleName.'::moduleRc();');
     }
+    echo "\nModules initialized\n";
   }
 
   function makeAppPaths() {
