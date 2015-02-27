@@ -57,7 +57,7 @@ class TableController{
     $this->clientData['order'] = $clientdata['order'];
 
     // set tabs
-    if( $clientdata['tab'] ) {
+    if( $clientdata['tab'] !== null ) {
       $this->currentTab = $clientdata['tab'];
     }
 
