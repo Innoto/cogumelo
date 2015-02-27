@@ -241,11 +241,18 @@ Class Model extends VO {
   * @return object  VO
   */
   function updateKey( array $parameters = array() ) {
+
+    $p = array(
+        'searchKey' => null,
+        'changeKey' => null
+    );
+
     $dataVO = false;
-    if($parameters['searchKey']) {
-      $dataVO = $this->listItems( array( 'filters' => array( $parameters['searchKey'] => $parameters['searchValue'] ) ));
-      if($dataVO && $parameters['changeKey'] && $parameters['changeValue']){
-        $dataVO->setter($parameters('changeKey'),$parameters('changeValue'));
+    if($parameters['searchKey'] !== null ) {
+      $dataVO = $this->listItems( array( 'filters' => array( $parameters['searchKey'] => $parameters['searchValue'] ) ))->fetch();
+      if($dataVO && $parameters['changeKey'] !== null && $parameters['changeValue'] !== null){
+        $dataVO->setter( $parameters['changeKey'], $parameters['changeValue'] );
+
         $dataVO->save();
       }
     }
@@ -254,3 +261,5 @@ Class Model extends VO {
 
 
 }
+
+

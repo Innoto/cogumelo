@@ -51,7 +51,7 @@ Class VO
 
 
     // seting relationship keys
-    if( $otherRelObj == false ) { 
+    if( $otherRelObj == false ) {
       $this->relObj = VOUtils::getRelObj( $this->name ) ;
     }
     else if( is_object( $otherRelObj ) ) {
@@ -99,7 +99,7 @@ Class VO
   /**
    * set dependence VOs from data
    *
-   * @param array $data 
+   * @param array $data
    * @param string $voName name of VO or Model
    * @param object $relObj related object
    *
@@ -128,7 +128,7 @@ Class VO
   /**
    * set dependence VO from data
    *
-   * @param object $dataVO 
+   * @param object $dataVO
    * @param string $voName name of VO or Model
    * @param object $relObj related object
    *
@@ -203,15 +203,16 @@ Class VO
   /**
    * set any data attribute by key
    *
-   * @param mixed $setterkey key or array 
-   * @param mixed $value 
-   * 
+   * @param mixed $setterkey key or array
+   * @param mixed $value
+   *
    * @return void
    */
-  function &setter( $setterkey, $value = false ) {
+  function &setter( $setterkey, $value = null ) {
+
     $retObj = false;
 
-    if( is_array($setterkey) && $value === false ) {
+    if( is_array($setterkey) && $value === null ) {
       foreach( $setterkey as $k => $e) {
         $this->setter($k, $e);
       }
@@ -239,7 +240,7 @@ Class VO
    *
    * @param object $voObj VO or Model
    * @param string $fk attribute name
-   * 
+   *
    * @return void
    */
   function setterDependence( $voObj, $fk = false ){
@@ -252,7 +253,7 @@ Class VO
         $references[ $voName ] = $rel;
       }
     }
-    
+
     // Dependence not exist
     if( sizeof($references) == 0 ) {
       Cogumelo::error( $voObj->getVOClassName() .' is not dependence of: '.$this->getVOClassName() );
@@ -302,8 +303,8 @@ Class VO
 
   /**
    * dependence getter
-   * 
-   * @param string $reference reference key 
+   *
+   * @param string $reference reference key
    *
    * @return array
    */
@@ -361,7 +362,7 @@ Class VO
 
 
   /**
-   * dependence data 
+   * dependence data
    *
    * @return array
    */
@@ -455,12 +456,12 @@ Class VO
 
     while( $dep = array_pop( $deps ) ){
 
-      if( 
-        $dep['parentKey'] !== false 
+      if(
+        $dep['parentKey'] !== false
       ) {
 
         $vo = $dep['ref'];
-  
+
 
         $voParent = $deps[ $dep['parentKey'] ]['ref'];
 
@@ -469,9 +470,9 @@ Class VO
         }
         else
         if( $vo->getter( $vo->relObj->relatedWithId) ) {
-          $voParent->setter( $vo->relObj->parentId , $vo->getter( $vo->relObj->relatedWithId  ) );       
+          $voParent->setter( $vo->relObj->parentId , $vo->getter( $vo->relObj->relatedWithId  ) );
         }
-        
+
         //echo "this ".$vo->getVOClassName().".".$vo->relObj->relatedWithId.": ". $vo->getter( $vo->relObj->relatedWithId  ).'<br>';
         //echo "parent ".$voParent->getVOClassName().".". $vo->relObj->parentId.": ". $voParent->getter( $vo->relObj->parentId  ).'<br><br>';
 
