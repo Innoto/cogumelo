@@ -350,45 +350,97 @@
   */
   static function limitRelObj($relObj, $resolveDependences) {
   
-    if( is_array( $resolveDependences ) ) {
-      /*$newRelObj = object();
+    if( is_array( $resolveDependences ) && sizeof( $resolveDependences ) > 0 ) {
+      $newRelObj = (object) 'relObj';
+      $completeResolveDependences = array();
 
-
+      // complete list of dependences to resolve
       foreach( $resolveDependences as $toResolve) {
+        $completeResolveDependences = array_merge($completeResolveDependences, self::limitRelIndex( $relObj->index, $toResolve ) );
+      }
 
-        $index = $relObj->index;
 
+      $newRelObj = clone $relObj;
+      $newRelObj->relationship = array();
 
+      if( sizeof($completeResolveDependences) > 0 ){
+        foreach( $completeResolveDependences as $subcrs) {
 
-      }*/
+          //$newRelObj->relationship = self::completeRelObject( $relObj->relationship, $newRelObj->relationship , $subcrs );
+        }
+        
+      }
+        
 
     }
 
     return $relObj;
   }
 
-/*
 
-  static function completeRelObject($originalRelObject, $newRelObj, $voToResolve ) {
 
-    $found = false;
-    $routeToResolve = array();
 
-    while( $e = array_pop( $originalRelObject->index ) ) {
 
-      if( $found == true ) {
+  static function completeRelObject( $originalRelArray, $newRelArray, $listToResolve ) {
+    $relList = $newRelArray;
 
-      }
-      else {
-        if( $e->voName == $voToResolve ) {
-          $found = true;
+      $voName = array_shift( $listToResolve );
+var_dump($voName);
+      foreach( $originalRelArray as $rel ){
+
+        if( $rel->vo == $voName ) {
+
+          // mirar se está dentro de reList para non machacalo
+          $nRelationship = array();
+          if(sizeof( $relList) >0 ){
+            foreach( $relList as $rel2){
+              if( $rel2->vo == $voName ) {
+                $nRelationship[] = $rel2;
+              }
+            }
+          }
+
+          $relList = array_merge($relList, self::completeRelObject($rel, $nRelationship  , $listToResolve)  ); 
         }
       }
 
-    }
+
+
+
+    return $relList;
   }
 
-*/
+
+
+  /**
+  * get all voNames of index array from the selected element folowing indexes
+  *  
+  * @param array $retIndex index list
+  * @param mixed $ref voName or index parentkey 
+  * 
+  * @return array
+  */
+  static function limitRelIndex( $relIndex, $ref ) {
+    $retArray = array();
+
+    if( sizeof( $relIndex ) > 0 ) {
+      while( $rel = array_pop($relIndex) ) {
+
+        // is an VO
+        if( is_string( $ref ) && $ref == $rel->voName ) {
+          $retArray[] = array_merge( self::limitRelIndex( $relIndex, $rel->parentKey ), array($rel->voName) );
+        }
+        // is a parent key
+        else
+        if( is_numeric( $ref ) && (sizeof( $relIndex ) ) == $ref && $ref != 0) {
+          $retArray = array_merge( self::limitRelIndex( $relIndex, $rel->parentKey ), array($rel->voName) );
+        }
+
+      }
+    }
+
+    return $retArray;
+  }
 
 
   /**

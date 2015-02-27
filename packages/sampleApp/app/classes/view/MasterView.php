@@ -45,11 +45,11 @@ class MasterView extends View
 
 
     user::load('model/UserModel.php');
-  /*
+  
     $user = new UserModel();
-    $u = $user->listItems( array('affectsDependences'=>array('UserRoleModel') ))->fetch();
+    $u = $user->listItems( array('affectsDependences'=>array('RoleModel', 'FiledataModel') ))->fetch();
 
-    var_dump( $u->getAllData());*/
+    var_dump( $u->getAllData());
 
       
   /*
@@ -59,10 +59,11 @@ class MasterView extends View
   var_dump($user->getAllData() );
 
 */
-
+/*
       $user = new UserModel();
       $user->setterDependence(  new FiledataModel() );
       var_dump($user->depData);
+*/
       //$user->save( array( 'affectsDependences' => true ));
   
 
