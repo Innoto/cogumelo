@@ -3,10 +3,6 @@ Cogumelo::load('coreModel/VO.php');
 Cogumelo::load('coreModel/Model.php');
 
 
-define( 'USER_STATUS_ACTIVE', 1 );
-define( 'USER_STATUS_WAITING', 2 );
-define( 'USER_STATUS_LOCKED', 3 );
-
 
 class UserModel extends Model
 {
@@ -50,10 +46,10 @@ class UserModel extends Model
       'type' => 'TEXT',
       'size' => '300'
     ),
-    'status'=> array(
-      'name' => 'Estado',
+    'active'=> array(
+      'name' => 'Active',
       'type' => 'INT',
-      'size' => '10'
+      'size' => '1'
     ),
     'timeLastLogin' => array(
       'name' => 'Último acceso',
@@ -85,19 +81,12 @@ class UserModel extends Model
   }
 
   function isActive(){
-    return $this->getter('status') === USER_STATUS_ACTIVE;
-  }
-  function isWaiting(){
-    return $this->getter('status') === USER_STATUS_WAITING;
-  }
-  function isLocked(){
-    return $this->getter('status') === USER_STATUS_LOCKED;
+    return $this->getter('active');
   }
 
   function equalPassword( $password ){
     return ($this->getter('password') === sha1($password));
   }
-
 
   function setPassword( $password ){
     $this->setter('password', sha1($password));

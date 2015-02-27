@@ -150,7 +150,7 @@ Class Model extends VO {
   * @return object  VO
   */
   private function saveOrUpdate( $voObj = false ){
-    $retObj = false; 
+    $retObj = false;
 
     if(!$voObj) {
       $voObj = $this;
@@ -186,7 +186,7 @@ Class Model extends VO {
     }
 
     $pkId = $this->getFirstPrimarykeyId();
-    
+
     if( $voObj->getter($pkId) && $filters = $voObj->data) {
 
       if( $this->listCount( array('filters'=>array( $pkId=>$filters[ $pkId ] ) )) ) {
@@ -203,7 +203,7 @@ Class Model extends VO {
   *
   * @param array $parameters array of filters
   *
-  * @return object  VO
+  * @return boolean
   */
   function delete( array $parameters = array() ) {
 
@@ -229,6 +229,27 @@ Class Model extends VO {
     }
 
     return true;
+  }
+
+
+
+  /**
+  * delete item
+  *
+  * @param array $parameters array of filters
+  *
+  * @return object  VO
+  */
+  function updateKey( array $parameters = array() ) {
+    $dataVO = false;
+    if($parameters['searchKey']) {
+      $dataVO = $this->listItems( array( 'filters' => array( $parameters['searchKey'] => $parameters['searchValue'] ) ));
+      if($dataVO && $parameters['changeKey'] && $parameters['changeValue']){
+        $dataVO->setter($parameters('changeKey'),$parameters('changeValue'));
+        $dataVO->save();
+      }
+    }
+    return $dataVO;
   }
 
 
