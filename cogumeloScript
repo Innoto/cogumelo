@@ -150,6 +150,8 @@
 
   function createDB(){
 
+    echo "\nDatabase configuration\n";
+
     $user =  ReadStdin("Enter an user with privileges:\n", '');
     // Get the password
     fwrite(STDOUT, "Enter the password:\n");
@@ -163,6 +165,8 @@
 
 
   function createRelSchemes() {
+
+    echo "\nCreating relationship schemes\n";
 
     global $C_ENABLED_MODULES;
 
@@ -185,6 +189,9 @@
 
 
   function createTables(){
+
+    echo "\nCreating DDBB tables, deleting old if exist\n";
+
     global $C_ENABLED_MODULES;
 
     foreach($C_ENABLED_MODULES as $moduleName) {

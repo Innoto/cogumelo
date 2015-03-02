@@ -466,7 +466,7 @@ Class VO
         $voParent = $deps[ $dep['parentKey'] ]['ref'];
 
         if( $voParent->getter( $vo->relObj->parentId) ) {
-          $vo->setter( $voParent->relObj->relatedWithId , $voParent->getter( $vo->relObj->parentId) );
+          $vo->setter( $vo->relObj->relatedWithId , $voParent->getter( $vo->relObj->parentId) );
         }
         else
         if( $vo->getter( $vo->relObj->relatedWithId) ) {
