@@ -19,18 +19,18 @@ class FormGroupTest extends View
     @return bool : true -> Access allowed
   */
   public function accessCheck() {
+
     return true;
   }
-
 
 
   /**
     Defino y muestro un formulario
   */
   public function loadForm() {
-    error_log( '--------------------------------' );
-    error_log( 'FormGroupTest: loadForm');
-    error_log( '--------------------------------' );
+    error_log( '-----------------------' );
+    error_log( 'FormGroupTest: loadForm' );
+    error_log( '-----------------------' );
 
     $form = new FormController( 'probaPorto', '/form-group-action' );
 
@@ -51,31 +51,26 @@ class FormGroupTest extends View
 
     $form->setFieldGroup( 'inputGa', 'grupoMeu' );
     $form->setFieldGroup( 'inputGb', 'grupoMeu' );
-    $form->setGroupLimits( 'grupoMeu', 1 );
+    $form->setGroupLimits( 'grupoMeu', 2, 1, 4 );
     //$form->setGroupLimits( 'grupoMeu', 3, 1, 4 );
-
 
     /*
     $form->setField( 'inputFicheiro', array( 'type' => 'file', 'id' => 'inputFicheiro',
       'placeholder' => 'Escolle un ficheiro JPG', 'label' => 'Colle un ficheiro JPG',
       'destDir' => '/porto' ) );
-
     $form->setValidationRule( 'inputFicheiro', 'minfilesize', 1024 );
     $form->setValidationRule( 'inputFicheiro', 'accept', 'image/jpeg' );
     $form->setValidationRule( 'inputFicheiro', 'required' );
-
 
     $form->setField( 'select1', array( 'type' => 'select', 'label' => 'Meu Select',
       'value' => array( '1', '2' ), 'multiple' => 'multiple'
       'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
       ) );
 
-
     $form->setField( 'check1', array( 'type' => 'checkbox', 'label' => 'Meu checkbox', 'value' => array( '1', 'asdf' ),
       'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
       ) );
     $form->setValidationRule( 'check1', 'required' );
-
 
     $form->setField( 'radio1', array( 'type' => 'radio', 'label' => 'Meu radio', 'value' => '2',
       'options'=> array( '' => 'Vacio', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
@@ -87,20 +82,25 @@ class FormGroupTest extends View
     // Una vez que hemos definido all, guardamos el form en sesion
     $form->saveToSession();
 
-
-    $formBasura = new FormController( 'probaPorto', '/form-group-action' );
-    $formBasura->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor678' ) );
-    $formBasura->setField( 'submit', array( 'type' => 'submit', 'label' => 'Pulsa para enviar', 'value' => 'Manda' ) );
-    $formBasura->saveToSession();
-
-    $formVacio = new FormController();
-
     $this->template->assign( 'formOpen', $form->getHtmpOpen() );
     $this->template->assign( 'formFields', $form->getHtmlFieldsAndGroups() );
     $this->template->assign( 'formClose', $form->getHtmlClose() );
     $this->template->assign( 'formValidations', $form->getScriptCode() );
 
+
+
+    $formBasura = new FormController( 'probaBasura', '/form-group-action' );
+    $formBasura->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor678' ) );
+    $formBasura->setField( 'submit', array( 'type' => 'submit', 'label' => 'Pulsa para enviar', 'value' => 'Manda' ) );
+    $formBasura->saveToSession();
+
     $this->template->assign( 'formBasura', $formBasura->getHtmlForm() );
+
+
+
+    $formVacio = new FormController();
+
+
 
     $this->template->setTpl( 'formGroupTest.tpl' );
     $this->template->exec();
@@ -108,14 +108,13 @@ class FormGroupTest extends View
   } // function loadForm()
 
 
-
   /**
     Evalua el envio del formulario y reporta posibles errores
   */
   public function actionForm() {
-    error_log( '--------------------------------' );
+    error_log( '-------------------------' );
     error_log( 'FormGroupTest: actionForm');
-    error_log( '--------------------------------' );
+    error_log( '-------------------------' );
 
     $form = new FormController();
 
@@ -148,9 +147,9 @@ class FormGroupTest extends View
     Evalua el envio del formulario y reporta posibles errores
   */
   public function actionFormEjemplo2() {
-    error_log( '--------------------------------' );
+    error_log( '-------------------------' );
     error_log( 'FormGroupTest: actionForm');
-    error_log( '--------------------------------' );
+    error_log( '-------------------------' );
 
     // Creamos un objeto FORM sin datos
     $form = new FormController();
@@ -190,6 +189,5 @@ class FormGroupTest extends View
     }
 
   }
-
 
 } // class FormGroupTest extends View

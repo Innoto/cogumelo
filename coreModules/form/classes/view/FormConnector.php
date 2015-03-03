@@ -23,20 +23,9 @@ class FormConnector extends View
   * @return bool : true -> Access allowed
   */
   public function accessCheck() {
+
     return true;
   }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -72,41 +61,42 @@ class FormConnector extends View
       // Recuperamos formObj y validamos el grupo
       if( $form->loadFromSession( $cgIntFrmId ) && $form->issetGroup( $groupName ) ) {
 
-        $groupLimits = $form->getGroupLimits( $groupName );
-        $groupIdElems = $form->getGroupIdElems( $groupName );
-        if( $groupLimits[ 'max' ] > count( $groupIdElems ) ) {
-          $groupIdElem = $form->getNewGroupIdElem( $groupName );
+        $groupMax = $form->getGroupLimits( $groupName, 'max' );
+        if( $groupMax > $form->countGroupElems( $groupName ) ) {
 
-          $htmlGroupElement = $form->getHtmlGroupElement( $groupName, $groupIdElem );
+          $groupIdElem = $form->newGroupElem( $groupName );
 
-          foreach( $form->getGroupFields( $groupName ) as $fieldName ) {
-            $fieldRules = $form->getValidationRules( $fieldName );
-            if( $fieldRules !== false ) {
-              $validationRules[ $fieldName.'_C_'.$groupIdElem ] = $fieldRules;
+          if( $groupIdElem !== false ) {
+            $htmlGroupElement = $form->getHtmlGroupElement( $groupName, $groupIdElem );
+
+            foreach( $form->getGroupFields( $groupName ) as $fieldName ) {
+              $fieldRules = $form->getValidationRules( $fieldName );
+              if( $fieldRules !== false ) {
+                $validationRules[ $fieldName.'_C_'.$groupIdElem ] = $fieldRules;
+              }
             }
+          }
+          else {
+            $form->addGroupRuleError( false, 'cogumelo', 'Error creando un nuevo elemento.' );
           }
         }
         else {
-          $form->addGroupRuleError( $groupName, 'cogumelo',
-            'Se ha alcanzado el número máximo de elementos permitidos: '.$groupLimits[ 'max' ].'>'.count( $groupIdElems ) );
+          $form->addGroupRuleError( false, 'cogumelo',
+            'Se ha alcanzado el número máximo de elementos permitidos: '.$groupMax );
         }
-
 
       }
       else {
-        $form->addGroupRuleError( $groupName, 'cogumelo',
-          'No han llegado los datos o lo ha hecho con errores. LOAD' );
+        $form->addGroupRuleError( false, 'cogumelo', 'Los datos no son válidos.' );
       }
 
     } // if( isset( ... ) )
     else { // los datos no estan bien
-      $form->addGroupRuleError( $_POST['groupName'], 'cogumelo',
-        'No han llegado los datos o lo ha hecho con errores. ISSET' );
+      $form->addGroupRuleError( false, 'cogumelo', 'No han llegado los datos necesarios. (IS)' );
     }
 
-
     // Notificamos el resultado al UI
-    $moreInfo = array( 'idForm' => $idForm, 'groupName' => $_POST['groupName'] );
+    $moreInfo = array( 'idForm' => $_POST['idForm'], 'groupName' => $_POST['groupName'] );
     if( !$form->existErrors() ) {
       $moreInfo[ 'groupIdElem' ] = $groupIdElem;
       $moreInfo[ 'htmlGroupElement' ] = $htmlGroupElement;
@@ -133,47 +123,34 @@ class FormConnector extends View
       // Recuperamos formObj y validamos el grupo
       if( $form->loadFromSession( $cgIntFrmId ) && $form->issetGroup( $groupName ) ) {
 
-        $groupLimits = $form->getGroupLimits( $groupName );
-        $groupIdElems = $form->getGroupIdElems( $groupName );
-        if( $groupLimits[ 'min' ] < count( $groupIdElems ) ) {
-          if( !$form->removeGroupInstance( $groupName, $groupIdElem ) ) {
-            $form->addGroupRuleError( $groupName, 'cogumelo',
+        $groupMin = $form->getGroupLimits( $groupName,  'min' );
+        if( $groupMin < $form->countGroupElems( $groupName ) ) {
+
+          if( !$form->removeGroupElem( $groupName, $groupIdElem ) ) {
+            $form->addGroupRuleError( false, 'cogumelo',
               'Imposible eliminar el elemento. (' . $groupIdElem . ')' );
           }
+
         }
         else {
-          $form->addGroupRuleError( $groupName, 'cogumelo',
-            'Se ha alcanzado el número máximo de elementos permitidos: '.$groupLimits[ 'min' ].'<'.count( $groupIdElems ) );
+          $form->addGroupRuleError( false, 'cogumelo',
+            'Se ha alcanzado el número mínimo de elementos permitidos: '.$groupMin );
         }
 
       }
       else {
-        $form->addGroupRuleError( $groupName, 'cogumelo',
-          'Los datos no son válidos.' );
+        $form->addGroupRuleError( false, 'cogumelo', 'Los datos no son válidos.' );
       }
 
     } // if( isset( ... ) )
     else { // los datos no estan bien
-      $form->addGroupRuleError( $_POST['groupName'], 'cogumelo',
-        'No han llegado los datos o lo ha hecho con errores. ISSET' );
+      $form->addGroupRuleError( false, 'cogumelo', 'No han llegado los datos necesarios. (IS)' );
     }
 
     // Notificamos el resultado al UI
-    $moreInfo = array( 'idForm' => $idForm, 'groupName' => $_POST['groupName'], 'groupIdElem' => $_POST['groupIdElem'] );
+    $moreInfo = array( 'idForm' => $_POST['idForm'], 'groupName' => $_POST['groupName'], 'groupIdElem' => $_POST['groupIdElem'] );
     $form->sendJsonResponse( $moreInfo );
   }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -373,7 +350,6 @@ class FormConnector extends View
   } // function uploadFormFile() {
 
 
-
   private function deleteFormFile() {
     error_log( '--------------------------------' );
     error_log( ' FormConnector - deleteFormFile ' );
@@ -473,7 +449,6 @@ class FormConnector extends View
   } // function deleteFormFile() {
 
 
-
   /**
    * Obtiene el texto de error en funcion del codigo
    * @param integer $fileErrorId
@@ -518,7 +493,6 @@ class FormConnector extends View
 
 
 
-
 /*
 
   pasos
@@ -558,8 +532,6 @@ class FormConnector extends View
   AddHandler cgi-script .php .pl .jsp .asp .sh .cgi
   Options -ExecCGI
 */
-
-
 
 
 

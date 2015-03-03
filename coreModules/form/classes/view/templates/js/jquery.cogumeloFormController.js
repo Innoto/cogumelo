@@ -5,6 +5,7 @@
 
 var cogumeloFormControllerFormsInfo = [];
 
+
 function getFormInfoIndex( idForm ) {
   var index = false;
   for( var i = cogumeloFormControllerFormsInfo.length - 1; i >= 0; i-- ) {
@@ -13,6 +14,7 @@ function getFormInfoIndex( idForm ) {
       break;
     }
   }
+
   return index;
 }
 
@@ -28,14 +30,15 @@ function setFormInfo( idForm, key, value ) {
 
 
 function getFormInfo( idForm, key ) {
-  var value = false;
+  var result = null;
+
   var index = getFormInfoIndex( idForm );
 
   if( index !== false ) {
-    value = cogumeloFormControllerFormsInfo[ index ][ key ];
+    result = cogumeloFormControllerFormsInfo[ index ][ key ];
   }
 
-  return value;
+  return result;
 }
 
 
@@ -62,10 +65,10 @@ function unbindForm( idForm ) {
   $( '#' + idForm + ' .removeGroupElement' ).off( 'click' );
 }
 
-
 /*
   Gestión de informacion en cliente (FIN)
 */
+
 
 
 function setValidateForm( idForm, rules, messages ) {
@@ -160,7 +163,7 @@ function setValidateForm( idForm, rules, messages ) {
         } );
         return false; // required to block normal submit since you used ajax
       }
-  });
+  }); // $validateForm =
 
   // Bind file fields and group actions...
   bindForm( idForm );
@@ -169,7 +172,7 @@ function setValidateForm( idForm, rules, messages ) {
   setFormInfo( idForm, 'validateForm', $validateForm );
 
   return $validateForm;
-} // function
+} // function setValidateForm( idForm, rules, messages )
 
 
 function showErrorsValidateForm( $form, msgText, msgClass ) {
@@ -181,7 +184,7 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
   msgLabel = '<label class="formError">'+msgText+'</label>';
   $msgContainer = false;
   if( msgClass !== false ) {
-    $msgContainer = $( '#JQVMC-'+msgClass+', .JQVMC-'+msgClass );
+    $msgContainer = $( '.JQVMC-'+msgClass );
   }
   if( $msgContainer !== false && $msgContainer.length > 0 ) {
     $msgContainer.append( msgLabel );
@@ -190,7 +193,6 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
     $form.append( msgLabel );
   }
 }
-
 
 
 
@@ -224,7 +226,7 @@ function checkInputFileField( files, idForm, fieldName ) {
   }
 
   return valRes;
-} // function procesarFiles
+} // function checkInputFileField( files, idForm, fieldName )
 
 
 function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
@@ -481,29 +483,40 @@ function addGroupElement( evnt ) {
       console.log( 'getGroupElement success:' );
       console.log( $jsonData );
 
+      var idForm = $jsonData.moreInfo.idForm;
+      var groupName = $jsonData.moreInfo.groupName;
+
+      $( '#' + idForm + ' .JQVMC-group-' + groupName + ' .formError' ).remove();
+
       if( $jsonData.result === 'ok' ) {
         console.log( 'getGroupElement OK' );
-        console.log( $jsonData.moreInfo.idForm, $jsonData.moreInfo.groupName );
+        console.log( 'idForm: ' + idForm + ' groupName: ' + groupName );
 
         $( $jsonData.moreInfo.htmlGroupElement ).insertBefore(
-          '#' + $jsonData.moreInfo.idForm + ' .cgmMForm-group-' + groupName + ' .addGroupElement'
+          '#' + idForm + ' .cgmMForm-group-' + groupName + ' .addGroupElement'
         );
 
         $.each( $jsonData.moreInfo.validationRules, function( fieldName, fieldRules ) {
-          console.log( fieldName, fieldRules );
-          $( '#' + $jsonData.moreInfo.idForm + ' .cgmMForm-field-' + fieldName ).rules( 'add', fieldRules );
+          console.log( 'fieldName: ' + fieldName + ' fieldRules: ', fieldRules );
+          console.log( 'ELEM: #' + idForm + ' .cgmMForm-field.cgmMForm-field-' + fieldName );
+          $( '#' + idForm + ' .cgmMForm-field.cgmMForm-field-' + fieldName ).rules( 'add', fieldRules );
         });
+
+        console.log( 'getGroupElement OK Fin' );
       }
       else {
         console.log( 'getGroupElement ERROR' );
-
-        $validateForm = getFormInfo( $jsonData.moreInfo.idForm, 'validateForm' );
+        $validateForm = getFormInfo( idForm, 'validateForm' );
         console.log( $validateForm );
-
+        errObj = $jsonData.jvErrors[0];
+        console.log( errObj.JVshowErrors );
+        showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors[0], 'group-' + groupName );
       }
 
       // Activamos los bins del form despues del proceso
       bindForm( idForm );
+
+      console.log( 'getGroupElement success: Fin' );
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
       console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
@@ -513,7 +526,7 @@ function addGroupElement( evnt ) {
       bindForm( idForm );
     }
   });
-} // function addGroupElement
+} // function addGroupElement( evnt )
 
 
 function removeGroupElement( evnt ) {
@@ -552,24 +565,30 @@ function removeGroupElement( evnt ) {
       console.log( 'removeGroupElement success:' );
       console.log( $jsonData );
 
+      var idForm = $jsonData.moreInfo.idForm;
+      var groupName = $jsonData.moreInfo.groupName;
+
+      $( '#' + idForm + ' .JQVMC-group-' + groupName + ' .formError' ).remove();
+
       if( $jsonData.result === 'ok' ) {
         console.log( 'removeGroupElement OK' );
-        console.log( $jsonData.moreInfo.idForm, $jsonData.moreInfo.groupName, $jsonData.moreInfo.groupIdElem );
-        console.log( '#' + $jsonData.moreInfo.idForm +
-          ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem );
-        $( '#' + $jsonData.moreInfo.idForm +
-          ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem ).remove();
+        console.log( idForm, groupName, $jsonData.moreInfo.groupIdElem );
+        console.log( '#' + idForm + ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem );
+        $( '#' + idForm + ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem ).remove();
       }
       else {
         console.log( 'removeGroupElement ERROR' );
-
-        $validateForm = getFormInfo( $jsonData.moreInfo.idForm, 'validateForm' );
+        $validateForm = getFormInfo( idForm, 'validateForm' );
         console.log( $validateForm );
-
+        errObj = $jsonData.jvErrors[0];
+        console.log( errObj.JVshowErrors );
+        showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors[0], 'group-' + groupName );
       }
 
       // Activamos los bins del form despues del proceso
       bindForm( idForm );
+
+      console.log( 'removeGroupElement success: Fin' );
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
       console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
@@ -579,7 +598,7 @@ function removeGroupElement( evnt ) {
       bindForm( idForm );
     }
   });
-} // function addGroupElement
+} // function removeGroupElement( evnt )
 
 
 

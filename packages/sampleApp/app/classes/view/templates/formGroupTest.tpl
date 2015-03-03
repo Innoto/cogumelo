@@ -41,6 +41,8 @@
 
     {$formValidations}
 
+    <br><hr><br>
+
     {$formBasura}
 
   </body>
