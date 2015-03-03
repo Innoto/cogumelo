@@ -169,7 +169,7 @@
   * 
   * @return array
   */
-  static function getVORelationship( $voName, $parentInfo=array( 'parentVO' => false, 'parentTable'=>false, 'parentId'=>false, 'relatedWithId'=>false ) ) {
+  static function getVORelationship( $voName, $parentInfo=array( 'parentVO' => false, 'parentTable'=>false, 'parentId'=>false, 'relatedWithId'=>false, 'preventCircle'=>array() ) ) {
 
     $vo = new $voName();
     $relArray = array(
@@ -191,15 +191,26 @@
             in_array( $roRel['name'], $allVOsRel[$voName]['relationship']) ||   // relation from this to other VO
             in_array( $voName, $roRel['relationship'] )                         // relation fron other to this VO
           ) && 
-          ($parentInfo['parentVO'] == false || $roRel['name'] != $parentInfo['parentVO'])
+          ( !in_array( $roRel['name'], $parentInfo['preventCircle']) )
         ) {
+
+
+            // prevent circle relationships array
+            if( sizeof($parentInfo['preventCircle']) === 0 ) {
+              $preventCircle = array($voName);
+            }
+            else {
+              array_push( $parentInfo['preventCircle'], $voName);
+              $preventCircle = $parentInfo['preventCircle'];
+            }
 
 
             $sonParentArray = array(
              'parentVO' => $voName, 
              'parentTable'=> $vo::$tableName, 
              'parentId'=> 'NO', 
-             'relatedWithId'=> 'NO' 
+             'relatedWithId'=> 'NO',
+             'preventCircle' => $preventCircle
             );
 
 
