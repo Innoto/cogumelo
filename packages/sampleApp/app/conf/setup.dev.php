@@ -165,7 +165,7 @@ define( 'LANG_AVAILABLE', 'gl,es,en' );
 //
 //  Form Mod
 //
-
+ini_set( 'session.gc_maxlifetime', 86400 );
 define( 'MOD_FORM_CSS_PRE', 'cgmMForm' );
 define( 'MOD_FORM_FILES_TMP_PATH', APP_TMP_PATH.'/formFiles' );
 define( 'MOD_FORM_FILES_APP_PATH', APP_BASE_PATH.'/../formFiles' );
