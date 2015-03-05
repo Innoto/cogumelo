@@ -125,8 +125,13 @@
             $relationships[] =  $attr['vo'];
           }
           else {
-            $relationships[ $attr['vo'] ] =  array('parent' => $attrKey, 'related'=>$attr['key'] );
+
+
+            $relationships[] =  array('vo' =>  $attr['vo'] , 'key' => $attrKey, 'related'=>$attr['key'] );
+
+
           }
+
         }
       }
     }
@@ -184,6 +189,7 @@
 
     $allVOsRel = self::getAllRelScheme();
 
+
     if( sizeof( $allVOsRel ) > 0) {
       foreach( $allVOsRel as $roRel ) {
         if(  
@@ -193,6 +199,7 @@
           ) && 
           ( !in_array( $roRel['name'], $parentInfo['preventCircle']) )
         ) {
+
 
 
             // prevent circle relationships array
@@ -214,22 +221,45 @@
             );
 
 
-            if( array_key_exists( $roRel['name'], $allVOsRel[$voName]['extendedRelationship'] ) ) {
-              $sonParentArray['parentId'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['parent'];
-              $sonParentArray['relatedWithId'] = $allVOsRel[$voName]['extendedRelationship'][$roRel['name']]['related'];
-            }
-            else {
-              $sonParentArray['parentId'] = $roRel['extendedRelationship'][$voName]['related'];
-              $sonParentArray['relatedWithId']  = $roRel['extendedRelationship'][$voName]['parent'];
-            }
-            
-            $relArray['relationship'][] = self::getVORelationship( $roRel['name'], $sonParentArray );
+            $relArray['relationship'] = array_merge( $relArray['relationship'] , self::findRelFromIn( $allVOsRel[$voName]['extendedRelationship'] , $roRel['name'] , $voName ,  $sonParentArray) );
+            $relArray['relationship'] = array_merge( $relArray['relationship'] , self::findRelFromOut( $roRel['extendedRelationship'] , $voName,  $roRel['name'],  $sonParentArray) );
+
           }
       }
     }
 
     return $relArray;
   }
+
+
+  static function findRelFromOut( $rel , $voSearch, $voToRegister, $sonParentArray) {
+    $retArray = array();
+    foreach( $rel as $r ) {
+      if( $r['vo'] == $voSearch ) {
+        $sonParentArray['parentId'] = $r['related'];
+        $sonParentArray['relatedWithId'] = $r['key'];
+        $retArray[ $r['related'].'.'.$voToRegister ] = self::getVORelationship( $voToRegister, $sonParentArray );
+      }
+    }
+
+    return $retArray;
+  }
+
+
+  static function findRelFromIn( $rel , $voSearch, $voToRegister, $sonParentArray) {
+    $retArray = array();
+    foreach( $rel as $r ) {
+      if( $r['vo'] == $voSearch ) {
+        $sonParentArray['parentId'] = $r['key'];
+        $sonParentArray['relatedWithId'] = $r['related'];
+        $retArray[ $r['key'].'.'.$voSearch ] = self::getVORelationship( $voSearch, $sonParentArray );
+      }
+    }
+
+    return $retArray;
+  }
+
+
 
   /**
   * Generate index for rel Object
@@ -396,7 +426,7 @@
     $relList = $newRelArray;
 
       $voName = array_shift( $listToResolve );
-var_dump($voName);
+
       foreach( $originalRelArray as $rel ){
 
         if( $rel->vo == $voName ) {
