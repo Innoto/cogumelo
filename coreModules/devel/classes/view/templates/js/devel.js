@@ -66,11 +66,24 @@ function botonBinds(){
 
 function drawERScheme() {
 
+
+
+
   var diagramDataObj = {nodes:[],links:[]};
 
   //links:[{source:12, target:10}];
 
+
+  var newErData = [];
+
   $.each(erData, function(i,e) {
+    newErData.push(e);
+
+  });
+
+  erData = newErData;
+
+  $.each(newErData, function(i,e) {
 
     var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
 
@@ -102,6 +115,7 @@ function drawERScheme() {
     $('#dbsql_container .erDiagram .legend').find('.module.' +e.module).append('<div><div class="colorlegend" style="background-color:'+randomColor+';"></div><div>'+e.name+'</div></div>');
 
   });
+
 
 
 
