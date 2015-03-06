@@ -3,12 +3,12 @@ function drawERD(  svgDiv,  graphData, cola) {
 
 
    var width = 800,
-      height =  25 * graphData.nodes.length + 80*graphData.links.length ;
+      height =  20 * graphData.nodes.length + 25*graphData.links.length ;
 
     var color = d3.scale.category20();
 
     var cola = cola.d3adaptor()
-        .linkDistance(100)
+        .linkDistance(70)
         .handleDisconnected(true)
         .size([width, height]);
 
@@ -36,7 +36,7 @@ function drawERD(  svgDiv,  graphData, cola) {
         .data(graph.nodes)
       .enter().append("circle")
         .attr("class", "node")
-        .attr("r", function (d) { return 2 * d.elements})
+        .attr("r", function (d) { return 1.5 * d.elements})
         .style("fill", function (d) { return d.color})
         .call(cola.drag);
 

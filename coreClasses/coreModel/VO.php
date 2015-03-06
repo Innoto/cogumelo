@@ -243,7 +243,7 @@ Class VO
    *
    * @return void
    */
-  function setterDependence( $voObj, $fk = false ){
+  function setterDependence( $fk, $voObj ){
     $retVO = false;
     $voName = $voObj->getVOClassName();
 
@@ -261,17 +261,8 @@ Class VO
     else
     if( sizeof($references) > 1 ) {
 
-      // Dependence must be referenced by key id ( Same VO as dependency of two different keys )
-      if( !$fk ) {
-        Cogumelo::error( 'Various '.$voObj->getVOClassName() .' dependences into '.$this->getVOClassName().'. You must specify the foreign key reference.' );
-      }
-      else {
-        // developer specified id key, search for it into relationship reference object
-      }
-    }
-    else {
-      // dependence exist, we doesn't need specify by key
       $retVO = $this->setDepVO( $voObj->data, $voName, array_pop( $references) );
+
     }
 
 

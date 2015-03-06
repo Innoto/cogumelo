@@ -5,6 +5,7 @@ $(document).ready(function(){
   autoLoadDebugger();
   drawERScheme();
   botonBinds();
+  $('#dbsql_link a').trigger('click');
 });
 
 
