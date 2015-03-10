@@ -110,7 +110,7 @@ Class VO
 
     if( is_array($data) ) {
       foreach( $data as $d ) {
-        $this->setDepVO($d, $voName, $relObj);
+        $this->setDepVO($d, $voName, $relObj->parentId, $relObj);
       }
     }
     else
@@ -120,7 +120,7 @@ Class VO
         Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
       }
 
-      $this->setDepVO($d, $voName, $relObj);
+      $this->setDepVO($d, $voName, $relObj->parentId, $relObj);
     }
   }
 
@@ -130,13 +130,14 @@ Class VO
    *
    * @param object $dataVO
    * @param string $voName name of VO or Model
+   * @param string $key vo dependence key 
    * @param object $relObj related object
    *
    * @return object
    */
-  function &setDepVO( $dataVO, $voName, $relObj  ) {
+  function &setDepVO( $dataVO, $voName, $key, $relObj  ) {
     $retvO = false;
-    $attribute =  $relObj->parentId;
+    $attribute =  $key;
 
     if( $this->isForeignKey( $attribute ) ){
       $retVO = new $voName( (array) $dataVO, $relObj );
@@ -238,8 +239,8 @@ Class VO
   /**
    * set data dependence
    *
-   * @param object $voObj VO or Model
    * @param string $fk attribute name
+   * @param object $voObj VO or Model
    *
    * @return void
    */
@@ -256,18 +257,15 @@ Class VO
 
     // Dependence not exist
     if( sizeof($references) == 0 ) {
+
       Cogumelo::error( $voObj->getVOClassName() .' is not dependence of: '.$this->getVOClassName() );
     }
-    else
-    if( sizeof($references) > 1 ) {
-
-      $retVO = $this->setDepVO( $voObj->data, $voName, array_pop( $references) );
-
+    else{ 
+      $retVO = $this->setDepVO( $voObj->data, $voName, $fk, array_pop( $references) );
     }
 
 
     $this->refreshRelationshipKeyIds();
-
     return $retVO;
   }
 
