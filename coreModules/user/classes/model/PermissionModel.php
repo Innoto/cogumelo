@@ -13,7 +13,6 @@ class PermissionModel extends Model
       'autoincrement' => true
     ),
     'name' => array(
-      'name' => 'Name',
       'type' => 'CHAR',
       'size' => '100',
       'unique' => true

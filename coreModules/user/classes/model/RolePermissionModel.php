@@ -14,14 +14,12 @@ class RolePermissionModel extends Model
     ),
 
     'role' => array(
-      'name' => 'Role',
       'type'=>'FOREIGN',
       'vo' => 'RoleModel',
       'key' => 'id'
     ),
 
     'permission' => array(
-      'name' => 'Permission',
       'type'=>'FOREIGN',
       'vo' => 'PermissionModel',
       'key' => 'id'

@@ -15,12 +15,10 @@ class RoleModel extends Model
       'autoincrement' => true
     ),
     'name' => array(
-      'name' => 'Name',
       'type' => 'CHAR',
       'size' => '10'
     ),
     'description'=> array(
-      'name' => 'Descripción',
       'type' => 'TEXT',
       'size' => '300'
     )
