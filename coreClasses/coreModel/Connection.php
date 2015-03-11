@@ -21,6 +21,15 @@ abstract class Connection
 		Cogumelo::load($class.'.php');
 		
 		$dbObj = ucfirst(DB_ENGINE)."Connection";
-		return new $dbObj($devel_data);
+
+
+        static $cogumelo_connection_instance = null;
+        if (null === $cogumelo_connection_instance) {
+            $cogumelo_connection_instance = new $dbObj($devel_data);;
+        }
+
+        return $cogumelo_connection_instance;
+
+		
 	}
 }
