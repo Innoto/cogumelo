@@ -13,27 +13,22 @@ class FiledataModel extends Model
       'autoincrement' => true
     ),
     'name' => array(
-      'name' => 'Name',
       'type' => 'CHAR',
       'size' => '250'
     ),
     'originalName'=> array(
-      'name' => 'Nombre original',
       'type' => 'CHAR',
       'size' => '250'
     ),
     'absLocation'=> array(
-      'name' => 'Nombre original',
       'type' => 'CHAR',
       'size' => '250'
     ),
     'type'=> array(
-      'name' => 'Tipo',
       'type' => 'CHAR',
       'size' => '60'
     ),
     'size'=> array(
-      'name' => 'Tamaño',
       'type' => 'BIGINT'
     )
   );

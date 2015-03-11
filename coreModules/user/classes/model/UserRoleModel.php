@@ -15,13 +15,11 @@ class UserRoleModel extends Model
       'autoincrement' => true
     ),
     'user'=> array(
-      'name' => 'User',
       'type'=>'FOREIGN',
       'vo' => 'UserModel',
       'key' => 'id'
     ),
     'role'=> array(
-      'name' => 'Role',
       'type'=>'FOREIGN',
       'vo' => 'RoleModel',
       'key' => 'id'
