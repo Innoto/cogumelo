@@ -60,11 +60,39 @@ class MysqlConnection extends Connection
         else {
             Cogumelo::debug("MYSQLI: Connection Stablished to ".DB_HOSTNAME);
         }
-        
-        @mysqli_query($this->db ,"START TRANSACTION;");
     }
   }
-  
+
+  /**
+   * Start transaction
+   *
+   * @return void
+   */
+  public function transactionStart()
+  {
+    mysqli_query($this->db ,"START TRANSACTION;");
+  }
+
+  /**
+   * Commit transaction
+   *
+   * @return void
+   */
+  public function transactionCommit()
+  {
+    mysqli_query($this->db ,"COMMIT;");
+  }
+
+  /**
+   * Commit transaction
+   *
+   * @return void
+   */
+  public function transactionRollback()
+  {
+    mysqli_query($this->db ,"ROLLBACK;");
+  }
+
 
   /**
    * Close mysql connection

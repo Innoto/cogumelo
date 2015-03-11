@@ -37,7 +37,9 @@ class Facade
 	public function openConnection()
 	{
 		$this->connectioncontrol = Connection::Factory($this->develModeData);
+    $this->connectioncontrol->connect();    
 	}
+
 
 	/**
 	 * devel Mode is used when want to execute database with other user
@@ -73,12 +75,23 @@ class Facade
 			$args_str .= (', $args['. $akey .']');
 		}
 
-		Cogumelo::debug("TRANSACTION START: ".$name);
-		$this->OpenConnection();
+		$this->openConnection();
+
+
+    $this->connectioncontrol->transactionStart();
+    Cogumelo::debug("TRANSACTION START: ".$name);
+
 		eval('$data = $this->dao->'.$name. '($this->connectioncontrol'. $args_str . '); ');
 
-		if($data !== COGUMELO_ERROR) Cogumelo::debug("TRANSACTION COMPLETED: ".$name);
-		else Cogumelo::error("TRANSACTION NOT COMPLETED: ".$name);
+		if($data !== COGUMELO_ERROR) {
+      $this->connectioncontrol->transactionCommit();
+      Cogumelo::debug("TRANSACTION COMMITED: ".$name);
+    }
+		else {
+      $this->connectioncontrol->transactionRollback();
+      Cogumelo::debug("TRANSACTION ROLLBACK: ".$name);
+      Cogumelo::error("TRANSACTION NOT COMPLETED, DOING ROLLBACK: ".$name);
+    }
 
 		return $data;
 	}
