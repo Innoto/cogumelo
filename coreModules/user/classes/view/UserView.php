@@ -292,6 +292,48 @@ class UserView extends View
     return $form;
   }
 
+  /**
+  *
+  * Update user roles form
+  * @param request(id)
+  * @return Form Html
+  *
+  **/
+  function userRolesFormDefine( $request ){
+
+    $userModel = new UserModel();
+    $user = $userModel->listItems( array('filters' => array('id' => $request[1] )))->fetch();
+    $roleModel = new RoleModel();
+    $roles = $roleModel->listItems()->fetchAll();
+    $userRoleModel = new UserRoleModel();
+    $userRoles = $userRoleModel->listItems( array('filters' => array('user' => $request[1] )))->fetchAll();
+
+    $rolesCheck = array();
+    foreach ($roles as $key => $rol) {
+      $rolesCheck[$rol->getter('id')] = $rol->getter('name');
+    }
+
+    $activeRolesCheck = array();
+    foreach ($userRoles as $key => $rol) {
+      array_push( $activeRolesCheck, $rol->getter('role'));
+    }
+
+    if(!$user){
+      Cogumelo::redirect( SITE_URL.'404' );
+    }
+
+    $form = new FormController( 'userRoleForm', '/user/assignroleform' ); //actionform
+    $form->setSuccess( 'redirect', '/' );
+    $form->setField( 'user', array( 'type' => 'reserved', 'value' => $user->getter('id') ));
+    $form->setField( 'checkroles', array( 'type' => 'checkbox', 'label' => 'Selecciona los roles para este usuario', 'value' => $activeRolesCheck,
+      'options'=> $rolesCheck
+    ));
+    $form->setValidationRule( 'checkroles', 'required' );
+    $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
+
+    return $form;
+  }
+
    /**
    *
    * Returns necessary html form
@@ -327,6 +369,26 @@ class UserView extends View
     $this->template->assign("userChangePasswordFormValidations", $form->getScriptCode());
 
     $this->template->setTpl('userChangePasswordForm.tpl', 'user');
+
+    return $this->template->execToString();
+  }
+
+  /**
+   *
+   * Returns necessary html form
+   * @param $form
+   * @return string
+   *
+   **/
+  function userRolesFormGet($form) {
+    $form->saveToSession();
+
+    $this->template->assign("userRolesFormOpen", $form->getHtmpOpen());
+    $this->template->assign("userRolesFormFields", $form->getHtmlFieldsArray());
+    $this->template->assign("userRolesFormClose", $form->getHtmlClose());
+    $this->template->assign("userRolesFormValidations", $form->getScriptCode());
+
+    $this->template->setTpl('userRolesForm.tpl', 'user');
 
     return $this->template->execToString();
   }
@@ -393,9 +455,16 @@ class UserView extends View
     return $form;
   }
 
+  /**
+   *
+   * Edit/Create User
+   * @return $user
+   *
+   **/
 
   function userFormOk( $form ) {
     //Si todo esta OK!
+    $asignRole = false;
 
     if( !$form->processFileFields() ) {
       $form->addFormError( 'Ha sucedido un problema con los ficheros adjuntos. Puede que sea necesario subirlos otra vez.', 'formError' );
@@ -404,7 +473,6 @@ class UserView extends View
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
       $valuesArray['active'] = 0;
-      $valuesArray['role'] = ROLE_USER;
 
        // Donde diferenciamos si es un update o un create
       if( !isset($valuesArray['id']) || !$valuesArray['id'] ){
@@ -412,19 +480,32 @@ class UserView extends View
         unset($valuesArray['password']);
         unset($valuesArray['password2']);
         $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
+        $asignRole = true;
       }
 
       $user = new UserModel( $valuesArray );
+
       if(isset($password)){
         $user->setPassword( $password );
       }
-
-      //$file = new FiledataModel( $valuesArray['avatar']['values'] );
-      //$file->save();
-      $user->setterDependence( new FiledataModel( $valuesArray['avatar']['values'] ) );
-      //var_dump($user->getAllData());
+      if($valuesArray['avatar']['values']){
+        $user->setterDependence( 'avatar', new FiledataModel( $valuesArray['avatar']['values'] ) );
+      }
       $user->save( array( 'affectsDependences' => true ));
-      //var_dump($user->getAllData());
+
+      /*Asignacion de ROLE user*/
+      if($asignRole){
+        $roleModel = new RoleModel();
+        $role = $roleModel->listItems( array('filters' => array('name' => 'user') ))->fetch();
+        $userRole = new UserRoleModel();
+        if( $role ){
+          $userRole->setterDependence( 'role', $role );
+        }
+        $userRole->setterDependence( 'user', $user );
+        $userRole->save(array( 'affectsDependences' => true ));
+      }
+
+
     }
     return $user;
   }
@@ -466,6 +547,12 @@ class UserView extends View
     return $form;
   }
 
+  /**
+   *
+   * Change Password
+   * @return $user
+   *
+   **/
 
   function changeUserPasswordFormOk( $form ) {
     //Si todo esta OK!
@@ -483,6 +570,72 @@ class UserView extends View
       $user->save();
     }
     return $user;
+  }
+
+
+
+
+  /**
+   *
+   * Assigns the forms validations
+   * @return $form
+   *
+   **/
+  function actionUserRolesForm() {
+    $form = new FormController();
+    if( $form->loadPostInput() ) {
+      $form->validateForm();
+    }
+    else {
+      $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
+    }
+
+    if( !$form->existErrors() ){
+      $valuesArray = $form->getValuesArray();
+
+      if( !isset($valuesArray['user'])){
+        $form->addFieldRuleError('id', 'cogumelo', 'Error usuario no identificado.');
+      }
+    }
+
+    return $form;
+  }
+
+  /**
+   *
+   * Save UserRoles
+   * @return $array userRoles
+   *
+   **/
+
+  function userRolesFormOk( $form ) {
+    //Si todo esta OK!
+
+
+    if( !$form->existErrors() ){
+      $valuesArray = $form->getValuesArray();
+
+      $userRoleModel = new UserRoleModel();
+      $userRoles = $userRoleModel->listItems( array('filters' => array( 'user' => $valuesArray['user'])) );
+      if( $userRoles ){
+        while( $userRole = $userRoles->fetch() ){
+          $userRole->delete();
+        }
+      }
+
+      if( is_array($valuesArray['checkroles']) && count($valuesArray['checkroles']) > 0){
+        foreach ($valuesArray['checkroles'] as $key => $checkrol) {
+          # code...
+          $userRoleModel = new UserRoleModel( array( 'role' => $checkrol, 'user' => $valuesArray['user'] ) );
+          $userRoleModel->save();
+        }
+      }else{
+        $userRoleModel = new UserRoleModel( array( 'role' => $valuesArray['checkroles'], 'user' => $valuesArray['user'] ) );
+        $userRoleModel->save();
+      }
+
+    }
+    return $userRoleModel->listItems( array('filters' => array( 'user' => $valuesArray['user'])))->fetchAll();
   }
 
 
