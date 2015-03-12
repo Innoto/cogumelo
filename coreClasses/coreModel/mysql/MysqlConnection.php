@@ -106,7 +106,7 @@ class MysqlConnection extends Connection
    *
    * @return void
    */
-  function __destruct()
+/*  function __destruct()
   {
 
 
@@ -134,5 +134,5 @@ class MysqlConnection extends Connection
       }
     }
   }
-
+*/
 }
