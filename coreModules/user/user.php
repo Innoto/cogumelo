@@ -16,6 +16,7 @@ class user extends Module
     /*'controller/UserController.php',*/
     'controller/UserAccessController.php',
     'view/UserView.php',
+    'view/RoleView.php',
     'model/UserModel.php',
     'model/RoleModel.php'
 
