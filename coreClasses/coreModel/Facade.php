@@ -16,6 +16,7 @@ class Facade
 	var $dao;
 	var $develModeData = false;
 
+
 	/**
 	 *
    * @param object $voObj vo for the autogenerator 
@@ -25,8 +26,9 @@ class Facade
    * @return object
    */
 	function __construct( $voObj, $entity = false, $module=false )
-	{
+  {
 		$this->dao = DAO::Factory($voObj, $entity, $module);
+    $this->openConnection();
 	}
 
 	/**
@@ -75,22 +77,13 @@ class Facade
 			$args_str .= (', $args['. $akey .']');
 		}
 
-		$this->openConnection();
 
-
-    $this->connectioncontrol->transactionStart();
-    Cogumelo::debug("TRANSACTION START: ".$name);
 
 		eval('$data = $this->dao->'.$name. '($this->connectioncontrol'. $args_str . '); ');
 
-		if($data !== COGUMELO_ERROR) {
-      $this->connectioncontrol->transactionCommit();
-      Cogumelo::debug("TRANSACTION COMMITED: ".$name);
-    }
-		else {
-      $this->connectioncontrol->transactionRollback();
-      Cogumelo::debug("TRANSACTION ROLLBACK: ".$name);
-      Cogumelo::error("TRANSACTION NOT COMPLETED, DOING ROLLBACK: ".$name);
+		if($data == COGUMELO_ERROR) {
+      $this->connectioncontrol = transactionError();
+      Cogumelo::error("Facade error : ".$name);
     }
 
 		return $data;
