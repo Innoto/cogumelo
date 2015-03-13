@@ -95,6 +95,8 @@ class MysqlConnection extends Connection
       $this->transactionCommit();
       Cogumelo::debug("TRANSACTION COMMIT");
     }
+
+    $this->transactStarted = false;
   }
 
   /**
