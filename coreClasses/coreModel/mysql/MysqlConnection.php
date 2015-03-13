@@ -122,39 +122,4 @@ class MysqlConnection extends Connection
      $this->transactError = true;
   }
 
-
-  /**
-   * Close mysql connection
-   *
-   * @return void
-   */
-/*  function __destruct()
-  {
-
-
-    if($this->stmt || $this->db) {
-
-      if( $this->transactError ) {
-        $this->connectioncontrol->transactionRollback();
-        Cogumelo::debug("TRANSACTION ROLLBACK");
-      }
-      else {
-        $this->transactionCommit();
-        Cogumelo::debug("TRANSACTION COMMIT");
-      }
-
-
-      // close stmt if exist
-      if($this->stmt)
-          $this->stmt->close();
-
-      // close mysqli
-      if($this->db){
-          $this->db->close();
-          //echo "mysl closed";
-          Cogumelo::debug("MYSQLI: Connection closed");
-      }
-    }
-  }
-*/
 }
