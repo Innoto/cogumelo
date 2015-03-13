@@ -253,7 +253,7 @@ class MysqlDAO extends DAO
           $cached->setCache($queryId, $daoresult->fetchAll_RAW() );
         }
         else{
-          $daoresult = null;
+          $daoresult = COGUMELO_ERROR;
         }
       }
     }
@@ -266,7 +266,7 @@ class MysqlDAO extends DAO
         $daoresult = new MysqlDAOResult( $this->VO , $res);
       }
       else{
-        $daoresult = null;
+        $daoresult = COGUMELO_ERROR;
       }
     }
 
@@ -346,7 +346,7 @@ class MysqlDAO extends DAO
       return $VOobj;
     }
     else {
-      return null;
+      return COGUMELO_ERROR;
     }
   }
 
@@ -385,7 +385,7 @@ class MysqlDAO extends DAO
       return $VOobj;
     }
     else {
-      return null;
+      return COGUMELO_ERROR;
     }
   }
 
