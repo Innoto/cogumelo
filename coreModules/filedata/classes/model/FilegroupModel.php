@@ -5,7 +5,7 @@ Cogumelo::load('coreModel/Model.php');
 
 class FilegroupModel extends Model
 {
-  static $tableName = 'filedata_filedata';
+  static $tableName = 'filedata_filedatagroup';
   static $cols = array(
     'id' => array(
       'type' => 'INT',

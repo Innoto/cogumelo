@@ -391,28 +391,16 @@
   */
   static function limitRelObj($relObj, $resolveDependences) {
   
-    if( is_array( $resolveDependences ) && sizeof( $resolveDependences ) > 0 ) {
-      $newRelObj = (object) 'relObj';
-      $completeResolveDependences = array();
+    if( is_array( $resolveDependences ) && is_array( $relOb->relationship ) ) {
+      $relationshipArray = array();
+      foreach ($relOb->relationship as $rok => $ro) {
 
-      // complete list of dependences to resolve
-      foreach( $resolveDependences as $toResolve) {
-        $completeResolveDependences = array_merge($completeResolveDependences, self::limitRelIndex( $relObj->index, $toResolve ) );
-      }
-
-
-      $newRelObj = clone $relObj;
-      $newRelObj->relationship = array();
-
-      if( sizeof($completeResolveDependences) > 0 ){
-        foreach( $completeResolveDependences as $subcrs) {
-
-          //$newRelObj->relationship = self::completeRelObject( $relObj->relationship, $newRelObj->relationship , $subcrs );
+        if( in_array( preg_replace('#(.*).#' ,'', $rok ), $resolveDependences ) ) {
+          $relationshipArray[$rok] = self::limitRelObj( $ro );
         }
-        
       }
-        
 
+      $relOb->relationship = $relationshipArray;
     }
 
     return $relObj;
