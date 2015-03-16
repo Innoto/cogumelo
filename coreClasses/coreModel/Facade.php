@@ -28,7 +28,9 @@ class Facade
   function __construct( $voObj, $entity = false, $module=false )
   {
     $this->dao = DAO::Factory($voObj, $entity, $module);
-    $this->openConnection();
+    if( $module != 'devel' ) {
+      $this->getConnection();
+    }
   }
 
   /**
@@ -36,10 +38,9 @@ class Facade
    *
    * @return void
    */
-  public function openConnection()
+  public function getConnection()
   {
     $this->connectioncontrol = Connection::Factory($this->develModeData);
-    $this->connectioncontrol->connect();    
   }
 
 
@@ -57,6 +58,8 @@ class Facade
     $this->develModeData['DB_USER'] = $user;
     $this->develModeData['DB_PASSWORD'] = $password;
     $this->develModeData['DB_NAME'] = $DB;
+
+    $this->getConnection();    
   }
   
 
@@ -118,7 +121,7 @@ class Facade
     $args_str = '';
     foreach($args as $akey =>$arg){
       $args_str .= (', $args['. $akey .']');
-  }
+    }
 
 
     eval('$data = $this->dao->'.$name. '($this->connectioncontrol'. $args_str . '); ');

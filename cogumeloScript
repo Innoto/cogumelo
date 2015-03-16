@@ -18,7 +18,7 @@
   //
   //  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
   //
-  $develdbcontrol = new DevelDBController();
+  //$develdbcontrol = new DevelDBController();
   //var_dump( $develdbcontrol->getTablesSQL() ); // este método, por exemplo, devolvenos todo o  SQL xerado para os VO's do proxecto
 
 
@@ -197,7 +197,15 @@
     foreach($C_ENABLED_MODULES as $moduleName) {
       require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
     }
-    $develdbcontrol = new DevelDBController();
+
+    $user =  ReadStdin("Enter an user with privileges:\n", '');
+    // Get the password
+    fwrite(STDOUT, "Enter the password:\n");
+    $passwd = getPassword(true);
+    fwrite(STDOUT, "\n--\n");
+
+    $develdbcontrol = new DevelDBController($user, $passwd, DB_NAME);
+
     $develdbcontrol->createTables();
     echo "\nGenerated db tables\n";
   }
