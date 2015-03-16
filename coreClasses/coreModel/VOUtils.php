@@ -376,7 +376,6 @@
       $ret = $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
     }
 
-
     return self::limitRelObj( $ret, $resolveDependences );
   }
 
@@ -390,17 +389,21 @@
   * @return object
   */
   static function limitRelObj($relObj, $resolveDependences) {
-  
-    if( is_array( $resolveDependences ) && is_array( $relOb->relationship ) ) {
-      $relationshipArray = array();
-      foreach ($relOb->relationship as $rok => $ro) {
 
-        if( in_array( preg_replace('#(.*).#' ,'', $rok ), $resolveDependences ) ) {
-          $relationshipArray[$rok] = self::limitRelObj( $ro );
+
+    if( is_array( $resolveDependences ) && sizeof( $relObj->relationship ) > 0 ) {
+
+      $relationshipArray = array();
+      $currentRel = (array) $relObj->relationship;
+      foreach ( $currentRel   as $rok => $ro) {
+
+        if( in_array( preg_replace('/(.*)\./' ,'', $rok ), $resolveDependences ) ) {
+
+          $relationshipArray[$rok] = self::limitRelObj( $ro, $resolveDependences );
         }
       }
 
-      $relOb->relationship = $relationshipArray;
+      $relObj->relationship = $relationshipArray;
     }
 
     return $relObj;
