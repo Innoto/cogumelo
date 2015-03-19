@@ -588,7 +588,7 @@ class FormController implements Serializable {
         // Procesamos los campos que no son raiz de campos agrupados
         $fieldsValuesArray[ $fieldName ] = $this->getFieldValue( $fieldName );
 
-        error_log( $fieldName .' === '. $fieldsValuesArray[ $fieldName ] );
+        error_log( $fieldName .' === '. print_r( $fieldsValuesArray[ $fieldName ], true ) );
       }
       else {
         error_log( $fieldName .' IGNORADO!!! ' );
@@ -619,8 +619,7 @@ class FormController implements Serializable {
       }
       else {
         $valuesArray[ 'fields' ][ $fieldName ] = $this->getFieldValue( $fieldName );
-
-        error_log( $fieldName .' === '. $valuesArray[ 'fields' ][ $fieldName ] );
+        // error_log( $fieldName .' === '. print_r( $valuesArray[ 'fields' ][ $fieldName ], true ) );
       }
     }
 
@@ -642,8 +641,7 @@ class FormController implements Serializable {
 
         if( $this->getFieldInternal( $fieldName, 'groupElemRemoved' ) !== true ) {
           $fieldsValuesArray[ $idElem ][ $fieldName ] = $this->getFieldValue( $fieldName );
-
-          error_log( $groupName.'/'.$idElem.'/'.$fieldName .' === '. $fieldsValuesArray[ $idElem ][ $fieldName ] );
+          error_log( $groupName.'/'.$idElem.'/'.$fieldName .' === '. print_r( $fieldsValuesArray[ $idElem ][ $fieldName ], true ) );
         }
         else {
           error_log( $groupName.'/'.$idElem.'/'.$fieldName .' IGNORADO!!! ' );
@@ -1684,7 +1682,7 @@ class FormController implements Serializable {
   public function getJsonOk( $moreInfo = false ) {
     $result = array(
       'result' => 'ok',
-      'valuesDEBUG' => $this->getValuesGroupedArray(),
+      // 'valuesDEBUG' => $this->getValuesGroupedArray(),
       'success' => $this->getSuccess()
     );
     if( $moreInfo !== false ) {
