@@ -33,7 +33,7 @@ class TableController{
   var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
   var $tabs = false;
   var $searchId = 'tableSearch';
-  var $currentTab = null;
+  var $currentTab = '*';
   var $filters = array();
   var $internalFilters = array();
   var $rowsEachPage = 50;

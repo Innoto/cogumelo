@@ -146,16 +146,21 @@ function cogumeloTable( tableId, tableUrl ) {
     if( !that.currentTab ) {
       that.currentTab = { key: that.tableData.tabs.tabsKey, default:that.tableData.tabs.defaultKey};
       
-      $.each( that.tableData.tabs.tabs , function(i,e)  {
-        if(i == that.currentTab.default){
-          var sel = ' SELECTED ';
-        }
-        else {
-          var sel = ' ';
-        }
-        that.tabsContent.append('<option ' + sel + ' value="' + i + '">' + e + '</option>');
+      if( that.tableData.tabs != false){ 
+        $.each( that.tableData.tabs.tabs , function(i,e)  {
+          if(i == that.currentTab.default){
+            var sel = ' SELECTED ';
+          }
+          else {
+            var sel = ' ';
+          }
+          that.tabsContent.append('<option ' + sel + ' value="' + i + '">' + e + '</option>');
 
-      });
+        });
+      }
+      else {
+        that.tabsContent.hide();
+      }
 
     }
   }
