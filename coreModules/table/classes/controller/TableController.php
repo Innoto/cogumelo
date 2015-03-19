@@ -35,6 +35,7 @@ class TableController{
   var $searchId = 'tableSearch';
   var $currentTab = null;
   var $filters = array();
+  var $internalFilters = array();
   var $rowsEachPage = 50;
 
   /**
@@ -137,13 +138,13 @@ class TableController{
 
 
   /**
-  * Set filters array
+  * Set internal filters array
   *
-  * @param array $filters
+  * @param array $internalFilters
   * @return void
   */
-  function setFilters( $filters ) {
-    $this->filters = $filters;
+  function setInternalFilters( $internalFilters ) {
+    $this->internalFilters = $internalFilters;
   }
 
 
@@ -162,6 +163,8 @@ class TableController{
     if($this->currentTab != '*'){
       $retFilters[ $this->tabs['tabsKey'] ] = $this->currentTab;
     }
+
+    $retFilters = array_merge( $retFilters, $this->internalFilters );
 
     return $retFilters;
   }
@@ -320,6 +323,7 @@ class TableController{
         'filters' =>  $this->getFilters(),
         'order' => $this->orderIntoArray()
     );
+
     eval('$lista = $this->model->'. $this->controllerMethodAlias['list'].'( $p );');
     new $this->exports[$this->export]['controller']( $this, $fileName, $lista );
   }

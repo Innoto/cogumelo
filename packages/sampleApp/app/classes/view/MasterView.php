@@ -40,6 +40,7 @@ class MasterView extends View
 
   function testdata(){
     
+/*
 
     echo "<pre>";
 
@@ -51,9 +52,9 @@ class MasterView extends View
     $u = $user->listItems( array('affectsDependences'=>array('UserRoleModel', 'RoleModel', 'FiledataModel') ))->fetch();
 
     var_dump( $u->getAllData());
+*/
 
 /*
-
   user::load('model/UserModel.php');
   $user = new UserModel( ['login'=>'olasdfteu', 'email'=>'ola@teu.com', 'surname'=>'pablo', 'name'=>'blanco' ] );
   
