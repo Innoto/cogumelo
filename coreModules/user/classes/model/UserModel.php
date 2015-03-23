@@ -59,9 +59,9 @@ class UserModel extends Model
 
   );
 
-  var $filters = array(
+  static $extraFilters = array(
       'find' => "UPPER(surname)  LIKE CONCAT('%',UPPER(?),'%') OR login LIKE CONCAT('%', UPPER(?), '%')",
-      'login' => "login LIKE CONCAT('%', ? ,'%')"
+//      'login' => "login = CONCAT('', ? ,'')"
 //      'edadmax' => "edad <= ?",
 //      'edadmin' => "edad >= ?"
     );

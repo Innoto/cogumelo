@@ -73,10 +73,12 @@ class MysqlDAO extends DAO
     if( $connectionControl->stmt ) {  //set prepare sql
 
       $bind_vars_type = $this->getPrepareTypes($val_array);
+
       $bind_vars_str = "";
       foreach($val_array as $ak=>$vk){
         $bind_vars_str .= ', $val_array['.$ak.']';
       }
+
 
       // bind params
       if($bind_vars_type != "") {
@@ -221,11 +223,14 @@ class MysqlDAO extends DAO
       $this->execSQL($connectionControl,'SET group_concat_max_len='.DB_MYSQL_GROUPCONCAT_MAX_LEN.';');
     }
 
+    $mysqlDAORel = new MysqlDAORelationship();
+    //$mysqlDAORel
+
     $strSQL = "SELECT ".
               $VO->getKeysToString($fields, $resolveDependences ) .
               " FROM `" . 
               $VO::$tableName ."` " . 
-              MysqlDAORelationship::getVOJoins( $this->VO, $resolveDependences) . 
+              $mysqlDAORel->getVOJoins( $this->VO, $resolveDependences) . 
               $whereArray['string'] . $orderSTR . $rangeSTR . ";";
 
 
@@ -241,7 +246,6 @@ class MysqlDAO extends DAO
         $queryID = $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
       }
       else{
-
         // With cache, but not cached yet. Caching ...
         $res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']);
 
@@ -257,6 +261,7 @@ class MysqlDAO extends DAO
     }
     else
     {
+
       //  Without cache!
       $res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']);
 
@@ -294,12 +299,17 @@ class MysqlDAO extends DAO
     $StrSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
 
     $res = $this->execSQL($connectionControl,$StrSQL, $whereArray['values']);
-    if( $res != COGUMELO_ERROR )  {
+    if( $res !== COGUMELO_ERROR )  {
 
         //$res->fetch_assoc();
         $row = $res->fetch_assoc();
         $retVal = $row['number_elements'];
+
     }
+    else {
+      $retVal = COGUMELO_ERROR;
+    }
+
 
     return $retVal;
   }

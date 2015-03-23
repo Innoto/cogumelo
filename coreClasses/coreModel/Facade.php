@@ -126,7 +126,7 @@ class Facade
 
     eval('$data = $this->dao->'.$name. '($this->connectioncontrol'. $args_str . '); ');
 
-    if($data == COGUMELO_ERROR) {
+    if($data === COGUMELO_ERROR) {
       $this->connectioncontrol->transactionError();
       Cogumelo::error('Error in facade calling : '.$name.'. Transaction will rollback');
     }
