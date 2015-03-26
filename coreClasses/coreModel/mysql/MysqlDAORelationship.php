@@ -10,18 +10,22 @@ class MysqlDAORelationship
 {
 
 
+  var $filters = array();
+  var $whereData = array(); 
+
   /**
    * Get joins from VO or Model Class
    *
    * @return string
    */  
-  static function getVOJoins( $VOClass, $resolveDependences ) {
+  function getVOJoins( $VOClass, $resolveDependences, $filters = array() ) {
     
+    $this->filters = $filters;
     $ret = '';
 
     if( $resolveDependences ) {
       VOUtils::includeVOs();
-      $ret = self::joins( VOUtils::getRelObj($VOClass, $resolveDependences) );
+      $ret = $this->joins( VOUtils::getRelObj($VOClass, $resolveDependences) );
     }
 
     return $ret;
@@ -35,18 +39,18 @@ class MysqlDAORelationship
    *
    * @return string
    */  
-  static function joins($vo) {
+  function joins($vo) {
     $joinList = '';
 
     foreach( $vo->relationship as $voRel) {
 
       if( sizeof($voRel->relationship) == 0  ) {
         // FINAL
-        $joinList .= self::leftJoin( self::selectConcat($voRel), $voRel );
+        $joinList .= $this->leftJoin( $this->selectConcat($voRel), $voRel );
       }
       else {
         // Any table
-        $joinList .= self::leftJoin( self::selectGroupConcat( $voRel, self::joins( $voRel ) ), $voRel );
+        $joinList .= $this->leftJoin( $this->selectGroupConcat( $voRel, $this->joins( $voRel ) ), $voRel );
       }
       
     }
@@ -63,7 +67,7 @@ class MysqlDAORelationship
    *
    * @return string
    */  
-  static function leftJoin($select, $sonVo ) {
+  function leftJoin($select, $sonVo ) {
     return " LEFT JOIN ( ".$select." ) as ".$sonVo->table."_serialized  ON ".$sonVo->table."_serialized.".$sonVo->relatedWithId." = ".$sonVo->parentTable.".".$sonVo->parentId;
   }
 
@@ -75,8 +79,10 @@ class MysqlDAORelationship
    *
    * @return string
    */  
-  static function selectConcat( $vo ) {
-    return " SELECT " . self::cols($vo) . ", concat('{', " . self::jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+  function selectConcat( $vo ) {
+
+    $where = $this->setWheres( $vo->vo );
+    return " SELECT " . $this->cols($vo) . ", concat('{', " . $this->jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table. $where ." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
 
@@ -88,8 +94,9 @@ class MysqlDAORelationship
    *
    * @return string
    */  
-  static function selectGroupConcat( $vo, $joins ) {
-    return " SELECT " .self::cols($vo). " , concat('{', ". self::jsonCols($vo) ." ". self::getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+  function selectGroupConcat( $vo, $joins ) {
+    $where = $this->setWheres( $vo->vo );
+    return " SELECT " .$this->cols($vo). " , concat('{', ". $this->jsonCols($vo) ." ". $this->getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins. $where ." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
 
@@ -100,7 +107,7 @@ class MysqlDAORelationship
    *
    * @return string
    */  
-  static function jsonCols($vo) {
+  function jsonCols($vo) {
     $returnCols = '';
     $coma = '';
 
@@ -119,7 +126,7 @@ class MysqlDAORelationship
    *
    * @return string
    */  
-  static function cols($vo) {
+  function cols($vo) {
     $returnCols = '';
     $coma = '';
 
@@ -138,7 +145,7 @@ class MysqlDAORelationship
    *
    * @return string
    */  
-  static function getGroupConcats ($vo) {
+  function getGroupConcats ($vo) {
     $groupConcats = '';
 
     foreach( $vo->relationship as $voRel) {
@@ -148,4 +155,84 @@ class MysqlDAORelationship
     return $groupConcats;
   }
 
-}
+
+  function searchVOInFilters($voName) {
+    $found = array();
+    
+    if( sizeof($this->filters)>0 ) {
+      foreach ($this->filters as $fK => $fD) {
+        preg_match('#'.$voName.'\.(.*)#', $fK, $matches);
+        if( sizeof($matches)>0 ) {
+          $found[ $matches[1] ] = $fD;        
+        }
+
+      }
+    }
+
+    return $found;
+  }
+
+  function setWheres($voName) {
+
+    $where_str = "";
+    $val_array = array();
+
+
+    $thisVOFilterValues = $this->searchVOInFilters( $voName );
+
+    if( array($thisVOFilterValues) > 0) {
+
+      eval( '$getVOFilters = '.$voName.'::getFilters();' );
+
+
+
+      $thisVOFilterArray = MysqlAutogeneratorDAO::filtersAsMysql( $getVOFilters );
+
+      foreach($thisVOFilterValues as $fkey => $filter_val) {
+
+        if( array_key_exists($fkey, $thisVOFilterArray) ) {
+          $fstr = " AND ".$thisVOFilterArray[$fkey];
+        }
+        else {
+          Cogumelo::error( $fkey." not found on wherearray or into (".$voName.") VO in Relationship. Omiting..." );
+        }
+
+        // where string
+        $where_str.=$fstr;
+
+
+        // dump value or array value into $values array
+        if( is_array($filter_val) ) {
+          foreach($filter_val as $val) {
+            $val_array[] = $val;
+          }
+        }
+        else {
+          $var_count = substr_count( $fstr , "?");
+          for($c=0; $c < $var_count; $c++) {
+            $val_array[] = $filter_val;
+          }
+        }
+
+      }
+    
+    }
+
+
+    $fArray = array(
+        'string' => " WHERE true".$where_str,
+        'values' => $val_array
+    );
+
+    $this->whereData[] = $fArray;
+
+    return $fArray['string'];
+
+
+  }
+
+  function getFilterArrays() {
+    return $this->whereData;
+  }
+
+} 

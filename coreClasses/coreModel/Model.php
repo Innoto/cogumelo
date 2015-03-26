@@ -17,7 +17,6 @@ Class Model extends VO {
   var $customFacade = false;
   var $customDAO = false;
   var $moduleDAO = false;
-  var $filters = array();
 
 
   function __construct( $datarray= array(), $otherRelObj = false ) {
@@ -57,6 +56,8 @@ Class Model extends VO {
       );
     $parameters =  array_merge($p, $parameters );
 
+
+//var_dump($parameters);
     Cogumelo::debug( 'Called listItems on '.get_called_class() );
     $data = $this->dataFacade->listItems(
                                           $parameters['filters'],
@@ -86,15 +87,33 @@ Class Model extends VO {
         'cache' => false
       );
     $parameters =  array_merge($p, $parameters );
-
+//var_dump($parameters);
     Cogumelo::debug( 'Called listCount on '.get_called_class() );
     $data = $this->dataFacade->listCount( $parameters['filters']);
 
     return $data;
   }
 
-  function getFilters(){
-    return $this->filters;
+  static function getFilters(){
+
+    $extraFilters = array();
+    $filterCols = array();
+
+    eval('$tableName = '.get_called_class().'::$tableName;');
+    eval('$cols = '.get_called_class().'::$cols;');
+    eval('if( isset( '.get_called_class().'::$extraFilters) ) {$extraFilters = '.get_called_class().'::$extraFilters;}');    
+
+
+    foreach( $cols as $colK => $colD  ) {
+      $type = $colD['type'];
+
+      if( $type == 'CHAR' || $type == 'VARCHAR' || $type == 'INT'){
+          $filterCols[ $colK ] = $tableName.".".$colK." = ? ";
+      }
+
+    }
+
+    return array_merge( $filterCols, $extraFilters );
   }
 
 

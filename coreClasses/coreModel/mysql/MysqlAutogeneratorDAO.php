@@ -2,7 +2,6 @@
 
 Cogumelo::load('coreModel/mysql/MysqlDAO.php');
 
-
 /**
  * Generic DAO autogenerator
  *
@@ -19,7 +18,7 @@ class MysqlAutogeneratorDAO extends MysqlDAO
    */
   function __construct($voObj) {
     $this->VO = $voObj->getVOClassName();
-    $this->setFilters( $voObj->getFilters() );
+    $this->filters = self::filtersAsMysql( $voObj::getFilters() );
   }
 
   /**
@@ -29,9 +28,9 @@ class MysqlAutogeneratorDAO extends MysqlDAO
    *
    * @return void
    */
-  function setFilters( $filters ) {
+  static function filtersAsMysql( $filters ) {
     // process here filters format if needed
-    $this->filters = $filters;
+    return  $filters;
   }
 
 }
