@@ -10,7 +10,7 @@ class common extends Module
   public $dependences = array(
    array(
      "id" =>"jquery",
-     "params" => array("jquery#1.*"),
+     "params" => array("jquery"),
      "installer" => "bower",
      "includes" => array("dist/jquery.js")
    ),
