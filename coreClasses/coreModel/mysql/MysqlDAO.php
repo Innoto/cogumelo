@@ -153,31 +153,25 @@ class MysqlDAO extends DAO
 
         if( array_key_exists($fkey, $this->filters) ) {
           $fstr = " AND ".$this->filters[$fkey];
-        }
-        else if(array_key_exists($fkey, $VO::$cols) ) {
-          $fstr = " AND ".$VO::$tableName.".".$fkey." = ?";
-        }
-        else {
-          Cogumelo::error( $fkey." not found on wherearray or into (".$this->VO.") VO. Omiting..." );
-        }
-
-        // where string
-        $where_str.=$fstr;
 
 
-        // dump value or array value into $values array
-        if( is_array($filter_val) ) {
-          foreach($filter_val as $val) {
-            $val_array[] = $val;
+          // where string
+          $where_str.=$fstr;
+
+
+          // dump value or array value into $values array
+          if( is_array($filter_val) ) {
+            foreach($filter_val as $val) {
+              $val_array[] = $val;
+            }
+          }
+          else {
+            $var_count = substr_count( $fstr , "?");
+            for($c=0; $c < $var_count; $c++) {
+              $val_array[] = $filter_val;
+            }
           }
         }
-        else {
-          $var_count = substr_count( $fstr , "?");
-          for($c=0; $c < $var_count; $c++) {
-            $val_array[] = $filter_val;
-          }
-        }
-
 
 
       }
@@ -209,8 +203,28 @@ class MysqlDAO extends DAO
     // SQL Query
     $VO = new $this->VO();
 
-    // where string and vars
+    // joins
+    $mysqlDAORel = new MysqlDAORelationship();
+    $joins = $mysqlDAORel->getVOJoins( $this->VO, $resolveDependences, $filters);
+
+    // where string for join queries
+    $joinWhereArrays = $mysqlDAORel->getFilterArrays();
+
+    // where string for main query
     $whereArray = $this->getFilters($filters);
+
+    // merge where arrays and array values
+    $allWhereArrays = $joinWhereArrays;
+    $allWhereArrays[] = $whereArray;
+
+
+    $allWhereARraysValues = array();
+    foreach( $allWhereArrays as $wa ) {
+      //var_dump($wa['values']);
+
+      $allWhereARraysValues = array_merge( $allWhereARraysValues, $wa['values'] );
+    }
+
 
     // order string
     $orderSTR = ($order)? $this->orderByString($order): "";
@@ -223,21 +237,19 @@ class MysqlDAO extends DAO
       $this->execSQL($connectionControl,'SET group_concat_max_len='.DB_MYSQL_GROUPCONCAT_MAX_LEN.';');
     }
 
-    $mysqlDAORel = new MysqlDAORelationship();
-    //$mysqlDAORel
+
 
     $strSQL = "SELECT ".
               $VO->getKeysToString($fields, $resolveDependences ) .
               " FROM `" . 
               $VO::$tableName ."` " . 
-              $mysqlDAORel->getVOJoins( $this->VO, $resolveDependences) . 
+              $joins. 
               $whereArray['string'] . $orderSTR . $rangeSTR . ";";
-
 
 
     if ( $cache && DB_ALLOW_CACHE  )
     {
-      $queryId = md5($strSQL.serialize($whereArray['values']));
+      $queryId = md5($strSQL.serialize( $allWhereArrays ));
       $cached =  new Cache();
 
       if($cache_data = $cached->getCache($queryId)  ) {
@@ -247,7 +259,7 @@ class MysqlDAO extends DAO
       }
       else{
         // With cache, but not cached yet. Caching ...
-        $res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']);
+        $res = $this->execSQL($connectionControl,$strSQL, $allWhereARraysValues );
 
         if( $res != COGUMELO_ERROR ) {
           Cogumelo::debug('Using cache: cache Set with ID: '.$queryId );
@@ -263,7 +275,7 @@ class MysqlDAO extends DAO
     {
 
       //  Without cache!
-      $res = $this->execSQL($connectionControl,$strSQL, $whereArray['values']);
+      $res = $this->execSQL($connectionControl,$strSQL, $allWhereARraysValues );
 
       if( $res != COGUMELO_ERROR ){
         $daoresult = new MysqlDAOResult( $this->VO , $res);

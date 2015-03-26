@@ -2,7 +2,6 @@
 
 Cogumelo::load('coreModel/mysql/MysqlDAO.php');
 
-
 /**
  * Generic DAO autogenerator
  *

@@ -99,6 +99,7 @@ Class Model extends VO {
     $extraFilters = array();
     $filterCols = array();
 
+    eval('$tableName = '.get_called_class().'::$tableName;');
     eval('$cols = '.get_called_class().'::$cols;');
     eval('if( isset( '.get_called_class().'::$extraFilters) ) {$extraFilters = '.get_called_class().'::$extraFilters;}');    
 
@@ -107,7 +108,7 @@ Class Model extends VO {
       $type = $colD['type'];
 
       if( $type == 'CHAR' || $type == 'VARCHAR' || $type == 'INT'){
-          $filterCols[ $colK ] = $colK." = ? ";
+          $filterCols[ $colK ] = $tableName.".".$colK." = ? ";
       }
 
     }
