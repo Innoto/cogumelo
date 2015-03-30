@@ -49,7 +49,7 @@ class MasterView extends View
   
     $user = new UserModel();
     //$u = $user->listItems( array('affectsDependences'=> true ))->fetch();
-    $u = $user->listItems( array('affectsDependences'=>array('UserRoleModel', 'RoleModel', 'RolePermissionModel', 'PermissionModel', 'FiledataModel'), 'filters'=>array( 'PermissionModel.name'=>'fukinpermission' ) ))->fetch();
+    $u = $user->listItems( array('affectsDependences'=>array('UserRoleModel', 'RoleModel', 'RolePermissionModel', 'PermissionModel'), 'filters'=>array('RoleModel.name'=>'blanco') ))->fetch();
 
     var_dump( $u->getAllData());
 

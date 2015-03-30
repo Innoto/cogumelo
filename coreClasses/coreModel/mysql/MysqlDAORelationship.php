@@ -82,7 +82,7 @@ class MysqlDAORelationship
   function selectConcat( $vo ) {
 
     $where = $this->setWheres( $vo->vo );
-    return " SELECT " . $this->cols($vo) . ", concat('{', " . $this->jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table. $where ." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+    return " SELECT " . $this->cols($vo) . ", concat('{', " . $this->jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table. $where. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
 
@@ -95,8 +95,8 @@ class MysqlDAORelationship
    * @return string
    */  
   function selectGroupConcat( $vo, $joins ) {
-    $where = $this->setWheres( $vo->vo );
-    return " SELECT " .$this->cols($vo). " , concat('{', ". $this->jsonCols($vo) ." ". $this->getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins. $where ." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+    //$where = $this->setWheres( $vo->vo );
+    return " SELECT " .$this->cols($vo). " , concat('{', ". $this->jsonCols($vo) ." ". $this->getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins ." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
 
@@ -149,7 +149,7 @@ class MysqlDAORelationship
     $groupConcats = '';
 
     foreach( $vo->relationship as $voRel) {
-      $groupConcats .= "',\"".$voRel->parentTable.".".$voRel->table."\": [', group_concat(".$voRel->table."_serialized.".$voRel->table."), ']',";
+      $groupConcats .= "',\"".$voRel->parentTable.".".$voRel->table."\": [', COALESCE( group_concat(".$voRel->table."_serialized.".$voRel->table."),'' ), ']',";
     }
     
     return $groupConcats;
@@ -158,8 +158,8 @@ class MysqlDAORelationship
 
   function searchVOInFilters($voName) {
     $found = array();
-    
-    if( sizeof($this->filters)>0 ) {
+
+    if( sizeof($this->filters)>0 && $this->filters !== false ) {
       foreach ($this->filters as $fK => $fD) {
         preg_match('#'.$voName.'\.(.*)#', $fK, $matches);
         if( sizeof($matches)>0 ) {
@@ -220,7 +220,7 @@ class MysqlDAORelationship
 
 
     $fArray = array(
-        'string' => " WHERE true".$where_str,
+        'string' => " WHERE true ".$where_str,
         'values' => $val_array
     );
 

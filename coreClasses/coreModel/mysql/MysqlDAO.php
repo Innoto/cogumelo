@@ -246,7 +246,7 @@ class MysqlDAO extends DAO
               $joins. 
               $whereArray['string'] . $orderSTR . $rangeSTR . ";";
 
-
+//echo $strSQL; 
     if ( $cache && DB_ALLOW_CACHE  )
     {
       $queryId = md5($strSQL.serialize( $allWhereArrays ));
