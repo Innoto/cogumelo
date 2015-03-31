@@ -197,7 +197,7 @@ class MysqlDAO extends DAO
   * 
   * @return object
   */
-  function listItems(&$connectionControl, $filters, $range, $order, $fields, $resolveDependences = false, $cache = false)
+  function listItems(&$connectionControl, $filters, $range, $order, $fields, $joinType ,$resolveDependences = false, $cache = false)
   {
 
     // SQL Query
@@ -205,7 +205,7 @@ class MysqlDAO extends DAO
 
     // joins
     $mysqlDAORel = new MysqlDAORelationship();
-    $joins = $mysqlDAORel->getVOJoins( $this->VO, $resolveDependences, $filters);
+    $joins = $mysqlDAORel->getVOJoins( $this->VO, $joinType , $resolveDependences, $filters);
 
     // where string for join queries
     $joinWhereArrays = $mysqlDAORel->getFilterArrays();
@@ -247,6 +247,8 @@ class MysqlDAO extends DAO
               $whereArray['string'] . $orderSTR . $rangeSTR . ";";
 
 //echo $strSQL; 
+//var_dump($joinWhereArrays);
+//exit;
     if ( $cache && DB_ALLOW_CACHE  )
     {
       $queryId = md5($strSQL.serialize( $allWhereArrays ));

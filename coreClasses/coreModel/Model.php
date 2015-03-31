@@ -51,19 +51,20 @@ Class Model extends VO {
         'range' => false,
         'order' => false,
         'fields' => false,
+        'joinType' => 'LEFT',
         'affectsDependences' => false,
         'cache' => false
       );
     $parameters =  array_merge($p, $parameters );
 
 
-//var_dump($parameters);
     Cogumelo::debug( 'Called listItems on '.get_called_class() );
     $data = $this->dataFacade->listItems(
                                           $parameters['filters'],
                                           $parameters['range'],
                                           $parameters['order'],
                                           $parameters['fields'],
+                                          $parameters['joinType'],
                                           $parameters['affectsDependences'],
                                           $parameters['cache']
                                         );
@@ -84,10 +85,12 @@ Class Model extends VO {
 
     $p = array(
         'filters' => false,
+        'joinType' => 'left',
+        'affectsDependences' => false,
         'cache' => false
       );
     $parameters =  array_merge($p, $parameters );
-//var_dump($parameters);
+
     Cogumelo::debug( 'Called listCount on '.get_called_class() );
     $data = $this->dataFacade->listCount( $parameters['filters']);
 

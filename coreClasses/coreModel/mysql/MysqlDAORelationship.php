@@ -12,15 +12,17 @@ class MysqlDAORelationship
 
   var $filters = array();
   var $whereData = array(); 
+  var $joinType = 'LEFT';
 
   /**
    * Get joins from VO or Model Class
    *
    * @return string
    */  
-  function getVOJoins( $VOClass, $resolveDependences, $filters = array() ) {
+  function getVOJoins( $VOClass, $joinType, $resolveDependences, $filters = array() ) {
     
     $this->filters = $filters;
+    $this->joinType = $joinType;
     $ret = '';
 
     if( $resolveDependences ) {
@@ -68,7 +70,7 @@ class MysqlDAORelationship
    * @return string
    */  
   function leftJoin($select, $sonVo ) {
-    return " LEFT JOIN ( ".$select." ) as ".$sonVo->table."_serialized  ON ".$sonVo->table."_serialized.".$sonVo->relatedWithId." = ".$sonVo->parentTable.".".$sonVo->parentId;
+    return " ".$this->joinType." JOIN ( ".$select." ) as ".$sonVo->table."_serialized  ON ".$sonVo->table."_serialized.".$sonVo->relatedWithId." = ".$sonVo->parentTable.".".$sonVo->parentId;
   }
 
 
@@ -95,8 +97,8 @@ class MysqlDAORelationship
    * @return string
    */  
   function selectGroupConcat( $vo, $joins ) {
-    //$where = $this->setWheres( $vo->vo );
-    return " SELECT " .$this->cols($vo). " , concat('{', ". $this->jsonCols($vo) ." ". $this->getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins ." GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+    $where = $this->setWheres( $vo->vo );
+    return " SELECT " .$this->cols($vo). " , concat('{', ". $this->jsonCols($vo) ." ". $this->getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins .$where. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
 
@@ -159,7 +161,9 @@ class MysqlDAORelationship
   function searchVOInFilters($voName) {
     $found = array();
 
+
     if( sizeof($this->filters)>0 && $this->filters !== false ) {
+      //var_dump($this->filters);
       foreach ($this->filters as $fK => $fD) {
         preg_match('#'.$voName.'\.(.*)#', $fK, $matches);
         if( sizeof($matches)>0 ) {
