@@ -85,13 +85,13 @@
           break;
 
         case 'generateTranslations':
-          require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
+          require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
           generateTranslations();
           echo "The files.po are ready to be edited!\n";
         break;
 
         case 'compileTranslations':
-          require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendorServer/gettext/gettext/Gettext/autoloader.php");
+          require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
           compileTranslations();
           echo "The files.mo are ready to be used!\n";
           break;
@@ -212,6 +212,7 @@
 
   function initModules() {
     global $C_ENABLED_MODULES;
+    global $lc;
 
     foreach($C_ENABLED_MODULES as $moduleName) {
       require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
@@ -221,9 +222,18 @@
   }
 
   function makeAppPaths() {
-    $md = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
+    $md_1 = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
       MEDIASERVER_TMP_CACHE_PATH, WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH,
-      LOGDIR, MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, BCK );
+      LOGDIR, MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, BCK, I18N, I18N_LOCALE );
+
+    $lc_1 = explode(',',LANG_AVAILABLE);
+    $i = 0;
+    foreach ($lc_1 as $l){
+      $lc[$i] = I18N_LOCALE.$l.'_'.strtoupper($l);
+      $i = $i+1;
+    }
+
+    $md = array_merge($md_1, $lc);
 
     foreach( $md as $dir ) {
       if( !is_dir( $dir ) ) {
@@ -319,7 +329,7 @@
     // Prepare the enviroment to localize the project
     $textdomain="cogumelo";
 
-    $locale= 'es_ES';
+    $locale= LANG_DEFAULT;
 
     global $c_lang;
 
@@ -335,11 +345,12 @@
     bind_textdomain_codeset($textdomain, 'UTF-8');
     textdomain($textdomain);
 
-    $dir_path = SITE_PATH.'conf/i18n/';
+    $dir_path = I18N;
     $dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
     $dir_modules = SITE_PATH.'modules/';
     global $C_ENABLED_MODULES;
     $modules = $C_ENABLED_MODULES;
+
 
     // Check if the .po files already exist
     $existPHP = false;
