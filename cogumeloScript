@@ -212,7 +212,6 @@
 
   function initModules() {
     global $C_ENABLED_MODULES;
-    global $lc;
 
     foreach($C_ENABLED_MODULES as $moduleName) {
       require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
@@ -331,7 +330,7 @@
 
     $locale= LANG_DEFAULT;
 
-    global $c_lang;
+    global $c_lang, $lc;
 
     putenv('LANGUAGE='.$locale);
     putenv('LANG='.$locale);
@@ -351,26 +350,33 @@
     global $C_ENABLED_MODULES;
     $modules = $C_ENABLED_MODULES;
 
-
-    // Check if the .po files already exist
     $existPHP = false;
     $existTPL = false;
     $existJS = false;
-    if (is_dir($dir_path)){
-      $handle = opendir($dir_path);
-      while ($file = readdir($handle)) {
-        if ($file=='cogumelo_php.po'){
-          $existPHP = true;
+    $lc_1 = explode(',',LANG_AVAILABLE);
+    $i = 0;
+    foreach ($lc_1 as $l){
+        $dir_path[$l] = I18N_LOCALE.$l.'_'.strtoupper($l);
+        
+        // Check if the .po files already exist
+        if (is_dir($dir_path[$l])){
+          $handle = opendir($dir_path[$l]);
+          while ($file = readdir($handle)) {
+            if ($file=='cogumelo_php.po'){
+              $existPHP = true;
+            }
+            if ($file=='cogumelo_tpl.po'){
+              $existTPL = true;
+            }
+            if ($file=='cogumelo_js.po'){
+              $existJS = true;
+            }
+            if ($existPHP && $existTPL && $existJS)
+              break;
+          }
         }
-        if ($file=='cogumelo_tpl.po'){
-          $existTPL = true;
-        }
-        if ($file=='cogumelo_js.po'){
-          $existJS = true;
-        }
-        if ($existPHP && $existTPL && $existJS)
-          break;
-      }
+
+        $i = $i+1;
     }
 
     /******************************/
@@ -428,7 +434,10 @@
     }
 
     //Now save the php.po file with the result
-    Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_php.po');
+    foreach ($lc_1 as $l){
+      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l);
+      Gettext\Generators\Po::generateFile($entries, $dir_lc[$l].'/'.$textdomain.'_php.po');
+    }
 
     /********** END PHP **********/
 
@@ -488,9 +497,14 @@
       $entries = Gettext\Extractors\JsCode::extract($array_js);
     }
 
-    //Now save the php.po file with the result
+    /*//Now save the php.po file with the result
     Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_js.po');
-
+    */
+    //Now save the php.po file with the result
+    foreach ($lc_1 as $l){
+      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l);
+      Gettext\Generators\Po::generateFile($entries, $dir_lc[$l].'/'.$textdomain.'_js.po');
+    }
 
     /*********** END JS **********/
 
