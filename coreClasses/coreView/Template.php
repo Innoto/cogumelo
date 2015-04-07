@@ -64,7 +64,6 @@ Class Template extends Smarty
         $this->js_includes .= $include_chain;
       }
     }
-
   }
 
 
@@ -117,18 +116,24 @@ Class Template extends Smarty
   }
 
 
-
   function execToString() {
+    /*
     ob_start();
     $this->exec();
     $result = ob_get_clean();
     return $result;
+    */
+
+    return( $this->exec( true ) );
   }
 
 
 
-  function exec() {
-    if($this->tpl) {
+  function exec( $toString = false ) {
+
+    $htmlCode = '';
+
+    if( $this->tpl &&  file_exists($this->tpl) ) {
 
       global $cogumeloIncludesCSS;
       global $cogumeloIncludesJS;
@@ -157,16 +162,20 @@ Class Template extends Smarty
       $this->assign('css_includes', $lessConfInclude.$this->css_autoincludes. $this->css_includes );
       $this->assign('js_includes', $jsConfInclude.$this->lessClientCompiler() . $this->js_autoincludes . $this->js_includes );
 
-      if( file_exists($this->tpl) ) {
-        $this->display($this->tpl);
-        Cogumelo::debug('Template class displays tpl '.$this->tpl);
+      if( $toString ) {
+        $htmlCode = $this->fetch( $this->tpl );
       }
       else {
-        Cogumelo::error('Template not found: '.$this->tpl );
+        $this->display( $this->tpl );
       }
+      Cogumelo::debug('Template class displays tpl '.$this->tpl);
     }
     else {
-      Cogumelo::error('Template: no tpl file defined');
+      Cogumelo::error( 'Template: no tpl file defined or not found: '.$this->tpl );
+    }
+
+    if( $toString ) {
+      return( $htmlCode );
     }
   }
 
