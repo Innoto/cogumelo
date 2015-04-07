@@ -17,8 +17,7 @@ Class Template extends Smarty
   var $js_includes = '';
 
 
-  public function __construct($base_dir)
-  {
+  public function __construct( $base_dir ) {
     parent::__construct();
 
     $this->base_dir = $base_dir;
@@ -30,7 +29,7 @@ Class Template extends Smarty
     Smarty::muteExpectedErrors();
   }
 
-  function addClientScript($file_path, $module = false, $is_autoinclude = false)  {
+  function addClientScript($file_path, $module = false, $is_autoinclude = false) {
 
     if($module == false){
       $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/';
@@ -65,7 +64,6 @@ Class Template extends Smarty
       }
     }
   }
-
 
   function addClientStyles( $file_path, $module = false, $is_autoinclude = false ) {
 
@@ -115,7 +113,6 @@ Class Template extends Smarty
     $this->tpl = ModuleController::getRealFilePath('classes/view/templates/'.$file_name, $module );
   }
 
-
   function execToString() {
     /*
     ob_start();
@@ -126,8 +123,6 @@ Class Template extends Smarty
 
     return( $this->exec( true ) );
   }
-
-
 
   function exec( $toString = false ) {
 
@@ -179,7 +174,6 @@ Class Template extends Smarty
     }
   }
 
-
   function lessClientCompiler() {
     $ret = "";
     if( !MEDIASERVER_COMPILE_LESS ){
@@ -190,5 +184,6 @@ Class Template extends Smarty
 
     return $ret;
   }
+
 }
 
