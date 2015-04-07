@@ -5,6 +5,7 @@
 
   global $_C;
   $_C =Cogumelo::get();
+  $lc_1 = explode(',',LANG_AVAILABLE);
 
   //
   //  CARGO MÓDULO DEVEL E O DEVELDBCONTROLLER, QUE É ONDE ESTÁN OS MÉTODOS QUE NOS INTERESAN
@@ -12,7 +13,6 @@
   require_once(ModuleController::getRealFilePath('devel.php', 'devel'));
   require_once(ModuleController::getRealFilePath('classes/controller/DevelDBController.php', 'devel'));
   require_once(ModuleController::getRealFilePath('classes/controller/CacheUtilsController.php', 'mediaserver'));
-  Cogumelo::load('coreController/ModuleController.php');
   Cogumelo::load('coreController/ModuleController.php');
 
   //
@@ -221,14 +221,14 @@
   }
 
   function makeAppPaths() {
+    global $lc_1;
     $md_1 = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
       MEDIASERVER_TMP_CACHE_PATH, WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH,
       LOGDIR, MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, BCK, I18N, I18N_LOCALE );
 
-    $lc_1 = explode(',',LANG_AVAILABLE);
     $i = 0;
     foreach ($lc_1 as $l){
-      $lc[$i] = I18N_LOCALE.$l.'_'.strtoupper($l);
+      $lc[$i] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
       $i = $i+1;
     }
 
@@ -330,7 +330,7 @@
 
     $locale= LANG_DEFAULT;
 
-    global $c_lang, $lc;
+    global $c_lang, $C_ENABLED_MODULES, $lc_1;
 
     putenv('LANGUAGE='.$locale);
     putenv('LANG='.$locale);
@@ -347,16 +347,16 @@
     $dir_path = I18N;
     $dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
     $dir_modules = SITE_PATH.'modules/';
-    global $C_ENABLED_MODULES;
+
     $modules = $C_ENABLED_MODULES;
 
     $existPHP = false;
     $existTPL = false;
     $existJS = false;
-    $lc_1 = explode(',',LANG_AVAILABLE);
+   
     $i = 0;
     foreach ($lc_1 as $l){
-        $dir_path[$l] = I18N_LOCALE.$l.'_'.strtoupper($l);
+        $dir_path[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
         
         // Check if the .po files already exist
         if (is_dir($dir_path[$l])){
@@ -435,7 +435,7 @@
 
     //Now save the php.po file with the result
     foreach ($lc_1 as $l){
-      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l);
+      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
       Gettext\Generators\Po::generateFile($entries, $dir_lc[$l].'/'.$textdomain.'_php.po');
     }
 
@@ -502,7 +502,7 @@
     */
     //Now save the php.po file with the result
     foreach ($lc_1 as $l){
-      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l);
+      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
       Gettext\Generators\Po::generateFile($entries, $dir_lc[$l].'/'.$textdomain.'_js.po');
     }
 
@@ -521,8 +521,13 @@
   * Compile files.po to get the translations ready to be used
   */
   function compileTranslations(){
-    $dir_path = SITE_PATH.'conf/i18n/';
+    global $lc_1;
+
     $textdomain="cogumelo";
+    foreach ($lc_1 as $l){
+      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
+      exec('msgfmt -c -v -o '.$dir_lc[$l].'/'.$textdomain.'_php.mo '.$dir_lc[$l].'/'.$textdomain.'_php.po');
+    }
 
   }
 
