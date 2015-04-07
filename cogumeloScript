@@ -527,6 +527,7 @@
     foreach ($lc_1 as $l){
       $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
       exec('msgfmt -c -v -o '.$dir_lc[$l].'/'.$textdomain.'_php.mo '.$dir_lc[$l].'/'.$textdomain.'_php.po');
+      exec('msgfmt -c -v -o '.$dir_lc[$l].'/'.$textdomain.'_js.mo '.$dir_lc[$l].'/'.$textdomain.'_js.po');
     }
 
   }
