@@ -224,7 +224,7 @@
     global $lc_1;
     $md_1 = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
       MEDIASERVER_TMP_CACHE_PATH, WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH,
-      LOGDIR, MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, BCK, I18N, I18N_LOCALE );
+      LOGDIR, MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, BCK, I18N, I18N_LOCALE,TPL_TMP );
 
     $i = 0;
     foreach ($lc_1 as $l){
@@ -250,7 +250,7 @@
     exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
       APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
       MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
-      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH );
+      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
 
     exec( 'chmod -R g-wx,g+rX,o-rwx '.WEB_BASE_PATH );
 
@@ -259,7 +259,7 @@
     // Path que necesitan escritura
     exec( 'chmod -R ug+rwX '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
       MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
-      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH );
+      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
 
     // Solo usuario administrador
     exec( 'sudo chown $USER:$USER '.BCK );
@@ -275,7 +275,7 @@
     exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
       APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
       MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
-      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH );
+      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
 
     exec( 'chmod -R u-x,go-wx,ugo+rX '.WEB_BASE_PATH );
 
@@ -284,7 +284,7 @@
     // Path que necesitan escritura
     exec( 'chmod -R ug+rwX,o+rX '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
       MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
-      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH );
+      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
 
     // Solo usuario administrador
     exec( 'sudo chown $USER:$USER '.BCK );
@@ -327,7 +327,6 @@
   function generateTranslations(){
     // Prepare the enviroment to localize the project
     $textdomain="cogumelo";
-
     $locale= LANG_DEFAULT;
 
     global $c_lang, $C_ENABLED_MODULES, $lc_1;
@@ -512,7 +511,56 @@
     /************* TPL *************/
     /******************************/
 
-    // Buscar a forma de extraer os strings dos tpl
+    // We will use the smarty-gettext pluggin to extract the strings to translate from .tpl files
+    
+    // get all the .tpl files unless files into modules folder
+    $all_files_tpl = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('tpl'), false);
+    foreach($all_files_tpl as $i => $dir){
+      if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false
+          && strpos($dir,'/vendor/')===false && strpos($dir,'/vendorServer/')===false
+          && strpos($dir,'/pluggins/')===false && strpos($dir,'/jquery-validation/')===false
+          && strpos($dir,'/tmp/')===false){ // We exclude files from modules, tmp and vendorServer
+            $files_tpl[$i] = $dir->getRealPath();
+      }
+    }
+
+    // get the .tpl files into modules folder
+    $files_module_tpl = CacheUtilsController::listFolderFiles($dir_modules, array('tpl'), false);
+    foreach ($modules as $i => $dir) {
+      foreach ($files_module_tpl as $k => $file) {
+        $parts = explode('/'.$dir.'/',$file);
+        if (sizeof($parts)==2){
+          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
+          $array_tpl_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
+        }
+      }
+    }
+
+    // get the .tpl files into coreModules folder
+    $files_module_tpl_c = CacheUtilsController::listFolderFiles($dir_modules_c, array('tpl'), false);
+    foreach ($modules as $i => $dir) {
+      foreach ($files_module_tpl_c as $k => $file) {
+        $parts = explode('/'.$dir.'/',$file);
+        if (sizeof($parts)==2){
+          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
+          $array_tpl_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
+        }
+      }
+    }
+
+    // We combine all the arrays that we've got in an only array
+    $array_tpl = array_merge($array_tpl_module, $array_tpl_module_c, $files_tpl);
+
+    //temos o listado de todos os arquivos no array_tpl, falta saber cómo executalo
+    // copiamos os ficheiros nun dir temporal
+    foreach ($array_tpl as $a){
+      exec('cp '.$a.' '.TPL_TMP);
+    }
+
+    foreach ($lc_1 as $l){
+      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
+      exec(DEPEN_COMPOSER_PATH.'/smarty-gettext/smarty-gettext/tsmarty2c.php -o '.$dir_lc[$l].'/'.$textdomain.'_tpl.po '.TPL_TMP);
+    }
 
     /*********** END TPL **********/
   }
@@ -522,8 +570,8 @@
   */
   function compileTranslations(){
     global $lc_1;
-
     $textdomain="cogumelo";
+
     foreach ($lc_1 as $l){
       $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
       exec('msgfmt -c -v -o '.$dir_lc[$l].'/'.$textdomain.'_php.mo '.$dir_lc[$l].'/'.$textdomain.'_php.po');
