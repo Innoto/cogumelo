@@ -17,8 +17,7 @@ Class Template extends Smarty
   var $js_includes = '';
 
 
-  public function __construct($base_dir)
-  {
+  public function __construct( $base_dir ) {
     parent::__construct();
 
     $this->base_dir = $base_dir;
@@ -30,7 +29,7 @@ Class Template extends Smarty
     Smarty::muteExpectedErrors();
   }
 
-  function addClientScript($file_path, $module = false, $is_autoinclude = false)  {
+  function addClientScript($file_path, $module = false, $is_autoinclude = false) {
 
     if($module == false){
       $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/';
@@ -64,9 +63,7 @@ Class Template extends Smarty
         $this->js_includes .= $include_chain;
       }
     }
-
   }
-
 
   function addClientStyles( $file_path, $module = false, $is_autoinclude = false ) {
 
@@ -116,19 +113,22 @@ Class Template extends Smarty
     $this->tpl = ModuleController::getRealFilePath('classes/view/templates/'.$file_name, $module );
   }
 
-
-
   function execToString() {
+    /*
     ob_start();
     $this->exec();
     $result = ob_get_clean();
     return $result;
+    */
+
+    return( $this->exec( true ) );
   }
 
+  function exec( $toString = false ) {
 
+    $htmlCode = '';
 
-  function exec() {
-    if($this->tpl) {
+    if( $this->tpl &&  file_exists($this->tpl) ) {
 
       global $cogumeloIncludesCSS;
       global $cogumeloIncludesJS;
@@ -157,19 +157,22 @@ Class Template extends Smarty
       $this->assign('css_includes', $lessConfInclude.$this->css_autoincludes. $this->css_includes );
       $this->assign('js_includes', $jsConfInclude.$this->lessClientCompiler() . $this->js_autoincludes . $this->js_includes );
 
-      if( file_exists($this->tpl) ) {
-        $this->display($this->tpl);
-        Cogumelo::debug('Template class displays tpl '.$this->tpl);
+      if( $toString ) {
+        $htmlCode = $this->fetch( $this->tpl );
       }
       else {
-        Cogumelo::error('Template not found: '.$this->tpl );
+        $this->display( $this->tpl );
       }
+      Cogumelo::debug('Template class displays tpl '.$this->tpl);
     }
     else {
-      Cogumelo::error('Template: no tpl file defined');
+      Cogumelo::error( 'Template: no tpl file defined or not found: '.$this->tpl );
+    }
+
+    if( $toString ) {
+      return( $htmlCode );
     }
   }
-
 
   function lessClientCompiler() {
     $ret = "";
@@ -181,5 +184,6 @@ Class Template extends Smarty
 
     return $ret;
   }
+
 }
 
