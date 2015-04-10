@@ -13,7 +13,11 @@
   require_once(ModuleController::getRealFilePath('devel.php', 'devel'));
   require_once(ModuleController::getRealFilePath('classes/controller/DevelDBController.php', 'devel'));
   require_once(ModuleController::getRealFilePath('classes/controller/CacheUtilsController.php', 'mediaserver'));
+  require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
   Cogumelo::load('coreController/ModuleController.php');
+  Cogumelo::load('coreController/I18nController.php');
+  $i18nController = new I18nController();
+  $i18nController->setLang();
 
   //
   //  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
@@ -84,15 +88,13 @@
             $dependencesControl->installDependences();
           break;
 
-        case 'generateTranslations':
-          require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
-          generateTranslations();
+        case 'generateTranslations':        
+          $i18nController->c_i18n_gettext();
           echo "The files.po are ready to be edited!\n";
         break;
 
         case 'compileTranslations':
-          require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
-          compileTranslations();
+          $i18nController->c_i18n_compile();
           echo "The files.mo are ready to be used!\n";
           break;
 
@@ -320,265 +322,6 @@
     }
     echo "\nYour db was successfully restored!\n";
 }
-
-  /**
-    * Get all the text to be translated and update or create a file.po if not exists
-    */
-  function generateTranslations(){
-    // Prepare the enviroment to localize the project
-    $textdomain="cogumelo";
-    $locale= LANG_DEFAULT;
-
-    global $c_lang, $C_ENABLED_MODULES, $lc_1;
-
-    putenv('LANGUAGE='.$locale);
-    putenv('LANG='.$locale);
-    putenv('LC_ALL='.$locale);
-    putenv('LC_MESSAGES='.$locale);
-
-    setlocale(LC_ALL,$locale);
-    setlocale(LC_CTYPE,$locale);
-
-    bindtextdomain($textdomain, SITE_PATH.'conf/i18n');
-    bind_textdomain_codeset($textdomain, 'UTF-8');
-    textdomain($textdomain);
-
-    $dir_path = I18N;
-    $dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
-    $dir_modules = SITE_PATH.'modules/';
-
-    $modules = $C_ENABLED_MODULES;
-
-    $existPHP = false;
-    $existTPL = false;
-    $existJS = false;
-   
-    $i = 0;
-    foreach ($lc_1 as $l){
-        $dir_path[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
-        
-        // Check if the .po files already exist
-        if (is_dir($dir_path[$l])){
-          $handle = opendir($dir_path[$l]);
-          while ($file = readdir($handle)) {
-            if ($file=='cogumelo_php.po'){
-              $existPHP = true;
-            }
-            if ($file=='cogumelo_tpl.po'){
-              $existTPL = true;
-            }
-            if ($file=='cogumelo_js.po'){
-              $existJS = true;
-            }
-            if ($existPHP && $existTPL && $existJS)
-              break;
-          }
-        }
-
-        $i = $i+1;
-    }
-
-    /******************************/
-    /************ PHP *************/
-    /******************************/
-
-    // get all the .php files unless files into modules folder
-    $all_files_php = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php'), false);
-    foreach($all_files_php as $i => $dir){
-      if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false
-          && strpos($dir,'/vendorServer/')===false && strpos($dir,'/tmp/')===false){ // We exclude files from modules, tmp and vendorServer
-            $files_php[$i] = $dir->getRealPath();
-      }
-    }
-
-    // get the .php files into modules folder
-    $files_module_php = CacheUtilsController::listFolderFiles($dir_modules, array('php'), false);
-    foreach ($modules as $i => $dir) {
-      foreach ($files_module_php as $k => $file) {
-        $parts = explode('/'.$dir.'/',$file);
-        if (sizeof($parts)==2){
-          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
-          $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-        }
-      }
-    }
-
-    // get the .php files into coreModules folder
-    $files_module_php_c = CacheUtilsController::listFolderFiles($dir_modules_c, array('php'), false);
-    foreach ($modules as $i => $dir) {
-      foreach ($files_module_php_c as $k => $file) {
-        $parts = explode('/'.$dir.'/',$file);
-        if (sizeof($parts)==2){
-          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
-          $array_php_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-        }
-      }
-    }
-
-    // We combine all the arrays that we've got in an only array
-    $array_php = array_merge($array_php_module, $array_php_module_c, $files_php);
-
-    if ($existPHP){ //merge
-      //Scan the php code to find the latest gettext entries
-      $entries = Gettext\Extractors\PhpCode::extract($array_php);
-
-      //Get the translations of the code that are stored in a po file
-      $oldEntries = Gettext\Extractors\Po::extract($dir_path.$textdomain.'_php.po');
-
-      //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-      $entries->mergeWith($oldEntries); //now $entries has all the values
-    }
-    else{ //create
-      $entries = Gettext\Extractors\PhpCode::extract($array_php);
-    }
-
-    //Now save the php.po file with the result
-    foreach ($lc_1 as $l){
-      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
-      Gettext\Generators\Po::generateFile($entries, $dir_lc[$l].'/'.$textdomain.'_php.po');
-    }
-
-    /********** END PHP **********/
-
-    /******************************/
-    /************* JS *************/
-    /******************************/
-
-    // get all the .js files unless files into modules folder
-    $all_files_js = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('js'), false);
-    foreach($all_files_js as $i => $dir){
-      if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false
-          && strpos($dir,'/vendor/')===false && strpos($dir,'/vendorServer/')===false
-          && strpos($dir,'/pluggins/')===false && strpos($dir,'/jquery-validation/')===false
-          && strpos($dir,'/tmp/')===false){ // We exclude files from modules, tmp and vendorServer
-            $files_js[$i] = $dir->getRealPath();
-      }
-    }
-
-    // get the .js files into modules folder
-    $files_module_js = CacheUtilsController::listFolderFiles($dir_modules, array('js'), false);
-    foreach ($modules as $i => $dir) {
-      foreach ($files_module_js as $k => $file) {
-        $parts = explode('/'.$dir.'/',$file);
-        if (sizeof($parts)==2){
-          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
-          $array_js_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-        }
-      }
-    }
-
-    // get the .js files into coreModules folder
-    $files_module_js_c = CacheUtilsController::listFolderFiles($dir_modules_c, array('js'), false);
-    foreach ($modules as $i => $dir) {
-      foreach ($files_module_js_c as $k => $file) {
-        $parts = explode('/'.$dir.'/',$file);
-        if (sizeof($parts)==2){
-          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
-          $array_js_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-        }
-      }
-    }
-
-    // We combine all the arrays that we've got in an only array
-    $array_js = array_merge($array_js_module, $array_js_module_c, $files_js);
-
-    if ($existJS){ //merge
-      //Scan the php code to find the latest gettext entries
-      $entries = Gettext\Extractors\JsCode::extract($array_js);
-
-      //Get the translations of the code that are stored in a po file
-      $oldEntries = Gettext\Extractors\Po::extract($dir_path.$textdomain.'_js.po');
-
-      //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-      $entries->mergeWith($oldEntries); //now $entries has all the values
-    }
-    else{ //create
-      $entries = Gettext\Extractors\JsCode::extract($array_js);
-    }
-
-    /*//Now save the php.po file with the result
-    Gettext\Generators\Po::generateFile($entries, $dir_path.$textdomain.'_js.po');
-    */
-    //Now save the php.po file with the result
-    foreach ($lc_1 as $l){
-      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
-      Gettext\Generators\Po::generateFile($entries, $dir_lc[$l].'/'.$textdomain.'_js.po');
-    }
-
-    /*********** END JS **********/
-
-    /******************************/
-    /************* TPL *************/
-    /******************************/
-
-    // We will use the smarty-gettext pluggin to extract the strings to translate from .tpl files
-    
-    // get all the .tpl files unless files into modules folder
-    $all_files_tpl = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('tpl'), false);
-    foreach($all_files_tpl as $i => $dir){
-      if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false
-          && strpos($dir,'/vendor/')===false && strpos($dir,'/vendorServer/')===false
-          && strpos($dir,'/pluggins/')===false && strpos($dir,'/jquery-validation/')===false
-          && strpos($dir,'/tmp/')===false){ // We exclude files from modules, tmp and vendorServer
-            $files_tpl[$i] = $dir->getRealPath();
-      }
-    }
-
-    // get the .tpl files into modules folder
-    $files_module_tpl = CacheUtilsController::listFolderFiles($dir_modules, array('tpl'), false);
-    foreach ($modules as $i => $dir) {
-      foreach ($files_module_tpl as $k => $file) {
-        $parts = explode('/'.$dir.'/',$file);
-        if (sizeof($parts)==2){
-          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
-          $array_tpl_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-        }
-      }
-    }
-
-    // get the .tpl files into coreModules folder
-    $files_module_tpl_c = CacheUtilsController::listFolderFiles($dir_modules_c, array('tpl'), false);
-    foreach ($modules as $i => $dir) {
-      foreach ($files_module_tpl_c as $k => $file) {
-        $parts = explode('/'.$dir.'/',$file);
-        if (sizeof($parts)==2){
-          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
-          $array_tpl_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-        }
-      }
-    }
-
-    // We combine all the arrays that we've got in an only array
-    $array_tpl = array_merge($array_tpl_module, $array_tpl_module_c, $files_tpl);
-
-    //temos o listado de todos os arquivos no array_tpl, falta saber cómo executalo
-    // copiamos os ficheiros nun dir temporal
-    foreach ($array_tpl as $a){
-      exec('cp '.$a.' '.TPL_TMP);
-    }
-
-    foreach ($lc_1 as $l){
-      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
-      exec(DEPEN_COMPOSER_PATH.'/smarty-gettext/smarty-gettext/tsmarty2c.php -o '.$dir_lc[$l].'/'.$textdomain.'_tpl.po '.TPL_TMP);
-    }
-
-    /*********** END TPL **********/
-  }
-
-  /**
-  * Compile files.po to get the translations ready to be used
-  */
-  function compileTranslations(){
-    global $lc_1;
-    $textdomain="cogumelo";
-
-    foreach ($lc_1 as $l){
-      $dir_lc[$l] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
-      exec('msgfmt -c -v -o '.$dir_lc[$l].'/'.$textdomain.'_php.mo '.$dir_lc[$l].'/'.$textdomain.'_php.po');
-      exec('msgfmt -c -v -o '.$dir_lc[$l].'/'.$textdomain.'_js.mo '.$dir_lc[$l].'/'.$textdomain.'_js.po');
-    }
-
-  }
 
   /**
    * Get data from the shell.
