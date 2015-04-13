@@ -1,26 +1,26 @@
 <?php
 
 
-Cogumelo::load('coreView/Template.php');
+Cogumelo::load( 'coreView/Template.php' );
 
 
 abstract class View {
   var $first_execution = true;
   var $template;
 
-  function __construct($teplates_dir) {
-    if($this->first_execution) {
+  function __construct( $base_dir ) {
+    if( $this->first_execution ) {
 
       $first_execution = false;
 
-      $this->template = new Template($teplates_dir);
+      $this->template = new Template( $base_dir );
 
       if(!$this->accessCheck()){
-        Cogumelo::error('Acess error on view '. get_called_class() );
+        Cogumelo::error( 'Acess error on view '. get_called_class() );
         exit;
       }
       else {
-        Cogumelo::debug('accessCheck OK '. get_called_class() );
+        Cogumelo::debug( 'accessCheck OK '. get_called_class() );
       }
     }
   }
@@ -31,7 +31,7 @@ abstract class View {
   */
   function accessCheck() {
 
-    Cogumelo::error('You need to define "accessCheck" into View');
+    Cogumelo::error( 'You need to define "accessCheck" into View' );
 
     return false;
   }
