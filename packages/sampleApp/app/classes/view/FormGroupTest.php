@@ -10,7 +10,7 @@ class FormGroupTest extends View
 {
 
   public function __construct( $base_dir ) {
-    parent::__construct($base_dir);
+    parent::__construct( $base_dir );
   }
 
 
@@ -89,6 +89,7 @@ class FormGroupTest extends View
 
 
 
+
     $formBasura = new FormController( 'probaBasura', '/form-group-action' );
     $formBasura->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor678' ) );
     $formBasura->setField( 'submit', array( 'type' => 'submit', 'label' => 'Pulsa para enviar', 'value' => 'Manda' ) );
@@ -99,6 +100,15 @@ class FormGroupTest extends View
 
 
     $formVacio = new FormController();
+
+
+
+    $this->templateBlock = new Template( null );
+    $this->templateBlock->assign( 'meu1', 'olameu1' );
+    $this->templateBlock->assign( 'meu2', 'olameu2' );
+    $this->templateBlock->setTpl( 'formGroupTestBlock.tpl' );
+
+    $this->template->setBlock( 'bloque1', $this->templateBlock );
 
 
 
