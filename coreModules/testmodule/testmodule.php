@@ -29,6 +29,7 @@ $this->setUrlPatternsFromArray(
   )
 );
 */
+__('traduceme esto se tes valor');
   }
 
 
