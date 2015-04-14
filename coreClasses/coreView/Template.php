@@ -39,6 +39,9 @@ class Template extends Smarty
 
     $this->base_dir = $base_dir;
 
+    // En caso de que Smarty no encuentre un TPL, usa este metodo para buscarlo
+    $this->default_template_handler_func = 'ModuleController::cogumeloSmartyTemplateHandlerFunc';
+
     // Inicializamos atributos internos de SMARTY
     $this->config_dir = $this->cgmSmartyConfigDir;
     $this->compile_dir = $this->cgmSmartyCompileDir;
