@@ -19,6 +19,10 @@ class GetLang extends View
 
   // load media from app
   function setlang($url_path=''){
+
+      global $c_lang;
+      $c_lang = 'gl';
+     
     echo "<br> SET Lang global variables<br><br>";
   }
 }
