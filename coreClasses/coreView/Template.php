@@ -9,7 +9,7 @@ Cogumelo::load('coreController/ModuleController.php');
 class Template extends Smarty
 {
   var $tpl;
-  var $base_dir;
+  var $baseDir;
 
   var $blocks = array();
 
@@ -32,12 +32,12 @@ class Template extends Smarty
   /**
    * Carga la configuracion inicial
    *
-   * @param string $base_dir
+   * @param string $baseDir
    **/
-  public function __construct( $base_dir ) {
+  public function __construct( $baseDir ) {
     parent::__construct();
 
-    $this->base_dir = $base_dir;
+    $this->baseDir = $baseDir;
 
     // En caso de que Smarty no encuentre un TPL, usa este metodo para buscarlo
     $this->default_template_handler_func = 'ModuleController::cogumeloSmartyTemplateHandlerFunc';

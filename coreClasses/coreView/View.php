@@ -8,12 +8,14 @@ abstract class View {
   var $first_execution = true;
   var $template;
 
-  function __construct( $base_dir ) {
+  function __construct( $baseDir ) {
     if( $this->first_execution ) {
+
+      $this->baseDir = $baseDir;
 
       $first_execution = false;
 
-      $this->template = new Template( $base_dir );
+      $this->template = new Template( $baseDir );
 
       if(!$this->accessCheck()){
         Cogumelo::error( 'Acess error on view '. get_called_class() );
