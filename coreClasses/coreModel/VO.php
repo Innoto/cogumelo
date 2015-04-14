@@ -209,9 +209,23 @@ Class VO
    *
    * @return void
    */
-  function &setter( $setterkey, $value = null ) {
+  function &setter( $setterkey, $value = null, $lang = false ) {
 
-    $retObj = false;
+    $cols = $this->getCols();
+
+    // if a setter is for concrete lang or col have multilang
+    if( 
+      ( !$lang && array_key_exists($setterkey,$cols) && array_key_exists('multilang',$cols[$setterkey]) && $cols[$setterkey]['multilang'] ) || 
+      ( $lang && array_key_exists($setterkey, $cols ) ) 
+    ) {
+
+      if(!$lang)
+        $lang = LANG_DEFAULT;
+
+      $setterkey .= '_'.$lang;
+    }
+
+
 
     if( is_array($setterkey) && $value === null ) {
       foreach( $setterkey as $k => $e) {
@@ -221,7 +235,7 @@ Class VO
     }
 
 
-    if( array_key_exists($setterkey, $this->getCols()) ) {
+    if( array_key_exists($setterkey, $cols ) || array_key_exists( $this->isMultilangKey($setterkey) , $cols ) ) {
       // set values
       if( $value !== null && !is_object($value) && !is_array($value) ) {
         $this->data[$setterkey] = $value;
@@ -235,6 +249,16 @@ Class VO
     return $retObj;
   }
 
+
+  function isMultilangKey( $key ) {
+
+    $regex = '#(.*)_(('.implode(')|(', explode(',',LANG_AVAILABLE) ).'))#';
+
+    preg_match($regex, $key, $match);
+
+
+    return ($match[1]);
+  }
 
   /**
    * set data dependence
@@ -328,23 +352,37 @@ Class VO
   function getKeysToString( $fields, $resolveDependences=false ) {
     $retFields = array();
 
+    $originalCols = $this->getCols();
+
     // main vo Fields
     if( !$fields ) {
-      $retFields = array_merge($retFields, array_keys( $this->getCols() ) );
+      $retFields = array_merge($retFields, array_keys( $originalCols ) );
     }
     else {
       $retFields = array_merge($retFields, $fields );
     }
 
+    $originalCols = $this->getCols();
+
     foreach($retFields as $fkey => $retF )  {
-      $retFields[$fkey] = $this->getTableName().'.'.$retF;
+      
+      if( array_key_exists('multilang', $originalCols[$retF] )  ) {
+        unset($retFields[$fkey] );
+        foreach ( explode(',', LANG_AVAILABLE) as $langKey) {
+          $retFields[$fkey.'_'.$langKey] = $this->getTableName().'.'.$retF.'_'.$langKey;
+
+        }
+      }
+      else {
+        $retFields[$fkey] = $this->getTableName().'.'.$retF;
+      }
+      
     }
 
     // relationship cols
     if( $resolveDependences ) {
       $retFields = array_merge($retFields, VOUtils::getRelKeys(  $this->name, false, $resolveDependences ) );
     }
-
 
     return implode(', ', $retFields);
   }
