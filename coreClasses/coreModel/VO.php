@@ -235,7 +235,7 @@ Class VO
     }
 
 
-    if( array_key_exists($setterkey, $cols ) || array_key_exists( $this->isMultilangKey($setterkey) , $cols ) ) {
+    if( array_key_exists($setterkey, $cols ) || array_key_exists( $this->langKey($setterkey, true) , $cols ) ) {
       // set values
       if( $value !== null && !is_object($value) && !is_array($value) ) {
         $this->data[$setterkey] = $value;
@@ -250,14 +250,20 @@ Class VO
   }
 
 
-  function isMultilangKey( $key ) {
-
+  function langKey( $key, $getKey = false ) {
+    $ret = false;
     $regex = '#(.*)_(('.implode(')|(', explode(',',LANG_AVAILABLE) ).'))#';
 
-    preg_match($regex, $key, $match);
+    $pm = preg_match($regex, $key, $match);
 
+    if($getKey) {
+      $ret = $match[1];
+    } 
+    else {
+      $ret = $pm;
+    }
 
-    return ($match[1]);
+    return $ret;
   }
 
   /**
@@ -299,18 +305,28 @@ Class VO
    *
    * @return mixed
    */
-  function getter($getterkey) {
+  function getter($getterkey, $lang = false) {
 
-    $value = null;
+    $cols = $this->getCols();
+
+    if( 
+      (!$lang && array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] ) ) 
+    {
+      $getterkey .= '_'.LANG_DEFAULT;
+    }
+    else
+    if( $lang ) {
+      $getterkey .= '_'.$lang;
+    }
 
     // get values
     if( array_key_exists($getterkey, $this->data) ) {
-        $value = $this->data[$getterkey];
-    }
-    else {
-      Cogumelo::debug("value '". $getterkey ."' not exist in VO::". $this::$tableName);
+      $value = $this->data[$getterkey];
     }
 
+if (!$value) {
+   echo $getterkey;
+}
     return $value;
   }
 
