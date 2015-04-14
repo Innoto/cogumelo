@@ -145,18 +145,25 @@ class ModuleController
     //error_log( '  smarty: ' . print_r( $smarty, true ) );
     //print_r( $smarty );
 
+    $module = false;
+    $tmpNameParts = explode ( '///', $name );
+    if( count( $tmpNameParts ) > 1 ) {
+      $module = $tmpNameParts[0];
+      $name = $tmpNameParts[1];
+    }
+
     if( $type == 'file' ) {
 
-      // Caso 1: Busco con getRealFilePath
+      // Caso: Busco con getRealFilePath
       if( $newName === false ) {
-        $tmpName = ModuleController::getRealFilePath( 'classes/view/templates/'.$name );
+        $tmpName = ModuleController::getRealFilePath( 'classes/view/templates/'.$name, $module );
         if( file_exists ( $tmpName ) ) {
           $newName = $tmpName;
-          error_log( 'Solucion getRealFilePath: ' . $newName );
+          error_log( 'Solucion getRealFilePath( classes/view/templates/'.$name.', '.$module.' ): ' . $newName );
         }
       }
 
-      // Caso 2: Si se necesita un tpl que no es el principal del obj Smarty, miro en su mismo dir
+      // Caso: Si se necesita un tpl que no es el principal del obj Smarty, miro en su mismo dir
       if( $newName === false && isset( $smarty->tpl ) ) {
         $smartyTpl = pathinfo( $smarty->tpl );
         if( $smartyTpl[ 'basename' ] !== $name ) {
