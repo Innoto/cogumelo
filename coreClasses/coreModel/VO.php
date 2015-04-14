@@ -257,7 +257,12 @@ Class VO
     $pm = preg_match($regex, $key, $match);
 
     if($getKey) {
-      $ret = $match[1];
+      if( isset($match[1]) ){
+        $ret = $match[1];        
+      }
+      else{
+        $ret = $key;
+      }
     } 
     else {
       $ret = $pm;
@@ -307,6 +312,7 @@ Class VO
    */
   function getter($getterkey, $lang = false) {
 
+    $value = null;
     $cols = $this->getCols();
 
     if( 
@@ -324,9 +330,6 @@ Class VO
       $value = $this->data[$getterkey];
     }
 
-if (!$value) {
-   echo $getterkey;
-}
     return $value;
   }
 
