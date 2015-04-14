@@ -38,7 +38,8 @@ class UserModel extends Model
 
     'description'=> array(
       'type' => 'TEXT',
-      'size' => '300'
+      'size' => '300',
+      'multilang' => true
     ),
     'active'=> array(
       'type' => 'INT',
