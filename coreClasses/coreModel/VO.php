@@ -368,6 +368,17 @@ Class VO
 
 
 
+  function getKeys() {
+
+    $retArray = array();
+
+    foreach( $this->getCols() as $cK => $c) {
+      $retArray[] = $cK;
+    }
+
+    return $retArray;
+  }
+
   /**
    * get key list into string
    *

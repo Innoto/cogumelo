@@ -50,7 +50,8 @@ class MasterView extends View
     $user = new UserModel();
     $u = $user->listItems( array('affectsDependences'=> true ))->fetch();
     $av = $u->getterDependence('avatar');
-    
+    $av->setter('name');
+
     //    $u = $user->listItems(  )->fetch();
     //$u->setter('name', 'NovoNOME');
     //$u->save();
