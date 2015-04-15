@@ -97,7 +97,7 @@
 
     $vo = new $voName();
 
-    foreach( $vo->getCols() as $colK => $col ) {
+    foreach( $vo->getCols(true) as $colK => $col ) {
         $retCols[] = $colK;
     }
 
@@ -117,8 +117,8 @@
   static function getVOConnections( $VOInstance, $includeKeys= false ) {
     $relationships = array();
 
-    if( sizeof( $VOInstance->getCols() ) > 0 ) {
-      foreach ( $VOInstance->getCols() as $attrKey=>$attr ) {
+    if( sizeof( $VOInstance->getCols(true) ) > 0 ) {
+      foreach ( $VOInstance->getCols(true) as $attrKey=>$attr ) {
         if( array_key_exists( 'type', $attr ) && $attr['type'] == 'FOREIGN' ){
 
           if( !$includeKeys ) {
@@ -156,7 +156,7 @@
                       'name' => $voName, 
                       'relationship' => self::getVOConnections( $vo ), 
                       'extendedRelationship' => self::getVOConnections( $vo, true ),
-                      'elements' => sizeof( $vo->getCols() ),
+                      'elements' => sizeof( $vo->getCols(true) ),
                       'module' => $voDef['module']
                     );
     }

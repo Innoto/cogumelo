@@ -186,8 +186,24 @@ Class VO
    *
    * @return array
    */
-  function getCols(){
-    return $this::$cols;
+  function getCols( $realCols = false ){
+
+    $retCols = array();
+
+    foreach( $this::$cols as $colK=>$col ) {
+      if( isset($col['multilang']) && $col['multilang'] == true && $realCols) {
+        foreach ( explode(',', LANG_AVAILABLE) as $langKey) {
+          $retCols[ $colK.'_'.$langKey ] = $col;   
+        }
+      }
+      else {
+        $retCols[ $colK ] = $col;        
+      }
+    }
+    
+    return $retCols;
+
+
   }
 
 
@@ -352,17 +368,6 @@ Class VO
 
 
 
-  function getKeys() {
-
-    $retArray = array();
-
-    foreach( $this->getCols() as $cK => $c) {
-      $retArray[] = $cK;
-    }
-
-    return $retArray;
-  }
-
   /**
    * get key list into string
    *
@@ -371,7 +376,7 @@ Class VO
   function getKeysToString( $fields, $resolveDependences=false ) {
     $retFields = array();
 
-    $originalCols = $this->getCols();
+    $originalCols = $this->getCols( true );
 
     // main vo Fields
     if( !$fields ) {
@@ -384,18 +389,8 @@ Class VO
     $originalCols = $this->getCols();
 
     foreach($retFields as $fkey => $retF )  {
-      
-      if( array_key_exists('multilang', $originalCols[$retF] )  ) {
-        unset($retFields[$fkey] );
-        foreach ( explode(',', LANG_AVAILABLE) as $langKey) {
-          $retFields[$fkey.'_'.$langKey] = $this->getTableName().'.'.$retF.'_'.$langKey;
-
-        }
-      }
-      else {
         $retFields[$fkey] = $this->getTableName().'.'.$retF;
-      }
-      
+
     }
 
     // relationship cols
