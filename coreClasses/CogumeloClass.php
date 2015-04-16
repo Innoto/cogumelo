@@ -34,12 +34,12 @@ class CogumeloClass extends Singleton
        "installer" => 'composer',
        "includes" => array('libs/Smarty.class.php')
      ),
-/*     array(
+     array(
        "id" => "gettext",
        "params" => array('gettext/gettext', '1.1.2'),
        "installer" => 'composer',
        "includes" => array('Gettext/autoloader.php')
-     ),*/
+     ),
      array(
      "id" => "smarty-gettext",
      "params" => array("smarty-gettext/smarty-gettext", "~1.1.1"),
@@ -66,10 +66,6 @@ class CogumeloClass extends Singleton
 
   function exec() {
     Cogumelo::debug('Request URI: '.$_SERVER['REQUEST_URI']);
-    //$i18nController = new I18nController();
-    //print($i18nController->__('prueba'));
-    //require_once(I18N.'/index.php');
-
 
     // cut out the SITE_FOLDER and final slash from path
     $url_path = preg_replace('#\/$#', '', preg_replace('#^'.SITE_FOLDER.'#', '', $_SERVER['REQUEST_URI'], 1) , 1);

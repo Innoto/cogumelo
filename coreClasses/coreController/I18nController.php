@@ -4,9 +4,6 @@
 * i18n Class
 */
 
- /*require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
- require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/translator_functions.php");*/
-
 class I18nController {
 
 	/**
