@@ -116,11 +116,19 @@ Class VO
     else
     {
       // when is first rel decode it
-      if(! $d = json_decode($data) ){
-        Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
+      if( $d = json_decode('['.$data.']') ){
+        if( sizeof($d)>1 ) {
+          foreach($d as $dep) {
+            $this->setDepVO($dep, $voName, $relObj->parentId, $relObj);                  
+          }
+        }
+        
+       }
+      else {
+       Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
       }
 
-      $this->setDepVO($d, $voName, $relObj->parentId, $relObj);
+
     }
   }
 
@@ -137,7 +145,7 @@ Class VO
    */
   function &setDepVO( $dataVO, $voName, $key, $relObj  ) {
     $retvO = false;
-    
+
     if( $this->isForeignKey( $key ) ){
       $retVO = new $voName( (array) $dataVO, $relObj );
       $this->depData[ $key ] = $retVO;
