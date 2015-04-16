@@ -13,7 +13,6 @@
   require_once(ModuleController::getRealFilePath('devel.php', 'devel'));
   require_once(ModuleController::getRealFilePath('classes/controller/DevelDBController.php', 'devel'));
   require_once(ModuleController::getRealFilePath('classes/controller/CacheUtilsController.php', 'mediaserver'));
-  require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
   Cogumelo::load('coreController/ModuleController.php');
   Cogumelo::load('coreController/i18nScriptController.php');
   $i18nscriptController = new i18nScriptController();
@@ -89,11 +88,13 @@
           break;
 
         case 'generateTranslations':        
+          require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
           $i18nscriptController->c_i18n_gettext();
           echo "The files.po are ready to be edited!\n";
         break;
 
         case 'compileTranslations':
+          require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
           $i18nscriptController->c_i18n_compile();
           echo "The files.mo are ready to be used!\n";
           break;

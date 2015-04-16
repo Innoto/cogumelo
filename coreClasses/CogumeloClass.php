@@ -66,8 +66,10 @@ class CogumeloClass extends Singleton
 
   function exec() {
     Cogumelo::debug('Request URI: '.$_SERVER['REQUEST_URI']);
-    // $i18nController = new I18nController();
-    // print($i18nController->__('prueba'));
+    //$i18nController = new I18nController();
+    //print($i18nController->__('prueba'));
+    //require_once(I18N.'/index.php');
+
 
     // cut out the SITE_FOLDER and final slash from path
     $url_path = preg_replace('#\/$#', '', preg_replace('#^'.SITE_FOLDER.'#', '', $_SERVER['REQUEST_URI'], 1) , 1);
