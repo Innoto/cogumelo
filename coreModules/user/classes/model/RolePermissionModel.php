@@ -26,6 +26,8 @@ class RolePermissionModel extends Model
     )    
   );
 
+  static $extraFilters = array();
+  
   function __construct($datarray = array(),  $otherRelObj= false )
   {
     parent::__construct($datarray, $otherRelObj );

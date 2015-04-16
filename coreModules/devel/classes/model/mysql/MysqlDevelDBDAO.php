@@ -98,7 +98,7 @@ class MysqlDevelDBDAO extends MysqlDAO
 
     foreach($VO::$cols as $colkey => $col) {
 
-      if( array_key_exists('multilang', $col) && $col['multilang'] == true ) {
+      if( isset( $col['multilang'] ) && $col['multilang'] == true &&  $col['type'] != 'FOREIGN'  ) {
 
         foreach ( explode(',', LANG_AVAILABLE) as $langKey) {
 

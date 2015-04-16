@@ -9,13 +9,11 @@ class FiledataModel extends Model
   static $cols = array(
     'id' => array(
       'type' => 'INT',
-      'primarykey' => true,
-      'autoincrement' => true
+      'primarykey' => true
     ),
     'name' => array(
       'type' => 'CHAR',
-      'size' => '250',
-      'multilang' => true
+      'size' => '250'
     ),
     'originalName'=> array(
       'type' => 'CHAR',
@@ -33,6 +31,8 @@ class FiledataModel extends Model
       'type' => 'BIGINT'
     )
   );
+
+  static $extraFilters = array();
 
   function __construct($datarray = array(), $otherRelObj = false ) {
     parent::__construct( $datarray, $otherRelObj );
