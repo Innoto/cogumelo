@@ -1348,7 +1348,7 @@ class FormController implements Serializable {
     $html = '';
 
     if( $this->issetGroup( $groupName ) ) {
-      $html = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-group-'.$groupName.'">'."\n";
+      $html = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-group-wrap '.self::CSS_PRE.'-group-'.$groupName.'">'."\n";
       $html .= '<label>Grupo '.$groupName.'</label>'."\n";
 
       $groupLimits = $this->getGroupLimits( $groupName );
