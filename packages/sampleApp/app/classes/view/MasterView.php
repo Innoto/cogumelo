@@ -43,14 +43,67 @@ class MasterView extends View
 
 
     echo "<pre>";
-
-
     user::load('model/UserModel.php');
-  
+
+
+
+      ////////////////////////////////////
+     //           CREACIÓN
+    ////////////////////////////////////
+
+
+    // permisos
+    $permiso_lectura = new PermissionModel( array('name'=>'Lectura') );
+    $permiso_edicion = new PermissionModel( array('name'=>'Edición') );
+    $permiso_administracion = new PermissionModel( array('name'=>'Administración') );
+
+    // roles
+
+    //$rol_visitante = new RoleModel( array('name'=>'visitor') );
+    //$rol_editor = new RoleModel( array('name'=>'editor') );
+    //$rol_harduser = new RoleModel( array('name'=>'harduser') );    
+    $rol_administrador = new RoleModel( array('name'=>'admin') );
+
+
+
+
+
+    $rol_administrador->setterDependence('id', new RolePermissionModel() )->setterDependence('permission', $permiso_lectura);
+    $rol_administrador->setterDependence('id', new RolePermissionModel() )->setterDependence('permission', $permiso_edicion); 
+    //$rol_administrador->setterDependence('id', new RolePermissionModel() )->setterDependence('permission', $permiso_administracion); 
+
+
+var_dump($rol_administrador->getAllData());
+    $rol_administrador->save( array('affectsDependences' =>true) );
+    //$rol_administrador->setterDependence('id', $permiso_edicion );
+    //$rol_administrador->setterDependence('id', $permiso_lectura );
+
+
+//    $rol_administrador->save();
+
+    // usuarios
+
+
     $user = new UserModel();
-    $u = $user->listItems( array('affectsDependences'=> true ))->fetch();
-    $av = $u->getterDependence('avatar');
-    $av->setter('name');
+
+
+    //$u = $user->listItems( array('affectsDependences'=> true ))->fetch();
+    //$av = $u->getterDependence('avatar');
+
+
+
+
+
+
+      ////////////////////////////////////
+     //           CONSULTA
+    ////////////////////////////////////
+
+
+
+
+
+
 
     //    $u = $user->listItems(  )->fetch();
     //$u->setter('name', 'NovoNOME');

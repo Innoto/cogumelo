@@ -137,15 +137,14 @@ Class VO
    */
   function &setDepVO( $dataVO, $voName, $key, $relObj  ) {
     $retvO = false;
-    $attribute =  $key;
-
-    if( $this->isForeignKey( $attribute ) ){
+    
+    if( $this->isForeignKey( $key ) ){
       $retVO = new $voName( (array) $dataVO, $relObj );
-      $this->depData[ $attribute ] = $retVO;
+      $this->depData[ $key ] = $retVO;
     }
     else {
       $retVO = new $voName( (array) $dataVO, $relObj );
-      $this->depData[ $attribute] = array( $retVO );
+      $this->depData[ $key] [] = $retVO;
     }
 
     return $retVO;
