@@ -62,7 +62,7 @@ class MysqlDAO extends DAO
   */
   function execSQL(&$connectionControl, $sql, $val_array = array())
   {
-
+//echo $sql;
     // obtaining debug data
     $d = debug_backtrace();
     $caller_method = $d[1]['class'].'.'.$d[1]['function'].'()';
@@ -341,8 +341,8 @@ class MysqlDAO extends DAO
   {
 
     $cols = array();
-    foreach( $VOobj::$cols as $colk => $col) {
-      if($VOobj->getter($colk) !== null) {
+    foreach( $VOobj->data as $colk => $col) {
+      if( $VOobj->getter($colk) !== null) {
         $cols[$colk] = $col;
       }
     }
@@ -389,8 +389,10 @@ class MysqlDAO extends DAO
 
     // add getter values to values array
     $setvalues = '';
+
+
     $valArray = array();
-    foreach( $VOobj::$cols as $colk => $col) {
+    foreach( $VOobj->data as $colk => $col) {
       if($VOobj->getter($colk) !== null) {
         $setvalues .= ', '.$colk.'= ? ';
         $valArray[] = $VOobj->getter($colk);

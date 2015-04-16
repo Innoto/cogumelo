@@ -110,7 +110,7 @@ Class Model extends VO {
     foreach( $cols as $colK => $colD  ) {
       $type = $colD['type'];
 
-      if( $type == 'CHAR' || $type == 'VARCHAR' || $type == 'INT' || $type == 'FOREIGN' ){
+      if( $type == 'CHAR' || $type == 'VARCHAR' || $type == 'INT' || $type == 'BOOLEAN'  || $type == 'FOREIGN' ){
           $filterCols[ $colK ] = $tableName.".".$colK." = ? ";
       }
 

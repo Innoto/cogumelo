@@ -18,6 +18,12 @@
   </head>
   <body>
 
+
+
+    {$bloque1}
+
+
+
     {$formOpen}
 
       {$formFields}

@@ -48,10 +48,18 @@ class MasterView extends View
     user::load('model/UserModel.php');
   
     $user = new UserModel();
-    //$u = $user->listItems( array('affectsDependences'=> true ))->fetch();
-    $u = $user->listItems( array('affectsDependences'=>array('UserRoleModel', 'RoleModel', 'RolePermissionModel', 'PermissionModel'), 'filters'=>array('RoleModel.name'=>'fukin') ))->fetch();
+    $u = $user->listItems( array('affectsDependences'=> true ))->fetch();
+    $av = $u->getterDependence('avatar');
+    $av->setter('name');
+
+    //    $u = $user->listItems(  )->fetch();
+    //$u->setter('name', 'NovoNOME');
+    //$u->save();
+    //var_dump($u->getAllData());
     //$u = $user->listItems( array('affectsDependences'=>array('UserRoleModel', 'RoleModel', 'RolePermissionModel', 'PermissionModel', 'FiledataModel'), 'filters'=>array('PermissionModel.name'=>'fukinpermission') ))->fetch();
-    var_dump( $u->getAllData());
+
+
+    //var_dump( $u->getAllData());
 
 
 /*

@@ -14,7 +14,8 @@ class FiledataModel extends Model
     ),
     'name' => array(
       'type' => 'CHAR',
-      'size' => '250'
+      'size' => '250',
+      'multilang' => true
     ),
     'originalName'=> array(
       'type' => 'CHAR',

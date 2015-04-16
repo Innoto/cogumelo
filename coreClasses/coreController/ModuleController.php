@@ -10,7 +10,7 @@
 * @author: pablinhob
 */
 
-require_once(COGUMELO_LOCATION."/coreClasses/coreController/RequestController.php");
+require_once( COGUMELO_LOCATION . "/coreClasses/coreController/RequestController.php" );
 
 class ModuleController
 {
@@ -19,7 +19,7 @@ class ModuleController
   var $module_paths = array();
 
 
-  function __construct($url_path = false, $from_shell = false) {
+  public function __construct( $url_path = false, $from_shell = false ) {
     $this->url_path = $url_path;
     $this->setModules();
 
@@ -28,19 +28,17 @@ class ModuleController
     if( !$from_shell ) {
       $this->execModules();
     }
-
-
   }
 
 
-  function setModules() {
+  public function setModules() {
     global $C_ENABLED_MODULES;
 
-    if (!is_array($C_ENABLED_MODULES)) {
+    if ( !is_array( $C_ENABLED_MODULES ) ) {
       return;
     }
 
-    foreach ($C_ENABLED_MODULES as $module_name) {
+    foreach( $C_ENABLED_MODULES as $module_name ) {
       if( $module_main_class = self::getRealFilePath($module_name.'.php' ,$module_name) ) {
         $this->module_paths[$module_name] = dirname($module_main_class); // get module.php container
       }
@@ -49,19 +47,18 @@ class ModuleController
         Cogumelo::error("Module not found: ".$module_name);
       }
     }
-
   }
 
 
-  function execModules() {
+  public function execModules() {
     global $C_INDEX_MODULES;
 
-    foreach($C_INDEX_MODULES as $module_name) {
+    foreach( $C_INDEX_MODULES as $module_name ) {
       $this->execModule($module_name);
     }
   }
 
-  function execModule($module_name) {
+  public function execModule( $module_name ) {
     if($this->module_paths[$module_name] == false) {
       Cogumelo::error("Module '".$module_name. "' not found.");
     }
@@ -73,23 +70,23 @@ class ModuleController
     }
   }
 
-  function includeModules() {
+  public function includeModules() {
 
     global $C_ENABLED_MODULES;
 
-    foreach($C_ENABLED_MODULES as $module_name) {
+    foreach( $C_ENABLED_MODULES as $module_name ) {
       $mod_path = $this->module_paths[$module_name];
       require_once($mod_path.'/'.$module_name.'.php');
     }
-
   }
 
-  function getLeftUrl() {
+  public function getLeftUrl() {
+
     return $this->url_path;
   }
 
 
-  static function getRealFilePath($file_relative_path, $module = false) {
+  static public function getRealFilePath( $file_relative_path, $module = false ) {
     $retPath = false;
 
     if(!$module) {
@@ -99,13 +96,13 @@ class ModuleController
       global $C_ENABLED_MODULES;
       if(in_array($module, $C_ENABLED_MODULES)) {
         // APP modules
-        if( file_exists(SITE_PATH.'/modules/'.$module.'/'.$file_relative_path) ) { 
+        if( file_exists(SITE_PATH.'/modules/'.$module.'/'.$file_relative_path) ) {
           $retPath = SITE_PATH.'/modules/'.$module.'/'.$file_relative_path;
         }
         // DIST modules
         else if( COGUMELO_DIST_LOCATION != false && file_exists( COGUMELO_DIST_LOCATION.'/distModules/'.$module.'/'.$file_relative_path ) ) {
           $retPath = COGUMELO_DIST_LOCATION.'/distModules/'.$module.'/'.$file_relative_path;
-        }        
+        }
         // CORE modules
         else if( file_exists( COGUMELO_LOCATION.'/coreModules/'.$module.'/'.$file_relative_path ) ) {
           $retPath = COGUMELO_LOCATION.'/coreModules/'.$module.'/'.$file_relative_path;
@@ -120,6 +117,80 @@ class ModuleController
       }
     }
     return $retPath;
+  }
+
+  /**
+   * Default Template Handler
+   *
+   * Called when Smarty's file: resource is unable to load a requested file
+   *
+   * @param string   $type     resource type (e.g. "file", "string", "eval", "resource")
+   * @param string   $name     resource name (e.g. "foo/bar.tpl")
+   * @param string  &$content  template's content
+   * @param integer &$modified template's modification time
+   * @param Smarty   $smarty   Smarty instance
+   * @return string|boolean   path to file or boolean true if $content and $modified
+   *                          have been filled, boolean false if no default template
+   *                          could be loaded
+   */
+  static public function cogumeloSmartyTemplateHandlerFunc( $type, $name, &$content, &$modified, Smarty $smarty ) {
+
+    $newName = false;
+
+    error_log( 'cogumeloSmartyTemplateHandlerFunc: ' );
+    error_log( '  type: ' . $type );
+    error_log( '  name: ' . $name );
+    error_log( '  content: ' . print_r( $content, true ) );
+    error_log( '  modified: ' . print_r( $modified, true ) );
+    //error_log( '  smarty: ' . print_r( $smarty, true ) );
+    //print_r( $smarty );
+
+    $module = false;
+    $tmpNameParts = explode ( '///', $name );
+    if( count( $tmpNameParts ) > 1 ) {
+      $module = $tmpNameParts[0];
+      $name = $tmpNameParts[1];
+    }
+
+    if( $type == 'file' ) {
+
+      // Caso: Busco con getRealFilePath
+      if( $newName === false ) {
+        $tmpName = ModuleController::getRealFilePath( 'classes/view/templates/'.$name, $module );
+        if( file_exists ( $tmpName ) ) {
+          $newName = $tmpName;
+          error_log( 'Solucion getRealFilePath( classes/view/templates/'.$name.', '.$module.' ): ' . $newName );
+        }
+      }
+
+      // Caso: Si se necesita un tpl que no es el principal del obj Smarty, miro en su mismo dir
+      if( $newName === false && isset( $smarty->tpl ) ) {
+        $smartyTpl = pathinfo( $smarty->tpl );
+        if( $smartyTpl[ 'basename' ] !== $name ) {
+          $tmpName = $smartyTpl[ 'dirname' ] .'/'. $name;
+          if( file_exists ( $tmpName ) ) {
+            $newName = $tmpName;
+            error_log( 'Solucion misma carpeta: ' . $newName );
+          }
+        }
+      }
+
+    }
+
+    /*
+      // return corrected filepath
+      return "/tmp/some/foobar.tpl";
+
+      // return a template directly
+      $content = "the template source";
+      $modified = time();
+      return true;
+
+      // tell smarty that we failed
+      return false;
+    */
+
+    return $newName;
   }
 
 

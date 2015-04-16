@@ -6,156 +6,273 @@ Cogumelo::load('coreController/ModuleController.php');
 //  Template Class (Extends smarty library)
 //
 
-Class Template extends Smarty
+class Template extends Smarty
 {
   var $tpl;
-  var $base_dir;
+  var $baseDir;
 
-  var $css_autoincludes = '';
-  var $css_includes = '';
-  var $js_autoincludes = '';
-  var $js_includes = '';
+  var $blocks = array();
+
+  var $css_autoincludes = array();
+  var $css_includes = array();
+  var $js_autoincludes = array();
+  var $js_includes = array();
+
+  /**
+   * Globals
+   **/
+  var $cgmSmartyConfigDir = SMARTY_CONFIG;
+  var $cgmSmartyCompileDir = SMARTY_COMPILE;
+  var $cgmSmartyCacheDir = SMARTY_CACHE;
+  var $cgmMediaserverCompileLess = MEDIASERVER_COMPILE_LESS;
+  var $cgmMediaserverHost = MEDIASERVER_HOST;
+  var $cgmMediaserverUrlDir = MOD_MEDIASERVER_URL_DIR;
 
 
-  public function __construct( $base_dir ) {
+  /**
+   * Carga la configuracion inicial
+   *
+   * @param string $baseDir
+   **/
+  public function __construct( $baseDir ) {
     parent::__construct();
 
-    $this->base_dir = $base_dir;
-    $this->config_dir = SMARTY_CONFIG;
-    $this->compile_dir = SMARTY_COMPILE;
-    $this->cache_dir = SMARTY_CACHE;
+    $this->baseDir = $baseDir;
+
+    // En caso de que Smarty no encuentre un TPL, usa este metodo para buscarlo
+    $this->default_template_handler_func = 'ModuleController::cogumeloSmartyTemplateHandlerFunc';
+
+    // Inicializamos atributos internos de SMARTY
+    $this->config_dir = $this->cgmSmartyConfigDir;
+    $this->compile_dir = $this->cgmSmartyCompileDir;
+    $this->cache_dir = $this->cgmSmartyCacheDir;
 
     // Smarty Hack: http://www.smarty.net/forums/viewtopic.php?t=21352&sid=88c6bbab5fb1fd84d3e4f18857d3d10e
     Smarty::muteExpectedErrors();
   }
 
-  function addClientScript($file_path, $module = false, $is_autoinclude = false) {
 
-    if($module == false){
-      $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/';
-    }
-    else
-    if($module == 'vendor') {
-      $base_path = MEDIASERVER_HOST.'vendor/';
-    }
-    else
-    if($module == 'vendor/bower') {
-      $base_path = MEDIASERVER_HOST.'vendor/bower/';
-    }
-    else
-    if($module == 'vendor/manual') {
-      $base_path = MEDIASERVER_HOST.'vendor/manual/';
-    }
-    else {
-      $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/module/'.$module.'/';
-    }
+  /**
+   Establece el contenido de un bloque
+   *
+   * @param string $blockName
+   * @param string $blockObject
+   **/
+  public function setBlock( $blockName, $blockObject ) {
+    $this->blocks[ $blockName ] = array( $blockObject );
+  }
+
+  /**
+   Añade otro template al contenido de un bloque
+   *
+   * @param string $blockName
+   * @param string $blockObject
+   **/
+  public function addToBlock( $blockName, $blockObject ) {
+    $this->blocks[ $blockName ][] = $blockObject;
+  }
 
 
-    $include_chain = "\n".'<script type="text/javascript" src="'.$base_path.$file_path.'"></script>';
+  /**
+   Añade un script JS para cargar en el HTML
+   *
+   * @param string $file_path
+   * @param string $module
+   * @param bool $is_autoinclude
+   **/
+  public function addClientScript( $file_path, $module = false, $is_autoinclude = false ) {
+
+    switch( $module ) {
+      case false:
+        $base_path = '/'.$this->cgmMediaserverUrlDir.'/';
+        break;
+      case 'vendor':
+        $base_path = $this->cgmMediaserverHost.'vendor/';
+        break;
+      case 'vendor/bower':
+        $base_path = $this->cgmMediaserverHost.'vendor/bower/';
+        break;
+      case 'vendor/manual':
+        $base_path = $this->cgmMediaserverHost.'vendor/manual/';
+        break;
+      default:
+        $base_path = '/'.$this->cgmMediaserverUrlDir.'/module/'.$module.'/';
+        break;
+    }
+
+    $include_chain = '<script type="text/javascript" src="'.$base_path.$file_path.'"></script>';
 
     if( $is_autoinclude ){
-      if ( strpos( $this->js_autoincludes, $include_chain ) === false ) {
-        $this->js_autoincludes .= $include_chain;
+      if ( in_array( $include_chain, $this->js_autoincludes ) === false ) {
+        $this->js_autoincludes[] = $include_chain;
       }
     }
     else {
-      if ( strpos( $this->js_includes, $include_chain ) === false ) {
-        $this->js_includes .= $include_chain;
+      if ( in_array( $include_chain, $this->js_includes ) === false ) {
+        $this->js_includes[] = $include_chain;
       }
     }
   }
 
-  function addClientStyles( $file_path, $module = false, $is_autoinclude = false ) {
+  /**
+   Añade un CSS para cargar en el HTML
+   *
+   * @param string $file_path
+   * @param string $module
+   * @param bool $is_autoinclude
+   **/
+  public function addClientStyles( $file_path, $module = false, $is_autoinclude = false ) {
 
-    if($module == false){
-      $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/';
-    }
-    else
-    if($module == 'vendor') {
-      $base_path = MEDIASERVER_HOST.'vendor/';
-    }
-    else
-    if($module == 'vendor/bower') {
-      $base_path = MEDIASERVER_HOST.'vendor/bower/';
-    }
-    else
-    if($module == 'vendor/manual') {
-      $base_path = MEDIASERVER_HOST.'vendor/manual/';
-    }
-    else {
-      $base_path = '/'.MOD_MEDIASERVER_URL_DIR.'/module/'.$module.'/';
+    switch( $module ) {
+      case false:
+        $base_path = '/'.$this->cgmMediaserverUrlDir.'/';
+        break;
+      case 'vendor':
+        $base_path = $this->cgmMediaserverHost.'vendor/';
+        break;
+      case 'vendor/bower':
+        $base_path = $this->cgmMediaserverHost.'vendor/bower/';
+        break;
+      case 'vendor/manual':
+        $base_path = $this->cgmMediaserverHost.'vendor/manual/';
+        break;
+      default:
+        $base_path = '/'.$this->cgmMediaserverUrlDir.'/module/'.$module.'/';
+        break;
     }
 
-
-    if( !MEDIASERVER_COMPILE_LESS && substr($file_path, -5) == '.less' ) {
+    if( !$this->cgmMediaserverCompileLess && substr($file_path, -5) == '.less' ) {
       $file_rel = "stylesheet/less";
     }
     else {
       $file_rel = "stylesheet";
     }
 
-
-    $include_chain = "\n".'<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.'">';
+    $include_chain = '<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.'">';
 
     if( $is_autoinclude ) {
-      if ( strpos( $this->css_autoincludes, $include_chain ) === false ) {
-        $this->css_autoincludes .= $include_chain;
+      if ( in_array( $include_chain, $this->css_autoincludes ) === false ) {
+        $this->css_autoincludes[] = $include_chain;
       }
     }
     else {
-      if ( strpos( $this->css_includes, $include_chain ) === false ) {
-        $this->css_includes .= $include_chain;
+      if ( in_array( $include_chain, $this->css_includes ) === false ) {
+        $this->css_includes[] = $include_chain;
       }
     }
   }
 
-  function setTpl($file_name, $module = false) {
-    $this->tpl = ModuleController::getRealFilePath('classes/view/templates/'.$file_name, $module );
+  /**
+   Crea el HTML que carga los Scripts
+   *
+   * @param bool $ignoreAutoincludes
+   * @return string $is_autoinclude
+   **/
+  public function getClientScriptHtml( $ignoreAutoincludes = false ) {
+    if( $ignoreAutoincludes ) {
+      $html = implode( "\n", array_unique( $this->js_includes ) );
+    }
+    else {
+      $html = implode( "\n", array_unique( array_merge( $this->js_autoincludes, $this->js_includes ) ) );
+    }
+
+    return( $html );
   }
 
-  function execToString() {
-    /*
-    ob_start();
-    $this->exec();
-    $result = ob_get_clean();
-    return $result;
-    */
+  /**
+   Crea el HTML que carga los Styles
+   *
+   * @param bool $ignoreAutoincludes
+   * @return string $is_autoinclude
+   **/
+  public function getClientStylesHtml( $ignoreAutoincludes = false ) {
+    if( $ignoreAutoincludes ) {
+      $html = implode( "\n", array_unique( $this->css_includes ) );
+    }
+    else {
+      $html = implode( "\n", array_unique( array_merge( $this->css_autoincludes, $this->css_includes ) ) );
+    }
+
+    return( $html );
+  }
+
+
+
+  /**
+   Establece el template a utilizar
+   *
+   * @param string $file_name
+   * @param string $module
+   **/
+  public function setTpl( $file_name, $module = false ) {
+
+    $this->tpl = ModuleController::getRealFilePath( 'classes/view/templates/'.$file_name, $module );
+  }
+
+  /**
+   Crea el HTML a partir de los datos y plantillas indicados y lo devuelve como STRING
+   *
+   * @return string HTML generado
+   **/
+  public function execToString() {
 
     return( $this->exec( true ) );
   }
 
-  function exec( $toString = false ) {
+  /**
+   Crea el HTML a partir de los datos y plantillas indicados
+   *
+   * @global string $cogumeloIncludesCSS
+   * @global string $cogumeloIncludesJS
+   * @param bool $toString
+   * @return string $htmlCode
+   **/
+  public function exec( $toString = false ) {
 
     $htmlCode = '';
 
-    if( $this->tpl &&  file_exists($this->tpl) ) {
+    if( $this->tpl && file_exists( $this->tpl ) ) {
 
       global $cogumeloIncludesCSS;
       global $cogumeloIncludesJS;
 
-      if( is_array( $cogumeloIncludesCSS ) ){
-        foreach( $cogumeloIncludesCSS as $fileCss){
+      if( is_array( $cogumeloIncludesCSS ) ) {
+        foreach( $cogumeloIncludesCSS as $fileCss ) {
           $this->addClientStyles( $fileCss['src'], $fileCss['module'], true );
         }
       }
 
       if( is_array( $cogumeloIncludesJS ) ){
         foreach( $cogumeloIncludesJS as $fileJs ){
-          $this->addClientScript( $fileJs['src'],  $fileJs ['module'], true);
+          $this->addClientScript( $fileJs['src'], $fileJs['module'], true );
         }
       }
 
       // conf Variables
       $lessConfInclude = '';
-      $jsConfInclude = '<script type="text/javascript" src="'.MEDIASERVER_HOST.MOD_MEDIASERVER_URL_DIR.'/jsConfConstants.js'.'"></script>'."\n";
+      $jsConfInclude = '<script type="text/javascript" src="'.$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js'.'"></script>'."\n";
 
-      if( MEDIASERVER_COMPILE_LESS == false ){
-        $lessConfInclude = '<link rel="stylesheet/less" type="text/css" href="'.MEDIASERVER_HOST.MOD_MEDIASERVER_URL_DIR.'/lessConfConstants.less'.'">'."\n";
+      if( $this->cgmMediaserverCompileLess == false ) {
+        $lessConfInclude = '<link rel="stylesheet/less" type="text/css" href="'.$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/lessConfConstants.less'.'">'."\n";
       }
 
       // assign
-      $this->assign('css_includes', $lessConfInclude.$this->css_autoincludes. $this->css_includes );
-      $this->assign('js_includes', $jsConfInclude.$this->lessClientCompiler() . $this->js_autoincludes . $this->js_includes );
+      $this->assign( 'css_includes', $lessConfInclude . $this->getClientStylesHtml() );
+      $this->assign( 'js_includes', $jsConfInclude . $this->lessClientCompiler() . $this->getClientScriptHtml() );
+
+
+
+      foreach( $this->blocks as $blockName => $blockObjects ) {
+        $htmlBlock = '';
+
+        foreach( $blockObjects as $blockTemplate ) {
+          $htmlBlock .= $blockTemplate->execBlock();
+        }
+
+        $this->assign( $blockName, $htmlBlock );
+      }
+
+
 
       if( $toString ) {
         $htmlCode = $this->fetch( $this->tpl );
@@ -163,7 +280,7 @@ Class Template extends Smarty
       else {
         $this->display( $this->tpl );
       }
-      Cogumelo::debug('Template class displays tpl '.$this->tpl);
+      Cogumelo::debug( 'Template class displays tpl '.$this->tpl );
     }
     else {
       Cogumelo::error( 'Template: no tpl file defined or not found: '.$this->tpl );
@@ -174,12 +291,56 @@ Class Template extends Smarty
     }
   }
 
-  function lessClientCompiler() {
-    $ret = "";
-    if( !MEDIASERVER_COMPILE_LESS ){
-      $ret =  "\n".'<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
-              'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
-              '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>';
+  /**
+   Crea el HTML a partir de los datos y plantillas indicados sin esqueleto
+   *
+   * @return string $htmlCode
+   **/
+  public function execBlock() {
+
+    $htmlCode = '';
+
+    if( $this->tpl && file_exists( $this->tpl ) ) {
+      // assign
+      $this->assign( 'css_includes', $this->getClientStylesHtml( true ) );
+      $this->assign( 'js_includes', $this->getClientScriptHtml( true ) );
+
+
+
+      foreach( $this->blocks as $blockName => $blockObjects ) {
+        $htmlBlock = '';
+
+        foreach( $blockObjects as $blockTemplate ) {
+          $htmlBlock .= $blockTemplate->execBlock();
+        }
+
+        $this->assign( $blockName, $htmlBlock );
+      }
+
+
+
+      $htmlCode = $this->fetch( $this->tpl );
+      Cogumelo::debug( 'Template class displays tpl '.$this->tpl );
+    }
+    else {
+      Cogumelo::error( 'Template: no tpl file defined or not found: '.$this->tpl );
+    }
+
+    return( $htmlCode );
+  }
+
+  /**
+   Introduce o script para compilar o LESS con JS
+   *
+   * @return string $ret
+   **/
+  public function lessClientCompiler() {
+    $ret = '';
+
+    if( !$this->cgmMediaserverCompileLess ) {
+      $ret = "\n".'<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
+        'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
+        '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>';
     }
 
     return $ret;

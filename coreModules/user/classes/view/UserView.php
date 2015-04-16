@@ -11,8 +11,8 @@ class UserView extends View
 {
 
 
-  function __construct($base_dir = false){
-    parent::__construct($base_dir);
+  function __construct( $baseDir = false ){
+    parent::__construct( $baseDir );
   }
 
   /**
@@ -23,14 +23,11 @@ class UserView extends View
     return true;
   }
 
-  /**
-   *
-   * Example login form
-   * @return void
-   *
-   **/
 
-  function loginForm() {
+  /**
+   * Example login form
+   **/
+  public function loginForm() {
 
     $form = $this->loginFormDefine();
     $loginHtml = $this->loginFormGet( $form );
@@ -39,9 +36,24 @@ class UserView extends View
 
     $this->template->setTpl('loginFormExample.tpl', 'user');
     $this->template->exec();
-
   } // function loadForm()
 
+
+  /**
+   * Example login form
+   **/
+  public function loginFormBlock() {
+    $template = new Template( $this->baseDir );
+
+    $form = $this->loginFormDefine();
+    $loginHtml = $this->loginFormGet( $form );
+
+    $template->assign( 'loginHtml', $loginHtml );
+
+    $template->setTpl( 'loginFormExample.tpl', 'user' );
+
+    return $template;
+  } // function loadFormBlock()
 
 
   /**
