@@ -2,9 +2,6 @@
 
 /**
 * i18n Class
-*
-* 
-* @author: pablinhob
 */
 
  require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
@@ -18,24 +15,41 @@ class I18nController {
 
 	function __($text) {
 
-		$directory = I18N_LOCALE;
-		$domain = 'cogumelo';
+		
+		$domain = 'messages';
 		$locale ="gl_GL";
+		$directory = I18N_LOCALE;
 
-		//putenv("LANG=".$locale); //not needed for my tests, but people say it's useful for windows
-
-		putenv('LC_MESSAGES=gl_GL');
-		setlocale( LC_MESSAGES, $locale);
-		bindtextdomain($domain, $directory);
-		textdomain($domain);
 		bind_textdomain_codeset($domain, 'UTF-8');
 
+		// Configurate language
+		//putenv('LC_MESSAGES='.$locale);
+		setlocale( LC_ALL,"");
+		setlocale( LC_MESSAGES, $locale);
+
+		// Set the translations table path
+		bindtextdomain($domain, $directory);
+
+		// Select domain
+		textdomain($domain);
+
+
+		/* Cosas en prueba */
+/*		putenv('LANGUAGE='.$locale);
+	    putenv('LANG='.$locale);
+	    putenv('LC_ALL='.$locale);*/
+		
+		//setlocale(LC_ALL,$locale);
+		
+		textdomain($domain);
+		
+
+
 		$t = new Gettext\Translator();
-	    __currentTranslator($t);
+		__currentTranslator($t);
 
-	    echo $domain;
-
-	    echo gettext($text);
+		echo __($text);
+	    
 
 		/*$translations = Gettext\Extractors\Po::extract(I18N_LOCALE.'gl_GL/LC_MESSAGES/cogumelo_php.po');
 

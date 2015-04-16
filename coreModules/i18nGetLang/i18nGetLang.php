@@ -11,7 +11,7 @@ class i18nGetLang extends Module
   
   function __construct(){
   	global $c_lang;
-  	$c_lang  = LANG_DEFAULT;
+  	$c_lang  = 'gl';
   	$this->addUrlPatterns( '#^(gl/?)(.*)$#', 'noendview:GetLang::setlang' );
   }
 
