@@ -3,8 +3,6 @@
 require_once(COGUMELO_LOCATION.'/coreClasses/coreController/Singleton.php');
 require_once(COGUMELO_LOCATION.'/coreClasses/coreController/ModuleController.php');
 require_once(COGUMELO_LOCATION.'/coreClasses/coreController/DependencesController.php');
-require_once(COGUMELO_LOCATION.'/coreClasses/coreController/I18nController.php');
-
 
 class CogumeloClass extends Singleton
 {
@@ -65,7 +63,12 @@ class CogumeloClass extends Singleton
 
 
   function exec() {
-    Cogumelo::debug('Request URI: '.$_SERVER['REQUEST_URI']);
+/*    Cogumelo::debug('Request URI: '.$_SERVER['REQUEST_URI']);
+    require_once(COGUMELO_LOCATION.'/coreClasses/coreController/I18nController.php');
+    $i18nController = new I18nController();
+    print($i18nController->__('prueba'));
+    require_once(I18N.'/index.php');*/
+
 
     // cut out the SITE_FOLDER and final slash from path
     $url_path = preg_replace('#\/$#', '', preg_replace('#^'.SITE_FOLDER.'#', '', $_SERVER['REQUEST_URI'], 1) , 1);

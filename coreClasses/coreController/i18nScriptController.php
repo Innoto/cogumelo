@@ -3,7 +3,8 @@
 /**
 * i18nScriptController Class
 */
-
+require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
+require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/Translator.php");
 
 
 class i18nScriptController {
