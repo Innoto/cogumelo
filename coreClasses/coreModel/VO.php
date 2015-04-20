@@ -213,6 +213,18 @@ Class VO
 
   }
 
+  function isMultilangCol( $colK ) {
+    $ret = false;
+
+    $this::$cols[ $colK ];
+
+    if( isset($col['multilang']) && $col['multilang'] == true ){
+      $ret = true;
+    }
+
+    return $ret;
+  }
+
 
   /**
    * get BBDD table name
