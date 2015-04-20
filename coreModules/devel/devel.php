@@ -13,7 +13,7 @@ class devel extends Module
    // BOWER
    array(
      "id" => "jquery",
-     "params" => array("jquery#1.*"),
+     "params" => array("jquery"),
      "installer" => "bower",
      "includes" => array("dist/jquery.js")
    ),
@@ -35,13 +35,13 @@ class devel extends Module
      "params" => array("d3"),
      "installer" => "bower",
      "includes" => array("d3.js")
-   ),  
+   ),
    array(
      "id" =>"webcola",
      "params" => array("webcola#3.0.0"),
      "installer" => "bower",
      "includes" => array("WebCola/cola.v3.min.js")
-   ),   
+   ),
 
    // COMPOSER
    array(
