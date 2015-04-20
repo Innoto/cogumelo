@@ -84,7 +84,7 @@ class MysqlDAORelationship
   function selectConcat( $vo ) {
 
     $where = $this->setWheres( $vo->vo );
-    return " SELECT " . $this->cols($vo) . ", concat('{', " . $this->jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table. $where. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
+    return " SELECT " . $this->cols($vo) . ", group_concat('{', " . $this->jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table. $where. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
 
 

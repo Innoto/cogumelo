@@ -73,7 +73,6 @@ class MasterView extends View
     //$rol_administrador->setterDependence('id', new RolePermissionModel() )->setterDependence('permission', $permiso_administracion); 
 
 
-var_dump($rol_administrador->getAllData());
     $rol_administrador->save( array('affectsDependences' =>true) );
     //$rol_administrador->setterDependence('id', $permiso_edicion );
     //$rol_administrador->setterDependence('id', $permiso_lectura );
