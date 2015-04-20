@@ -11,7 +11,7 @@ class UserView extends View
 {
 
 
-  function __construct( $baseDir = false ){
+  public function __construct( $baseDir = false ){
     parent::__construct( $baseDir );
   }
 
@@ -19,7 +19,7 @@ class UserView extends View
   * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
-  function accessCheck() {
+  public function accessCheck() {
     return true;
   }
 
@@ -57,13 +57,12 @@ class UserView extends View
 
 
   /**
-   *
    * Create form fields and validations
-   * @return object
    *
+   * @return object
    **/
 
-  function loginFormDefine() {
+  public function loginFormDefine() {
 
     $form = new FormController( 'loginForm', '/user/sendloginform' ); //actionform
     $form->setField( 'userLogin', array( 'placeholder' => 'Login' ));
@@ -79,14 +78,13 @@ class UserView extends View
 
 
   /**
-   *
    * Returns necessary html form
-   * @param $form
-   * @return string
    *
+   * @param $form
+   *
+   * @return string
    **/
-
-  function loginFormGet( $form ) {
+  public function loginFormGet( $form ) {
 
     $form->saveToSession();
 
@@ -101,15 +99,13 @@ class UserView extends View
     return $loginHtml;
   } // function loginFormGet()
 
+
   /**
-   *
    * Example of an external action login
    *
    * @return void
-   *
    **/
-
-  function sendLoginForm() {
+  public function sendLoginForm() {
 
     $form = $this->actionLoginForm();
 
@@ -119,17 +115,14 @@ class UserView extends View
     else {
       echo $form->jsonFormOk();
     }
-
   }
 
   /**
-   *
    * Assigns the forms validations
-   * @return $form
    *
+   * @return $form
    **/
-
-  function actionLoginForm(){
+  public function actionLoginForm(){
     $form = new FormController();
 
     if( $form->loadPostInput() ) {
@@ -139,7 +132,7 @@ class UserView extends View
       $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
     }
 
-    //Si todo esta OK!
+    //Si tod0 esta OK!
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
       $userAccessControl = new UserAccessController();
@@ -164,12 +157,11 @@ class UserView extends View
 
 
   /**
-   *
    * Example register form
-   * @return void
    *
+   * @return void
    **/
-  function registerForm() {
+  public function registerForm() {
     $form = $this->registerFormDefine();
     $registerHtml = $this->registerFormGet( $form );
 
@@ -177,8 +169,6 @@ class UserView extends View
 
     $this->template->setTpl('registerFormExample.tpl', 'user');
     $this->template->exec();
-
-
   } // function loadForm()
 
 
@@ -186,13 +176,13 @@ class UserView extends View
 
 
   /**
-  *
-  * Update user form
-  * @param request(id)
-  * @return Form Html
-  *
-  **/
-  function userUpdateFormDefine( $request ){
+   * Update user form
+   *
+   * @param request(id)
+   *
+   * @return Form Html
+   **/
+  public function userUpdateFormDefine( $request ){
 
     $user = new UserModel();
     $dataVO = $user->listItems( array('filters' => array('id' => $request[1] )))->fetch();
@@ -207,13 +197,11 @@ class UserView extends View
 
 
   /**
-   *
    * Create form fields and validations
-   * @return object
    *
+   * @return object
    **/
-
-  function userFormDefine( $dataVO = '' ) {
+  public function userFormDefine( $dataVO = '' ) {
 
     $form = new FormController( 'userForm', '/user/senduserform' ); //actionform
 
@@ -263,13 +251,13 @@ class UserView extends View
   }
 
   /**
-  *
-  * Update user password form
-  * @param request(id)
-  * @return Form Html
-  *
-  **/
-  function userChangePasswordFormDefine( $request ){
+   * Update user password form
+   *
+   * @param request(id)
+   *
+   * @return Form Html
+   **/
+  public function userChangePasswordFormDefine( $request ){
 
     $user = new UserModel();
     $dataVO = $user->listItems( array('filters' => array('id' => $request[1] )))->fetch();
@@ -305,13 +293,13 @@ class UserView extends View
   }
 
   /**
-  *
-  * Update user roles form
-  * @param request(id)
-  * @return Form Html
-  *
-  **/
-  function userRolesFormDefine( $request ){
+   * Update user roles form
+   *
+   * @param request(id)
+   *
+   * @return Form Html
+   **/
+  public function userRolesFormDefine( $request ){
 
     $userModel = new UserModel();
     $user = $userModel->listItems( array('filters' => array('id' => $request[1] )))->fetch();
@@ -321,12 +309,12 @@ class UserView extends View
     $userRoles = $userRoleModel->listItems( array('filters' => array('user' => $request[1] )))->fetchAll();
 
     $rolesCheck = array();
-    foreach ($roles as $key => $rol) {
+    foreach( $roles as $key => $rol ) {
       $rolesCheck[$rol->getter('id')] = $rol->getter('name');
     }
 
     $activeRolesCheck = array();
-    foreach ($userRoles as $key => $rol) {
+    foreach( $userRoles as $key => $rol ) {
       array_push( $activeRolesCheck, $rol->getter('role'));
     }
 
@@ -346,14 +334,14 @@ class UserView extends View
     return $form;
   }
 
-   /**
-   *
+  /**
    * Returns necessary html form
-   * @param $form
-   * @return string
    *
+   * @param $form
+   *
+   * @return string
    **/
-  function userFormGet($form) {
+  public function userFormGet( $form ) {
     $form->saveToSession();
 
     $this->template->assign("userFormOpen", $form->getHtmpOpen());
@@ -365,14 +353,16 @@ class UserView extends View
 
     return $this->template->execToString();
   }
+
+
   /**
-   *
    * Returns necessary html form
-   * @param $form
-   * @return string
    *
+   * @param $form
+   *
+   * @return string
    **/
-  function userChangePasswordFormGet($form) {
+  public function userChangePasswordFormGet( $form ) {
     $form->saveToSession();
 
     $this->template->assign("userChangePasswordFormOpen", $form->getHtmpOpen());
@@ -385,14 +375,15 @@ class UserView extends View
     return $this->template->execToString();
   }
 
+
   /**
-   *
    * Returns necessary html form
-   * @param $form
-   * @return string
    *
+   * @param $form
+   *
+   * @return string
    **/
-  function userRolesFormGet($form) {
+  public function userRolesFormGet( $form ) {
     $form->saveToSession();
 
     $this->template->assign("userRolesFormOpen", $form->getHtmpOpen());
@@ -405,15 +396,13 @@ class UserView extends View
     return $this->template->execToString();
   }
 
+
   /**
-   *
    * Example of an external action register
    *
    * @return void
-   *
    **/
-  function sendUserForm() {
-
+  public function sendUserForm() {
     $form = $this->actionUserForm();
     $this->registerOk($form);
 
@@ -425,13 +414,13 @@ class UserView extends View
     }
   }
 
+
   /**
-   *
    * Assigns the forms validations
-   * @return $form
    *
+   * @return $form
    **/
-  function actionUserForm() {
+  public function actionUserForm() {
     $form = new FormController();
     if( $form->loadPostInput() ) {
       $form->validateForm();
@@ -447,7 +436,6 @@ class UserView extends View
       // Donde diferenciamos si es un update o un create para validar el login
       $loginExist = $userControl->listItems( array('filters' => array('login' => $form->getFieldValue('login'))) )->fetch();
 
-
       if( isset($valuesArray['id']) && $valuesArray['id'] ){
         $user = $userControl->listItems( array('filters' => array('id' => $valuesArray['id'])) )->fetch();
         if($valuesArray['login'] !== $user->getter('login')){
@@ -455,8 +443,8 @@ class UserView extends View
             $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
           }
         }
-
-      }else{
+      }
+      else{
         // Create: comprobamos si el login existe y si existe mostramos error.
         if($loginExist){
           $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
@@ -467,15 +455,14 @@ class UserView extends View
     return $form;
   }
 
-  /**
-   *
-   * Edit/Create User
-   * @return $user
-   *
-   **/
 
-  function userFormOk( $form ) {
-    //Si todo esta OK!
+  /**
+   * Edit/Create User
+   *
+   * @return $user
+   **/
+  public function userFormOk( $form ) {
+    //Si tod0 esta OK!
     $asignRole = false;
 
     if( !$form->processFileFields() ) {
@@ -516,22 +503,17 @@ class UserView extends View
         $userRole->setterDependence( 'user', $user );
         $userRole->save(array( 'affectsDependences' => true ));
       }
-
-
     }
     return $user;
   }
 
 
-
-
   /**
-   *
    * Assigns the forms validations
-   * @return $form
    *
+   * @return $form
    **/
-  function actionChangeUserPasswordForm() {
+  public function actionChangeUserPasswordForm() {
     $form = new FormController();
     if( $form->loadPostInput() ) {
       $form->validateForm();
@@ -559,17 +541,14 @@ class UserView extends View
     return $form;
   }
 
+
   /**
-   *
    * Change Password
-   * @return $user
    *
+   * @return $user
    **/
-
-  function changeUserPasswordFormOk( $form ) {
-    //Si todo esta OK!
-
-
+  public function changeUserPasswordFormOk( $form ) {
+    //Si tod0 esta OK!
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
 
@@ -581,19 +560,17 @@ class UserView extends View
       $user->setPassword( $password );
       $user->save();
     }
+
     return $user;
   }
 
 
-
-
   /**
-   *
    * Assigns the forms validations
-   * @return $form
    *
+   * @return $form
    **/
-  function actionUserRolesForm() {
+  public function actionUserRolesForm() {
     $form = new FormController();
     if( $form->loadPostInput() ) {
       $form->validateForm();
@@ -614,16 +591,12 @@ class UserView extends View
   }
 
   /**
-   *
    * Save UserRoles
-   * @return $array userRoles
    *
+   * @return $array userRoles
    **/
-
-  function userRolesFormOk( $form ) {
-    //Si todo esta OK!
-
-
+  public function userRolesFormOk( $form ) {
+    //Si tod0 esta OK!
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
 
@@ -635,8 +608,8 @@ class UserView extends View
         }
       }
 
-      if( is_array($valuesArray['checkroles']) && count($valuesArray['checkroles']) > 0){
-        foreach ($valuesArray['checkroles'] as $key => $checkrol) {
+      if( is_array($valuesArray['checkroles']) && count($valuesArray['checkroles']) > 0) {
+        foreach( $valuesArray['checkroles'] as $key => $checkrol ) {
           # code...
           $userRoleModel = new UserRoleModel( array( 'role' => $checkrol, 'user' => $valuesArray['user'] ) );
           $userRoleModel->save();
@@ -647,6 +620,7 @@ class UserView extends View
       }
 
     }
+
     return $userRoleModel->listItems( array('filters' => array( 'user' => $valuesArray['user'])))->fetchAll();
   }
 
