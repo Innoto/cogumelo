@@ -34,15 +34,14 @@ class CogumeloClass extends Singleton
      ),
      array(
        "id" => "gettext",
-       "params" => array('gettext/gettext', '1.1.2'),
-       "installer" => 'composer',
-       "includes" => array('Gettext/autoloader.php')
+       "params" => array('Gettext'),
+       "installer" => 'manual'
      ),
      array(
      "id" => "smarty-gettext",
      "params" => array("smarty-gettext/smarty-gettext", "~1.1.1"),
      "installer" => "composer",
-     "includes" => array("")
+     "includes" => array('')
     )
   );
 
@@ -63,11 +62,12 @@ class CogumeloClass extends Singleton
 
 
   function exec() {
-/*    Cogumelo::debug('Request URI: '.$_SERVER['REQUEST_URI']);
-    require_once(COGUMELO_LOCATION.'/coreClasses/coreController/I18nController.php');
-    $i18nController = new I18nController();
-    print($i18nController->__('prueba'));
-    require_once(I18N.'/index.php');*/
+    Cogumelo::debug('Request URI: '.$_SERVER['REQUEST_URI']);
+/*    require_once(COGUMELO_LOCATION.'/coreClasses/coreController/I18nController.php');
+
+    print(t_('Hola soy la cadena a traducir al gallego '));
+    print(t_('text 1'));*/
+    //require_once(I18N.'/index.php');
 
 
     // cut out the SITE_FOLDER and final slash from path

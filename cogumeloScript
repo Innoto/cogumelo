@@ -85,7 +85,6 @@
           break;
 
         case 'generateTranslations':        
-          //require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
           Cogumelo::load('coreController/i18nScriptController.php');
           $i18nscriptController = new i18nScriptController();
           $i18nscriptController->setEnviroment();
@@ -94,13 +93,20 @@
         break;
 
         case 'compileTranslations':
-          //require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
           Cogumelo::load('coreController/i18nScriptController.php');
           $i18nscriptController = new i18nScriptController();
           $i18nscriptController->setEnviroment();
           $i18nscriptController->c_i18n_compile();
           echo "The files.mo are ready to be used!\n";
           break;
+
+        case 'jsonTranslations':
+          Cogumelo::load('coreController/i18nScriptController.php');
+          $i18nscriptController = new i18nScriptController();
+          $i18nscriptController->setEnviroment();
+          $i18nscriptController->c_i18n_json();
+          echo "The files.json are ready to be used!\n";
+          break;  
 
         /* We execute this two actions from web as we need to operate with the apache permissions*/
         case 'flush': // delete temporary files
@@ -234,7 +240,7 @@
 
     $i = 0;
     foreach ($lc_1 as $l){
-      $lc[$i] = I18N_LOCALE.$l.'_'.strtoupper($l).'/LC_MESSAGES';
+      $lc[$i] = I18N_LOCALE.$l.'/LC_MESSAGES';
       $i = $i+1;
     }
 

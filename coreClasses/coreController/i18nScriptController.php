@@ -3,8 +3,9 @@
 /**
 * i18nScriptController Class
 */
-require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/autoloader.php");
-require_once(COGUMELO_LOCATION."/packages/sampleApp/httpdocs/vendor/composer/gettext/gettext/Gettext/Translator.php");
+
+require_once(DEPEN_MANUAL_REPOSITORY.'/Gettext/src/autoloader.php');
+require_once(DEPEN_MANUAL_REPOSITORY.'/Gettext/src/Translator.php');
 
 
 class i18nScriptController {
@@ -16,7 +17,7 @@ class i18nScriptController {
 	var $modules;
 	var $lc_1;
 	var $dir_lc = array();
-
+	var $lang = array();
 	
 	function __construct()
 	{
@@ -28,7 +29,9 @@ class i18nScriptController {
 	    $this->modules = $C_ENABLED_MODULES;
 	    $this->lc_1 = explode(',',LANG_AVAILABLE);
 	    foreach ($this->lc_1 as $l){
-	        $this->dir_lc[$l] = $this->dir_path.$l.'_'.strtoupper($l).'/LC_MESSAGES';
+	    	$lang_array = explode('_',$l);
+	    	$this->lang[$l] = $lang_array[0];
+	        $this->dir_lc[$l] = $this->dir_path.$l.'/LC_MESSAGES';
 	    }
 	}
 
@@ -53,29 +56,26 @@ class i18nScriptController {
 	    textdomain($this->textdomain);
 	}
 
-	/**
-    * Get all the text to be translated and update or create a file.po if not exists
-    */
-	function c_i18n_gettext(){
-
-		$existPHP = false;
-	    $existTPL = false;
-	    $existJS = false;
-	    $exist = false;
-		$i = 0;
-    	foreach ($this->dir_lc as $l){
-	        // Check if the .po files already exist
-	        if (is_dir($l)){
-	          $handle = opendir($l);
-	          while ($file = readdir($handle)) {
+	function checkTranslations($l){
+		$exist = false;
+		if (is_dir($l)){
+	        $handle = opendir($l);
+	        while ($file = readdir($handle)) {
 	            if ($file==$this->textdomain.'.po'){
 	              $exist = true;
 	            }  
 	          }
 	       }
 
-        $i = $i+1;
-    	}
+    	return $exist;
+	}
+
+	/**
+    * Get all the text to be translated and update or create a file.po if not exists
+    */
+	function c_i18n_gettext(){
+
+		error_reporting(E_ALL ^ E_NOTICE);
 
     	/******************************/
 	    /************ PHP *************/
@@ -96,7 +96,7 @@ class i18nScriptController {
 	      foreach ($files_module_php as $k => $file) {
 	        $parts = explode('/'.$dir.'/',$file);
 	        if (sizeof($parts)==2){
-	          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
+	          //$parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
 	          $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
 	        }
 	      }
@@ -108,7 +108,6 @@ class i18nScriptController {
 	      foreach ($files_module_php_c as $k => $file) {
 	        $parts = explode('/'.$dir.'/',$file);
 	        if (sizeof($parts)==2){
-	          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
 	          $array_php_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
 	        }
 	      }
@@ -119,20 +118,21 @@ class i18nScriptController {
 
 	    //Now save the php.po file with the result
 	    foreach ($this->dir_lc as $l){
-	      if ($exist){ //merge
+	      if ($this->checkTranslations($l)){ //merge
 		      //Scan the php code to find the latest gettext entries
-		      $entries = Gettext\Extractors\PhpCode::extract($array_php);
+		      $entries_php = Gettext\Extractors\PhpCode::fromFile($array_php);
 
 		      //Get the translations of the code that are stored in a po file
-		      $oldEntries = Gettext\Extractors\Po::extract($l.'/'.$this->textdomain.'.po');
+		      $oldEntries = Gettext\Extractors\Po::fromFile($l.'/'.$this->textdomain.'.po');
 
 		      //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-		      $entries->mergeWith($oldEntries); //now $entries has all the values
+		      $entries_php->mergeWith($oldEntries); //now $entries has all the values
 		    }
 		    else{ //create
-		      $entries = Gettext\Extractors\PhpCode::extract($array_php);
+		      $entries_php = Gettext\Extractors\PhpCode::fromFile($array_php);
 		    }
-	      Gettext\Generators\Po::generateFile($entries, $l.'/'.$this->textdomain.'.po');
+		    
+	      //Gettext\Generators\Po::generateFile($entries_php, $l.'/'.$this->textdomain.'.po');
 	    }
 
 	    /********** END PHP **********/
@@ -158,7 +158,6 @@ class i18nScriptController {
           foreach ($files_module_js as $k => $file) {
             $parts = explode('/'.$dir.'/',$file);
             if (sizeof($parts)==2){
-              $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
               $array_js_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
             }
           }
@@ -170,7 +169,6 @@ class i18nScriptController {
           foreach ($files_module_js_c as $k => $file) {
             $parts = explode('/'.$dir.'/',$file);
             if (sizeof($parts)==2){
-              $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
               $array_js_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
             }
           }
@@ -181,21 +179,25 @@ class i18nScriptController {
 
         //Now save the .po file with the result
         foreach ($this->dir_lc as $l){
-      	  if ($exist){ //merge
+      	  if ($this->checkTranslations($l)){ //merge
+
 	        //Scan the php code to find the latest gettext entries
-	        $entries = Gettext\Extractors\JsCode::extract($array_js);
+	        $entries_js = Gettext\Extractors\JsCode::fromFile($array_js);
 
 	        //Get the translations of the code that are stored in a po file
-	        $oldEntries = Gettext\Extractors\Po::extract($l.'/'.$this->textdomain.'.po');
+	        $oldEntries = Gettext\Extractors\Po::fromFile($l.'/'.$this->textdomain.'.po');
 
 	        //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-	        $entries->mergeWith($oldEntries); //now $entries has all the values
+	        $entries_js->mergeWith($oldEntries); //now $entries has all the values
 	      }
 	      else{ //create
-	        $entries = Gettext\Extractors\JsCode::extract($array_js);
+	        $entries_js = Gettext\Extractors\JsCode::fromFile($array_js);
 	      }
 
-          Gettext\Generators\Po::generateFile($entries, $l.'/'.$this->textdomain.'.po');
+          //Gettext\Generators\Po::generateFile($entries, $l.'/'.$this->textdomain.'.po');
+          $entries_js->mergeWith($entries_php);
+
+          Gettext\Generators\Po::toFile($entries_js, $l.'/'.$this->textdomain.'.po');
         }
 
         /*********** END JS **********/ 	    
@@ -203,6 +205,9 @@ class i18nScriptController {
         /******************************/
     	/************* TPL *************/
 	    /******************************/
+
+	    $smartygettext = DEPEN_COMPOSER_PATH.'/smarty-gettext/smarty-gettext/tsmarty2c.php';
+	    exec( 'chmod 700 '.$smartygettext );
 
 	    // We will use the smarty-gettext pluggin to extract the strings to translate from .tpl files
 	    
@@ -223,7 +228,6 @@ class i18nScriptController {
 	      foreach ($files_module_tpl as $k => $file) {
 	        $parts = explode('/'.$dir.'/',$file);
 	        if (sizeof($parts)==2){
-	          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
 	          $array_tpl_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
 	        }
 	      }
@@ -235,7 +239,6 @@ class i18nScriptController {
 	      foreach ($files_module_tpl_c as $k => $file) {
 	        $parts = explode('/'.$dir.'/',$file);
 	        if (sizeof($parts)==2){
-	          $parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
 	          $array_tpl_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
 	        }
 	      }
@@ -250,9 +253,17 @@ class i18nScriptController {
 	      exec('cp '.$a.' '.TPL_TMP);
 	    }
 
+
 	    foreach ($this->dir_lc as $l){
-	      exec(DEPEN_COMPOSER_PATH.'/smarty-gettext/smarty-gettext/tsmarty2c.php -o '.$l.'/'.$this->textdomain.'_tpl.po '.TPL_TMP);
+	      exec($smartygettext.' -o '.$l.'/'.$this->textdomain.'_tpl.pot '.TPL_TMP);
+	      // Now we have to combine this PO file with the PO file we had previusly and discard the tmp file
+	      exec('msgmerge '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_tpl.pot');
+	      //exec ('rm '.$l.'/'.$this->textdomain.'_tpl.pot');
+
+	      error_reporting(E_ALL);
 	    }
+
+
 
 	    /*********** END TPL **********/
 
@@ -276,6 +287,19 @@ class i18nScriptController {
 
 		foreach ($this->dir_lc as $l){
 	      exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
+	    }
+	}
+
+	/**
+  	* Translate files.po into .json to be used in client
+  	*/
+	function c_i18n_json() {
+
+		//hai q usar no foreach a variable q tiñamos antes e facelle un explode para ter o idioma aislado
+
+		foreach ($this->lang as $l){
+			echo 'i18next-conv -l httpdocs/locales/'.$l.' -s '.COGUMELO_LOCATION.'/packages/sampleApp/httpdocs/locales/'.$l.'/translation.json -t '.$l.'/'.$this->textdomain.'.po';
+	      exec('i18next-conv -l httpdocs/locales/'.$l.' -s '.COGUMELO_LOCATION.'/packages/sampleApp/httpdocs/locales/'.$l.'/translation.json -t '.$l.'/'.$this->textdomain.'.po');
 	    }
 	}
 
