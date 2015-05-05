@@ -11,7 +11,7 @@ class Template extends Smarty
   var $tpl;
   var $baseDir;
 
-  var fileBacktrace = false;
+  var $fileBacktrace = false;
 
   var $blocks = array();
 
