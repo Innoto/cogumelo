@@ -1607,11 +1607,6 @@ class FormController implements Serializable {
         break;
     }
 
-
-    if( $this->htmlEditor ) {
-      form::loadDependence( 'ckeditor' );
-    }
-
     return $html;
   } // function getHtmlFieldArray
 
@@ -2059,11 +2054,12 @@ class FormController implements Serializable {
 
     $html .= '<!-- Cogumelo module form ' . $this->getName() . ' -->' . "\n";
 
-    /*
+
     if( $this->htmlEditor ) {
-      $html .= '<script type="text/javascript" src="/ckeditor/ckeditor.js"></script>' . "\n";
+      form::loadDependence( 'ckeditor' );
+      // $html .= '<script type="text/javascript" src="/ckeditor/ckeditor.js"></script>' . "\n";
     }
-    */
+
 
     $html .= '<script>' . "\n";
 
