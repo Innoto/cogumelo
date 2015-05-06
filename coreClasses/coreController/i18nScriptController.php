@@ -255,9 +255,10 @@ class i18nScriptController {
 
 
 	    foreach ($this->dir_lc as $l){
-	      exec($smartygettext.' -o '.$l.'/'.$this->textdomain.'_tpl.pot '.TPL_TMP);
+	      exec($smartygettext.' -o '.$l.'/'.$this->textdomain.'_tpl.po '.TPL_TMP);
 	      // Now we have to combine this PO file with the PO file we had previusly and discard the tmp file
-	      exec('msgmerge '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_tpl.pot');
+	      exec('msgmerge '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_tpl.po');
+	      //exec('msgcat '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_tpl.po -o file='.$l.'/'.$this->textdomain.'.po');
 	      //exec ('rm '.$l.'/'.$this->textdomain.'_tpl.pot');
 
 	      error_reporting(E_ALL);

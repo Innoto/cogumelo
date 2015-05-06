@@ -35,7 +35,8 @@ class CogumeloClass extends Singleton
      array(
        "id" => "gettext",
        "params" => array('Gettext'),
-       "installer" => 'manual'
+       "installer" => 'manual',
+       "includes" => array('')
      ),
      array(
      "id" => "smarty-gettext",
