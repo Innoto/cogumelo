@@ -190,8 +190,7 @@ Class DependencesController {
   //
 
 
-  function loadModuleIncludes($moduleName) {
-
+  public function loadModuleIncludes( $moduleName ) {
     Cogumelo::load('coreController/ModuleController.php');
     ModuleController::getRealFilePath( $moduleName.'.php', $moduleName );
 
@@ -199,12 +198,36 @@ Class DependencesController {
 
     $moduleInstance = new $moduleName();
 
-    $this->addVendorIncludeList( $moduleInstance->dependences );
-    $this->addIncludeList( $moduleInstance->includesCommon, $moduleName );
+    //$this->addVendorIncludeList( $moduleInstance->dependences );
+    $dependences = array_filter( $moduleInstance->dependences,
+      function( $dep ) {
+        return( !isset( $dep['autoinclude'] ) || $dep['autoinclude'] !== false );
+      }
+    );
+    //error_log( 'DependencesController::loadModuleIncludes : ' . print_r( $dependences, true ) );
+    $this->addVendorIncludeList( $dependences );
 
+    $this->addIncludeList( $moduleInstance->includesCommon, $moduleName );
   }
 
-  function loadAppIncludes() {
+
+  public function loadModuleDependence( $moduleName, $idDependence, $installer = false ) {
+    Cogumelo::load('coreController/ModuleController.php');
+    ModuleController::getRealFilePath( $moduleName.'.php', $moduleName );
+
+    $moduleInstance = new $moduleName();
+
+    $dependences = array_filter( $moduleInstance->dependences,
+      function( $dep ) use ( $idDependence, $installer ) {
+        return( $dep['id'] === $idDependence && ( $installer === false || $dep['installer'] === $installer ) );
+      }
+    );
+    //error_log( 'DependencesController::loadModuleDependence' . print_r( $dependences, true ) );
+    $this->addVendorIncludeList( $dependences );
+  }
+
+
+  public function loadAppIncludes() {
     global $_C;
 
     //$this->loadCogumeloIncludes();
@@ -212,17 +235,17 @@ Class DependencesController {
     $this->addIncludeList( $_C->includesCommon );
   }
 
-  function loadCogumeloIncludes() {
+  public function loadCogumeloIncludes() {
     $this->addVendorIncludeList(CogumeloClass::$mainDependences);
   }
 
 
 
-  function addVendorIncludeList( $includes ) {
+  public function addVendorIncludeList( $includes ) {
 
-    if( sizeof( $includes ) > 0) {
+    if( count( $includes ) > 0) {
 
-      foreach ($includes as $includeElement) {
+      foreach( $includes as $includeElement ) {
 
         $include_folder = '';
 
@@ -239,7 +262,7 @@ Class DependencesController {
           $include_folder = $includeElement['params'][0];
         }
 
-        if( sizeof( $includeElement['includes'] ) > 0 ) {
+        if( isset( $includeElement['includes'] ) && count( $includeElement['includes'] ) > 0 ) {
           foreach( $includeElement['includes'] as $includeFile ) {
 
             switch ($this->typeIncludeFile( $includeFile )) {
@@ -262,19 +285,17 @@ Class DependencesController {
       }
 
     }
-
   }
 
 
 
-  function addIncludeList( $includes, $module=false) {
+  public function addIncludeList( $includes, $module = false ) {
 
-    if( sizeof( $includes ) > 0) {
-      foreach ($includes as $includeFile) {
+    if( count( $includes ) > 0) {
+      foreach( $includes as $includeFile ) {
 
         switch($this->typeIncludeFile( $includeFile ) ) {
           case 'serverScript':
-
             if($module == false) {
               Cogumelo::load($includeFile);
             }
