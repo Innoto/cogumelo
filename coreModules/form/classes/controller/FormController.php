@@ -1490,11 +1490,11 @@ class FormController implements Serializable {
     $groupName = $this->getFieldInternal( $fieldName, 'groupName' );
 
     $myFielId = isset( $field['id'] ) ? $field['id'] : false;
-    $myFielId = ( !$myFielId && isset( $field['htmlEditor'] ) ) ? $fieldName : false;
 
+    //$myFielId = ( $myFielId === false && isset( $field['htmlEditor'] ) ) ? $fieldName : false;
     if( isset( $field['htmlEditor'] ) ) {
       $this->htmlEditor = true;
-      if( !$myFielId ) {
+      if( $myFielId === false ) {
         $myFielId = $fieldName;
       }
     }
