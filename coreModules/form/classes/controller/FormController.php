@@ -258,10 +258,12 @@ class FormController implements Serializable {
   }
 
   /**
-    Recupera de sesion todos los datos importantes
-    @param string $tokenId ID interno del formulario
-    @return boolean
-  */
+     Recupera de sesion todos los datos importantes
+   *
+   * @param string $tokenId ID interno del formulario
+   *
+   * @return boolean
+   */
   public function loadFromSession( $tokenId ) {
     $result = false;
 
