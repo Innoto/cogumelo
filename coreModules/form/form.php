@@ -1,22 +1,28 @@
 <?php
 
-Cogumelo::load("coreController/Module.php");
+Cogumelo::load( 'coreController/Module.php' );
 
 
 class form extends Module
 {
 
 
-  public $name = "form";
-  public $version = "";
+  public $name = 'form';
+  public $version = '';
   public $dependences = array(
-   // BOWER
-   array(
-     "id" => "jquery-validation",
-     "params" => array("jquery-validation"),
-     "installer" => "bower",
-     "includes" => array("dist/jquery.validate.js", "dist/additional-methods.js")
-   )
+    array(
+      'id' => 'jquery-validation',
+      'params' => array( 'jquery-validation' ),
+      'installer' => 'bower',
+      'includes' => array( 'dist/jquery.validate.js', 'dist/additional-methods.js' )
+    ),
+    array(
+     'id' =>'ckeditor',
+     'params' => array( 'ckeditor#standard/stable' ),
+     'installer' => 'bower',
+     'includes' => array( 'ckeditor.js' ),
+     'autoinclude' => false
+    )
   );
 
 
@@ -27,7 +33,6 @@ class form extends Module
     'js/jquery.serializeFormToObject.js',
     'js/formValidators.js',
     'js/formValidatorsExtender.js',
-    //'js/ckeditor/ckeditor.js',
     'styles/form.less'
   );
 

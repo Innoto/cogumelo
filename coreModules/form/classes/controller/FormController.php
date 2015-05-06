@@ -362,7 +362,7 @@ class FormController implements Serializable {
     @param VO $dataVO Datos cargados por el programa
   */
   public function loadVOValues( $dataVO ) {
-    if( gettype( $dataVO ) == "object" ) {
+    if( gettype( $dataVO ) == 'object' ) {
       foreach( $dataVO->getKeys() as $keyVO ) {
         $this->setFieldValue( $keyVO, $dataVO->getter( $keyVO ) );
       }
@@ -1607,6 +1607,11 @@ class FormController implements Serializable {
         break;
     }
 
+
+    if( $this->htmlEditor ) {
+      form::loadDependence( 'ckeditor' );
+    }
+
     return $html;
   } // function getHtmlFieldArray
 
@@ -2054,9 +2059,11 @@ class FormController implements Serializable {
 
     $html .= '<!-- Cogumelo module form ' . $this->getName() . ' -->' . "\n";
 
+    /*
     if( $this->htmlEditor ) {
       $html .= '<script type="text/javascript" src="/ckeditor/ckeditor.js"></script>' . "\n";
     }
+    */
 
     $html .= '<script>' . "\n";
 
