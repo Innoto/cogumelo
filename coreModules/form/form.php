@@ -10,6 +10,7 @@ class form extends Module
   public $name = 'form';
   public $version = '';
   public $dependences = array(
+
     array(
       'id' => 'jquery-validation',
       'params' => array( 'jquery-validation' ),
@@ -17,12 +18,13 @@ class form extends Module
       'includes' => array( 'dist/jquery.validate.js', 'dist/additional-methods.js' )
     ),
     array(
-     'id' =>'ckeditor',
-     'params' => array( 'ckeditor#standard/stable' ),
-     'installer' => 'bower',
-     'includes' => array( 'ckeditor.js' ),
-     'autoinclude' => false
+      'id' =>'ckeditor',
+      'params' => array( 'ckeditor#standard/stable' ),
+      'installer' => 'bower',
+      'includes' => array( 'ckeditor.js' ),
+      'autoinclude' => false
     )
+
   );
 
 
