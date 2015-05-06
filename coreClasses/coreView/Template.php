@@ -11,6 +11,8 @@ class Template extends Smarty
   var $tpl;
   var $baseDir;
 
+  var $fileBacktrace = false;
+
   var $blocks = array();
 
   var $css_autoincludes = array();
@@ -206,6 +208,13 @@ class Template extends Smarty
    **/
   public function setTpl( $file_name, $module = false ) {
 
+    //error_log( 'Template->setTpl('.$file_name.', '.$module.') === ' . ModuleController::getRealFilePath( 'classes/view/templates/'.$file_name, $module ) );
+
+    // Esto nos puede permitir referenciar TPLs "al lado" de la clase que esta usando este metodo
+    $debugBacktrace = debug_backtrace();
+    //error_log( 'debug_backtrace: ' . print_r( $debugBacktrace['0']['file'], true ) );
+    $this->fileBacktrace = $debugBacktrace['0']['file'];
+
     $this->tpl = ModuleController::getRealFilePath( 'classes/view/templates/'.$file_name, $module );
   }
 
@@ -228,6 +237,8 @@ class Template extends Smarty
    * @return string $htmlCode
    **/
   public function exec( $toString = false ) {
+
+    //error_log( 'Template->exec('.$toString.') === ' . $this->tpl );
 
     $htmlCode = '';
 
@@ -297,6 +308,8 @@ class Template extends Smarty
    * @return string $htmlCode
    **/
   public function execBlock() {
+
+    //error_log( 'Template->execBlock() === ' . $this->tpl );
 
     $htmlCode = '';
 

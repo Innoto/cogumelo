@@ -27,6 +27,7 @@ class form extends Module
     'js/jquery.serializeFormToObject.js',
     'js/formValidators.js',
     'js/formValidatorsExtender.js',
+    //'js/ckeditor/ckeditor.js',
     'styles/form.less'
   );
 
