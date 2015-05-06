@@ -258,8 +258,7 @@ class i18nScriptController {
 	      exec($smartygettext.' -o '.$l.'/'.$this->textdomain.'_tpl.po '.TPL_TMP);
 	      // Now we have to combine this PO file with the PO file we had previusly and discard the tmp file
 	      exec('msgmerge '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_tpl.po');
-	      //exec('msgcat '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_tpl.po -o file='.$l.'/'.$this->textdomain.'.po');
-	      //exec ('rm '.$l.'/'.$this->textdomain.'_tpl.pot');
+	      exec ('rm '.$l.'/'.$this->textdomain.'_tpl.pot');
 
 	      error_reporting(E_ALL);
 	    }
@@ -287,6 +286,7 @@ class i18nScriptController {
 	function c_i18n_compile() {
 
 		foreach ($this->dir_lc as $l){
+			echo
 	      exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
 	    }
 	}
@@ -295,12 +295,10 @@ class i18nScriptController {
   	* Translate files.po into .json to be used in client
   	*/
 	function c_i18n_json() {
-
-		//hai q usar no foreach a variable q tiñamos antes e facelle un explode para ter o idioma aislado
-
-		foreach ($this->lang as $l){
-			echo 'i18next-conv -l httpdocs/locales/'.$l.' -s '.COGUMELO_LOCATION.'/packages/sampleApp/httpdocs/locales/'.$l.'/translation.json -t '.$l.'/'.$this->textdomain.'.po';
-	      exec('i18next-conv -l httpdocs/locales/'.$l.' -s '.COGUMELO_LOCATION.'/packages/sampleApp/httpdocs/locales/'.$l.'/translation.json -t '.$l.'/'.$this->textdomain.'.po');
+		foreach ($this->lc_1 as $l){
+			$myarray = explode('_',$l);
+	    	$lang = $myarray[0];
+			exec('i18next-conv -l '.$this->textdomain.' -s '.I18N_LOCALE.$l.'/LC_MESSAGES/'.$this->textdomain.'.po -t '.COGUMELO_LOCATION.'/packages/sampleApp/httpdocs/locales/'.$lang.'/translation.json');
 	    }
 	}
 
