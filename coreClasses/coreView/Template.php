@@ -168,6 +168,7 @@ class Template extends Smarty
    Crea el HTML que carga los Scripts
    *
    * @param bool $ignoreAutoincludes
+   *
    * @return string $is_autoinclude
    **/
   public function getClientScriptHtml( $ignoreAutoincludes = false ) {
@@ -185,6 +186,7 @@ class Template extends Smarty
    Crea el HTML que carga los Styles
    *
    * @param bool $ignoreAutoincludes
+   *
    * @return string $is_autoinclude
    **/
   public function getClientStylesHtml( $ignoreAutoincludes = false ) {
@@ -231,9 +233,11 @@ class Template extends Smarty
   /**
    Crea el HTML a partir de los datos y plantillas indicados
    *
+   * @param bool $toString
+   *
    * @global string $cogumeloIncludesCSS
    * @global string $cogumeloIncludesJS
-   * @param bool $toString
+   *
    * @return string $htmlCode
    **/
   public function exec( $toString = false ) {
