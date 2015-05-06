@@ -211,9 +211,9 @@ class Template extends Smarty
     //error_log( 'Template->setTpl('.$file_name.', '.$module.') === ' . ModuleController::getRealFilePath( 'classes/view/templates/'.$file_name, $module ) );
 
     // Esto nos puede permitir referenciar TPLs "al lado" de la clase que esta usando este metodo
-    $debugBacktrace = debug_backtrace();
-    //error_log( 'debug_backtrace: ' . print_r( $debugBacktrace['0']['file'], true ) );
-    $this->fileBacktrace = $debugBacktrace['0']['file'];
+    // $debugBacktrace = debug_backtrace( false, 1 );
+    // error_log( 'debug_backtrace: ' . print_r( $debugBacktrace, true ) );
+    // $this->fileBacktrace = $debugBacktrace['0']['file'];
 
     $this->tpl = ModuleController::getRealFilePath( 'classes/view/templates/'.$file_name, $module );
   }
