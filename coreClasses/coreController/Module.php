@@ -16,7 +16,7 @@ Cogumelo::load('coreController/ModuleController.php');
 class Module
 {
   private $urlPatterns = array();
-  
+
   public $name = "";
   public $version = "";
   public $dependences = array();
@@ -26,7 +26,7 @@ class Module
   /**
   * @param string $load_path the path of module
   */
-  static function load($load_path) {
+  public static function load( $load_path ) {
     $module_name = get_called_class();
 
     if($file_to_include =  ModuleController::getRealFilePath('classes/'.$load_path.'', $module_name)) {
@@ -38,14 +38,26 @@ class Module
   }
 
 
-  // Set autoincludes 
-  static function autoIncludes() {
+  // Set autoincludes
+  public static function autoIncludes() {
+
+    //error_log( 'Module::autoincludes ' . get_called_class() );
+
     $dependencesControl = new DependencesController();
     $dependencesControl->loadModuleIncludes( get_called_class() );
   }
 
 
-  static function moduleRc(){
+  public static function loadDependence( $idDependence, $installer = false ) {
+
+    error_log( 'Module::loadDependence ' . get_called_class() );
+
+    $dependencesControl = new DependencesController();
+    $dependencesControl->loadModuleDependence( get_called_class(), $idDependence, $installer );
+  }
+
+
+  public static function moduleRc(){
 
   }
 
@@ -53,7 +65,7 @@ class Module
 // Metodos duplicados en CogumeloClass.php
 // (Ini)
 
-  function deleteUrlPatterns() {
+  public function deleteUrlPatterns() {
     $this->urlPatterns = array();
   }
 

@@ -18,42 +18,41 @@ class CogumeloClass extends Singleton
   public $includesCommon = array();
 
   // main dependences for cogumelo framework
-  static $mainDependences = array(
+  public static $mainDependences = array(
 
-     array(
-       "id" => "phpmailer",
-       "params" => array("phpmailer/phpmailer", "5.2.9"),
-       "installer" => "composer",
-       "includes" => array("class.phpmailer.php")
-     ),
-     array(
-       "id" => "smarty",
-       "params" => array('smarty/smarty', '3.1.18'),
-       "installer" => 'composer',
-       "includes" => array('libs/Smarty.class.php')
-     ),
-     array(
-       "id" => "gettext",
-       "params" => array('gettext/gettext', '1.1.2'),
-       "installer" => 'composer',
-       "includes" => array('Gettext/autoloader.php')
-     ),
-     array(
-     "id" => "smarty-gettext",
-     "params" => array("smarty-gettext/smarty-gettext", "~1.1.1"),
-     "installer" => "composer",
-     "includes" => array("")
+    array(
+      "id" => "phpmailer",
+      "params" => array("phpmailer/phpmailer", "5.2.9"),
+      "installer" => "composer",
+      "includes" => array("class.phpmailer.php")
+    ),
+    array(
+      "id" => "smarty",
+      "params" => array('smarty/smarty', '3.1.18'),
+      "installer" => 'composer',
+      "includes" => array('libs/Smarty.class.php')
+    ),
+    array(
+      "id" => "gettext",
+      "params" => array('gettext/gettext', '1.1.2'),
+      "installer" => 'composer',
+      "includes" => array('Gettext/autoloader.php')
+    ),
+    array(
+      "id" => "smarty-gettext",
+      "params" => array("smarty-gettext/smarty-gettext", "~1.1.1"),
+      "installer" => "composer"
     )
   );
 
   // Set autoincludes
-  static function autoIncludes() {
+  public static function autoIncludes() {
     $dependencesControl = new DependencesController();
     $dependencesControl->loadAppIncludes();
   }
 
 
-  static function get(){
+  public static function get(){
     return parent::getInstance('Cogumelo');
   }
 
@@ -62,8 +61,8 @@ class CogumeloClass extends Singleton
   }
 
 
-  function exec() {
-/*    Cogumelo::debug('Request URI: '.$_SERVER['REQUEST_URI']);
+  public function exec() {
+  /*    Cogumelo::debug('Request URI: '.$_SERVER['REQUEST_URI']);
     require_once(COGUMELO_LOCATION.'/coreClasses/coreController/I18nController.php');
     $i18nController = new I18nController();
     print($i18nController->__('prueba'));
@@ -86,13 +85,12 @@ class CogumeloClass extends Singleton
   //
   //  include
   //
-  static function load($classname) {
+  public static function load( $classname ) {
 
     if( preg_match('#^core#', $classname) ){
       $filename =  $classname;
       $file_path = COGUMELO_LOCATION.'/coreClasses/'.$filename;
     }
-
     else {
       $filename =  $classname;
       $file_path = SITE_PATH. 'classes/'. $filename;
@@ -111,7 +109,7 @@ class CogumeloClass extends Singleton
   //
   //  include Vendor libs
   //
-  static function vendorLoad($loadFile) {
+  public static function vendorLoad( $loadFile ) {
     require_once SITE_PATH.'../httpdocs/vendorServer/'.$loadFile;
   }
 
@@ -119,7 +117,7 @@ class CogumeloClass extends Singleton
   //
   //  Redirect (alias for RequestController::redirect )
   //
-  static function redirect( $redirect_url ) {
+  public static function redirect( $redirect_url ) {
     RequestController::redirect( $redirect_url );
   }
 
@@ -127,7 +125,7 @@ class CogumeloClass extends Singleton
   //
   //  Error Handler
   //
-  static function warningHandler( $errno, $errstr, $errfile, $errline) {
+  public static function warningHandler( $errno, $errstr, $errfile, $errline ) {
 
     $error_msg = 'Warning: '.$errstr.' on file "'.$errfile.'" line:'.$errline;
 
@@ -138,7 +136,7 @@ class CogumeloClass extends Singleton
     self::error($error_msg);
   }
 
-  static function errorHandler() {
+  public static function errorHandler() {
 
     $last_error = error_get_last();
 
@@ -154,21 +152,21 @@ class CogumeloClass extends Singleton
   //
   //  LOGS
   //
-  static function error($description) {
-    if(ERRORS == true) {
+  public static function error( $description ) {
+    if(ERRORS === true) {
       echo '<br>Cogumelo error: '.$description."\n";
     }
 
     self::log($description, 'cogumelo_error');
   }
 
-  static function debug($description) {
-    if(DEBUG == true) {
+  public static function debug( $description ) {
+    if(DEBUG === true) {
       self::log($description, 'cogumelo_debug');
     }
   }
 
-  static function log( $texto, $fich_log='cogumelo' ) {
+  public static function log( $texto, $fich_log = 'cogumelo' ) {
     $ignore = false;
 
     // Rodeo para evitar "PHP Notice:  Use of undefined constant MOD_DEVEL_URL_DIR"
@@ -192,11 +190,11 @@ class CogumeloClass extends Singleton
   }
 
   // set an string with user information
-  function setUserInfo($userinfoString) {
+  public function setUserInfo( $userinfoString ) {
     $this->userinfoString = $userinfoString;
   }
 
-  static function getUserInfo() {
+  public static function getUserInfo() {
     if(class_exists('UserSessionController')) {
       require_once(ModuleController::getRealFilePath('classes/controller/UserSessionController.php', 'user'));
       $userSessionControl = new UserSessionController();
@@ -219,11 +217,11 @@ class CogumeloClass extends Singleton
   //
   //  Advanced Object Debug
   //
-  static function objDebugObjectCreate($obj, $comment) {
+  public static function objDebugObjectCreate( $obj, $comment ) {
     return array( 'comment' => $comment, 'creation_date' => getdate(), 'data' => $obj );
   }
 
-  static function objDebugPull() {
+  public static function objDebugPull() {
     $now = getdate();
     $debug_object_maxlifetime = 60; // in seconds
     $result_array = array();
@@ -237,8 +235,8 @@ class CogumeloClass extends Singleton
 
       $session_array = unserialize( $_SESSION['cogumelo_dev_obj_array'] );
 
-      if(is_array($session_array) && sizeof($session_array) > 0 ) {
-        foreach ($session_array as $session_obj) {
+      if(is_array($session_array) && count($session_array) > 0 ) {
+        foreach( $session_array as $session_obj ) {
           if( isset($session_obj['creation_date'])
             && ( $now[0] - $session_obj['creation_date'][0]) <= $debug_object_maxlifetime
           ) {
@@ -254,11 +252,11 @@ class CogumeloClass extends Singleton
     return $result_array;
   }
 
-  static function console($obj, $comment='') {
+  public static function console( $obj, $comment = '' ) {
     return self::objDebugPush($obj, $comment);
   }
 
-  static function objDebugPush($obj, $comment) {
+  public static function objDebugPush( $obj, $comment ) {
     if(DEBUG && isset($obj)){
 
       $session_array = array();
@@ -281,32 +279,32 @@ class CogumeloClass extends Singleton
   }
 
 
-//
-// Metodos duplicados en Module.php
-// (Ini)
+  //
+  // Metodos duplicados en Module.php
+  // (Ini)
 
-  function deleteUrlPatterns() {
+  public function deleteUrlPatterns() {
     $this->urlPatterns = array();
   }
 
-  function addUrlPatterns( $regex, $destination ) {
+  public function addUrlPatterns( $regex, $destination ) {
     $this->urlPatterns[ $regex ] = $destination;
   }
 
-  function setUrlPatternsFromArray( $arrayUrlPatterns ) {
+  public function setUrlPatternsFromArray( $arrayUrlPatterns ) {
     $this->deleteUrlPatterns();
-    foreach ($arrayUrlPatterns as $key => $value) {
+    foreach( $arrayUrlPatterns as $key => $value ) {
       $this->addUrlPatterns( $key, $value );
     }
   }
 
-  function getUrlPatternsToArray() {
+  public function getUrlPatternsToArray() {
     return $this->urlPatterns;
   }
 
-// (Fin)
-// Metodos duplicados en Module.php
-//
+  // (Fin)
+  // Metodos duplicados en Module.php
+  //
 
 }
 

@@ -129,6 +129,7 @@ class ModuleController
    * @param string  &$content  template's content
    * @param integer &$modified template's modification time
    * @param Smarty   $smarty   Smarty instance
+   *
    * @return string|boolean   path to file or boolean true if $content and $modified
    *                          have been filled, boolean false if no default template
    *                          could be loaded

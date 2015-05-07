@@ -90,11 +90,7 @@ function setValidateForm( idForm, rules, messages ) {
 
 
   var $validateForm = $( '#'+idForm ).validate({
-
     // debug: true,
-
-    //groups: { ungrupo: 'input1 input2' },
-
     errorClass: 'formError',
     rules: rules,
     messages: messages,
@@ -104,63 +100,26 @@ function setValidateForm( idForm, rules, messages ) {
         $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
         $( form ).find( '.submitRun' ).show();
         $.ajax( {
-           contentType: 'application/json', processData: false,
-           data: JSON.stringify( $( form ).serializeFormToObject() ),
-           type: 'POST', url: $( form ).attr( 'action' ),
-           dataType : 'json'
+          contentType: 'application/json', processData: false,
+          data: JSON.stringify( $( form ).serializeFormToObject() ),
+          type: 'POST', url: $( form ).attr( 'action' ),
+          dataType : 'json'
         } )
         .done( function ( response ) {
           console.log( 'Executando validate.submitHandler.done...' );
           console.log( response );
           if( response.result === 'ok' ) {
-            var successActions = response.success;
-            console.log( successActions );
-            if ( successActions.jsEval ) {
-              eval( successActions.jsEval );
-            }
-            if ( successActions.accept ) {
-              alert( successActions.accept );
-            }
-            if ( successActions.redirect ) {
-              // Usando replace no permite volver a la pagina del form
-              window.location.replace( successActions.redirect );
-            }
-            if ( successActions.reload ) {
-              window.location.reload();
-            }
-            if ( successActions.resetForm ) {
-              $( form )[0].reset();
-            }
             // alert( 'Form Submit OK' );
+            console.log( 'Form Done: OK' );
+            formDoneOk( form, response );
           }
           else {
-            console.log( 'ERROR' );
-            for(var i in response.jvErrors) {
-              errObj = response.jvErrors[i];
-              console.log( errObj );
-
-              if( errObj.fieldName !== false ) {
-                if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
-                  $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
-                  if( typeof $defMess !== 'string' ) {
-                    $defMess = $defMess( errObj.ruleParams );
-                  }
-                  errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
-                }
-                console.log( errObj.JVshowErrors );
-                $validateForm.showErrors( errObj.JVshowErrors );
-              }
-              else {
-                console.log( errObj.JVshowErrors );
-                showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
-              }
-            } // for(var i in response.jvErrors)
-
-            // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
+            console.log( 'Form Done: ERROR' );
+            formDoneError( form, response );
           }
           $( form ).find( '[type="submit"]' ).removeAttr('disabled');
           $( form ).find( '.submitRun' ).hide();
-        } );
+        } ); // /.done
         return false; // required to block normal submit since you used ajax
       }
   }); // $validateForm =
@@ -173,6 +132,56 @@ function setValidateForm( idForm, rules, messages ) {
 
   return $validateForm;
 } // function setValidateForm( idForm, rules, messages )
+
+
+function formDoneOk( form, response ) {
+  var successActions = response.success;
+  console.log( successActions );
+  if ( successActions.jsEval ) {
+    eval( successActions.jsEval );
+  }
+  if ( successActions.accept ) {
+    alert( successActions.accept );
+  }
+  if ( successActions.redirect ) {
+    // Usando replace no permite volver a la pagina del form
+    window.location.replace( successActions.redirect );
+  }
+  if ( successActions.reload ) {
+    window.location.reload();
+  }
+  if ( successActions.resetForm ) {
+    $( form )[0].reset();
+  }
+  // alert( 'Form Submit OK' );
+}
+
+
+function formDoneError( form, response ) {
+
+  for(var i in response.jvErrors) {
+    errObj = response.jvErrors[i];
+    console.log( errObj );
+
+    if( errObj.fieldName !== false ) {
+      if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
+        $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
+        if( typeof $defMess !== 'string' ) {
+          $defMess = $defMess( errObj.ruleParams );
+        }
+        errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
+      }
+      console.log( errObj.JVshowErrors );
+      $validateForm.showErrors( errObj.JVshowErrors );
+    }
+    else {
+      console.log( errObj.JVshowErrors );
+      showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
+    }
+  } // for(var i in response.jvErrors)
+
+  // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
+}
 
 
 function showErrorsValidateForm( $form, msgText, msgClass ) {
