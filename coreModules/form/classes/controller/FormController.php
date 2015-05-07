@@ -1638,6 +1638,12 @@ class FormController implements Serializable {
   */
   public function setSuccess( $name, $success = true ) {
     //error_log( 'setSuccess: name='. $name . ' success=' .  $success );
+    // jsEval : Ejecuta el texto indicado con un eval
+    // accept : Muestra el texto como un alert
+    // redirect : Pasa a la url indicada con un window.location.replace
+    // reload : window.location.reload
+    // resetForm : Borra el formulario
+
     $this->success[ $name ] = $success;
   }
 
