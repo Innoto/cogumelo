@@ -1,6 +1,7 @@
 <?php
 
 
+Cogumelo::load('coreModel/VO.php');
 Cogumelo::load('coreModel/Model.php');
 
 class FilegroupModel extends Model
