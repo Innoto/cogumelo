@@ -107,7 +107,7 @@ function setValidateForm( idForm, rules, messages ) {
         } )
         .done( function ( response ) {
           console.log( 'Executando validate.submitHandler.done...' );
-          console.log( response );
+          //console.log( response );
           if( response.result === 'ok' ) {
             // alert( 'Form Submit OK' );
             console.log( 'Form Done: OK' );
@@ -135,8 +135,10 @@ function setValidateForm( idForm, rules, messages ) {
 
 
 function formDoneOk( form, response ) {
+  console.log( 'formDoneOk' );
+  console.log( response );
+
   var successActions = response.success;
-  console.log( successActions );
   if ( successActions.jsEval ) {
     eval( successActions.jsEval );
   }
@@ -158,6 +160,8 @@ function formDoneOk( form, response ) {
 
 
 function formDoneError( form, response ) {
+  console.log( 'formDoneError' );
+  console.log( response );
 
   for(var i in response.jvErrors) {
     errObj = response.jvErrors[i];

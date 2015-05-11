@@ -3,8 +3,7 @@
 Cogumelo::load( 'coreController/Module.php' );
 
 
-class form extends Module
-{
+class form extends Module {
 
 
   public $name = 'form';
