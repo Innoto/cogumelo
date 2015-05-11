@@ -372,6 +372,18 @@ class FormController implements Serializable {
   }
 
   /**
+    Carga los valores del VO
+    @param VO $dataVO Datos cargados por el programa
+  */
+  public function loadArrayValues( $dataArray ) {
+    foreach( $dataArray as $key => $value ) {
+      if( $this->isFieldDefined( $key ) ) {
+        $this->setFieldValue( $key, $value );
+      }
+    }
+  }
+
+  /**
     Define un campo del formulario y, opcionalmente, con sus parametros
     @param string $fieldName Nombre del campo
     @param array $params Opcional. Parametros: id, type, label, title, options, placeholder, size,
