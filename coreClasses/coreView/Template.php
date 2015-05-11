@@ -8,7 +8,7 @@ Cogumelo::load('coreController/ModuleController.php');
 
 class Template extends Smarty
 {
-  var $tpl;
+  var $tpl = false;
   var $baseDir;
 
   var $fileBacktrace = false;
@@ -208,16 +208,35 @@ class Template extends Smarty
    * @param string $file_name
    * @param string $module
    **/
-  public function setTpl( $file_name, $module = false ) {
-
-    //error_log( 'Template->setTpl('.$file_name.', '.$module.') === ' . ModuleController::getRealFilePath( 'classes/view/templates/'.$file_name, $module ) );
+  public function setTpl( $tplData = false, $module = false ) {
+    // error_log( 'Template->setTpl('.$tplData.', '.$module.')' );
 
     // Esto nos puede permitir referenciar TPLs "al lado" de la clase que esta usando este metodo
     // $debugBacktrace = debug_backtrace( false, 1 );
     // error_log( 'debug_backtrace: ' . print_r( $debugBacktrace, true ) );
     // $this->fileBacktrace = $debugBacktrace['0']['file'];
 
-    $this->tpl = ModuleController::getRealFilePath( 'classes/view/templates/'.$file_name, $module );
+    if( $tplData ) {
+      if( strpos( $tplData, 'string:' ) === 0 || strpos( $tplData, 'eval:' ) === 0 ) {
+        $this->tpl = $tplData;
+      }
+      else {
+        // Asumimos que es un fichero
+        $tplFile = ModuleController::getRealFilePath( 'classes/view/templates/'.$tplData, $module );
+        if( $tplFile && file_exists( $tplFile ) ) {
+          $this->tpl = $tplFile;
+        }
+        else {
+          $this->tpl = false;
+        }
+      }
+    }
+    else {
+      $this->tpl = false;
+    }
+
+    // error_log( 'Template = ' . $this->tpl );
+    return $this->tpl;
   }
 
   /**
@@ -246,7 +265,7 @@ class Template extends Smarty
 
     $htmlCode = '';
 
-    if( $this->tpl && file_exists( $this->tpl ) ) {
+    if( $this->tpl ) {
 
       global $cogumeloIncludesCSS;
       global $cogumeloIncludesJS;
@@ -317,7 +336,7 @@ class Template extends Smarty
 
     $htmlCode = '';
 
-    if( $this->tpl && file_exists( $this->tpl ) ) {
+    if( $this->tpl ) {
       // assign
       $this->assign( 'css_includes', $this->getClientStylesHtml( true ) );
       $this->assign( 'js_includes', $this->getClientScriptHtml( true ) );
