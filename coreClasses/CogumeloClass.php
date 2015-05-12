@@ -70,7 +70,6 @@ class CogumeloClass extends Singleton
     Cogumelo::load('coreController/I18nController.php');
     I18nController::setLang();
 
-
     // cut out the SITE_FOLDER and final slash from path
     $url_path = preg_replace('#\/$#', '', preg_replace('#^'.SITE_FOLDER.'#', '', $_SERVER['REQUEST_URI'], 1) , 1);
 
