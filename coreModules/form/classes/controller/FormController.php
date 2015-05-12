@@ -2077,7 +2077,6 @@ class FormController implements Serializable {
 
     if( $this->htmlEditor ) {
       form::loadDependence( 'ckeditor' );
-      // $html .= '<script type="text/javascript" src="/ckeditor/ckeditor.js"></script>' . "\n";
     }
 
 
@@ -2099,11 +2098,7 @@ class FormController implements Serializable {
     $html .= '  console.log( $validateForm_'.$this->id.' );'."\n";
 
     if( $this->htmlEditor ) {
-      $html .= '  $( "#'.$this->id.' .cgmMForm-htmlEditor" ).each( function( index ) {'."\n";
-      $html .= '      var idName = $( this ).attr( "id" );'."\n";
-      $html .= '      var CKcontent = CKEDITOR.replace( idName, { removePlugins: "elementspath, resize, autogrow", height: 100, width: 700 } );'."\n";
-      $html .= '      CKcontent.on( "change", function ( ev ) { document.getElementById( idName ).innerHTML = CKcontent.getData(); } );'."\n";
-      $html .= '    });'."\n";
+      $html .= '  activateHtmlEditor( "'.$this->id.'" );'."\n";
     }
 
     $html .= '});'."\n";
