@@ -19,6 +19,11 @@ class GetLangView extends View
 
   // load media from app
   function setlang($url_path=''){
-    echo "<br> SET Lang global variables<br><br>";
+      global $c_lang;
+      if ($url_path)
+        $c_lang = $url_path[1];
+      else
+        $c_lang = LANG_DEFAULT;
+      //echo "<br> SET Lang global variables<br><br>";
   }
 }

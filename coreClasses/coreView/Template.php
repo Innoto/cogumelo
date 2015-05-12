@@ -43,12 +43,12 @@ class Template extends Smarty
     $this->default_template_handler_func = 'ModuleController::cogumeloSmartyTemplateHandlerFunc';
 
     // Inicializamos atributos internos de SMARTY
-    $this->config_dir = $this->cgmSmartyConfigDir;
-    $this->compile_dir = $this->cgmSmartyCompileDir;
-    $this->cache_dir = $this->cgmSmartyCacheDir;
+       $this->setConfigDir( $this->cgmSmartyConfigDir );
+   $this->setCompileDir( $this->cgmSmartyCompileDir );
+   $this->setCacheDir( $this->cgmSmartyCacheDir );
 
     // Smarty Hack: http://www.smarty.net/forums/viewtopic.php?t=21352&sid=88c6bbab5fb1fd84d3e4f18857d3d10e
-    Smarty::muteExpectedErrors();
+    //Smarty::muteExpectedErrors();
   }
 
 

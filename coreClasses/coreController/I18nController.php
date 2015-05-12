@@ -8,37 +8,15 @@ class I18nController {
 	/**
 	* Prepare the enviroment to localize the project
 	*/
-	static function setLang($url) {
-		global $locale;
-		global $c_i18n_uri;
-
-		$locale=self::GetLang($url);
+	static function setLang() {
 		
-		$c_i18n_uri = str_replace($locale.'/', '', $url);
-
-		global $c_lang;
-		/**
-		* Prepare the enviroment to localize the project
-		*/
-		$domain = 'messages';
-		$locale ="es_ES.utf8";
-		$locale_dir = 'i18n/locale/';
-
-		setlocale(LC_ALL, $locale);
-		putenv("LC_ALL=$locale");
-		bindtextdomain($domain, $locale_dir);
-		bind_textdomain_codeset($domain, 'utf8');
-		textdomain($domain);
-	}
-
-
-	static function t_($text) {
+		global $c_lang, $lang_available;
 
 		/**
 		* Prepare the enviroment to localize the project
 		*/
 		$domain = 'messages';
-		$locale ="es_ES.utf8";
+		$locale = $lang_available[$c_lang].'.utf8';
 		$locale_dir = I18N_LOCALE;
 
 		setlocale(LC_ALL, $locale);
@@ -46,8 +24,6 @@ class I18nController {
 		bindtextdomain($domain, $locale_dir);
 		bind_textdomain_codeset($domain, 'utf8');
 		textdomain($domain);
-
-		return _($text);
 	}
 
 	static function getLang($url) {

@@ -40,9 +40,9 @@ class CogumeloClass extends Singleton
      ),
      array(
      "id" => "smarty-gettext",
-     "params" => array("smarty-gettext/smarty-gettext", "~1.1.1"),
+     "params" => array('smarty-gettext/smarty-gettext', '~1.1.1'),
      "installer" => "composer",
-     "includes" => array('')
+     "includes" => array('block.t.php')
     )
   );
 

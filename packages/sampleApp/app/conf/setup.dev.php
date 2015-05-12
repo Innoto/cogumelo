@@ -92,7 +92,7 @@ define( 'SYS_MAIL_FROM_EMAIL', 'cogumelo@cogumelo.org' );
 //
 //  Templates
 //
-
+define( 'SMARTY_DIR', WEB_BASE_PATH.'/vendor/composer/smarty/smarty/libs/');
 define( 'SMARTY_CONFIG', APP_BASE_PATH.'/conf/smarty' );
 define( 'SMARTY_COMPILE', APP_TMP_PATH.'/templates_c' );
 define( 'SMARTY_CACHE', APP_TMP_PATH.'/cache' );
@@ -161,8 +161,8 @@ define( 'MOD_DEVEL_PASSWORD', 'develpassword' );
 define ('I18N', SITE_PATH.'conf/i18n/');
 define ('I18N_LOCALE', SITE_PATH.'conf/i18n/locale/');
 define( 'GETTEXT_UPDATE', true ); // update gettext files when working in localhost
-define( 'LANG_DEFAULT', 'gl' );
-define( 'LANG_AVAILABLE', 'gl,es,en' );
+define( 'LANG_DEFAULT', 'es_ES' );
+define( 'LANG_AVAILABLE', 'es_ES,en_GB' );
 
 
 //
