@@ -1,4 +1,3 @@
-
 <?php
 
 // Dependencias en classes/view/templates/js/devel.js
