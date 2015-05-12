@@ -39,6 +39,7 @@ class form extends Module {
 
 
   public function __construct() {
+    $this->addUrlPatterns( '#^cgml-form-htmleditor-config.js#', 'view:FormConnector::customCkeditorConfig' );
     $this->addUrlPatterns( '#^cgml-form-file-upload$#', 'view:FormConnector::fileUpload' );
     $this->addUrlPatterns( '#^cgml-form-group-element$#', 'view:FormConnector::groupElement' );
   }

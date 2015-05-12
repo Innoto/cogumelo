@@ -493,6 +493,19 @@ class FormConnector extends View
 
 
 
+  public function customCkeditorConfig() {
+    $fileInfo = ModuleController::getRealFilePath( 'classes/view/templates/js/ckeditor-config.js', 'form' );
+
+    header( 'Content-Type: application/javascript; charset=utf-8' );
+    header( 'Content-Length: ' . filesize( $fileInfo ) );
+    readfile( $fileInfo );
+    exit;
+  } // function customCkeditorConfig() {
+
+
+} // class FormConnector extends View
+
+
 /*
 
   pasos
@@ -533,6 +546,3 @@ class FormConnector extends View
   Options -ExecCGI
 */
 
-
-
-} // class FormConnector extends View

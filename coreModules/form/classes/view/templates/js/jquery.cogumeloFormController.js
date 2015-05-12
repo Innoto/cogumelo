@@ -615,4 +615,18 @@ function removeGroupElement( evnt ) {
 
 
 
+function activateHtmlEditor( formId ) {
+  console.log( 'activateHtmlEditor: ' + formId );
+  console.log( formId );
+
+  $( '#' + formId + ' .cgmMForm-htmlEditor' ).each(
+    function( index ) {
+      var idName = $( this ).attr( 'id' );
+      var CKcontent = CKEDITOR.replace( idName, {
+        customConfig: '/cgml-form-htmleditor-config.js'
+      } );
+      CKcontent.on( 'change', function ( ev ) { document.getElementById( idName ).innerHTML = CKcontent.getData(); } );
+    }
+  );
+}
 
