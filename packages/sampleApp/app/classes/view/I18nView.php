@@ -1,9 +1,7 @@
 <?php
 
 Cogumelo::load('coreView/View.php');
-Cogumelo::load('coreController/I18nController.php');
-require_once(DEPEN_MANUAL_REPOSITORY.'/Gettext/src/autoloader.php');
-require_once(DEPEN_MANUAL_REPOSITORY.'/Gettext/src/Translator.php');
+
 
 class I18nView extends View
 {
@@ -20,13 +18,15 @@ class I18nView extends View
     /***********************************/
     /*    Using the system function    */
     /***********************************/
-    I18nController::setLang();
     echo _('colo');
      
     /***************************/
     /*    Using the library    */
     /***************************/
     /*
+    require_once(DEPEN_MANUAL_REPOSITORY.'/Gettext/src/autoloader.php');
+    require_once(DEPEN_MANUAL_REPOSITORY.'/Gettext/src/Translator.php');
+
     $translations = Gettext\Translations::fromPoFile(I18N_LOCALE.'/es_ES/LC_MESSAGES/messages.po');
     $t = new Gettext\Translator();
     Gettext\Translator::initGettextFunctions($t);
@@ -37,8 +37,6 @@ class I18nView extends View
   }
 
   function translate(){
-
-    I18nController::setLang();
 
     /***************************************/
     /*           Para probar TPL           */

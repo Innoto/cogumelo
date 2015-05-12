@@ -1,20 +1,18 @@
 <?php
 
-
-require_once(DEPEN_MANUAL_REPOSITORY.'/Gettext/src/autoloader.php');
-require_once(DEPEN_MANUAL_REPOSITORY.'/Gettext/src/Translator.php');
-
 class I18nController {
 	/**
 	* Prepare the enviroment to localize the project
 	*/
-	static function setLang() {
+	static function setLang($url_path = false) {
 		
 		global $c_lang, $lang_available;
 
-		/**
-		* Prepare the enviroment to localize the project
-		*/
+	    if ($url_path)
+	       $c_lang = $url_path[1];
+	    else
+	       $c_lang = LANG_DEFAULT;
+
 		$domain = 'messages';
 		$locale = $lang_available[$c_lang].'.utf8';
 		$locale_dir = I18N_LOCALE;
