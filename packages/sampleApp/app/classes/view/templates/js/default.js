@@ -2,10 +2,10 @@ alert('mierda')
 
 $( document ).ready(function() {
 
-  $("#video").wallpaper({
+  $("#video").background({
     source: {
-      //CROwct3691Q
-      video: "//www.youtube.com/embed/qrsUqThqfb4"
+      //CROwct3691Q qrsUqThqfb4
+      video: "//www.youtube.com/embed/xxK2XKBp2rE"
     }
   });
 

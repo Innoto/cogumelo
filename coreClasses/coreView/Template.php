@@ -8,8 +8,10 @@ Cogumelo::load('coreController/ModuleController.php');
 
 class Template extends Smarty
 {
-  var $tpl;
+  var $tpl = false;
   var $baseDir;
+
+  var $fileBacktrace = false;
 
   var $blocks = array();
 
@@ -42,10 +44,12 @@ class Template extends Smarty
     // En caso de que Smarty no encuentre un TPL, usa este metodo para buscarlo
     $this->default_template_handler_func = 'ModuleController::cogumeloSmartyTemplateHandlerFunc';
 
+
     // Inicializamos atributos internos de SMARTY
-       $this->setConfigDir( $this->cgmSmartyConfigDir );
-   $this->setCompileDir( $this->cgmSmartyCompileDir );
-   $this->setCacheDir( $this->cgmSmartyCacheDir );
+    $this->setConfigDir( $this->cgmSmartyConfigDir );
+    $this->setCompileDir( $this->cgmSmartyCompileDir );
+    $this->setCacheDir( $this->cgmSmartyCacheDir );
+
 
     // Smarty Hack: http://www.smarty.net/forums/viewtopic.php?t=21352&sid=88c6bbab5fb1fd84d3e4f18857d3d10e
     //Smarty::muteExpectedErrors();
@@ -166,6 +170,7 @@ class Template extends Smarty
    Crea el HTML que carga los Scripts
    *
    * @param bool $ignoreAutoincludes
+   *
    * @return string $is_autoinclude
    **/
   public function getClientScriptHtml( $ignoreAutoincludes = false ) {
@@ -183,6 +188,7 @@ class Template extends Smarty
    Crea el HTML que carga los Styles
    *
    * @param bool $ignoreAutoincludes
+   *
    * @return string $is_autoinclude
    **/
   public function getClientStylesHtml( $ignoreAutoincludes = false ) {
@@ -204,9 +210,35 @@ class Template extends Smarty
    * @param string $file_name
    * @param string $module
    **/
-  public function setTpl( $file_name, $module = false ) {
+  public function setTpl( $tplData = false, $module = false ) {
+    error_log( 'Template->setTpl('.$tplData.', '.$module.')' );
 
-    $this->tpl = ModuleController::getRealFilePath( 'classes/view/templates/'.$file_name, $module );
+    // Esto nos puede permitir referenciar TPLs "al lado" de la clase que esta usando este metodo
+    // $debugBacktrace = debug_backtrace( false, 1 );
+    // error_log( 'debug_backtrace: ' . print_r( $debugBacktrace, true ) );
+    // $this->fileBacktrace = $debugBacktrace['0']['file'];
+
+    if( $tplData ) {
+      if( strpos( $tplData, 'string:' ) === 0 || strpos( $tplData, 'eval:' ) === 0 ) {
+        $this->tpl = $tplData;
+      }
+      else {
+        // Asumimos que es un fichero
+        $tplFile = ModuleController::getRealFilePath( 'classes/view/templates/'.$tplData, $module );
+        if( $tplFile && file_exists( $tplFile ) ) {
+          $this->tpl = $tplFile;
+        }
+        else {
+          $this->tpl = false;
+        }
+      }
+    }
+    else {
+      $this->tpl = false;
+    }
+
+    error_log( 'Template = ' . $this->tpl );
+    return $this->tpl;
   }
 
   /**
@@ -222,16 +254,20 @@ class Template extends Smarty
   /**
    Crea el HTML a partir de los datos y plantillas indicados
    *
+   * @param bool $toString
+   *
    * @global string $cogumeloIncludesCSS
    * @global string $cogumeloIncludesJS
-   * @param bool $toString
+   *
    * @return string $htmlCode
    **/
   public function exec( $toString = false ) {
 
+    //error_log( 'Template->exec('.$toString.') === ' . $this->tpl );
+
     $htmlCode = '';
 
-    if( $this->tpl && file_exists( $this->tpl ) ) {
+    if( $this->tpl ) {
 
       global $cogumeloIncludesCSS;
       global $cogumeloIncludesJS;
@@ -298,9 +334,11 @@ class Template extends Smarty
    **/
   public function execBlock() {
 
+    //error_log( 'Template->execBlock() === ' . $this->tpl );
+
     $htmlCode = '';
 
-    if( $this->tpl && file_exists( $this->tpl ) ) {
+    if( $this->tpl ) {
       // assign
       $this->assign( 'css_includes', $this->getClientStylesHtml( true ) );
       $this->assign( 'js_includes', $this->getClientScriptHtml( true ) );

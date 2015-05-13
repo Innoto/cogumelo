@@ -50,4 +50,4 @@ class UserSessionController extends SessionController
     return $this->isSession();
   }
 }
-?>
+
