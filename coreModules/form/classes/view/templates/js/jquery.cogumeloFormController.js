@@ -650,7 +650,7 @@ function switchFormLang( idForm, lang ) {
 function createSwitchFormLang( idForm ) {
   console.log( 'createSwitchFormLang' );
 
-  if( langAvailable ) {
+  if( typeof( langAvailable ) == 'object' ) {
     var htmlLangSwitch = '';
     htmlLangSwitch += '<div class="langSwitch-wrap">';
     htmlLangSwitch += '<ul class="langSwitch">';
