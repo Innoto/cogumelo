@@ -19,12 +19,10 @@ class i18nGetLang extends Module
       $i = $i +1;
     }
 
-    $num = count($LANG_AVAILABLE);
-
-    for ($j=0;$j<$num;$j++){
+    for ($j=0;$j<$i;$j++){
       if ($j==0)
         $patron = $lang_array[$j];
-      else if ($j==$num-1)
+      else if ($j==$i-1)
         $patron = $patron.'|'.$lang_array[$j];
       else
         $patron = $patron .'|'.$lang_array[$j];
