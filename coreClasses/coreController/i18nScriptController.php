@@ -4,9 +4,8 @@
 * i18nScriptController Class
 */
 
-require_once(DEPEN_MANUAL_REPOSITORY.'/Gettext/src/autoloader.php');
-require_once(DEPEN_MANUAL_REPOSITORY.'/Gettext/src/Translator.php');
-
+require_once(DEPEN_MANUAL_PATH.'/Gettext/src/autoloader.php');
+require_once(DEPEN_MANUAL_PATH.'/Gettext/src/Translator.php');
 
 class i18nScriptController {
 
@@ -258,7 +257,7 @@ class i18nScriptController {
 	      exec($smartygettext.' -o '.$l.'/'.$this->textdomain.'_tpl.po '.TPL_TMP);
 	      // Now we have to combine this PO file with the PO file we had previusly and discard the tmp file
 	      exec('msgmerge '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_tpl.po');
-	      exec ('rm '.$l.'/'.$this->textdomain.'_tpl.pot');
+	      exec ('rm '.$l.'/'.$this->textdomain.'_tpl.po');
 
 	      error_reporting(E_ALL);
 	    }
