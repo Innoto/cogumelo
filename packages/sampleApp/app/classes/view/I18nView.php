@@ -18,7 +18,8 @@ class I18nView extends View
     /***********************************/
     /*    Using the system function    */
     /***********************************/
-    echo _('colo');
+
+    echo __('culo');
      
     /***************************/
     /*    Using the library    */
