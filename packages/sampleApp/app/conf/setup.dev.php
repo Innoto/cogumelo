@@ -146,7 +146,7 @@ define ('I18N', SITE_PATH.'conf/i18n/');
 define ('I18N_LOCALE', SITE_PATH.'conf/i18n/locale/');
 define( 'GETTEXT_UPDATE', true ); // update gettext files when working in localhost
 
-define( 'LANG_DEFAULT', 'es' );
+define( 'LANG_DEFAULT', 'es_ES' );
 define( 'LANG_AVAILABLE', 'es_ES,en_GB' );
 
 
