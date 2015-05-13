@@ -6,7 +6,7 @@ class I18nController {
 	*/
 	static function setLang($url_path = false) {
 		
-		global $c_lang, $lang_available;
+		global $c_lang, $LANG_AVAILABLE;
 
 	    if ($url_path)
 	       $c_lang = $url_path[1];
@@ -14,7 +14,7 @@ class I18nController {
 	       $c_lang = LANG_DEFAULT;
 
 		$domain = 'messages';
-		$locale = $lang_available[$c_lang].'.utf8';
+		$locale = $LANG_AVAILABLE[$c_lang]['i18n'].'.utf8';
 		$locale_dir = I18N_LOCALE;
 
 		setlocale(LC_ALL, $locale);

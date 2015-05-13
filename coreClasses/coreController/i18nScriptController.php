@@ -16,7 +16,6 @@ class i18nScriptController {
 	var $modules;
 	var $lc_1;
 	var $dir_lc = array();
-	var $lang = array();
 	
 	function __construct()
 	{
@@ -24,13 +23,12 @@ class i18nScriptController {
 	    $this->dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
 	    $this->dir_modules = SITE_PATH.'modules/';
 	    $this->textdomain="messages";
-	    global $C_ENABLED_MODULES;
+	    global $C_ENABLED_MODULES, $LANG_AVAILABLE;
 	    $this->modules = $C_ENABLED_MODULES;
-	    $this->lc_1 = explode(',',LANG_AVAILABLE);
-	    foreach ($this->lc_1 as $l){
-	    	$lang_array = explode('_',$l);
-	    	$this->lang[$l] = $lang_array[0];
-	        $this->dir_lc[$l] = $this->dir_path.$l.'/LC_MESSAGES';
+	    $this->lang = $LANG_AVAILABLE;
+
+	    foreach ($LANG_AVAILABLE as $l => $lang){
+	    	$this->dir_lc[$l] = $this->dir_path.$lang['i18n'].'/LC_MESSAGES';
 	    }
 	}
 
@@ -38,9 +36,7 @@ class i18nScriptController {
     * Prepare the enviroment to localize the project
     */
 	function setEnviroment() {
-	    $locale= LANG_DEFAULT;
-
-	    global $c_lang;
+	    $locale= $this->lang[LANG_DEFAULT]['i18n'];
 
 	    putenv('LANGUAGE='.$locale);
 	    putenv('LANG='.$locale);

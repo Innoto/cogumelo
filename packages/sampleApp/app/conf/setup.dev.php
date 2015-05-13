@@ -146,8 +146,7 @@ define ('I18N', SITE_PATH.'conf/i18n/');
 define ('I18N_LOCALE', SITE_PATH.'conf/i18n/locale/');
 define( 'GETTEXT_UPDATE', true ); // update gettext files when working in localhost
 
-define( 'LANG_DEFAULT', 'es_ES' );
-define( 'LANG_AVAILABLE', 'es_ES,en_GB' );
+define( 'LANG_DEFAULT', 'es' );
 
 
 //
@@ -173,13 +172,18 @@ define( 'DEPEN_MANUAL_REPOSITORY', COGUMELO_LOCATION.'/packages/vendorPackages' 
 //
 //	Media server
 //
+global $LANG_AVAILABLE;
 global $MEDIASERVER_LESS_CONSTANTS;
 global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
 global $MEDIASERVER_SMARTY_CONSTANTS;
 
+$LANG_AVAILABLE = array('es' => array('i18n' => 'es_ES'), 
+						'gl' => array('i18n' => 'gl_GL'), 
+						'en' => array('i18n' => 'en_US')
+						);
 $MEDIASERVER_LESS_CONSTANTS = array('variable1' =>1,  'variable2'=>'red', 'variable3'=>'blue' );
 $MEDIASERVER_JAVASCRIPT_CONSTANTS = array('variable1' =>5,  'variable2'=>'red', 'variable3'=>'blue' );
-$MEDIASERVER_SMARTY_CONSTANTS = array('lang_default' => LANG_DEFAULT, 'lang_available' => LANG_AVAILABLE );
+//$MEDIASERVER_SMARTY_CONSTANTS = array('lang_default' => LANG_DEFAULT, 'lang_available' => LANG_AVAILABLE );
 
 define( 'MEDIASERVER_REFRESH_CACHE', true ); // false for best performance in final server
 define( 'MEDIASERVER_HOST', '/' );

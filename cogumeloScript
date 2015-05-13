@@ -5,7 +5,6 @@
 
   global $_C;
   $_C =Cogumelo::get();
-  $lc_1 = explode(',',LANG_AVAILABLE);
 
   //
   //  CARGO MÓDULO DEVEL E O DEVELDBCONTROLLER, QUE É ONDE ESTÁN OS MÉTODOS QUE NOS INTERESAN
@@ -233,14 +232,14 @@
   }
 
   function makeAppPaths() {
-    global $lc_1;
+    global $lc, $LANG_AVAILABLE;
     $md_1 = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
       MEDIASERVER_TMP_CACHE_PATH, WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH,
       LOGDIR, MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, BCK, I18N, I18N_LOCALE,TPL_TMP );
 
     $i = 0;
-    foreach ($lc_1 as $l){
-      $lc[$i] = I18N_LOCALE.$l.'/LC_MESSAGES';
+    foreach ($LANG_AVAILABLE as $l=>$lang){
+      $lc[$i] = I18N_LOCALE.$lang['i18n'].'/LC_MESSAGES';
       $i = $i+1;
     }
 

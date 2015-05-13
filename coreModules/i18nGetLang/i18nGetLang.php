@@ -11,14 +11,26 @@ class i18nGetLang extends Module
   
   function __construct(){
 
-  	global $lang_available;
-  	$lang_array = explode(',',LANG_AVAILABLE);
-  	foreach ($lang_array as $l=>$lang){
-  		$lang_short = explode('_',$lang);
-  		$lang_available[$lang_short[0]] = $lang;
-  	}
+  	global $LANG_AVAILABLE;
 
-  	$this->addUrlPatterns( '#^(es|en|gl)\/(.*)$#', 'noendview:GetLangView::setlang' );
+    $i = 0;
+    foreach ($LANG_AVAILABLE as $l=>$lang){
+      $lang_array[$i] = $l;
+      $i = $i +1;
+    }
+
+    $num = count($LANG_AVAILABLE);
+
+    for ($j=0;$j<$num;$j++){
+      if ($j==0)
+        $patron = $lang_array[$j];
+      else if ($j==$num-1)
+        $patron = $patron.'|'.$lang_array[$j];
+      else
+        $patron = $patron .'|'.$lang_array[$j];
+    }
+
+  	$this->addUrlPatterns( '#^('.$patron.')\/(.*)$#', 'noendview:GetLangView::setlang' );
   }
 
 }
