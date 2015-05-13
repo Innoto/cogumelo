@@ -4,6 +4,7 @@
 */
 
 var cogumeloFormControllerFormsInfo = [];
+var langForm = false;
 
 
 function getFormInfoIndex( idForm ) {
@@ -72,6 +73,9 @@ function unbindForm( idForm ) {
 
 
 function setValidateForm( idForm, rules, messages ) {
+
+  // Si hay idiomas, buscamos campos multiidioma en el form y los procesamos
+  createSwitchFormLang( idForm );
 
   $.validator.setDefaults({
     errorPlacement: function(error, element) {
@@ -629,4 +633,45 @@ function activateHtmlEditor( formId ) {
     }
   );
 }
+
+
+
+/*** Form lang select ***/
+
+function switchFormLang( idForm, lang ) {
+  console.log( 'switchFormLang: '+lang );
+  langForm = lang;
+  $( '#' + idForm + ' .cgmMForm-groupElem > div' ).hide();
+  $( '#' + idForm + ' .cgmMForm-groupElem > div[class$="_'+lang+'"]' ).show();
+  $( '#' + idForm + ' .cgmMForm-group-wrap ul.langSwitch li' ).removeClass( 'langActive' );
+  $( '#' + idForm + ' .cgmMForm-group-wrap ul.langSwitch li.langSwitch-'+lang ).addClass( 'langActive' );
+}
+
+function createSwitchFormLang( idForm ) {
+  console.log( 'createSwitchFormLang' );
+
+  if( langAvailable ) {
+    var htmlLangSwitch = '';
+    htmlLangSwitch += '<div class="langSwitch-wrap">';
+    htmlLangSwitch += '<ul class="langSwitch">';
+    $.each( langAvailable, function( index, lang ) {
+      htmlLangSwitch += '<li class="langSwitch-'+lang+'" data-lang-value="'+lang+'">'+lang;
+    });
+    htmlLangSwitch += '</ul>';
+    htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-flag fa-fw"></i></span>';
+    htmlLangSwitch += '</div>';
+    $( '#' + idForm + ' .cgmMForm-group-wrap' ).prepend( htmlLangSwitch );
+
+    switchFormLang( idForm, langDefault );
+
+    $( '#' + idForm + ' .cgmMForm-group-wrap ul.langSwitch li' ).on( "click", function() {
+      newLang = $( this ).data( 'lang-value' );
+      if( newLang != langForm ) {
+        switchFormLang( idForm, newLang );
+      }
+    });
+  }
+}
+
+/*** Form lang select - End ***/
 

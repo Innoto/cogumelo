@@ -43,3 +43,24 @@ select{
     .box-shadow(1px 0px 2px 0px @formErrorColor);
   }
 }
+
+
+
+/*** Form lang select ***/
+
+.cgmMForm-group-wrap > label { display: none; }
+.cgmMForm-group-wrap .langSwitch { float: right; margin:0; }
+.cgmMForm-group-wrap .langSwitch li {
+  display: none; padding: 0 0.5em; cursor: pointer; font-weight: bold;
+  border:1px dotted #1E90FF;
+  background-color: #F5F5F5;
+}
+.cgmMForm-group-wrap .langSwitch:hover li { display: inline; }
+.cgmMForm-group-wrap .langSwitch .langActive {
+  display: inline; cursor: no-drop;
+  background-color: inherit;
+  color: #1E90FF;
+}
+.cgmMForm-group-wrap .langSwitchIcon { float:right; color:#1E90FF }
+
+/*** Form lang select - End ***/
