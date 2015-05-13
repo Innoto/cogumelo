@@ -3,7 +3,7 @@
 require_once(COGUMELO_LOCATION.'/coreClasses/coreController/Singleton.php');
 require_once(COGUMELO_LOCATION.'/coreClasses/coreController/ModuleController.php');
 require_once(COGUMELO_LOCATION.'/coreClasses/coreController/DependencesController.php');
-
+require_once(COGUMELO_LOCATION.'/coreClasses/coreController/I18n.php');
 
 class CogumeloClass extends Singleton
 {
