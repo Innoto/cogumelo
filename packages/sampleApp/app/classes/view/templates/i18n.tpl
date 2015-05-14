@@ -9,9 +9,9 @@
 
   {$css_includes}
 
-
+<!--
 {locale path=$milocale domain=$domain}
-
+-->
   {$js_includes}
 
 </head>
@@ -23,4 +23,5 @@
 {_("haimarea")}
 	{t}miau{/t} 
 
+	{t}PRUEBA{/t}
 </body>

@@ -1,4 +1,3 @@
-alert('mierda')
 
 $( document ).ready(function() {
 

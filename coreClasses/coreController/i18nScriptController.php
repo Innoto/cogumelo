@@ -192,7 +192,7 @@ class i18nScriptController {
           //Gettext\Generators\Po::generateFile($entries, $l.'/'.$this->textdomain.'.po');
           $entries_js->mergeWith($entries_php);
 
-          Gettext\Generators\Po::toFile($entries_js, $l.'/'.$this->textdomain.'.po');
+          Gettext\Generators\Po::toFile($entries_js, $l.'/'.$this->textdomain.'_prev.po');
         }
 
         /*********** END JS **********/ 	    
@@ -248,12 +248,14 @@ class i18nScriptController {
 	      exec('cp '.$a.' '.TPL_TMP);
 	    }
 
-
 	    foreach ($this->dir_lc as $l){
 	      exec($smartygettext.' -o '.$l.'/'.$this->textdomain.'_tpl.po '.TPL_TMP);
 	      // Now we have to combine this PO file with the PO file we had previusly and discard the tmp file
-	      exec('msgmerge '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_tpl.po');
+	      
+	      exec ('msgcat --use-first '.$l.'/'.$this->textdomain.'_prev.po '.$l.'/'.$this->textdomain.'_tpl.po > '.$l.'/'.$this->textdomain.'.po'); 
 	      exec ('rm '.$l.'/'.$this->textdomain.'_tpl.po');
+	      exec ('rm '.$l.'/'.$this->textdomain.'_prev.po');
+	      exec ('rm '.TPL_TMP.'/*.tpl');
 
 	      error_reporting(E_ALL);
 	    }
