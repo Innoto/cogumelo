@@ -19,7 +19,6 @@
  * * Valores:
  * - Las rutas no finalizan en /
  * - Las URL no finalizan en /
- *
  */
 
 
@@ -31,21 +30,19 @@
 //
 //  APP
 //
-
 define( 'APP_TMP_PATH', APP_BASE_PATH.'/tmp' );
 
 
 //
 // Framework Path
 //
-
 define( 'COGUMELO_LOCATION', '/home/proxectos/cogumelo' );
 define( 'COGUMELO_DIST_LOCATION', false );
+
 
 //
 //  DB
 //
-
 define( 'DB_ENGINE', 'mysql' );
 define( 'DB_HOSTNAME', 'localhost');
 define( 'DB_PORT', '3306');
@@ -63,7 +60,6 @@ require_once( APP_BASE_PATH.'/conf/memcached.setup.php' );  //memcached options
 //
 //  Url settings
 //
-
 // TODO: Cuidado porque no se admite un puerto
 define( 'COGUMELO_ADMINSCRIPT_URL', 'http://cogumeloapp/cogumelo-server.php');
 define( 'SITE_PROTOCOL', isset( $_SERVER['HTTPS'] ) ? 'https' : 'http' );
@@ -78,7 +74,6 @@ define( 'SITE_URL_CURRENT', SITE_PROTOCOL == 'http' ? SITE_URL_HTTP : SITE_URL_H
 //
 //  Sendmail
 //
-
 define( 'SMTP_HOST', 'localhost' );
 define( 'SMTP_PORT', '25' );
 define( 'SMTP_AUTH', false );
@@ -99,15 +94,11 @@ define( 'SMARTY_CACHE', APP_TMP_PATH.'/cache' );
 define( 'TPL_TMP', APP_TMP_PATH.'/tpl' );
 
 
-
-
 //
 //  Module load
 //
-
 global $C_ENABLED_MODULES;
 global $C_INDEX_MODULES;
-
 $C_ENABLED_MODULES = array( 'mediaserver', 'i18nGetLang', 'common', 'devel', 'filedata', 'form', 'table', 'user' );
 $C_INDEX_MODULES  = array( 'mediaserver', 'i18nGetLang', 'user', 'form', 'devel' ); // DEVEL SIEMPRE DE ULTIMO!!!
 
@@ -115,7 +106,6 @@ $C_INDEX_MODULES  = array( 'mediaserver', 'i18nGetLang', 'user', 'form', 'devel'
 //
 //  Logs
 //
-
 define( 'LOGDIR', APP_BASE_PATH.'/log/' ); //log files directory
 define( 'LOG_RAW_SQL', false ); // Log RAW all SQL ¡WARNING! application passwords will dump into log files
 define( 'DEBUG', true ); // Set Debug mode to log debug messages on log
@@ -125,14 +115,12 @@ define( 'ERRORS', true ); // Display errors on screen. If you use devel module, 
 //
 // Backups
 //
-
 define( 'BCK', APP_BASE_PATH.'/backups/' ); //backups directory
 
 
 //
 //  Devel Mod
 //
-
 define( 'MOD_DEVEL_ALLOW_ACCESS', true );
 define( 'MOD_DEVEL_URL_DIR', 'devel' );
 define( 'MOD_DEVEL_PASSWORD', 'develpassword' );
@@ -141,12 +129,17 @@ define( 'MOD_DEVEL_PASSWORD', 'develpassword' );
 //
 //  i18n
 //
-
 define ('I18N', SITE_PATH.'conf/i18n/');
 define ('I18N_LOCALE', SITE_PATH.'conf/i18n/locale/');
 define( 'GETTEXT_UPDATE', true ); // update gettext files when working in localhost
 
-define( 'LANG_DEFAULT', 'es' );
+global $LANG_AVAILABLE;
+$LANG_AVAILABLE = array(
+  'es' => array('i18n' => 'es_ES'),
+  'gl' => array('i18n' => 'gl_ES'),
+  'en' => array('i18n' => 'en_US')
+);
+define( 'LANG_DEFAULT', 'gl' );
 
 
 //
@@ -165,29 +158,24 @@ define( 'MOD_FORM_FILES_APP_PATH', APP_BASE_PATH.'/../formFiles' );
 define( 'DEPEN_COMPOSER_PATH', WEB_BASE_PATH.'/vendor/composer' );
 define( 'DEPEN_BOWER_PATH', WEB_BASE_PATH.'/vendor/bower' );
 define( 'DEPEN_MANUAL_PATH', WEB_BASE_PATH.'/vendor/manual' );
-
 define( 'DEPEN_MANUAL_REPOSITORY', COGUMELO_LOCATION.'/packages/vendorPackages' );
 
 
 //
 //	Media server
 //
-global $LANG_AVAILABLE;
-global $MEDIASERVER_LESS_CONSTANTS;
-global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
-//global $MEDIASERVER_SMARTY_CONSTANTS;
-
-$LANG_AVAILABLE = array('es' => array('i18n' => 'es_ES'), 
-						'gl' => array('i18n' => 'gl_ES'), 
-						'en' => array('i18n' => 'en_US')
-						);
-$MEDIASERVER_LESS_CONSTANTS = array('variable1' =>1,  'variable2'=>'red', 'variable3'=>'blue' );
-$MEDIASERVER_JAVASCRIPT_CONSTANTS = array('variable1' =>5,  'variable2'=>'red', 'variable3'=>'blue' );
-//$MEDIASERVER_SMARTY_CONSTANTS = array('lang_default' => LANG_DEFAULT, 'lang_available' => LANG_AVAILABLE );
-
 define( 'MEDIASERVER_REFRESH_CACHE', true ); // false for best performance in final server
 define( 'MEDIASERVER_HOST', '/' );
 define( 'MEDIASERVER_MINIMIFY_FILES', false ); // minimify js and css files
 define( 'MEDIASERVER_TMP_CACHE_PATH', APP_TMP_PATH.'/mediaCache' );
 define( 'MEDIASERVER_FINAL_CACHE_PATH', 'mediaCache' );
-define( 'MEDIASERVER_COMPILE_LESS', true );
+define( 'MEDIASERVER_COMPILE_LESS', false );
+
+global $MEDIASERVER_LESS_CONSTANTS;
+global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
+global $MEDIASERVER_SMARTY_CONSTANTS;
+
+$MEDIASERVER_LESS_CONSTANTS = array( 'variable1' => 1, 'variable2' => 'red', 'variable3' => 'blue' );
+$MEDIASERVER_JAVASCRIPT_CONSTANTS = array( 'variable1' => 5, 'variable2'=>'red', 'variable3' => 'blue' );
+$MEDIASERVER_SMARTY_CONSTANTS = array( 'lang_default' => LANG_DEFAULT );
+
