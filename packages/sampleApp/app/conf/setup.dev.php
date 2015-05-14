@@ -139,7 +139,7 @@ $LANG_AVAILABLE = array(
   'gl' => array('i18n' => 'gl_ES'),
   'en' => array('i18n' => 'en_US')
 );
-define( 'LANG_DEFAULT', 'gl' );
+define( 'LANG_DEFAULT', 'es' );
 
 
 //
