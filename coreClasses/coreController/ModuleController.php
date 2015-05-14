@@ -151,6 +151,7 @@ class ModuleController
     if( count( $tmpNameParts ) > 1 ) {
       $module = $tmpNameParts[0];
       $name = $tmpNameParts[1];
+      error_log( 'Separando: ' . "$module --- $name" );
     }
 
     if( $type == 'file' ) {
