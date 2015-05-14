@@ -175,10 +175,10 @@ define( 'DEPEN_MANUAL_REPOSITORY', COGUMELO_LOCATION.'/packages/vendorPackages' 
 global $LANG_AVAILABLE;
 global $MEDIASERVER_LESS_CONSTANTS;
 global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
-global $MEDIASERVER_SMARTY_CONSTANTS;
+//global $MEDIASERVER_SMARTY_CONSTANTS;
 
 $LANG_AVAILABLE = array('es' => array('i18n' => 'es_ES'), 
-						'gl' => array('i18n' => 'gl_GL'), 
+						'gl' => array('i18n' => 'gl_ES'), 
 						'en' => array('i18n' => 'en_US')
 						);
 $MEDIASERVER_LESS_CONSTANTS = array('variable1' =>1,  'variable2'=>'red', 'variable3'=>'blue' );
