@@ -19,6 +19,8 @@ class GetLangView extends View
 
   // load media from app
   function setlang($url_path=''){
-    echo "<br> SET Lang global variables<br><br>";
+    Cogumelo::load('coreController/I18nController.php');
+    I18nController::setLang($url_path);
+    //echo "<br> SET Lang global variables<br><br>";
   }
 }

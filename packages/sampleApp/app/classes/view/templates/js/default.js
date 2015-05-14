@@ -1,3 +1,5 @@
+alert('mierda')
+
 $( document ).ready(function() {
 
   $("#video").background({

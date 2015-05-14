@@ -3,6 +3,7 @@
 require_once(COGUMELO_LOCATION.'/coreClasses/coreController/Singleton.php');
 require_once(COGUMELO_LOCATION.'/coreClasses/coreController/ModuleController.php');
 require_once(COGUMELO_LOCATION.'/coreClasses/coreController/DependencesController.php');
+require_once(COGUMELO_LOCATION.'/coreClasses/coreController/I18n.php');
 
 class CogumeloClass extends Singleton
 {
@@ -18,31 +19,32 @@ class CogumeloClass extends Singleton
   public $includesCommon = array();
 
   // main dependences for cogumelo framework
-  public static $mainDependences = array(
+  static $mainDependences = array(
 
-    array(
-      "id" => "phpmailer",
-      "params" => array("phpmailer/phpmailer", "5.2.9"),
-      "installer" => "composer",
-      "includes" => array("class.phpmailer.php")
-    ),
-    array(
-      "id" => "smarty",
-      "params" => array('smarty/smarty', '3.1.18'),
-      "installer" => 'composer',
-      "includes" => array('libs/Smarty.class.php')
-    ),
-    array(
-      "id" => "gettext",
-      "params" => array('gettext/gettext', '1.1.2'),
-      "installer" => 'composer',
-      "includes" => array('Gettext/autoloader.php')
-    ),
-    array(
-      "id" => "smarty-gettext",
-      "params" => array("smarty-gettext/smarty-gettext", "~1.1.1"),
-      "installer" => "composer"
-    )
+     array(
+       "id" => "phpmailer",
+       "params" => array("phpmailer/phpmailer", "5.2.9"),
+       "installer" => "composer",
+       "includes" => array("class.phpmailer.php")
+     ),
+     array(
+       "id" => "smarty",
+       "params" => array('smarty/smarty', '3.1.18'),
+       "installer" => 'composer',
+       "includes" => array('libs/Smarty.class.php')
+     ),
+     array(
+       "id" => "gettext",
+       "params" => array('Gettext'),
+       "installer" => 'manual',
+       "includes" => array('')
+     ),
+     array(
+     "id" => "smarty-gettext",
+     "params" => array('smarty-gettext/smarty-gettext', '~1.1.1'),
+     "installer" => "composer",
+     "includes" => array('block.t.php')
+     )
   );
 
   // Set autoincludes
@@ -60,14 +62,11 @@ class CogumeloClass extends Singleton
     session_start();
   }
 
-
   public function exec() {
-  /*    Cogumelo::debug('Request URI: '.$_SERVER['REQUEST_URI']);
-    require_once(COGUMELO_LOCATION.'/coreClasses/coreController/I18nController.php');
-    $i18nController = new I18nController();
-    print($i18nController->__('prueba'));
-    require_once(I18N.'/index.php');*/
 
+    /* i18n */
+    Cogumelo::load('coreController/I18nController.php');
+    I18nController::setLang();
 
     // cut out the SITE_FOLDER and final slash from path
     $url_path = preg_replace('#\/$#', '', preg_replace('#^'.SITE_FOLDER.'#', '', $_SERVER['REQUEST_URI'], 1) , 1);

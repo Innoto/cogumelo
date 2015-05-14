@@ -44,13 +44,15 @@ class Template extends Smarty
     // En caso de que Smarty no encuentre un TPL, usa este metodo para buscarlo
     $this->default_template_handler_func = 'ModuleController::cogumeloSmartyTemplateHandlerFunc';
 
-    // Inicializamos SMARTY
+
+    // Inicializamos atributos internos de SMARTY
     $this->setConfigDir( $this->cgmSmartyConfigDir );
     $this->setCompileDir( $this->cgmSmartyCompileDir );
     $this->setCacheDir( $this->cgmSmartyCacheDir );
 
+
     // Smarty Hack: http://www.smarty.net/forums/viewtopic.php?t=21352&sid=88c6bbab5fb1fd84d3e4f18857d3d10e
-    Smarty::muteExpectedErrors();
+    //Smarty::muteExpectedErrors();
   }
 
 
