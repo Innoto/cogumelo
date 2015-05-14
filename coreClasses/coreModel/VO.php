@@ -195,12 +195,12 @@ Class VO
    * @return array
    */
   function getCols( $realCols = false ){
-
+    global $LANG_AVAILABLE;
     $retCols = array();
 
     foreach( $this::$cols as $colK=>$col ) {
       if( isset($col['multilang']) && $col['multilang'] == true && $realCols) {
-        foreach ( explode(',', LANG_AVAILABLE) as $langKey) {
+        foreach ( array_keys($LANG_AVAILABLE) as $langKey) {
           $retCols[ $colK.'_'.$langKey ] = $col;   
         }
       }
@@ -287,8 +287,10 @@ Class VO
 
 
   function langKey( $key, $getKey = false ) {
+
+    global $LANG_AVAILABLE;
     $ret = false;
-    $regex = '#(.*)_(('.implode(')|(', explode(',',LANG_AVAILABLE) ).'))#';
+    $regex = '#(.*)_(('.implode(')|(', array_keys($LANG_AVAILABLE) ).'))#';
 
     $pm = preg_match($regex, $key, $match);
 
