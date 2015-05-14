@@ -169,9 +169,11 @@ class DevelView extends View
     else{
       $this->template->assign("infoGetTextUpdate" , 'False');
     }
+    
+    global $LANG_AVAILABLE;
 
     $this->template->assign("infoLangDefault" , LANG_DEFAULT);
-    $this->template->assign("infoLangAvailable" , LANG_AVAILABLE);
+    $this->template->assign("infoLangAvailable" , implode(',',array_keys($LANG_AVAILABLE)) );
 
   }
 
