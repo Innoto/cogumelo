@@ -41,6 +41,14 @@ class Template extends Smarty
 
     $this->baseDir = $baseDir;
 
+    global $COGUMELO_SMARTY_CONSTANTS;
+    if( is_array( $COGUMELO_SMARTY_CONSTANTS ) ) {
+      foreach( $COGUMELO_SMARTY_CONSTANTS as $key => $value ) {
+        error_log( 'Template - COGUMELO_SMARTY_CONSTANTS: ' . $key );
+        $this->assign( $key, $value );
+      }
+    }
+
     // En caso de que Smarty no encuentre un TPL, usa este metodo para buscarlo
     $this->default_template_handler_func = 'ModuleController::cogumeloSmartyTemplateHandlerFunc';
 

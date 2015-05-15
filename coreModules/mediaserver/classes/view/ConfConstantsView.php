@@ -3,19 +3,19 @@
 class ConfConstantsView {
 
 
-  function __construct() {
+  public function __construct() {
 
   }
 
 
-  function less(){
+  public function less(){
 
     global $MEDIASERVER_LESS_CONSTANTS;
 
     header('Content-Type: text/less');
     echo '/* COGUMELO SETUP CONSTANTS */'."\n";
-    if( sizeof($MEDIASERVER_LESS_CONSTANTS) > 0 ) {
-      foreach ($MEDIASERVER_LESS_CONSTANTS as $name => $value) {
+    if( count( $MEDIASERVER_LESS_CONSTANTS ) > 0 ) {
+      foreach( $MEDIASERVER_LESS_CONSTANTS as $name => $value ) {
         echo '@'.$name.' : "'.$value.'";'."\n";
       }
     }
@@ -23,15 +23,14 @@ class ConfConstantsView {
   }
 
 
-  function javascript(){
+  public function javascript(){
 
     global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
 
     header('Content-Type: application/javascript');
-    
     echo '/* COGUMELO SETUP CONSTANTS */'."\n";
-    if( sizeof($MEDIASERVER_JAVASCRIPT_CONSTANTS) > 0 ) {
-      foreach ($MEDIASERVER_JAVASCRIPT_CONSTANTS as $name => $value) {
+    if( count( $MEDIASERVER_JAVASCRIPT_CONSTANTS ) > 0 ) {
+      foreach( $MEDIASERVER_JAVASCRIPT_CONSTANTS as $name => $value ) {
         if( is_string( $value ) ) {
           echo 'var '.$name.' = "'.$value.'";'."\n";
         }
@@ -41,7 +40,7 @@ class ConfConstantsView {
       }
     }
     echo '/* END SETUP CONSTANTS */'."\n";
-    
+
   }
 
 }

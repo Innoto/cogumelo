@@ -173,9 +173,19 @@ define( 'MEDIASERVER_COMPILE_LESS', false );
 
 global $MEDIASERVER_LESS_CONSTANTS;
 global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
-global $MEDIASERVER_SMARTY_CONSTANTS;
+$MEDIASERVER_LESS_CONSTANTS = array(
+  'variable1' => 1, 'variable2' => 'red', 'variable3' => 'blue'
+);
+$MEDIASERVER_JAVASCRIPT_CONSTANTS = array(
+  'langDefault' => LANG_DEFAULT,
+  //'langAvailable' => $LANG_AVAILABLE,
+  'variable1' => 5, 'variable2'=>'red', 'variable3' => 'blue'
+);
 
-$MEDIASERVER_LESS_CONSTANTS = array( 'variable1' => 1, 'variable2' => 'red', 'variable3' => 'blue' );
-$MEDIASERVER_JAVASCRIPT_CONSTANTS = array( 'variable1' => 5, 'variable2'=>'red', 'variable3' => 'blue' );
-$MEDIASERVER_SMARTY_CONSTANTS = array( 'lang_default' => LANG_DEFAULT );
+
+global $COGUMELO_SMARTY_CONSTANTS;
+$COGUMELO_SMARTY_CONSTANTS = array(
+  'langDefault' => LANG_DEFAULT,
+  'langAvailable' => $LANG_AVAILABLE
+);
 
