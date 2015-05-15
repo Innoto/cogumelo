@@ -14,7 +14,7 @@ class ConfConstantsView {
 
     header('Content-Type: text/less');
     echo '/* COGUMELO SETUP CONSTANTS */'."\n";
-    if( count( $MEDIASERVER_LESS_CONSTANTS ) > 0 ) {
+    if( is_array( $MEDIASERVER_LESS_CONSTANTS ) && count( $MEDIASERVER_LESS_CONSTANTS ) > 0 ) {
       foreach( $MEDIASERVER_LESS_CONSTANTS as $name => $value ) {
         echo '@'.$name.' : "'.$value.'";'."\n";
       }
@@ -29,7 +29,7 @@ class ConfConstantsView {
 
     header('Content-Type: application/javascript');
     echo '/* COGUMELO SETUP CONSTANTS */'."\n";
-    if( count( $MEDIASERVER_JAVASCRIPT_CONSTANTS ) > 0 ) {
+    if( is_array( $MEDIASERVER_JAVASCRIPT_CONSTANTS ) && count( $MEDIASERVER_JAVASCRIPT_CONSTANTS ) > 0 ) {
       foreach( $MEDIASERVER_JAVASCRIPT_CONSTANTS as $name => $value ) {
         if( is_string( $value ) ) {
           echo 'var '.$name.' = "'.$value.'";'."\n";
