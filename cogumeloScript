@@ -41,7 +41,7 @@
         case 'createDB': // create database
           createDB();
           break;
-        case 'createRelSchemes': 
+        case 'createRelSchemes':
           createRelSchemes();
           break;
 
@@ -83,7 +83,7 @@
             $dependencesControl->installDependences();
           break;
 
-        case 'generateTranslations':        
+        case 'generateTranslations':
           Cogumelo::load('coreController/i18nScriptController.php');
           $i18nscriptController = new i18nScriptController();
           $i18nscriptController->setEnviroment();
@@ -105,7 +105,7 @@
           $i18nscriptController->setEnviroment();
           $i18nscriptController->c_i18n_json();
           echo "The files.json are ready to be used!\n";
-          break;  
+          break;
 
         /* We execute this two actions from web as we need to operate with the apache permissions*/
         case 'flush': // delete temporary files
@@ -254,21 +254,22 @@
     }
   }
 
-
-  function setPermissions() {
+  function setPermissions( $devel = false ) {
     makeAppPaths();
+
+    $extPerms = $devel ? ',ugo+rX' : '';
 
     exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
       APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
       MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
       LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
 
-    exec( 'chmod -R g-wx,g+rX,o-rwx '.WEB_BASE_PATH );
+    exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH );
 
-    exec( 'chmod -R g-wx,g+rX,o-rwx '.APP_BASE_PATH );
+    exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.APP_BASE_PATH );
 
-    // Path que necesitan escritura
-    exec( 'chmod -R ug+rwX '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+    // Path que necesitan escritura Apache
+    exec( 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
       MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
       LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
 
@@ -279,45 +280,25 @@
     echo "Permissions ready!\n";
   }
 
-
-  function setPermissionsDevel(){
-    makeAppPaths();
-
-    exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
-      APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
-      MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
-      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
-
-    exec( 'chmod -R u-x,go-wx,ugo+rX '.WEB_BASE_PATH );
-
-    exec( 'chmod -R go-wx,go+rX '.APP_BASE_PATH );
-
-    // Path que necesitan escritura
-    exec( 'chmod -R ug+rwX,o+rX '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
-      MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
-      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
-
-    // Solo usuario administrador
-    exec( 'sudo chown $USER:$USER '.BCK );
-    exec( 'chmod -R go-rwx '.BCK );
-
-    echo "Permissions ready!\n";
+  function setPermissionsDevel() {
+    setPermissions( true );
   }
 
-  function doBackup($BD, $user, $file){
 
-    if (!$file)
+  function doBackup( $BD, $user, $file ) {
+    if( !$file ) {
       $file = date('Ymd-Hms').'-'.$BD.'.sql';
+    }
 
     $DIR = BCK;
 
-    popen('mysqldump -u '.$user.' -p '.$BD.'> '.$DIR.'/'.$file, 'r');
-    exec('sudo gzip '.$DIR.'/'.$file);
-    exec('chmod go-rwx '.$DIR.'/*');
+    popen( 'mysqldump -u ' . $user . ' -p ' . $BD . '> ' . $DIR . '/' . $file, 'r' );
+    exec( 'gzip ' . $DIR . '/' . $file );
+    exec( 'chmod go-rwx ' . $DIR . '/' . $file . '*' );
     echo "\nYour db was successfully saved!\n";
   }
 
-  function restoreDB($BD, $user, $file){
+  function restoreDB( $BD, $user, $file ) {
 
     $DIR = BCK;
 
@@ -330,7 +311,7 @@
       popen('mysql -u '.$user.' -p '.$BD.'< '.$DIR.$file, 'r');
     }
     echo "\nYour db was successfully restored!\n";
-}
+  }
 
   /**
    * Get data from the shell.
