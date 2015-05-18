@@ -135,9 +135,15 @@ define( 'GETTEXT_UPDATE', true ); // update gettext files when working in localh
 
 global $LANG_AVAILABLE;
 $LANG_AVAILABLE = array(
-  'es' => array('i18n' => 'es_ES'),
-  'gl' => array('i18n' => 'gl_ES'),
-  'en' => array('i18n' => 'en_US')
+  'es' => array(
+    'i18n' => 'es_ES',
+    'name' => 'Español' ),
+  'gl' => array(
+    'i18n' => 'gl_ES',
+    'name' => 'Galego' ),
+  'en' => array(
+    'i18n' => 'en_US',
+    'name' => 'English' ),
 );
 define( 'LANG_DEFAULT', 'es' );
 
