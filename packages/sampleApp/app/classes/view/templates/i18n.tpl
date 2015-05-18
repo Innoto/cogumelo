@@ -23,5 +23,10 @@
 {_("haimarea")}
 	{t}miau{/t} 
 
-	{t}PRUEBA{/t}
+{assign var="name" value="{t}PRUEBA{/t}"}
+{$name}
+
+	<input id="test" value="{t}PRUEBA{/t}"/>
+
+
 </body>
