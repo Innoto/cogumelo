@@ -35,8 +35,11 @@ class TableController{
   var $searchId = 'tableSearch';
   var $currentTab = '*';
   var $filters = array();
-  var $internalFilters = array();
+  var $defaultFilters = array();
   var $rowsEachPage = 50;
+  var $affectsDependences = false;
+  var $joinType = 'LEFT';
+
 
   /**
   * @param object $model: is the data model
@@ -138,13 +141,35 @@ class TableController{
 
 
   /**
-  * Set internal filters array
+  * Set default filters array
   *
-  * @param array $internalFilters
+  * @param array $defaultFilters
   * @return void
   */
-  function setInternalFilters( $internalFilters ) {
-    $this->internalFilters = $internalFilters;
+  function setDefaultFilters( $defaultFilters ) {
+    $this->defaultFilters = $defaultFilters;
+  }
+
+
+  /**
+  * Set affectsDependences array
+  *
+  * @param array $defaultFilters
+  * @return void
+  */
+  function setaffectsDependences( $affectsDependences ) {
+    $this->affectsDependences = $affectsDependences;
+  }
+
+
+  /**
+  * Set setJoinType array
+  *
+  * @param string $joinType
+  * @return void
+  */
+  function setJoinType( $joinType ) {
+    $this->joinType = $joinType;
   }
 
 
@@ -164,7 +189,7 @@ class TableController{
       $retFilters[ $this->tabs['tabsKey'] ] = $this->currentTab;
     }
 
-    $retFilters = array_merge( $retFilters, $this->internalFilters );
+    $retFilters = array_merge( $retFilters, $this->defaultFilters );
 
     return $retFilters;
   }
@@ -374,10 +399,12 @@ class TableController{
     $p = array(
         'filters' =>  $this->getFilters(),
         'range' => $this->clientData["range"],
-        'order' => $this->orderIntoArray()
+        'order' => $this->orderIntoArray(),
+        'affectsDependences' => $this->affectsDependences , //array('ResourceTopicModel'),
+        'joinType' => $this->joinType 
     );
     eval('$lista = $this->model->'. $this->controllerMethodAlias['list'].'( $p );');
-    eval('$totalRows = $this->model->'. $this->controllerMethodAlias['count'].'( array( "filters" => $this->getFilters()) );');
+    eval('$totalRows = $this->model->'. $this->controllerMethodAlias['count'].'( $p );');
 
 
     // printing json table...
