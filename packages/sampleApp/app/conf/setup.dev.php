@@ -135,9 +135,15 @@ define( 'GETTEXT_UPDATE', true ); // update gettext files when working in localh
 
 global $LANG_AVAILABLE;
 $LANG_AVAILABLE = array(
-  'es' => array('i18n' => 'es_ES'),
-  'gl' => array('i18n' => 'gl_ES'),
-  'en' => array('i18n' => 'en_US')
+  'es' => array(
+    'i18n' => 'es_ES',
+    'name' => 'Español' ),
+  'gl' => array(
+    'i18n' => 'gl_ES',
+    'name' => 'Galego' ),
+  'en' => array(
+    'i18n' => 'en_US',
+    'name' => 'English' ),
 );
 define( 'LANG_DEFAULT', 'es' );
 
@@ -173,9 +179,19 @@ define( 'MEDIASERVER_COMPILE_LESS', false );
 
 global $MEDIASERVER_LESS_CONSTANTS;
 global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
-global $MEDIASERVER_SMARTY_CONSTANTS;
+$MEDIASERVER_LESS_CONSTANTS = array(
+  'variable1' => 1, 'variable2' => 'red', 'variable3' => 'blue'
+);
+$MEDIASERVER_JAVASCRIPT_CONSTANTS = array(
+  'langDefault' => LANG_DEFAULT,
+  //'langAvailable' => $LANG_AVAILABLE,
+  'variable1' => 5, 'variable2'=>'red', 'variable3' => 'blue'
+);
 
-$MEDIASERVER_LESS_CONSTANTS = array( 'variable1' => 1, 'variable2' => 'red', 'variable3' => 'blue' );
-$MEDIASERVER_JAVASCRIPT_CONSTANTS = array( 'variable1' => 5, 'variable2'=>'red', 'variable3' => 'blue' );
-$MEDIASERVER_SMARTY_CONSTANTS = array( 'lang_default' => LANG_DEFAULT );
+
+global $COGUMELO_SMARTY_CONSTANTS;
+$COGUMELO_SMARTY_CONSTANTS = array(
+  'langDefault' => LANG_DEFAULT,
+  'langAvailable' => $LANG_AVAILABLE
+);
 
