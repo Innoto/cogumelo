@@ -44,7 +44,7 @@ class Template extends Smarty
     global $COGUMELO_SMARTY_CONSTANTS;
     if( is_array( $COGUMELO_SMARTY_CONSTANTS ) && count( $COGUMELO_SMARTY_CONSTANTS ) > 0 ) {
       foreach( $COGUMELO_SMARTY_CONSTANTS as $key => $value ) {
-        error_log( 'Template - COGUMELO_SMARTY_CONSTANTS: ' . $key );
+        // error_log( 'Template - COGUMELO_SMARTY_CONSTANTS: ' . $key );
         $this->assign( $key, $value );
       }
     }
