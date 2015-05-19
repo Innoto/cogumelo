@@ -33,12 +33,12 @@ class CogumeloClass extends Singleton
        "installer" => 'composer',
        "includes" => array('libs/Smarty.class.php')
      ),
-     /*array(
+     array(
        "id" => "gettext",
        "params" => array('Gettext'),
        "installer" => 'manual',
-       "includes" => array('')
-     ),*/
+       "includes" => array('src/autoloader.php')
+     ),
      array(
      "id" => "smarty-gettext",
      "params" => array('smarty-gettext/smarty-gettext', '~1.1.1'),
