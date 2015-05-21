@@ -626,4 +626,3 @@ class UserView extends View
 
 
 }
-
