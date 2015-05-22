@@ -142,6 +142,8 @@ function formDoneOk( form, response ) {
   console.log( 'formDoneOk' );
   console.log( response );
 
+  var $validateForm = getFormInfo( $( form ).attr( 'id' ), 'validateForm' );
+
   var successActions = response.success;
   if ( successActions.jsEval ) {
     eval( successActions.jsEval );
@@ -676,4 +678,3 @@ function createSwitchFormLang( idForm ) {
 }
 
 /*** Form lang select - End ***/
-
