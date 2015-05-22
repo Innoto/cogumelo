@@ -604,7 +604,7 @@ class FormController implements Serializable {
         // Procesamos los campos que no son raiz de campos agrupados
         $fieldsValuesArray[ $fieldName ] = $this->getFieldValue( $fieldName );
 
-        error_log( $fieldName .' === '. print_r( $fieldsValuesArray[ $fieldName ], true ) );
+        // error_log( $fieldName .' === '. print_r( $fieldsValuesArray[ $fieldName ], true ) );
       }
       else {
         error_log( $fieldName .' IGNORADO!!! ' );
@@ -1916,7 +1916,7 @@ class FormController implements Serializable {
       foreach( $this->rules as $fieldName => $fieldRules ) {
         if( $this->getFieldInternal( $fieldName, 'groupCloneRoot' ) !== true ) {
           // Procesamos los campos que no son raiz de campos agrupados
-          error_log( 'validateForm: campo: '.$fieldName );
+          // error_log( 'validateForm: campo: '.$fieldName );
           $fieldValidated = $this->validateField( $fieldName );
           $formValidated = $formValidated && $fieldValidated;
         }
@@ -1941,11 +1941,11 @@ class FormController implements Serializable {
 
   /**
     Verifica que se cumplen las reglas establecidas para un campo
-    @param string $fieldName Nombre del campo
-    @return boolean
+  * @param string $fieldName Nombre del campo
+  * @return boolean
   */
   public function validateField( $fieldName ) {
-    error_log( 'validateField: '.$fieldName );
+    // error_log( 'validateField: '.$fieldName );
     $fieldValidated = true;
 
     if( $this->isEmptyFieldValue( $fieldName ) ) {

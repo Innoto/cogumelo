@@ -142,6 +142,8 @@ function formDoneOk( form, response ) {
   console.log( 'formDoneOk' );
   console.log( response );
 
+  var $validateForm = getFormInfo( $( form ).attr( 'id' ), 'validateForm' );
+
   var successActions = response.success;
   if ( successActions.jsEval ) {
     eval( successActions.jsEval );
@@ -167,6 +169,8 @@ function formDoneError( form, response ) {
   console.log( 'formDoneError' );
   console.log( response );
 
+  var $validateForm = getFormInfo( $( form ).attr( 'id' ), 'validateForm' );
+
   for(var i in response.jvErrors) {
     errObj = response.jvErrors[i];
     console.log( errObj );
@@ -179,7 +183,7 @@ function formDoneError( form, response ) {
         }
         errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
       }
-      console.log( errObj.JVshowErrors );
+      console.log( 'showErrors: ' + errObj.JVshowErrors );
       $validateForm.showErrors( errObj.JVshowErrors );
     }
     else {
@@ -674,4 +678,3 @@ function createSwitchFormLang( idForm ) {
 }
 
 /*** Form lang select - End ***/
-
