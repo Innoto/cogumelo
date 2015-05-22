@@ -167,6 +167,8 @@ function formDoneError( form, response ) {
   console.log( 'formDoneError' );
   console.log( response );
 
+  var $validateForm = getFormInfo( $( form ).attr( 'id' ), 'validateForm' );
+
   for(var i in response.jvErrors) {
     errObj = response.jvErrors[i];
     console.log( errObj );
@@ -179,7 +181,7 @@ function formDoneError( form, response ) {
         }
         errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
       }
-      console.log( errObj.JVshowErrors );
+      console.log( 'showErrors: ' + errObj.JVshowErrors );
       $validateForm.showErrors( errObj.JVshowErrors );
     }
     else {
