@@ -43,13 +43,13 @@ class RoleView extends View
 
 
 
+
   /**
    *
    * Create form fields and validations
    * @return object
    *
    **/
-
   function roleFormDefine( $dataVO = '' ) {
 
     $form = new FormController( 'roleForm', '/user/sendroleform' ); //actionform
@@ -59,7 +59,7 @@ class RoleView extends View
     $form->setField( 'id', array( 'type' => 'reserved', 'value' => null ) );
     $form->setField( 'name', array( 'placeholder' => 'Name' ) );
     $form->setField( 'description', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
-    $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
+    $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save', 'class' => 'gzzAdminToMove' ) );
 
     /******************************************************************************************** VALIDATIONS */
     $form->setValidationRule( 'name', 'required' );
@@ -148,4 +148,3 @@ class RoleView extends View
 
 
 }
-
