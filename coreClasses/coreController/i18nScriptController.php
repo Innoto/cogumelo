@@ -22,6 +22,7 @@ class i18nScriptController {
 		$this->dir_path = I18N_LOCALE;
 	    $this->dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
 	    $this->dir_modules = SITE_PATH.'modules/';
+	    $this->dir_modules_dist = COGUMELO_DIST_LOCATION.'/distModules/';
 	    $this->textdomain="messages";
 	    global $C_ENABLED_MODULES, $LANG_AVAILABLE;
 	    $this->modules = $C_ENABLED_MODULES;
@@ -76,6 +77,11 @@ class i18nScriptController {
 	    /************ PHP *************/
 	    /******************************/
 
+	    $files_php = array();
+	    $array_php_module = array();
+	    $array_php_module_c = array();
+	    $array_php_module_dist = array();
+
 	    // get all the .php files unless files into modules folder
 	    $all_files_php = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php'), false);
 	    foreach($all_files_php as $i => $dir){
@@ -108,6 +114,19 @@ class i18nScriptController {
 	      }
 	    }
 
+	    // get the .php files into distModules folder, if exists
+/*	    if ($this->dir_modules_dist){
+	    	$files_module_php_dist = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('php'), false);
+		    foreach ($this->modules as $i => $dir) {
+		      foreach ($files_module_php_dist as $k => $file) {
+		        $parts = explode('/'.$dir.'/',$file);
+		        if (sizeof($parts)==2){
+		          $array_php_module_dist[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
+		        }
+		      }
+		    }
+	    }*/
+
 	    // We combine all the arrays that we've got in an only array
 	    $array_php = array_merge($array_php_module, $array_php_module_c, $files_php);
 
@@ -135,6 +154,10 @@ class i18nScriptController {
         /******************************/
         /************* JS *************/
         /******************************/
+
+        $files_js = array();
+	    $array_js_module = array();
+	    $array_js_module_c = array();
 
         // get all the .js files unless files into modules folder
         $all_files_js = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('js'), false);
@@ -206,6 +229,11 @@ class i18nScriptController {
 
 	    // We will use the smarty-gettext pluggin to extract the strings to translate from .tpl files
 	    
+	    $files_tpl = array();
+	    $array_tpl_module = array();
+	    $array_tpl_module_c = array();
+	    $array_tpl_module_dist = array();
+
 	    // get all the .tpl files unless files into modules folder
 	    $all_files_tpl = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('tpl'), false);
 	    foreach($all_files_tpl as $i => $dir){
@@ -239,8 +267,19 @@ class i18nScriptController {
 	      }
 	    }
 
+		// get the .tpl files into distModules folder, if exists
+		$files_module_tpl_dist = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('tpl'), false);
+
+		foreach ($files_module_tpl_dist as $k => $file) {
+		    $array_tpl_module_dist[$k] = $file;
+		}
+		   
+	    
+
 	    // We combine all the arrays that we've got in an only array
-	    $array_tpl = array_merge($array_tpl_module, $array_tpl_module_c, $files_tpl);
+	    $array_tpl = array_merge($array_tpl_module, $array_tpl_module_c, $files_tpl, $array_tpl_module_dist);
+
+
 
 	    //temos o listado de todos os arquivos no array_tpl, falta saber cómo executalo
 	    // copiamos os ficheiros nun dir temporal
