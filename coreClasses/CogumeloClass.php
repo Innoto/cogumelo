@@ -81,6 +81,20 @@ class CogumeloClass extends Singleton
   }
 
 
+  public function viewUrl( $url ) {
+
+    // cut out the SITE_FOLDER and final slash from path
+    $url_path = preg_replace('#\/$#', '', preg_replace('#^'.SITE_FOLDER.'#', '', $url, 1) , 1);
+
+    // modules
+    $this->modules = new ModuleController( $url_path );
+    $url_path_after_modules = $this->modules->getLeftUrl();
+
+    // main request controller
+    self::load('coreController/RequestController.php');
+    $this->request = new RequestController($this->urlPatterns, $url_path_after_modules );
+  }
+
   //
   //  include
   //
