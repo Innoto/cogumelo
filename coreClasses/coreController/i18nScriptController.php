@@ -22,7 +22,7 @@ class i18nScriptController {
 		$this->dir_path = I18N_LOCALE;
 	    $this->dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
 	    $this->dir_modules = SITE_PATH.'modules/';
-	    $this->dir_modules_dist = COGUMELO_DIST_LOCATION.'/distModules/';
+	    $this->dir_modules_dist = COGUMELO_DIST_LOCATION;
 	    $this->textdomain="messages";
 	    global $C_ENABLED_MODULES, $LANG_AVAILABLE;
 	    $this->modules = $C_ENABLED_MODULES;
@@ -269,12 +269,13 @@ class i18nScriptController {
 
 		// get the .tpl files into distModules folder, if exists
 		$files_module_tpl_dist = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('tpl'), false);
+		if (sizeof($files_module_tpl_dist)>0){
+			foreach ($files_module_tpl_dist as $k => $file) {
+			    $array_tpl_module_dist[$k] = $file;
+			}
+		} 
 
-		foreach ($files_module_tpl_dist as $k => $file) {
-		    $array_tpl_module_dist[$k] = $file;
-		}
-		   
-	    
+
 
 	    // We combine all the arrays that we've got in an only array
 	    $array_tpl = array_merge($array_tpl_module, $array_tpl_module_c, $files_tpl, $array_tpl_module_dist);
