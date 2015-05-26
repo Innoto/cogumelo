@@ -115,20 +115,15 @@ class i18nScriptController {
 	    }
 
 	    // get the .php files into distModules folder, if exists
-/*	    if ($this->dir_modules_dist){
-	    	$files_module_php_dist = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('php'), false);
-		    foreach ($this->modules as $i => $dir) {
-		      foreach ($files_module_php_dist as $k => $file) {
-		        $parts = explode('/'.$dir.'/',$file);
-		        if (sizeof($parts)==2){
-		          $array_php_module_dist[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-		        }
-		      }
-		    }
-	    }*/
+		$files_module_php_dist = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('php'), false);
+		if (sizeof($files_module_php_dist)>0){
+			foreach ($files_module_php_dist as $k => $file) {
+			    $array_php_module_dist[$k] = $file;
+			}
+		} 
 
 	    // We combine all the arrays that we've got in an only array
-	    $array_php = array_merge($array_php_module, $array_php_module_c, $files_php);
+	    $array_php = array_merge($array_php_module, $array_php_module_c, $files_php, $array_php_module_dist);
 
 	    //Now save the php.po file with the result
 	    foreach ($this->dir_lc as $l){
@@ -145,7 +140,8 @@ class i18nScriptController {
 		    else{ //create
 		      $entries_php = Gettext\Extractors\PhpCode::fromFile($array_php);
 		    }
-		    
+		  
+		  // Xenérase máis abaixo, despois de mezclar coas de js
 	      //Gettext\Generators\Po::generateFile($entries_php, $l.'/'.$this->textdomain.'.po');
 	    }
 
@@ -158,6 +154,7 @@ class i18nScriptController {
         $files_js = array();
 	    $array_js_module = array();
 	    $array_js_module_c = array();
+	    $array_js_module_dist = array();
 
         // get all the .js files unless files into modules folder
         $all_files_js = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('js'), false);
@@ -192,8 +189,16 @@ class i18nScriptController {
           }
         }
 
+        // get the .js files into distModules folder, if exists
+		$files_module_js_dist = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('js'), false);
+		if (sizeof($files_module_js_dist)>0){
+			foreach ($files_module_js_dist as $k => $file) {
+			    $array_js_module_dist[$k] = $file;
+			}
+		} 
+
         // We combine all the arrays that we've got in an only array
-        $array_js = array_merge($array_js_module, $array_js_module_c, $files_js);
+        $array_js = array_merge($array_js_module, $array_js_module_c, $files_js, $array_js_module_dist);
 
         //Now save the .po file with the result
         foreach ($this->dir_lc as $l){
@@ -295,11 +300,10 @@ class i18nScriptController {
 	      exec ('msgcat --use-first '.$l.'/'.$this->textdomain.'_prev.po '.$l.'/'.$this->textdomain.'_tpl.po > '.$l.'/'.$this->textdomain.'.po'); 
 	      exec ('rm '.$l.'/'.$this->textdomain.'_tpl.po');
 	      exec ('rm '.$l.'/'.$this->textdomain.'_prev.po');
-	      exec ('rm '.TPL_TMP.'/*.tpl');
-
-	      error_reporting(E_ALL);
 	    }
 
+	    exec ('rm '.TPL_TMP.'/*.tpl');
+		error_reporting(E_ALL);
 
 
 	    /*********** END TPL **********/
