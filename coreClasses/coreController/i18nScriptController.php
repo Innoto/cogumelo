@@ -73,223 +73,98 @@ class i18nScriptController {
 
 		error_reporting(E_ALL ^ E_NOTICE);
 
-    	/******************************/
-	    /************ PHP *************/
-	    /******************************/
+		$filesAll = $filesModules = $filesArray = array();
 
-	    $files_php = array();
-	    $array_php_module = array();
-	    $array_php_module_c = array();
-	    $array_php_module_dist = array();
+		$cogumeloFiles = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php','js','tpl'), false);
+		$cogumeloFilesModule = CacheUtilsController::listFolderFiles($this->dir_modules, array('php','js','tpl'), false);
+		$cogumeloFilesModuleC = CacheUtilsController::listFolderFiles($this->dir_modules_c, array('php','js','tpl'), false);
+		$appFiles = CacheUtilsController::listFolderFiles(COGUMELO_DIST_LOCATION, array('php','js','tpl'), false);
 
-	    // get all the .php files unless files into modules folder
-	    $all_files_php = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php'), false);
-	    foreach($all_files_php as $i => $dir){
-	      if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false
-	          && strpos($dir,'/vendorServer/')===false && strpos($dir,'/tmp/')===false){ // We exclude files from modules, tmp and vendorServer
-	            $files_php[$i] = $dir->getRealPath();
-	      }
-	    }
+		$files = array_merge($cogumeloFiles, $appFiles);
+		$filesMod = array_merge($cogumeloFilesModule, $cogumeloFilesModuleC);
 
-	    // get the .php files into modules folder
-	    $files_module_php = CacheUtilsController::listFolderFiles($this->dir_modules, array('php'), false);
-	    foreach ($this->modules as $i => $dir) {
-	      foreach ($files_module_php as $k => $file) {
-	        $parts = explode('/'.$dir.'/',$file);
-	        if (sizeof($parts)==2){
-	          //$parts[1] = (string) ereg_replace('[[:space:]]+','',$parts[1]);
-	          $array_php_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-	        }
-	      }
-	    }
+		// get all the files unless files into modules folder, excluding tmp and vendor folders
+		if ($files){
+		    foreach($files as $i => $dir){
+		      	if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false 
+		      	&& strpos($dir,'/vendor/')===false && strpos($dir,'/vendorPackages/')===false
+		        && strpos($dir,'/vendorServer/')===false && strpos($dir,'/tmp/')===false){ 
+		      		$parts = explode('.',$dir->getRealPath());
+				    switch($parts[1]){
+				      case 'php':
+				        $filesAll['php'][$i] = $dir->getRealPath();
+				        break;
+				      case 'js':
+				        $filesAll['js'][$i] = $dir->getRealPath();
+				        break;	
+				      case 'tpl':
+				        $filesAll['tpl'][$i] = $dir->getRealPath();
+				        break;	
+				    }
+				}
+		    }
+		}
 
-	    // get the .php files into coreModules folder
-	    $files_module_php_c = CacheUtilsController::listFolderFiles($this->dir_modules_c, array('php'), false);
-	    foreach ($this->modules as $i => $dir) {
-	      foreach ($files_module_php_c as $k => $file) {
-	        $parts = explode('/'.$dir.'/',$file);
-	        if (sizeof($parts)==2){
-	          $array_php_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-	        }
-	      }
-	    }
-
-	    // get the .php files into distModules folder, if exists
-		$files_module_php_dist = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('php'), false);
-		if (sizeof($files_module_php_dist)>0){
-			foreach ($files_module_php_dist as $k => $file) {
-			    $array_php_module_dist[$k] = $file;
+		// get the .php files into modules folder
+	    if ($filesMod && $this->modules){
+			foreach ($this->modules as $i => $dir) {
+			    foreach ($filesMod as $k => $file) {
+				    $outMod = explode('/'.$dir.'/',$file);
+				    if (sizeof($outMod)==2){
+				    	if(ModuleController::getRealFilePath($outMod[1], $dir)){
+  		        			$parts = explode('.',$file);
+  		        			switch($parts[1]){
+						      case 'php':
+						        $filesModules['php'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+						        break;
+						      case 'js':
+						        $filesModules['js'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+						        break;	
+						      case 'tpl':
+						        $filesModules['tpl'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+						        break;	
+						    }
+				    	}
+				    } 
+				}
 			}
-		} 
+		}
 
 	    // We combine all the arrays that we've got in an only array
-	    $array_php = array_merge($array_php_module, $array_php_module_c, $files_php, $array_php_module_dist);
+	    $filesArray = array_merge_recursive($filesAll, $filesModules);
+
+	    /************************** PHP e JS *******************************/
 
 	    //Now save the php.po file with the result
 	    foreach ($this->dir_lc as $l){
 	      if ($this->checkTranslations($l)){ //merge
 		      //Scan the php code to find the latest gettext entries
-		      $entries_php = Gettext\Extractors\PhpCode::fromFile($array_php);
+		      $entriesPhp = Gettext\Extractors\PhpCode::fromFile($filesArray['php']);
+		      $entriesJs = Gettext\Extractors\JsCode::fromFile($filesArray['js']);
+
+		      $entriesJs->mergeWith($entriesPhp);
 
 		      //Get the translations of the code that are stored in a po file
 		      $oldEntries = Gettext\Extractors\Po::fromFile($l.'/'.$this->textdomain.'.po');
 
 		      //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-		      $entries_php->mergeWith($oldEntries); //now $entries has all the values
+		      $entriesJs->mergeWith($oldEntries); //now $entries has all the values
 		    }
 		    else{ //create
-		      $entries_php = Gettext\Extractors\PhpCode::fromFile($array_php);
+		      $entriesPhp = Gettext\Extractors\PhpCode::fromFile($filesArray['php']);
+		      $entriesJs = Gettext\Extractors\JsCode::fromFile($filesArray['js']);
+		      $entriesJs->mergeWith($entriesPhp);
 		    }
-		  
-		  // Xenérase máis abaixo, despois de mezclar coas de js
-	      //Gettext\Generators\Po::generateFile($entries_php, $l.'/'.$this->textdomain.'.po');
+		  Gettext\Generators\Po::toFile($entriesJs, $l.'/'.$this->textdomain.'_prev.po');
 	    }
 
-	    /********** END PHP **********/
-
-        /******************************/
-        /************* JS *************/
-        /******************************/
-
-        $files_js = array();
-	    $array_js_module = array();
-	    $array_js_module_c = array();
-	    $array_js_module_dist = array();
-
-        // get all the .js files unless files into modules folder
-        $all_files_js = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('js'), false);
-        foreach($all_files_js as $i => $dir){
-          if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false
-            && strpos($dir,'/vendor/')===false && strpos($dir,'/vendorServer/')===false
-            && strpos($dir,'/pluggins/')===false && strpos($dir,'/jquery-validation/')===false
-            && strpos($dir,'/tmp/')===false){ // We exclude files from modules, tmp and vendorServer
-              $files_js[$i] = $dir->getRealPath();
-          }
-        }
-
-        // get the .js files into modules folder
-        $files_module_js = CacheUtilsController::listFolderFiles($this->dir_modules, array('js'), false);
-        foreach ($this->modules as $i => $dir) {
-          foreach ($files_module_js as $k => $file) {
-            $parts = explode('/'.$dir.'/',$file);
-            if (sizeof($parts)==2){
-              $array_js_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-            }
-          }
-        }
-
-        // get the .js files into coreModules folder
-        $files_module_js_c = CacheUtilsController::listFolderFiles($this->dir_modules_c, array('js'), false);
-        foreach ($this->modules as $i => $dir) {
-          foreach ($files_module_js_c as $k => $file) {
-            $parts = explode('/'.$dir.'/',$file);
-            if (sizeof($parts)==2){
-              $array_js_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-            }
-          }
-        }
-
-        // get the .js files into distModules folder, if exists
-		$files_module_js_dist = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('js'), false);
-		if (sizeof($files_module_js_dist)>0){
-			foreach ($files_module_js_dist as $k => $file) {
-			    $array_js_module_dist[$k] = $file;
-			}
-		} 
-
-        // We combine all the arrays that we've got in an only array
-        $array_js = array_merge($array_js_module, $array_js_module_c, $files_js, $array_js_module_dist);
-
-        //Now save the .po file with the result
-        foreach ($this->dir_lc as $l){
-      	  if ($this->checkTranslations($l)){ //merge
-
-	        //Scan the php code to find the latest gettext entries
-	        $entries_js = Gettext\Extractors\JsCode::fromFile($array_js);
-
-	        //Get the translations of the code that are stored in a po file
-	        $oldEntries = Gettext\Extractors\Po::fromFile($l.'/'.$this->textdomain.'.po');
-
-	        //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-	        $entries_js->mergeWith($oldEntries); //now $entries has all the values
-	      }
-	      else{ //create
-	        $entries_js = Gettext\Extractors\JsCode::fromFile($array_js);
-	      }
-
-          //Gettext\Generators\Po::generateFile($entries, $l.'/'.$this->textdomain.'.po');
-          $entries_js->mergeWith($entries_php);
-
-          Gettext\Generators\Po::toFile($entries_js, $l.'/'.$this->textdomain.'_prev.po');
-        }
-
-        /*********** END JS **********/ 	    
-
-        /******************************/
-    	/************* TPL *************/
-	    /******************************/
+	    /**************************** TPL ********************************/
 
 	    $smartygettext = DEPEN_COMPOSER_PATH.'/smarty-gettext/smarty-gettext/tsmarty2c.php';
 	    exec( 'chmod 700 '.$smartygettext );
 
-	    // We will use the smarty-gettext pluggin to extract the strings to translate from .tpl files
-	    
-	    $files_tpl = array();
-	    $array_tpl_module = array();
-	    $array_tpl_module_c = array();
-	    $array_tpl_module_dist = array();
-
-	    // get all the .tpl files unless files into modules folder
-	    $all_files_tpl = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('tpl'), false);
-	    foreach($all_files_tpl as $i => $dir){
-	      if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false
-	          && strpos($dir,'/vendor/')===false && strpos($dir,'/vendorServer/')===false
-	          && strpos($dir,'/pluggins/')===false && strpos($dir,'/jquery-validation/')===false
-	          && strpos($dir,'/tmp/')===false){ // We exclude files from modules, tmp and vendorServer
-	            $files_tpl[$i] = $dir->getRealPath();
-	      }
-	    }
-
-	    // get the .tpl files into modules folder
-	    $files_module_tpl = CacheUtilsController::listFolderFiles($this->dir_modules, array('tpl'), false);
-	    foreach ($this->modules as $i => $dir) {
-	      foreach ($files_module_tpl as $k => $file) {
-	        $parts = explode('/'.$dir.'/',$file);
-	        if (sizeof($parts)==2){
-	          $array_tpl_module[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-	        }
-	      }
-	    }
-
-	    // get the .tpl files into coreModules folder
-	    $files_module_tpl_c = CacheUtilsController::listFolderFiles($this->dir_modules_c, array('tpl'), false);
-	    foreach ($this->modules as $i => $dir) {
-	      foreach ($files_module_tpl_c as $k => $file) {
-	        $parts = explode('/'.$dir.'/',$file);
-	        if (sizeof($parts)==2){
-	          $array_tpl_module_c[$k] = ModuleController::getRealFilePath($parts[1], $dir);// Array of files with gettext strings
-	        }
-	      }
-	    }
-
-		// get the .tpl files into distModules folder, if exists
-		$files_module_tpl_dist = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('tpl'), false);
-		if (sizeof($files_module_tpl_dist)>0){
-			foreach ($files_module_tpl_dist as $k => $file) {
-			    $array_tpl_module_dist[$k] = $file;
-			}
-		} 
-
-
-
-	    // We combine all the arrays that we've got in an only array
-	    $array_tpl = array_merge($array_tpl_module, $array_tpl_module_c, $files_tpl, $array_tpl_module_dist);
-
-
-
-	    //temos o listado de todos os arquivos no array_tpl, falta saber cómo executalo
 	    // copiamos os ficheiros nun dir temporal
-	    foreach ($array_tpl as $a){
+	    foreach ($filesArray['tpl'] as $a){
 	      exec('cp '.$a.' '.TPL_TMP);
 	    }
 
@@ -304,21 +179,6 @@ class i18nScriptController {
 
 	    exec ('rm '.TPL_TMP.'/*.tpl');
 		error_reporting(E_ALL);
-
-
-	    /*********** END TPL **********/
-
-		/*if($_SERVER["REMOTE_ADDR"] == "127.0.0.1")
-		{
-			shell_exec('xgettext --from-code=UTF-8 -o '.SITE_PATH.'conf/i18n/en/LC_MESSAGES/messages.po '.SITE_PATH.'../*.php');
-			print('xgettext --from-code=UTF-8 -o '.SITE_PATH.'conf/i18n/en/LC_MESSAGES/messages.po '.SITE_PATH.'../*.php');
-			// Buscamos todos os textos en ficheiros .php
-			//exec('find '.COGUMELO_LOCATION.'/. ../app/. -iname "*.php" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code utf-8 -d c_project -o ../app/i18n/c_project.pot -L PHP');
-			foreach(explode(',', 'gl,es,en') as $lng) {
-				shell_exec('xgettext --from-code=UTF-8 -o /home/proxectos/cogumelo/c_packages/sampleApp/httpdocs/../app/conf/i18n/en/LC_MESSAGES/messages_'.$lng.'.po /home/proxectos/cogumelo/c_packages/sampleApp/httpdocs/../app/../*.php');
-			}
-	
-		}*/
 	}
 
 	/**
