@@ -9,7 +9,8 @@ class FiledataModel extends Model
   static $cols = array(
     'id' => array(
       'type' => 'INT',
-      'primarykey' => true
+      'primarykey' => true,
+      'autoincrement' => true
     ),
     'name' => array(
       'type' => 'CHAR',
