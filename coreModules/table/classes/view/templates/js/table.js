@@ -85,7 +85,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
 
-  that.load = function( doAction ) {
+  that.load = function( doAction, res ) {
 
     // range
     if( !that.tableData ) {
@@ -129,7 +129,7 @@ function cogumeloTable( tableId, tableUrl ) {
         that.setHeaders();
         that.setRows();
         that.setPager();
-
+        if (res) res();
       }
     });
 
@@ -420,7 +420,7 @@ function cogumeloTable( tableId, tableUrl ) {
     }
   }
 
-  that.actionOnSelectedRows = function() {
+  that.actionOnSelectedRows = function(actExt, resExt = false) {
 
     var selectedRows = [];
 
@@ -431,9 +431,13 @@ function cogumeloTable( tableId, tableUrl ) {
       }
     });
 
+    if(actExt)
+      act = actExt;
+    else
+      act = that.actionSelect.val();
 
-    if( that.actionSelect.val() != '0' && selectedRows.length > 0 ){
-      that.load( {action: that.actionSelect.val(), keys: selectedRows} );
+    if( act != '0' && selectedRows.length > 0 ){
+      that.load( {action: act, keys: selectedRows}, resExt );
     }
     else {
       that.load();
