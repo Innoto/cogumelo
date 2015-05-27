@@ -76,7 +76,7 @@ class i18nScriptController {
 		$filesAll = $filesModules = $filesArray = array();
 
 		$cogumeloFiles = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php','js','tpl'), false);
-		$cogumeloFilesModule = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php','js','tpl'), false);
+		$cogumeloFilesModule = CacheUtilsController::listFolderFiles($this->dir_modules, array('php','js','tpl'), false);
 		$cogumeloFilesModuleC = CacheUtilsController::listFolderFiles($this->dir_modules_c, array('php','js','tpl'), false);
 		$appFiles = CacheUtilsController::listFolderFiles(COGUMELO_DIST_LOCATION, array('php','js','tpl'), false);
 
@@ -158,7 +158,7 @@ class i18nScriptController {
 		  Gettext\Generators\Po::toFile($entriesJs, $l.'/'.$this->textdomain.'_prev.po');
 	    }
 
-	    /************************** TPL *******************************/
+	    /**************************** TPL ********************************/
 
 	    $smartygettext = DEPEN_COMPOSER_PATH.'/smarty-gettext/smarty-gettext/tsmarty2c.php';
 	    exec( 'chmod 700 '.$smartygettext );
