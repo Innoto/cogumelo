@@ -149,7 +149,7 @@ Class VO
 
     if( $this->isForeignKey( $key ) ){
       $retVO = new $voName( (array) $dataVO, $relObj );
-      $this->depData[ $key ] = $retVO;
+      $this->depData[ $key ][] = $retVO;
     }
     else {
       $retVO = new $voName( (array) $dataVO, $relObj );
@@ -378,7 +378,7 @@ Class VO
    *
    * @return array
    */
-  function getterDependence( $reference ) {
+  function getterDependence( $reference, $onlyModel = false ) {
     $depReturn = false;
 
     if( array_key_exists($reference, $this->depData) ){
