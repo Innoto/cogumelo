@@ -385,6 +385,25 @@ Class VO
       $depReturn = &$this->depData[ $reference ];
     }
 
+    if( $onlyModel && $depReturn ) {
+      $depsFiltered = array();
+
+
+      foreach ( $depReturn as $depK => $dep ) {
+
+        if( $dep->getVOClassName() == $onlyModel) {
+          $depsFiltered[ $depK ] = $dep;
+        }
+      }
+
+      if( sizeof($depsFiltered) ) {
+        $depReturn = $depsFiltered;
+      }
+      else {
+        $depReturn = false;
+      }
+    }
+
     return $depReturn;
   }
 
