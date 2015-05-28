@@ -9,11 +9,9 @@ class TableView {
 
 
   <script>
-    $(function() {
-      if( typeof pageTables == "undefined"){
-        var cogumeloTables = {};
-      }
 
+    var cogumeloTables = cogumeloTables || {};
+    $(function() {
       cogumeloTables.'. $tableId .' = new cogumeloTable("'. $tableId . '", "' . $tableDataUrl .'");
     });
   </script>
