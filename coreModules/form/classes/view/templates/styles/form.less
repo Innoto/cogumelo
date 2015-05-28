@@ -5,7 +5,7 @@
 // Variables
 // ------------------------------
 @MOD_FORM_CSS_PRE: 'cgmMForm';
-@formErrorColor: #1AB394;
+@formErrorColor: #4EBD88;
 @formErrorFontColor: #ffffff;
 @formErrorBckColor: @formErrorColor;
 @labelHeight: @inputHeight;
@@ -52,15 +52,15 @@ select{
 .cgmMForm-group-wrap .langSwitch { float: right; margin:0; }
 .cgmMForm-group-wrap .langSwitch li {
   display: none; padding: 0 0.5em; cursor: pointer; font-weight: bold;
-  border:1px dotted #1E90FF;
+  border:1px dotted @formErrorColor;
   background-color: #F5F5F5;
 }
 .cgmMForm-group-wrap .langSwitch:hover li { display: inline; }
 .cgmMForm-group-wrap .langSwitch .langActive {
   display: inline; cursor: no-drop;
   background-color: inherit;
-  color: #1E90FF;
+  color: @formErrorColor;
 }
-.cgmMForm-group-wrap .langSwitchIcon { float:right; color:#1E90FF }
+.cgmMForm-group-wrap .langSwitchIcon { float:right; color:@formErrorColor; }
 
 /*** Form lang select - End ***/
