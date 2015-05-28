@@ -1,372 +1,382 @@
 <?php
 
-  require_once(COGUMELO_LOCATION."/coreClasses/CogumeloClass.php");
-  require_once(SITE_PATH."/Cogumelo.php");
+require_once(COGUMELO_LOCATION."/coreClasses/CogumeloClass.php");
+require_once(SITE_PATH."/Cogumelo.php");
 
-  global $_C;
-  $_C =Cogumelo::get();
+global $_C;
+$_C =Cogumelo::get();
 
-  //
-  //  CARGO MÓDULO DEVEL E O DEVELDBCONTROLLER, QUE É ONDE ESTÁN OS MÉTODOS QUE NOS INTERESAN
-  //
-  require_once(ModuleController::getRealFilePath('devel.php', 'devel'));
-  require_once(ModuleController::getRealFilePath('classes/controller/DevelDBController.php', 'devel'));
-  require_once(ModuleController::getRealFilePath('classes/controller/CacheUtilsController.php', 'mediaserver'));
-  Cogumelo::load('coreController/ModuleController.php');
+//
+//  CARGO MÓDULO DEVEL E O DEVELDBCONTROLLER, QUE É ONDE ESTÁN OS MÉTODOS QUE NOS INTERESAN
+//
+require_once(ModuleController::getRealFilePath('devel.php', 'devel'));
+require_once(ModuleController::getRealFilePath('classes/controller/DevelDBController.php', 'devel'));
+require_once(ModuleController::getRealFilePath('classes/controller/CacheUtilsController.php', 'mediaserver'));
+Cogumelo::load('coreController/ModuleController.php');
 
-  //
-  //  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
-  //
-  //$develdbcontrol = new DevelDBController();
-  //var_dump( $develdbcontrol->getTablesSQL() ); // este método, por exemplo, devolvenos todo o  SQL xerado para os VO's do proxecto
+//
+//  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
+//
+//$develdbcontrol = new DevelDBController();
+//var_dump( $develdbcontrol->getTablesSQL() ); // este método, por exemplo, devolvenos todo o  SQL xerado para os VO's do proxecto
 
 
-   if ($argc>1){ //parameters handler
-      switch($argv[1]){
-        case 'setPermissions': // set the files/folders permission
-          setPermissions();
-          break;
+if( $argc > 1 ) {
+  //parameters handler
+  switch( $argv[1] ) {
+    case 'setPermissions': // set the files/folders permission
+      setPermissions();
+      break;
 
-        case 'setPermissionsDevel': // set the files/folders permission
-          setPermissionsDevel();
-          break;
+    case 'setPermissionsDevel': // set the files/folders permission
+      setPermissionsDevel();
+      break;
 
-        case 'generateModel':
-          createDB();
-          createRelSchemes();
-          createTables();
-          initModules();
-          break;
+    case 'generateModel':
+      createDB();
+      createRelSchemes();
+      createTables();
+      initModules();
+      break;
 
-        case 'createDB': // create database
-          createDB();
-          break;
-        case 'createRelSchemes':
-          createRelSchemes();
-          break;
+    case 'createDB': // create database
+      createDB();
+      break;
+    case 'createRelSchemes':
+      createRelSchemes();
+      break;
 
-        case 'createTables': // create database tables
-          createTables();
-          break;
+    case 'createTables': // create database tables
+      createTables();
+      break;
 
-        case 'initModules': // execute ::moduleRc() of all modules
-          initModules();
+    case 'initModules': // execute ::moduleRc() of all modules
+      initModules();
 
-          break;
+      break;
 
-        case 'bckDB': // do the backup of the db
-          if ($argc>2){
-            $file = $argv[2].'.sql';//name of the backup file
-          }
-          else{
-            $file = false;
-          }
-          $user =  ReadStdin('Enter an user with privileges: ', '');
-          doBackup(DB_NAME, $user, $file);
-          break;
+    case 'bckDB': // do the backup of the db
+      if ($argc>2){
+        $file = $argv[2].'.sql';//name of the backup file
+      }
+      else{
+        $file = false;
+      }
+      $user =  ReadStdin('Enter an user with privileges: ', '');
+      doBackup(DB_NAME, $user, $file);
+      break;
 
-        case 'restoreDB': // restore the backup of a given db
-          if ($argc>2){
-           $db = $argv[2];
-           $user =  ReadStdin('Enter an user with privileges: ', '');
-           restoreDB(DB_NAME, $user, $db);
-          }
-          else{
-            echo "You must especify the database to restore\n";
-          }
-          break;
+    case 'restoreDB': // restore the backup of a given db
+      if ($argc>2){
+        $db = $argv[2];
+        $user =  ReadStdin('Enter an user with privileges: ', '');
+        restoreDB(DB_NAME, $user, $db);
+      }
+      else{
+        echo "You must especify the database to restore\n";
+      }
+      break;
 
-        case 'installDependences':
-            Cogumelo::load('coreController/DependencesController.php');
+    case 'installDependences':
+      Cogumelo::load('coreController/DependencesController.php');
+      $dependencesControl = new DependencesController();
+      $dependencesControl->installDependences();
+      break;
 
-            $dependencesControl = new DependencesController();
-            $dependencesControl->installDependences();
-          break;
+    case 'generateTranslations':
+      Cogumelo::load('coreController/i18nScriptController.php');
+      $i18nscriptController = new i18nScriptController();
+      $i18nscriptController->setEnviroment();
+      $i18nscriptController->c_i18n_gettext();
+      echo "The files.po are ready to be edited!\n";
+    break;
 
-        case 'generateTranslations':
-          Cogumelo::load('coreController/i18nScriptController.php');
-          $i18nscriptController = new i18nScriptController();
-          $i18nscriptController->setEnviroment();
-          $i18nscriptController->c_i18n_gettext();
-          echo "The files.po are ready to be edited!\n";
-        break;
+    case 'compileTranslations':
+      actionCompileTranslations();
+      break;
 
-        case 'compileTranslations':
-          Cogumelo::load('coreController/i18nScriptController.php');
-          $i18nscriptController = new i18nScriptController();
-          $i18nscriptController->setEnviroment();
-          $i18nscriptController->c_i18n_compile();
-          echo "The files.mo are ready to be used!\n";
-          break;
+    case 'jsonTranslations':
+      Cogumelo::load('coreController/i18nScriptController.php');
+      $i18nscriptController = new i18nScriptController();
+      $i18nscriptController->setEnviroment();
+      $i18nscriptController->c_i18n_json();
+      echo "The files.json are ready to be used!\n";
+      break;
 
-        case 'jsonTranslations':
-          Cogumelo::load('coreController/i18nScriptController.php');
-          $i18nscriptController = new i18nScriptController();
-          $i18nscriptController->setEnviroment();
-          $i18nscriptController->c_i18n_json();
-          echo "The files.json are ready to be used!\n";
-          break;
+    /* We execute this two actions from web as we need to operate with the apache permissions*/
+    case 'flush': // delete temporary files
+      actionFlush();
+      actionCompileTranslations();
+      break;
 
-        /* We execute this two actions from web as we need to operate with the apache permissions*/
-        case 'flush': // delete temporary files
-           exec('wget -q --spider http://cogumelo/cogumelo-server.php?q=flush');
-           echo "Temporary files deleted!\n";
-          break;
+    case 'rotateLogs':
+      exec('wget -q --spider cogumelo/cogumelo-server.php?q=rotate_logs');
+      echo "The logs have been stored\n";
+      break;
 
-        case 'rotateLogs':
-            exec('wget -q --spider cogumelo/cogumelo-server.php?q=rotate_logs');
-            echo "The logs have been stored\n";
-          break;
+    case 'generateClientCaches':
+      // setPermissions();
+      exec('wget -q --spider cogumelo/cogumelo-server.php?q=client_caches');
+      echo "All client cachés generated into 'httpdocs/mediacache/' folder \n";
+      break;
 
-        case 'generateClientCaches':
-//          setPermissions();
-          exec('wget -q --spider cogumelo/cogumelo-server.php?q=client_caches');
-          echo "All client cachés generated into 'httpdocs/mediacache/' folder \n";
-          break;
-        default:
-          echo "Invalid parameter;try:";
-          printOptions();
+    default:
+      echo "Invalid parameter;try:";
+      printOptions();
 
-      }//end switch
-  }//end parameters handler
-  else{
-    echo "You have to write an option:";
-    printOptions();
+  }//end switch
+}//end parameters handler
+else{
+  echo "You have to write an option:";
+  printOptions();
+}
+
+
+function actionCompileTranslations() {
+  Cogumelo::load('coreController/i18nScriptController.php');
+  $i18nscriptController = new i18nScriptController();
+  $i18nscriptController->setEnviroment();
+  $i18nscriptController->c_i18n_compile();
+  echo "The files.mo are ready to be used!\n";
+}
+
+function actionFlush() {
+  exec( 'wget -q --spider http://cogumelo/cogumelo-server.php?q=flush' );
+  echo "Temporary files deleted!\n";
+}
+
+
+function printOptions(){
+  echo "\n
+ + Permissions and dependences
+    * flush                   Remove temporary files
+    * generateClientCaches    Cache all js, css, compiled less and other client files
+    * setPermissions          Set the files/folders permission
+    * setPermissionsDevel     Set the files/folders permission
+    * installDependences          Install all modules dependencies
+
+ + Database
+    * generateModel           Execute all options below in the same order
+      - createDB                Create a database
+      - createTables            Generate the tables
+      - createRelSchemes        Generate relationship tmp files
+      - initModules             Execute '::moduleRc()' of all modules
+    * bckDB                       Do a DB backup (optional arg: filename)
+    * restoreDB                   Restore a database
+
+ + Internationalization
+    * generateTranslations        Get all the web text into a file.po
+    * compileTranslations         Compile file.po and get the translations ready
+  \n\n";
+}
+
+function createDB(){
+
+  echo "\nDatabase configuration\n";
+
+  $user =  ReadStdin("Enter an user with privileges:\n", '');
+  // Get the password
+  fwrite(STDOUT, "Enter the password:\n");
+  $passwd = getPassword(true);
+  fwrite(STDOUT, "\n--\n");
+
+  $develdbcontrol = new DevelDBController($user, $passwd);
+  $develdbcontrol->createSchemaDB();
+  echo "\nDatase created!\n";
+}
+
+
+function createRelSchemes() {
+
+  echo "\nCreating relationship schemes\n";
+
+  global $C_ENABLED_MODULES;
+
+  foreach($C_ENABLED_MODULES as $moduleName) {
+    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
   }
 
+  Cogumelo::load('coreModel/VOUtils.php');
 
-  function printOptions(){
-    echo "\n
-   + Permissions and dependences
-      * flush                   Remove temporary files
-      * generateClientCaches    Cache all js, css, compiled less and other client files
-      * setPermissions          Set the files/folders permission
-      * setPermissionsDevel     Set the files/folders permission
-      * installDependences          Install all modules dependencies
+  $dir = APP_TMP_PATH.'/modelRelationship';
 
-   + Database
-      * generateModel           Execute all options below in the same order
-        - createDB                Create a database
-        - createTables            Generate the tables
-        - createRelSchemes        Generate relationship tmp files
-        - initModules             Execute '::moduleRc()' of all modules
-      * bckDB                       Do a DB backup (optional arg: filename)
-      * restoreDB                   Restore a database
-
-   + Internationalization
-      * generateTranslations        Get all the web text into a file.po
-      * compileTranslations         Compile file.po and get the translations ready
-    \n\n";
-  }
-
-  function createDB(){
-
-    echo "\nDatabase configuration\n";
-
-    $user =  ReadStdin("Enter an user with privileges:\n", '');
-    // Get the password
-    fwrite(STDOUT, "Enter the password:\n");
-    $passwd = getPassword(true);
-    fwrite(STDOUT, "\n--\n");
-
-    $develdbcontrol = new DevelDBController($user, $passwd);
-    $develdbcontrol->createSchemaDB();
-    echo "\nDatase created!\n";
-  }
-
-
-  function createRelSchemes() {
-
-    echo "\nCreating relationship schemes\n";
-
-    global $C_ENABLED_MODULES;
-
-    foreach($C_ENABLED_MODULES as $moduleName) {
-      require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+  if( !is_dir( $dir ) ) {
+    if( !mkdir( $dir, 0777, true ) ) {
+      echo 'ERROR: Imposible crear el dirirectorio: '.$dir."\n";
     }
+  }
 
-    Cogumelo::load('coreModel/VOUtils.php');
+  VOUtils::createModelRelTreeFiles();
+}
 
-    $dir = APP_TMP_PATH.'/modelRelationship';
 
+function createTables(){
+
+  echo "\nCreating DDBB tables, deleting old if exist\n";
+
+  global $C_ENABLED_MODULES;
+
+  foreach($C_ENABLED_MODULES as $moduleName) {
+    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+  }
+
+  $user =  ReadStdin("Enter an user with privileges:\n", '');
+  // Get the password
+  fwrite(STDOUT, "Enter the password:\n");
+  $passwd = getPassword(true);
+  fwrite(STDOUT, "\n--\n");
+
+  $develdbcontrol = new DevelDBController($user, $passwd, DB_NAME);
+
+  $develdbcontrol->createTables();
+  echo "\nGenerated db tables\n";
+}
+
+function initModules() {
+  global $C_ENABLED_MODULES;
+
+  foreach($C_ENABLED_MODULES as $moduleName) {
+    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+    eval($moduleName.'::moduleRc();');
+  }
+  echo "\nModules initialized\n";
+}
+
+function makeAppPaths() {
+  global $lc, $LANG_AVAILABLE;
+  $md_1 = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
+    MEDIASERVER_TMP_CACHE_PATH, WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH,
+    LOGDIR, MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, BCK, I18N, I18N_LOCALE,TPL_TMP );
+
+  $i = 0;
+  foreach ($LANG_AVAILABLE as $l=>$lang){
+    $lc[$i] = I18N_LOCALE.$lang['i18n'].'/LC_MESSAGES';
+    $i = $i+1;
+  }
+
+  $md = array_merge($md_1, $lc);
+
+  foreach( $md as $dir ) {
     if( !is_dir( $dir ) ) {
       if( !mkdir( $dir, 0777, true ) ) {
         echo 'ERROR: Imposible crear el dirirectorio: '.$dir."\n";
       }
     }
+  }
+}
 
-    VOUtils::createModelRelTreeFiles();
+function setPermissions( $devel = false ) {
+  makeAppPaths();
+
+  $extPerms = $devel ? ',ugo+rX' : '';
+
+  exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
+    APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+    MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
+    LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
+
+  exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH );
+
+  exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.APP_BASE_PATH );
+
+  // Path que necesitan escritura Apache
+  exec( 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+    MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
+    LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
+
+  // Solo usuario administrador
+  exec( 'sudo chown $USER:$USER '.BCK );
+  exec( 'chmod -R go-rwx '.BCK );
+
+  echo "Permissions ready!\n";
+}
+
+function setPermissionsDevel() {
+  setPermissions( true );
+}
+
+
+function doBackup( $BD, $user, $file ) {
+  if( !$file ) {
+    $file = date('Ymd-Hms').'-'.$BD.'.sql';
   }
 
+  $DIR = BCK;
 
-  function createTables(){
+  popen( 'mysqldump -u ' . $user . ' -p ' . $BD . '> ' . $DIR . '/' . $file, 'r' );
+  exec( 'gzip ' . $DIR . '/' . $file );
+  exec( 'chmod go-rwx ' . $DIR . '/' . $file . '*' );
+  echo "\nYour db was successfully saved!\n";
+}
 
-    echo "\nCreating DDBB tables, deleting old if exist\n";
+function restoreDB( $BD, $user, $file ) {
 
-    global $C_ENABLED_MODULES;
+  $DIR = BCK;
 
-    foreach($C_ENABLED_MODULES as $moduleName) {
-      require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-    }
-
-    $user =  ReadStdin("Enter an user with privileges:\n", '');
-    // Get the password
-    fwrite(STDOUT, "Enter the password:\n");
-    $passwd = getPassword(true);
-    fwrite(STDOUT, "\n--\n");
-
-    $develdbcontrol = new DevelDBController($user, $passwd, DB_NAME);
-
-    $develdbcontrol->createTables();
-    echo "\nGenerated db tables\n";
+  $type = exec('file '.$DIR.$file);
+  $position = strpos($type, 'gzip');
+  if ($position!=false){
+    popen('gunzip -c '.$DIR.$file.' | mysql -u '.$user.' -p '.$BD, 'r');
   }
-
-  function initModules() {
-    global $C_ENABLED_MODULES;
-
-    foreach($C_ENABLED_MODULES as $moduleName) {
-      require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-      eval($moduleName.'::moduleRc();');
-    }
-    echo "\nModules initialized\n";
+  else{
+    popen('mysql -u '.$user.' -p '.$BD.'< '.$DIR.$file, 'r');
   }
+  echo "\nYour db was successfully restored!\n";
+}
 
-  function makeAppPaths() {
-    global $lc, $LANG_AVAILABLE;
-    $md_1 = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
-      MEDIASERVER_TMP_CACHE_PATH, WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH,
-      LOGDIR, MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, BCK, I18N, I18N_LOCALE,TPL_TMP );
-
-    $i = 0;
-    foreach ($LANG_AVAILABLE as $l=>$lang){
-      $lc[$i] = I18N_LOCALE.$lang['i18n'].'/LC_MESSAGES';
-      $i = $i+1;
-    }
-
-    $md = array_merge($md_1, $lc);
-
-    foreach( $md as $dir ) {
-      if( !is_dir( $dir ) ) {
-        if( !mkdir( $dir, 0777, true ) ) {
-          echo 'ERROR: Imposible crear el dirirectorio: '.$dir."\n";
+/**
+ * Get data from the shell.
+ */
+function ReadStdin($prompt, $valid_inputs, $default = '') {
+    while(!isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input))) {
+        echo $prompt;
+        $input = strtolower(trim(fgets(STDIN)));
+        if(empty($input) && !empty($default)) {
+            $input = $default;
         }
-      }
     }
-  }
+    return $input;
+}
 
-  function setPermissions( $devel = false ) {
-    makeAppPaths();
+/**
+ * Get a password from the shell.
+ * This function works on *nix systems only and requires shell_exec and stty.
+ *
+ * @param  boolean $stars Wether or not to output stars for given characters
+ * @return string
+ */
+function getPassword( $stars = false ) {
+  // Get current style
+  $oldStyle = shell_exec('stty -g');
 
-    $extPerms = $devel ? ',ugo+rX' : '';
+  if ($stars === false) {
+      shell_exec('stty -echo');
+      $password = rtrim(fgets(STDIN), "\n");
+  } else {
+      shell_exec('stty -icanon -echo min 1 time 0');
 
-    exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
-      APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
-      MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
-      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
+      $password = '';
+      while (true) {
+          $char = fgetc(STDIN);
 
-    exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH );
-
-    exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.APP_BASE_PATH );
-
-    // Path que necesitan escritura Apache
-    exec( 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
-      MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
-      LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
-
-    // Solo usuario administrador
-    exec( 'sudo chown $USER:$USER '.BCK );
-    exec( 'chmod -R go-rwx '.BCK );
-
-    echo "Permissions ready!\n";
-  }
-
-  function setPermissionsDevel() {
-    setPermissions( true );
-  }
-
-
-  function doBackup( $BD, $user, $file ) {
-    if( !$file ) {
-      $file = date('Ymd-Hms').'-'.$BD.'.sql';
-    }
-
-    $DIR = BCK;
-
-    popen( 'mysqldump -u ' . $user . ' -p ' . $BD . '> ' . $DIR . '/' . $file, 'r' );
-    exec( 'gzip ' . $DIR . '/' . $file );
-    exec( 'chmod go-rwx ' . $DIR . '/' . $file . '*' );
-    echo "\nYour db was successfully saved!\n";
-  }
-
-  function restoreDB( $BD, $user, $file ) {
-
-    $DIR = BCK;
-
-    $type = exec('file '.$DIR.$file);
-    $position = strpos($type, 'gzip');
-    if ($position!=false){
-      popen('gunzip -c '.$DIR.$file.' | mysql -u '.$user.' -p '.$BD, 'r');
-    }
-    else{
-      popen('mysql -u '.$user.' -p '.$BD.'< '.$DIR.$file, 'r');
-    }
-    echo "\nYour db was successfully restored!\n";
-  }
-
-  /**
-   * Get data from the shell.
-   */
-  function ReadStdin($prompt, $valid_inputs, $default = '') {
-      while(!isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input))) {
-          echo $prompt;
-          $input = strtolower(trim(fgets(STDIN)));
-          if(empty($input) && !empty($default)) {
-              $input = $default;
-          }
-      }
-      return $input;
-  }
-
-  /**
-   * Get a password from the shell.
-   * This function works on *nix systems only and requires shell_exec and stty.
-   *
-   * @param  boolean $stars Wether or not to output stars for given characters
-   * @return string
-   */
-  function getPassword($stars = false)
-  {
-      // Get current style
-      $oldStyle = shell_exec('stty -g');
-
-      if ($stars === false) {
-          shell_exec('stty -echo');
-          $password = rtrim(fgets(STDIN), "\n");
-      } else {
-          shell_exec('stty -icanon -echo min 1 time 0');
-
-          $password = '';
-          while (true) {
-              $char = fgetc(STDIN);
-
-              if ($char === "\n") {
-                  break;
-              } else if (ord($char) === 127) {
-                  if (strlen($password) > 0) {
-                      fwrite(STDOUT, "\x08 \x08");
-                      $password = substr($password, 0, -1);
-                  }
-              } else {
-                  fwrite(STDOUT, "*");
-                  $password .= $char;
+          if ($char === "\n") {
+              break;
+          } else if (ord($char) === 127) {
+              if (strlen($password) > 0) {
+                  fwrite(STDOUT, "\x08 \x08");
+                  $password = substr($password, 0, -1);
               }
+          } else {
+              fwrite(STDOUT, "*");
+              $password .= $char;
           }
       }
-
-      // Reset old style
-      shell_exec('stty ' . $oldStyle);
-
-      // Return the password
-      return $password;
   }
+
+  // Reset old style
+  shell_exec('stty ' . $oldStyle);
+
+  // Return the password
+  return $password;
+}
 
