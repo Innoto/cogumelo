@@ -12,7 +12,8 @@
 /httpdocs/mediaCache/
 /httpdocs/vendor/
 /bower.*
-/composer.*
+/composer.json
+/composer.lock
 
 # temp form files
 /formFiles/
