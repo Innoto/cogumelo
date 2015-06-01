@@ -114,7 +114,7 @@ class MysqlDAORelationship
     $coma = '';
 
     foreach($vo->cols as $col) {
-      $returnCols .= "'".$coma."\"".$vo->table.".".$col."\": ' ,'\"', COALESCE(".$vo->table.".".$col.", 'null'),'\"', ";
+      $returnCols .= "'".$coma."\"".$vo->table.".".$col."\": ' ,'\"', ASCII( COALESCE(".$vo->table.".".$col.", 'null') ),'\"', ";
       $coma = ',';
     }
 
@@ -151,7 +151,7 @@ class MysqlDAORelationship
     $groupConcats = '';
 
     foreach( $vo->relationship as $voRel) {
-      $groupConcats .= "',\"".$voRel->parentTable.".".$voRel->table."\": [', COALESCE( group_concat(".$voRel->table."_serialized.".$voRel->table."),'' ), ']',";
+      $groupConcats .= "',\"".$voRel->parentTable.".".$voRel->table."\": [', ASCII( COALESCE( group_concat(".$voRel->table."_serialized.".$voRel->table."),'' ) ), ']',";
     }
     
     return $groupConcats;
