@@ -263,7 +263,7 @@ Class Model extends VO {
 
 
   /**
-  * delete item
+  * update item key
   *
   * @param array $parameters array of filters
   *

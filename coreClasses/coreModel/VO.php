@@ -115,8 +115,13 @@ Class VO
     }
     else
     {
+      //var_dump('['.$data.']'); 
+      //var_dump( json_decode('['.$data.']') );
+      //var_dump( $json_errors[json_last_error()] );
+      //exit;
+
       // when is first rel decode it
-      if( $d = json_decode('['.$data.']') ){
+      if( $d = json_decode('['.$data.']')  ){
 
         if( sizeof($d)>0 ) {
           foreach($d as $dep) {
@@ -126,7 +131,21 @@ Class VO
         
        }
       else {
-        Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
+        // JSON DECODE ERROR
+        //Cogumelo::error('Problem decoding VO JSON in '.$this->name.'. Provably the result is truncated, try to increase DB_MYSQL_GROUPCONCAT_MAX_LEN constant in configuration or optimize query.');
+        $constants = get_defined_constants(true);
+        $json_errors = array();
+        foreach ($constants["json"] as $name => $value) {
+            if (!strncmp($name, "JSON_ERROR_", 11)) {
+                $json_errors[$value] = $name;
+            }
+        }
+
+        // Show the errors for different depths.
+        foreach (range(4, 3, -1) as $depth) {
+          echo 'Problem decoding VO JSON : ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
+          Cogumelo::error('['.$data.']');
+        }        
       }
 
 
