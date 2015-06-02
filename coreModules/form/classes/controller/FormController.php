@@ -1379,7 +1379,7 @@ class FormController implements Serializable {
         foreach( $this->getGroupIdElems( $groupName ) as $idElem ) {
           $html .= $this->getHtmlGroupElement( $groupName, $idElem )."\n";
         }
-        $html .= '<div class="addGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" groupName="'.$groupName.'">MAS</div>'."\n";
+        $html .= '<div data-form-id="'.$this->id.'" class="addGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" groupName="'.$groupName.'">MAS</div>'."\n";
         $html .= '<div class="JQVMC-group-'.$groupName.'"></div>'."\n";
       }
 
@@ -1414,7 +1414,7 @@ class FormController implements Serializable {
       $html .= implode( "\n", $this->getHtmlFieldsArray( $groupFieldNames ) )."\n";
 
       if( $idElem !== false ) {
-        $html .= '<div class="removeGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" '.
+        $html .= '<div data-form-id="'.$this->id.'" class="removeGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" '.
           'groupName="'.$groupName.'" groupIdElem="'.$idElem.'">QUITAR</div>'."\n";
       }
 
@@ -1523,7 +1523,7 @@ class FormController implements Serializable {
       $html['label'] .= '>'.$field['label'].'</label>';
     }
 
-    $attribs = '';
+    $attribs = 'form="'.$this->id.'"';
     $attribs .= ( $myFielId ? ' id="'.$myFielId.'"' : '' );
     $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$fieldName.
       ( ( $field['type'] === 'file' ) ? ' '.self::CSS_PRE.'-fileField' : '' ).
