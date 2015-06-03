@@ -301,11 +301,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .progressBar' ).hide();
 
       if( $jsonData.result === 'ok' ) {
-        $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .status' ).html(
-          'Fichero listo para enviar: ' +
-          '<span class="fileUploadOK">' + $jsonData.moreInfo.fileName + '</span>'
-        );
-        fileFieldToOk( idForm, fieldName );
+        fileFieldToOk( idForm, fieldName, $jsonData.moreInfo.fileName, false );
       }
       else {
         console.log( 'uploadFile ERROR' );
@@ -401,10 +397,11 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 } // function deleteFormFile( idForm, fieldName, cgIntFrmId )
 
 
-function fileFieldToOk( idForm, fieldName ) {
+function fileFieldToOk( idForm, fieldName, fileName, fileModId ) {
+  console.log( 'fileFieldToOk( '+idForm+', '+fieldName+', '+fileName+', '+fileModId+' )' );
   $fileField = $( 'input[name=' + fieldName + '][form="'+idForm+'"]' );
   $fileFieldWrap = $fileField.parents().find( '.cgmMForm-field-' + fieldName );
-  fileObj = $fileField[0].files[0];
+  // fileObj = $fileField[0].files[0];
 
   $fileField.attr( 'readonly', 'readonly' );
   $fileField.prop( 'disabled', true );
@@ -412,7 +409,14 @@ function fileFieldToOk( idForm, fieldName ) {
 
   $( '#'+fieldName+'-error[data-form-id="'+idForm+'"]' ).hide();
 
-  $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileObj.name + '" uploaded OK</span>' );
+
+  $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .status' ).html(
+    'Fichero listo para enviar: ' +
+    '<span class="fileUploadOK">' + $jsonData.moreInfo.fileName + '</span>'
+  );
+  $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileName + '" uploaded OK</span>' );
+
+
   /*
   $fileFieldWrap.append(
     $( '<div>' )
@@ -459,11 +463,6 @@ function loadImageTh( fileObj, $fileFieldWrap ) {
   // Read in the image file as a data URL.
   imageReader.readAsDataURL( fileObj );
 } // function loadImageTh( fileObj, $fileFieldWrap )
-
-
-
-
-
 
 
 
@@ -643,63 +642,6 @@ function activateHtmlEditor( idForm ) {
 }
 
 
-
-/*** Form lang select ***/
-
-/*
-function switchFormLang( idForm, lang ) {
-  console.log( 'switchFormLang: '+lang );
-  langForm = lang;
-  $( '#' + idForm + ' .cgmMForm-groupElem > div' ).hide();
-  $( '#' + idForm + ' .cgmMForm-groupElem > div[class$="_'+lang+'"]' ).show();
-  $( '#' + idForm + ' .cgmMForm-group-wrap ul.langSwitch li' ).removeClass( 'langActive' );
-  $( '#' + idForm + ' .cgmMForm-group-wrap ul.langSwitch li.langSwitch-'+lang ).addClass( 'langActive' );
-}
-
-function createSwitchFormLang( idForm ) {
-  console.log( 'createSwitchFormLang' );
-
-  if( typeof( langAvailable ) == 'object' ) {
-    var htmlLangSwitch = '';
-    htmlLangSwitch += '<div class="langSwitch-wrap">';
-    htmlLangSwitch += '<ul class="langSwitch">';
-    $.each( langAvailable, function( index, lang ) {
-      htmlLangSwitch += '<li class="langSwitch-'+lang+'" data-lang-value="'+lang+'">'+lang;
-    });
-    htmlLangSwitch += '</ul>';
-    htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-flag fa-fw"></i></span>';
-    htmlLangSwitch += '</div>';
-    $( '#' + idForm + ' .cgmMForm-group-wrap' ).prepend( htmlLangSwitch );
-
-    switchFormLang( idForm, langDefault );
-
-    $( '#' + idForm + ' .cgmMForm-group-wrap ul.langSwitch li' ).on( "click", function() {
-      newLang = $( this ).data( 'lang-value' );
-      if( newLang != langForm ) {
-        switchFormLang( idForm, newLang );
-      }
-    });
-  }
-}
-*/
-
-/*
-<div style="display: block;" class="cgmMForm-wrap cgmMForm-field-shortDescription_es">
-  <label class="cgmMForm translate shortDescription_translate">Descripción breve</label>
-  <input name="shortDescription_es" value="55es"
-    class="cgmMForm-field cgmMForm-field-shortDescription_es translate shortDescription_translate">
-</div>
-<div style="display: none;" class="cgmMForm-wrap cgmMForm-field-shortDescription_gl">
-  <label class="cgmMForm translate shortDescription_translate">Descripción breve</label>
-  <input name="shortDescription_gl" value="Desc. curta en galego"
-    class="cgmMForm-field cgmMForm-field-shortDescription_gl translate shortDescription_translate">
-</div>
-<div style="display: none;" class="cgmMForm-wrap cgmMForm-field-shortDescription_en">
-  <label class="cgmMForm translate shortDescription_translate">Descripción breve</label>
-  <input name="shortDescription_en" value=""
-    class="cgmMForm-field cgmMForm-field-shortDescription_en translate shortDescription_translate">
-</div>
-*/
 
 function switchFormLang( idForm, lang ) {
   console.log( 'switchFormLang: '+lang );

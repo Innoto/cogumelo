@@ -468,7 +468,7 @@ class FormController implements Serializable {
         $this->fields[ $fieldName ][ 'value' ] = $value['id'];
         $this->fields[ $fieldName ][ 'data-file-id' ] = $value['id'];
         $this->fields[ $fieldName ][ 'status' ] = 'EXIST';
-        $this->fields[ $fieldName ][ 'temp' ][ 'fileId' ] = $value['id'];
+        $this->fields[ $fieldName ][ 'temp' ][ 'id' ] = $value['id'];
         $this->fields[ $fieldName ][ 'temp' ][ 'name' ] = $value['name'];
         $this->fields[ $fieldName ][ 'temp' ][ 'originalName' ] = $value['originalName'];
         $this->fields[ $fieldName ][ 'temp' ][ 'absLocation' ] = $value['absLocation'];
@@ -2151,6 +2151,18 @@ class FormController implements Serializable {
     // }
 
     $html .= '  console.log( $validateForm_'.$this->id.' );'."\n";
+
+
+
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+      if( $this->getFieldType( $fieldName ) === 'file' && $this->getFieldParam( $fieldName, 'status' ) === 'EXIST' ) {
+        $fileInfo = $this->getFieldParam( $fieldName, 'temp' );
+        $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", '.
+          '"'.$fileInfo['name'].'", "'.$fileInfo['id'].'" );'."\n";
+      }
+    }
+
+
 
     if( $this->htmlEditor ) {
       $html .= '  activateHtmlEditor( "'.$this->id.'" );'."\n";
