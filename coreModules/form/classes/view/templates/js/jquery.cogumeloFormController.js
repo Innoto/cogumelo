@@ -410,11 +410,17 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId ) {
   $( '#'+fieldName+'-error[data-form-id="'+idForm+'"]' ).hide();
 
 
-  $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .status' ).html(
-    'Fichero listo para enviar: ' +
-    '<span class="fileUploadOK">' + $jsonData.moreInfo.fileName + '</span>'
-  );
-  $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileName + '" uploaded OK</span>' );
+  if( fileModId === false ) {
+    $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .status' ).html(
+      'Fichero listo para enviar: ' +
+      '<span class="fileUploadOK">' + fileName + '</span>'
+    );
+    $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileName + '" uploaded OK</span>' );
+  }
+  else {
+    $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileName + '"</span>' );
+    $fileFieldWrap.append( '<img src="/cgmlformfilews/' + fileModId + '" style="width: 100%;"></img>' );
+  }
 
 
   /*

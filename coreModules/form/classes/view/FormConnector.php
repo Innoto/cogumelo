@@ -31,130 +31,6 @@ class FormConnector extends View
 
 
 
-  public function groupElement() {
-    if( isset( $_POST['execute'] ) && $_POST['execute'] === 'removeGroupElement' ) {
-      $this->removeGroupElement();
-    }
-    else {
-      $this->getGroupElement();
-    }
-  }
-
-
-  private function getGroupElement() {
-    error_log( '---------------------------------' );
-    error_log( ' FormConnector - getGroupElement ' );
-    error_log( '---------------------------------' );
-
-    $groupIdElem = false; // Id de la nueva instancia del grupo
-    $htmlGroupElement = false; // HTML de la nueva instancia del grupo
-    $validationRules = false; // Reglas de validacion de la nueva instancia del grupo
-
-    $form = new FormController();
-
-    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['groupName'] ) ) {
-
-      $idForm     = $_POST['idForm'];
-      $cgIntFrmId = $_POST['cgIntFrmId'];
-      $groupName  = $_POST['groupName'];
-
-      // Recuperamos formObj y validamos el grupo
-      if( $form->loadFromSession( $cgIntFrmId ) && $form->issetGroup( $groupName ) ) {
-
-        $groupMax = $form->getGroupLimits( $groupName, 'max' );
-        if( $groupMax > $form->countGroupElems( $groupName ) ) {
-
-          $groupIdElem = $form->newGroupElem( $groupName );
-
-          if( $groupIdElem !== false ) {
-            $htmlGroupElement = $form->getHtmlGroupElement( $groupName, $groupIdElem );
-
-            foreach( $form->getGroupFields( $groupName ) as $fieldName ) {
-              $fieldRules = $form->getValidationRules( $fieldName );
-              if( $fieldRules !== false ) {
-                $validationRules[ $fieldName.'_C_'.$groupIdElem ] = $fieldRules;
-              }
-            }
-          }
-          else {
-            $form->addGroupRuleError( false, 'cogumelo', 'Error creando un nuevo elemento.' );
-          }
-        }
-        else {
-          $form->addGroupRuleError( false, 'cogumelo',
-            'Se ha alcanzado el número máximo de elementos permitidos: '.$groupMax );
-        }
-
-      }
-      else {
-        $form->addGroupRuleError( false, 'cogumelo', 'Los datos no son válidos.' );
-      }
-
-    } // if( isset( ... ) )
-    else { // los datos no estan bien
-      $form->addGroupRuleError( false, 'cogumelo', 'No han llegado los datos necesarios. (IS)' );
-    }
-
-    // Notificamos el resultado al UI
-    $moreInfo = array( 'idForm' => $_POST['idForm'], 'groupName' => $_POST['groupName'] );
-    if( !$form->existErrors() ) {
-      $moreInfo[ 'groupIdElem' ] = $groupIdElem;
-      $moreInfo[ 'htmlGroupElement' ] = $htmlGroupElement;
-      $moreInfo[ 'validationRules' ] = $validationRules;
-    }
-    $form->sendJsonResponse( $moreInfo );
-  }
-
-
-  private function removeGroupElement() {
-    error_log( '------------------------------------' );
-    error_log( ' FormConnector - removeGroupElement ' );
-    error_log( '------------------------------------' );
-
-    $form = new FormController();
-
-    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['groupName'], $_POST['groupIdElem'] ) ) {
-
-      $idForm     = $_POST['idForm'];
-      $cgIntFrmId = $_POST['cgIntFrmId'];
-      $groupName  = $_POST['groupName'];
-      $groupIdElem  = $_POST['groupIdElem'];
-
-      // Recuperamos formObj y validamos el grupo
-      if( $form->loadFromSession( $cgIntFrmId ) && $form->issetGroup( $groupName ) ) {
-
-        $groupMin = $form->getGroupLimits( $groupName,  'min' );
-        if( $groupMin < $form->countGroupElems( $groupName ) ) {
-
-          if( !$form->removeGroupElem( $groupName, $groupIdElem ) ) {
-            $form->addGroupRuleError( false, 'cogumelo',
-              'Imposible eliminar el elemento. (' . $groupIdElem . ')' );
-          }
-
-        }
-        else {
-          $form->addGroupRuleError( false, 'cogumelo',
-            'Se ha alcanzado el número mínimo de elementos permitidos: '.$groupMin );
-        }
-
-      }
-      else {
-        $form->addGroupRuleError( false, 'cogumelo', 'Los datos no son válidos.' );
-      }
-
-    } // if( isset( ... ) )
-    else { // los datos no estan bien
-      $form->addGroupRuleError( false, 'cogumelo', 'No han llegado los datos necesarios. (IS)' );
-    }
-
-    // Notificamos el resultado al UI
-    $moreInfo = array( 'idForm' => $_POST['idForm'], 'groupName' => $_POST['groupName'], 'groupIdElem' => $_POST['groupIdElem'] );
-    $form->sendJsonResponse( $moreInfo );
-  }
-
-
-
-
 
   public function fileUpload() {
     if( isset( $_POST['execute'] ) && $_POST['execute'] === 'delete' ) {
@@ -164,7 +40,6 @@ class FormConnector extends View
       $this->uploadFormFile();
     }
   }
-
 
   private function uploadFormFile() {
     error_log( '--------------------------------' );
@@ -298,7 +173,7 @@ class FormConnector extends View
 
 
               if( !$form->existErrors() ) {
-                // error_log( 'FU: OK con el ficheiro subido... Se persiste...' );
+                error_log( 'FU: OK con el ficheiro subido... Se persiste...' );
 
                 $form->setFieldValue( $fieldName, $fileFieldValuePrev );
                 // Persistimos formObj para cuando se envíe el formulario completo
@@ -348,7 +223,6 @@ class FormConnector extends View
       echo $form->jsonFormError( $moreInfo );
     }
   } // function uploadFormFile() {
-
 
   private function deleteFormFile() {
     error_log( '--------------------------------' );
@@ -448,7 +322,6 @@ class FormConnector extends View
     }
   } // function deleteFormFile() {
 
-
   /**
    * Obtiene el texto de error en funcion del codigo
    * @param integer $fileErrorId
@@ -493,6 +366,134 @@ class FormConnector extends View
 
 
 
+
+
+
+  public function groupElement() {
+    if( isset( $_POST['execute'] ) && $_POST['execute'] === 'removeGroupElement' ) {
+      $this->removeGroupElement();
+    }
+    else {
+      $this->getGroupElement();
+    }
+  }
+
+
+  private function getGroupElement() {
+    error_log( '---------------------------------' );
+    error_log( ' FormConnector - getGroupElement ' );
+    error_log( '---------------------------------' );
+
+    $groupIdElem = false; // Id de la nueva instancia del grupo
+    $htmlGroupElement = false; // HTML de la nueva instancia del grupo
+    $validationRules = false; // Reglas de validacion de la nueva instancia del grupo
+
+    $form = new FormController();
+
+    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['groupName'] ) ) {
+
+      $idForm     = $_POST['idForm'];
+      $cgIntFrmId = $_POST['cgIntFrmId'];
+      $groupName  = $_POST['groupName'];
+
+      // Recuperamos formObj y validamos el grupo
+      if( $form->loadFromSession( $cgIntFrmId ) && $form->issetGroup( $groupName ) ) {
+
+        $groupMax = $form->getGroupLimits( $groupName, 'max' );
+        if( $groupMax > $form->countGroupElems( $groupName ) ) {
+
+          $groupIdElem = $form->newGroupElem( $groupName );
+
+          if( $groupIdElem !== false ) {
+            $htmlGroupElement = $form->getHtmlGroupElement( $groupName, $groupIdElem );
+
+            foreach( $form->getGroupFields( $groupName ) as $fieldName ) {
+              $fieldRules = $form->getValidationRules( $fieldName );
+              if( $fieldRules !== false ) {
+                $validationRules[ $fieldName.'_C_'.$groupIdElem ] = $fieldRules;
+              }
+            }
+          }
+          else {
+            $form->addGroupRuleError( false, 'cogumelo', 'Error creando un nuevo elemento.' );
+          }
+        }
+        else {
+          $form->addGroupRuleError( false, 'cogumelo',
+            'Se ha alcanzado el número máximo de elementos permitidos: '.$groupMax );
+        }
+
+      }
+      else {
+        $form->addGroupRuleError( false, 'cogumelo', 'Los datos no son válidos.' );
+      }
+
+    } // if( isset( ... ) )
+    else { // los datos no estan bien
+      $form->addGroupRuleError( false, 'cogumelo', 'No han llegado los datos necesarios. (IS)' );
+    }
+
+    // Notificamos el resultado al UI
+    $moreInfo = array( 'idForm' => $_POST['idForm'], 'groupName' => $_POST['groupName'] );
+    if( !$form->existErrors() ) {
+      $moreInfo[ 'groupIdElem' ] = $groupIdElem;
+      $moreInfo[ 'htmlGroupElement' ] = $htmlGroupElement;
+      $moreInfo[ 'validationRules' ] = $validationRules;
+    }
+    $form->sendJsonResponse( $moreInfo );
+  }
+
+
+  private function removeGroupElement() {
+    error_log( '------------------------------------' );
+    error_log( ' FormConnector - removeGroupElement ' );
+    error_log( '------------------------------------' );
+
+    $form = new FormController();
+
+    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['groupName'], $_POST['groupIdElem'] ) ) {
+
+      $idForm     = $_POST['idForm'];
+      $cgIntFrmId = $_POST['cgIntFrmId'];
+      $groupName  = $_POST['groupName'];
+      $groupIdElem  = $_POST['groupIdElem'];
+
+      // Recuperamos formObj y validamos el grupo
+      if( $form->loadFromSession( $cgIntFrmId ) && $form->issetGroup( $groupName ) ) {
+
+        $groupMin = $form->getGroupLimits( $groupName,  'min' );
+        if( $groupMin < $form->countGroupElems( $groupName ) ) {
+
+          if( !$form->removeGroupElem( $groupName, $groupIdElem ) ) {
+            $form->addGroupRuleError( false, 'cogumelo',
+              'Imposible eliminar el elemento. (' . $groupIdElem . ')' );
+          }
+
+        }
+        else {
+          $form->addGroupRuleError( false, 'cogumelo',
+            'Se ha alcanzado el número mínimo de elementos permitidos: '.$groupMin );
+        }
+
+      }
+      else {
+        $form->addGroupRuleError( false, 'cogumelo', 'Los datos no son válidos.' );
+      }
+
+    } // if( isset( ... ) )
+    else { // los datos no estan bien
+      $form->addGroupRuleError( false, 'cogumelo', 'No han llegado los datos necesarios. (IS)' );
+    }
+
+    // Notificamos el resultado al UI
+    $moreInfo = array( 'idForm' => $_POST['idForm'], 'groupName' => $_POST['groupName'], 'groupIdElem' => $_POST['groupIdElem'] );
+    $form->sendJsonResponse( $moreInfo );
+  }
+
+
+
+
+
   public function customCkeditorConfig() {
     $fileInfo = ModuleController::getRealFilePath( 'classes/view/templates/js/ckeditor-config.js', 'form' );
 
@@ -501,7 +502,6 @@ class FormConnector extends View
     readfile( $fileInfo );
     exit;
   } // function customCkeditorConfig() {
-
 
 } // class FormConnector extends View
 

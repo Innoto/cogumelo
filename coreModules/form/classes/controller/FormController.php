@@ -365,9 +365,11 @@ class FormController implements Serializable {
   */
   public function loadVOValues( $dataVO ) {
     if( gettype( $dataVO ) == 'object' ) {
+      $dataArray = array();
       foreach( $dataVO->getKeys() as $keyVO ) {
-        $this->setFieldValue( $keyVO, $dataVO->getter( $keyVO ) );
+        $dataArray[ $keyVO ] = $dataVO->getter( $keyVO );
       }
+      $this->loadArrayValues( $dataArray );
     }
   }
 
@@ -378,9 +380,23 @@ class FormController implements Serializable {
   public function loadArrayValues( $dataArray ) {
     // error_log( 'loadArrayValues: ' . print_r( $dataArray, true ) );
 
-    foreach( $dataArray as $key => $value ) {
-      if( $this->isFieldDefined( $key ) ) {
-        $this->setFieldValue( $key, $value );
+    foreach( $dataArray as $fieldName => $value ) {
+      if( $this->isFieldDefined( $fieldName ) ) {
+
+        if( $this->getFieldType( $fieldName ) !== 'file' ) {
+          $this->setFieldValue( $fieldName, $value );
+        }
+        else {
+          error_log( 'FILE value: ' . print_r( $value, true ) );
+
+          $fileFieldValue = array (
+            'status' => 'EXIST',
+            'prev' => $value
+          );
+          $this->setFieldValue( $fieldName, $fileFieldValue );
+          $this->setFieldParam( $fieldName, 'data-filemodel-id', $value['id'] );
+        }
+
       }
     }
   }
@@ -460,21 +476,7 @@ class FormController implements Serializable {
     // error_log( 'setFieldParam: ' . $paramName . ': ' . print_r( $value, true ) );
 
     if( array_key_exists( $fieldName, $this->fields) ) {
-      if( $paramName !== 'value' || $this->getFieldType( $fieldName ) !== 'file' ) {
-        $this->fields[ $fieldName ][ $paramName ] = $value;
-      }
-      else {
-        error_log( 'FILE value: ' . print_r( $value, true ) );
-        $this->fields[ $fieldName ][ 'value' ] = $value['id'];
-        $this->fields[ $fieldName ][ 'data-file-id' ] = $value['id'];
-        $this->fields[ $fieldName ][ 'status' ] = 'EXIST';
-        $this->fields[ $fieldName ][ 'temp' ][ 'id' ] = $value['id'];
-        $this->fields[ $fieldName ][ 'temp' ][ 'name' ] = $value['name'];
-        $this->fields[ $fieldName ][ 'temp' ][ 'originalName' ] = $value['originalName'];
-        $this->fields[ $fieldName ][ 'temp' ][ 'absLocation' ] = $value['absLocation'];
-        $this->fields[ $fieldName ][ 'temp' ][ 'type' ] = $value['type'];
-        $this->fields[ $fieldName ][ 'temp' ][ 'size' ] = $value['size'];
-      }
+      $this->fields[ $fieldName ][ $paramName ] = $value;
     }
     else {
       error_log( 'Intentando almacenar un parámetro ('.$paramName.') en un campo inexistente: '.$fieldName );
@@ -1660,7 +1662,7 @@ class FormController implements Serializable {
 
       case 'file':
         $html['input'] = '<input name="'.$fieldName.'"';
-        $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
+        // $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
         $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
         break;
 
@@ -2155,10 +2157,12 @@ class FormController implements Serializable {
 
 
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
-      if( $this->getFieldType( $fieldName ) === 'file' && $this->getFieldParam( $fieldName, 'status' ) === 'EXIST' ) {
-        $fileInfo = $this->getFieldParam( $fieldName, 'temp' );
-        $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", '.
-          '"'.$fileInfo['name'].'", "'.$fileInfo['id'].'" );'."\n";
+      if( $this->getFieldType( $fieldName ) === 'file' ) {
+        $fileInfo = $this->getFieldValue( $fieldName );
+        if( $fileInfo[ 'status' ] === 'EXIST' ) {
+          $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", '.
+            '"'.$fileInfo[ 'prev' ][ 'name' ].'", "'.$fileInfo[ 'prev' ][ 'id' ].'" );'."\n";
+        }
       }
     }
 
