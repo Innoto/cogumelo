@@ -376,6 +376,8 @@ class FormController implements Serializable {
     @param VO $dataVO Datos cargados por el programa
   */
   public function loadArrayValues( $dataArray ) {
+    // error_log( 'loadArrayValues: ' . print_r( $dataArray, true ) );
+
     foreach( $dataArray as $key => $value ) {
       if( $this->isFieldDefined( $key ) ) {
         $this->setFieldValue( $key, $value );
@@ -434,6 +436,20 @@ class FormController implements Serializable {
     $this->setFieldParam( $fieldName, 'value', $fieldValue );
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /**
     Establece un parametro de un campo
     @param string $fieldName Nombre del campo
@@ -441,13 +457,41 @@ class FormController implements Serializable {
     @param mixed $value Valor del parametro
   */
   public function setFieldParam( $fieldName, $paramName, $value ) {
-    if(array_key_exists($fieldName, $this->fields)) {
-      $this->fields[ $fieldName ][ $paramName ] = $value;
+    // error_log( 'setFieldParam: ' . $paramName . ': ' . print_r( $value, true ) );
+
+    if( array_key_exists( $fieldName, $this->fields) ) {
+      if( $paramName !== 'value' || $this->getFieldType( $fieldName ) !== 'file' ) {
+        $this->fields[ $fieldName ][ $paramName ] = $value;
+      }
+      else {
+        error_log( 'FILE value: ' . print_r( $value, true ) );
+        $this->fields[ $fieldName ][ 'value' ] = $value['id'];
+        $this->fields[ $fieldName ][ 'data-file-id' ] = $value['id'];
+        $this->fields[ $fieldName ][ 'status' ] = 'EXIST';
+        $this->fields[ $fieldName ][ 'temp' ][ 'fileId' ] = $value['id'];
+        $this->fields[ $fieldName ][ 'temp' ][ 'name' ] = $value['name'];
+        $this->fields[ $fieldName ][ 'temp' ][ 'originalName' ] = $value['originalName'];
+        $this->fields[ $fieldName ][ 'temp' ][ 'absLocation' ] = $value['absLocation'];
+        $this->fields[ $fieldName ][ 'temp' ][ 'type' ] = $value['type'];
+        $this->fields[ $fieldName ][ 'temp' ][ 'size' ] = $value['size'];
+      }
     }
     else {
       error_log( 'Intentando almacenar un parámetro ('.$paramName.') en un campo inexistente: '.$fieldName );
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
 
   /**
     Establece un parametro interno en un campo
@@ -855,7 +899,9 @@ class FormController implements Serializable {
     if( isset( $this->groups[ $groupName ][ 'idElments' ] ) ) {
       $idElems = array_keys(
         array_filter( $this->groups[ $groupName ][ 'idElments' ],
-          function( $valor ) { return( $valor === true ); }
+          function( $valor ) {
+            return( $valor === true );
+          }
         )
       );
     }
@@ -873,7 +919,9 @@ class FormController implements Serializable {
     if( isset( $this->groups[ $groupName ][ 'idElments' ] ) ) {
       $idElems = array_keys(
         array_filter( $this->groups[ $groupName ][ 'idElments' ],
-          function( $valor ) { return( $valor === false ); }
+          function( $valor ) {
+            return( $valor === false );
+          }
         )
       );
     }
@@ -891,7 +939,9 @@ class FormController implements Serializable {
     if( isset( $this->groups[ $groupName ][ 'idElments' ] ) ) {
       $numElems = count(
         array_filter( $this->groups[ $groupName ][ 'idElments' ],
-          function( $valor ) { return( $valor === true ); }
+          function( $valor ) {
+            return( $valor === true );
+          }
         )
       );
     }
@@ -1379,7 +1429,7 @@ class FormController implements Serializable {
         foreach( $this->getGroupIdElems( $groupName ) as $idElem ) {
           $html .= $this->getHtmlGroupElement( $groupName, $idElem )."\n";
         }
-        $html .= '<div class="addGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" groupName="'.$groupName.'">MAS</div>'."\n";
+        $html .= '<div data-form-id="'.$this->id.'" class="addGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" groupName="'.$groupName.'">MAS</div>'."\n";
         $html .= '<div class="JQVMC-group-'.$groupName.'"></div>'."\n";
       }
 
@@ -1414,7 +1464,7 @@ class FormController implements Serializable {
       $html .= implode( "\n", $this->getHtmlFieldsArray( $groupFieldNames ) )."\n";
 
       if( $idElem !== false ) {
-        $html .= '<div class="removeGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" '.
+        $html .= '<div data-form-id="'.$this->id.'" class="removeGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" '.
           'groupName="'.$groupName.'" groupIdElem="'.$idElem.'">QUITAR</div>'."\n";
       }
 
@@ -1523,7 +1573,7 @@ class FormController implements Serializable {
       $html['label'] .= '>'.$field['label'].'</label>';
     }
 
-    $attribs = '';
+    $attribs = 'form="'.$this->id.'"';
     $attribs .= ( $myFielId ? ' id="'.$myFielId.'"' : '' );
     $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$fieldName.
       ( ( $field['type'] === 'file' ) ? ' '.self::CSS_PRE.'-fileField' : '' ).
@@ -1545,6 +1595,11 @@ class FormController implements Serializable {
     $attribs .= isset( $field['hidden'] ) ? ' hidden="hidden"' : '';
     $attribs .= isset( $field['htmlEditor'] ) ? ' contenteditable="true"' : '';
 
+    foreach( $field as $dataKey => $dataValue ) {
+      if( strpos( $dataKey, 'data-' ) === 0 ) {
+        $attribs .= ' '.$dataKey.'="'.$dataValue.'"';
+      }
+    }
 
     switch( $field['type'] ) {
       case 'select':

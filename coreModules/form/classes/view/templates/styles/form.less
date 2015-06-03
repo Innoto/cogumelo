@@ -47,20 +47,22 @@ select{
 
 
 /*** Form lang select ***/
-
-.cgmMForm-group-wrap > label { display: none; }
-.cgmMForm-group-wrap .langSwitch { float: right; margin:0; }
-.cgmMForm-group-wrap .langSwitch li {
-  display: none; padding: 0 0.5em; cursor: pointer; font-weight: bold;
-  border:1px dotted @formErrorColor;
-  background-color: #F5F5F5;
+.langSwitch {
+  float: right;
+  margin:0;
+  li {
+    display: none; padding: 0 0.5em; cursor: pointer; font-weight: bold;
+    border:1px dotted @formErrorColor;
+    background-color: #F5F5F5;
+  }
+  &:hover li{
+    display: inline;
+  }
+  .langActive {
+    display: inline; cursor: no-drop;
+    background-color: inherit;
+    color: @formErrorColor;
+  }
 }
-.cgmMForm-group-wrap .langSwitch:hover li { display: inline; }
-.cgmMForm-group-wrap .langSwitch .langActive {
-  display: inline; cursor: no-drop;
-  background-color: inherit;
-  color: @formErrorColor;
-}
-.cgmMForm-group-wrap .langSwitchIcon { float:right; color:@formErrorColor; }
-
+.langSwitchIcon { float:right; color:@formErrorColor; }
 /*** Form lang select - End ***/

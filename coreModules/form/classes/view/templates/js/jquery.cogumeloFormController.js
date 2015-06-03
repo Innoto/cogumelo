@@ -45,25 +45,25 @@ function getFormInfo( idForm, key ) {
 
 function bindForm( idForm ) {
   console.log( 'bindForm( '+idForm+' )' );
-  $inputFileFields = $( '#' + idForm + ' input:file' );
+  $inputFileFields = $( 'input:file[form="'+idForm+'"]' );
   if( $inputFileFields.length ) {
     if( !window.File ) {
       // File - provides readonly information such as name, file size, mimetype
-      alert('Tu navegador aún no tiene soporte para el envío de ficheros HTML5. Actualiza a versiones recientes...');
+      alert('Tu navegador aún no tiene soporte HTML5 para el envío de ficheros. Actualiza a versiones recientes...');
     }
     $inputFileFields.on( 'change', processInputFileField );
   }
 
-  $( '#' + idForm + ' .addGroupElement' ).on( 'click', addGroupElement ).css( 'cursor', 'pointer' );
-  $( '#' + idForm + ' .removeGroupElement' ).on( 'click', removeGroupElement ).css( 'cursor', 'pointer' );
+  $( '.addGroupElement[data-form-id="'+idForm+'"]' ).on( 'click', addGroupElement ).css( 'cursor', 'pointer' );
+  $( '.removeGroupElement[data-form-id="'+idForm+'"]' ).on( 'click', removeGroupElement ).css( 'cursor', 'pointer' );
 }
 
 
 function unbindForm( idForm ) {
   console.log( 'unbindForm( '+idForm+' )' );
-  $( '#' + idForm + ' input:file' ).off( 'change' );
-  $( '#' + idForm + ' .addGroupElement' ).off( 'click' );
-  $( '#' + idForm + ' .removeGroupElement' ).off( 'click' );
+  $( 'input:file[form="'+idForm+'"]' ).off( 'change' );
+  $( '.addGroupElement[data-form-id="'+idForm+'"]' ).off( 'click' );
+  $( '.removeGroupElement[data-form-id="'+idForm+'"]' ).off( 'click' );
 }
 
 /*
@@ -73,9 +73,6 @@ function unbindForm( idForm ) {
 
 
 function setValidateForm( idForm, rules, messages ) {
-
-  // Si hay idiomas, buscamos campos multiidioma en el form y los procesamos
-  createSwitchFormLang( idForm );
 
   $.validator.setDefaults({
     errorPlacement: function(error, element) {
@@ -93,46 +90,50 @@ function setValidateForm( idForm, rules, messages ) {
   });
 
 
+  console.log( 'VALIDATE: ', $( '#'+idForm ) );
   var $validateForm = $( '#'+idForm ).validate({
     // debug: true,
     errorClass: 'formError',
     rules: rules,
     messages: messages,
-    submitHandler:
-      function ( form ) {
-        console.log( 'Executando validate.submitHandler...' );
-        $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
-        $( form ).find( '.submitRun' ).show();
-        $.ajax( {
-          contentType: 'application/json', processData: false,
-          data: JSON.stringify( $( form ).serializeFormToObject() ),
-          type: 'POST', url: $( form ).attr( 'action' ),
-          dataType : 'json'
-        } )
-        .done( function ( response ) {
-          console.log( 'Executando validate.submitHandler.done...' );
-          //console.log( response );
-          if( response.result === 'ok' ) {
-            // alert( 'Form Submit OK' );
-            console.log( 'Form Done: OK' );
-            formDoneOk( form, response );
-          }
-          else {
-            console.log( 'Form Done: ERROR' );
-            formDoneError( form, response );
-          }
-          $( form ).find( '[type="submit"]' ).removeAttr('disabled');
-          $( form ).find( '.submitRun' ).hide();
-        } ); // /.done
-        return false; // required to block normal submit since you used ajax
-      }
+    submitHandler: function ( form ) {
+      console.log( 'Executando validate.submitHandler...' );
+      $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
+      $( form ).find( '.submitRun' ).show();
+      $.ajax( {
+        contentType: 'application/json', processData: false,
+        data: JSON.stringify( $( form ).serializeFormToObject() ),
+        type: 'POST', url: $( form ).attr( 'action' ),
+        dataType : 'json'
+      } )
+      .done( function ( response ) {
+        console.log( 'Executando validate.submitHandler.done...' );
+        //console.log( response );
+        if( response.result === 'ok' ) {
+          // alert( 'Form Submit OK' );
+          console.log( 'Form Done: OK' );
+          formDoneOk( form, response );
+        }
+        else {
+          console.log( 'Form Done: ERROR' );
+          formDoneError( form, response );
+        }
+        $( form ).find( '[type="submit"]' ).removeAttr('disabled');
+        $( form ).find( '.submitRun' ).hide();
+      } ); // /.done
+      return false; // required to block normal submit since you used ajax
+    }
   }); // $validateForm =
+  console.log( 'VALIDATE FEITO' );
 
   // Bind file fields and group actions...
   bindForm( idForm );
 
   // Save validate instance for this Form
   setFormInfo( idForm, 'validateForm', $validateForm );
+
+  // Si hay idiomas, buscamos campos multi-idioma en el form y los procesamos
+  createSwitchFormLang( idForm );
 
   return $validateForm;
 } // function setValidateForm( idForm, rules, messages )
@@ -226,7 +227,7 @@ function processInputFileField( evnt ) {
   var valid = checkInputFileField( files, evnt.target.form.id, evnt.target.name );
 
   if( valid ) {
-    var cgIntFrmId = $( '#' + evnt.target.form.id ).attr('sg');
+    var cgIntFrmId = $( '#' + evnt.target.form.id ).attr( 'sg' );
     for (var i = 0, file; (file = files[i]); i++) {
       uploadFile( file, evnt.target.form.id, evnt.target.name, cgIntFrmId );
     }
@@ -235,16 +236,18 @@ function processInputFileField( evnt ) {
 
 
 function checkInputFileField( files, idForm, fieldName ) {
-  console.log('checkInputFileField()');
+  console.log( 'checkInputFileField()' );
   console.log( files );
   console.log( fieldName );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
   var valRes = $validateForm.element( 'input[name=' + fieldName + ']' );
 
   // Mostrando informacion obtenida del navegador
+  /*
   for( var i = 0, f; (f = files[i]); i++ ) {
-    $('#list').before( '<div>' + escape(f.name) + ' (' + f.type + ') ' + f.size + ' bytes</div>' );
+    $( '#list' ).before( '<div>' + escape(f.name) + ' (' + f.type + ') ' + f.size + ' bytes</div>' );
   }
+  */
 
   return valRes;
 } // function checkInputFileField( files, idForm, fieldName )
@@ -259,7 +262,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
   formData.append( 'fieldName', fieldName );
   formData.append( 'cgIntFrmId', cgIntFrmId );
 
-  $( '#'+idForm+' .'+fieldName+'-info' ).show();
+  $( '.'+fieldName+'-info[data-form-id="'+idForm+'"]' ).show();
 
   $.ajax({
     url: '/cgml-form-file-upload', type: 'POST',
@@ -295,10 +298,10 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
       var idForm = $jsonData.moreInfo.idForm;
       var fieldName = $jsonData.moreInfo.fieldName;
-      $( '#'+idForm+' .'+fieldName+'-info .wrap .progressBar' ).hide();
+      $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .progressBar' ).hide();
 
       if( $jsonData.result === 'ok' ) {
-        $( '#'+idForm+' .'+fieldName+'-info .wrap .status' ).html(
+        $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .status' ).html(
           'Fichero listo para enviar: ' +
           '<span class="fileUploadOK">' + $jsonData.moreInfo.fileName + '</span>'
         );
@@ -306,7 +309,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       }
       else {
         console.log( 'uploadFile ERROR' );
-        $( '#'+idForm+' .'+fieldName+'-info .wrap .status' ).html( 'Error cargando el fichero.' );
+        $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .status' ).html( 'Error cargando el fichero.' );
 
         $validateForm = getFormInfo( idForm, 'validateForm' );
         console.log( $validateForm );
@@ -338,7 +341,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
       console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
-      $( '#'+idForm+' .'+fieldName+'-info .status' ).html( 'Upload Failed (' + $textStatus + ')' );
+      $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .status' ).html( 'Upload Failed (' + $textStatus + ')' );
     }
   });
 } // function uploadFile( file, idForm, fieldName, cgIntFrmId )
@@ -399,15 +402,15 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 
 
 function fileFieldToOk( idForm, fieldName ) {
-  $fileFieldWrap = $( '#' + idForm + ' .cgmMForm-field-' + fieldName );
-  $fileField = $( '#' + idForm + ' input[name=' + fieldName + ']' );
+  $fileField = $( 'input[name=' + fieldName + '][form="'+idForm+'"]' );
+  $fileFieldWrap = $fileField.parents().find( '.cgmMForm-field-' + fieldName );
   fileObj = $fileField[0].files[0];
 
   $fileField.attr( 'readonly', 'readonly' );
   $fileField.prop( 'disabled', true );
   $fileField.hide();
 
-  $( '#'+idForm+' #'+fieldName+'-error' ).hide();
+  $( '#'+fieldName+'-error[data-form-id="'+idForm+'"]' ).hide();
 
   $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileObj.name + '" uploaded OK</span>' );
   /*
@@ -427,9 +430,10 @@ function fileFieldToOk( idForm, fieldName ) {
 
 
 function fileFieldToInput( idForm, fieldName ) {
-  $fileField = $( '#' + idForm + ' input[name=' + fieldName + ']' );
+  $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  $fileFieldWrap = $fileField.parents().find( '.cgmMForm-field-' + fieldName );
 
-  $( '#' + idForm + ' .cgmMForm-field-' + fieldName + ' .fileUploadOK').remove();
+  $fileFieldWrap.find( '.fileUploadOK' ).remove();
 
   $fileField.removeAttr( 'readonly' );
   $fileField.removeProp( 'disabled' );
@@ -438,14 +442,14 @@ function fileFieldToInput( idForm, fieldName ) {
 }
 
 
-function loadImageTh( fileObj, $container ) {
+function loadImageTh( fileObj, $fileFieldWrap ) {
   var imageReader = new FileReader();
   // Closure to capture the file information.
   imageReader.onload = (
     function cargado( fileLoaded ) {
       return(
         function procesando( evnt ) {
-          $container.append('<div class="fileUploadOK imageTh"><img class="imageTh" border="1" ' +
+          $fileFieldWrap.append('<div class="fileUploadOK imageTh"><img class="imageTh" border="1" ' +
             ' style="max-width:50px; max-height:50px;" src="' + evnt.target.result + '"/></div>');
         }
       );
@@ -454,7 +458,7 @@ function loadImageTh( fileObj, $container ) {
 
   // Read in the image file as a data URL.
   imageReader.readAsDataURL( fileObj );
-} // function loadImageTh( fileObj, $container )
+} // function loadImageTh( fileObj, $fileFieldWrap )
 
 
 
@@ -623,11 +627,11 @@ function removeGroupElement( evnt ) {
 
 
 
-function activateHtmlEditor( formId ) {
-  console.log( 'activateHtmlEditor: ' + formId );
-  console.log( formId );
+function activateHtmlEditor( idForm ) {
+  console.log( 'activateHtmlEditor: ' + idForm );
+  console.log( idForm );
 
-  $( '#' + formId + ' .cgmMForm-htmlEditor' ).each(
+  $( 'textarea.cgmMForm-htmlEditor[form="'+idForm+'"]' ).each(
     function( index ) {
       var idName = $( this ).attr( 'id' );
       var CKcontent = CKEDITOR.replace( idName, {
@@ -642,6 +646,7 @@ function activateHtmlEditor( formId ) {
 
 /*** Form lang select ***/
 
+/*
 function switchFormLang( idForm, lang ) {
   console.log( 'switchFormLang: '+lang );
   langForm = lang;
@@ -676,5 +681,61 @@ function createSwitchFormLang( idForm ) {
     });
   }
 }
+*/
+
+/*
+<div style="display: block;" class="cgmMForm-wrap cgmMForm-field-shortDescription_es">
+  <label class="cgmMForm translate shortDescription_translate">Descripción breve</label>
+  <input name="shortDescription_es" value="55es"
+    class="cgmMForm-field cgmMForm-field-shortDescription_es translate shortDescription_translate">
+</div>
+<div style="display: none;" class="cgmMForm-wrap cgmMForm-field-shortDescription_gl">
+  <label class="cgmMForm translate shortDescription_translate">Descripción breve</label>
+  <input name="shortDescription_gl" value="Desc. curta en galego"
+    class="cgmMForm-field cgmMForm-field-shortDescription_gl translate shortDescription_translate">
+</div>
+<div style="display: none;" class="cgmMForm-wrap cgmMForm-field-shortDescription_en">
+  <label class="cgmMForm translate shortDescription_translate">Descripción breve</label>
+  <input name="shortDescription_en" value=""
+    class="cgmMForm-field cgmMForm-field-shortDescription_en translate shortDescription_translate">
+</div>
+*/
+
+function switchFormLang( idForm, lang ) {
+  console.log( 'switchFormLang: '+lang );
+  langForm = lang;
+  $( '#' + idForm + ' .js-tr' ).parent().hide();
+  $( '#' + idForm + ' .js-tr-'+lang ).parent().show();
+  $( '#' + idForm + ' ul.langSwitch li' ).removeClass( 'langActive' );
+  $( '#' + idForm + ' ul.langSwitch li.langSwitch-'+lang ).addClass( 'langActive' );
+}
+
+function createSwitchFormLang( idForm ) {
+  console.log( 'createSwitchFormLang' );
+
+  if( typeof( langAvailable ) == 'object' ) {
+    var htmlLangSwitch = '';
+    htmlLangSwitch += '<div class="langSwitch-wrap">';
+    htmlLangSwitch += '<ul class="langSwitch">';
+    $.each( langAvailable, function( index, lang ) {
+      htmlLangSwitch += '<li class="langSwitch-'+lang+'" data-lang-value="'+lang+'">'+lang;
+    });
+    htmlLangSwitch += '</ul>';
+    htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-flag fa-fw"></i></span>';
+    htmlLangSwitch += '</div>';
+
+    $( '#' + idForm + ' .cgmMForm-field.js-tr.js-tr-' + langDefault ).parent().before( htmlLangSwitch );
+
+    switchFormLang( idForm, langDefault );
+
+    $( '#' + idForm + ' ul.langSwitch li' ).on( "click", function() {
+      newLang = $( this ).data( 'lang-value' );
+      if( newLang != langForm ) {
+        switchFormLang( idForm, newLang );
+      }
+    });
+  }
+}
+
 
 /*** Form lang select - End ***/
