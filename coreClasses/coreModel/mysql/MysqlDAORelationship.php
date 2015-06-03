@@ -14,6 +14,10 @@ class MysqlDAORelationship
   var $whereData = array(); 
   var $joinType = 'LEFT';
 
+  function __construct() {
+
+  }
+
   /**
    * Get joins from VO or Model Class
    *
@@ -110,11 +114,12 @@ class MysqlDAORelationship
    * @return string
    */  
   function jsonCols($vo) {
+
     $returnCols = '';
     $coma = '';
 
     foreach($vo->cols as $col) {
-      $returnCols .= "'".$coma."\"".$vo->table.".".$col."\": ' ,'\"', ASCII( COALESCE(".$vo->table.".".$col.", 'null') ),'\"', ";
+      $returnCols .= "'".$coma."\"".$vo->table.".".$col."\": ' ,'\"', ".$this->colToString($col, $vo).",'\"', ";
       $coma = ',';
     }
 
@@ -140,6 +145,19 @@ class MysqlDAORelationship
     return $returnCols;
   }
 
+  function colToString( $colKey, $vo ) {
+    $retStr = "COALESCE(".$vo->table.".".$colKey.", 'null')";
+
+    $colType = '';
+    eval( '$colType = '.$vo->vo.'::$cols[$colKey]["type"];' );
+
+    if( $colType == 'BOOLEAN' ) {
+      $retStr = "ASCII( COALESCE(".$vo->table.".".$colKey.", 'null') )";
+    }
+
+    return $retStr;
+  }
+
   /**
    * group Concat function
    *
@@ -151,7 +169,7 @@ class MysqlDAORelationship
     $groupConcats = '';
 
     foreach( $vo->relationship as $voRel) {
-      $groupConcats .= "',\"".$voRel->parentTable.".".$voRel->table."\": [', ASCII( COALESCE( group_concat(".$voRel->table."_serialized.".$voRel->table."),'' ) ), ']',";
+      $groupConcats .= "',\"".$voRel->parentTable.".".$voRel->table."\": [', COALESCE( group_concat(".$voRel->table."_serialized.".$voRel->table."),'' ) , ']',";
     }
     
     return $groupConcats;
