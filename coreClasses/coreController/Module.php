@@ -24,12 +24,13 @@ class Module
 
 
   /**
+  * Load module
   * @param string $load_path the path of module
   */
   public static function load( $load_path ) {
     $module_name = get_called_class();
 
-    if($file_to_include =  ModuleController::getRealFilePath('classes/'.$load_path.'', $module_name)) {
+    if( $file_to_include =  ModuleController::getRealFilePath('classes/'.$load_path.'', $module_name) ) {
       require_once($file_to_include);
     }
     else {
@@ -41,7 +42,7 @@ class Module
   // Set autoincludes
   public static function autoIncludes() {
 
-    //error_log( 'Module::autoincludes ' . get_called_class() );
+    // error_log( 'Module::autoincludes ' . get_called_class() );
 
     $dependencesControl = new DependencesController();
     $dependencesControl->loadModuleIncludes( get_called_class() );
@@ -50,7 +51,7 @@ class Module
 
   public static function loadDependence( $idDependence, $installer = false ) {
 
-    error_log( 'Module::loadDependence ' . get_called_class() );
+    // error_log( 'Module::loadDependence ' . get_called_class() );
 
     $dependencesControl = new DependencesController();
     $dependencesControl->loadModuleDependence( get_called_class(), $idDependence, $installer );
@@ -69,18 +70,18 @@ class Module
     $this->urlPatterns = array();
   }
 
-  function addUrlPatterns( $regex, $destination ) {
+  public function addUrlPatterns( $regex, $destination ) {
     $this->urlPatterns[ $regex ] = $destination;
   }
 
-  function setUrlPatternsFromArray( $arrayUrlPatterns ) {
+  public function setUrlPatternsFromArray( $arrayUrlPatterns ) {
     $this->deleteUrlPatterns();
-    foreach ($arrayUrlPatterns as $key => $value) {
+    foreach( $arrayUrlPatterns as $key => $value ) {
       $this->addUrlPatterns( $key, $value );
     }
   }
 
-  function getUrlPatternsToArray() {
+  public function getUrlPatternsToArray() {
     return $this->urlPatterns;
   }
 

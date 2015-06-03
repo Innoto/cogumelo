@@ -138,20 +138,20 @@ class ModuleController
 
     $newName = false;
 
-    error_log( 'cogumeloSmartyTemplateHandlerFunc: ' );
-    error_log( '  type: ' . $type );
-    error_log( '  name: ' . $name );
-    error_log( '  content: ' . print_r( $content, true ) );
-    error_log( '  modified: ' . print_r( $modified, true ) );
-    //error_log( '  smarty: ' . print_r( $smarty, true ) );
-    //print_r( $smarty );
+    // error_log( 'cogumeloSmartyTemplateHandlerFunc: ' );
+    // error_log( '  type: ' . $type );
+    // error_log( '  name: ' . $name );
+    // error_log( '  content: ' . print_r( $content, true ) );
+    // error_log( '  modified: ' . print_r( $modified, true ) );
+    // error_log( '  smarty: ' . print_r( $smarty, true ) );
+    // print_r( $smarty );
 
     $module = false;
     $tmpNameParts = explode ( '///', $name );
     if( count( $tmpNameParts ) > 1 ) {
       $module = $tmpNameParts[0];
       $name = $tmpNameParts[1];
-      error_log( 'Separando: ' . "$module --- $name" );
+      // error_log( 'Separando: ' . "$module --- $name" );
     }
 
     if( $type == 'file' ) {
@@ -161,7 +161,7 @@ class ModuleController
         $tmpName = ModuleController::getRealFilePath( 'classes/view/templates/'.$name, $module );
         if( file_exists ( $tmpName ) ) {
           $newName = $tmpName;
-          error_log( 'Solucion getRealFilePath( classes/view/templates/'.$name.', '.$module.' ): ' . $newName );
+          // error_log( 'Solucion getRealFilePath( classes/view/templates/'.$name.', '.$module.' ): ' . $newName );
         }
       }
 
@@ -172,7 +172,7 @@ class ModuleController
           $tmpName = $smartyTpl[ 'dirname' ] .'/'. $name;
           if( file_exists ( $tmpName ) ) {
             $newName = $tmpName;
-            error_log( 'Solucion misma carpeta: ' . $newName );
+            // error_log( 'Solucion misma carpeta: ' . $newName );
           }
         }
       }
@@ -192,6 +192,7 @@ class ModuleController
       return false;
     */
 
+    error_log( 'cogumeloSmartyTemplateHandlerFunc result: ' . print_r( $newName, true ) );
     return $newName;
   }
 

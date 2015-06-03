@@ -219,7 +219,7 @@ class Template extends Smarty
    * @param string $module
    **/
   public function setTpl( $tplData = false, $module = false ) {
-    error_log( 'Template->setTpl('.$tplData.', '.$module.')' );
+    // error_log( 'Template->setTpl('.$tplData.', '.$module.')' );
 
     // Esto nos puede permitir referenciar TPLs "al lado" de la clase que esta usando este metodo
     // $debugBacktrace = debug_backtrace( false, 1 );
@@ -245,7 +245,7 @@ class Template extends Smarty
       $this->tpl = false;
     }
 
-    error_log( 'Template = ' . $this->tpl );
+    // error_log( 'Template = ' . $this->tpl );
     return $this->tpl;
   }
 
@@ -271,7 +271,7 @@ class Template extends Smarty
    **/
   public function exec( $toString = false ) {
 
-    //error_log( 'Template->exec('.$toString.') === ' . $this->tpl );
+    // error_log( 'Template->exec('.$toString.') === ' . $this->tpl );
 
     $htmlCode = '';
 
@@ -342,7 +342,7 @@ class Template extends Smarty
    **/
   public function execBlock() {
 
-    //error_log( 'Template->execBlock() === ' . $this->tpl );
+    // error_log( 'Template->execBlock() === ' . $this->tpl );
 
     $htmlCode = '';
 
