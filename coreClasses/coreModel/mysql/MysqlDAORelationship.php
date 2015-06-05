@@ -148,8 +148,15 @@ class MysqlDAORelationship
   function colToString( $colKey, $vo ) {
     $retStr = "COALESCE(".$vo->table.".".$colKey.", 'null')";
 
-    $colType = '';
-    eval( '$colType = '.$vo->vo.'::$cols[$colKey]["type"];' );
+    $col = false;
+    $colType =  false;
+    $model =  new $vo->vo();
+
+
+    eval( '$col = $model->langKey($colKey, true);' );
+    eval( '$colType = '.$vo->vo.'::$cols[ $col ]["type"];' );
+
+
 
     if( $colType == 'BOOLEAN' ) {
       $retStr = "ASCII( COALESCE(".$vo->table.".".$colKey.", 'null') )";
