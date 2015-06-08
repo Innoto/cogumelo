@@ -18,9 +18,9 @@ class MysqlDAO extends DAO
 
   /**
   * Composes order mysql (ORDER BY) String
-  * 
+  *
   * @param array $ORDArray array('id1'=>-1, 'id2'=>1)
-  * 
+  *
   * @return string
   */
   function orderByString($ORDArray)
@@ -48,16 +48,16 @@ class MysqlDAO extends DAO
 
 
   //
-  // 
+  //
   //
 
   /**
   * Execute a SQL query command
-  * 
+  *
   * @param object $connectionControl mysqli connection object
   * @param string $sql query
   * @param string $val_array value array
-  * 
+  *
   * @return mixed
   */
   function execSQL(&$connectionControl, $sql, $val_array = array())
@@ -109,9 +109,9 @@ class MysqlDAO extends DAO
 
   /**
   * get string of chars according prepare type (ex. i:integer, d:double, s:string, b:boolean)
-  * 
-  * @param array $values_array 
-  * 
+  *
+  * @param array $values_array
+  *
   * @return string
   */
   function getPrepareTypes($values_array){
@@ -125,6 +125,8 @@ class MysqlDAO extends DAO
       if(is_float($value)) $return_str.= 'd';
       else
       if(is_bool($value)) $return_str.= 'b';
+      else
+      if( $value === null )  $return_str.= 's';
     }
 
     return $return_str;
@@ -133,9 +135,9 @@ class MysqlDAO extends DAO
 
   /**
   * Generates where clausule
-  * 
+  *
   * @param array $fiters
-  * 
+  *
   * @return string
   */
   function getFilters($filters){
@@ -186,15 +188,15 @@ class MysqlDAO extends DAO
 
   /**
   * Generic List ittems
-  * 
+  *
   * @param object $connectionControl mysqli connection object
   * @param array $filters filters array
   * @param array $range query range
   * @param array $order order array
-  * @param array 
+  * @param array
   * @param boolean $resolveDependences if want to resolve relationship dependences
   * @param boolean $cache save query result into cache
-  * 
+  *
   * @return object
   */
   function listItems(&$connectionControl, $filters, $range, $order, $fields, $joinType ,$resolveDependences = false, $cache = false)
@@ -241,12 +243,12 @@ class MysqlDAO extends DAO
 
     $strSQL = "SELECT ".
               $VO->getKeysToString($fields, $resolveDependences ) .
-              " FROM `" . 
-              $VO::$tableName ."` " . 
-              $joins. 
+              " FROM `" .
+              $VO::$tableName ."` " .
+              $joins.
               $whereArray['string'] . $orderSTR . $rangeSTR . ";";
 
-//echo $strSQL; 
+//echo $strSQL;
 //var_dump($joinWhereArrays);
 //exit;
     if ( $cache && DB_ALLOW_CACHE  )
@@ -295,10 +297,10 @@ class MysqlDAO extends DAO
 
   /**
   * Generic List Count
-  * 
+  *
   * @param object $connectionControl mysqli connection object
   * @param array $filters filters array
-  * 
+  *
   * @return integer
   */
   function listCount(&$connectionControl, $filters)
@@ -331,10 +333,10 @@ class MysqlDAO extends DAO
 
   /**
   * Insert record
-  * 
+  *
   * @param object $connectionControl mysqli connection object
   * @param object $voObj VO or Model object
-  * 
+  *
   * @return mixed
   */
   function create(&$connectionControl, $VOobj)
@@ -374,10 +376,10 @@ class MysqlDAO extends DAO
 
   /**
   * Update record
-  * 
+  *
   * @param object $connectionControl mysqli connection object
   * @param object $voObj VO or Model object
-  * 
+  *
   * @return mixed
   */
   function update(&$connectionControl, $VOobj)
@@ -393,11 +395,14 @@ class MysqlDAO extends DAO
 
     $valArray = array();
     foreach( $VOobj->data as $colk => $col) {
-      if($VOobj->getter($colk) !== null) {
+//      if($VOobj->getter($colk) !== null) {
         $setvalues .= ', '.$colk.'= ? ';
-        $valArray[] = $VOobj->getter($colk);
-      }
+        $valArray[] = $col;//$VOobj->getter($colk);
+//      }
     }
+
+//var_dump($setvalues);
+//var_dump($valArray);
 
     // add primary key value to values array
     $valArray[] = $pkValue;
@@ -415,11 +420,11 @@ class MysqlDAO extends DAO
 
   /**
   * delete from key
-  * 
+  *
   * @param object $connectionControl mysqli connection object
   * @param string $key key to search
   * @param mixed $value value to search
-  * 
+  *
   * @return boolean
   */
   function deleteFromKey(&$connectionControl, $key, $value)
@@ -440,9 +445,9 @@ class MysqlDAO extends DAO
 
   /**
   * return list of question marks separated by comma
-  * 
-  * @param array $elements 
-  * 
+  *
+  * @param array $elements
+  *
   * @return string
   */
   function getQuestionMarks( $elements ){

@@ -115,7 +115,7 @@ Class VO
     }
     else
     {
-      //var_dump('['.$data.']'); 
+      //var_dump('['.$data.']');
       //var_dump( json_decode('['.$data.']') );
       //var_dump( $json_errors[json_last_error()] );
       //exit;
@@ -125,10 +125,10 @@ Class VO
 
         if( sizeof($d)>0 ) {
           foreach($d as $dep) {
-            $this->setDepVO($dep, $voName, $relObj->parentId, $relObj);                  
+            $this->setDepVO($dep, $voName, $relObj->parentId, $relObj);
           }
         }
-        
+
        }
       else {
         // JSON DECODE ERROR
@@ -145,7 +145,7 @@ Class VO
         foreach (range(4, 3, -1) as $depth) {
           echo 'Problem decoding VO JSON : ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
           Cogumelo::error('['.$data.']');
-        }        
+        }
       }
 
 
@@ -158,7 +158,7 @@ Class VO
    *
    * @param object $dataVO
    * @param string $voName name of VO or Model
-   * @param string $key vo dependence key 
+   * @param string $key vo dependence key
    * @param object $relObj related object
    *
    * @return object
@@ -220,14 +220,14 @@ Class VO
     foreach( $this::$cols as $colK=>$col ) {
       if( isset($col['multilang']) && $col['multilang'] == true && $realCols) {
         foreach ( array_keys($LANG_AVAILABLE) as $langKey) {
-          $retCols[ $colK.'_'.$langKey ] = $col;   
+          $retCols[ $colK.'_'.$langKey ] = $col;
         }
       }
       else {
-        $retCols[ $colK ] = $col;        
+        $retCols[ $colK ] = $col;
       }
     }
-    
+
     return $retCols;
 
 
@@ -269,9 +269,9 @@ Class VO
     $cols = $this->getCols();
 
     // if a setter is for concrete lang or col have multilang
-    if( 
-      ( !$lang && array_key_exists($setterkey,$cols) && array_key_exists('multilang',$cols[$setterkey]) && $cols[$setterkey]['multilang'] ) || 
-      ( $lang && array_key_exists($setterkey, $cols ) ) 
+    if(
+      ( !$lang && array_key_exists($setterkey,$cols) && array_key_exists('multilang',$cols[$setterkey]) && $cols[$setterkey]['multilang'] ) ||
+      ( $lang && array_key_exists($setterkey, $cols ) )
     ) {
 
       if(!$lang)
@@ -292,7 +292,7 @@ Class VO
 
     if( array_key_exists($setterkey, $cols ) || array_key_exists( $this->langKey($setterkey, true) , $cols ) ) {
       // set values
-      if( $value !== null && !is_object($value) && !is_array($value) ) {
+      if( !is_object($value) && !is_array($value) ) {
         $this->data[$setterkey] = $value;
       }
       $retObj = $this;
@@ -315,12 +315,12 @@ Class VO
 
     if($getKey) {
       if( isset($match[1]) ){
-        $ret = $match[1];        
+        $ret = $match[1];
       }
       else{
         $ret = $key;
       }
-    } 
+    }
     else {
       $ret = $pm;
     }
@@ -352,7 +352,7 @@ Class VO
 
       Cogumelo::error( $voObj->getVOClassName() .' is not dependence of: '.$this->getVOClassName() );
     }
-    else{ 
+    else{
       $retVO = $this->setDepVO( $voObj->data, $voName, $fk, array_pop( $references) );
     }
 
@@ -372,8 +372,8 @@ Class VO
     $value = null;
     $cols = $this->getCols();
 
-    if( 
-      (!$lang && array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] ) ) 
+    if(
+      (!$lang && array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] ) )
     {
       $getterkey .= '_'.LANG_DEFAULT;
     }
@@ -425,6 +425,43 @@ Class VO
 
     return $depReturn;
   }
+
+
+
+  /**
+   * dependence deletion
+   *
+   * @param string $reference reference key
+   *
+   * @return array
+   */
+  function deleteDependence( $reference, $onlyModel = false, $delete = true ) {
+
+    if( array_key_exists($reference, $this->depData) ){
+      $depReturn = &$this->depData[ $reference ];
+    }
+
+    if( $onlyModel && $depReturn ) {
+      $depsFiltered = array();
+
+
+      foreach ( $depReturn as $depK => $dep ) {
+
+        if( $dep->getVOClassName() == $onlyModel) {
+          $depsFiltered[ $depK ] = $dep;
+        }
+      }
+
+      if( sizeof($depsFiltered) ) {
+        $depReturn = $depsFiltered;
+      }
+      else {
+        $depReturn = false;
+      }
+    }
+
+  }
+
 
 
 
@@ -595,4 +632,3 @@ Class VO
   }
 
 }
-
