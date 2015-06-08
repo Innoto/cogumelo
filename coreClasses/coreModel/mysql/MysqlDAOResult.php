@@ -17,8 +17,8 @@ class MysqlDAOResult extends DAOResult {
   /**
    * Sets data of VO
    *
-   * @param object $voObj 
-   * @param object $result 
+   * @param object $voObj
+   * @param object $result
    * @param boolean $isCacheResult
    *
    * @return object
@@ -107,9 +107,17 @@ class MysqlDAOResult extends DAOResult {
    * Creates an VO os Model from a query result
    *
    * @return object
-   */  
+   */
   function VOGenerator($row) // antes utilizaba & na variable res
   {
+
+    // exclude null values
+    foreach ($row as $k => $v ) {
+      if( $v === null ) {
+        unset( $row[$k] );
+      }
+    }
+
     return new $this->VO($row);
   }
 
@@ -118,7 +126,7 @@ class MysqlDAOResult extends DAOResult {
    * Query result without VO or Model declaration
    *
    * @return array
-   */  
+   */
   function fetchAllRaw() {
 
         //$this->reset_fetch();
@@ -138,7 +146,7 @@ class MysqlDAOResult extends DAOResult {
    * Reset fetch
    *
    * @return void
-   */  
+   */
   function resetFetch() {
      //return mysql_data_seek($this->result ,0);
      $this->result->data_seek(0);
