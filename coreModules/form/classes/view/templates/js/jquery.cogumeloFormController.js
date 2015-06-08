@@ -227,7 +227,7 @@ function processInputFileField( evnt ) {
   var valid = checkInputFileField( files, evnt.target.form.id, evnt.target.name );
 
   if( valid ) {
-    var cgIntFrmId = $( '#' + evnt.target.form.id ).attr( 'sg' );
+    var cgIntFrmId = $( '#' + evnt.target.form.id ).attr( 'data-cgmInId' );
     for (var i = 0, file; (file = files[i]); i++) {
       uploadFile( file, evnt.target.form.id, evnt.target.name, cgIntFrmId );
     }
@@ -240,7 +240,11 @@ function checkInputFileField( files, idForm, fieldName ) {
   console.log( files );
   console.log( fieldName );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
-  var valRes = $validateForm.element( 'input[name=' + fieldName + ']' );
+
+  $fileField = $( 'input[name="' + fieldName + '"][form="' + idForm + '"]' );
+  $( '#' + $fileField.attr('id') + '-error' ).remove();
+
+  var valRes = $validateForm.element( 'input[name="' + fieldName + '"][form="' + idForm + '"]' );
 
   // Mostrando informacion obtenida del navegador
   /*
@@ -344,17 +348,18 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 
 
 function deleteFormFileEvent( evnt ) {
+  console.log( 'deleteFormFileEvent: ', evnt );
   $fileField = $( evnt.target );
-  $form = $fileField.parents( 'form' );
-  var idForm = $form.attr( 'id' );
-  var fieldName = $fileField.attr( 'fieldName' );
-  var cgIntFrmId = $form.attr( 'sg' );
+  var idForm = $fileField.attr( 'data-form-id' );
+  var fieldName = $fileField.attr( 'data-fieldname' );
+  var cgIntFrmId = $( '#' + idForm ).attr( 'data-cgmInId' );
 
   deleteFormFile( idForm, fieldName, cgIntFrmId );
 } // function deleteFormFileEvent( evnt )
 
 
 function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
+  console.log( 'deleteFormFile: ', idForm, fieldName, cgIntFrmId );
   var formData = new FormData();
   formData.append( 'execute', 'delete' );
   formData.append( 'idForm', idForm );
@@ -407,30 +412,33 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId ) {
   $fileField.prop( 'disabled', true );
   $fileField.hide();
 
-  $( '#'+fieldName+'-error[data-form-id="'+idForm+'"]' ).hide();
+  //$( '#'+fieldName+'-error[data-form-id="'+idForm+'"]' ).hide();
+  $( '#' + $fileField.attr('id') + '-error' ).remove();
 
 
   if( fileModId === false ) {
     $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .status' ).html(
-      'Fichero listo para enviar: ' +
-      '<span class="fileUploadOK">' + fileName + '</span>'
+      '<span class="fileUploadOK">Fichero listo para enviar: ' + fileName + '</span>'
     );
     $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileName + '" uploaded OK</span>' );
   }
   else {
     $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileName + '"</span>' );
-    $fileFieldWrap.append( '<img src="/cgmlformfilews/' + fileModId + '" style="width: 100%;"></img>' );
+    $fileFieldWrap.append( '<img class="fileUploadOK tnImage" src="/cgmlformfilews/' + fileModId + '" style="width: 100%;"></img>' );
   }
 
-
-  /*
+  // Element to send delete order
   $fileFieldWrap.append(
-    $( '<div>' )
-      .attr( 'fieldName', fieldName )
+    $( '<span>' )
+      .attr( 'data-fieldname', fieldName )
+      .attr( 'data-form-id', idForm )
+      .attr( 'style', 'color: red; cursor: pointer;' )
       .addClass( 'fileUploadOK formFileDelete' )
       .text( ' * BORRAR * ' )
       .on('click', deleteFormFileEvent )
   );
+
+  /*
   // Only process image files.
   if( fileObj.type.match('image.*') && fileObj.size < 5000000 ) {
     loadImageTh( fileObj, $fileFieldWrap );
@@ -440,13 +448,15 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId ) {
 
 
 function fileFieldToInput( idForm, fieldName ) {
+  console.log( 'fileFieldToInput: ', idForm, fieldName );
   $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  console.log( $fileField );
   $fileFieldWrap = $fileField.parents().find( '.cgmMForm-field-' + fieldName );
 
   $fileFieldWrap.find( '.fileUploadOK' ).remove();
 
   $fileField.removeAttr( 'readonly' );
-  $fileField.removeProp( 'disabled' );
+  $fileField.prop( 'disabled', false ); //$fileField.removeProp( 'disabled' );
   $fileField.val( null );
   $fileField.show();
 }
@@ -484,7 +494,7 @@ function addGroupElement( evnt ) {
 
   var myForm = evnt.target.closest("form");
   var idForm = $( myForm ).attr('id');
-  var cgIntFrmId = $( myForm ).attr('sg');
+  var cgIntFrmId = $( myForm ).attr('data-cgmInId');
   var groupName = $( evnt.target ).attr('groupName');
 
 
@@ -565,7 +575,7 @@ function removeGroupElement( evnt ) {
 
   var myForm = evnt.target.closest("form");
   var idForm = $( myForm ).attr('id');
-  var cgIntFrmId = $( myForm ).attr('sg');
+  var cgIntFrmId = $( myForm ).attr('data-cgmInId');
   var groupName = $( evnt.target ).attr('groupName');
   var groupIdElem = $( evnt.target ).attr('groupIdElem');
   console.log( idForm );

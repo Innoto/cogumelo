@@ -389,14 +389,18 @@ class FormController implements Serializable {
         else {
           error_log( 'FILE value: ' . print_r( $value, true ) );
 
-          $fileFieldValue = array (
-            'status' => 'EXIST',
-            'prev' => $value
-          );
-          $this->setFieldValue( $fieldName, $fileFieldValue );
-          $this->setFieldParam( $fieldName, 'data-filemodel-id', $value['id'] );
+          if ( isset( $value ) && is_array( $value ) ) {
+            $fileFieldValue = array (
+              'status' => 'EXIST',
+              'prev' => $value
+            );
+            $this->setFieldValue( $fieldName, $fileFieldValue );
+            $this->setFieldParam( $fieldName, 'data-filemodel-id', $value['id'] );
+          }
+          else {
+            $this->setFieldValue( $fieldName, null );
+          }
         }
-
       }
     }
   }
@@ -1349,7 +1353,7 @@ class FormController implements Serializable {
   public function getHtmpOpen() {
     $html='';
 
-    $html .= '<form name="'.$this->getName().'" id="'.$this->id.'" sg="'.$this->getTokenId().'" ';
+    $html .= '<form name="'.$this->getName().'" id="'.$this->id.'" data-cgmInId="'.$this->getTokenId().'" ';
     $html .= ' class="'.self::CSS_PRE.' '.self::CSS_PRE.'-form-'.$this->getName().'" ';
     if( $this->action ) {
       $html .= ' action="'.$this->action.'"';
