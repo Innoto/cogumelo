@@ -1662,9 +1662,12 @@ class FormController implements Serializable {
         // Colocamos los selected
         if( isset( $field['value'] ) ) {
           $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
+          $dataOrder = 1;
           foreach( $values as $val ) {
             $html['options'][$val]['input'] = str_replace( 'option value="'.$val.'"',
-              'option value="'.$val.'" selected="selected"', $html['options'][$val]['input'] );
+              'option data-order="'.$dataOrder.'" value="'.$val.'" selected="selected"',
+              $html['options'][$val]['input'] );
+            $dataOrder++;
             if( !isset( $field['multiple'] ) ) {
               break; // Si no es multiple, solo puede tener 1 valor
             }
