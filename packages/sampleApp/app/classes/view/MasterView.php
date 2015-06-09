@@ -34,24 +34,24 @@ class MasterView extends View
   }
 
   function common() {
+    echo "BLAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     $this->template->addClientScript('js/default.js');
     $this->template->setTpl('default.tpl');
   }
 
   function testdata(){
-    
+
 
 
     echo "<pre>";
     user::load('model/UserModel.php');
 
 
-
       ////////////////////////////////////
      //           CREACIÓN
     ////////////////////////////////////
 
-
+/*
     // permisos
     $permiso_lectura = new PermissionModel( array('name'=>'Lectura') );
     $permiso_edicion = new PermissionModel( array('name'=>'Edición') );
@@ -61,7 +61,7 @@ class MasterView extends View
 
     //$rol_visitante = new RoleModel( array('name'=>'visitor') );
     //$rol_editor = new RoleModel( array('name'=>'editor') );
-    //$rol_harduser = new RoleModel( array('name'=>'harduser') );    
+    //$rol_harduser = new RoleModel( array('name'=>'harduser') );
     $rol_administrador = new RoleModel( array('name'=>'admin') );
 
 
@@ -69,8 +69,8 @@ class MasterView extends View
 
 
     $rol_administrador->setterDependence('id', new RolePermissionModel() )->setterDependence('permission', $permiso_lectura);
-    $rol_administrador->setterDependence('id', new RolePermissionModel() )->setterDependence('permission', $permiso_edicion); 
-    //$rol_administrador->setterDependence('id', new RolePermissionModel() )->setterDependence('permission', $permiso_administracion); 
+    $rol_administrador->setterDependence('id', new RolePermissionModel() )->setterDependence('permission', $permiso_edicion);
+    //$rol_administrador->setterDependence('id', new RolePermissionModel() )->setterDependence('permission', $permiso_administracion);
 
 
     $rol_administrador->save( array('affectsDependences' =>true) );
@@ -85,7 +85,10 @@ class MasterView extends View
 
     $user = new UserModel();
 
+*/
 
+
+    $user = new UserModel();
     //$u = $user->listItems( array('affectsDependences'=> true ))->fetch();
     //$av = $u->getterDependence('avatar');
 
@@ -104,10 +107,10 @@ class MasterView extends View
 
 
 
-    //    $u = $user->listItems(  )->fetch();
-    //$u->setter('name', 'NovoNOME');
-    //$u->save();
-    //var_dump($u->getAllData());
+    $u = $user->listItems(  )->fetch();
+    $u->setter('active', NULL);
+    $u->save();
+    var_dump($u->getAllData());
     //$u = $user->listItems( array('affectsDependences'=>array('UserRoleModel', 'RoleModel', 'RolePermissionModel', 'PermissionModel', 'FiledataModel'), 'filters'=>array('PermissionModel.name'=>'fukinpermission') ))->fetch();
 
 
@@ -117,11 +120,11 @@ class MasterView extends View
 /*
   user::load('model/UserModel.php');
   $user = new UserModel( ['login'=>'olasdfteu', 'email'=>'ola@teu.com', 'surname'=>'pablo', 'name'=>'blanco' ] );
-  
+
   $user->setterDependence( 'id', new FileDataModel( ['name'=>'blabla', 'originalName'] ) );
 
   $user->setterDependence( 'id', new UserRoleModel( ) )->setterDependence( 'role', new RoleModel( ['nome' => 'fukee/*r', 'description'=>'A motherfuker'] ) )->setterDependence('id', new RolePermissionModel() )->setterDependence('permission', new PermissionModel(['name'=>'fukinpermission']) ) ;
-  
+
   $user->save(['affectsDependences' =>true]);
   var_dump($user->getAllData() );
 */
@@ -137,7 +140,7 @@ class MasterView extends View
       var_dump($user->depData);
 */
       //$user->save( array( 'affectsDependences' => true ));
-  
+
 
 
 
@@ -179,11 +182,11 @@ class MasterView extends View
 
 
 /*
-    $users = $user->listItems( 
+    $users = $user->listItems(
       array(
         'filters'=>array('find'=>'pablo'),
-        'affectsDependences' => true 
-      ) 
+        'affectsDependences' => true
+      )
     );
 
     $u  = $users->fetch();
@@ -196,7 +199,7 @@ class MasterView extends View
       //$u->setter('name', 'novonome');
       //var_dump( $u->getAllData() );
       var_dump($u->getDepInLinearArray($u));
-      //$u->delete();  
+      //$u->delete();
     }
 */
 
@@ -208,7 +211,7 @@ class MasterView extends View
     //var_dump($u->getAllData());
 */
 
-    
+
   //  $u  = $users->fetch();
 //    var_dump($u);
 
@@ -218,7 +221,7 @@ class MasterView extends View
     //$usD = $u->getDepInLinearArray($u);
 
 
-    
+
 
   }
 
@@ -227,4 +230,3 @@ class MasterView extends View
   }
 
 }
-
