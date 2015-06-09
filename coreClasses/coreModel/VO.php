@@ -437,28 +437,36 @@ Class VO
    */
   function deleteDependence( $reference, $onlyModel = false, $delete = true ) {
 
-    if( array_key_exists($reference, $this->depData) ){
+
+    if( array_key_exists($reference, $this->depData)  ){
       $depReturn = &$this->depData[ $reference ];
-    }
 
-    if( $onlyModel && $depReturn ) {
-      $depsFiltered = array();
+      if( sizeof( $this->depData[ $reference ] )>0  ) {
+        foreach( $this->depData[$reference] as $dk => $dep ){
 
+          // filter only selected models
+          if( $onlyModel == false || $dep->getVOClassName() == $onlyModel ) {
 
-      foreach ( $depReturn as $depK => $dep ) {
+            // UNSET
+            unset( $this->depData[$reference][$dk] );
 
-        if( $dep->getVOClassName() == $onlyModel) {
-          $depsFiltered[ $depK ] = $dep;
+            // DELETE
+            if( $delete ) {
+              $dep->delete();
+            }
+          }
+
         }
       }
 
-      if( sizeof($depsFiltered) ) {
-        $depReturn = $depsFiltered;
+
+      // set to null if is foreing key of this model
+      if( $this::$cols[$reference]['type'] == 'FOREIGN' ){
+        $this->setter($reference, null);
       }
-      else {
-        $depReturn = false;
-      }
+
     }
+
 
   }
 
