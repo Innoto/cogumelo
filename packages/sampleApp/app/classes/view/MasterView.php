@@ -107,9 +107,10 @@ class MasterView extends View
 
 
 
-    $u = $user->listItems(  )->fetch();
-    $u->setter('active', NULL);
-    $u->save();
+    $u = $user->listItems( array('affectsDependences'=>array('UserRoleModel') ) )->fetch();
+
+    $u->deleteDependence('id', 'UserRoleModel');
+
     var_dump($u->getAllData());
     //$u = $user->listItems( array('affectsDependences'=>array('UserRoleModel', 'RoleModel', 'RolePermissionModel', 'PermissionModel', 'FiledataModel'), 'filters'=>array('PermissionModel.name'=>'fukinpermission') ))->fetch();
 
