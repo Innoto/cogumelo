@@ -1,28 +1,49 @@
 $.fn.serializeFormToObject = function () {
-  var o = {};
+  var ser = {};
 
-  var a = this.serializeArray();
+  var fa = this.serializeArray();
 
-  $.each( a, function () {
-    if( o[this.name] !== undefined ) {
-      if( !o[this.name].push ) {
-        o[this.name] = [o[this.name]];
+
+  $.each( fa, function () {
+    if( ser[ this.name ] !== undefined ) {
+      if( !ser[ this.name ].push ) {
+        ser[ this.name ] = [ ser[ this.name ] ];
       }
-      o[this.name].push( this.value || '' );
+      ser[ this.name ].push( this.value || '' );
     }
     else {
-      o[this.name] = this.value || '';
+      ser[ this.name ] = this.value || '';
     }
   });
 
-  this.find(':input').each(
-    function(i, elem) {
-      if( elem.name !== undefined && elem.name !== '' && o[elem.name] === undefined ) {
-        o[elem.name] = false;
-      }
-  });
 
-  return o;
+  this.find(':input').each(
+    function( i, elem ) {
+      if( elem.name !== undefined && elem.name !== '' ) {
+        if( ser[ elem.name ] === undefined ) {
+          ser[ elem.name ] = false;
+        }
+
+        // order select multiple
+        if( elem.multiple === true  && ser[ elem.name ].push ) {
+          var opValOrd = [];
+          $( elem ).find( 'option' ).filter( ':selected').each(
+            function( i, opElem ) {
+              $selElem = $( opElem );
+              opValOrd.push( { val: $selElem.val(), ord: $selElem.data( 'order' ) } );
+            }
+          );
+          ser[ elem.name ] = opValOrd
+            .sort( function( a, b ) { return( parseInt( a.ord ) - parseInt( b.ord ) ); } )
+            .map( function( e ) { return( e.val ); } );
+        }
+      }
+    }
+  );
+
+
+  console.log( 'resultado: ', ser );
+  return ser;
 };
 
 
