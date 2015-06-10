@@ -401,7 +401,7 @@ Class VO
     $depReturn = false;
 
     if( array_key_exists($reference, $this->depData) ){
-      $depReturn = &$this->depData[ $reference ];
+      $depReturn = $this->depData[ $reference ];
     }
 
     if( $onlyModel && $depReturn ) {
