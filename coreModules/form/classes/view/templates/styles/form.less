@@ -16,15 +16,17 @@
 @import "/form/classes/view/templates/styles/formExtender.less";
 
 
+/*** Form errors ***/
+
 input[type="text"],
-input[type="password"]{
-  &.formError{
+input[type="password"] {
+  &.formError {
     border-color: @formErrorColor;
   }
 }
 
-label{
-  &.formError{
+label {
+  &.formError {
     background: @formErrorBckColor;
     color: @formErrorFontColor;
     display: inline-block;
@@ -38,9 +40,23 @@ label{
 input[type="radiobutton"],
 input[type="checkbox"],
 textarea,
-select{
-  &.formError{
+select {
+  &.formError {
     .box-shadow(1px 0px 2px 0px @formErrorColor);
+  }
+}
+
+
+
+/*** Form file field ***/
+.cgmMForm-fileField .fileFieldInfo {
+  position: relative;
+  .formFileDelete {
+    position: absolute; top: 3px; left: 3px;
+    color: red; cursor: pointer; font-size: 20px;
+  }
+  .tnImage {
+    width: 100%;
   }
 }
 

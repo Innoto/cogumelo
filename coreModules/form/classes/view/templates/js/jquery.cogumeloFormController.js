@@ -416,27 +416,25 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId ) {
   $( '#' + $fileField.attr('id') + '-error' ).remove();
 
 
-  if( fileModId === false ) {
-    $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .status' ).html(
-      '<span class="fileUploadOK">Fichero listo para enviar: ' + fileName + '</span>'
-    );
-    $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileName + '" uploaded OK</span>' );
-  }
-  else {
-    $fileFieldWrap.append( '<span class="fileUploadOK msgText">"' + fileName + '"</span>' );
-    $fileFieldWrap.append( '<img class="fileUploadOK tnImage" src="/cgmlformfilews/' + fileModId + '" style="width: 100%;"></img>' );
-  }
+  $fileFieldInfo = $( '<div>' ).addClass( 'fileFieldInfo fileUploadOK formFileDelete' )
+    .attr( { "data-fieldname": fieldName, "data-form-id": idForm } );
 
   // Element to send delete order
-  $fileFieldWrap.append(
-    $( '<span>' )
-      .attr( 'data-fieldname', fieldName )
-      .attr( 'data-form-id', idForm )
-      .attr( 'style', 'color: red; cursor: pointer;' )
-      .addClass( 'fileUploadOK formFileDelete' )
-      .text( ' * BORRAR * ' )
-      .on('click', deleteFormFileEvent )
+  $fileFieldInfo.append( $( '<i>' ).addClass( 'formFileDelete fa fa-trash' )
+    .attr( { "data-fieldname": fieldName, "data-form-id": idForm } )
+    .on('click', deleteFormFileEvent )
   );
+
+  if( fileModId === false ) {
+    $fileFieldInfo.append( '<div class="msgInfo">&nbsp; &nbsp; &nbsp; Información, Icono e esquina coa papelera</div>' );
+    $fileFieldInfo.append( '<span class="msgText">"' + fileName + '" uploaded OK</span>' );
+  }
+  else {
+    $fileFieldInfo.append( '<img class="tnImage" src="/cgmlformfilews/' + fileModId + '"></img>' );
+    $fileFieldInfo.append( '<span class="msgText">"' + fileName + '"</span>' );
+  }
+
+  $fileFieldWrap.append( $fileFieldInfo );
 
   /*
   // Only process image files.
@@ -469,7 +467,7 @@ function loadImageTh( fileObj, $fileFieldWrap ) {
     function cargado( fileLoaded ) {
       return(
         function procesando( evnt ) {
-          $fileFieldWrap.append('<div class="fileUploadOK imageTh"><img class="imageTh" border="1" ' +
+          $fileFieldWrap.append('<div class="imageTh"><img class="imageTh" border="1" ' +
             ' style="max-width:50px; max-height:50px;" src="' + evnt.target.result + '"/></div>');
         }
       );
