@@ -23,26 +23,11 @@ $.fn.serializeFormToObject = function () {
         if( ser[ elem.name ] === undefined ) {
           ser[ elem.name ] = false;
         }
-
         // order select multiple
         if( elem.multiple === true  && ser[ elem.name ].push ) {
-
           ser[ elem.name ] = $( elem ).find( 'option' ).filter( ':selected').toArray()
             .sort( function( a, b ) { return( parseInt( $( a ).data( 'order' ) ) - parseInt( $( b ).data( 'order' ) ) ); } )
             .map( function( e ) { return( e.value ); } );
-
-          /*
-          var opValOrd = [];
-          $( elem ).find( 'option' ).filter( ':selected').each(
-            function( i, opElem ) {
-              $selElem = $( opElem );
-              opValOrd.push( { val: $selElem.val(), ord: $selElem.data( 'order' ) } );
-            }
-          );
-          ser[ elem.name ] = opValOrd
-            .sort( function( a, b ) { return( parseInt( a.ord ) - parseInt( b.ord ) ); } )
-            .map( function( e ) { return( e.val ); } );
-          */
         }
       }
     }
