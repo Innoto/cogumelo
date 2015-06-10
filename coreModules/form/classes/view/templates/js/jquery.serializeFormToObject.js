@@ -26,6 +26,12 @@ $.fn.serializeFormToObject = function () {
 
         // order select multiple
         if( elem.multiple === true  && ser[ elem.name ].push ) {
+
+          ser[ elem.name ] = $( elem ).find( 'option' ).filter( ':selected').toArray()
+            .sort( function( a, b ) { return( parseInt( $( a ).data( 'order' ) ) - parseInt( $( b ).data( 'order' ) ) ); } )
+            .map( function( e ) { return( e.value ); } );
+
+          /*
           var opValOrd = [];
           $( elem ).find( 'option' ).filter( ':selected').each(
             function( i, opElem ) {
@@ -36,6 +42,7 @@ $.fn.serializeFormToObject = function () {
           ser[ elem.name ] = opValOrd
             .sort( function( a, b ) { return( parseInt( a.ord ) - parseInt( b.ord ) ); } )
             .map( function( e ) { return( e.val ); } );
+          */
         }
       }
     }

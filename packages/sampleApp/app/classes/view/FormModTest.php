@@ -45,12 +45,12 @@ class FormModTest extends View
     $form->setValidationRule( 'inputFicheiro', 'accept', 'image/jpeg' );
     $form->setValidationRule( 'inputFicheiro', 'required' );
 
-    /*
+
     $form->setField( 'select1', array( 'type' => 'select', 'label' => 'Meu Select',
-      'value' => array( '1', '2' ), 'multiple' => 'multiple'
+      'value' => array( '2', '1' ), 'multiple' => 'multiple',
       'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
       ) );
-    */
+
     $form->setField( 'input2', array( 'id' => 'meu2', 'label' => 'Meu 2', 'value' => 'valor678' ) );
     $form->setValidationRule( 'input2', 'required' );
     $form->setValidationRule( 'input2', 'minlength', '8' );
