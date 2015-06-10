@@ -41,7 +41,7 @@ Class Model extends VO {
   *
   * @param array $parameters array of filters
   *
-  * @return array VO array
+  * @return DAOResult
   */
   function listItems( array $parameters = array() )
   {
@@ -104,7 +104,7 @@ Class Model extends VO {
 
     eval('$tableName = '.get_called_class().'::$tableName;');
     eval('$cols = '.get_called_class().'::$cols;');
-    eval('if( isset( '.get_called_class().'::$extraFilters) ) {$extraFilters = '.get_called_class().'::$extraFilters;}');    
+    eval('if( isset( '.get_called_class().'::$extraFilters) ) {$extraFilters = '.get_called_class().'::$extraFilters;}');
 
 
     foreach( $cols as $colK => $colD  ) {
@@ -295,5 +295,3 @@ Class Model extends VO {
 
 
 }
-
-
