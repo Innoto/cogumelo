@@ -43,7 +43,7 @@ class FormModTest extends View
 
     $form->setValidationRule( 'inputFicheiro', 'minfilesize', 1024 );
     $form->setValidationRule( 'inputFicheiro', 'accept', 'image/jpeg' );
-    $form->setValidationRule( 'inputFicheiro', 'required' );
+    //$form->setValidationRule( 'inputFicheiro', 'required' );
 
 
     $form->setField( 'select1', array( 'type' => 'select', 'label' => 'Meu Select',
@@ -55,10 +55,12 @@ class FormModTest extends View
     $form->setValidationRule( 'input2', 'required' );
     $form->setValidationRule( 'input2', 'minlength', '8' );
 
-    $form->setField( 'check1', array( 'type' => 'checkbox', 'label' => 'Meu checkbox', 'value' => array( '1', 'asdf' ),
+    $form->setField( 'check1', array( 'type' => 'checkbox', 'label' => 'Meu checkbox', //'value' => array( '1', 'asdf' ),
       'options'=> array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' )
       ) );
-    $form->setValidationRule( 'check1', 'required' );
+    //$form->setValidationRule( 'check1', 'required' );
+
+    error_log( 'check1: '. print_r( array( '0' => 'Zero', '1' => 'Opcion 1', '2' => 'Posto 2', 'asdf' => 'asdf' ), true ) );
 
     /*
     $form->setField( 'radio1', array( 'type' => 'radio', 'label' => 'Meu radio', 'value' => '2',

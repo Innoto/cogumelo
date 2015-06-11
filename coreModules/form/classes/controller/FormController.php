@@ -1664,12 +1664,14 @@ class FormController implements Serializable {
           $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
           $dataOrder = 1;
           foreach( $values as $val ) {
-            $html['options'][$val]['input'] = str_replace( 'option value="'.$val.'"',
-              'option data-order="'.$dataOrder.'" value="'.$val.'" selected="selected"',
-              $html['options'][$val]['input'] );
-            $dataOrder++;
-            if( !isset( $field['multiple'] ) ) {
-              break; // Si no es multiple, solo puede tener 1 valor
+            if( isset( $html['options'][$val]['input'] ) ) {
+              $html['options'][$val]['input'] = str_replace( 'option value="'.$val.'"',
+                'option data-order="'.$dataOrder.'" value="'.$val.'" selected="selected"',
+                $html['options'][$val]['input'] );
+              $dataOrder++;
+              if( !isset( $field['multiple'] ) ) {
+                break; // Si no es multiple, solo puede tener 1 valor
+              }
             }
           }
         }
@@ -1691,12 +1693,14 @@ class FormController implements Serializable {
         if( isset( $field['value'] ) ) {
           $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
           foreach( $values as $val ) {
-            $html['options'][$val]['input'] = str_replace(
-              'name="'.$fieldName.'" value="'.$val.'"',
-              'name="'.$fieldName.'" value="'.$val.'" checked="checked"',
-              $html['options'][$val]['input'] );
-            if( $field['type']=='radio' ) {
-              break; // Radio solo puede tener 1 valor
+            if( isset( $html['options'][$val]['input'] ) ) {
+              $html['options'][$val]['input'] = str_replace(
+                'name="'.$fieldName.'" value="'.$val.'"',
+                'name="'.$fieldName.'" value="'.$val.'" checked="checked"',
+                $html['options'][$val]['input'] );
+              if( $field['type']=='radio' ) {
+                break; // Radio solo puede tener 1 valor
+              }
             }
           }
         }
