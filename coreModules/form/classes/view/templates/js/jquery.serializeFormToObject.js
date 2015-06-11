@@ -17,7 +17,7 @@ $.fn.serializeFormToObject = function () {
   });
 
 
-  this.find(':input').each(
+  $( ':input[form="' + this.attr( 'id' ) + '"]' ).each(
     function( i, elem ) {
       if( elem.name !== undefined && elem.name !== '' ) {
         if( ser[ elem.name ] === undefined ) {
@@ -34,7 +34,7 @@ $.fn.serializeFormToObject = function () {
   );
 
 
-  console.log( 'resultado: ', ser );
+  console.log( 'serializeFormToObject: ', ser );
   return ser;
 };
 
