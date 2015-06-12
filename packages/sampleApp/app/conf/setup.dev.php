@@ -110,6 +110,7 @@ $C_INDEX_MODULES  = array( 'mediaserver', 'i18nGetLang', 'user', 'form', 'devel'
 //
 //  Logs
 //
+define( 'ENABLE_LOGS', true);
 define( 'LOGDIR', APP_BASE_PATH.'/log/' ); //log files directory
 define( 'LOG_RAW_SQL', false ); // Log RAW all SQL ¡WARNING! application passwords will dump into log files
 define( 'DEBUG', true ); // Set Debug mode to log debug messages on log
@@ -197,4 +198,3 @@ $COGUMELO_SMARTY_CONSTANTS = array(
   'langDefault' => LANG_DEFAULT,
   'langAvailable' => $LANG_AVAILABLE
 );
-
