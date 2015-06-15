@@ -129,7 +129,7 @@ Class Model extends VO {
   *
   * @return object  VO
   */
-  function save( array $parameters= array(), $checkUpdates = true )
+  function save( array $parameters= array() )
   {
     $this->dataFacade->transactionStart();
 
@@ -148,15 +148,15 @@ Class Model extends VO {
           $selectDep['ref']->save( array('affectsDependences' => false) );
       }
 
-      if( $checkUpdates ) {
-        // Update external keys of all VOs
-        $this->refreshRelationshipKeyIds();
 
-        // save second time to update keys in related VOs
-        while( $selectDep = array_pop($depsInOrder2) ) {
-            $selectDep['ref']->save( array('affectsDependences' => false) );
-        }
+      // Update external keys of all VOs
+      $this->refreshRelationshipKeyIds();
+
+      // save second time to update keys in related VOs
+      while( $selectDep = array_pop($depsInOrder2) ) {
+          $selectDep['ref']->save( array('affectsDependences' => false) );
       }
+
 
     }
     // Save only this Model
