@@ -180,10 +180,11 @@ class CogumeloClass extends Singleton
   }
 
   public static function log( $texto, $fich_log = 'cogumelo' ) {
+    global $COGUMELO_DISABLE_LOGS;
     $ignore = false;
 
 
-    if( ENABLE_LOGS ) {
+    if( !$COGUMELO_DISABLE_LOGS ) {
       // Rodeo para evitar "PHP Notice:  Use of undefined constant MOD_DEVEL_URL_DIR"
       $arrayDefines = get_defined_constants();
       if(
@@ -203,6 +204,11 @@ class CogumeloClass extends Singleton
         );
       }
     }
+  }
+
+  public static function disableLogs() {
+    global $COGUMELO_DISABLE_LOGS;
+    $COGUMELO_DISABLE_LOGS = true;
   }
 
   // set an string with user information
