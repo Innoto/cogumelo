@@ -1,6 +1,4 @@
 <?php
-
-
 Cogumelo::load('coreModel/VO.php');
 Cogumelo::load('coreModel/Model.php');
 
@@ -15,15 +13,15 @@ class FilegroupModel extends Model
     ),
     'idGroup' => array(
       'type' => 'INT'
-    ),    
+    ),
     'filedataId' => array(
       'type'=>'FOREIGN',
       'vo' => 'FiledataModel',
       'key' => 'id'
-    ),    
+    ),
   );
 
-  function __construct($datarray = array(), $otherRelObj = false ) {
+  public function __construct( $datarray = array(), $otherRelObj = false ) {
     parent::__construct( $datarray, $otherRelObj );
   }
 
