@@ -54,16 +54,16 @@ function bindForm( idForm ) {
     $inputFileFields.on( 'change', processInputFileField );
   }
 
-  $( '.addGroupElement[data-form-id="'+idForm+'"]' ).on( 'click', addGroupElement ).css( 'cursor', 'pointer' );
-  $( '.removeGroupElement[data-form-id="'+idForm+'"]' ).on( 'click', removeGroupElement ).css( 'cursor', 'pointer' );
+  $( '.addGroupElement[data-form_id="'+idForm+'"]' ).on( 'click', addGroupElement ).css( 'cursor', 'pointer' );
+  $( '.removeGroupElement[data-form_id="'+idForm+'"]' ).on( 'click', removeGroupElement ).css( 'cursor', 'pointer' );
 }
 
 
 function unbindForm( idForm ) {
   console.log( 'unbindForm( '+idForm+' )' );
   $( 'input:file[form="'+idForm+'"]' ).off( 'change' );
-  $( '.addGroupElement[data-form-id="'+idForm+'"]' ).off( 'click' );
-  $( '.removeGroupElement[data-form-id="'+idForm+'"]' ).off( 'click' );
+  $( '.addGroupElement[data-form_id="'+idForm+'"]' ).off( 'click' );
+  $( '.removeGroupElement[data-form_id="'+idForm+'"]' ).off( 'click' );
 }
 
 /*
@@ -227,7 +227,7 @@ function processInputFileField( evnt ) {
   var valid = checkInputFileField( files, evnt.target.form.id, evnt.target.name );
 
   if( valid ) {
-    var cgIntFrmId = $( '#' + evnt.target.form.id ).attr( 'data-cgmInId' );
+    var cgIntFrmId = $( '#' + evnt.target.form.id ).attr( 'data-token_id' );
     for (var i = 0, file; (file = files[i]); i++) {
       uploadFile( file, evnt.target.form.id, evnt.target.name, cgIntFrmId );
     }
@@ -266,7 +266,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
   formData.append( 'fieldName', fieldName );
   formData.append( 'cgIntFrmId', cgIntFrmId );
 
-  $( '.'+fieldName+'-info[data-form-id="'+idForm+'"]' ).show();
+  $( '.'+fieldName+'-info[data-form_id="'+idForm+'"]' ).show();
 
   $.ajax({
     url: '/cgml-form-file-upload', type: 'POST',
@@ -302,14 +302,14 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
       var idForm = $jsonData.moreInfo.idForm;
       var fieldName = $jsonData.moreInfo.fieldName;
-      $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .progressBar' ).hide();
+      $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .progressBar' ).hide();
 
       if( $jsonData.result === 'ok' ) {
         fileFieldToOk( idForm, fieldName, $jsonData.moreInfo.fileName, false );
       }
       else {
         console.log( 'uploadFile ERROR' );
-        $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .wrap .status' ).html( 'Error cargando el fichero.' );
+        $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( 'Error cargando el fichero.' );
 
         $validateForm = getFormInfo( idForm, 'validateForm' );
         console.log( $validateForm );
@@ -341,7 +341,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
       console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
-      $( '.'+fieldName+'-info[data-form-id="'+idForm+'"] .status' ).html( 'Upload Failed (' + $textStatus + ')' );
+      $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .status' ).html( 'Upload Failed (' + $textStatus + ')' );
     }
   });
 } // function uploadFile( file, idForm, fieldName, cgIntFrmId )
@@ -350,9 +350,9 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 function deleteFormFileEvent( evnt ) {
   console.log( 'deleteFormFileEvent: ', evnt );
   $fileField = $( evnt.target );
-  var idForm = $fileField.attr( 'data-form-id' );
+  var idForm = $fileField.attr( 'data-form_id' );
   var fieldName = $fileField.attr( 'data-fieldname' );
-  var cgIntFrmId = $( '#' + idForm ).attr( 'data-cgmInId' );
+  var cgIntFrmId = $( '#' + idForm ).attr( 'data-token_id' );
 
   deleteFormFile( idForm, fieldName, cgIntFrmId );
 } // function deleteFormFileEvent( evnt )
@@ -412,16 +412,16 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId ) {
   $fileField.prop( 'disabled', true );
   $fileField.hide();
 
-  //$( '#'+fieldName+'-error[data-form-id="'+idForm+'"]' ).hide();
+  //$( '#'+fieldName+'-error[data-form_id="'+idForm+'"]' ).hide();
   $( '#' + $fileField.attr('id') + '-error' ).remove();
 
 
   $fileFieldInfo = $( '<div>' ).addClass( 'fileFieldInfo fileUploadOK formFileDelete' )
-    .attr( { "data-fieldname": fieldName, "data-form-id": idForm } );
+    .attr( { "data-fieldname": fieldName, "data-form_id": idForm } );
 
   // Element to send delete order
   $fileFieldInfo.append( $( '<i>' ).addClass( 'formFileDelete fa fa-trash' )
-    .attr( { "data-fieldname": fieldName, "data-form-id": idForm } )
+    .attr( { "data-fieldname": fieldName, "data-form_id": idForm } )
     .on('click', deleteFormFileEvent )
   );
 
@@ -492,7 +492,7 @@ function addGroupElement( evnt ) {
 
   var myForm = evnt.target.closest("form");
   var idForm = $( myForm ).attr('id');
-  var cgIntFrmId = $( myForm ).attr('data-cgmInId');
+  var cgIntFrmId = $( myForm ).attr('data-token_id');
   var groupName = $( evnt.target ).attr('groupName');
 
 
@@ -573,7 +573,7 @@ function removeGroupElement( evnt ) {
 
   var myForm = evnt.target.closest("form");
   var idForm = $( myForm ).attr('id');
-  var cgIntFrmId = $( myForm ).attr('data-cgmInId');
+  var cgIntFrmId = $( myForm ).attr('data-token_id');
   var groupName = $( evnt.target ).attr('groupName');
   var groupIdElem = $( evnt.target ).attr('groupIdElem');
   console.log( idForm );
@@ -674,7 +674,7 @@ function createSwitchFormLang( idForm ) {
     htmlLangSwitch += '<div class="langSwitch-wrap">';
     htmlLangSwitch += '<ul class="langSwitch">';
     $.each( langAvailable, function( index, lang ) {
-      htmlLangSwitch += '<li class="langSwitch-'+lang+'" data-lang-value="'+lang+'">'+lang;
+      htmlLangSwitch += '<li class="langSwitch-'+lang+'" data-lang="'+lang+'">'+lang;
     });
     htmlLangSwitch += '</ul>';
     htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-flag fa-fw"></i></span>';
@@ -685,7 +685,7 @@ function createSwitchFormLang( idForm ) {
     switchFormLang( idForm, langDefault );
 
     $( '#' + idForm + ' ul.langSwitch li' ).on( "click", function() {
-      newLang = $( this ).data( 'lang-value' );
+      newLang = $( this ).data( 'lang' );
       if( newLang != langForm ) {
         switchFormLang( idForm, newLang );
       }

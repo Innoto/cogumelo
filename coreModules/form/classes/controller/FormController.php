@@ -60,9 +60,34 @@ class FormController implements Serializable {
 
   private $htmlEditor = false;
 
+  public $langDefault = false;
+  public $langAvailable = false;
+
   private $replaceAcents = array(
-    'from' => array( 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï', 'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'ß', 'à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù', 'ú', 'û', 'ü', 'ý', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č', 'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ', 'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ', 'Ĵ', 'ĵ', 'Ķ', 'ķ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň', 'ň', 'ŉ', 'Ō', 'ō', 'Ŏ', 'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ', 'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů', 'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'ſ', 'ƒ', 'Ơ', 'ơ', 'Ư', 'ư', 'Ǎ', 'ǎ', 'Ǐ', 'ǐ', 'Ǒ', 'ǒ', 'Ǔ', 'ǔ', 'Ǖ', 'ǖ', 'Ǘ', 'ǘ', 'Ǚ', 'ǚ', 'Ǜ', 'ǜ', 'Ǻ', 'ǻ', 'Ǽ', 'ǽ', 'Ǿ', 'ǿ' ),
-    'to'   => array( 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I', 'D', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 's', 'a', 'a', 'a', 'a', 'a', 'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u', 'y', 'y', 'A', 'a', 'A', 'a', 'A', 'a', 'C', 'c', 'C', 'c', 'C', 'c', 'C', 'c', 'D', 'd', 'D', 'd', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'G', 'g', 'G', 'g', 'G', 'g', 'G', 'g', 'H', 'h', 'H', 'h', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'J', 'j', 'K', 'k', 'L', 'l', 'L', 'l', 'L', 'l', 'L', 'l', 'l', 'l', 'N', 'n', 'N', 'n', 'N', 'n', 'n', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'R', 'r', 'R', 'r', 'R', 'r', 'S', 's', 'S', 's', 'S', 's', 'S', 's', 'T', 't', 'T', 't', 'T', 't', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'W', 'w', 'Y', 'y', 'Y', 'Z', 'z', 'Z', 'z', 'Z', 'z', 's', 'f', 'O', 'o', 'U', 'u', 'A', 'a', 'I', 'i', 'O', 'o', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'A', 'a', 'A', 'a', 'O', 'o' )
+    'from' => array( 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï',
+      'Ð', 'Ñ', 'Ò', 'Ó', 'Ô', 'Õ', 'Ö', 'Ø', 'Ù', 'Ú', 'Û', 'Ü', 'Ý', 'ß', 'à', 'á', 'â', 'ã', 'ä',
+      'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ñ', 'ò', 'ó', 'ô', 'õ', 'ö', 'ø', 'ù',
+      'ú', 'û', 'ü', 'ý', 'ÿ', 'Ā', 'ā', 'Ă', 'ă', 'Ą', 'ą', 'Ć', 'ć', 'Ĉ', 'ĉ', 'Ċ', 'ċ', 'Č', 'č',
+      'Ď', 'ď', 'Đ', 'đ', 'Ē', 'ē', 'Ĕ', 'ĕ', 'Ė', 'ė', 'Ę', 'ę', 'Ě', 'ě', 'Ĝ', 'ĝ', 'Ğ', 'ğ', 'Ġ',
+      'ġ', 'Ģ', 'ģ', 'Ĥ', 'ĥ', 'Ħ', 'ħ', 'Ĩ', 'ĩ', 'Ī', 'ī', 'Ĭ', 'ĭ', 'Į', 'į', 'İ', 'ı', 'Ĳ', 'ĳ',
+      'Ĵ', 'ĵ', 'Ķ', 'ķ', 'Ĺ', 'ĺ', 'Ļ', 'ļ', 'Ľ', 'ľ', 'Ŀ', 'ŀ', 'Ł', 'ł', 'Ń', 'ń', 'Ņ', 'ņ', 'Ň',
+      'ň', 'ŉ', 'Ō', 'ō', 'Ŏ', 'ŏ', 'Ő', 'ő', 'Œ', 'œ', 'Ŕ', 'ŕ', 'Ŗ', 'ŗ', 'Ř', 'ř', 'Ś', 'ś', 'Ŝ',
+      'ŝ', 'Ş', 'ş', 'Š', 'š', 'Ţ', 'ţ', 'Ť', 'ť', 'Ŧ', 'ŧ', 'Ũ', 'ũ', 'Ū', 'ū', 'Ŭ', 'ŭ', 'Ů', 'ů',
+      'Ű', 'ű', 'Ų', 'ų', 'Ŵ', 'ŵ', 'Ŷ', 'ŷ', 'Ÿ', 'Ź', 'ź', 'Ż', 'ż', 'Ž', 'ž', 'ſ', 'ƒ', 'Ơ', 'ơ',
+      'Ư', 'ư', 'Ǎ', 'ǎ', 'Ǐ', 'ǐ', 'Ǒ', 'ǒ', 'Ǔ', 'ǔ', 'Ǖ', 'ǖ', 'Ǘ', 'ǘ', 'Ǚ', 'ǚ', 'Ǜ', 'ǜ', 'Ǻ',
+      'ǻ', 'Ǽ', 'ǽ', 'Ǿ', 'ǿ' ),
+    'to'   => array( 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'C', 'E', 'E', 'E', 'E', 'I', 'I', 'I', 'I',
+      'D', 'N', 'O', 'O', 'O', 'O', 'O', 'O', 'U', 'U', 'U', 'U', 'Y', 's', 'a', 'a', 'a', 'a', 'a',
+      'a', 'a', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'n', 'o', 'o', 'o', 'o', 'o', 'o', 'u',
+      'u', 'u', 'u', 'y', 'y', 'A', 'a', 'A', 'a', 'A', 'a', 'C', 'c', 'C', 'c', 'C', 'c', 'C', 'c',
+      'D', 'd', 'D', 'd', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'E', 'e', 'G', 'g', 'G', 'g', 'G',
+      'g', 'G', 'g', 'H', 'h', 'H', 'h', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i', 'I', 'i',
+      'J', 'j', 'K', 'k', 'L', 'l', 'L', 'l', 'L', 'l', 'L', 'l', 'l', 'l', 'N', 'n', 'N', 'n', 'N',
+      'n', 'n', 'O', 'o', 'O', 'o', 'O', 'o', 'O', 'o', 'R', 'r', 'R', 'r', 'R', 'r', 'S', 's', 'S',
+      's', 'S', 's', 'S', 's', 'T', 't', 'T', 't', 'T', 't', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u',
+      'U', 'u', 'U', 'u', 'W', 'w', 'Y', 'y', 'Y', 'Z', 'z', 'Z', 'z', 'Z', 'z', 's', 'f', 'O', 'o',
+      'U', 'u', 'A', 'a', 'I', 'i', 'O', 'o', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'U', 'u', 'A',
+      'a', 'A', 'a', 'O', 'o' )
   );
 
 
@@ -79,6 +104,12 @@ class FormController implements Serializable {
     }
     if( $action !== false ) {
       $this->setAction( $action );
+    }
+
+    $this->langDefault = LANG_DEFAULT;
+    global $LANG_AVAILABLE;
+    if( isset( $LANG_AVAILABLE ) && is_array( $LANG_AVAILABLE ) ) {
+      $this->langAvailable = array_keys( $LANG_AVAILABLE );
     }
   }
 
@@ -291,10 +322,10 @@ class FormController implements Serializable {
     // error_log( $postDataJson );
     if( $postDataJson !== false && strpos( $postDataJson, '{' )===0 ) {
       $postData = json_decode( $postDataJson, true );
-      // error_log( print_r( $postData, true ) );
+      error_log( '$postDataJson: '.print_r( $postData, true ) );
 
       // recuperamos FORM de sesion y añadimos los datos enviados
-      if( $this->loadPostSession( $postData ) ) {
+      if( isset( $postData[ 'cgIntFrmId' ][ 'value' ] ) && $this->loadPostSession( $postData[ 'cgIntFrmId' ][ 'value' ] ) ) {
         $this->loadPostValues( $postData );
         $result = true;
       }
@@ -308,10 +339,10 @@ class FormController implements Serializable {
     @param array $formPost Datos enviados por el navegador convertidos a array
     @return boolean
   */
-  public function loadPostSession( $formPost ) {
+  public function loadPostSession( $tokenId ) {
     $result = false;
-    if( $formPost !== false && isset( $formPost[ 'cgIntFrmId' ] ) ) {
-      $result = $this->loadFromSession( $formPost[ 'cgIntFrmId' ] );
+    if( isset( $tokenId ) && $tokenId !== false ) {
+      $result = $this->loadFromSession( $tokenId );
     }
 
     return $result;
@@ -327,9 +358,14 @@ class FormController implements Serializable {
     // Importando los datos del form e integrando los datos de ficheros subidos
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
 
+      if( isset( $formPost[ $fieldName ][ 'dataInfo' ] ) && $formPost[ $fieldName ][ 'dataInfo' ] !== false ) {
+        error_log( 'DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
+        $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
+      }
+
       if( $this->getFieldType( $fieldName ) !== 'file' ) {
-        if( isset( $formPost[ $fieldName ] ) ) {
-          $this->setFieldValue( $fieldName, $formPost[ $fieldName ] );
+        if( isset( $formPost[ $fieldName ][ 'value' ] ) ) {
+          $this->setFieldValue( $fieldName, $formPost[ $fieldName ][ 'value' ] );
         }
       }
       else {
@@ -382,25 +418,38 @@ class FormController implements Serializable {
 
     foreach( $dataArray as $fieldName => $value ) {
       if( $this->isFieldDefined( $fieldName ) ) {
-
-        if( $this->getFieldType( $fieldName ) !== 'file' ) {
-          $this->setFieldValue( $fieldName, $value );
-        }
-        else {
-          error_log( 'FILE value: ' . print_r( $value, true ) );
-
-          if ( isset( $value ) && is_array( $value ) ) {
-            $fileFieldValue = array (
-              'status' => 'EXIST',
-              'prev' => $value
-            );
-            $this->setFieldValue( $fieldName, $fileFieldValue );
-            $this->setFieldParam( $fieldName, 'data-filemodel-id', $value['id'] );
+        $this->setFieldValue( $fieldName, $value );
+        /*
+          if( $this->getFieldType( $fieldName ) !== 'file' ) {
+            $this->setFieldValue( $fieldName, $value );
           }
           else {
-            $this->setFieldValue( $fieldName, null );
+            error_log( 'FILE value: ' . print_r( $value, true ) );
+
+            if ( isset( $value ) && is_array( $value ) ) {
+              $fileFieldValue = array( 'status' => 'EXIST', 'prev' => $value );
+
+              error_log( 'fileFieldValue: '. print_r( $fileFieldValue, true ) );
+
+              $this->setFieldValue( $fieldName, $fileFieldValue );
+              $this->setFieldParam( $fieldName, 'data-fm-id', $value['id'] );
+
+              if( $this->langAvailable === false ) {
+                $this->setFieldParam( $fieldName, 'data-fm-title',
+                  ($value[ 'title' ] !== null) ? $value[ 'title' ] : '' );
+              }
+              else {
+                foreach( $this->langAvailable as $lang ) {
+                  $this->setFieldParam( $fieldName, 'data-fm-title-'.$lang,
+                    ($value[ 'title_'.$lang ] !== 'null') ? $value[ 'title_'.$lang ] : '' );
+                }
+              }
+            }
+            else {
+              $this->setFieldValue( $fieldName, null );
+            }
           }
-        }
+        */
       }
     }
   }
@@ -453,7 +502,46 @@ class FormController implements Serializable {
     @param mixed $fieldValue Valor del campo
   */
   public function setFieldValue( $fieldName, $fieldValue ) {
-    $this->setFieldParam( $fieldName, 'value', $fieldValue );
+    // $this->setFieldParam( $fieldName, 'value', $fieldValue );
+
+    if( $this->getFieldType( $fieldName ) !== 'file' ) {
+      $this->setFieldParam( $fieldName, 'value', $fieldValue );
+    }
+    else {
+      error_log( 'FILE value: ' . print_r( $fieldValue, true ) );
+
+      if ( isset( $fieldValue ) && is_array( $fieldValue ) ) {
+        if ( isset( $fieldValue[ 'status' ] ) ) {
+          $this->setFieldParam( $fieldName, 'value', $fieldValue );
+        }
+        else {
+          $fileFieldValue = array( 'status' => 'EXIST', 'prev' => $fieldValue );
+          error_log( 'fileFieldValue: '. print_r( $fileFieldValue, true ) );
+          $this->setFieldParam( $fieldName, 'value', $fileFieldValue );
+        }
+
+        $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
+        if( $this->langAvailable === false ) {
+          /**
+            TODO: Arreglar os null en texto
+          */
+          $this->setFieldParam( $fieldName, 'data-fm_title',
+            (isset( $fieldValue[ 'title' ] ) && $fieldValue[ 'title' ] !== 'null') ? $fieldValue[ 'title' ] : '' );
+        }
+        else {
+          foreach( $this->langAvailable as $lang ) {
+            /**
+              TODO: Arreglar os null en texto
+            */
+            $this->setFieldParam( $fieldName, 'data-fm_title_'.$lang,
+              (isset( $fieldValue[ 'title_'.$lang ] ) && $fieldValue[ 'title_'.$lang ] !== 'null') ? $fieldValue[ 'title_'.$lang ] : '' );
+          }
+        }
+      }
+      else {
+        $this->setFieldParam( $fieldName, 'value', null );
+      }
+    }
   }
 
 
@@ -488,6 +576,47 @@ class FormController implements Serializable {
   }
 
 
+
+
+
+
+
+
+  /**
+   * Crea los campos y les asigna las reglas en form
+   *
+   * @param $definitions Array fields info
+  **/
+  public function definitionsToForm( $definitions ) {
+    foreach( $definitions as $fieldName => $definition ) {
+      if( !isset( $definition['params'] ) ) {
+        $definition['params'] = false;
+      }
+      if( isset( $definition['translate'] ) && $definition['translate'] === true ) {
+        $baseClass = '';
+        if( isset( $definition['params']['class'] ) &&  $definition['params']['class'] !== '' ) {
+          $baseClass = $definition['params']['class'];
+        }
+        foreach( $this->langAvailable as $lang ) {
+          $definition['params']['class'] = $baseClass . ' js-tr js-tr-'.$lang;
+          $this->setField( $fieldName.'_'.$lang, $definition['params'] );
+          if( isset( $definition['rules'] ) ) {
+            foreach( $definition['rules'] as $ruleName => $ruleParams ) {
+              $this->setValidationRule( $fieldName.'_'.$lang, $ruleName, $ruleParams );
+            }
+          }
+        }
+      }
+      else {
+        $this->setField( $fieldName, $definition['params'] );
+        if( isset( $definition['rules'] ) ) {
+          foreach( $definition['rules'] as $ruleName => $ruleParams ) {
+            $this->setValidationRule( $fieldName, $ruleName, $ruleParams );
+          }
+        }
+      }
+    }
+  }
 
 
 
@@ -707,7 +836,8 @@ class FormController implements Serializable {
 
         if( $this->getFieldInternal( $fieldName, 'groupElemRemoved' ) !== true ) {
           $fieldsValuesArray[ $idElem ][ $fieldName ] = $this->getFieldValue( $fieldName );
-          error_log( $groupName.'/'.$idElem.'/'.$fieldName .' === '. print_r( $fieldsValuesArray[ $idElem ][ $fieldName ], true ) );
+          error_log( $groupName.'/'.$idElem.'/'.$fieldName .' === '.
+            print_r( $fieldsValuesArray[ $idElem ][ $fieldName ], true ) );
         }
         else {
           error_log( $groupName.'/'.$idElem.'/'.$fieldName .' IGNORADO!!! ' );
@@ -1150,7 +1280,8 @@ class FormController implements Serializable {
                   $result = false;
                   $this->addFieldRuleError( $fieldName, 'cogumelo',
                     'La subida del fichero ha fallado. (MF)' );
-                  error_log( 'Imposible mover el fichero al directorio adecuado.' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                  error_log( 'Imposible mover el fichero al directorio adecuado.' .
+                    $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
                 }
               }
 
@@ -1186,7 +1317,8 @@ class FormController implements Serializable {
                   $result = false;
                   $this->addFieldRuleError( $fieldName, 'cogumelo',
                     'La subida del fichero ha fallado. (MF)' );
-                  error_log( 'Imposible mover el fichero al directorio adecuado.' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                  error_log( 'Imposible mover el fichero al directorio adecuado.' .
+                    $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
                 }
               }
 
@@ -1394,7 +1526,7 @@ class FormController implements Serializable {
   public function getHtmpOpen() {
     $html='';
 
-    $html .= '<form name="'.$this->getName().'" id="'.$this->id.'" data-cgmInId="'.$this->getTokenId().'" ';
+    $html .= '<form name="'.$this->getName().'" id="'.$this->id.'" data-token_id="'.$this->getTokenId().'" ';
     $html .= ' class="'.self::CSS_PRE.' '.self::CSS_PRE.'-form-'.$this->getName().'" ';
     if( $this->action ) {
       $html .= ' action="'.$this->action.'"';
@@ -1476,7 +1608,8 @@ class FormController implements Serializable {
         foreach( $this->getGroupIdElems( $groupName ) as $idElem ) {
           $html .= $this->getHtmlGroupElement( $groupName, $idElem )."\n";
         }
-        $html .= '<div data-form-id="'.$this->id.'" class="addGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" groupName="'.$groupName.'">MAS</div>'."\n";
+        $html .= '<div data-form_id="'.$this->id.'" class="addGroupElement '.
+          self::CSS_PRE.'-group-'.$groupName.'" groupName="'.$groupName.'">MAS</div>'."\n";
         $html .= '<div class="JQVMC-group-'.$groupName.'"></div>'."\n";
       }
 
@@ -1511,7 +1644,7 @@ class FormController implements Serializable {
       $html .= implode( "\n", $this->getHtmlFieldsArray( $groupFieldNames ) )."\n";
 
       if( $idElem !== false ) {
-        $html .= '<div data-form-id="'.$this->id.'" class="removeGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" '.
+        $html .= '<div data-form_id="'.$this->id.'" class="removeGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" '.
           'groupName="'.$groupName.'" groupIdElem="'.$idElem.'">QUITAR</div>'."\n";
       }
 
@@ -2099,7 +2232,8 @@ class FormController implements Serializable {
           //error_log( 'evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
 
           if( !$fieldRuleValidate ) {
-            error_log( 'ERROR: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
+            error_log( 'ERROR: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.
+                $ruleName.', '.print_r( $ruleParams, true ) .' )' );
             $this->addFieldRuleError( $fieldName, $ruleName );
             //$this->fieldErrors[ $fieldName ][ $ruleName ] = $fieldRuleValidate;
           }
