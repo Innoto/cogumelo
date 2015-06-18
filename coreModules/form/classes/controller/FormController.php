@@ -39,6 +39,9 @@ class FormController implements Serializable {
   */
   const FILES_TMP_PATH = MOD_FORM_FILES_TMP_PATH;
 
+  public $langDefault = false;
+  public $langAvailable = false;
+
   private $name = false;
   private $id = false;
   private $tokenId = false;
@@ -59,9 +62,6 @@ class FormController implements Serializable {
   private $formErrors = array();
 
   private $htmlEditor = false;
-
-  public $langDefault = false;
-  public $langAvailable = false;
 
   private $replaceAcents = array(
     'from' => array( 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï',
@@ -305,7 +305,7 @@ class FormController implements Serializable {
     }
     else {
       error_log( 'ERROR. El FORM no esta en sesion: '.$formSessionId );
-      error_log( print_r( $_SESSION, true ) );
+      // error_log( print_r( $_SESSION, true ) );
     }
 
     return $result;
@@ -322,7 +322,7 @@ class FormController implements Serializable {
     // error_log( $postDataJson );
     if( $postDataJson !== false && strpos( $postDataJson, '{' )===0 ) {
       $postData = json_decode( $postDataJson, true );
-      error_log( '$postDataJson: '.print_r( $postData, true ) );
+      // error_log( '$postDataJson: '.print_r( $postData, true ) );
 
       // recuperamos FORM de sesion y añadimos los datos enviados
       if( isset( $postData[ 'cgIntFrmId' ][ 'value' ] ) && $this->loadPostSession( $postData[ 'cgIntFrmId' ][ 'value' ] ) ) {
@@ -359,8 +359,12 @@ class FormController implements Serializable {
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
 
       if( isset( $formPost[ $fieldName ][ 'dataInfo' ] ) && $formPost[ $fieldName ][ 'dataInfo' ] !== false ) {
-        error_log( 'DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
-        $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
+        // error_log( 'DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
+        // $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
+        foreach( $formPost[ $fieldName ][ 'dataInfo' ] as $key => $value ) {
+          // error_log( "setFieldParam: $fieldName, data-$key, $value )" );
+          $this->setFieldParam( $fieldName, 'data-'.$key, $value );
+        }
       }
 
       if( $this->getFieldType( $fieldName ) !== 'file' ) {
@@ -419,37 +423,6 @@ class FormController implements Serializable {
     foreach( $dataArray as $fieldName => $value ) {
       if( $this->isFieldDefined( $fieldName ) ) {
         $this->setFieldValue( $fieldName, $value );
-        /*
-          if( $this->getFieldType( $fieldName ) !== 'file' ) {
-            $this->setFieldValue( $fieldName, $value );
-          }
-          else {
-            error_log( 'FILE value: ' . print_r( $value, true ) );
-
-            if ( isset( $value ) && is_array( $value ) ) {
-              $fileFieldValue = array( 'status' => 'EXIST', 'prev' => $value );
-
-              error_log( 'fileFieldValue: '. print_r( $fileFieldValue, true ) );
-
-              $this->setFieldValue( $fieldName, $fileFieldValue );
-              $this->setFieldParam( $fieldName, 'data-fm-id', $value['id'] );
-
-              if( $this->langAvailable === false ) {
-                $this->setFieldParam( $fieldName, 'data-fm-title',
-                  ($value[ 'title' ] !== null) ? $value[ 'title' ] : '' );
-              }
-              else {
-                foreach( $this->langAvailable as $lang ) {
-                  $this->setFieldParam( $fieldName, 'data-fm-title-'.$lang,
-                    ($value[ 'title_'.$lang ] !== 'null') ? $value[ 'title_'.$lang ] : '' );
-                }
-              }
-            }
-            else {
-              $this->setFieldValue( $fieldName, null );
-            }
-          }
-        */
       }
     }
   }
@@ -508,55 +481,47 @@ class FormController implements Serializable {
       $this->setFieldParam( $fieldName, 'value', $fieldValue );
     }
     else {
-      error_log( 'FILE value: ' . print_r( $fieldValue, true ) );
-
       if ( isset( $fieldValue ) && is_array( $fieldValue ) ) {
-        if ( isset( $fieldValue[ 'status' ] ) ) {
-          $this->setFieldParam( $fieldName, 'value', $fieldValue );
-        }
-        else {
-          $fileFieldValue = array( 'status' => 'EXIST', 'prev' => $fieldValue );
-          error_log( 'fileFieldValue: '. print_r( $fileFieldValue, true ) );
-          $this->setFieldParam( $fieldName, 'value', $fileFieldValue );
-        }
-
-        $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
-        if( $this->langAvailable === false ) {
-          /**
-            TODO: Arreglar os null en texto
-          */
-          $this->setFieldParam( $fieldName, 'data-fm_title',
-            (isset( $fieldValue[ 'title' ] ) && $fieldValue[ 'title' ] !== 'null') ? $fieldValue[ 'title' ] : '' );
-        }
-        else {
-          foreach( $this->langAvailable as $lang ) {
+        // Carga inicial
+        if ( !isset( $fieldValue[ 'status' ] ) ) {
+          $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
+          if( $this->langAvailable === false ) {
             /**
               TODO: Arreglar os null en texto
             */
-            $this->setFieldParam( $fieldName, 'data-fm_title_'.$lang,
-              (isset( $fieldValue[ 'title_'.$lang ] ) && $fieldValue[ 'title_'.$lang ] !== 'null') ? $fieldValue[ 'title_'.$lang ] : '' );
+            $this->setFieldParam( $fieldName, 'data-fm_title',
+              (isset( $fieldValue[ 'title' ] ) && $fieldValue[ 'title' ] !== 'null') ? $fieldValue[ 'title' ] : '' );
+          }
+          else {
+            foreach( $this->langAvailable as $lang ) {
+              /**
+                TODO: Arreglar os null en texto
+              */
+              $this->setFieldParam( $fieldName, 'data-fm_title_'.$lang,
+                (isset( $fieldValue[ 'title_'.$lang ] ) && $fieldValue[ 'title_'.$lang ] !== 'null') ? $fieldValue[ 'title_'.$lang ] : '' );
+            }
+          }
+          $fieldValue = array( 'status' => 'EXIST', 'prev' => $fieldValue, 'values' => array() );
+        }
+        else {
+          if( $this->langAvailable === false ) {
+            $fieldValue[ 'values' ][ 'title' ] = $this->getFieldParam( $fieldName, 'data-fm_title' );
+          }
+          else {
+            foreach( $this->langAvailable as $lang ) {
+              $fieldValue[ 'values' ][ 'title_'.$lang ] = $this->getFieldParam( $fieldName, 'data-fm_title_'.$lang );
+            }
           }
         }
+
+        error_log( 'FILE fieldValue: '. print_r( $fieldValue, true ) );
+        $this->setFieldParam( $fieldName, 'value', $fieldValue );
       }
       else {
         $this->setFieldParam( $fieldName, 'value', null );
       }
     }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   /**
     Establece un parametro de un campo
@@ -574,13 +539,6 @@ class FormController implements Serializable {
       error_log( 'Intentando almacenar un parámetro ('.$paramName.') en un campo inexistente: '.$fieldName );
     }
   }
-
-
-
-
-
-
-
 
   /**
    * Crea los campos y les asigna las reglas en form
@@ -617,16 +575,6 @@ class FormController implements Serializable {
       }
     }
   }
-
-
-
-
-
-
-
-
-
-
 
   /**
     Establece un parametro interno en un campo
@@ -883,6 +831,9 @@ class FormController implements Serializable {
 
 
 
+  /**********************************************************************/
+  /***  Grupos                                                        ***/
+  /**********************************************************************/
 
   /**
     Inicializa un grupo
@@ -1212,18 +1163,16 @@ class FormController implements Serializable {
     return( $this->issetGroup( $groupName ) && in_array( $fieldName, $this->groups[ $groupName ][ 'fields' ] ) );
   }
 
+  /**********************************************************************/
+  /***  Grupos (FIN)                                                  ***/
+  /**********************************************************************/
 
 
 
 
-
-
-
-
-
-  /*
-  Ficheros
-  */
+  /**********************************************************************/
+  /***  Ficheros                                                      ***/
+  /**********************************************************************/
 
   /**
     Convierte el tamaño de memoria de formato php.ini a bytes
@@ -1356,7 +1305,8 @@ class FormController implements Serializable {
 
         // TODO: FALTA GUARDA LOS DATOS DEFINITIVOS DEL FICHERO!!!
         // En caso de fallo $result = false;
-      } // if( $this->getFieldType( $fieldName ) === 'file' )
+
+      } // if( $result && $this->getFieldType( $fieldName ) === 'file' )
     } // foreach( $this->getFieldsNamesArray() as $fieldName )
 
     if( !$result ) {
@@ -1494,14 +1444,15 @@ class FormController implements Serializable {
     return $fileName;
   }
 
-  /*
-  Ficheros (FIN)
-  */
+  /**********************************************************************/
+  /***  Ficheros (FIN)                                                ***/
+  /**********************************************************************/
 
 
-  /*
-  HTML y JS
-  */
+
+  /**********************************************************************/
+  /***  HTML y JS                                                     ***/
+  /**********************************************************************/
 
   /**
     Recupera el html y js que forman el form
@@ -2010,14 +1961,15 @@ class FormController implements Serializable {
     return json_encode( $result );
   }
 
-  /*
-  HTML y JS (FIN)
-  */
+  /**********************************************************************/
+  /***  HTML y JS (FIN)                                               ***/
+  /**********************************************************************/
 
 
-  /*
-  Validaciones y gestion de errores
-  */
+
+  /**********************************************************************/
+  /***  Validaciones y gestion de errores                             ***/
+  /**********************************************************************/
 
   /**
     Establece una regla de validacion para un campo
@@ -2065,8 +2017,6 @@ class FormController implements Serializable {
     @param string $fieldName Nombre del campo
   */
   public function removeValidationRules( $fieldName ) {
-    error_log( 'removeValidationRules: '.$fieldName );
-
     if( isset( $this->rules[ $fieldName ] ) ) {
       unset( $this->rules[ $fieldName ] );
       $this->updateFieldRulesToSession( $fieldName );
@@ -2183,8 +2133,8 @@ class FormController implements Serializable {
 
   /**
     Verifica que se cumplen las reglas establecidas para un campo
-  * @param string $fieldName Nombre del campo
-  * @return boolean
+    @param string $fieldName Nombre del campo
+    @return boolean
   */
   public function validateField( $fieldName ) {
     // error_log( 'validateField: '.$fieldName );
@@ -2301,9 +2251,9 @@ class FormController implements Serializable {
     return( isset( $this->fieldErrors[ $fieldName ] ) || count( $this->formErrors[ $fieldName ] ) > 0 );
   }
 
-  /*
-  Validaciones y gestion de errores (FIN)
-  */
+  /**********************************************************************/
+  /***  Validaciones y gestion de errores (FIN)                       ***/
+  /**********************************************************************/
 
 
   /**

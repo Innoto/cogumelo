@@ -34,13 +34,14 @@ $.fn.serializeFormToObject = function () {
         }
 
         $dataInfo = $( elem ).data();
+        // PELIGRO: Los valores recuperados por data() no siven!!!
         ser[ elem.name ].dataInfo = false;
 
         $.each( $dataInfo, function( k, v ) {
           if( ser[ elem.name ].dataInfo === false ) {
             ser[ elem.name ].dataInfo = {};
           }
-          ser[ elem.name ].dataInfo[ k ] = v;
+          ser[ elem.name ].dataInfo[ k ] = $( elem ).attr( 'data-'+k );
         } );
       }
     }

@@ -48,24 +48,33 @@ function createFilesTitleField( idForm ) {
   $( 'input:file[form="'+idForm+'"]' ).after( function() {
     console.log( this );
 
-    fileFieldName = this.name;
+    fileField = this;
     langs = ( typeof( langAvailable ) == 'object' ) ? langAvailable : [''];
     html = '';
 
     $.each( langs, function( i, lang ) {
-      name = ( lang !== '' ) ? fileFieldName+'_'+lang : fileFieldName;
-      classLang = ( lang !== '' ) ? ' js-tr js-tr-'+lang : '';
-      html += '<div class="cgmMForm-wrap cgmMForm-field-titleField_'+name+'">'+"\n"+
+      name = ( lang !== '' ) ? fileField.name+'_'+lang : fileField.name;
+      filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
+      classLang = ( lang !== '' ) ? 'js-tr js-tr-'+lang+' ' : '';
+      html += '<div class="cgmMForm-wrap cgmMForm-field-titleFileField_'+name+'">'+"\n"+
         '<label class="cgmMForm'+classLang+'">Alt-Title</label>'+"\n"+
-        '<input name="titleField_'+name+'" form="fileFields_'+idForm+'" '+
-        'class="cgmMForm-field cgmMForm-field-titleField_'+name+''+classLang+'" type="text">'+"\n"+
+        '<input name="titleFileField_'+name+'" value="'+$( fileField ).data( filefielddata )+'" '+
+        'data-ffid="'+idForm+'" data-ffname="'+fileField.name+'" data-ffdata="'+filefielddata+'" '+
+        'form="fileFields_'+idForm+'" class="cgmMForm-field cgmMForm-field-titleFileField '+classLang+'" type="text">'+"\n"+
         '</div>'+"\n";
     });
 
     return html;
   });
-  /*
-  */
+
+  $( 'input.cgmMForm-field-titleFileField' ).on( 'change', function() {
+    $titleFileField = $( this );
+    $titleData = $titleFileField.data();
+    $fileField = $( 'input[form="'+$titleData.ffid+'"][name="'+$titleData.ffname+'"]' );
+    $fileField.attr( 'data-'+$titleData.ffdata, $titleFileField.val() );
+    $fileField.data( $titleData.ffdata, $titleFileField.val() );
+    // Doble escritura para asegurar porque funcionan distinto
+  });
 }
 
 
