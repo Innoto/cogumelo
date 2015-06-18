@@ -185,12 +185,27 @@ class UserView extends View
   public function userUpdateFormDefine( $request ){
 
     $user = new UserModel();
-    $dataVO = $user->listItems( array('filters' => array('id' => $request[1] )))->fetch();
+    $dataVO = $user->listItems( array(
+      'filters' => array('id' => $request[1] ),
+      'affectsDependences' => array( 'FiledataModel')
+    ))->fetch();
     if(!$dataVO){
       Cogumelo::redirect( SITE_URL.'404' );
     }
 
-    $form = $this->userFormDefine( $dataVO );
+    foreach( $dataVO->getKeys() as $keyVO ) {
+      $dataArray[ $keyVO ] = $dataVO->getter( $keyVO );
+    }
+    $fileDep = $dataVO->getterDependence( 'avatar' );
+    if( $fileDep !== false ) {
+      foreach( $fileDep as $fileModel ) {
+        $fileData = $fileModel->getAllData();
+        $dataArray[ 'avatar' ] = $fileData[ 'data' ];
+      }
+    }
+
+
+    $form = $this->userFormDefine( $dataArray );
     return $form;
   }
 
@@ -201,7 +216,8 @@ class UserView extends View
    *
    * @return object
    **/
-  public function userFormDefine( $dataVO = '' ) {
+  public function userFormDefine( $data = '' ) {
+
 
     $form = new FormController( 'userForm', '/user/senduserform' ); //actionform
 
@@ -212,7 +228,7 @@ class UserView extends View
 
     $form->setField( 'login', array( 'placeholder' => 'Login' ) );
     //Esto es para verificar si es un create
-    if(!isset($dataVO) || $dataVO == ''){
+    if(!isset($data) || $data == ''){
       $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña' ) );
       $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => 'Repite contraseña' ) );
     }
@@ -233,19 +249,20 @@ class UserView extends View
     $form->setValidationRule( 'email', 'required' );
 
     //Esto es para verificar si es un create
-    if(!isset($dataVO) || $dataVO == ''){
+    if(!isset($data) || $data == ''){
       $form->setValidationRule( 'password', 'required' );
       $form->setValidationRule( 'password2', 'required' );
       $form->setValidationRule( 'password', 'equalTo', '#password2' );
     }
     $form->setValidationRule( 'avatar', 'minfilesize', 1024 );
-    $form->setValidationRule( 'avatar', 'accept', 'image/png' );
+    $form->setValidationRule( 'avatar', 'accept', 'image/jpeg' );
     //$form->setValidationRule( 'avatar', 'required' );
 
 
     $form->setValidationRule( 'email', 'email' );
 
-    $form->loadVOValues( $dataVO );
+
+    $form->loadArrayValues( $data );
 
     return $form;
   }
