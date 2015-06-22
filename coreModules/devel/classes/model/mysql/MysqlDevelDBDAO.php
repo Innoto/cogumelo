@@ -65,6 +65,7 @@ class MysqlDevelDBDAO extends MysqlDAO
     $this->execSQL($connection, $this->getDropSQL($connection, $vo_name) , array() );
   }
 
+
   function createTable($connection, $vo_name) {
     $strSQL = $this->getTableSQL($connection, $vo_name);
     $this->execSQL($connection, $strSQL, array() );
@@ -78,6 +79,10 @@ class MysqlDevelDBDAO extends MysqlDAO
     }
   }
 
+
+  function aditionalExec($connection, $strSQL) {
+    return $this->execSQL($connection, $strSQL, array() );
+  }
 
   // Sql generation methods
 
