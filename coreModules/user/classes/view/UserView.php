@@ -504,9 +504,16 @@ class UserView extends View
       if(isset($password)){
         $user->setPassword( $password );
       }
+
+Cogumelo::console($valuesArray['avatar']['values']);
+exit();
       if($valuesArray['avatar']['values']){
         $user->setterDependence( 'avatar', new FiledataModel( $valuesArray['avatar']['values'] ) );
       }
+
+
+
+
       $user->save( array( 'affectsDependences' => true ));
 
       /*Asignacion de ROLE user*/
