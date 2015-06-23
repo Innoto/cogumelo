@@ -1703,7 +1703,7 @@ class FormController implements Serializable {
       $html['label'] .= '>'.$field['label'].'</label>';
     }
 
-    $attribs = 'form="'.$this->id.'"';
+    $attribs = ' form="'.$this->id.'"';
     $attribs .= ( $myFielId ? ' id="'.$myFielId.'"' : '' );
     $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$fieldName.
       ( ( $field['type'] === 'file' ) ? ' '.self::CSS_PRE.'-fileField' : '' ).

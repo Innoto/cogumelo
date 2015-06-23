@@ -26,6 +26,7 @@ class Template extends Smarty
   var $cgmSmartyConfigDir = SMARTY_CONFIG;
   var $cgmSmartyCompileDir = SMARTY_COMPILE;
   var $cgmSmartyCacheDir = SMARTY_CACHE;
+
   var $cgmMediaserverCompileLess = MEDIASERVER_COMPILE_LESS;
   var $cgmMediaserverHost = MEDIASERVER_HOST;
   var $cgmMediaserverUrlDir = MOD_MEDIASERVER_URL_DIR;
@@ -37,30 +38,39 @@ class Template extends Smarty
    * @param string $baseDir
    **/
   public function __construct( $baseDir ) {
+    // Call Smarty's constructor
     parent::__construct();
 
     $this->baseDir = $baseDir;
-
-    global $COGUMELO_SMARTY_CONSTANTS;
-    if( is_array( $COGUMELO_SMARTY_CONSTANTS ) && count( $COGUMELO_SMARTY_CONSTANTS ) > 0 ) {
-      foreach( $COGUMELO_SMARTY_CONSTANTS as $key => $value ) {
-        // error_log( 'Template - COGUMELO_SMARTY_CONSTANTS: ' . $key );
-        $this->assign( $key, $value );
-      }
-    }
 
     // En caso de que Smarty no encuentre un TPL, usa este metodo para buscarlo
     $this->default_template_handler_func = 'ModuleController::cogumeloSmartyTemplateHandlerFunc';
 
 
     // Inicializamos atributos internos de SMARTY
+    // $this->setTemplateDir( $this->cgmSmartyTplDir ); // Intentando evitar error "smarty_resource.php line:744"
     $this->setConfigDir( $this->cgmSmartyConfigDir );
     $this->setCompileDir( $this->cgmSmartyCompileDir );
     $this->setCacheDir( $this->cgmSmartyCacheDir );
 
 
+    global $COGUMELO_SMARTY_GLOBALS, $COGUMELO_SMARTY_CONSTANTS;
+    if( is_array( $COGUMELO_SMARTY_GLOBALS ) && count( $COGUMELO_SMARTY_GLOBALS ) > 0 ) {
+      foreach( $COGUMELO_SMARTY_GLOBALS as $globalKey ) {
+        if( isset( $GLOBALS[ $globalKey ] ) ) {
+          $this->assign( 'GLOBAL_'.$globalKey, $GLOBALS[ $globalKey ] );
+        }
+      }
+    }
+    if( is_array( $COGUMELO_SMARTY_CONSTANTS ) && count( $COGUMELO_SMARTY_CONSTANTS ) > 0 ) {
+      foreach( $COGUMELO_SMARTY_CONSTANTS as $key => $value ) {
+        $this->assign( $key, $value );
+      }
+    }
+
+
     // Smarty Hack: http://www.smarty.net/forums/viewtopic.php?t=21352&sid=88c6bbab5fb1fd84d3e4f18857d3d10e
-    //Smarty::muteExpectedErrors();
+    Smarty::muteExpectedErrors(); // IGNORANDO ERRORES de Smarty
   }
 
 
@@ -374,6 +384,7 @@ class Template extends Smarty
 
     return( $htmlCode );
   }
+
 
   /**
    Introduce o script para compilar o LESS con JS
