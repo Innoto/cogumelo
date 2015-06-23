@@ -44,14 +44,16 @@ function getFormInfo( idForm, key ) {
 
 
 function createFilesTitleField( idForm ) {
-  console.log( 'createFilesTitleField( '+idForm+' )' );
-  $( 'input:file[form="'+idForm+'"]' ).after( function() {
-    console.log( this );
+  // console.log( 'createFilesTitleField( '+idForm+' )' );
+
+  $inputFileFields = $( 'input:file[form="'+idForm+'"]' );
+  $inputFileFields.after( function() {
+    // console.log( 'createFilesTitleField after ', this );
 
     fileField = this;
     langs = ( typeof( langAvailableIds ) == 'object' ) ? langAvailableIds : [''];
-    html = '<div class="cgmMForm-wrap cgmMForm-'+idForm+' cgmMForm-titleFileField_'+fileField.name+'"'+
-      ' style="display:none">'+"\n";
+    html = '<div class="cgmMForm-wrap cgmMForm-'+idForm+' cgmMForm-fileFields-'+idForm+
+      ' cgmMForm-titleFileField_'+fileField.name+'" style="display:none">'+"\n";
 
     $.each( langs, function( i, lang ) {
       name = ( lang !== '' ) ? fileField.name+'_'+lang : fileField.name;
@@ -62,8 +64,9 @@ function createFilesTitleField( idForm ) {
         '<label class="cgmMForm'+classLang+'">Alt-Title</label>'+"\n"+
         '<input name="titleFileField_'+name+'" value="'+titleValue+'" '+
         'data-ffid="'+idForm+'" data-ffname="'+fileField.name+'" data-ffdata="'+filefielddata+'" '+
-        'form="fileFields_'+idForm+'" class="cgmMForm-field cgmMForm-field-titleFileField'+classLang+'" type="text">'+"\n"+
+        'class="noValidate cgmMForm-field cgmMForm-field-titleFileField'+classLang+'" type="text">'+"\n"+
         '</div>'+"\n";
+      // console.log( 'createFilesTitleField each lang '+lang );
     });
 
     html += '</div>'+"\n";
@@ -72,6 +75,7 @@ function createFilesTitleField( idForm ) {
   });
 
   $( 'input.cgmMForm-field-titleFileField' ).on( 'change', function() {
+    // console.log( 'titleFileField change en ', this );
     $titleFileField = $( this );
     $titleData = $titleFileField.data();
     $fileField = $( 'input[form="'+$titleData.ffid+'"][name="'+$titleData.ffname+'"]' );
@@ -93,7 +97,7 @@ function hideFileTitleField( idForm, fieldName ) {
     $fileField.data( filefielddata, '' );
   });
   // Hide wrap
-  $wrap = $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName )
+  $wrap = $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName );
   $wrap.hide();
   // Clear values
   $wrap.find( ' input' ).val('');
@@ -151,6 +155,7 @@ function setValidateForm( idForm, rules, messages ) {
   var $validateForm = $( '#'+idForm ).validate({
     // debug: true,
     errorClass: 'formError',
+    ignore: '.noValidate',
     rules: rules,
     messages: messages,
     submitHandler: function ( form ) {
@@ -189,7 +194,7 @@ function setValidateForm( idForm, rules, messages ) {
   // Save validate instance for this Form
   setFormInfo( idForm, 'validateForm', $validateForm );
 
-  // createFilesTitleField( idForm );
+  createFilesTitleField( idForm );
 
   // Si hay idiomas, buscamos campos multi-idioma en el form y los procesamos
   createSwitchFormLang( idForm );
@@ -728,10 +733,10 @@ function switchFormLang( idForm, lang ) {
   console.log( 'switchFormLang: '+lang );
   langForm = lang;
   $( '[form="'+idForm+'"].js-tr, [data-form_id="'+idForm+'"].js-tr, '+
-    ' [form="fileFields_'+idForm+'"].js-tr, [data-form_id="fileFields_'+idForm+'"].js-tr' )
+    ' .cgmMForm-fileFields-'+idForm+' input.js-tr' )
     .parent().hide();
   $( '[form="'+idForm+'"].js-tr.js-tr-'+lang+', [data-form_id="'+idForm+'"].js-tr.js-tr-'+lang+', '+
-    ' [form="fileFields_'+idForm+'"].js-tr.js-tr-'+lang+', [data-form_id="fileFields_'+idForm+'"].js-tr.js-tr-'+lang )
+    ' .cgmMForm-fileFields-'+idForm+' input.js-tr.js-tr-'+lang )
     .parent().show();
   $( 'ul[data-form_id="'+idForm+'"].langSwitch li' ).removeClass( 'langActive' );
   $( 'ul[data-form_id="'+idForm+'"].langSwitch li.langSwitch-'+lang ).addClass( 'langActive' );
@@ -748,11 +753,11 @@ function createSwitchFormLang( idForm ) {
       htmlLangSwitch += '<li class="langSwitch-'+lang+'" data-lang="'+lang+'">'+lang;
     });
     htmlLangSwitch += '</ul>';
-    htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-flag fa-fw"></i></span>';
+    htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-language fa-fw" style="font-size:16px;"></i></span>';
     htmlLangSwitch += '</div>';
 
     $( '[form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + langDefault ).parent().before( htmlLangSwitch );
-    $( '[form="fileFields_'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + langDefault ).parent().before( htmlLangSwitch );
+    $( '.cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + langDefault ).parent().before( htmlLangSwitch );
 
     switchFormLang( idForm, langDefault );
 
