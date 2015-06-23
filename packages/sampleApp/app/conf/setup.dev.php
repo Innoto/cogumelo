@@ -180,20 +180,30 @@ define( 'MEDIASERVER_TMP_CACHE_PATH', APP_TMP_PATH.'/mediaCache' );
 define( 'MEDIASERVER_FINAL_CACHE_PATH', 'mediaCache' );
 define( 'MEDIASERVER_COMPILE_LESS', false );
 
+global $MEDIASERVER_LESS_GLOBALS;
+$MEDIASERVER_LESS_GLOBALS = array( 'C_LANG' );
 global $MEDIASERVER_LESS_CONSTANTS;
-global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
 $MEDIASERVER_LESS_CONSTANTS = array(
-  'variable1' => 1, 'variable2' => 'red', 'variable3' => 'blue'
+  'langDefault' => LANG_DEFAULT,
+  'langAvailableIds' => array_keys( $LANG_AVAILABLE ),
+  // 'langAvailable' => $LANG_AVAILABLE, // No conocemos como crear arrays anidados en Less
+  // 'var1' => 5, 'var2'=>array('a',true,5, array(1,2) ), 'var3' => true, 'comilla' => "ola'tu"
 );
+
+global $MEDIASERVER_JAVASCRIPT_GLOBALS;
+$MEDIASERVER_JAVASCRIPT_GLOBALS = array( 'LANG_AVAILABLE', 'C_LANG' );
+global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
 $MEDIASERVER_JAVASCRIPT_CONSTANTS = array(
   'langDefault' => LANG_DEFAULT,
-  //'langAvailable' => $LANG_AVAILABLE,
-  'variable1' => 5, 'variable2'=>'red', 'variable3' => 'blue'
+  'langAvailableIds' => array_keys( $LANG_AVAILABLE ),
+  // 'var1' => 5, 'var2'=>array('a',true,5, array(1,2) ), 'var3' => true, 'comilla' => "ola'tu"
 );
 
-
+global $MEDIASERVER_SMARTY_GLOBALS;
+$MEDIASERVER_SMARTY_GLOBALS = array( 'LANG_AVAILABLE', 'C_LANG' );
 global $COGUMELO_SMARTY_CONSTANTS;
 $COGUMELO_SMARTY_CONSTANTS = array(
   'langDefault' => LANG_DEFAULT,
-  'langAvailable' => $LANG_AVAILABLE
+  'langAvailableIds' => array_keys( $LANG_AVAILABLE ),
+  // 'var1' => 5, 'var2'=>array('a',true,5, array(1,2) ), 'var3' => true, 'comilla' => "ola'tu"
 );
