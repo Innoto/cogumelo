@@ -419,9 +419,11 @@ class FormController implements Serializable {
   public function loadArrayValues( $dataArray ) {
     // error_log( 'loadArrayValues: ' . print_r( $dataArray, true ) );
 
-    foreach( $dataArray as $fieldName => $value ) {
-      if( $this->isFieldDefined( $fieldName ) ) {
-        $this->setFieldValue( $fieldName, $value );
+    if( isset( $dataArray ) && is_array( $dataArray ) && count( $dataArray ) > 0  ) {
+      foreach( $dataArray as $fieldName => $value ) {
+        if( $this->isFieldDefined( $fieldName ) ) {
+          $this->setFieldValue( $fieldName, $value );
+        }
       }
     }
   }

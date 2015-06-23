@@ -49,20 +49,20 @@ function createFilesTitleField( idForm ) {
     console.log( this );
 
     fileField = this;
-    langs = ( typeof( langAvailable ) == 'object' ) ? langAvailable : [''];
+    langs = ( typeof( langAvailableIds ) == 'object' ) ? langAvailableIds : [''];
     html = '<div class="cgmMForm-wrap cgmMForm-'+idForm+' cgmMForm-titleFileField_'+fileField.name+'"'+
       ' style="display:none">'+"\n";
 
     $.each( langs, function( i, lang ) {
       name = ( lang !== '' ) ? fileField.name+'_'+lang : fileField.name;
       filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
-      classLang = ( lang !== '' ) ? 'js-tr js-tr-'+lang+' ' : '';
+      classLang = ( lang !== '' ) ? ' js-tr js-tr-'+lang : '';
       titleValue = ( $( fileField ).data( filefielddata ) ) ? $( fileField ).data( filefielddata ) : '';
       html += '<div class="cgmMForm-wrap cgmMForm-field-titleFileField_'+name+'">'+"\n"+
         '<label class="cgmMForm'+classLang+'">Alt-Title</label>'+"\n"+
         '<input name="titleFileField_'+name+'" value="'+titleValue+'" '+
         'data-ffid="'+idForm+'" data-ffname="'+fileField.name+'" data-ffdata="'+filefielddata+'" '+
-        'form="fileFields_'+idForm+'" class="cgmMForm-field cgmMForm-field-titleFileField '+classLang+'" type="text">'+"\n"+
+        'form="fileFields_'+idForm+'" class="cgmMForm-field cgmMForm-field-titleFileField'+classLang+'" type="text">'+"\n"+
         '</div>'+"\n";
     });
 
@@ -86,7 +86,7 @@ function hideFileTitleField( idForm, fieldName ) {
 
   $fileField = $( 'input[form="'+idForm+'"][name="'+fieldName+'"]' );
   // Clear data-fm_title
-  langs = ( typeof( langAvailable ) == 'object' ) ? langAvailable : [''];
+  langs = ( typeof( langAvailableIds ) == 'object' ) ? langAvailableIds : [''];
   $.each( langs, function( i, lang ) {
     filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
     $fileField.attr( 'data-'+filefielddata, '' );
@@ -147,7 +147,7 @@ function setValidateForm( idForm, rules, messages ) {
   });
 
 
-  console.log( 'VALIDATE: ', $( '#'+idForm ) );
+  console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
   var $validateForm = $( '#'+idForm ).validate({
     // debug: true,
     errorClass: 'formError',
@@ -189,7 +189,7 @@ function setValidateForm( idForm, rules, messages ) {
   // Save validate instance for this Form
   setFormInfo( idForm, 'validateForm', $validateForm );
 
-  createFilesTitleField( idForm );
+  // createFilesTitleField( idForm );
 
   // Si hay idiomas, buscamos campos multi-idioma en el form y los procesamos
   createSwitchFormLang( idForm );
@@ -740,11 +740,11 @@ function switchFormLang( idForm, lang ) {
 function createSwitchFormLang( idForm ) {
   console.log( 'createSwitchFormLang' );
 
-  if( typeof( langAvailable ) == 'object' ) {
+  if( typeof( langAvailableIds ) == 'object' ) {
     var htmlLangSwitch = '';
     htmlLangSwitch += '<div class="langSwitch-wrap">';
     htmlLangSwitch += '<ul class="langSwitch" data-form_id="'+idForm+'">';
-    $.each( langAvailable, function( index, lang ) {
+    $.each( langAvailableIds, function( index, lang ) {
       htmlLangSwitch += '<li class="langSwitch-'+lang+'" data-lang="'+lang+'">'+lang;
     });
     htmlLangSwitch += '</ul>';
