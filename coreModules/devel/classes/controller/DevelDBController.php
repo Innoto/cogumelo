@@ -6,7 +6,7 @@ Cogumelo::load('coreModel/Facade.php');
 //
 // DevelUtilsDB Controller Class
 //
-class  DevelDBController 
+class  DevelDBController
 {
   var $data;
   var $voUtilControl;
@@ -24,11 +24,26 @@ class  DevelDBController
   function createTables(){
 
     $returnStrArray = array();
+    $aditionalRcSQL = '';
     foreach( VOUtils::listVOs() as $voKey => $vo) {
-      $returnStrArray[] = $this->data->dropTable($voKey);
-      $returnStrArray[] = $this->data->createTable($voKey);
-      $returnStrArray[] = $this->data->insertTableValues($voKey);
+
+      $evo = new $voKey();
+
+      // rc custom SQL
+      if( $evo->rcSQL ){
+        $aditionalRcSQL .= "\n# Aditional rcSQL for ".$voKey.".php\n";
+        $aditionalRcSQL .= $evo->rcSQL;
+      }
+
+      if( !$evo->notCreateDBTable ) {
+        $returnStrArray[] = $this->data->dropTable($voKey);
+        $returnStrArray[] = $this->data->createTable($voKey);
+        $returnStrArray[] = $this->data->insertTableValues($voKey);
+      }
     }
+
+    // add all rc custom SQL at bottom
+    $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
 
     return $returnStrArray;
   }
@@ -36,21 +51,37 @@ class  DevelDBController
 
   function getTablesSQL(){
     $returnStrArray = array();
+    $aditionalRcSQL = '';
 
     foreach( VOUtils::listVOs() as $voKey => $vo) {
-      $returnStrArray[] = "#VO File: ".$vo['path'].".php";
-      $returnStrArray[] = $this->data->getDropSQL( $voKey, $vo['path'].".php" );
-      $returnStrArray[] = $this->data->getTableSQL( $voKey, $vo['path'].".php");
 
-      $resInsert = $this->data->getInsertTableSQL( $voKey, $vo['path'].".php");
+      $evo = new $voKey();
 
-      if(!empty($resInsert)) {
-        foreach ($resInsert as $resInsertKey => $resInsertValue) {
-          $returnStrArray[] = $resInsertValue['infoSQL'];
+      // rc custom SQL
+      if( $evo->rcSQL ){
+        $aditionalRcSQL .= "\n# Aditional rcSQL for ".$voKey.".php\n";
+        $aditionalRcSQL .= $evo->rcSQL;
+      }
+
+      // tables Creation
+      if( !$evo->notCreateDBTable ) {
+        $returnStrArray[] = "#VO File: ".$vo['path'].$voKey.".php";
+        $returnStrArray[] = $this->data->getDropSQL( $voKey, $vo['path'].$voKey.".php" );
+        $returnStrArray[] = $this->data->getTableSQL( $voKey, $vo['path'].$voKey.".php");
+
+        $resInsert = $this->data->getInsertTableSQL( $voKey, $vo['path'].$voKey.".php");
+
+        if(!empty($resInsert)) {
+          foreach ($resInsert as $resInsertKey => $resInsertValue) {
+            $returnStrArray[] = $resInsertValue['infoSQL'];
+          }
         }
       }
 
     }
+
+    // add all rc custom SQL at bottom
+    $returnStrArray[] = $aditionalRcSQL;
 
     return $returnStrArray;
   }

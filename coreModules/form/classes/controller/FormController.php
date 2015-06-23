@@ -395,7 +395,6 @@ class FormController implements Serializable {
           $this->setFieldValue( $fieldName, $fileFieldValue );
         }
       }
-
     }
   }
 

@@ -105,6 +105,7 @@ if( $argc > 1 ) {
 
     /* We execute this two actions from web as we need to operate with the apache permissions*/
     case 'flush': // delete temporary files
+      setPermissionsDevel();
       actionFlush();
       actionCompileTranslations();
       break;
@@ -192,7 +193,7 @@ function createRelSchemes() {
 
   global $C_ENABLED_MODULES;
 
-  foreach($C_ENABLED_MODULES as $moduleName) {
+  foreach( $C_ENABLED_MODULES as $moduleName ) {
     require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
   }
 
@@ -202,7 +203,7 @@ function createRelSchemes() {
 
   if( !is_dir( $dir ) ) {
     if( !mkdir( $dir, 0777, true ) ) {
-      echo 'ERROR: Imposible crear el dirirectorio: '.$dir."\n";
+      echo 'ERROR: Imposible crear el directorio: '.$dir."\n";
     }
   }
 
@@ -216,7 +217,7 @@ function createTables(){
 
   global $C_ENABLED_MODULES;
 
-  foreach($C_ENABLED_MODULES as $moduleName) {
+  foreach( $C_ENABLED_MODULES as $moduleName ) {
     require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
   }
 
@@ -235,7 +236,7 @@ function createTables(){
 function initModules() {
   global $C_ENABLED_MODULES;
 
-  foreach($C_ENABLED_MODULES as $moduleName) {
+  foreach( $C_ENABLED_MODULES as $moduleName ) {
     require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
     eval($moduleName.'::moduleRc();');
   }
@@ -244,17 +245,13 @@ function initModules() {
 
 function makeAppPaths() {
   global $lc, $LANG_AVAILABLE;
-  $md_1 = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
+  $md = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
     MEDIASERVER_TMP_CACHE_PATH, WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH,
     LOGDIR, MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, BCK, I18N, I18N_LOCALE,TPL_TMP );
 
-  $i = 0;
-  foreach ($LANG_AVAILABLE as $l=>$lang){
-    $lc[$i] = I18N_LOCALE.$lang['i18n'].'/LC_MESSAGES';
-    $i = $i+1;
+  foreach( $LANG_AVAILABLE as $lang ) {
+    $md[] = I18N_LOCALE.$lang['i18n'].'/LC_MESSAGES';
   }
-
-  $md = array_merge($md_1, $lc);
 
   foreach( $md as $dir ) {
     if( !is_dir( $dir ) ) {
@@ -327,13 +324,14 @@ function restoreDB( $BD, $user, $file ) {
 /**
  * Get data from the shell.
  */
-function ReadStdin($prompt, $valid_inputs, $default = '') {
-    while(!isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input))) {
-        echo $prompt;
-        $input = strtolower(trim(fgets(STDIN)));
-        if(empty($input) && !empty($default)) {
-            $input = $default;
-        }
+function ReadStdin( $prompt, $valid_inputs, $default = '' ) {
+    while( !isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input)))
+    {
+      echo $prompt;
+      $input = strtolower(trim(fgets(STDIN)));
+      if( empty($input) && !empty($default) ) {
+        $input = $default;
+      }
     }
     return $input;
 }
@@ -342,7 +340,8 @@ function ReadStdin($prompt, $valid_inputs, $default = '') {
  * Get a password from the shell.
  * This function works on *nix systems only and requires shell_exec and stty.
  *
- * @param  boolean $stars Wether or not to output stars for given characters
+ * @param boolean $stars Wether or not to output stars for given characters
+ *
  * @return string
  */
 function getPassword( $stars = false ) {

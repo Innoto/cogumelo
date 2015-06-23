@@ -50,19 +50,23 @@ function createFilesTitleField( idForm ) {
 
     fileField = this;
     langs = ( typeof( langAvailable ) == 'object' ) ? langAvailable : [''];
-    html = '';
+    html = '<div class="cgmMForm-wrap cgmMForm-'+idForm+' cgmMForm-titleFileField_'+fileField.name+'"'+
+      ' style="display:none">'+"\n";
 
     $.each( langs, function( i, lang ) {
       name = ( lang !== '' ) ? fileField.name+'_'+lang : fileField.name;
       filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
       classLang = ( lang !== '' ) ? 'js-tr js-tr-'+lang+' ' : '';
+      titleValue = ( $( fileField ).data( filefielddata ) ) ? $( fileField ).data( filefielddata ) : '';
       html += '<div class="cgmMForm-wrap cgmMForm-field-titleFileField_'+name+'">'+"\n"+
         '<label class="cgmMForm'+classLang+'">Alt-Title</label>'+"\n"+
-        '<input name="titleFileField_'+name+'" value="'+$( fileField ).data( filefielddata )+'" '+
+        '<input name="titleFileField_'+name+'" value="'+titleValue+'" '+
         'data-ffid="'+idForm+'" data-ffname="'+fileField.name+'" data-ffdata="'+filefielddata+'" '+
         'form="fileFields_'+idForm+'" class="cgmMForm-field cgmMForm-field-titleFileField '+classLang+'" type="text">'+"\n"+
         '</div>'+"\n";
     });
+
+    html += '</div>'+"\n";
 
     return html;
   });
@@ -75,6 +79,24 @@ function createFilesTitleField( idForm ) {
     $fileField.data( $titleData.ffdata, $titleFileField.val() );
     // Doble escritura para asegurar porque funcionan distinto
   });
+}
+
+function hideFileTitleField( idForm, fieldName ) {
+  console.log( 'hideFileTitleField( '+idForm+', '+fieldName+' )' );
+
+  $fileField = $( 'input[form="'+idForm+'"][name="'+fieldName+'"]' );
+  // Clear data-fm_title
+  langs = ( typeof( langAvailable ) == 'object' ) ? langAvailable : [''];
+  $.each( langs, function( i, lang ) {
+    filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
+    $fileField.attr( 'data-'+filefielddata, '' );
+    $fileField.data( filefielddata, '' );
+  });
+  // Hide wrap
+  $wrap = $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName )
+  $wrap.hide();
+  // Clear values
+  $wrap.find( ' input' ).val('');
 }
 
 
@@ -454,6 +476,9 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId ) {
   //$( '#'+fieldName+'-error[data-form_id="'+idForm+'"]' ).hide();
   $( '#' + $fileField.attr('id') + '-error' ).remove();
 
+  // Show Title file field
+  $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName ).show();
+  console.log( 'SHOW: .cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName );
 
   $fileFieldInfo = $( '<div>' ).addClass( 'fileFieldInfo fileUploadOK formFileDelete' )
     .attr( { "data-fieldname": fieldName, "data-form_id": idForm } );
@@ -496,6 +521,9 @@ function fileFieldToInput( idForm, fieldName ) {
   $fileField.prop( 'disabled', false ); //$fileField.removeProp( 'disabled' );
   $fileField.val( null );
   $fileField.show();
+
+  // Hide and clear Title file field/value
+  hideFileTitleField( idForm, fieldName );
 }
 
 

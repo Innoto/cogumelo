@@ -179,6 +179,12 @@ class CogumeloClass extends Singleton
     }
   }
 
+  public static function debugSQL( $description ) {
+    if(DEBUG === true) {
+      self::log($description, 'cogumelo_debug_sql');
+    }
+  }
+
   public static function log( $texto, $fich_log = 'cogumelo' ) {
     global $COGUMELO_DISABLE_LOGS;
     $ignore = false;
