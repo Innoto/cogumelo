@@ -9,7 +9,6 @@ class ConfConstantsView {
 
 
   public function less(){
-
     $lessContent = '/* COGUMELO SETUP CONSTANTS */'."\n";
 
     global $MEDIASERVER_LESS_GLOBALS, $MEDIASERVER_LESS_CONSTANTS;
@@ -43,9 +42,6 @@ class ConfConstantsView {
 
 
   public function javascript(){
-
-    error_log( print_r( array_keys( $GLOBALS ), true ) );
-
     $jsContent = '/* COGUMELO SETUP CONSTANTS */'."\n";
 
     global $MEDIASERVER_JAVASCRIPT_GLOBALS, $MEDIASERVER_JAVASCRIPT_CONSTANTS;
