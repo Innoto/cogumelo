@@ -180,7 +180,7 @@ define( 'MEDIASERVER_TMP_CACHE_PATH', APP_TMP_PATH.'/mediaCache' );
 define( 'MEDIASERVER_FINAL_CACHE_PATH', 'mediaCache' );
 define( 'MEDIASERVER_COMPILE_LESS', false );
 
-global $MEDIASERVER_LESS_GLOBALS;
+global $MEDIASERVER_LESS_GLOBALS; // Se cargan con el prefijo GLOBAL_
 $MEDIASERVER_LESS_GLOBALS = array( 'C_LANG' );
 global $MEDIASERVER_LESS_CONSTANTS;
 $MEDIASERVER_LESS_CONSTANTS = array(
@@ -190,7 +190,7 @@ $MEDIASERVER_LESS_CONSTANTS = array(
   // 'var1' => 5, 'var2'=>array('a',true,5, array(1,2) ), 'var3' => true, 'comilla' => "ola'tu"
 );
 
-global $MEDIASERVER_JAVASCRIPT_GLOBALS;
+global $MEDIASERVER_JAVASCRIPT_GLOBALS; // Se cargan con el prefijo GLOBAL_
 $MEDIASERVER_JAVASCRIPT_GLOBALS = array( 'LANG_AVAILABLE', 'C_LANG' );
 global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
 $MEDIASERVER_JAVASCRIPT_CONSTANTS = array(
@@ -199,7 +199,7 @@ $MEDIASERVER_JAVASCRIPT_CONSTANTS = array(
   // 'var1' => 5, 'var2'=>array('a',true,5, array(1,2) ), 'var3' => true, 'comilla' => "ola'tu"
 );
 
-global $MEDIASERVER_SMARTY_GLOBALS;
+global $MEDIASERVER_SMARTY_GLOBALS; // Se cargan con el prefijo GLOBAL_
 $MEDIASERVER_SMARTY_GLOBALS = array( 'LANG_AVAILABLE', 'C_LANG' );
 global $COGUMELO_SMARTY_CONSTANTS;
 $COGUMELO_SMARTY_CONSTANTS = array(
