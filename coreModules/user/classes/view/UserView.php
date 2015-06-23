@@ -257,11 +257,7 @@ class UserView extends View
     $form->setValidationRule( 'avatar', 'minfilesize', 1024 );
     $form->setValidationRule( 'avatar', 'accept', 'image/jpeg' );
     //$form->setValidationRule( 'avatar', 'required' );
-
-
     $form->setValidationRule( 'email', 'email' );
-
-
     $form->loadArrayValues( $data );
 
     return $form;
@@ -439,6 +435,7 @@ class UserView extends View
    **/
   public function actionUserForm() {
     $form = new FormController();
+
     if( $form->loadPostInput() ) {
       $form->validateForm();
     }
@@ -505,8 +502,10 @@ class UserView extends View
         $user->setPassword( $password );
       }
 
+/*
 Cogumelo::console($valuesArray['avatar']['values']);
 exit();
+*/
       if($valuesArray['avatar']['values']){
         $user->setterDependence( 'avatar', new FiledataModel( $valuesArray['avatar']['values'] ) );
       }
