@@ -57,7 +57,9 @@ class Template extends Smarty
     global $COGUMELO_SMARTY_GLOBALS, $COGUMELO_SMARTY_CONSTANTS;
     if( is_array( $COGUMELO_SMARTY_GLOBALS ) && count( $COGUMELO_SMARTY_GLOBALS ) > 0 ) {
       foreach( $COGUMELO_SMARTY_GLOBALS as $globalKey ) {
-        $this->assign( 'GLOBAL_'.$globalKey, $GLOBALS[ $globalKey ] );
+        if( isset( $GLOBALS[ $globalKey ] ) ) {
+          $this->assign( 'GLOBAL_'.$globalKey, $GLOBALS[ $globalKey ] );
+        }
       }
     }
     if( is_array( $COGUMELO_SMARTY_CONSTANTS ) && count( $COGUMELO_SMARTY_CONSTANTS ) > 0 ) {

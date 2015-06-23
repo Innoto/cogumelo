@@ -16,9 +16,11 @@ class ConfConstantsView {
 
     if( is_array( $MEDIASERVER_LESS_GLOBALS ) && count( $MEDIASERVER_LESS_GLOBALS ) > 0 ) {
       foreach( $MEDIASERVER_LESS_GLOBALS as $globalKey ) {
-        $lessValue = $this->valueToLess( $GLOBALS[ $globalKey ] );
-        if( $lessValue !== null ) {
-          $lessContent .= '@GLOBAL_'.$globalKey.' : '.$lessValue.';'."\n";
+        if( isset( $GLOBALS[ $globalKey ] ) ) {
+          $lessValue = $this->valueToLess( $GLOBALS[ $globalKey ] );
+          if( $lessValue !== null ) {
+            $lessContent .= '@GLOBAL_'.$globalKey.' : '.$lessValue.';'."\n";
+          }
         }
       }
     }
@@ -50,9 +52,11 @@ class ConfConstantsView {
 
     if( is_array( $MEDIASERVER_JAVASCRIPT_GLOBALS ) && count( $MEDIASERVER_JAVASCRIPT_GLOBALS ) > 0 ) {
       foreach( $MEDIASERVER_JAVASCRIPT_GLOBALS as $globalKey ) {
-        $jsValue = $this->valueToJs( $GLOBALS[ $globalKey ] );
-        if( $jsValue !== null ) {
-          $jsContent .= 'var GLOBAL_'.$globalKey.' = '.$jsValue.';'."\n";
+        if( isset( $GLOBALS[ $globalKey ] ) ) {
+          $jsValue = $this->valueToJs( $GLOBALS[ $globalKey ] );
+          if( $jsValue !== null ) {
+            $jsContent .= 'var GLOBAL_'.$globalKey.' = '.$jsValue.';'."\n";
+          }
         }
       }
     }
