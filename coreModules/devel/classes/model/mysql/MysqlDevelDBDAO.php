@@ -142,21 +142,31 @@ class MysqlDevelDBDAO extends MysqlDAO
     $type = "";
     $size = "";
 
-    // is primary key
-    if( array_key_exists('primarykey', $col ) ) {
-      $primarykeys[] = $colkey;
-    }
+    if( array_key_exists('default', $col ) ) {
+      if( is_numeric($col['default']) ){
+        $extrapkey = ' DEFAULT '.$col['default'].' ';
+      }
+      else {
+        $extrapkey = " DEFAULT '".$col['default']."' ";
+      }
 
-    // is autoincrement
-    if(  array_key_exists('autoincrement', $col ) ){
-      $extrapkey=' NOT NULL auto_increment ';
     }
+    else {
+      // is primary key
+      if( array_key_exists('primarykey', $col ) ) {
+        $primarykeys[] = $colkey;
+      }
 
-    // is unique
-    if(  array_key_exists('unique', $col ) ){
-      $uniques[] = $colkey;
+      // is autoincrement
+      if(  array_key_exists('autoincrement', $col ) ){
+        $extrapkey=' NOT NULL auto_increment ';
+      }
+
+      // is unique
+      if(  array_key_exists('unique', $col ) ){
+        $uniques[] = $colkey;
+      }
     }
-
 
     if( $col['type'] == "FOREIGN" ) { // is a foreign key
       eval( '$foreign_col = '.$col['vo'].'::$cols[\''.$col['key'].'\'];' );
