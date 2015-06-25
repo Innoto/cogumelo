@@ -149,32 +149,6 @@ class UserView extends View
   }
 
 
-
-
-
-
-
-
-
-  /**
-   * Example register form
-   *
-   * @return void
-   **/
-  public function registerForm() {
-    $form = $this->registerFormDefine();
-    $registerHtml = $this->registerFormGet( $form );
-
-    $this->template->assign('registerHtml', $registerHtml);
-
-    $this->template->setTpl('registerFormExample.tpl', 'user');
-    $this->template->exec();
-  } // function loadForm()
-
-
-
-
-
   /**
    * Update user form
    *
@@ -220,12 +194,13 @@ class UserView extends View
 
 
     $form = new FormController( 'userForm', '/user/senduserform' ); //actionform
-
-    $form->setSuccess( 'accept', 'Bienvenido' );
     $form->setSuccess( 'redirect', '/' );
 
     $form->setField( 'id', array( 'type' => 'reserved', 'value' => null ) );
 
+    $form->setField( 'avatar', array( 'type' => 'file', 'id' => 'inputFicheiro',
+      'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro',
+      'destDir' => '/users' ) );
     $form->setField( 'login', array( 'placeholder' => 'Login' ) );
     //Esto es para verificar si es un create
     if(!isset($data) || $data == ''){
@@ -238,9 +213,7 @@ class UserView extends View
     $form->setField( 'email', array( 'placeholder' => 'Email' ) );
 
     $form->setField( 'description', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
-    $form->setField( 'avatar', array( 'type' => 'file', 'id' => 'inputFicheiro',
-      'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro',
-      'destDir' => '/users' ) );
+
 
     $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
 
@@ -258,7 +231,10 @@ class UserView extends View
     $form->setValidationRule( 'avatar', 'accept', 'image/jpeg' );
     //$form->setValidationRule( 'avatar', 'required' );
     $form->setValidationRule( 'email', 'email' );
-    $form->loadArrayValues( $data );
+
+    if(!isset($data) || $data !== ''){
+      $form->loadArrayValues( $data );
+    }
 
     return $form;
   }
@@ -355,16 +331,30 @@ class UserView extends View
    * @return string
    **/
   public function userFormGet( $form ) {
+
+    return $this->userFormGetBlock($form)->execToString();
+  }
+
+  /**
+   * Returns Block form
+   *
+   * @param $form
+   *
+   * @return template
+   **/
+  public function userFormGetBlock( $form ) {
     $form->saveToSession();
 
-    $this->template->assign("userFormOpen", $form->getHtmpOpen());
-    $this->template->assign("userFormFields", $form->getHtmlFieldsArray());
-    $this->template->assign("userFormClose", $form->getHtmlClose());
-    $this->template->assign("userFormValidations", $form->getScriptCode());
+    $template = new Template( $this->baseDir );
 
-    $this->template->setTpl('userForm.tpl', 'user');
+    $template->assign("userFormOpen", $form->getHtmpOpen());
+    $template->assign("userFormFields", $form->getHtmlFieldsArray());
+    $template->assign("userFormClose", $form->getHtmlClose());
+    $template->assign("userFormValidations", $form->getScriptCode());
 
-    return $this->template->execToString();
+    $template->setTpl('userForm.tpl', 'user');
+
+    return $template;
   }
 
 
@@ -376,16 +366,29 @@ class UserView extends View
    * @return string
    **/
   public function userChangePasswordFormGet( $form ) {
+    return $this->userChangePasswordFormGetBlock($form)->execToString();
+  }
+
+  /**
+   * Returns Block form
+   *
+   * @param $form
+   *
+   * @return template
+   **/
+  public function userChangePasswordFormGetBlock( $form ) {
     $form->saveToSession();
 
-    $this->template->assign("userChangePasswordFormOpen", $form->getHtmpOpen());
-    $this->template->assign("userChangePasswordFormFields", $form->getHtmlFieldsArray());
-    $this->template->assign("userChangePasswordFormClose", $form->getHtmlClose());
-    $this->template->assign("userChangePasswordFormValidations", $form->getScriptCode());
+    $template = new Template( $this->baseDir );
 
-    $this->template->setTpl('userChangePasswordForm.tpl', 'user');
+    $template->assign("userChangePasswordFormOpen", $form->getHtmpOpen());
+    $template->assign("userChangePasswordFormFields", $form->getHtmlFieldsArray());
+    $template->assign("userChangePasswordFormClose", $form->getHtmlClose());
+    $template->assign("userChangePasswordFormValidations", $form->getScriptCode());
 
-    return $this->template->execToString();
+    $template->setTpl('userChangePasswordForm.tpl', 'user');
+
+    return $template;
   }
 
 
@@ -397,16 +400,29 @@ class UserView extends View
    * @return string
    **/
   public function userRolesFormGet( $form ) {
+    return $this->userRolesFormGetBlock($form)->execToString();
+  }
+
+  /**
+   * Returns Block form
+   *
+   * @param $form
+   *
+   * @return template
+   **/
+  public function userRolesFormGetBlock( $form ) {
     $form->saveToSession();
 
-    $this->template->assign("userRolesFormOpen", $form->getHtmpOpen());
-    $this->template->assign("userRolesFormFields", $form->getHtmlFieldsArray());
-    $this->template->assign("userRolesFormClose", $form->getHtmlClose());
-    $this->template->assign("userRolesFormValidations", $form->getScriptCode());
+    $template = new Template( $this->baseDir );
 
-    $this->template->setTpl('userRolesForm.tpl', 'user');
+    $template->assign("userRolesFormOpen", $form->getHtmpOpen());
+    $template->assign("userRolesFormFields", $form->getHtmlFieldsArray());
+    $template->assign("userRolesFormClose", $form->getHtmlClose());
+    $template->assign("userRolesFormValidations", $form->getScriptCode());
 
-    return $this->template->execToString();
+    $template->setTpl('userRolesForm.tpl', 'user');
+
+    return $template;
   }
 
 
