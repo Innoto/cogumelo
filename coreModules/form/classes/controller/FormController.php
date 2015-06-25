@@ -1873,7 +1873,7 @@ class FormController implements Serializable {
       $json = $this->jsonFormOk( $moreInfo );
     }
     else {
-      // $this->addFormError( 'NO SE HAN GUARDADO LOS DATOS.', 'formError' );
+      $this->addFormError( 'NO SE HAN GUARDADO LOS DATOS.', 'formError' );
       $json = $this->jsonFormError( $moreInfo );
     }
 
