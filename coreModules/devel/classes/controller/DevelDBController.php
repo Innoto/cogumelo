@@ -11,8 +11,7 @@ class  DevelDBController
   var $data;
   var $voUtilControl;
 
-  function __construct($usuario=false, $password = false, $DB = false)
-  {
+  public function __construct( $usuario = false, $password = false, $DB = false ) {
     $this->data = new Facade(false, "DevelDB", "devel");
 
     if($usuario) {
@@ -21,11 +20,11 @@ class  DevelDBController
   }
 
 
-  function createTables(){
+  public function createTables() {
 
     $returnStrArray = array();
     $aditionalRcSQL = '';
-    foreach( VOUtils::listVOs() as $voKey => $vo) {
+    foreach( VOUtils::listVOs() as $voKey => $vo ) {
 
       $evo = new $voKey();
 
@@ -43,17 +42,19 @@ class  DevelDBController
     }
 
     // add all rc custom SQL at bottom
-    $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
+    if( $aditionalRcSQL !== '' ) {
+      $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
+    }
 
     return $returnStrArray;
   }
 
 
-  function getTablesSQL(){
+  public function getTablesSQL() {
     $returnStrArray = array();
     $aditionalRcSQL = '';
 
-    foreach( VOUtils::listVOs() as $voKey => $vo) {
+    foreach( VOUtils::listVOs() as $voKey => $vo ) {
 
       $evo = new $voKey();
 
@@ -72,7 +73,7 @@ class  DevelDBController
         $resInsert = $this->data->getInsertTableSQL( $voKey, $vo['path'].$voKey.".php");
 
         if(!empty($resInsert)) {
-          foreach ($resInsert as $resInsertKey => $resInsertValue) {
+          foreach( $resInsert as $resInsertKey => $resInsertValue ) {
             $returnStrArray[] = $resInsertValue['infoSQL'];
           }
         }
@@ -86,7 +87,7 @@ class  DevelDBController
     return $returnStrArray;
   }
 
-  function createSchemaDB() {
+  public function createSchemaDB() {
     return $this->data->createSchemaDB();
   }
 
