@@ -518,16 +518,19 @@ class UserView extends View
         $user->setPassword( $password );
       }
 
-/*
-Cogumelo::console($valuesArray['avatar']['values']);
-exit();
-*/
-      if($valuesArray['avatar']['values']){
+
+      if( $valuesArray['avatar'] === "DELETE"){
+        //IMG DELETE
+        $user->deleteDependence( 'avatar', true);
+      }
+      elseif( $valuesArray['avatar'] === "REPLACE"){
+        //IMG UPDATE
+        $user->deleteDependence( 'avatar', true);
+        $user->setterDependence( 'avatar', new FiledataModel( $valuesArray['avatar']['values'] ) );
+      }else{
+        //IMG CREATE
         $user->setterDependence( 'avatar', new FiledataModel( $valuesArray['avatar']['values'] ) );
       }
-
-
-
 
       $user->save( array( 'affectsDependences' => true ));
 
