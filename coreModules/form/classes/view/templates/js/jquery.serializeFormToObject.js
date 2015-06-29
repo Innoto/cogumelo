@@ -27,7 +27,8 @@ $.fn.serializeFormToObject = function () {
           ser[ elem.name ].value = false;
         }
         // Order select values
-        if( elem.multiple === true  && ser[ elem.name ].value.push ) {
+        if( elem.multiple === true && $( elem ).hasClass( 'cgmMForm-order' ) && ser[ elem.name ].value.push ) { // Array de options
+          console.log( 'Ordenando '+ elem.name, ser[ elem.name ] );
           ser[ elem.name ].value = $( elem ).find( 'option' ).filter( ':selected').toArray()
             .sort( function( a, b ) { return( parseInt( $( a ).data( 'order' ) ) - parseInt( $( b ).data( 'order' ) ) ); } )
             .map( function( e ) { return( e.value ); } );
