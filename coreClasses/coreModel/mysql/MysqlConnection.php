@@ -11,8 +11,6 @@ Cogumelo::load('coreModel/Connection.php');
  */
 class MysqlConnection extends Connection
 {
-    var $transactStarted = false;
-    var $transactError = false;
     var $db = false;
     var $stmt = false;
 
@@ -48,7 +46,7 @@ class MysqlConnection extends Connection
 
 
   /**
-   * Connect Mysql: Only when dbinstance doesn't exist 
+   * Connect Mysql: Only when dbinstance doesn't exist
    *
    * @return void
    */
@@ -73,34 +71,13 @@ class MysqlConnection extends Connection
    */
   public function transactionStart()
   {
-    if( ! $this->transactStarted ){
-      $this->db->autocommit(false);
-      Cogumelo::debug("TRANSACTION START");
-      mysqli_query($this->db ,"START TRANSACTION;");
-      $this->transactStarted = true;
-    }
+    Cogumelo::debug("DB TRANSACTION START");
+    mysqli_query($this->db ,"START TRANSACTION;");
+    mysqli_query($this->db ,"BEGIN;");
+
 
   }
 
-
-  /**
-   * End transaction
-   *
-   * @return void
-   */
-  public function transactionEnd()
-  {
-    if( $this->transactError ) {
-      $this->transactionRollback();
-      Cogumelo::debug("TRANSACTION ROLLBACK");
-    }
-    else {
-      $this->transactionCommit();
-      Cogumelo::debug("TRANSACTION COMMIT");
-    }
-
-    $this->transactStarted = false;
-  }
 
   /**
    * Commit transaction
@@ -109,7 +86,7 @@ class MysqlConnection extends Connection
    */
   public function transactionCommit()
   {
-    $this->db->commit();
+    mysqli_query($this->db ,"COMMIT;");
   }
 
   /**
@@ -119,12 +96,10 @@ class MysqlConnection extends Connection
    */
   public function transactionRollback()
   {
-    $this->db->rollback();
+    mysqli_query($this->db ,"ROLLBACK;");
   }
 
 
-  public function transactionError() {
-     $this->transactError = true;
-  }
+
 
 }

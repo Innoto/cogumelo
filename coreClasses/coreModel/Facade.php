@@ -19,7 +19,7 @@ class Facade
 
   /**
    *
-   * @param object $voObj vo for the autogenerator 
+   * @param object $voObj vo for the autogenerator
    * @param string $entity name to use a handmade DAO
    * @param string $module when DAO is handmade, specify module name
    *
@@ -59,9 +59,9 @@ class Facade
     $this->develModeData['DB_PASSWORD'] = $password;
     $this->develModeData['DB_NAME'] = $DB;
 
-    $this->getConnection();    
+    $this->getConnection();
   }
-  
+
 
 
   /**
@@ -71,18 +71,7 @@ class Facade
    */
   public function transactionStart()
   {
-    $this->connectioncontrol->transactionStart();    
-  }
-
-
-  /**
-   * End transaction
-   *
-   * @return void
-   */
-  public function transactionEnd()
-  {
-    $this->connectioncontrol->transactionEnd();    
+    $this->connectioncontrol->transactionStart();
   }
 
   /**
@@ -92,7 +81,7 @@ class Facade
    */
   public function transactionCommit()
   {
-    $this->connectioncontrol->transactionCommit();    
+    $this->connectioncontrol->transactionCommit();
   }
 
   /**
@@ -102,7 +91,7 @@ class Facade
    */
   public function transactionRollback()
   {
-    $this->connectioncontrol->transactionRollback();    
+    $this->connectioncontrol->transactionRollback();
   }
 
 
@@ -113,7 +102,7 @@ class Facade
    * @param string $name the called method
    * @param array $args arguments
    *
-   * @return mixed 
+   * @return mixed
    */
   function __call($name, $args){
 
@@ -127,8 +116,7 @@ class Facade
     eval('$data = $this->dao->'.$name. '($this->connectioncontrol'. $args_str . '); ');
 
     if($data === COGUMELO_ERROR) {
-      $this->connectioncontrol->transactionError();
-      Cogumelo::error('Error in facade calling : '.$name.'. Transaction will rollback');
+      Cogumelo::error('Error in facade calling : '.$name);
     }
 
     return $data;
