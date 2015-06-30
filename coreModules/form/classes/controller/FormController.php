@@ -486,32 +486,20 @@ class FormController implements Serializable {
         // Carga inicial
         if ( !isset( $fieldValue[ 'status' ] ) ) {
           $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
-          if( $this->langAvailable === false ) {
+
+          foreach( $this->multilangFieldNames( 'title' ) as $titleLang ) {
             /**
               TODO: Arreglar os null en texto
             */
-            $this->setFieldParam( $fieldName, 'data-fm_title',
-              (isset( $fieldValue[ 'title' ] ) && $fieldValue[ 'title' ] !== 'null') ? $fieldValue[ 'title' ] : '' );
+            $this->setFieldParam( $titleLang, 'data-fm_'.$titleLang,
+              (isset( $fieldValue[ $titleLang ] ) && $fieldValue[ $titleLang ] !== 'null') ? $fieldValue[ $titleLang ] : '' );
           }
-          else {
-            foreach( $this->langAvailable as $lang ) {
-              /**
-                TODO: Arreglar os null en texto
-              */
-              $this->setFieldParam( $fieldName, 'data-fm_title_'.$lang,
-                (isset( $fieldValue[ 'title_'.$lang ] ) && $fieldValue[ 'title_'.$lang ] !== 'null') ? $fieldValue[ 'title_'.$lang ] : '' );
-            }
-          }
+
           $fieldValue = array( 'status' => 'EXIST', 'prev' => $fieldValue, 'values' => array() );
         }
         else {
-          if( $this->langAvailable === false ) {
-            $fieldValue[ 'values' ][ 'title' ] = $this->getFieldParam( $fieldName, 'data-fm_title' );
-          }
-          else {
-            foreach( $this->langAvailable as $lang ) {
-              $fieldValue[ 'values' ][ 'title_'.$lang ] = $this->getFieldParam( $fieldName, 'data-fm_title_'.$lang );
-            }
+          foreach( $this->multilangFieldNames( 'title' ) as $titleLang ) {
+            $fieldValue[ 'values' ][ $titleLang ] = $this->getFieldParam( $fieldName, 'data-fm_'.$titleLang );
           }
         }
 
@@ -542,9 +530,9 @@ class FormController implements Serializable {
   }
 
   /**
-   * Crea los campos y les asigna las reglas en form
-   *
-   * @param $definitions Array fields info
+    Crea los campos y les asigna las reglas en form
+
+    @param $definitions Array fields info
   **/
   public function definitionsToForm( $definitions ) {
     foreach( $definitions as $fieldName => $definition ) {
@@ -575,6 +563,28 @@ class FormController implements Serializable {
         }
       }
     }
+  }
+
+  /**
+    Crea un array con los nombre del los campos para un elemento multilang
+
+    @param string $fieldName Nombre del campo
+
+    @return array
+  */
+  public function multilangFieldNames( $fieldName ) {
+    $fieldNames = [];
+
+    if( $this->langAvailable === false || count( $this->langAvailable ) <= 1 ) {
+      $fieldNames[] = $fieldName;
+    }
+    else {
+      foreach( $this->langAvailable as $lang ) {
+        $fieldNames[] = $fieldName.'_'.$lang;
+      }
+    }
+
+    return $fieldNames;
   }
 
   /**

@@ -248,7 +248,7 @@ function formDoneError( form, response ) {
         }
         errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
       }
-      console.log( 'showErrors: ' + errObj.JVshowErrors );
+      console.log( 'showErrors: ', errObj.JVshowErrors );
       $validateForm.showErrors( errObj.JVshowErrors );
     }
     else {
