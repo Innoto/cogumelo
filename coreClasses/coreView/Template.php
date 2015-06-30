@@ -37,7 +37,7 @@ class Template extends Smarty
    *
    * @param string $baseDir
    **/
-  public function __construct( $baseDir ) {
+  public function __construct( $baseDir = false ) {
     // Call Smarty's constructor
     parent::__construct();
 
