@@ -573,7 +573,7 @@ class FormController implements Serializable {
     @return array
   */
   public function multilangFieldNames( $fieldName ) {
-    $fieldNames = [];
+    $fieldNames = array();
 
     if( $this->langAvailable === false || count( $this->langAvailable ) <= 1 ) {
       $fieldNames[] = $fieldName;
