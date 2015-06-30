@@ -133,7 +133,6 @@ Class Model extends VO {
   */
   function save( array $parameters= array() )
   {
-    $this->dataFacade->transactionStart();
 
     $p = array(
         'affectsDependences' => false
@@ -167,7 +166,6 @@ Class Model extends VO {
       return $this->saveOrUpdate();
     }
 
-    $this->dataFacade->transactionEnd();
 
   }
 
@@ -236,8 +234,6 @@ Class Model extends VO {
   */
   function delete( array $parameters = array() ) {
 
-    $this->dataFacade->transactionStart();
-
     $p = array(
         'affectsDependences' => false
       );
@@ -259,7 +255,6 @@ Class Model extends VO {
       $this->dataFacade->deleteFromKey( $this->getFirstPrimarykeyId(), $this->getter( $this->getFirstPrimarykeyId() )  );
     }
 
-    $this->dataFacade->transactionEnd();
 
     return true;
   }
@@ -275,7 +270,6 @@ Class Model extends VO {
   */
   function updateKey( array $parameters = array() ) {
 
-    $this->dataFacade->transactionStart();
 
     $p = array(
         'searchKey' => null,
@@ -292,10 +286,41 @@ Class Model extends VO {
       }
     }
 
-    $this->dataFacade->transactionEnd();
-
     return $dataVO;
   }
+
+
+
+  /**
+   * Start transaction
+   *
+   * @return void
+   */
+  public function transactionStart()
+  {
+    $this->dataFacade->transactionStart();
+  }
+
+  /**
+   * Commit transaction
+   *
+   * @return void
+   */
+  public function transactionCommit()
+  {
+    $this->dataFacade->transactionCommit();
+  }
+
+  /**
+   * Rollback transaction
+   *
+   * @return void
+   */
+  public function transactionRollback()
+  {
+    $this->dataFacade->transactionRollback();
+  }
+
 
 
 }
