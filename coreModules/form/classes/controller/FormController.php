@@ -449,9 +449,6 @@ class FormController implements Serializable {
     // Creamos ya algunas reglas en funcion del tipo
     switch( $this->fields[$fieldName]['type'] ) {
       case 'select':
-        $this->setValidationRule( $this->fields[$fieldName]['name'], 'inArray',
-          array_keys( $this->fields[$fieldName]['options'] ) );
-        break;
       case 'checkbox':
       case 'radio':
         $this->setValidationRule( $this->fields[$fieldName]['name'], 'inArray',
