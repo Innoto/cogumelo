@@ -500,7 +500,7 @@ class FormController implements Serializable {
           }
         }
 
-        error_log( 'FILE fieldValue: '. print_r( $fieldValue, true ) );
+        // error_log( 'FILE fieldValue: '. print_r( $fieldValue, true ) );
         $this->setFieldParam( $fieldName, 'value', $fieldValue );
       }
       else {
@@ -1880,7 +1880,7 @@ class FormController implements Serializable {
       $json = $this->jsonFormOk( $moreInfo );
     }
     else {
-      $this->addFormError( 'NO SE HAN GUARDADO LOS DATOS.', 'formError' );
+      // $this->addFormError( 'NO SE HAN GUARDADO LOS DATOS.', 'formError' );
       $json = $this->jsonFormError( $moreInfo );
     }
 
