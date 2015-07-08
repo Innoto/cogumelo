@@ -451,8 +451,10 @@ class FormController implements Serializable {
       case 'select':
       case 'checkbox':
       case 'radio':
-        $this->setValidationRule( $this->fields[$fieldName]['name'], 'inArray',
-          array_keys( $this->fields[$fieldName]['options'] ) );
+        if( isset( $this->fields[$fieldName]['options'] ) ) {
+          $this->setValidationRule( $this->fields[$fieldName]['name'], 'inArray',
+            array_keys( $this->fields[$fieldName]['options'] ) );
+        }
         break;
       case 'file':
         $maxFileSize = $this->phpIni2Bytes( ini_get('upload_max_filesize') );
@@ -1745,24 +1747,26 @@ class FormController implements Serializable {
         $html['inputOpen'] = '<select name="'.$fieldName.'"'. $attribs.'>';
 
         $html['options'] = array();
-        foreach( $field['options'] as $val => $text ) {
-          $html['options'][$val] = array(
-            'input' => '<option value="'.$val.'">'.$text.'</option>',
-            'text' => $text
-            );
-        }
-        // Colocamos los selected
-        if( isset( $field['value'] ) ) {
-          $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
-          $dataOrder = 1;
-          foreach( $values as $val ) {
-            if( isset( $html['options'][$val]['input'] ) ) {
-              $html['options'][$val]['input'] = str_replace( 'option value="'.$val.'"',
-                'option data-order="'.$dataOrder.'" value="'.$val.'" selected="selected"',
-                $html['options'][$val]['input'] );
-              $dataOrder++;
-              if( !isset( $field['multiple'] ) ) {
-                break; // Si no es multiple, solo puede tener 1 valor
+        if( isset($field['options']) && is_array($field['options']) && count($field['options'])>0 ) {
+          foreach( $field['options'] as $val => $text ) {
+            $html['options'][$val] = array(
+              'input' => '<option value="'.$val.'">'.$text.'</option>',
+              'text' => $text
+              );
+          }
+          // Colocamos los selected
+          if( isset( $field['value'] ) ) {
+            $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
+            $dataOrder = 1;
+            foreach( $values as $val ) {
+              if( isset( $html['options'][$val]['input'] ) ) {
+                $html['options'][$val]['input'] = str_replace( 'option value="'.$val.'"',
+                  'option data-order="'.$dataOrder.'" value="'.$val.'" selected="selected"',
+                  $html['options'][$val]['input'] );
+                $dataOrder++;
+                if( !isset( $field['multiple'] ) ) {
+                  break; // Si no es multiple, solo puede tener 1 valor
+                }
               }
             }
           }
