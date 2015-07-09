@@ -290,6 +290,25 @@ Class Model extends VO {
   }
 
 
+  public function getAllData( $style='raw' ) {
+    $retData = false;
+
+    switch ( $style ) {
+      case 'raw':
+        $retData = $this->getAllRawData();
+        break;
+      case 'onlydata':
+        $retData = $this->getAllRawData();
+        $retData = $retData['data'];
+        break;
+      case 'plainjson':
+
+        break;
+    }
+
+    return $retData;
+  }
+
 
   /**
    * Start transaction

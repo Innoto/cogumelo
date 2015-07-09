@@ -579,7 +579,7 @@ Class VO
    *
    * @return array
    */
-  function getAllData() {
+  function getAllRawData() {
 
     $relationshipArrayData = array();
 
@@ -588,12 +588,12 @@ Class VO
       if( is_array( $dep ) ){
         $depA = array();
         foreach( $dep as $d  ) {
-          $depA[] = $d->getAllData();
+          $depA[] = $d->getAllRawData();
         }
         $relationshipArrayData[] = $depA;
       }
       else {
-        $relationshipArrayData[] = $dep->getAllData();
+        $relationshipArrayData[] = $dep->getAllRawData();
       }
 
     }
