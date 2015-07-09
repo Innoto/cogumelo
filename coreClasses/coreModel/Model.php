@@ -297,13 +297,12 @@ Class Model extends VO {
       case 'raw':
         $retData = $this->getAllRawData();
         break;
-      case 'onlydata':
-        $retData = $this->getAllRawData();
-        $retData = $retData['data'];
-        break;
-      case 'plainjson':
 
+      case 'onlydata':
+        $data = $this->getAllRawData();
+        $retData = $data['data'];
         break;
+
     }
 
     return $retData;
