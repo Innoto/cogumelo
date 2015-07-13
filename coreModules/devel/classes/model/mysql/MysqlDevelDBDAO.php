@@ -47,7 +47,6 @@ class MysqlDevelDBDAO extends MysqlDAO
         "DELETE, ".
         "INDEX, ".
         "LOCK TABLES, ".
-        "CREATE VIEW, ".
         "CREATE, ".
         "DROP, ".
         "SHOW VIEW ".
@@ -71,7 +70,6 @@ class MysqlDevelDBDAO extends MysqlDAO
     $strSQL = $this->getTableSQL($connection, $vo_name);
     $this->execSQL($connection, $strSQL, array() );
   }
-
   public function insertTableValues( $connection, $vo_name ){
     $res = $this->getInsertTableSQL($connection, $vo_name);
     if(!empty($res)) {
@@ -82,7 +80,7 @@ class MysqlDevelDBDAO extends MysqlDAO
   }
 
   public function aditionalExec( $connection, $strSQL ) {
-    return $this->execSQL($connection, $strSQL, array() );
+    return $this->rawExecSQL($connection, $strSQL, array() );
   }
 
   // Sql generation methods

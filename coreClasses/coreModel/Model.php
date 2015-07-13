@@ -299,8 +299,7 @@ Class Model extends VO {
         break;
 
       case 'onlydata':
-        $data = $this->getAllRawData();
-        $retData = $data['data'];
+        $retData = $this->getAllOnlyData();
         break;
 
     }

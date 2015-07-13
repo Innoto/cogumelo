@@ -106,6 +106,18 @@ class MysqlDAO extends DAO
   }
 
 
+  function rawExecSQL( &$connectionControl, $sql ) {
+    $ret = '';
+    $connectionControl->db->multi_query(  $sql );
+
+    if( $connectionControl->db->error != ''){
+      echo "Error executing rawExecSQL: ".$connectionControl->db->error;
+      $ret =  COGUMELO_ERROR;
+    }
+
+    return $ret;
+  }
+
 
   /**
   * get string of chars according prepare type (ex. i:integer, d:double, s:string, b:boolean)

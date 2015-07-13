@@ -602,6 +602,15 @@ Class VO
   }
 
 
+  /**
+   * get nested array with data (including loaded dependences)
+   *
+   * @return array
+   */
+  function getAllOnlyData() {
+    return $this->data;
+  }
+
 
   /**
    * refresh all relationship ids from sons to parents
