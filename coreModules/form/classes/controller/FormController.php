@@ -1749,10 +1749,30 @@ class FormController implements Serializable {
         $html['options'] = array();
         if( isset($field['options']) && is_array($field['options']) && count($field['options'])>0 ) {
           foreach( $field['options'] as $val => $text ) {
-            $html['options'][$val] = array(
-              'input' => '<option value="'.$val.'">'.$text.'</option>',
-              'text' => $text
+            if( is_array( $text ) && isset( $text['value'] ) ) {
+              $optInfo = text;
+
+              $optInput = '<option value="'. $optInfo[ 'value' ] .'"';
+              if( isset( $optInfo[ 'disabled' ] ) && $optInfo[ 'disabled' ] ) {
+                $optInput .= ' disabled';
+              }
+              foreach( $optInfo as $dataKey => $dataValue ) {
+                if( strpos( $dataKey, 'data-' ) === 0 ) {
+                  $optInput .= ' '.$dataKey.'="'.$dataValue.'"';
+                }
+              }
+              $optInput .= '>' . $optInfo[ 'text' ] . '</option>';
+              $html[ 'options' ][ $optInfo[ 'value' ] ] = array(
+                'input' => $optInput,
+                'text' => $optInfo[ 'text' ]
               );
+            }
+            else {
+              $html['options'][$val] = array(
+                'input' => '<option value="'.$val.'">'.$text.'</option>',
+                'text' => $text
+              );
+            }
           }
           // Colocamos los selected
           if( isset( $field['value'] ) ) {
