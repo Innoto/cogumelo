@@ -209,11 +209,9 @@ input[type="color"],
   line-height: @inputHeight;
   */
   padding: 4px 6px;
-  margin-bottom: @inputHeight / 4;
+  /*margin-bottom: @inputHeight / 4;*/
   font-size: @baseFontSize;
-
   color: @gray;
-  .border-radius(@inputBorderRadius);
 }
 
 input[type="file"] {
@@ -223,7 +221,6 @@ input[type="file"] {
   font-size: @baseFontSize;
   line-height: @inputHeight;
   color: @gray;
-  .border-radius(@inputBorderRadius);
 }
 
 // Reset height since textareas have rows
@@ -255,7 +252,6 @@ input[type="text"],
 input[type="password"]{
   background-image: none;
   border: 1px solid @btnBorder;
-  .border-radius(@baseBorderRadius);
   .box-shadow(~"inset 0 1px 0 rgba(255,255,255,.2), 0 1px 1px rgba(0,0,0,.075)");
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
   width: 100%;
