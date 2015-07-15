@@ -33,7 +33,7 @@ class FiledataWeb extends View {
     Visualizamos un fichero
   */
   public function webFileShow( $urlParams ) {
-    error_log( 'FiledataWeb: webFileShow()' . $urlParams['1'] );
+    // error_log( 'FiledataWeb: webFileShow()' . $urlParams['1'] );
     $this->fileSendCommon( $urlParams['1'], self::FILES_APP_PATH, 'web' );
   } // function webFileShow()
 
@@ -43,7 +43,7 @@ class FiledataWeb extends View {
     Visualizamos un fichero de Form
   */
   public function webFormFileShow( $urlParams ) {
-    error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['1'] );
+    // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['1'] );
     $this->fileSendCommon( $urlParams['1'], self::FILES_APP_PATH, 'web' );
   } // function webFormFileShow()
 
@@ -53,7 +53,7 @@ class FiledataWeb extends View {
     Visualizamos el fichero
   */
   public function fileSendCommon( $fileId, $basePath = false, $destination = 'web' ) {
-    error_log( "FiledataWeb: fileSendCommon( $fileId, $basePath, $destination )" );
+    // error_log( "FiledataWeb: fileSendCommon( $fileId, $basePath, $destination )" );
 
     $fileInfo = $this->loadFileInfo( $fileId );
 
@@ -82,7 +82,7 @@ class FiledataWeb extends View {
     Load File info
   */
   public function loadFileInfo( $fileId ) {
-    error_log( 'FiledataWeb: loadFileInfo(): ' . $fileId );
+    // error_log( 'FiledataWeb: loadFileInfo(): ' . $fileId );
 
     $fileInfo = false;
 
@@ -103,12 +103,12 @@ class FiledataWeb extends View {
     Visualizamos el fichero en la web
   */
   public function webShowFile( $fileInfo, $basePath = '' ) {
-    error_log( 'FiledataWeb: webShowFile() ' . print_r( $fileInfo, true ) );
+    // error_log( 'FiledataWeb: webShowFile() ' . print_r( $fileInfo, true ) );
 
     $filePath = $basePath . $fileInfo['absLocation'];
 
-    error_log( 'filePath = ' . $filePath );
-    error_log( 'filesize = ' . filesize( $filePath ) );
+    error_log( 'FiledataWeb: filePath = ' . $filePath );
+    // error_log( 'FiledataWeb: filesize = ' . filesize( $filePath ) );
 
     if( file_exists( $filePath ) ) {
       //header( 'Content-Description: File Transfer' );
@@ -134,7 +134,7 @@ class FiledataWeb extends View {
     Descargamos el fichero
   */
   public function webDownloadFile( $fileInfo, $basePath = '' ) {
-    error_log( 'FiledataWeb: webDownloadFile() ' . print_r( $fileInfo, true ) );
+    // error_log( 'FiledataWeb: webDownloadFile() ' . print_r( $fileInfo, true ) );
 
     $filePath = $basePath . $fileInfo['absLocation'];
 
