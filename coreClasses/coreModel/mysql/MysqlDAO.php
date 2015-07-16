@@ -211,7 +211,7 @@ class MysqlDAO extends DAO
   *
   * @return object
   */
-  function listItems(&$connectionControl, $filters, $range, $order, $fields, $joinType ,$resolveDependences = false, $cache = false)
+  function listItems(&$connectionControl, $filters, $range, $order, $fields, $joinType ,$resolveDependences = false, $groupBy = false, $cache = false)
   {
 
     // SQL Query
@@ -243,6 +243,9 @@ class MysqlDAO extends DAO
     // order string
     $orderSTR = ($order)? $this->orderByString($order): "";
 
+    // group by
+    $groupBySTR = ($groupBy)?  " GROUP BY $groupBy": "";
+
     // range string
     $rangeSTR = ($range != array() && is_array($range) )? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
 
@@ -258,7 +261,7 @@ class MysqlDAO extends DAO
               " FROM `" .
               $VO::$tableName ."` " .
               $joins.
-              $whereArray['string'] . $orderSTR . $rangeSTR . ";";
+              $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
 
 //echo $strSQL;
 //var_dump($joinWhereArrays);
