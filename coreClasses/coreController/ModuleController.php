@@ -192,7 +192,7 @@ class ModuleController
       return false;
     */
 
-    error_log( 'cogumeloSmartyTemplateHandlerFunc result: ' . print_r( $newName, true ) );
+    // error_log( 'cogumeloSmartyTemplateHandlerFunc result: ' . print_r( $newName, true ) );
     return $newName;
   }
 

@@ -1750,8 +1750,8 @@ class FormController implements Serializable {
         if( isset($field['options']) && is_array($field['options']) && count($field['options'])>0 ) {
           foreach( $field['options'] as $val => $text ) {
             if( is_array( $text ) && isset( $text['value'] ) ) {
-              $optInfo = text;
-
+              $optInfo = $text;
+error_log( print_r($optInfo, true) );
               $optInput = '<option value="'. $optInfo[ 'value' ] .'"';
               if( isset( $optInfo[ 'disabled' ] ) && $optInfo[ 'disabled' ] ) {
                 $optInput .= ' disabled';
