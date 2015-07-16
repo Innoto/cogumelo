@@ -28,8 +28,8 @@
 .tableHeaderContainer{
   .tableSearchFilters{
     padding: 10px 0px;
-    background: #f4f4f4;
-    border-bottom: 1px solid #ddd;
+    background: #f1f1f1;
+    border: 1px solid #ddd;
 
     .tableSearch{
       margin-left: 40px;
@@ -179,6 +179,9 @@ table.tableClass{
   margin: 10px 0px;
   font-size: @tableFontSize;
   tr{
+    &:first-child{
+      border-bottom: 1px solid @tableBorder;
+    }
     &.even{
       background: @tableBackgroundEven;
     }
@@ -192,10 +195,11 @@ table.tableClass{
   }
   th{
     background: @tableBackgroundTh;
+    text-transform: uppercase;
     height: 20px;
     line-height: 20px;
     vertical-align: middle;
-    div div{ float: left;}
+    div div{ float: left; margin-left:5px; }
     img{
 
     }
