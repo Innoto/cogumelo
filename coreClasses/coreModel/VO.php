@@ -83,7 +83,7 @@ Class VO
       }
 
       // set dependence VOs
-      if( array_key_exists( $datakey , $this->depKeys) ){
+      if( is_array($this->depKeys) && array_key_exists( $datakey , $this->depKeys) ){
         if( $data ) {
           $this->setDepVOs( $data, $this->depKeys[$datakey], VOUtils::searchVOinRelObj( $this->depKeys[$datakey], $this->relObj) );
         }

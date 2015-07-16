@@ -55,6 +55,7 @@ Class Model extends VO {
         'fields' => false,
         'joinType' => 'LEFT',
         'affectsDependences' => false,
+        'groupBy' => false,
         'cache' => false
       );
     $parameters =  array_merge($p, $parameters );
@@ -68,6 +69,7 @@ Class Model extends VO {
                                           $parameters['fields'],
                                           $parameters['joinType'],
                                           $parameters['affectsDependences'],
+                                          $parameters['groupBy'],
                                           $parameters['cache']
                                         );
 
