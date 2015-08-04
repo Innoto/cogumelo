@@ -169,22 +169,30 @@ class MysqlDAO extends DAO
           $fstr = " AND ".$this->filters[$fkey];
 
 
-          // where string
-          $where_str.=$fstr;
+          $var_count = substr_count( $fstr , "?");
+          for($c=0; $c < $var_count; $c++) {
+
+            if( is_array( $filter_val ) ) { // Value array for one filter
+              foreach($filter_val as $val) {
+                $val_array[] = $val;
+              }
 
 
-          // dump value or array value into $values array
-          if( is_array($filter_val) ) {
-            foreach($filter_val as $val) {
-              $val_array[] = $val;
             }
-          }
-          else {
-            $var_count = substr_count( $fstr , "?");
-            for($c=0; $c < $var_count; $c++) {
+            else { // one value
               $val_array[] = $filter_val;
             }
+
           }
+
+          // create n '?' separed by comma to filter by array values
+          if( is_array( $filter_val ) ) {
+            $to_replace = implode(',', array_fill(0, sizeof( $filter_val ), '?') );
+            $fstr = str_replace('?', $to_replace, $fstr );
+          }
+
+          $where_str.=$fstr;
+
         }
 
 
@@ -234,8 +242,6 @@ class MysqlDAO extends DAO
 
     $allWhereARraysValues = array();
     foreach( $allWhereArrays as $wa ) {
-      //var_dump($wa['values']);
-
       $allWhereARraysValues = array_merge( $allWhereARraysValues, $wa['values'] );
     }
 
@@ -264,6 +270,7 @@ class MysqlDAO extends DAO
               $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
 
 //echo $strSQL;
+//exit;
 //var_dump($joinWhereArrays);
 //exit;
     if ( $cache && DB_ALLOW_CACHE  )
