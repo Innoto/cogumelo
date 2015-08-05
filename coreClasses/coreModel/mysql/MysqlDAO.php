@@ -260,10 +260,8 @@ class MysqlDAO extends DAO
       $this->execSQL($connectionControl,'SET group_concat_max_len='.DB_MYSQL_GROUPCONCAT_MAX_LEN.';');
     }
 
-
-
     $strSQL = "SELECT ".
-              $VO->getKeysToString($fields, $resolveDependences ) .
+              $this->getKeysToString($VO, $fields, $resolveDependences ) .
               " FROM `" .
               $VO::$tableName ."` " .
               $joins.
@@ -314,6 +312,28 @@ class MysqlDAO extends DAO
     return $daoresult;
 
 
+  }
+
+
+  /**
+  * Ket keys as string and set function AsText() to geo
+  *
+  *
+  * @return string
+  */
+  function getKeysToString($VO, $fields, $resolveDependences ) {
+    $keys = explode(',', $VO->getKeysToString($fields, $resolveDependences ));
+    $procesedKeys = array();
+    foreach($keys as $key) {
+      if( isset($VO::$cols[$key]) && $VO::$cols[$key]['type'] == 'GEOMETRY' ) {
+        $procesedKeys[] = 'AsText('.$key.')';
+      }
+      else {
+        $procesedKeys[] = $key;
+      }
+    }
+
+    return implode(',', $procesedKeys);
   }
 
 
@@ -380,7 +400,13 @@ class MysqlDAO extends DAO
     foreach( array_keys($cols) as $colName ) {
       $val = $VOobj->getter($colName);
       $valArray[] = $val;
-      $answrs .= ', ?';
+
+      if( $VOobj::$cols[$colName]['type'] == 'GEOMETRY' ) {
+        $answrs .= ', GeomFromText( ? )';
+      }
+      else {
+        $answrs .= ', ?';
+      }
     }
 
     $strSQL = "INSERT INTO `".$VOobj::$tableName."` (".$campos.") VALUES(".substr($answrs,1).");";
@@ -417,10 +443,15 @@ class MysqlDAO extends DAO
 
     $valArray = array();
     foreach( $VOobj->data as $colk => $col) {
-//      if($VOobj->getter($colk) !== null) {
+
+      if( $VOobj::$cols[$colk]['type'] == 'GEOMETRY' ) {
+        $setvalues .= ', '.$colk.'= GeomFromText( ? ) ';
+      }
+      else {
         $setvalues .= ', '.$colk.'= ? ';
-        $valArray[] = $col;//$VOobj->getter($colk);
-//      }
+      }
+
+      $valArray[] = $col;//$VOobj->getter($colk);
     }
 
 //var_dump($setvalues);
