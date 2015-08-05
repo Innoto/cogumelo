@@ -470,6 +470,16 @@ class FormController implements Serializable {
   } // function setField
 
   /**
+    Elimina un campo del formulario
+    @param string $fieldName Nombre del campo
+   */
+  public function removeField( $fieldName ) {
+    if( isset( $this->fields[ $fieldName ] ) ) {
+      unset( $this->fields[ $fieldName ] );
+    }
+  }
+
+  /**
     Establece el valor de un campo
     @param string $fieldName Nombre del campo
     @param mixed $fieldValue Valor del campo
@@ -656,6 +666,18 @@ class FormController implements Serializable {
   public function getFieldValue( $fieldName ) {
 
     return $this->getFieldParam( $fieldName, 'value' );
+  }
+
+  /**
+    Cambia valores vacios por null
+    @param array $fieldNames Nombres de los campos
+   */
+  public function emptyValuesToNull( $fieldNames ) {
+    foreach( $$fieldNames as $fieldName ) {
+      if( $this->getFieldValue( $fieldName ) === '' ) {
+        $this->setFieldValue( $fieldName, null );
+      }
+    }
   }
 
   /**
