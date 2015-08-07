@@ -9,19 +9,26 @@
 class MysqlDBUtils
 {
 
-  static function DecodeGeometry( $arg ) {
+  static function decodeGeometry( $arg ) {
     $rg = $arg[0];
     $ret = false;
+
 
     if( preg_match("#(.*)\((.*)\)#", $rg, $matches) ) {
 
       // type can be (POINT,POLYGON,LINESTRING)
       $ret = array();
       $ret['type'] = $matches[1];
-      $ret['data'] = explode( ',', $matches[2] );
 
-      foreach ($ret['data'] as $k => $val) {
-        $ret['data'][$k] = explode(' ', $val);
+
+      if( $ret['type'] == 'POINT') {
+        $ret['data'] = explode(' ', $matches[2]);
+      }
+      else {
+        $ret['data'] = explode( ',', $matches[2] );
+        foreach ($ret['data'] as $k => $val) {
+          $ret['data'][$k] = explode(' ', $val);
+        }
       }
     }
 
@@ -31,7 +38,7 @@ class MysqlDBUtils
 
 
 
-  static function EncodeGeometry( $arg ) {
+  static function encodeGeometry( $arg ) {
     $ret = false;
     $rg = $arg[0];
 
@@ -40,7 +47,7 @@ class MysqlDBUtils
       $spatialChain = '';
 
       if( $rg['type'] == 'POINT' ) {
-        $spatialChain = $rg['data'][0].' '.$rg['data'][1]
+        $spatialChain = $rg['data'][0].' '.$rg['data'][1];
       }
       else if( $rg['type'] == 'POLYGON' || $rg['type'] == 'LINESTRING' ) {
         $comma = '';
