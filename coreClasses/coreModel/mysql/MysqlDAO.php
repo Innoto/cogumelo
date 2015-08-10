@@ -325,13 +325,26 @@ class MysqlDAO extends DAO
     $keys = explode(',', $VO->getKeysToString($fields, $resolveDependences ));
     $procesedKeys = array();
     foreach($keys as $key) {
-      if( isset($VO::$cols[$key]) && $VO::$cols[$key]['type'] == 'GEOMETRY' ) {
-        $procesedKeys[] = 'AsText('.$key.')';
+
+      $k1 = explode('.',$key);
+      if( is_array( $k1 ) ){
+        $k = end( $k1 );
+      }
+      else{
+        $k = $key;
+      }
+
+
+      if( isset($VO::$cols[$k]) && $VO::$cols[$k]['type'] == 'GEOMETRY' ) {
+        $procesedKeys[] = 'AsText('.$key.') as "'.$key.'" ';
       }
       else {
         $procesedKeys[] = $key;
       }
     }
+
+//echo implode(',', $procesedKeys);
+//exit;
 
     return implode(',', $procesedKeys);
   }
