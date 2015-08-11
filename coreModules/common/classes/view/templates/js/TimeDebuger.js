@@ -60,7 +60,7 @@ TimeDebuger = function( opts ) {
     that.debug_mainTimes = document.createElement('div');
     that.debug_clusteringTimes = document.createElement('div');
 
-    $(that.debug_debugTitle).html("Is time for deguging times!");
+    $(that.debug_debugTitle).html("Is time for debuging times!");
 
     $(that.debug_debugDiv).append(that.debug_debugTitle);
     $(that.debug_debugDiv).append(that.debug_mainTimes);
