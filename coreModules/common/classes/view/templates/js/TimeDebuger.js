@@ -1,7 +1,7 @@
 /*
   Cogumelo Timedebugger allows to debug js times without using any console.
 */
-TimeDebugger = function( opts ) {
+TimeDebuger = function( opts ) {
   var that = this;
 
   that.options = new Object({
