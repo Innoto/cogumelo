@@ -1226,10 +1226,14 @@ class FormController implements Serializable {
     Procesa los ficheros temporales del form para colocarlos en su lugar definitivo y registrarlos
     @return boolean
    */
-  public function processFileFields() {
+  public function processFileFields( $fieldNames = false ) {
     $result = true;
 
-    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+    if( $fieldNames === false ) {
+      $fieldNames = $this->getFieldsNamesArray();
+    }
+
+    foreach( $fieldNames as $fieldName ) {
       if( $result && $this->getFieldType( $fieldName ) === 'file' ) {
         // error_log( 'FILE: Almacenando fileField: '.$fieldName );
 
