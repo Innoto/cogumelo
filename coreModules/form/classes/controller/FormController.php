@@ -470,6 +470,16 @@ class FormController implements Serializable {
   } // function setField
 
   /**
+    Elimina un campo del formulario
+    @param string $fieldName Nombre del campo
+   */
+  public function removeField( $fieldName ) {
+    if( isset( $this->fields[ $fieldName ] ) ) {
+      unset( $this->fields[ $fieldName ] );
+    }
+  }
+
+  /**
     Establece el valor de un campo
     @param string $fieldName Nombre del campo
     @param mixed $fieldValue Valor del campo
@@ -656,6 +666,18 @@ class FormController implements Serializable {
   public function getFieldValue( $fieldName ) {
 
     return $this->getFieldParam( $fieldName, 'value' );
+  }
+
+  /**
+    Cambia valores vacios por null
+    @param array $fieldNames Nombres de los campos
+   */
+  public function emptyValuesToNull( $fieldNames ) {
+    foreach( $$fieldNames as $fieldName ) {
+      if( $this->getFieldValue( $fieldName ) === '' ) {
+        $this->setFieldValue( $fieldName, null );
+      }
+    }
   }
 
   /**
@@ -1204,10 +1226,14 @@ class FormController implements Serializable {
     Procesa los ficheros temporales del form para colocarlos en su lugar definitivo y registrarlos
     @return boolean
    */
-  public function processFileFields() {
+  public function processFileFields( $fieldNames = false ) {
     $result = true;
 
-    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+    if( $fieldNames === false ) {
+      $fieldNames = $this->getFieldsNamesArray();
+    }
+
+    foreach( $fieldNames as $fieldName ) {
       if( $result && $this->getFieldType( $fieldName ) === 'file' ) {
         // error_log( 'FILE: Almacenando fileField: '.$fieldName );
 
@@ -1751,7 +1777,6 @@ class FormController implements Serializable {
           foreach( $field['options'] as $val => $text ) {
             if( is_array( $text ) && isset( $text['value'] ) ) {
               $optInfo = $text;
-error_log( print_r($optInfo, true) );
               $optInput = '<option value="'. $optInfo[ 'value' ] .'"';
               if( isset( $optInfo[ 'disabled' ] ) && $optInfo[ 'disabled' ] ) {
                 $optInput .= ' disabled';

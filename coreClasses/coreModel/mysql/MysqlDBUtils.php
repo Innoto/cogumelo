@@ -24,6 +24,13 @@ class MysqlDBUtils
       if( $ret['type'] == 'POINT') {
         $ret['data'] = explode(' ', $matches[2]);
       }
+      else if( $ret['type'] == 'POLYGON' ) {
+        $ret['data'] = explode( ',', $matches[2] );
+        foreach ($ret['data'] as $k => $val) {
+
+          $ret['data'][$k] = '('.explode(' ', $val).')';
+        }
+      }
       else {
         $ret['data'] = explode( ',', $matches[2] );
         foreach ($ret['data'] as $k => $val) {
@@ -48,18 +55,28 @@ class MysqlDBUtils
 
       if( $rg['type'] == 'POINT' ) {
         $spatialChain = $rg['data'][0].' '.$rg['data'][1];
+        $ret = $rg['type'].'('.$spatialChain.')';
       }
-      else if( $rg['type'] == 'POLYGON' || $rg['type'] == 'LINESTRING' ) {
+      else if( $rg['type'] == 'POLYGON') {
         $comma = '';
         foreach ( $rg['data'] as $val ) {
           $spatialChain .= $comma.implode(' ', $val);
 
           $comma = ',';
         }
+        $ret = $rg['type'].'(('.$spatialChain.'))';
+      }
+      else if( $rg['type'] == 'LINESTRING' ) {
+        $comma = '';
+        foreach ( $rg['data'] as $val ) {
+          $spatialChain .= $comma.implode(' ', $val);
+
+          $comma = ',';
+        }
+
+        $ret = $rg['type'].'('.$spatialChain.')';
       }
 
-
-      $ret = $rg['type'].'('.$spatialChain.')';
     }
 
     return $ret;
