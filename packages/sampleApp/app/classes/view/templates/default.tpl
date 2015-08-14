@@ -16,7 +16,7 @@
 </head>
 
 <body>
-
+{t}PRUEBA{/t}
 
   <div id="video" style="height:500px;"></div>
 
