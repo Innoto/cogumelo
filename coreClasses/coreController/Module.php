@@ -57,10 +57,11 @@ class Module
     $dependencesControl->loadModuleDependence( get_called_class(), $idDependence, $installer );
   }
 
-
+/*
   public static function moduleRc(){
 
   }
+*/
 
 //
 // Metodos duplicados en CogumeloClass.php

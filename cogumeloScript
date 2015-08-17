@@ -33,15 +33,16 @@ if( $argc > 1 ) {
       break;
 
     case 'generateModel':
-      createDB();
-      createRelSchemes();
+      // createDB();
       createTables();
       initModules();
+      createRelSchemes();
       break;
 
     case 'createDB': // create database
       createDB();
       break;
+
     case 'createRelSchemes':
       createRelSchemes();
       break;
@@ -52,14 +53,13 @@ if( $argc > 1 ) {
 
     case 'initModules': // execute ::moduleRc() of all modules
       initModules();
-
       break;
 
     case 'bckDB': // do the backup of the db
-      if ($argc>2){
+      if( $argc > 2 ) {
         $file = $argv[2].'.sql';//name of the backup file
       }
-      else{
+      else {
         $file = false;
       }
       $user =  ReadStdin('Enter an user with privileges: ', '');
@@ -67,7 +67,7 @@ if( $argc > 1 ) {
       break;
 
     case 'restoreDB': // restore the backup of a given db
-      if ($argc>2){
+      if( $argc > 2 ) {
         $db = $argv[2];
         $user =  ReadStdin('Enter an user with privileges: ', '');
         restoreDB(DB_NAME, $user, $db);
@@ -157,11 +157,11 @@ function printOptions(){
     * installDependences          Install all modules dependencies
 
  + Database
+    * createDB                Create a database
     * generateModel           Execute all options below in the same order
-      - createDB                Create a database
       - createTables            Generate the tables
-      - createRelSchemes        Generate relationship tmp files
       - initModules             Execute '::moduleRc()' of all modules
+      - createRelSchemes        Generate relationship tmp files
     * bckDB                       Do a DB backup (optional arg: filename)
     * restoreDB                   Restore a database
 
@@ -181,7 +181,7 @@ function createDB(){
   $passwd = getPassword(true);
   fwrite(STDOUT, "\n--\n");
 
-  $develdbcontrol = new DevelDBController($user, $passwd);
+  $develdbcontrol = new DevelDBController( $user, $passwd );
   $develdbcontrol->createSchemaDB();
   echo "\nDatase created!\n";
 }
@@ -212,7 +212,6 @@ function createRelSchemes() {
 
 
 function createTables(){
-
   echo "\nCreating DDBB tables, deleting old if exist\n";
 
   global $C_ENABLED_MODULES;
@@ -221,6 +220,7 @@ function createTables(){
     require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
   }
 
+  /*
   $user =  ReadStdin("Enter an user with privileges:\n", '');
   // Get the password
   fwrite(STDOUT, "Enter the password:\n");
@@ -228,6 +228,9 @@ function createTables(){
   fwrite(STDOUT, "\n--\n");
 
   $develdbcontrol = new DevelDBController($user, $passwd, DB_NAME);
+  */
+
+  $develdbcontrol = new DevelDBController();
 
   $develdbcontrol->createTables();
   echo "\nGenerated db tables\n";
@@ -238,8 +241,13 @@ function initModules() {
 
   foreach( $C_ENABLED_MODULES as $moduleName ) {
     require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-    eval($moduleName.'::moduleRc();');
+
+    if( method_exists( $moduleName, 'moduleRc' ) ) {
+      echo( "\nINIT: ".$moduleName."::moduleRc()\n" );
+      eval( $moduleName.'::moduleRc();' );
+    }
   }
+
   echo "\nModules initialized\n";
 }
 
@@ -325,15 +333,14 @@ function restoreDB( $BD, $user, $file ) {
  * Get data from the shell.
  */
 function ReadStdin( $prompt, $valid_inputs, $default = '' ) {
-    while( !isset($input) || (is_array($valid_inputs) && !in_array($input, $valid_inputs)) || ($valid_inputs == 'is_file' && !is_file($input)))
-    {
-      echo $prompt;
-      $input = strtolower(trim(fgets(STDIN)));
-      if( empty($input) && !empty($default) ) {
-        $input = $default;
-      }
+  while( !isset($input) || ( is_array($valid_inputs) && !in_array($input, $valid_inputs) ) || ( $valid_inputs === 'is_file' && !is_file($input) ) ) {
+    echo $prompt;
+    $input = strtolower(trim(fgets(STDIN)));
+    if( empty($input) && !empty($default) ) {
+      $input = $default;
     }
-    return $input;
+  }
+  return $input;
 }
 
 /**
