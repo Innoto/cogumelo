@@ -63,25 +63,26 @@ class MysqlDevelDBDAO extends MysqlDAO
 
 
   public function dropTable( $connection, $vo_name ) {
-    $this->execSQL($connection, $this->getDropSQL($connection, $vo_name) , array() );
+    $this->execSQL( $connection, $this->getDropSQL( $connection, $vo_name ) , array() );
   }
 
   public function createTable( $connection, $vo_name ) {
-    $strSQL = $this->getTableSQL($connection, $vo_name);
-    $this->execSQL($connection, $strSQL, array() );
+    $this->execSQL( $connection, $this->getTableSQL( $connection, $vo_name ), array() );
   }
+
   public function insertTableValues( $connection, $vo_name ){
-    $res = $this->getInsertTableSQL($connection, $vo_name);
-    if(!empty($res)) {
+    $res = $this->getInsertTableSQL( $connection, $vo_name );
+    if( !empty($res) ) {
       foreach( $res as $resKey => $resValue ) {
-        $this->execSQL($connection, $resValue['strSQL'], $resValue['valuesSQL']);
+        $this->execSQL( $connection, $resValue['strSQL'], $resValue['valuesSQL'] );
       }
     }
   }
 
   public function aditionalExec( $connection, $strSQL ) {
-    return $this->rawExecSQL($connection, $strSQL, array() );
+    return $this->rawExecSQL( $connection, $strSQL, array() );
   }
+
 
   // Sql generation methods
 
@@ -90,10 +91,9 @@ class MysqlDevelDBDAO extends MysqlDAO
 
     $strSQL = $this->getTableSQL($connection, $vo_name, $vo_route);
     return "DROP TABLE IF EXISTS  ".$vo::$tableName.";";
-
   }
 
-  public function getTableSQL( $connection, $vo_name, $vo_route = false ){
+  public function getTableSQL( $connection, $vo_name, $vo_route = false ) {
     $VO = new $vo_name();
 
     $primarykeys = array();
