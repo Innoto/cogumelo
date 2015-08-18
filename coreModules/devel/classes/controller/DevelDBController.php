@@ -17,6 +17,9 @@ class  DevelDBController
     if($usuario) {
       $this->data->develMode($usuario, $password, $DB);
     }
+    else {
+      $this->data->getConnection();
+    }
   }
 
 

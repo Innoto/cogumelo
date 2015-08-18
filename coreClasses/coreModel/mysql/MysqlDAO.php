@@ -11,8 +11,8 @@ Cogumelo::load('coreModel/mysql/MysqlDAOResult.php');
 *
 * @package Cogumelo Model
 */
-class MysqlDAO extends DAO
-{
+class MysqlDAO extends DAO {
+
   var $VO;
 
 
@@ -23,27 +23,28 @@ class MysqlDAO extends DAO
   *
   * @return string
   */
-  function orderByString($ORDArray)
-  {
+  public function orderByString( $ORDArray ) {
     // Direction (ASC, DESC) Array
-    if( is_array($ORDArray) )
-    {
+    if( is_array( $ORDArray ) ) {
       $orderSTR = " ORDER BY ";
       $coma = "";
-      foreach ($ORDArray as $elementK => $elementV)
-      {
-        if( !preg_match('/\s/',$elementK) )
-        if ($elementV < 0)
-          $orderSTR .= $coma .$elementK." DESC";
-        else
-          $orderSTR .= $coma .$elementK." ASC";
-
+      foreach( $ORDArray as $elementK => $elementV ) {
+        if( !preg_match('/\s/',$elementK) ) {
+          if( $elementV < 0 ) {
+            $orderSTR .= $coma .$elementK." DESC";
+          }
+          else {
+            $orderSTR .= $coma .$elementK." ASC";
+          }
+        }
         $coma=", ";
       }
+
       return $orderSTR;
     }
-    else
+    else {
       return "";
+    }
   }
 
 
@@ -60,14 +61,23 @@ class MysqlDAO extends DAO
   *
   * @return mixed
   */
-  function execSQL(&$connectionControl, $sql, $val_array = array())
-  {
+  public function execSQL( &$connectionControl, $sql, $val_array = array() ) {
     Cogumelo::debugSQL($sql);
     // obtaining debug data
     $d = debug_backtrace();
     $caller_method = $d[1]['class'].'.'.$d[1]['function'].'()';
 
     //set prepare sql
+    /*
+    if( $connectionControl->stmt ) {
+      mysqli_stmt_free_result ( $connectionControl->stmt );
+    }
+    while( $connectionControl->db->more_results() ) {
+      echo "\nMysqlDAO rawExecSQL - TRAGADATOS\n";
+      $connectionControl->db->next_result();
+      var_dump( $connectionControl->db->use_result() );
+    }
+    */
     $connectionControl->stmt = $connectionControl->db->prepare( $sql );
 
     if( $connectionControl->stmt ) {  //set prepare sql
@@ -75,30 +85,28 @@ class MysqlDAO extends DAO
       $bind_vars_type = $this->getPrepareTypes($val_array);
 
       $bind_vars_str = "";
-      foreach($val_array as $ak=>$vk){
+      foreach( $val_array as $ak => $vk ) {
         $bind_vars_str .= ', $val_array['.$ak.']';
       }
 
 
       // bind params
-      if($bind_vars_type != "") {
-        eval('$connectionControl->stmt->bind_param("'. $bind_vars_type .'"'. $bind_vars_str .');');
+      if( $bind_vars_type !== '' ) {
+        eval( '$connectionControl->stmt->bind_param("'. $bind_vars_type .'"'. $bind_vars_str .');' );
       }
-        $connectionControl->stmt->execute();
 
-        if($connectionControl->stmt->error == ''){
-          $ret_data = $connectionControl->stmt->get_result();
-        }
-        else {
+      $connectionControl->stmt->execute();
 
-          Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$connectionControl->stmt->error.' - '.$sql);
-          $ret_data = COGUMELO_ERROR;
-        }
-
+      if( $connectionControl->stmt->error === '' ) {
+        $ret_data = $connectionControl->stmt->get_result();
+      }
+      else {
+        Cogumelo::error( "MYSQL STMT ERROR on ".$caller_method.": ".$connectionControl->stmt->error.' - '.$sql);
+        $ret_data = COGUMELO_ERROR;
+      }
     }
     else {
       Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connectionControl->db->error.' - '.$sql);
-
       $ret_data = COGUMELO_ERROR;
     }
 
@@ -106,13 +114,21 @@ class MysqlDAO extends DAO
   }
 
 
-  function rawExecSQL( &$connectionControl, $sql ) {
+  public function rawExecSQL( &$connectionControl, $sql ) {
     $ret = '';
-    $connectionControl->db->multi_query(  $sql );
+    $connectionControl->db->multi_query( $sql );
 
     if( $connectionControl->db->error != ''){
       echo "Error executing rawExecSQL: ".$connectionControl->db->error;
       $ret =  COGUMELO_ERROR;
+    }
+    else {
+      $ret = true;
+      // Consumo los resultados sin guardarlos
+      while( $connectionControl->db->more_results() ) {
+        $connectionControl->db->next_result();
+        $connectionControl->db->use_result();
+      }
     }
 
     return $ret;
@@ -120,16 +136,16 @@ class MysqlDAO extends DAO
 
 
   /**
-  * get string of chars according prepare type (ex. i:integer, d:double, s:string, b:boolean)
+  * Get string of chars according prepare type (ex. i:integer, d:double, s:string, b:boolean)
   *
   * @param array $values_array
   *
   * @return string
   */
-  function getPrepareTypes($values_array){
+  public function getPrepareTypes( $values_array ) {
 
     $return_str = "";
-    foreach($values_array as $value) {
+    foreach( $values_array as $value ) {
       if(is_integer($value)) $return_str.= 'i';
       else
       if(is_string($value)) $return_str.= 's';
@@ -152,7 +168,7 @@ class MysqlDAO extends DAO
   *
   * @return string
   */
-  function getFilters($filters){
+  public function getFilters( $filters ) {
 
     $where_str = "";
     $val_array = array();
@@ -163,17 +179,17 @@ class MysqlDAO extends DAO
       $VO = new $this->VO();
 
 
-      foreach($filters as $fkey => $filter_val) {
+      foreach( $filters as $fkey => $filter_val ) {
 
         if( array_key_exists($fkey, $this->filters) ) {
           $fstr = " AND ".$this->filters[$fkey];
 
 
           $var_count = substr_count( $fstr , "?");
-          for($c=0; $c < $var_count; $c++) {
+          for( $c=0; $c < $var_count; $c++ ) {
 
             if( is_array( $filter_val ) ) { // Value array for one filter
-              foreach($filter_val as $val) {
+              foreach( $filter_val as $val ) {
                 $val_array[] = $val;
               }
 
@@ -187,7 +203,7 @@ class MysqlDAO extends DAO
 
           // create n '?' separed by comma to filter by array values
           if( is_array( $filter_val ) ) {
-            $to_replace = implode(',', array_fill(0, sizeof( $filter_val ), '?') );
+            $to_replace = implode(',', array_fill(0, count( $filter_val ), '?') );
             $fstr = str_replace('?', $to_replace, $fstr );
           }
 
@@ -219,9 +235,7 @@ class MysqlDAO extends DAO
   *
   * @return object
   */
-  function listItems(&$connectionControl, $filters, $range, $order, $fields, $joinType ,$resolveDependences = false, $groupBy = false, $cache = false)
-  {
-
+  public function listItems( &$connectionControl, $filters, $range, $order, $fields, $joinType, $resolveDependences = false, $groupBy = false, $cache = false ) {
     // SQL Query
     $VO = new $this->VO();
 
@@ -261,11 +275,11 @@ class MysqlDAO extends DAO
     }
 
     $strSQL = "SELECT ".
-              $this->getKeysToString($VO, $fields, $resolveDependences ) .
-              " FROM `" .
-              $VO::$tableName ."` " .
-              $joins.
-              $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
+      $this->getKeysToString($VO, $fields, $resolveDependences ) .
+      " FROM `" .
+      $VO::$tableName ."` " .
+      $joins.
+      $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
 
 //echo $strSQL;
 //exit;
