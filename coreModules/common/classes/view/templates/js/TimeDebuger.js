@@ -31,7 +31,6 @@ TimeDebuger = function( opts ) {
   that.debug_set_initial_time = function() {
     var that = this;
     if(that.options.debug == true){
-      $(that.debug_mainTimes).html("<b>Time ready, go ahead!: </b>"+ that.checktime()+"ms");
       that.reset();
     }
   }
