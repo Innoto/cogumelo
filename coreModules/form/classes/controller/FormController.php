@@ -474,8 +474,12 @@ class FormController implements Serializable {
     @param string $fieldName Nombre del campo
    */
   public function removeField( $fieldName ) {
-    if( isset( $this->fields[ $fieldName ] ) ) {
-      unset( $this->fields[ $fieldName ] );
+    $fieldNames = is_array( $fieldName ) ? $fieldName : array( $fieldName );
+    foreach( $fieldNames as $fieldName ) {
+      if( isset( $this->fields[ $fieldName ] ) ) {
+        unset( $this->fields[ $fieldName ] );
+        unset( $this->rules[ $fieldName ] );
+      }
     }
   }
 
