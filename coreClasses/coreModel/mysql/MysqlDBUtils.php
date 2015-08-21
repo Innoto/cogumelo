@@ -22,7 +22,10 @@ class MysqlDBUtils
 
 
       if( $ret['type'] == 'POINT') {
-        $ret['data'] = array_map( 'floatval', explode(' ', $matches[2]));
+        //$ret['data'] = array_map( 'floatval', explode(' ', $matches[2]));
+        foreach( explode(' ', $matches[2]) as $val ) {
+          $ret[ 'data' ][] = $val;
+        }
       }
       else if( $ret['type'] == 'POLYGON' ) {
         $ret['data'] = explode( ',', $matches[2] );
