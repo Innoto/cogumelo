@@ -93,7 +93,7 @@ class FormValidators extends FormValidatorsExtender {
   }
 
   private function val_url( $value ) {
-    $azP = '[a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]';
+    $azP = '[a-z]|[\x{00A0}-\x{D7FF}\x{F900}-\x{FDCF}\x{FDF0}-\x{FFEF}]';
     $azP2 = $azP.'|\d|-|\.|_|~';
     $rx2 = '%[\da-f]{2})|[!\$&\'\(\)\*\+,;=]|:';
     $rx3 = '\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]';
@@ -102,7 +102,7 @@ class FormValidators extends FormValidatorsExtender {
       '((('.$azP.'|\d)|(('.$azP.'|\d)('.$azP2.')*('.$azP.'|\d)))\.)+'.
       '(('.$azP.')|(('.$azP.')('.$azP2.')*('.$azP.')))\.?)(:\d*)?)'.
       '(\/((('.$azP2.')|('.$rx2.'|@)+(\/(('.$azP2.')|('.$rx2.'|@)*)*)?)?'.
-      '(\?((('.$azP2.')|('.$rx2.'|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((('.$azP2.')|('.$rx2.'|@)|\/|\?)*)?$/i';
+      '(\?((('.$azP2.')|('.$rx2.'|@)|[\x{E000}-\x{F8FF}]|\/|\?)*)?(#((('.$azP2.')|('.$rx2.'|@)|\/|\?)*)?$/iu';
     return( preg_match( $regex, $value ) === 1 );
   }
 
