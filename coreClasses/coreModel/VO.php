@@ -121,7 +121,7 @@ Class VO
       //exit;
 
       // when is first rel decode it
-      if( $d = json_decode('[' .str_replace( "\r", '', str_replace( "\n",'\\n', $data ) ). ']')  ){
+      if( $d = json_decode('[' .str_replace( "\r", '\\r', str_replace( "\n",'\\n', $data ) ). ']')  ){
 
         if( sizeof($d)>0 ) {
           foreach($d as $dep) {
