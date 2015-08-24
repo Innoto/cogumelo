@@ -1781,7 +1781,7 @@ class FormController implements Serializable {
           foreach( $field['options'] as $val => $text ) {
             if( is_array( $text ) && isset( $text['value'] ) ) {
               $optInfo = $text;
-              $optInput = '<option value="'. $optInfo[ 'value' ] .'"';
+              $optInput = '<option value="'. htmlspecialchars( $optInfo[ 'value' ] ) .'"';
               if( isset( $optInfo[ 'disabled' ] ) && $optInfo[ 'disabled' ] ) {
                 $optInput .= ' disabled';
               }
@@ -1798,7 +1798,7 @@ class FormController implements Serializable {
             }
             else {
               $html['options'][$val] = array(
-                'input' => '<option value="'.$val.'">'.$text.'</option>',
+                'input' => '<option value="'.htmlspecialchars( $val ).'">'.$text.'</option>',
                 'text' => $text
               );
             }
@@ -1809,8 +1809,9 @@ class FormController implements Serializable {
             $dataOrder = 1;
             foreach( $values as $val ) {
               if( isset( $html['options'][$val]['input'] ) ) {
-                $html['options'][$val]['input'] = str_replace( 'option value="'.$val.'"',
-                  'option data-order="'.$dataOrder.'" value="'.$val.'" selected="selected"',
+                $html['options'][$val]['input'] = str_replace(
+                  'option value="'.htmlspecialchars( $val ).'"',
+                  'option data-order="'.$dataOrder.'" value="'.htmlspecialchars( $val ).'" selected="selected"',
                   $html['options'][$val]['input'] );
                 $dataOrder++;
                 if( !isset( $field['multiple'] ) ) {
@@ -1829,7 +1830,8 @@ class FormController implements Serializable {
         $html['options'] = array();
         foreach( $field['options'] as $val => $text ) {
           $html['options'][$val] = array();
-          $html['options'][$val]['input'] = '<input name="'.$fieldName.'" value="'.$val.'"'.
+          $html['options'][$val]['input'] = '<input name="'.$fieldName.'"'.
+            ' value="'.htmlspecialchars( $val ).'"'.
             ' type="'.$field['type'].'"'.$attribs.'>';
           $html['options'][$val]['text'] = $text;
           $html['options'][$val]['label'] = $text!='' ? '<label>'.$text.'</label>' : '';
@@ -1840,8 +1842,8 @@ class FormController implements Serializable {
           foreach( $values as $val ) {
             if( isset( $html['options'][$val]['input'] ) ) {
               $html['options'][$val]['input'] = str_replace(
-                'name="'.$fieldName.'" value="'.$val.'"',
-                'name="'.$fieldName.'" value="'.$val.'" checked="checked"',
+                'name="'.$fieldName.'" value="'.htmlspecialchars( $val ).'"',
+                'name="'.$fieldName.'" value="'.htmlspecialchars( $val ).'" checked="checked"',
                 $html['options'][$val]['input'] );
               if( $field['type']=='radio' ) {
                 break; // Radio solo puede tener 1 valor
@@ -1853,7 +1855,7 @@ class FormController implements Serializable {
 
       case 'textarea':
         $html['inputOpen'] = '<textarea name="'.$fieldName.'"'.$attribs.'>';
-        $html['value'] = isset( $field['value'] ) ? $field['value'] : '';
+        $html['value'] = isset( $field['value'] ) ? htmlspecialchars( $field['value'] ) : '';
         $html['inputClose'] = '</textarea>';
         break;
 
@@ -1870,7 +1872,7 @@ class FormController implements Serializable {
         // button, file, hidden, password, range, text, color, date, datetime, datetime-local,
         // email, image, month, number, search, tel, time, url, week
         $html['input'] = '<input name="'.$fieldName.'"';
-        $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
+        $html['input'] .= isset( $field['value'] ) ? ' value="'.htmlspecialchars( $field['value'] ).'"' : '';
         $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
         break;
     }
