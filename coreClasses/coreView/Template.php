@@ -243,7 +243,7 @@ class Template extends Smarty
       else {
         // Asumimos que es un fichero
         $tplFile = ModuleController::getRealFilePath( 'classes/view/templates/'.$tplData, $module );
-        if( $tplFile && file_exists( $tplFile ) ) {
+        if( $tplFile ) {
           $this->tpl = $tplFile;
         }
         else {
