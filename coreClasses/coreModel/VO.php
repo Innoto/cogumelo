@@ -120,8 +120,15 @@ Class VO
       //var_dump( $json_errors[json_last_error()] );
       //exit;
 
+
+      $escapedData = str_replace(
+                                  array("\n","\r","\t"),
+                                  array('\\n', '\\r', '\\t'),
+                                  $data
+                    );
+
       // when is first rel decode it
-      if( $d = json_decode('[' .str_replace( "\r", '\\r', str_replace( "\n",'\\n', $data ) ). ']')  ){
+      if( $d = json_decode('['. $escapedData .']')  ){
 
         if( sizeof($d)>0 ) {
           foreach($d as $dep) {
