@@ -49,7 +49,8 @@ class MysqlDevelDBDAO extends MysqlDAO
         "LOCK TABLES, ".
         "CREATE, ".
         "DROP, ".
-        "SHOW VIEW ".
+        "SHOW VIEW, ".
+        "CREATE VIEW ".
       "ON ". DB_NAME .".* ".
       "TO '". DB_USER ."'@'localhost' IDENTIFIED BY '". DB_PASSWORD ."' ";
 
