@@ -2018,7 +2018,7 @@ class FormController implements Serializable {
     }
 
     $result = array(
-      'result' => ( count( $this->fields ) > 1 ) ? 'error' : 'errorSesion',
+      'result' => ( count( $this->fields ) > 1 ) ? 'error' : 'errorSession',
       'jvErrors' => $jvErrors
     );
     if( $moreInfo !== false ) {
