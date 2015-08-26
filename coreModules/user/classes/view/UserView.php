@@ -16,9 +16,10 @@ class UserView extends View
   }
 
   /**
-  * Evaluate the access conditions and report if can continue
-  * @return bool : true -> Access allowed
-  */
+   * Evaluate the access conditions and report if can continue
+   *
+   * @return bool : true -> Access allowed
+   */
   public function accessCheck() {
     return true;
   }
@@ -28,8 +29,8 @@ class UserView extends View
    * Example login form
    **/
   public function loginForm() {
-
     $form = $this->loginFormDefine();
+
     $loginHtml = $this->loginFormGet( $form );
 
     $this->template->assign('loginHtml', $loginHtml);
@@ -41,7 +42,7 @@ class UserView extends View
 
   /**
    * Example login form
-   **/
+   */
   public function loginFormBlock() {
     $template = new Template( $this->baseDir );
 
@@ -60,8 +61,7 @@ class UserView extends View
    * Create form fields and validations
    *
    * @return object
-   **/
-
+   */
   public function loginFormDefine() {
 
     $form = new FormController( 'loginForm', '/user/sendloginform' ); //actionform
@@ -108,13 +108,7 @@ class UserView extends View
   public function sendLoginForm() {
 
     $form = $this->actionLoginForm();
-
-    if( $form->existErrors() ) {
-      echo $form->jsonFormError();
-    }
-    else {
-      echo $form->jsonFormOk();
-    }
+    $form->sendJsonResponse();
   }
 
   /**
@@ -127,9 +121,6 @@ class UserView extends View
 
     if( $form->loadPostInput() ) {
       $form->validateForm();
-    }
-    else {
-      $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
     }
 
     //Si tod0 esta OK!
@@ -455,9 +446,6 @@ class UserView extends View
     if( $form->loadPostInput() ) {
       $form->validateForm();
     }
-    else {
-      $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
-    }
 
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
@@ -557,11 +545,9 @@ class UserView extends View
    **/
   public function actionChangeUserPasswordForm() {
     $form = new FormController();
+
     if( $form->loadPostInput() ) {
       $form->validateForm();
-    }
-    else {
-      $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
     }
 
     if( !$form->existErrors() ){
@@ -614,11 +600,9 @@ class UserView extends View
    **/
   public function actionUserRolesForm() {
     $form = new FormController();
+
     if( $form->loadPostInput() ) {
       $form->validateForm();
-    }
-    else {
-      $form->addFormError( 'El servidor no considera válidos los datos recibidos.', 'formError' );
     }
 
     if( !$form->existErrors() ){
