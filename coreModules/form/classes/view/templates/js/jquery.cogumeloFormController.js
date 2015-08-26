@@ -236,26 +236,36 @@ function formDoneError( form, response ) {
 
   var $validateForm = getFormInfo( $( form ).attr( 'id' ), 'validateForm' );
 
-  for(var i in response.jvErrors) {
-    errObj = response.jvErrors[i];
-    console.log( errObj );
+  if( response.result === 'errorSession' ) {
+    // No se ha podido recuperar el form en el servidor porque ha caducado
+    console.log( 'formDoneError: errorSession' );
+    showErrorsValidateForm( $( form ), 'Form session expired. Reload', 'formError' );
+    if( confirm( 'Reload to get valid From?' ) ) {
+      window.location.reload();
+    }
+  }
+  else {
+    for( var i in response.jvErrors ) {
+      errObj = response.jvErrors[i];
+      console.log( errObj );
 
-    if( errObj.fieldName !== false ) {
-      if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
-        $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
-        if( typeof $defMess !== 'string' ) {
-          $defMess = $defMess( errObj.ruleParams );
+      if( errObj.fieldName !== false ) {
+        if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
+          $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
+          if( typeof $defMess !== 'string' ) {
+            $defMess = $defMess( errObj.ruleParams );
+          }
+          errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
         }
-        errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
+        console.log( 'showErrors: ', errObj.JVshowErrors );
+        $validateForm.showErrors( errObj.JVshowErrors );
       }
-      console.log( 'showErrors: ', errObj.JVshowErrors );
-      $validateForm.showErrors( errObj.JVshowErrors );
-    }
-    else {
-      console.log( errObj.JVshowErrors );
-      showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
-    }
-  } // for(var i in response.jvErrors)
+      else {
+        console.log( errObj.JVshowErrors );
+        showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
+      }
+    } // for(var i in response.jvErrors)
+  }
 
   // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
 }

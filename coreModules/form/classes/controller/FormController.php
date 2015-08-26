@@ -331,6 +331,10 @@ class FormController implements Serializable {
       }
     }
 
+    if( $result === false ) {
+      $this->addFormError( 'El servidor no ha podido recuperar los datos recibidos.', 'formError' );
+    }
+
     return $result;
   }
 
@@ -2014,7 +2018,7 @@ class FormController implements Serializable {
     }
 
     $result = array(
-      'result' => 'error',
+      'result' => ( count( $this->fields ) > 1 ) ? 'error' : 'errorSesion',
       'jvErrors' => $jvErrors
     );
     if( $moreInfo !== false ) {
