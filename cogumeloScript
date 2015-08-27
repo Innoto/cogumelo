@@ -111,14 +111,11 @@ if( $argc > 1 ) {
       break;
 
     case 'rotateLogs':
-      exec('wget -q --spider cogumelo/cogumelo-server.php?q=rotate_logs');
-      echo "The logs have been stored\n";
+      echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=rotate_logs');
       break;
 
     case 'generateClientCaches':
-      // setPermissions();
-      exec('wget -q --spider cogumelo/cogumelo-server.php?q=client_caches');
-      echo "All client cachés generated into 'httpdocs/mediacache/' folder \n";
+      echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=client_caches');
       break;
 
     default:
@@ -142,7 +139,7 @@ function actionCompileTranslations() {
 }
 
 function actionFlush() {
-  exec( 'wget -q --spider http://cogumelo/cogumelo-server.php?q=flush' );
+  echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=flush');  
   echo "Temporary files deleted!\n";
 }
 
@@ -389,4 +386,3 @@ function getPassword( $stars = false ) {
   // Return the password
   return $password;
 }
-

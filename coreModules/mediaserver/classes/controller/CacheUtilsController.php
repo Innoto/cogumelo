@@ -35,7 +35,7 @@ class CacheUtilsController {
           $relativeFilePath = str_replace($moduleName.'/classes/view/templates/', '', $path);
         }
 
-        $mediaserverControl->cacheContent( $relativeFilePath  , $moduleName, true );
+        $mediaserverControl->compileAndCacheLes( $relativeFilePath  , $moduleName);
 
       }
     }
@@ -75,7 +75,7 @@ class CacheUtilsController {
         // DIST modules
         if( COGUMELO_DIST_LOCATION != false ) {
           self::copyLessTmpdir(
-            COGUMELO_DIST_LOCATION.'/coreModules/',
+            COGUMELO_DIST_LOCATION.'/distModules/',
             $moduleName.'/'.$cacheableFolder,
             $destino
           );
@@ -160,6 +160,7 @@ class CacheUtilsController {
 
 
   static function generateAllCaches() {
+
     global $C_ENABLED_MODULES;
     $cacheableFolder = 'classes/view/templates/';
 
@@ -170,6 +171,15 @@ class CacheUtilsController {
         COGUMELO_LOCATION.'/coreModules/'.$moduleName.'/'.$cacheableFolder,
         $moduleName
       );
+
+      // DIST modules
+      if( COGUMELO_DIST_LOCATION != false ) {
+        self::cacheFolder(
+          COGUMELO_DIST_LOCATION.'/distModules/'.$moduleName.'/'.$cacheableFolder,
+          $moduleName
+        );
+      }
+
       // app modules
       self::cacheFolder(
         SITE_PATH.'/modules/'.$moduleName.'/'.$cacheableFolder,

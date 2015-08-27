@@ -40,11 +40,24 @@ class MediaserverController {
     else {
       $this->copyAndMoveFile();
     }
-
-
-
-
   }
+
+
+
+  public function compileAndCacheLes( $path, $module) {
+
+    $parsedUrl = parse_url($path);
+    $this->urlPath = $parsedUrl['path'];
+    $this->moduleName = $module;
+    $this->realFilePath = ModuleController::getRealFilePath('classes/view/templates/'.$this->urlPath, $this->moduleName);
+    $this->modulePath = ( $this->moduleName )? '/module/'.$this->moduleName.'/' : '' ;
+
+    if( substr($this->urlPath, -5) == '.less' ) {
+      $this->compileAndMoveLessFile();
+
+    }
+  }
+
 
   /**
   * Process path to serve media resource. It will move and
@@ -111,8 +124,8 @@ class MediaserverController {
   function compileAndMoveLessFile( $minify = false ) {
 
     $lessControl = new LessController();
-    $tmp_cache = MEDIASERVER_TMP_CACHE_PATH .'/'. $this->modulePath . $this->urlPath. '.css';
-    $final_cache = SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH .'/'. $this->modulePath . $this->urlPath .'.css' ;
+    $tmp_cache = MEDIASERVER_TMP_CACHE_PATH .'/'. $this->modulePath . $this->urlPath.'.css';
+    $final_cache = SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH .'/'. $this->modulePath . $this->urlPath.'.css' ;
 
     // create tmp folder
     $this->createDirPath( $tmp_cache );

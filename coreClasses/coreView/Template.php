@@ -178,7 +178,16 @@ class Template extends Smarty
       $file_rel = "stylesheet";
     }
 
-    $include_chain = '<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.'">';
+
+    if( $this->cgmMediaserverCompileLess && substr($file_path, -5) == '.less' ) {
+      $lessCompiledExtension = '.css';
+    }
+    else {
+      $lessCompiledExtension  = '';
+    }
+
+
+    $include_chain = '<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.  $lessCompiledExtension.'">';
 
     if( $is_autoinclude ) {
       if ( in_array( $include_chain, $this->css_autoincludes ) === false ) {
