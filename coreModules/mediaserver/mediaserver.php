@@ -10,7 +10,7 @@ class mediaserver extends Module
   public $version = "";
 
   public $dependences = array(
-    // COMPOSER 
+    // COMPOSER
     array(
       "id" => "jsmin",
       "params" => array("linkorb/jsmin-php", "1.0.0"),
@@ -28,7 +28,7 @@ class mediaserver extends Module
       "params" => array("less.php/less.php", "1.7.0.2"),
       "installer" => "composer",
       "includes" => array("lessc.inc.php")
-    )        
+    )
   );
 
   public $includesCommon = array(
@@ -37,8 +37,9 @@ class mediaserver extends Module
     'controller/LessController.php'
   );
 
- 
+
   function __construct() {
+    $this->addUrlPatterns( '#^'.MEDIASERVER_FINAL_CACHE_PATH.'/jsConfConstants.js#', 'view:ConfConstantsView::javascript' );    
     $this->addUrlPatterns( '#^'.MOD_MEDIASERVER_URL_DIR.'/jsConfConstants.js#', 'view:ConfConstantsView::javascript' );
     $this->addUrlPatterns( '#^'.MOD_MEDIASERVER_URL_DIR.'/lessConfConstants.less#', 'view:ConfConstantsView::less' );
 
