@@ -6,7 +6,7 @@ class LessController {
   var $less = false;
 
   public function __construct() {
-    $this->less = new lessc();
+    // $this->less = new lessc();
   }
 
   /**
@@ -19,11 +19,9 @@ class LessController {
   public function compile( $lessFilePath, $resultFilePath, $moduleName ) {
     $ret = true;
 
-    /*
     if( $this->less === false ) {
       $this->less = new lessc();
     }
-    */
 
     // generate less caches
     $lessTmpDir = CacheUtilsController::prepareLessTmpdir();
