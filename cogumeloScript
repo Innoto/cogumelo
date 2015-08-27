@@ -115,7 +115,8 @@ if( $argc > 1 ) {
       break;
 
     case 'generateClientCaches':
-      echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=client_caches');
+      file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=client_caches');
+      echo "\nClient caches generated\n";
       break;
 
     default:
@@ -139,7 +140,7 @@ function actionCompileTranslations() {
 }
 
 function actionFlush() {
-  echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=flush');  
+  echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=flush');
   echo "Temporary files deleted!\n";
 }
 
