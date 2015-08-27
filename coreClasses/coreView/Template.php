@@ -27,7 +27,7 @@ class Template extends Smarty
   var $cgmSmartyCompileDir = SMARTY_COMPILE;
   var $cgmSmartyCacheDir = SMARTY_CACHE;
 
-  var $cgmMediaserverCompileLess = MEDIASERVER_COMPILE_LESS;
+  var $cgmMediaserverCompileLess = MEDIASERVER_PRODUCTION_MODE;
   var $cgmMediaserverHost = MEDIASERVER_HOST;
   var $cgmMediaserverUrlDir = MOD_MEDIASERVER_URL_DIR;
 
@@ -404,4 +404,3 @@ class Template extends Smarty
   }
 
 }
-

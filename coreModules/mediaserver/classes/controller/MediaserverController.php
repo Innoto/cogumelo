@@ -11,49 +11,37 @@ class MediaserverController {
 
 
   function cacheContent( $path, $module, $doNotRedirect = false ) {
+
+
     $parsedUrl = parse_url($path);
     $this->urlPath = $parsedUrl['path'];
     $this->moduleName = $module;
     $this->realFilePath = ModuleController::getRealFilePath('classes/view/templates/'.$this->urlPath, $this->moduleName);
     $this->modulePath = ( $this->moduleName )? '/module/'.$this->moduleName.'/' : '' ;
 
-    if( MEDIASERVER_REFRESH_CACHE ) {
-      if( !file_exists( $this->realFilePath ) && !$doNotRedirect ) {
-        if(!$doNotRedirect) {
-          RequestController::redirect(SITE_URL_CURRENT.'/404');
-        }
-      }
 
-      if( substr($this->urlPath, -4) == '.tpl' ||
-          substr($this->urlPath, -4) == '.php' ||
-          substr($this->urlPath, -4) == '.inc'
-        ) {
-
-        Cogumelo::error('trying to load( '.$this->urlPath.' ), but not allowed to serve .tpl .php or .inc files ');
-        if(!$doNotRedirect) {
-          RequestController::redirect(SITE_URL_CURRENT.'/404');
-        }
-
-      }
-      else {
-
-        if( (substr($this->urlPath, -4) == '.css' || substr($this->urlPath, -3) == '.js' ) && MEDIASERVER_MINIMIFY_FILES ) {
-          $this->copyAndMoveFile( true ); // copy and mofe with MINIFY
-        }
-        else
-        if( substr($this->urlPath, -5) == '.less' ) {
-          if( MEDIASERVER_COMPILE_LESS == false ) {
-            $this->copyAndMoveFile();
-          }
-          else {
-            $this->compileAndMoveLessFile();
-          }
-        }
-        else {
-          $this->copyAndMoveFile();
-        }
+    if( !file_exists( $this->realFilePath ) && !$doNotRedirect ) {
+      if(!$doNotRedirect) {
+        RequestController::redirect(SITE_URL_CURRENT.'/404');
       }
     }
+
+    if( substr($this->urlPath, -4) == '.tpl' ||
+        substr($this->urlPath, -4) == '.php' ||
+        substr($this->urlPath, -4) == '.inc'
+      ) {
+
+      Cogumelo::error('trying to load( '.$this->urlPath.' ), but not allowed to serve .tpl .php or .inc files ');
+      if(!$doNotRedirect) {
+        RequestController::redirect(SITE_URL_CURRENT.'/404');
+      }
+
+    }
+    else {
+      $this->copyAndMoveFile();
+    }
+
+
 
 
   }
@@ -65,8 +53,10 @@ class MediaserverController {
   */
   function serveContent($path, $module=false){
 
-    $this->cacheContent( $path, $module );
-    $this->serveFile( );
+    if( !MEDIASERVER_PRODUCTION_MODE ) {
+      $this->cacheContent( $path, $module );
+      $this->serveFile( );
+    }
 
   }
 
@@ -173,18 +163,13 @@ class MediaserverController {
     }
     else
     // less file without compilation
-    if( substr($this->urlPath , -5) == '.less' && !MEDIASERVER_COMPILE_LESS ) {
+    if( substr($this->urlPath , -5) == '.less' ) {
       header('Content-Type: text');
       readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
     }
-    else
-    // less file with compilation
-    if( substr($this->urlPath , -5) == '.less' ){
-      header('Content-Type: text/css');
-      readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath.'.css'  );      
-    }
     else {
       // redirect to file
+      //echo MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath ;
       RequestController::redirect( MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath );
     }
 
