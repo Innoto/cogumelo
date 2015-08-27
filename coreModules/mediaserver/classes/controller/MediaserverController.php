@@ -24,9 +24,9 @@ class MediaserverController {
         }
       }
 
-      if( substr($this->urlPath, -4) == '.tpl' || 
-          substr($this->urlPath, -4) == '.php' || 
-          substr($this->urlPath, -4) == '.inc' 
+      if( substr($this->urlPath, -4) == '.tpl' ||
+          substr($this->urlPath, -4) == '.php' ||
+          substr($this->urlPath, -4) == '.inc'
         ) {
 
         Cogumelo::error('trying to load( '.$this->urlPath.' ), but not allowed to serve .tpl .php or .inc files ');
@@ -36,7 +36,7 @@ class MediaserverController {
 
       }
       else {
-        
+
         if( (substr($this->urlPath, -4) == '.css' || substr($this->urlPath, -3) == '.js' ) && MEDIASERVER_MINIMIFY_FILES ) {
           $this->copyAndMoveFile( true ); // copy and mofe with MINIFY
         }
@@ -59,7 +59,7 @@ class MediaserverController {
   }
 
   /**
-  * Process path to serve media resource. It will move and 
+  * Process path to serve media resource. It will move and
   * serve final path resource.
   *
   */
@@ -68,7 +68,7 @@ class MediaserverController {
     $this->cacheContent( $path, $module );
     $this->serveFile( );
 
-  } 
+  }
 
 
   /*
@@ -165,9 +165,9 @@ class MediaserverController {
       header('Content-Type: text/javascript');
       readfile( SITE_PATH.'../httpdocs/' . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
     }
-    else 
-    // css or 
-    if( substr($this->urlPath , -4) == '.css' ) { 
+    else
+    // css or
+    if( substr($this->urlPath , -4) == '.css' ) {
       header('Content-Type: text/css');
       readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
     }
@@ -177,8 +177,8 @@ class MediaserverController {
       header('Content-Type: text');
       readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
     }
-    else 
-    // less file with compilation      
+    else
+    // less file with compilation
     if( substr($this->urlPath , -5) == '.less' ){
       header('Content-Type: text/css');
       readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath.'.css'  );      
@@ -215,14 +215,14 @@ class MediaserverController {
 
     if($type == 'js'){
       file_put_contents(
-        $toPath, 
+        $toPath,
         JSMin::minify(file_get_contents( $fromPath ), $filters),
         LOCK_EX
       );
     }
     else if($type == 'css') {
       file_put_contents(
-        $toPath, 
+        $toPath,
         CssMin::minify( file_get_contents( $fromPath ), $filters),
         LOCK_EX
       );
