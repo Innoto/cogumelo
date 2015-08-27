@@ -83,12 +83,7 @@ class DevelView extends View
 
   function infoSetup(){
     global $C_ENABLED_MODULES;
-    if(IS_DEVEL_ENV){
-      $this->template->assign("infoIsDevelEnv" , 'True');
-    }
-    else{
-      $this->template->assign("infoIsDevelEnv" , 'False');
-    }
+
     $this->template->assign("infoCogumeloLocation" , COGUMELO_LOCATION);
     $this->template->assign("infoDBEngine" , DB_ENGINE);
     $this->template->assign("infoDBHostName" , DB_HOSTNAME);
@@ -122,12 +117,7 @@ class DevelView extends View
     $this->template->assign("infoMediaServerTmpCachePath" , MEDIASERVER_TMP_CACHE_PATH);
     $this->template->assign("infoMediaServerFinalCachePath" , MEDIASERVER_FINAL_CACHE_PATH);
 
-    if(MEDIASERVER_COMPILE_LESS){
-      $this->template->assign("infoMediaServerCompileLess" , 'True');
-    }
-    else{
-      $this->template->assign("infoMediaServerCompileLess" , 'False');
-    }
+
 
     $stringEnabledModules = "";
     foreach( $C_ENABLED_MODULES as $em){
@@ -169,7 +159,7 @@ class DevelView extends View
     else{
       $this->template->assign("infoGetTextUpdate" , 'False');
     }
-    
+
     global $LANG_AVAILABLE;
 
     $this->template->assign("infoLangDefault" , LANG_DEFAULT);
@@ -220,4 +210,3 @@ class DevelView extends View
   }
 
 }
-

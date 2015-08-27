@@ -27,9 +27,9 @@ class Template extends Smarty
   var $cgmSmartyCompileDir = SMARTY_COMPILE;
   var $cgmSmartyCacheDir = SMARTY_CACHE;
 
-  var $cgmMediaserverCompileLess = MEDIASERVER_COMPILE_LESS;
+  var $cgmMediaserverCompileLess = MEDIASERVER_PRODUCTION_MODE;
   var $cgmMediaserverHost = MEDIASERVER_HOST;
-  var $cgmMediaserverUrlDir = MOD_MEDIASERVER_URL_DIR;
+  var $cgmMediaserverUrlDir = false;
 
 
   /**
@@ -39,6 +39,14 @@ class Template extends Smarty
    **/
   public function __construct( $baseDir = false ) {
     // Call Smarty's constructor
+
+    if( MEDIASERVER_PRODUCTION_MODE ) {
+      $this->cgmMediaserverUrlDir = MEDIASERVER_FINAL_CACHE_PATH;
+    }
+    else{
+      $this->cgmMediaserverUrlDir =MOD_MEDIASERVER_URL_DIR;
+    }
+
     parent::__construct();
 
     $this->baseDir = $baseDir;
@@ -170,7 +178,16 @@ class Template extends Smarty
       $file_rel = "stylesheet";
     }
 
-    $include_chain = '<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.'">';
+
+    if( $this->cgmMediaserverCompileLess && substr($file_path, -5) == '.less' ) {
+      $lessCompiledExtension = '.css';
+    }
+    else {
+      $lessCompiledExtension  = '';
+    }
+
+
+    $include_chain = '<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.  $lessCompiledExtension.'">';
 
     if( $is_autoinclude ) {
       if ( in_array( $include_chain, $this->css_autoincludes ) === false ) {
@@ -404,4 +421,3 @@ class Template extends Smarty
   }
 
 }
-
