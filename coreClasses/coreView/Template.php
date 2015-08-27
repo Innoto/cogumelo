@@ -29,7 +29,7 @@ class Template extends Smarty
 
   var $cgmMediaserverCompileLess = MEDIASERVER_PRODUCTION_MODE;
   var $cgmMediaserverHost = MEDIASERVER_HOST;
-  var $cgmMediaserverUrlDir = MOD_MEDIASERVER_URL_DIR;
+  var $cgmMediaserverUrlDir = false;
 
 
   /**
@@ -39,6 +39,14 @@ class Template extends Smarty
    **/
   public function __construct( $baseDir = false ) {
     // Call Smarty's constructor
+
+    if( MEDIASERVER_PRODUCTION_MODE ) {
+      $this->cgmMediaserverUrlDir = MEDIASERVER_FINAL_CACHE_PATH;
+    }
+    else{
+      $this->cgmMediaserverUrlDir =MOD_MEDIASERVER_URL_DIR;
+    }
+
     parent::__construct();
 
     $this->baseDir = $baseDir;

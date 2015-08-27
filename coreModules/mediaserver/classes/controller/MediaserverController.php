@@ -55,8 +55,13 @@ class MediaserverController {
 
     if( !MEDIASERVER_PRODUCTION_MODE ) {
       $this->cacheContent( $path, $module );
-      $this->serveFile( );
     }
+    else {
+      $this->modulePath = ( $module )? '/module/'.$module.'/' : '' ;
+      $this->urlPath = $path;
+
+    }
+    $this->serveFile( );
 
   }
 
@@ -150,26 +155,31 @@ class MediaserverController {
 
     Cogumelo::debug("Mediaserver, serving file: ".$this->realFilePath);
 
-    // js file
-    if( substr($this->urlPath , -3) == '.js' ) {
-      header('Content-Type: text/javascript');
-      readfile( SITE_PATH.'../httpdocs/' . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
-    }
-    else
-    // css or
-    if( substr($this->urlPath , -4) == '.css' ) {
-      header('Content-Type: text/css');
-      readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
-    }
-    else
-    // less file without compilation
-    if( substr($this->urlPath , -5) == '.less' ) {
-      header('Content-Type: text');
-      readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
+    if(!MEDIASERVER_PRODUCTION_MODE) {
+      // js file
+      if( substr($this->urlPath , -3) == '.js' ) {
+        header('Content-Type: text/javascript');
+        readfile( SITE_PATH.'../httpdocs/' . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
+      }
+      else
+      // css or
+      if( substr($this->urlPath , -4) == '.css' ) {
+        header('Content-Type: text/css');
+        readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
+      }
+      else
+      // less file without compilation
+      if( substr($this->urlPath , -5) == '.less' ) {
+        header('Content-Type: text');
+        readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
+      }
+      else {
+        // redirect to file
+        RequestController::redirect( MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath );
+      }
     }
     else {
       // redirect to file
-      //echo MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath ;
       RequestController::redirect( MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath );
     }
 
