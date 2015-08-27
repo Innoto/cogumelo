@@ -10,7 +10,7 @@ class CacheUtilsController {
 
 
   static function generateAllLessCaches() {
-    
+
     $mediaserverControl = new MediaserverController();
 
     // tmp less dir
@@ -36,10 +36,10 @@ class CacheUtilsController {
         }
 
         $mediaserverControl->cacheContent( $relativeFilePath  , $moduleName, true );
-       
+
       }
     }
-  
+
     // remove tmp less dir
     self::removeLessTmpdir();
 
@@ -66,35 +66,35 @@ class CacheUtilsController {
       foreach( $C_ENABLED_MODULES as $moduleName ){
 
         // cogumelo modules
-        self::copyLessTmpdir( 
+        self::copyLessTmpdir(
           COGUMELO_LOCATION.'/coreModules/',
-          $moduleName.'/'.$cacheableFolder, 
-          $destino 
+          $moduleName.'/'.$cacheableFolder,
+          $destino
         );
 
         // DIST modules
         if( COGUMELO_DIST_LOCATION != false ) {
-          self::copyLessTmpdir( 
-            COGUMELO_LOCATION.'/coreModules/',
-            $moduleName.'/'.$cacheableFolder, 
-            $destino 
+          self::copyLessTmpdir(
+            COGUMELO_DIST_LOCATION.'/coreModules/',
+            $moduleName.'/'.$cacheableFolder,
+            $destino
           );
         }
 
         // app modules
-        self::copyLessTmpdir( 
+        self::copyLessTmpdir(
           SITE_PATH.'/modules/',
           $moduleName.'/'.$cacheableFolder,
-          $destino 
+          $destino
         );
 
       }
 
       // app files
-      self::copyLessTmpdir( 
+      self::copyLessTmpdir(
         SITE_PATH.'/',
-        $cacheableFolder, 
-        $destino 
+        $cacheableFolder,
+        $destino
       );
 
       $CACHE_UTILS_LESS_TMPDIR = $destino;
@@ -125,7 +125,7 @@ class CacheUtilsController {
 
     if( $CACHE_UTILS_LESS_TMPDIR ) {
       if(!$dir)
-         $dir = $CACHE_UTILS_LESS_TMPDIR;      
+         $dir = $CACHE_UTILS_LESS_TMPDIR;
 
       $files = array_diff(scandir($dir), array('.','..'));
       foreach ($files as $file) {
@@ -166,13 +166,13 @@ class CacheUtilsController {
     foreach( $C_ENABLED_MODULES as $moduleName ){
 
       // cogumelo modules
-      self::cacheFolder( 
-        COGUMELO_LOCATION.'/coreModules/'.$moduleName.'/'.$cacheableFolder, 
+      self::cacheFolder(
+        COGUMELO_LOCATION.'/coreModules/'.$moduleName.'/'.$cacheableFolder,
         $moduleName
       );
       // app modules
-      self::cacheFolder( 
-        SITE_PATH.'/modules/'.$moduleName.'/'.$cacheableFolder, 
+      self::cacheFolder(
+        SITE_PATH.'/modules/'.$moduleName.'/'.$cacheableFolder,
         $moduleName
       );
     }
@@ -260,7 +260,7 @@ class CacheUtilsController {
     }
 
     return $ret;
-  }  
+  }
 
 
 }
