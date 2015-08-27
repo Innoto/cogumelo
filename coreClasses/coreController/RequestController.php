@@ -128,25 +128,34 @@ class RequestController
 
 
   public function notAppUrl() {
-    //error_log( 'RequestController::notAppUrl' );
+    error_log( 'RequestController::notAppUrl '.$this->url_path );
 
-    $validUrl = false;
-
-
+    $alternative = false;
 
     // require class script from views folder
-    include( '/home/proxectos/geozzy/distModules/geozzy/classes/controller/UrlAliasController.php' );
-    $urlAliasController = new UrlAliasController( $this->url_path );
-
-    if( $urlAliasController->evaluateAlternative() ) {
-      $validUrl = $urlAliasController->urlTo;
-      $httpCode = $urlAliasController->httpCode;
+    // include( '/home/proxectos/geozzy/distModules/geozzy/classes/controller/UrlAliasController.php' );
+    if( defined( 'COGUMELO_APP_URL_ALIAS_CONTROLLER' ) && file_exists( COGUMELO_APP_URL_ALIAS_CONTROLLER ) ) {
+      include( COGUMELO_APP_URL_ALIAS_CONTROLLER );
+      $urlAliasController = new UrlAliasController();
+      $alternative = $urlAliasController->getAlternative( $this->url_path );
     }
 
 
-
-    if( $validUrl ) {
-      $this->redirect( $validUrl, $httpCode );
+    if( $alternative ) {
+      error_log( 'RequestController::notAppUrl $alternative= '. print_r( $alternative, true ) );
+      if( $alternative[ 'code' ] === 'alias' ) {
+        error_log( 'RequestController::notAppUrl Alias-viewUrl '.$alternative[ 'url' ] );
+        global $_C;
+        $_C->viewUrl( $alternative[ 'url' ] );
+        /**
+          TODO: NO USA LANG PORQUE FALLA viewUrl
+          $_C->viewUrl( $langUrl . $alternative[ 'url' ] );
+        */
+      }
+      else {
+        error_log( 'RequestController::notAppUrl Redirect '.$alternative[ 'code' ].' a '.$alternative[ 'url' ] );
+        $this->redirect( $alternative[ 'url' ], $alternative[ 'code' ] );
+      }
     }
     else {
       Cogumelo::error( "URL not found ".$_SERVER['REQUEST_URI']."\n" );
