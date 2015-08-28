@@ -112,9 +112,17 @@ class Template extends Smarty
    **/
   public function addClientScript( $file_path, $module = false, $is_autoinclude = false ) {
 
+
+    if( substr( $file_path, -3) == '.js'  && MEDIASERVER_NOT_CACHE_JS == true ){
+      $mediaPath = 'media';
+    }
+    else {
+      $mediaPath = $this->cgmMediaserverUrlDir;
+    }
+
     switch( $module ) {
       case false:
-        $base_path = '/'.$this->cgmMediaserverUrlDir.'/';
+        $base_path = '/'.$mediaPath.'/';
         break;
       case 'vendor':
         $base_path = $this->cgmMediaserverHost.'vendor/';
@@ -126,7 +134,7 @@ class Template extends Smarty
         $base_path = $this->cgmMediaserverHost.'vendor/manual/';
         break;
       default:
-        $base_path = '/'.$this->cgmMediaserverUrlDir.'/module/'.$module.'/';
+        $base_path = '/'.$mediaPath.'/module/'.$module.'/';
         break;
     }
 

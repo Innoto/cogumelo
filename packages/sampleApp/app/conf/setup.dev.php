@@ -176,7 +176,8 @@ define( 'DEPEN_MANUAL_REPOSITORY', COGUMELO_LOCATION.'/packages/vendorPackages' 
 define( 'MEDIASERVER_HOST', '/' );
 define( 'MEDIASERVER_TMP_CACHE_PATH', APP_TMP_PATH.'/mediaCache' );
 define( 'MEDIASERVER_FINAL_CACHE_PATH', 'mediaCache' );
-define( 'MEDIASERVER_PRODUCTION_MODE', false ); // If true, you must compile less manually with ./cogumelo generateClientCaches
+define( 'MEDIASERVER_NOT_CACHE_JS', true );
+define( 'MEDIASERVER_PRODUCTION_MODE', true ); // If true, you must compile less manually with ./cogumelo generateClientCaches
 define( 'MEDIASERVER_MINIMIFY_FILES', false ); // for js and css files ( only when MEDIASERVER_PRODUCTION_MODE is true)
 
 global $MEDIASERVER_LESS_GLOBALS; // Se cargan con el prefijo GLOBAL_
