@@ -50,6 +50,16 @@ class FiledataWeb extends View {
 
 
   /**
+    Descargamos un fichero de Form
+  */
+  public function webFormFileDownload( $urlParams ) {
+    // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['1'] );
+    $this->fileSendCommon( $urlParams['1'], self::FILES_APP_PATH, 'download' );
+  } // function webFormFileShow()
+
+
+
+  /**
     Visualizamos el fichero
   */
   public function fileSendCommon( $fileId, $basePath = false, $destination = 'web' ) {
@@ -117,7 +127,6 @@ class FiledataWeb extends View {
       //header( 'Cache-Control: must-revalidate');
       //header( 'Pragma: public');
       //header( 'Content-Length: ' . $fileInfo['size'] );
-
       header( 'Content-Disposition: inline; filename="' . $fileInfo['originalName'] . '"' );
       //header( 'Content-Length: ' . filesize( $filePath ) );
       header( 'Content-Type: '. $fileInfo['type'] );
