@@ -195,7 +195,9 @@ class MediaserverController {
     }
     else {
       // redirect to file
-      RequestController::redirect( MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath );
+      if(file_exists( MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath ) ) {
+        RequestController::redirect( MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath );
+      }
     }
 
   }
