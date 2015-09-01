@@ -108,15 +108,16 @@ if( $argc > 1 ) {
       setPermissionsDevel();
       actionFlush();
       actionCompileTranslations();
+      actionGenerateClientCaches();
+      setPermissionsDevel();
       break;
 
     case 'rotateLogs':
-      echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=rotate_logs');
+      actionRotateLogs();
       break;
 
     case 'generateClientCaches':
-      file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=client_caches');
-      echo "\nClient caches generated\n";
+      actionGenerateClientCaches();
       break;
 
     default:
@@ -136,12 +137,25 @@ function actionCompileTranslations() {
   $i18nscriptController = new i18nScriptController();
   $i18nscriptController->setEnviroment();
   $i18nscriptController->c_i18n_compile();
-  echo "The files.mo are ready to be used!\n";
+  echo "\nThe files.mo are ready to be used!\n\n";
 }
+
 
 function actionFlush() {
   echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=flush');
-  echo "Temporary files deleted!\n";
+  echo "\nTemporary files deleted!\n\n";
+}
+
+
+function actionRotateLogs() {
+  echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=rotate_logs');
+  echo "\nRotate Logs done!\n\n";
+}
+
+
+function actionGenerateClientCaches() {
+  file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=client_caches');
+  echo "\nClient caches generated\n\n";
 }
 
 
