@@ -728,11 +728,11 @@ function activateHtmlEditor( idForm ) {
 
   $( 'textarea.cgmMForm-htmlEditor[form="'+idForm+'"]' ).each(
     function( index ) {
-      var idName = $( this ).attr( 'id' );
-      var CKcontent = CKEDITOR.replace( idName, {
+      var textarea = this;
+      var CKcontent = CKEDITOR.replace( textarea, {
         customConfig: '/cgml-form-htmleditor-config.js'
       } );
-      CKcontent.on( 'change', function ( ev ) { document.getElementById( idName ).innerHTML = CKcontent.getData(); } );
+      CKcontent.on( 'change', function ( ev ) { $( textarea ).html(CKcontent.getData()); });
     }
   );
 }
