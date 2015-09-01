@@ -1,6 +1,5 @@
 <?php
 
-define('MOD_MEDIASERVER_URL_DIR', 'media');
 
 Cogumelo::load("coreController/Module.php");
 
@@ -39,7 +38,7 @@ class mediaserver extends Module
 
 
   function __construct() {
-    $this->addUrlPatterns( '#^'.MEDIASERVER_FINAL_CACHE_PATH.'/jsConfConstants.js#', 'view:ConfConstantsView::javascript' );    
+    $this->addUrlPatterns( '#^'.MEDIASERVER_FINAL_CACHE_PATH.'/jsConfConstants.js#', 'view:ConfConstantsView::javascript' );
     $this->addUrlPatterns( '#^'.MOD_MEDIASERVER_URL_DIR.'/jsConfConstants.js#', 'view:ConfConstantsView::javascript' );
     $this->addUrlPatterns( '#^'.MOD_MEDIASERVER_URL_DIR.'/lessConfConstants.less#', 'view:ConfConstantsView::less' );
 

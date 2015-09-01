@@ -65,7 +65,7 @@ class MediaserverController {
   *
   */
   function serveContent($path, $module=false){
-    if( !MEDIASERVER_PRODUCTION_MODE || ( substr($path , -3) == '.js' &&  MEDIASERVER_NOT_CACHE_JS ) ) {
+    if( MEDIASERVER_PRODUCTION_MODE == false || ( substr($path , -3) == '.js' &&  MEDIASERVER_NOT_CACHE_JS ) ) {
       $this->cacheContent( $path, $module );
     }
     else {

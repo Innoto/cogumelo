@@ -35,8 +35,7 @@ class MediaserverView extends View
   //load media from a module
   function module($url_path=''){
 
-    preg_match('#/(.*?)/(.*)#', $url_path[1], $result);
-
+    preg_match('#/(.*?)/(.*)?\??(.*)#', $url_path[1], $result);
     if( $result != array() ) {
       $this->mediaserverControl->servecontent($result[2], $result[1]);
       CacheUtilsController::removeLessTmpdir();
