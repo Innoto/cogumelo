@@ -379,7 +379,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .progressBar' ).hide();
 
       if( $jsonData.result === 'ok' ) {
-        fileFieldToOk( idForm, fieldName, $jsonData.moreInfo.fileName, false );
+        fileFieldToOk( idForm, fieldName, $jsonData.moreInfo.fileName, false, false );
       }
       else {
         console.log( 'uploadFile ERROR' );
@@ -476,13 +476,15 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 } // function deleteFormFile( idForm, fieldName, cgIntFrmId )
 
 
-function fileFieldToOk( idForm, fieldName, fileName, fileModId ) {
-  console.log( 'fileFieldToOk( '+idForm+', '+fieldName+', '+fileName+', '+fileModId+' )' );
-  $fileField = $( 'input[name=' + fieldName + '][form="'+idForm+'"]' );
-  $fileFieldWrap = $fileField.parents().find( '.cgmMForm-field-' + fieldName );
-  // fileObj = $fileField[0].files[0];
+function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
+  console.log( 'fileFieldToOk( '+idForm+', '+fieldName+', '+fileName+', '+fileModId+', '+fileType+' )' );
+  $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
-  console.log( $fileField, $fileFieldWrap );
+  //console.log( $fileField );
+  //console.log( $fileFieldWrap );
+
+  // fileObj = $fileField[0].files[0];
 
   $fileField.attr( 'readonly', 'readonly' );
   $fileField.prop( 'disabled', true );
@@ -509,7 +511,12 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId ) {
     $fileFieldInfo.append( '<span class="msgText">"' + fileName + '" uploaded OK</span>' );
   }
   else {
-    $fileFieldInfo.append( '<img class="tnImage" src="/cgmlformfilews/' + fileModId + '"></img>' );
+    if( fileType &&  fileType.indexOf( 'image' ) === 0 ) {
+      $fileFieldInfo.append( '<img class="tnImage" src="/cgmlformfilews/' + fileModId + '"></img>' );
+    }
+    else {
+      $fileFieldInfo.append( '<div class="msgInfo"><i class="fa fa-file" style="font-size: 64px; color: #444"></i>Información, Icono e esquina coa papelera</div>' );
+    }
     $fileFieldInfo.append( '<span class="msgText">"' + fileName + '"</span>' );
   }
 
@@ -527,8 +534,9 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId ) {
 function fileFieldToInput( idForm, fieldName ) {
   console.log( 'fileFieldToInput: ', idForm, fieldName );
   $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-  console.log( $fileField );
-  $fileFieldWrap = $fileField.parents().find( '.cgmMForm-field-' + fieldName );
+  $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+
+  // console.log( $fileField );
 
   $fileFieldWrap.find( '.fileUploadOK' ).remove();
 

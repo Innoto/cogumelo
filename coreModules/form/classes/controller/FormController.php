@@ -2397,7 +2397,7 @@ error_log( 'FILE --- '.print_r( $field, true ) );
         $fileInfo = $this->getFieldValue( $fieldName );
         if( $fileInfo[ 'status' ] === 'EXIST' ) {
           $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", '.
-            '"'.$fileInfo[ 'prev' ][ 'name' ].'", "'.$fileInfo[ 'prev' ][ 'id' ].'" );'."\n";
+            '"'.$fileInfo[ 'prev' ][ 'name' ].'", "'.$fileInfo[ 'prev' ][ 'id' ].'", "'.$fileInfo[ 'prev' ][ 'type' ].'" );'."\n";
         }
       }
     }
