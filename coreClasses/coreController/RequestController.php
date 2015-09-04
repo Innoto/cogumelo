@@ -164,5 +164,21 @@ class RequestController
     exit();
   }
 
+  // gets the url parameters, validate them in function of the validation passed and returns and array with pairs key=>value
+  static function processUrlParams($urlParams, $validation) {
+    error_log( 'RequestController::processUrlParams' );
+
+    $url_parts = explode('/', $urlParams[1]);
+    $params = array();
+    for($i=0;$i<sizeof($url_parts);$i=$i+2){
+      $par = $url_parts[$i];
+      if ($validation[$par]){
+        if (preg_match ( $validation[$par] , $url_parts[$i+1])){
+          $params[$url_parts[$i]] = $url_parts[$i+1];
+        }
+      }
+    }
+    return $params;
+  }
 
 }
