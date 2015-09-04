@@ -1867,6 +1867,9 @@ class FormController implements Serializable {
         $html['input'] = '<input name="'.$fieldName.'"';
         // $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
         $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
+
+error_log( 'FILE --- '.print_r( $field, true ) );
+
         break;
 
       case 'reserved':
@@ -1917,6 +1920,24 @@ class FormController implements Serializable {
     // resetForm : Borra el formulario
 
     $this->success[ $name ] = $success;
+  }
+
+  /**
+    * Elimina una o todas las tareas que se han definido para el navegador al finalizar bien el submit
+    */
+  public function removeSuccess( $name = false ) {
+    // error_log( 'removeSuccess: ' . print_r( $this->success, true ) );
+
+    if( $name ) {
+      if( isset( $this->success[ $name ] ) ) {
+        unset( $this->success[ $name ] );
+      }
+    }
+    else {
+      $this->success = false;
+    }
+
+    return $this->success;
   }
 
   /**
@@ -2376,7 +2397,7 @@ class FormController implements Serializable {
         $fileInfo = $this->getFieldValue( $fieldName );
         if( $fileInfo[ 'status' ] === 'EXIST' ) {
           $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", '.
-            '"'.$fileInfo[ 'prev' ][ 'name' ].'", "'.$fileInfo[ 'prev' ][ 'id' ].'" );'."\n";
+            '"'.$fileInfo[ 'prev' ][ 'name' ].'", "'.$fileInfo[ 'prev' ][ 'id' ].'", "'.$fileInfo[ 'prev' ][ 'type' ].'" );'."\n";
         }
       }
     }
