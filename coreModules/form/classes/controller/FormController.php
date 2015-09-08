@@ -598,12 +598,12 @@ class FormController implements Serializable {
   }
 
   /**
-    Crea un array con los nombre del los campos para un elemento multilang
-
-    @param string $fieldName Nombre del campo
-
-    @return array
-   */
+    * Crea un array con los nombre del los campos para un elemento multilang
+    *
+    * @param string $fieldName Nombre del campo
+    *
+    * @return array
+    */
   public function multilangFieldNames( $fieldName ) {
     $fieldNames = array();
 
@@ -745,8 +745,9 @@ class FormController implements Serializable {
   }
 
   /**
-    Recupera los nombres de todos los campos
-    @return TYPE
+    * Recupera los nombres de todos los campos
+    *
+    * @return TYPE
    */
   public function getFieldsNamesArray() {
     $fieldsNamesArray = array();
