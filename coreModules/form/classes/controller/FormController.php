@@ -237,7 +237,14 @@ class FormController implements Serializable {
 
     if( isset( $_SESSION[ $formSessionId ] ) ) {
       $data = unserialize( $_SESSION[ $formSessionId ] );
-      $data[ 'fields' ][ $fieldName ] = $this->fields[ $fieldName ];
+      if( isset( $this->fields[ $fieldName ] ) ) {
+        $data[ 'fields' ][ $fieldName ] = $this->fields[ $fieldName ];
+      }
+      else {
+        if( isset( $data[ 'fields' ][ $fieldName ] ) ) {
+          unset( $data[ 'fields' ][ $fieldName ] );
+        }
+      }
       $_SESSION[ $formSessionId ] = serialize( $data );
       $result = true;
     }
@@ -482,7 +489,11 @@ class FormController implements Serializable {
     foreach( $fieldNames as $fieldName ) {
       if( isset( $this->fields[ $fieldName ] ) ) {
         unset( $this->fields[ $fieldName ] );
+        $this->updateFieldToSession( $fieldName );
+      }
+      if( isset( $this->rules[ $fieldName ] ) ) {
         unset( $this->rules[ $fieldName ] );
+        $this->updateFieldRulesToSession( $fieldName );
       }
     }
   }
@@ -2067,7 +2078,10 @@ error_log( 'FILE --- '.print_r( $field, true ) );
     @param mixed $ruleParams
    */
   public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
-    $this->rules[ $fieldName ][ $ruleName ] = $ruleParams;
+    if( isset( $this->fields[ $fieldName ] ) ) {
+      $this->rules[ $fieldName ][ $ruleName ] = $ruleParams;
+      $this->updateFieldRulesToSession( $fieldName );
+    }
   }
 
   /**
