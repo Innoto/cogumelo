@@ -28,28 +28,28 @@ function cogumeloTable( tableId, tableUrl ) {
   // table elements
   that.filters = $('.'+tableId+'.tableContainer .tableMoreFilters');
   that.resumeFilters = $('.'+tableId+'.tableContainer .tableResumeFilters');
-  that.tableContent = $('.'+tableId+'.tableContainer .tableClass');  
-  that.tabsContent = $('.'+tableId+'.tableContainer .tableFilters select'); 
-  that.pagersTotal = $('.'+tableId+'.tableContainer .tablePaginator .tablePage .totalPages');  
-  that.pagersCurrent = $('.'+tableId+'.tableContainer .tablePaginator .tablePage input');  
+  that.tableContent = $('.'+tableId+'.tableContainer .tableClass');
+  that.tabsContent = $('.'+tableId+'.tableContainer .tableFilters select');
+  that.pagersTotal = $('.'+tableId+'.tableContainer .tablePaginator .tablePage .totalPages');
+  that.pagersCurrent = $('.'+tableId+'.tableContainer .tablePaginator .tablePage input');
   that.headTableCheckBoxQstr = '.'+tableId+'.tableContainer .tableClass .headCheckBox';
-  that.allTableCheckBoxesQstr = '.'+tableId+'.tableContainer .tableClass .eachRowCheckBox';  
-  that.searchForm = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form');   
-  that.searchInput = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form input'); 
-  
+  that.allTableCheckBoxesQstr = '.'+tableId+'.tableContainer .tableClass .eachRowCheckBox';
+  that.searchForm = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form');
+  that.searchInput = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form input');
+
 
   // buttons and action elements
   that.openFiltersButton = $('.'+tableId+'.tableContainer .openFilters');
   that.closeFiltersButton = $('.'+tableId+'.tableContainer .closeFilters');
   that.anyColHeaderQstr = '.'+tableId+'.tableContainer table.tableClass tr th';
   that.pagersPrevious = $('.'+tableId+'.tableContainer .tablePaginator .tablePreviousPage');
-  that.pagersNext = $('.'+tableId+'.tableContainer .tablePaginator .tableNextPage'); 
-  that.actionSelect = $('.'+tableId+'.tableContainer .tableActions .actionSelect'); 
-  that.exportSelect = $('.'+tableId+'.tableContainer .exportContainer .exportSelect');   
-  that.searchButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.search'); 
-  that.searchClearButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.clear'); 
-  that.addNewItem = $('.'+tableId+'.tableContainer .addElem'); 
-  
+  that.pagersNext = $('.'+tableId+'.tableContainer .tablePaginator .tableNextPage');
+  that.actionSelect = $('.'+tableId+'.tableContainer .tableActions .actionSelect');
+  that.exportSelect = $('.'+tableId+'.tableContainer .exportContainer .exportSelect');
+  that.searchButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.search');
+  that.searchClearButton = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form button.clear');
+  that.addNewItem = $('.'+tableId+'.tableContainer .addElem');
+
 
 
   that.interfaceAction = function( status ){
@@ -115,7 +115,7 @@ function cogumeloTable( tableId, tableUrl ) {
         range: currentRange,
         action: action,
         filters: false,
-        search: that.search 
+        search: that.search
 
       },
       success: function(tableData) {
@@ -145,8 +145,8 @@ function cogumeloTable( tableId, tableUrl ) {
 
     if( !that.currentTab ) {
       that.currentTab = { key: that.tableData.tabs.tabsKey, default:that.tableData.tabs.defaultKey};
-      
-      if( that.tableData.tabs != false){ 
+
+      if( that.tableData.tabs != false){
         $.each( that.tableData.tabs.tabs , function(i,e)  {
           if(i == that.currentTab.default){
             var sel = ' SELECTED ';
@@ -181,8 +181,8 @@ function cogumeloTable( tableId, tableUrl ) {
 
     $.each(that.tableData.exports, function(i,e) {
       that.exportSelect.append('<option value='+i+'> ' + e.name + '</option>');
-    });    
-    
+    });
+
   }
 
   that.initOrderValues = function() {
@@ -225,7 +225,7 @@ function cogumeloTable( tableId, tableUrl ) {
         ordArray.unshift( nval );
       }
       else {
-        ordArray.push(e); 
+        ordArray.push(e);
       }
     });
 
@@ -237,7 +237,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.setHeaders = function() {
 
     var orderUpImg = '<img src="/media/module/table/img/up.png">';
-    var orderDownImg = '<img src="/media/module/table/img/down.png">';    
+    var orderDownImg = '<img src="/media/module/table/img/down.png">';
     var h = '<th><div class="selectAll"><input class="headCheckBox" type="checkbox"></div></th>';
 
 
@@ -261,7 +261,7 @@ function cogumeloTable( tableId, tableUrl ) {
     });
 
     that.tableContent.append('<tr>'+h+'</tr>');
-    
+
 
     // select/unselect all checkbox
     $(that.headTableCheckBoxQstr).on("change", function(el) {
@@ -280,7 +280,7 @@ function cogumeloTable( tableId, tableUrl ) {
       if( $(thElement.target).parent().parent().hasClass('thKey') ) {
         el = $(thElement.target).parent().parent();
       }
-      else 
+      else
       if( $(thElement.target).parent().parent().parent().hasClass('thKey') ) {
         el = $(thElement.target).parent().parent().parent();
       }
@@ -378,7 +378,7 @@ function cogumeloTable( tableId, tableUrl ) {
       var action = {action: 'list', keys: false};
 /*
       $.post(
-        tableUrl, 
+        tableUrl,
         {
           exportType: that.exportSelect.val(),
           tab : that.tabsContent.val(),
@@ -386,19 +386,19 @@ function cogumeloTable( tableId, tableUrl ) {
           range: currentRange,
           action: action,
           filters: false,
-          search: that.search 
-        }, 
+          search: that.search
+        },
         function(result){
           //var binUrl = retData.url;
           //console.log(retData);
 
           var blob=new Blob([result]);
-  
+
           var link=document.createElement('a');
           link.href=window.URL.createObjectURL(blob);
           link.download="myFileName.json";
           link.click();
-      }); 
+      });
 */
 
       $.fileDownload(tableUrl, {
@@ -410,17 +410,17 @@ function cogumeloTable( tableId, tableUrl ) {
             range: currentRange,
             action: action,
             filters: false,
-            search: that.search 
+            search: that.search
           }
       });
 
 
-        
+
       that.exportSelect.val('0')
     }
   }
 
-  that.actionOnSelectedRows = function(actExt, resExt = false) {
+  that.actionOnSelectedRows = function(actExt, resExt ) {
 
     var selectedRows = [];
 
@@ -520,7 +520,7 @@ function cogumeloTable( tableId, tableUrl ) {
   });
 
 
-  // FIRST TIME 
+  // FIRST TIME
   that.interfaceAction('default');
   that.load();
 }
