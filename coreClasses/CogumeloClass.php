@@ -207,7 +207,7 @@ class CogumeloClass extends Singleton
           '['. date('y-m-d H:i:s',time()) .'] ' .
           '['. $_SERVER['REMOTE_ADDR'] .'] ' .
           '[Session '. self::getUserInfo().'] ' .
-          str_replace("\n", '\n', $texto)."\n", 3,
+          str_replace("\n", '\n', $texto)."\n", 3, LOGDIR.$fich_log.'.log'
         );*/
       }
     }
