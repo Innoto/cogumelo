@@ -168,16 +168,20 @@ class RequestController
   static function processUrlParams($urlParams, $validation) {
     error_log( 'RequestController::processUrlParams' );
 
-    $url_parts = explode('/', $urlParams[1]);
+    $url_parts = explode('/', ltrim($urlParams[1], '/') );
     $params = array();
-    for($i=0;$i<sizeof($url_parts);$i=$i+2){
-      $par = $url_parts[$i];
-      if ($validation[$par]){
-        if (preg_match ( $validation[$par] , $url_parts[$i+1])){
-          $params[$url_parts[$i]] = $url_parts[$i+1];
+
+    if( sizeof( $url_parts ) > 1 ) {
+      for($i=0;$i<sizeof($url_parts);$i=$i+2){
+        $par = $url_parts[$i];
+        if ($validation[$par]){
+          if (preg_match ( $validation[$par] , $url_parts[$i+1])){
+            $params[$url_parts[$i]] = $url_parts[$i+1];
+          }
         }
       }
     }
+
     return $params;
   }
 
