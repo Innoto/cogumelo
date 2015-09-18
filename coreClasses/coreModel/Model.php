@@ -167,7 +167,20 @@ Class Model extends VO {
     // Save only this Model
     else {
       Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
-      return $this->saveOrUpdate();
+      $m = $this->saveOrUpdate();
+
+      $filter = array( 'id' => $this->getter( $this->getFirstPrimarykeyId() ) );
+
+
+      if( $els = $this->listItems( array('filters'=>$filter) )  ){
+        if( $el = $els->fetch() ) {
+          $this->data = $el->data;
+          $m = $el;
+        }
+      }
+
+      return $m;
+
     }
 
 

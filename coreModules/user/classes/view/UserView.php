@@ -147,11 +147,11 @@ class UserView extends View
    *
    * @return Form Html
    **/
-  public function userUpdateFormDefine( $request ){
+  public function userUpdateFormDefine( $id ){
 
     $user = new UserModel();
     $dataVO = $user->listItems( array(
-      'filters' => array('id' => $request[1] ),
+      'filters' => array('id' => $id ),
       'affectsDependences' => array( 'FiledataModel')
     ))->fetch();
     if(!$dataVO){
@@ -168,7 +168,6 @@ class UserView extends View
         $dataArray[ 'avatar' ] = $fileData[ 'data' ];
       }
     }
-
 
     $form = $this->userFormDefine( $dataArray );
     return $form;
@@ -237,10 +236,10 @@ class UserView extends View
    *
    * @return Form Html
    **/
-  public function userChangePasswordFormDefine( $request ){
+  public function userChangePasswordFormDefine( $id ){
 
     $user = new UserModel();
-    $dataVO = $user->listItems( array('filters' => array('id' => $request[1] )))->fetch();
+    $dataVO = $user->listItems( array('filters' => array('id' => $id )))->fetch();
 
 
     if(!$dataVO){
@@ -279,14 +278,14 @@ class UserView extends View
    *
    * @return Form Html
    **/
-  public function userRolesFormDefine( $request ){
+  public function userRolesFormDefine( $id ){
 
     $userModel = new UserModel();
-    $user = $userModel->listItems( array('filters' => array('id' => $request[1] )))->fetch();
+    $user = $userModel->listItems( array('filters' => array('id' => $id )))->fetch();
     $roleModel = new RoleModel();
     $roles = $roleModel->listItems()->fetchAll();
     $userRoleModel = new UserRoleModel();
-    $userRoles = $userRoleModel->listItems( array('filters' => array('user' => $request[1] )))->fetchAll();
+    $userRoles = $userRoleModel->listItems( array('filters' => array('user' => $id )))->fetchAll();
 
     $rolesCheck = array();
     foreach( $roles as $key => $rol ) {
@@ -500,25 +499,42 @@ class UserView extends View
         $asignRole = true;
       }
 
+      $userAvatar = $valuesArray['avatar'];
+      unset($valuesArray['avatar']);
+
       $user = new UserModel( $valuesArray );
+
 
       if(isset($password)){
         $user->setPassword( $password );
       }
 
+      $user->save();
 
-      if( $valuesArray['avatar'] === "DELETE"){
-        //IMG DELETE
-        $user->deleteDependence( 'avatar', true);
+//var_dump( $user->getAllData() );
+
+      if( $userAvatar ){
+        //var_dump( $userAvatar );
+        if( $userAvatar['status'] === "DELETE"){
+          //IMG DELETE
+          //var_dump('delete');
+          $user->deleteDependence( 'avatar', true );
+        }
+        elseif( $userAvatar['status'] === "REPLACE"){
+          //IMG UPDATE
+          //var_dump('replace');
+          $user->deleteDependence( 'avatar', true);
+          $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
+        }else{
+          //var_dump('else');
+          //IMG CREATE
+          $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
+        }
       }
-      elseif( $valuesArray['avatar'] === "REPLACE"){
-        //IMG UPDATE
-        $user->deleteDependence( 'avatar', true);
-        $user->setterDependence( 'avatar', new FiledataModel( $valuesArray['avatar']['values'] ) );
-      }else{
-        //IMG CREATE
-        $user->setterDependence( 'avatar', new FiledataModel( $valuesArray['avatar']['values'] ) );
-      }
+
+//echo "==========";
+
+//var_dump( $user->getAllData()  );
 
       $user->save( array( 'affectsDependences' => true ));
 
@@ -533,6 +549,7 @@ class UserView extends View
         $userRole->setterDependence( 'user', $user );
         $userRole->save(array( 'affectsDependences' => true ));
       }
+
     }
     return $user;
   }

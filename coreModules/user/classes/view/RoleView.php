@@ -32,10 +32,10 @@ class RoleView extends View
    *
    * @return Form Html
    */
-  public function roleUpdateFormDefine( $request ){
+  public function roleUpdateFormDefine( $id ){
     $roleModel = new RoleModel();
 
-    $role = $roleModel->listItems( array('filters' => array('id' => $request[1] )))->fetch();
+    $role = $roleModel->listItems( array('filters' => array('id' => $id )))->fetch();
     if(!$role){
       Cogumelo::redirect( SITE_URL.'404' );
     }
