@@ -187,11 +187,21 @@ function createDB(){
 
   echo "\nDatabase configuration\n";
 
-  $user =  ReadStdin("Enter an user with privileges:\n", '');
-  // Get the password
-  fwrite(STDOUT, "Enter the password:\n");
-  $passwd = getPassword(true);
-  fwrite(STDOUT, "\n--\n");
+  $fileConnectionsInfo = SITE_PATH.'conf/default-connections-info.php';
+  if( file_exists( $fileConnectionsInfo ) ) {
+    include $fileConnectionsInfo;
+    if( defined( 'DDBB_PRIV_USER' ) && defined( 'DDBB_PRIV_PASS' ) ) {
+      $user = DDBB_PRIV_USER;
+      $passwd = DDBB_PRIV_PASS;
+    }
+    else {
+      $user = ReadStdin( "Enter an user with privileges:\n", '' );
+      fwrite( STDOUT, "Enter the password:\n" );
+      $passwd = getPassword( true );
+      fwrite( STDOUT, "\n--\n" );
+    }
+  }
+
 
   $develdbcontrol = new DevelDBController( $user, $passwd );
   $develdbcontrol->createSchemaDB();
