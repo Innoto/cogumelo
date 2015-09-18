@@ -504,32 +504,37 @@ class UserView extends View
 
       $user = new UserModel( $valuesArray );
 
-var_dump($user->getter('avatar'));
-var_dump("getter");
-var_dump($user->data);
 
       if(isset($password)){
         $user->setPassword( $password );
       }
+
+      $user->save();
+
+//var_dump( $user->getAllData() );
+
       if( $userAvatar ){
-        var_dump( $userAvatar );
+        //var_dump( $userAvatar );
         if( $userAvatar['status'] === "DELETE"){
           //IMG DELETE
-          var_dump('delete');
+          //var_dump('delete');
           $user->deleteDependence( 'avatar', true );
         }
         elseif( $userAvatar['status'] === "REPLACE"){
           //IMG UPDATE
-          var_dump('replace');
+          //var_dump('replace');
           $user->deleteDependence( 'avatar', true);
           $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
         }else{
-          var_dump('else');
+          //var_dump('else');
           //IMG CREATE
           $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
         }
       }
 
+//echo "==========";
+
+//var_dump( $user->getAllData()  );
 
       $user->save( array( 'affectsDependences' => true ));
 
