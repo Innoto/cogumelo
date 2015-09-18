@@ -35,8 +35,8 @@ if( $argc > 1 ) {
     case 'generateModel':
       // createDB();
       createTables();
-      initModules();
       createRelSchemes();
+      initModules();
       break;
 
     case 'createDB': // create database
@@ -172,8 +172,8 @@ function printOptions(){
     * createDB                Create a database
     * generateModel           Execute all options below in the same order
       - createTables            Generate the tables
-      - initModules             Execute '::moduleRc()' of all modules
       - createRelSchemes        Generate relationship tmp files
+      - initModules             Execute '::moduleRc()' of all modules
     * bckDB                       Do a DB backup (optional arg: filename)
     * restoreDB                   Restore a database
 
