@@ -10,6 +10,7 @@ $_SERVER['REMOTE_ADDR'] = "local_shell";
 
 // Project location
 
+define( 'PRJ_BASE_PATH', dirname(__FILE__) );
 define( 'WEB_BASE_PATH', dirname(__FILE__).'/httpdocs' );
 define( 'APP_BASE_PATH', dirname(__FILE__).'/app' );
 define( 'SITE_PATH', APP_BASE_PATH.'/' );
