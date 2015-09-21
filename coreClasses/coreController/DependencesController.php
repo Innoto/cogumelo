@@ -112,12 +112,22 @@ Class DependencesController {
 
 
   public function installDependencesBower( $dependences ) {
-    //Instala las dependecias con Bower
+    echo "\n=== Bower dependences ===\n";
 
-    // exec('rm bower.json');
-    // exec('echo "{\"name\": \"cogumelo\", \"version\": \"1.0a\", \"homepage\": \"https://github.com/Innoto/cogumelo\", \"license\": \"GPLv2\", \"dependencies\": {} }" > bower.json');
+    if( !is_dir( DEPEN_BOWER_PATH ) ) {
+      if( !mkdir( DEPEN_BOWER_PATH, 0755, true ) ) {
+        echo "The destination folder does not exist and have permission to create \n";
+      }
+    }
+
+    $jsonBowerRC = '{ "directory": "'.DEPEN_BOWER_PATH.'", '.
+      ' "json": "'. PRJ_BASE_PATH . '/bower.json" }';
+    $fh = fopen( PRJ_BASE_PATH . '/.bowerrc', 'w' );
+      fwrite( $fh, $jsonBowerRC );
+    fclose( $fh );
+
     $jsonBower = '{ "name": "cogumelo", "version": "1.0a", '.
-      '"homepage": "https://github.com/Innoto/cogumelo", "license": "GPLv2", "dependencies": {} }';
+      ' "homepage": "https://github.com/Innoto/cogumelo", "license": "GPLv2", "dependencies": {} }';
     $fh = fopen( PRJ_BASE_PATH . '/bower.json', 'w' );
       fwrite( $fh, $jsonBower );
     fclose( $fh );
@@ -128,41 +138,54 @@ Class DependencesController {
           $allparam = "";
           foreach( $params as $p ) {
             $allparam = $allparam." ".$p;
-          } // end foreach
-          echo( "Exec ... bower install ".$depKey."=".$allparam." --save\n" );
-          exec( 'bower install '.$depKey.'='.$allparam.' --save' );
+          }
         }
         else {
-          echo( "Exec ... bower install ".$depKey."=".$params[0]." --save\n" );
-          exec( 'bower install '.$depKey.'='.$params[0].' --save' );
+          $allparam = $params[0];
         }
-      }       // end foreach
-    }   // end foreach
+        echo( "Exec... bower install ".$depKey."=".$allparam." --save\n" );
+        exec( 'cd '.PRJ_BASE_PATH.' ; bower install '.$depKey.'='.$allparam.' --save' );
+      } // end foreach
+    } // end foreach
+
+    echo "\n=== Bower dependences: Done ===\n";
   }
 
 
   public function installDependencesComposer( $dependences ) {
+    echo "\n=== Composer dependences ===\n";
+
+    if( !is_dir( DEPEN_COMPOSER_PATH ) ) {
+      if( !mkdir( DEPEN_COMPOSER_PATH, 0755, true ) ) {
+        echo "The destination folder does not exist and have permission to create \n";
+      }
+    }
+
     $finalArrayDep = array( "require" => array(), "config" => array( "vendor-dir" => DEPEN_COMPOSER_PATH ) );
     foreach( $dependences as $depKey => $dep ){
       foreach( $dep as $params ){
         $finalArrayDep['require'][$params[0]] = $params[1];
       }
     }
+
     $jsonencoded = json_encode( $finalArrayDep );
     $fh = fopen( PRJ_BASE_PATH . '/composer.json', 'w' );
       fwrite( $fh, $jsonencoded );
     fclose( $fh );
-    echo("Exec ... php composer.phar update\n\n");
-    exec('php composer.phar update');
+
+    echo("Exec... php composer.phar update\n\n");
+    exec('cd '.PRJ_BASE_PATH.' ; php composer.phar update');
     echo("If the folder does not appear vendorServer dependencies run 'php composer.phar update' or 'composer update' and resolves conflicts.\n");
+
+    echo "\n=== Composer dependences: Done ===\n";
   }
 
 
   public function installDependencesManual( $dependences ) {
-    echo "Manual dependences \n";
+    echo "\n === Manual dependences === \n";
 
     if( !is_dir( DEPEN_MANUAL_PATH ) ) {
-      if( !mkdir( DEPEN_MANUAL_PATH, 0777, true ) ) {
+      if( !mkdir( DEPEN_MANUAL_PATH, 0755, true ) ) {
         echo "The destination folder does not exist and have permission to create \n";
       }
     }
@@ -171,9 +194,11 @@ Class DependencesController {
       foreach( $dep as $params ) {
         echo "Installing ".$params[0]."\n";
         $manualCmd = 'cp -r '.DEPEN_MANUAL_REPOSITORY.'/'.$params[0].' '.DEPEN_MANUAL_PATH.'/';
-        exec($manualCmd);
+        exec( $manualCmd );
       }
     }
+
+    echo "\n === Manual dependences: Done === \n";
   }
 
 
