@@ -1,7 +1,7 @@
 <?php
 
-require_once(COGUMELO_LOCATION."/coreClasses/CogumeloClass.php");
-require_once(SITE_PATH."/Cogumelo.php");
+require_once( COGUMELO_LOCATION."/coreClasses/CogumeloClass.php" );
+require_once( SITE_PATH."/Cogumelo.php" );
 
 global $_C;
 $_C =Cogumelo::get();
@@ -142,19 +142,19 @@ function actionCompileTranslations() {
 
 
 function actionFlush() {
-  echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=flush');
+  echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=flush' );
   echo "\nTemporary files deleted!\n\n";
 }
 
 
 function actionRotateLogs() {
-  echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=rotate_logs');
+  echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=rotate_logs' );
   echo "\nRotate Logs done!\n\n";
 }
 
 
 function actionGenerateClientCaches() {
-  file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=client_caches');
+  file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=client_caches' );
   echo "\nClient caches generated\n\n";
 }
 
