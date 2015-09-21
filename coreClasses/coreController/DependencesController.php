@@ -120,7 +120,7 @@ Class DependencesController {
       }
     }
 
-    $jsonBowerRC = '{ "directory": "'.DEPEN_BOWER_PATH.'", '.
+    $jsonBowerRC = '{ "directory": "'.str_replace( PRJ_BASE_PATH, '', DEPEN_BOWER_PATH ).'", '.
       ' "json": "'. PRJ_BASE_PATH . '/bower.json" }';
     $fh = fopen( PRJ_BASE_PATH . '/.bowerrc', 'w' );
       fwrite( $fh, $jsonBowerRC );
