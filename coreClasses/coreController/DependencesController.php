@@ -112,7 +112,7 @@ Class DependencesController {
 
 
   public function installDependencesBower( $dependences ) {
-    echo "\n=== Bower dependences ===\n";
+    echo "\n === Bower dependences ===\n\n";
 
     if( !is_dir( DEPEN_BOWER_PATH ) ) {
       if( !mkdir( DEPEN_BOWER_PATH, 0755, true ) ) {
@@ -148,12 +148,12 @@ Class DependencesController {
       } // end foreach
     } // end foreach
 
-    echo "\n=== Bower dependences: Done ===\n";
+    echo "\n === Bower dependences: Done ===\n\n";
   }
 
 
   public function installDependencesComposer( $dependences ) {
-    echo "\n=== Composer dependences ===\n";
+    echo "\n === Composer dependences ===\n\n";
 
     if( !is_dir( DEPEN_COMPOSER_PATH ) ) {
       if( !mkdir( DEPEN_COMPOSER_PATH, 0755, true ) ) {
@@ -177,12 +177,12 @@ Class DependencesController {
     exec('cd '.PRJ_BASE_PATH.' ; php composer.phar update');
     echo("If the folder does not appear vendorServer dependencies run 'php composer.phar update' or 'composer update' and resolves conflicts.\n");
 
-    echo "\n=== Composer dependences: Done ===\n";
+    echo "\n === Composer dependences: Done ===\n\n";
   }
 
 
   public function installDependencesManual( $dependences ) {
-    echo "\n === Manual dependences === \n";
+    echo "\n === Manual dependences ===\n\n";
 
     if( !is_dir( DEPEN_MANUAL_PATH ) ) {
       if( !mkdir( DEPEN_MANUAL_PATH, 0755, true ) ) {
@@ -198,7 +198,7 @@ Class DependencesController {
       }
     }
 
-    echo "\n === Manual dependences: Done === \n";
+    echo "\n === Manual dependences: Done ===\n\n";
   }
 
 
