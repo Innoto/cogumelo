@@ -144,7 +144,7 @@ Class DependencesController {
           $allparam = $params[0];
         }
         echo( "Exec... bower install ".$depKey."=".$allparam." --save\n" );
-        exec( 'cd '.PRJ_BASE_PATH.' ; bower install '.$depKey.'='.$allparam.' --save' );
+        exec( 'cd '.PRJ_BASE_PATH.' ; bower install '.$depKey.'='.$allparam.' --save --allow-root' );
       } // end foreach
     } // end foreach
 
