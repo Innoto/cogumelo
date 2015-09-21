@@ -48,7 +48,8 @@
       button.clear{
         margin-top: -2px;
         margin-left: -4px;
-        width: 10px;
+        margin-bottom: 0px;
+        width: 30px;
         max-width: 120px;
         .btnFormat(@buttonClearSearchBck, @buttonSearchColor);
       }
@@ -56,6 +57,7 @@
       button{
         margin-top: -2px;
         margin-left: -4px;
+        margin-bottom: 0px;
         width: 25%;
         max-width: 120px;
         .btnFormat(@buttonSearchBck, @buttonSearchColor);
@@ -73,6 +75,7 @@
 
       button{
         .btnFormat(@buttonMoreFiltersBck, @buttonMoreFiltersColor);
+
       }
     }
   }
@@ -206,3 +209,35 @@ table.tableClass{
   }
 
 }
+
+
+
+@media screen and (min-width: 1200px) {
+
+} /*1200px*/
+
+@media screen and (max-width: 1199px) {
+
+}/*1199px*/
+
+@media screen and (max-width: 991px) {
+
+
+}/*991px*/
+
+@media screen and (max-width: 767px) {
+  .tableHeaderContainer{
+    .tableSearchFilters {
+      .tableFilters {
+        float: none;
+        height: auto;
+      }
+      .tableSearch {
+        float: none;
+        width: 100%;
+        margin-left: 10px;
+      }
+    }
+  }
+
+} /*767px*/
