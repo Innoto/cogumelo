@@ -187,6 +187,8 @@ function createDB(){
 
   echo "\nDatabase configuration\n";
 
+  $user = false;
+
   $fileConnectionsInfo = SITE_PATH.'conf/default-connections-info.php';
   if( file_exists( $fileConnectionsInfo ) ) {
     include $fileConnectionsInfo;
@@ -194,12 +196,13 @@ function createDB(){
       $user = DDBB_PRIV_USER;
       $passwd = DDBB_PRIV_PASS;
     }
-    else {
-      $user = ReadStdin( "Enter an user with privileges:\n", '' );
-      fwrite( STDOUT, "Enter the password:\n" );
-      $passwd = getPassword( true );
-      fwrite( STDOUT, "\n--\n" );
-    }
+  }
+
+  if( !$user ) {
+    $user = ReadStdin( "Enter an user with privileges:\n", '' );
+    fwrite( STDOUT, "Enter the password:\n" );
+    $passwd = getPassword( true );
+    fwrite( STDOUT, "\n--\n" );
   }
 
 
