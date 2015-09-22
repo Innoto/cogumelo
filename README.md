@@ -22,9 +22,9 @@ We recomend to look carefully the [Framework dependences](https://github.com/pab
  - Create database schems
  - set permissions 
  - flush caches
- - resolve dependences
-* [NOT READY] Ajax Tables
-* [NOT READY] Forms
+ - resolve 3rd party dependences
+* [OK] Ajax Tables
+* [OK] Forms
  - Validation 
  - Auto Form generating
  - Easy file uploads without page reloads
