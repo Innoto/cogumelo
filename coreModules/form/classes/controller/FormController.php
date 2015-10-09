@@ -1885,6 +1885,7 @@ error_log( 'FILE --- '.print_r( $field, true ) );
         break;
 
       case 'reserved':
+        $html = array();
         break;
 
       default:
