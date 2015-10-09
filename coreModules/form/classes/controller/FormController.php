@@ -1695,33 +1695,36 @@ class FormController implements Serializable {
 
     $htmlFieldArray = $this->getHtmlFieldArray( $fieldName );
 
-    if( isset( $htmlFieldArray['label'] ) ) {
-      $html .= $htmlFieldArray['label']."\n";
-    }
-    switch( $htmlFieldArray['fieldType'] ) {
-      case 'select':
-        $html .= $htmlFieldArray['inputOpen']."\n";
-        foreach( $htmlFieldArray['options'] as $optionAndText ) {
-          $html .= $optionAndText['input']."\n";
-        }
-        $html .= $htmlFieldArray['inputClose'];
-        break;
-      case 'checkbox':
-      case 'radio':
-        foreach( $htmlFieldArray['options'] as $inputAndText ) {
-          //$html .= $inputAndText['input'].$inputAndText['label'];
-          $html .= '<label>'.$inputAndText['input'].'<span class="labelText">'.$inputAndText['text'].'</span></label>';
-        }
-        $html .= '<span class="JQVMC-'.$fieldName.'-error JQVMC-error"></span>';
-        break;
-      case 'textarea':
-        $html .= $htmlFieldArray['inputOpen'] . $htmlFieldArray['value'] . $htmlFieldArray['inputClose'];
-        break;
-      case 'reserved':
-        break;
-      default:
-        $html .= $htmlFieldArray['input'];
-        break;
+    if( count( $htmlFieldArray ) > 0 ) {
+      if( isset( $htmlFieldArray['label'] ) ) {
+        $html .= $htmlFieldArray['label']."\n";
+      }
+      switch( $htmlFieldArray['fieldType'] ) {
+        case 'select':
+          $html .= $htmlFieldArray['inputOpen']."\n";
+          foreach( $htmlFieldArray['options'] as $optionAndText ) {
+            $html .= $optionAndText['input']."\n";
+          }
+          $html .= $htmlFieldArray['inputClose'];
+          break;
+        case 'checkbox':
+        case 'radio':
+          foreach( $htmlFieldArray['options'] as $inputAndText ) {
+            //$html .= $inputAndText['input'].$inputAndText['label'];
+            $html .= '<label>'.$inputAndText['input'].'<span class="labelText">'.$inputAndText['text'].'</span></label>';
+          }
+          $html .= '<span class="JQVMC-'.$fieldName.'-error JQVMC-error"></span>';
+          break;
+        case 'textarea':
+          $html .= $htmlFieldArray['inputOpen'] . $htmlFieldArray['value'] . $htmlFieldArray['inputClose'];
+          break;
+        case 'reserved':
+          $html = '';
+          break;
+        default:
+          $html .= $htmlFieldArray['input'];
+          break;
+      }
     }
 
     return $html;
