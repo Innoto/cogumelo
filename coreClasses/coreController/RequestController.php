@@ -94,6 +94,7 @@ class RequestController
     else {
       header( 'HTTP/1.1 '.$httpCode );
     }
+
     header( 'Location: '.$redirect_url );
     exit;
   }
@@ -115,7 +116,8 @@ class RequestController
       eval( '$current_view->'.$methodname.'();' );
     }
     else {
-      eval( '$current_view->'.$methodname.'(array("'.implode( '","', $url_path).'") );' );
+      eval( '$current_view->'.$methodname.'( $url_path );' );
+      // eval( '$current_view->'.$methodname.'(array("'.implode( '","', $url_path).'") );' );
     }
   }
 
