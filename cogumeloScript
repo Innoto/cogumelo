@@ -40,6 +40,7 @@ if( $argc > 1 ) {
       break;
 
     case 'createDB': // create database
+      doBackup(DB_NAME, DB_USER, DB_PASSWORD, false);
       createDB();
       break;
 
@@ -48,6 +49,7 @@ if( $argc > 1 ) {
       break;
 
     case 'createTables': // create database tables
+      doBackup(DB_NAME, DB_USER, DB_PASSWORD, false);
       createTables();
       break;
 
