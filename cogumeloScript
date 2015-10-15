@@ -62,18 +62,17 @@ if( $argc > 1 ) {
       else {
         $file = false;
       }
-      $user =  ReadStdin('Enter an user with privileges: ', '');
-      doBackup(DB_NAME, $user, $file);
+
+      doBackup(DB_NAME, DB_USER, DB_PASSWORD, $file);
       break;
 
     case 'restoreDB': // restore the backup of a given db
       if( $argc > 2 ) {
-        $db = $argv[2];
-        $user =  ReadStdin('Enter an user with privileges: ', '');
-        restoreDB(DB_NAME, $user, $db);
+        $file = $argv[2];//name of the backup file
+        restoreDB(DB_NAME, DB_USER, DB_PASSWORD, $file);
       }
-      else{
-        echo "You must especify the database to restore\n";
+      else {
+        echo "You must specify the file to restore\n";
       }
       break;
 
@@ -326,30 +325,28 @@ function setPermissionsDevel() {
 }
 
 
-function doBackup( $BD, $user, $file ) {
+function doBackup( $db, $user, $passwd, $file ) {
   if( !$file ) {
-    $file = date('Ymd-Hms').'-'.$BD.'.sql';
+    $file = date('Ymd-His').'-'.$db.'.sql';
   }
 
-  $DIR = BCK;
+  $dir = BCK;
 
-  popen( 'mysqldump -u ' . $user . ' -p ' . $BD . '> ' . $DIR . '/' . $file, 'r' );
-  exec( 'gzip ' . $DIR . '/' . $file );
-  exec( 'chmod go-rwx ' . $DIR . '/' . $file . '*' );
+  popen( 'mysqldump -u ' . $user . ' -p' . $passwd .' '. $db . '> ' . $dir . '/' . $file, 'r' );
+  exec( 'gzip ' . $dir . '/' . $file );
+  exec( 'chmod go-rwx ' . $dir . '/' . $file . '*' );
   echo "\nYour db was successfully saved!\n";
 }
 
-function restoreDB( $BD, $user, $file ) {
+function restoreDB( $db, $user, $passwd, $file ) {
+  $dir = BCK;
+  $file_parts = explode('.',$dir.$file);
 
-  $DIR = BCK;
-
-  $type = exec('file '.$DIR.$file);
-  $position = strpos($type, 'gzip');
-  if ($position!=false){
-    popen('gunzip -c '.$DIR.$file.' | mysql -u '.$user.' -p '.$BD, 'r');
+  if ($file_parts[2] == 'gz'){
+    popen('gunzip -c '.$dir.$file.' | mysql -u '.$user.' -p'.$passwd.' '.$db, 'r');
   }
   else{
-    popen('mysql -u '.$user.' -p '.$BD.'< '.$DIR.$file, 'r');
+    popen('mysql -u '.$user.' -p'.$passwd.' '.$db.'<' .$dir.$file, 'r');
   }
   echo "\nYour db was successfully restored!\n";
 }
