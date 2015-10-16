@@ -6,12 +6,6 @@ filedata::load('controller/FiledataImagesController.php');
 
 class FiledataImagesView extends View {
 
-  /**
-    Ruta a partir de la que se crean los directorios y ficheros subidos
-  */
-  const FILES_APP_PATH = MOD_FORM_FILES_APP_PATH;
-
-
   public function __construct( $baseDir = false ){
     parent::__construct( $baseDir );
 
@@ -43,9 +37,10 @@ class FiledataImagesView extends View {
       if( $imageCtrl->fileInfo ) {
 
         $imgInfo = array(
-          'route' => self::FILES_APP_PATH . $imageCtrl->fileInfo['absLocation'],
           'type' => $imageCtrl->fileInfo['type']
         );
+
+        $imgInfo['route'] = $imageCtrl->getRouteProfile( $urlParams[ 'profile' ] );
 
         $clearName = '';
         if( isset( $urlParams[ 'fileName' ]  ) ) {
