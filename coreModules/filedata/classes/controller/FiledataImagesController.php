@@ -47,8 +47,9 @@ class FiledataImagesController {
 
     global $IMAGE_PROFILES;
     $IMAGE_PROFILES = array(
-      'alto' => array( 'width' => 400, 'height' => 200 ),
-      'ancho' => array( 'width' => 200, 'height' => 400 )
+      'ancho' => array( 'width' => 400, 'height' => 200 ),
+      'alto' => array( 'width' => 200, 'height' => 400 ),
+      'exp1' => array( 'width' => 200, 'height' => 150 )
     );
 
     if( $profile && isset( $IMAGE_PROFILES[ $profile ] ) ) {
@@ -73,22 +74,46 @@ class FiledataImagesController {
   public function getRouteProfile( $profile ) {
     error_log( "FiledataImagesController: getRouteProfile( $profile )" );
     $imgRoute = false;
-    $imgRouteOriginal = realpath( $this->filesAppPath . $this->fileInfo['absLocation'] );
+    $imgRouteOriginal = $this->filesAppPath . $this->fileInfo['absLocation'];
 
     if( $this->fileInfo ) {
       if( $this->setProfile( $profile ) ) {
-        $imgRoute = realpath( $this->filesCachePath ) .'/'. $this->profile['idName'] .'/'.
-          $this->fileInfo['id'] .'/'. $this->fileInfo['name'];
+        $imgRoute = $this->filesCachePath .'/'. $this->fileInfo['id'] .'/'.
+          $this->profile['idName'] .'/'. $this->fileInfo['name'];
         error_log( "FiledataImagesController: getRouteProfile( $profile ): $imgRoute" );
 
         if( !file_exists( $imgRoute ) ) {
           $this->createImageProfile( $imgRouteOriginal, $imgRoute );
         }
       }
+      else {
+        // Original
+        $imgRoute = $this->filesCachePath .'/'. $this->fileInfo['id'] .'/'. $this->fileInfo['name'];
+        error_log( "FiledataImagesController: getRouteProfile( NONE ): $imgRoute" );
+        if( !file_exists( $imgRoute ) ) {
+          $toRouteDir = pathinfo( $imgRoute, PATHINFO_DIRNAME );
+          error_log( "toRouteDir = $toRouteDir" );
+          if( !file_exists( $toRouteDir ) ) {
+            error_log( "mkdir $toRouteDir" );
+            mkdir ( $toRouteDir, 0770, true );
+          }
+          if( !copy( $imgRouteOriginal, $imgRoute ) ) {
+            error_log( "FiledataImagesController: ERROR in copy( $imgRouteOriginal, $imgRoute )" );
+          }
+        }
+      }
     }
 
     if( !$imgRoute || !file_exists( $imgRoute ) ) {
       $imgRoute = $imgRouteOriginal;
+    }
+    else {
+      $imgRouteInfo = pathinfo( $imgRoute );
+      $linkIdRoute = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['id'] .'.'. $imgRouteInfo['extension'];
+      if( !file_exists( $linkIdRoute ) ) {
+        error_log( "symlink( $imgRoute, $linkIdRoute )" );
+        symlink( $imgRoute, $linkIdRoute );
+      }
     }
     error_log( "FiledataImagesController: getRouteProfile = $imgRoute" );
     return $imgRoute;
@@ -240,7 +265,7 @@ class FiledataImagesController {
       header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
       header( 'Pragma: public' );
 
-      ob_clean();
+      ob_flush();
       flush();
 
       // print image
