@@ -62,11 +62,11 @@ class FiledataImagesController {
       $this->profile['cut'] = ( isset( $conf['cut'] ) ) ? $conf['cut'] : true; // true by default
       $this->profile['enlarge'] = ( isset( $conf['enlarge'] ) ) ? $conf['enlarge'] : true; // true by default
       $this->profile['no_cache'] = ( isset( $conf['no_cache'] ) ) ? $conf['no_cache'] : false; // false by default
+      error_log( "FiledataImagesController: this->profile = $this->profile['idName']" );
     }
     else {
       $this->profile=false;
     }
-    error_log( "FiledataImagesController: this->profile = $this->profile['idName']" );
 
     return $this->profile;
   }
