@@ -9,7 +9,7 @@ class FiledataImagesController {
   // Ruta a partir de la que se crean los directorios y ficheros subidos
   var $filesAppPath = MOD_FORM_FILES_APP_PATH;
   // Ruta a partir de la que se crean los directorios y ficheros procesados
-  var $filesCachePath = MOD_FORM_FILES_CACHE_PATH;
+  var $filesCachePath = MOD_FILEDATA_CACHE_PATH;
 
   var $fileId = false;
   var $fileInfo = false;
