@@ -46,11 +46,6 @@ class FiledataImagesController {
     error_log( "FiledataImagesController: setProfile( $profile )" );
 
     global $IMAGE_PROFILES;
-    $IMAGE_PROFILES = array(
-      'ancho' => array( 'width' => 400, 'height' => 200 ),
-      'alto' => array( 'width' => 200, 'height' => 400 ),
-      'exp1' => array( 'width' => 200, 'height' => 150 )
-    );
 
     if( $profile && isset( $IMAGE_PROFILES[ $profile ] ) ) {
       $conf = $IMAGE_PROFILES[ $profile ];
