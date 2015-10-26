@@ -87,7 +87,7 @@ class FiledataImagesController {
         /**
          QUITAR !!!
         */
-        unlink( $imgRoute );
+        // unlink( $imgRoute );
 
         if( !file_exists( $imgRoute ) ) {
           $imgRoute = $this->createImageProfile( $imgRouteOriginal, $imgRoute );
