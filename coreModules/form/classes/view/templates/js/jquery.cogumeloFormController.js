@@ -138,7 +138,8 @@ function setValidateForm( idForm, rules, messages ) {
   $.validator.setDefaults({
     errorPlacement: function(error, element) {
       console.log( 'Executando validate.errorPlacement:' );
-      console.log( error, element );
+      console.log( error );
+      console.log( element );
       //console.log( 'Busco #JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       $msgContainer = $( '#JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       if ( $msgContainer.length > 0 ) {
@@ -148,6 +149,32 @@ function setValidateForm( idForm, rules, messages ) {
         error.insertAfter( element );
       }
     }
+    /*
+    highlight: function( element, errorClass, validClass ) {
+      console.log( 'Executando validate.highlight:' );
+      console.log( element );
+      console.log( errorClass );
+      console.log( validClass );
+      if ( element.type === "radio" ) {
+        this.findByName( element.name ).addClass( errorClass ).removeClass( validClass );
+      }
+      else {
+        $( element ).addClass( errorClass ).removeClass( validClass );
+      }
+    },
+    unhighlight: function( element, errorClass, validClass ) {
+      console.log( 'Executando validate.unhighlight:' );
+      console.log( element );
+      console.log( errorClass );
+      console.log( validClass );
+      if ( element.type === "radio" ) {
+        this.findByName( element.name ).removeClass( errorClass ).addClass( validClass );
+      }
+      else {
+        $( element ).removeClass( errorClass ).addClass( validClass );
+      }
+    }
+    */
   });
 
 
@@ -512,7 +539,7 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
   }
   else {
     if( fileType &&  fileType.indexOf( 'image' ) === 0 ) {
-      $fileFieldInfo.append( '<img class="tnImage" src="/cgmlformfilews/' + fileModId + '"></img>' );
+      $fileFieldInfo.append( '<img class="tnImage" src="/cgmlImg/' + fileModId + '/fast/' + fileModId + '.jpg"></img>' );
     }
     else {
       $fileFieldInfo.append( '<div class="msgInfo"><i class="fa fa-file" style="font-size: 64px; color: #444"></i>Información, Icono e esquina coa papelera</div>' );
