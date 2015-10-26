@@ -519,7 +519,7 @@ class FormController implements Serializable {
             /**
               TODO: Arreglar os null en texto
             */
-            $this->setFieldParam( $titleLang, 'data-fm_'.$titleLang,
+            $this->setFieldParam( $fieldName, 'data-fm_'.$titleLang,
               (isset( $fieldValue[ $titleLang ] ) && $fieldValue[ $titleLang ] !== 'null') ? $fieldValue[ $titleLang ] : '' );
           }
 
