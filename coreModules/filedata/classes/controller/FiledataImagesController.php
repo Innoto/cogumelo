@@ -52,11 +52,18 @@ class FiledataImagesController {
 
       $this->profile = array();
       $this->profile['idName'] = $profile;
-      $this->profile['width'] = $conf['width'];
-      $this->profile['height'] = $conf['height'];
+
+      $this->profile['width'] = ( isset( $conf['width'] ) ) ? $conf['width'] : 0; // 0 by default
+      $this->profile['height'] = ( isset( $conf['height'] ) ) ? $conf['height'] : 0; // 0 by default
+
       $this->profile['cut'] = ( isset( $conf['cut'] ) ) ? $conf['cut'] : true; // true by default
       $this->profile['enlarge'] = ( isset( $conf['enlarge'] ) ) ? $conf['enlarge'] : true; // true by default
-      $this->profile['no_cache'] = ( isset( $conf['no_cache'] ) ) ? $conf['no_cache'] : false; // false by default
+      // $this->profile['no_cache'] = ( isset( $conf['no_cache'] ) ) ? $conf['no_cache'] : false; // false by default
+
+      $this->profile['saveFormat'] = ( isset( $conf['saveFormat'] ) ) ? $conf['saveFormat'] : false;
+      $this->profile['saveName'] = ( isset( $conf['saveName'] ) ) ? $conf['saveName'] : false;
+      $this->profile['saveQuality'] = ( isset( $conf['saveQuality'] ) ) ? $conf['saveQuality'] : false;
+
       error_log( "FiledataImagesController: this->profile = $this->profile['idName']" );
     }
     else {
@@ -77,8 +84,13 @@ class FiledataImagesController {
           $this->profile['idName'] .'/'. $this->fileInfo['name'];
         error_log( "FiledataImagesController: getRouteProfile( $profile ): $imgRoute" );
 
+        /**
+         QUITAR !!!
+        */
+        unlink( $imgRoute );
+
         if( !file_exists( $imgRoute ) ) {
-          $this->createImageProfile( $imgRouteOriginal, $imgRoute );
+          $imgRoute = $this->createImageProfile( $imgRouteOriginal, $imgRoute );
         }
       }
       else {
@@ -123,7 +135,6 @@ class FiledataImagesController {
     $resultOK = true;
 
     if( $this->profile && file_exists( $fromRoute ) && !file_exists( $toRoute ) ) {
-
       $im = new Imagick();
       $imageFH = fopen( $fromRoute, 'rb' );
 
@@ -138,75 +149,84 @@ class FiledataImagesController {
       $ty = $this->profile['height'];
       error_log( "Datos iniciales $x $y $tx $ty ---" );
 
-      $escalar = false;
-      if( $this->profile['enlarge'] || ( $tx<=$x && $ty<=$y ) ) {
-        // Se ampliar ou xa e suficientemente grande
-        $escalar = true;
-        if( $this->profile['cut'] ) {
-          // Escala para axustar un eixo e corta no outro
-          if( $ty < intval( $tx*$y/$x ) ) {
-            $ty = intval( $tx*$y/$x );
-          }
-          else {
-            $tx = intval( $ty*$x/$y );
-          }
-        }
-        else { // Escala para axustar un eixo e queda corto o outro
-          if( $ty > intval( $tx*$y/$x ) ) {
-            $ty = intval( $tx*$y/$x );
-          }
-          else {
-            $tx = intval( $ty*$x/$y );
-          }
-        }
-      }
-      if( !( $this->profile['enlarge'] || ( $tx<=$x && $ty<=$y ) ) && ( $tx<$x || $ty<$y ) ) {
-        // Se non ampliar e sobra solo por un lado
-        if( $this->profile['cut'] ) {
-          // Manten un eixo e corta no outro
-          $escalar = false;
-          if( $ty < $y ) {
-            $tx = $x;
-          }
-          else {
-            $ty = $y;
-          }
-          error_log( "Cortar sin ampliar: $x $y $tx $ty ---" );
-        }
-        else { // Reduce para axustar un eixo e queda corto o outro
+      if( $tx !== 0 || $ty !== 0 ) {
+        // Cambios en las medidas
+        $escalar = false;
+        if( $this->profile['enlarge'] || ( $tx<=$x && $ty<=$y ) ) {
+          // Se ampliar ou xa e suficientemente grande
           $escalar = true;
-          if( $ty > intval( $tx*$y/$x ) ) {
-            $ty = intval( $tx*$y/$x );
+          if( $this->profile['cut'] ) {
+            // Escala para axustar un eixo e corta no outro
+            if( $ty < intval( $tx*$y/$x ) ) {
+              $ty = intval( $tx*$y/$x );
+            }
+            else {
+              $tx = intval( $ty*$x/$y );
+            }
           }
-          else {
-            $tx = intval( $ty*$x/$y );
+          else { // Escala para axustar un eixo e queda corto o outro
+            if( $ty > intval( $tx*$y/$x ) ) {
+              $ty = intval( $tx*$y/$x );
+            }
+            else {
+              $tx = intval( $ty*$x/$y );
+            }
           }
+        }
+        if( !( $this->profile['enlarge'] || ( $tx<=$x && $ty<=$y ) ) && ( $tx<$x || $ty<$y ) ) {
+          // Se non ampliar e sobra solo por un lado
+          if( $this->profile['cut'] ) {
+            // Manten un eixo e corta no outro
+            $escalar = false;
+            if( $ty < $y ) {
+              $tx = $x;
+            }
+            else {
+              $ty = $y;
+            }
+            error_log( "Cortar sin ampliar: $x $y $tx $ty ---" );
+          }
+          else { // Reduce para axustar un eixo e queda corto o outro
+            $escalar = true;
+            if( $ty > intval( $tx*$y/$x ) ) {
+              $ty = intval( $tx*$y/$x );
+            }
+            else {
+              $tx = intval( $ty*$x/$y );
+            }
+          }
+        }
+
+        error_log( "Datos recalculados $x $y $tx $ty ---" );
+
+        if( $escalar ) {
+
+          error_log( "Valores para escalar: $x $y $tx $ty ---" );
+
+          $im->scaleImage( $tx, $ty, false );
+
+          $imSize = $im->getImageGeometry();
+          $x = $imSize['width'];
+          $y = $imSize['height'];
+          $tx = $this->profile['width'];
+          $ty = $this->profile['height'];
+
+          error_log( "Xa escalado: $x $y $tx $ty ---" );
+        }
+
+        if( $tx < $x || $ty < $y ) {
+          $px = intval( ($x-$tx)/2 );
+          $py = intval( ($y-$ty)/2 );
+          $im->cropImage( $tx, $ty, $px, $py );
+          error_log( "Valores para cortar $x $y $tx $ty $px $py ---" );
         }
       }
 
-      error_log( "Datos recalculados $x $y $tx $ty ---" );
 
-      if( $escalar ) {
-
-        error_log( "Valores para escalar: $x $y $tx $ty ---" );
-
-        $im->scaleImage( $tx, $ty, false );
-
-        $imSize = $im->getImageGeometry();
-        $x = $imSize['width'];
-        $y = $imSize['height'];
-        $tx = $this->profile['width'];
-        $ty = $this->profile['height'];
-
-        error_log( "Xa escalado: $x $y $tx $ty ---" );
+      if( $this->profile['saveQuality'] ) {
+        $im->setImageCompressionQuality( $this->profile['saveQuality'] );
       }
 
-      if( $tx < $x || $ty < $y ) {
-        $px = intval( ($x-$tx)/2 );
-        $py = intval( ($y-$ty)/2 );
-        $im->cropImage( $tx, $ty, $px, $py );
-        error_log( "Valores para cortar $x $y $tx $ty $px $py ---" );
-      }
 
       // DEBUG info:
       $imSize = $im->getImageGeometry();
@@ -217,24 +237,53 @@ class FiledataImagesController {
       error_log( "Datos finales $x $y $tx $ty ---" );
 
 
-      $toRouteDir = pathinfo( $toRoute, PATHINFO_DIRNAME );
-      error_log( "toRouteDir = $toRouteDir" );
-      if( !file_exists( $toRouteDir ) ) {
-        error_log( "mkdir $toRouteDir" );
-        mkdir ( $toRouteDir, 0770, true );
+      $toRouteInfo = pathinfo( $toRoute );
+      // [dirname]/[basename]
+      // [dirname]/[filename].[extension]
+
+      error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
+      if( !file_exists( $toRouteInfo['dirname'] ) ) {
+        error_log( 'mkdir '.$toRouteInfo['dirname'] );
+        mkdir ( $toRouteInfo['dirname'], 0770, true );
       }
-      if( is_writable( $toRouteDir ) ) {
+
+      if( is_writable( $toRouteInfo['dirname'] ) ) {
+
+        if( $this->profile['saveFormat'] ) {
+          $saveFormatExt = false;
+          switch( $this->profile['saveFormat'] ) {
+            case 'JPEG':
+              $saveFormatExt = 'jpg';
+              break;
+            case 'PNG':
+              $saveFormatExt = 'png';
+              break;
+          }
+          if( $saveFormatExt ) {
+            $im->setImageFormat( $this->profile['saveFormat'] );
+            $toRoute = $toRouteInfo['dirname'] .'/'. $toRouteInfo['filename'] .'.'. $saveFormatExt;
+          }
+        }
+
+        if( $this->profile['saveName'] ) {
+          $toRoute = $toRouteInfo['dirname'] .'/'. $this->profile['saveName'];
+        }
+
+        //$im->setImageCompressionQuality(90);
+
+
+        error_log( 'FiledataImagesController: createImageProfile: writeImage '.$toRoute );
         $im->writeImage( $toRoute );
       }
       else {
-        $resultOK = false;
+        $toRoute = false;
         cogumelo::error( "Imposible guardar la imagen en $toRoute" );
       }
       $im->clear();
       $im->destroy();
     }
 
-    return $resultOK;
+    return $toRoute;
   }
 
 
