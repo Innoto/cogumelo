@@ -527,10 +527,6 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
     .on('click', deleteFormFileEvent )
   );
 
-
-
-
-
   if( fileModId === false || !fileType || fileType.indexOf( 'image' ) !== 0 ) {
     $fileFieldInfo.append( '<img class="tnImage" src="/mediaCache/module/form/img/loaded.jpg" ' +
       ' alt="' + fileName + ' - Uploaded OK" title="' + fileName + ' - Uploaded OK"></img>' );
