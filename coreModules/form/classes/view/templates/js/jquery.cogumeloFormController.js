@@ -507,11 +507,6 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
   $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
-  //console.log( $fileField );
-  //console.log( $fileFieldWrap );
-
-  // fileObj = $fileField[0].files[0];
-
   $fileField.attr( 'readonly', 'readonly' );
   $fileField.prop( 'disabled', true );
   $fileField.hide();
@@ -573,16 +568,13 @@ function fileFieldToInput( idForm, fieldName ) {
 
 
 function loadImageTh( idForm, fieldName, $fileFieldWrap ) {
-  console.log( 'loadImageTh: ', idForm, fieldName, $fileFieldWrap );
-
+  //console.log( 'loadImageTh: ', idForm, fieldName, $fileFieldWrap );
   $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-  console.log( $fileField );
 
   var fileObj = false;
   if( $fileField[0].files && $fileField[0].files[0]) {
     fileObj = $fileField[0].files[0];
   }
-  console.log( fileObj );
 
   if( fileObj && fileObj.type.match('image.*') && fileObj.size < 5000000 ) {
     var imageReader = new FileReader();
