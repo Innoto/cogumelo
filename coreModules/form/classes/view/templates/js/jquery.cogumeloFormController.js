@@ -434,7 +434,6 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
             console.log( errObj.JVshowErrors );
             showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
           }
-
         }
         // if( $jsonData.formError !== '' ) $validateForm.showErrors( {'submit': $jsonData.formError} );
       }
@@ -533,28 +532,24 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
     .on('click', deleteFormFileEvent )
   );
 
-  if( fileModId === false ) {
-    $fileFieldInfo.append( '<div class="msgInfo">Información, Icono e esquina coa papelera</div>' );
-    $fileFieldInfo.append( '<span class="msgText">"' + fileName + '" uploaded OK</span>' );
+
+
+
+
+  if( fileModId === false || !fileType || fileType.indexOf( 'image' ) !== 0 ) {
+    $fileFieldInfo.append( '<img class="tnImage" src="/mediaCache/module/form/img/loaded.jpg" ' +
+      ' alt="' + fileName + ' - Uploaded OK" title="' + fileName + ' - Uploaded OK"></img>' );
   }
   else {
-    if( fileType &&  fileType.indexOf( 'image' ) === 0 ) {
-      $fileFieldInfo.append( '<img class="tnImage" src="/cgmlImg/' + fileModId + '/fast/' + fileModId + '.jpg"></img>' );
-    }
-    else {
-      $fileFieldInfo.append( '<div class="msgInfo"><i class="fa fa-file" style="font-size: 64px; color: #444"></i>Información, Icono e esquina coa papelera</div>' );
-    }
-    $fileFieldInfo.append( '<span class="msgText">"' + fileName + '"</span>' );
+    $fileFieldInfo.append( '<img class="tnImage" src="/cgmlImg/' + fileModId + '/fast/' +
+      fileModId + '.jpg" alt="' + fileName + ' - Uploaded OK" title="' + fileName + ' - Uploaded OK"></img>' );
   }
 
   $fileFieldWrap.append( $fileFieldInfo );
 
-  /*
-  // Only process image files.
-  if( fileObj.type.match('image.*') && fileObj.size < 5000000 ) {
-    loadImageTh( fileObj, $fileFieldWrap );
+  if( fileModId === false ) {
+    loadImageTh( idForm, fieldName, $fileFieldWrap );
   }
-  */
 }
 
 
@@ -577,22 +572,33 @@ function fileFieldToInput( idForm, fieldName ) {
 }
 
 
-function loadImageTh( fileObj, $fileFieldWrap ) {
-  var imageReader = new FileReader();
-  // Closure to capture the file information.
-  imageReader.onload = (
-    function cargado( fileLoaded ) {
-      return(
-        function procesando( evnt ) {
-          $fileFieldWrap.append('<div class="imageTh"><img class="imageTh" border="1" ' +
-            ' style="max-width:50px; max-height:50px;" src="' + evnt.target.result + '"/></div>');
-        }
-      );
-    }
-  )( fileObj );
+function loadImageTh( idForm, fieldName, $fileFieldWrap ) {
+  console.log( 'loadImageTh: ', idForm, fieldName, $fileFieldWrap );
 
-  // Read in the image file as a data URL.
-  imageReader.readAsDataURL( fileObj );
+  $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  console.log( $fileField );
+
+  var fileObj = false;
+  if( $fileField[0].files && $fileField[0].files[0]) {
+    fileObj = $fileField[0].files[0];
+  }
+  console.log( fileObj );
+
+  if( fileObj && fileObj.type.match('image.*') && fileObj.size < 5000000 ) {
+    var imageReader = new FileReader();
+    imageReader.onload = (
+      function cargado( fileLoaded ) {
+        return(
+          function procesando( evnt ) {
+            $fileFieldWrap.find( '.tnImage' ).attr( 'src', evnt.target.result );
+          }
+        );
+      }
+    )( fileObj );
+
+    // Read in the image file as a data URL.
+    imageReader.readAsDataURL( fileObj );
+  }
 } // function loadImageTh( fileObj, $fileFieldWrap )
 
 
