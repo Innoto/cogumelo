@@ -9,6 +9,7 @@
 /app/tmp/
 
 # mediaserver and dependences
+/httpdocs/cgmlImg/
 /httpdocs/mediaCache/
 /httpdocs/vendor/
 /bower.*

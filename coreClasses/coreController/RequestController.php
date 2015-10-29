@@ -87,15 +87,17 @@ class RequestController
 
   public static function redirect( $redirect_url, $httpCode = '301' ) {
     //error_log( 'RequestController::redirect '.$redirect_url );
-
+    /*
     if( $httpCode === '301' ) {
       header( 'HTTP/1.1 301 Moved Permanently' );
     }
     else {
       header( 'HTTP/1.1 '.$httpCode );
     }
-
-    header( 'Location: '.$redirect_url );
+    */
+    header( 'Location: '.$redirect_url, true, $httpCode );
+    ob_flush();
+    flush();
     exit;
   }
 
