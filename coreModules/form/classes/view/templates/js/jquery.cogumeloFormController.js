@@ -46,20 +46,20 @@ function getFormInfo( idForm, key ) {
 function createFilesTitleField( idForm ) {
   // console.log( 'createFilesTitleField( '+idForm+' )' );
 
-  $inputFileFields = $( 'input:file[form="'+idForm+'"]' );
+  var $inputFileFields = $( 'input:file[form="'+idForm+'"]' );
   $inputFileFields.after( function() {
     // console.log( 'createFilesTitleField after ', this );
 
-    fileField = this;
-    langs = ( typeof( langAvailableIds ) == 'object' ) ? langAvailableIds : [''];
-    html = '<div class="cgmMForm-wrap cgmMForm-'+idForm+' cgmMForm-fileFields-'+idForm+
+    var fileField = this;
+    var langs = ( typeof( langAvailableIds ) === 'object' ) ? langAvailableIds : [''];
+    var html = '<div class="cgmMForm-wrap cgmMForm-'+idForm+' cgmMForm-fileFields-'+idForm+
       ' cgmMForm-titleFileField_'+fileField.name+'" style="display:none">'+"\n";
 
     $.each( langs, function( i, lang ) {
-      name = ( lang !== '' ) ? fileField.name+'_'+lang : fileField.name;
-      filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
-      classLang = ( lang !== '' ) ? ' js-tr js-tr-'+lang : '';
-      titleValue = ( $( fileField ).data( filefielddata ) ) ? $( fileField ).data( filefielddata ) : '';
+      var name = ( lang !== '' ) ? fileField.name+'_'+lang : fileField.name;
+      var filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
+      var classLang = ( lang !== '' ) ? ' js-tr js-tr-'+lang : '';
+      var titleValue = ( $( fileField ).data( filefielddata ) ) ? $( fileField ).data( filefielddata ) : '';
       html += '<div class="cgmMForm-wrap cgmMForm-field-titleFileField_'+name+'">'+"\n"+
         '<label class="cgmMForm'+classLang+'">Alt-Title</label>'+"\n"+
         '<input name="titleFileField_'+name+'" value="'+titleValue+'" '+
@@ -76,9 +76,9 @@ function createFilesTitleField( idForm ) {
 
   $( 'input.cgmMForm-field-titleFileField' ).on( 'change', function() {
     // console.log( 'titleFileField change en ', this );
-    $titleFileField = $( this );
-    $titleData = $titleFileField.data();
-    $fileField = $( 'input[form="'+$titleData.ffid+'"][name="'+$titleData.ffname+'"]' );
+    var $titleFileField = $( this );
+    var $titleData = $titleFileField.data();
+    var $fileField = $( 'input[form="'+$titleData.ffid+'"][name="'+$titleData.ffname+'"]' );
     $fileField.attr( 'data-'+$titleData.ffdata, $titleFileField.val() );
     $fileField.data( $titleData.ffdata, $titleFileField.val() );
     // Doble escritura para asegurar porque funcionan distinto
@@ -88,16 +88,16 @@ function createFilesTitleField( idForm ) {
 function hideFileTitleField( idForm, fieldName ) {
   console.log( 'hideFileTitleField( '+idForm+', '+fieldName+' )' );
 
-  $fileField = $( 'input[form="'+idForm+'"][name="'+fieldName+'"]' );
+  var $fileField = $( 'input[form="'+idForm+'"][name="'+fieldName+'"]' );
   // Clear data-fm_title
-  langs = ( typeof( langAvailableIds ) == 'object' ) ? langAvailableIds : [''];
+  var langs = ( typeof( langAvailableIds ) === 'object' ) ? langAvailableIds : [''];
   $.each( langs, function( i, lang ) {
-    filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
+    var filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
     $fileField.attr( 'data-'+filefielddata, '' );
     $fileField.data( filefielddata, '' );
   });
   // Hide wrap
-  $wrap = $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName );
+  var $wrap = $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName );
   $wrap.hide();
   // Clear values
   $wrap.find( ' input' ).val('');
@@ -106,7 +106,7 @@ function hideFileTitleField( idForm, fieldName ) {
 
 function bindForm( idForm ) {
   console.log( 'bindForm( '+idForm+' )' );
-  $inputFileFields = $( 'input:file[form="'+idForm+'"]' );
+  var $inputFileFields = $( 'input:file[form="'+idForm+'"]' );
   if( $inputFileFields.length ) {
     if( !window.File ) {
       // File - provides readonly information such as name, file size, mimetype
@@ -141,40 +141,24 @@ function setValidateForm( idForm, rules, messages ) {
       console.log( error );
       console.log( element );
       //console.log( 'Busco #JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
-      $msgContainer = $( '#JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
+      var $msgContainer = $( '#JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       if ( $msgContainer.length > 0 ) {
         $msgContainer.append( error );
       }
       else {
         error.insertAfter( element );
       }
-    }
-    /*
-    highlight: function( element, errorClass, validClass ) {
-      console.log( 'Executando validate.highlight:' );
-      console.log( element );
-      console.log( errorClass );
-      console.log( validClass );
-      if ( element.type === "radio" ) {
-        this.findByName( element.name ).addClass( errorClass ).removeClass( validClass );
-      }
-      else {
-        $( element ).addClass( errorClass ).removeClass( validClass );
-      }
     },
-    unhighlight: function( element, errorClass, validClass ) {
-      console.log( 'Executando validate.unhighlight:' );
-      console.log( element );
-      console.log( errorClass );
-      console.log( validClass );
-      if ( element.type === "radio" ) {
-        this.findByName( element.name ).removeClass( errorClass ).addClass( validClass );
+    findByName: function( name ) {
+      console.log( 'JQV findByName setDefaults: ', name );
+      var $form = $( this.currentForm );
+      var $elem = $form.find( "[name='" + name + "']" );
+      if( $elem.length !== 1 ) {
+        $elem = $( '[form="'+$form[0].id+'"][name="'+name+'"]' );
       }
-      else {
-        $( element ).removeClass( errorClass ).addClass( validClass );
-      }
+      console.log( 'JQV findByName ret: ', $elem );
+      return $elem;
     }
-    */
   });
 
 
@@ -212,8 +196,28 @@ function setValidateForm( idForm, rules, messages ) {
       } ); // /.done
       return false; // required to block normal submit since you used ajax
     }
-  }); // $validateForm =
-  console.log( 'VALIDATE FEITO' );
+  });
+  // JQUERY VALIDATE HACK !!! (Start)
+  $validateForm.findByName = function( name ) {
+    console.log( 'JQV cgmlHACK findByName: ', name );
+    var $form = $( this.currentForm );
+    var $elem = $form.find( "[name='" + name + "']" );
+    if( $elem.length !== 1 ) {
+      $elem = $( '[form="'+$form[0].id+'"][name="'+name+'"]' );
+    }
+    console.log( 'JQV cgmlHACK findByName ret: ', $elem );
+    return $elem;
+  };
+  $validateForm.idOrName = function( element ) {
+    console.log( 'JQV cgmlHACK idOrName: ', name );
+    var resp = this.groups[ element.name ] || ( this.checkable( element ) ? element.name : element.id || element.name );
+    console.log( 'JQV cgmlHACK idOrName ret: ', resp );
+    return resp;
+  };
+  // JQUERY VALIDATE HACK !!! (End)
+
+  console.log( 'VALIDATE PREPARADO: ', $validateForm );
+
 
   // Bind file fields and group actions...
   bindForm( idForm );
@@ -273,12 +277,12 @@ function formDoneError( form, response ) {
   }
   else {
     for( var i in response.jvErrors ) {
-      errObj = response.jvErrors[i];
+      var errObj = response.jvErrors[i];
       console.log( errObj );
 
       if( errObj.fieldName !== false ) {
         if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
-          $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
+          var $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
           if( typeof $defMess !== 'string' ) {
             $defMess = $defMess( errObj.ruleParams );
           }
@@ -304,8 +308,8 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
   // Replantear!!!
 
   console.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
-  msgLabel = '<label class="formError">'+msgText+'</label>';
-  $msgContainer = false;
+  var msgLabel = '<label class="formError">'+msgText+'</label>';
+  var $msgContainer = false;
   if( msgClass !== false ) {
     $msgContainer = $( '.JQVMC-'+msgClass );
   }
@@ -342,7 +346,7 @@ function checkInputFileField( files, idForm, fieldName ) {
   console.log( fieldName );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
 
-  $fileField = $( 'input[name="' + fieldName + '"][form="' + idForm + '"]' );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="' + idForm + '"]' );
   $( '#' + $fileField.attr('id') + '-error' ).remove();
 
   var valRes = $validateForm.element( 'input[name="' + fieldName + '"][form="' + idForm + '"]' );
@@ -397,9 +401,11 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       }
       return myXhr;
     },
+    /*
     beforeSend: function beforeSendHandler( $jqXHR, $settings ) {
-      // $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
+      $( '#status' ).html( 'Upload Failed (' + $textStatus + ')' );
     },
+    */
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
       var idForm = $jsonData.moreInfo.idForm;
       var fieldName = $jsonData.moreInfo.fieldName;
@@ -412,16 +418,16 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
         console.log( 'uploadFile ERROR' );
         $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( 'Error cargando el fichero.' );
 
-        $validateForm = getFormInfo( idForm, 'validateForm' );
+        var $validateForm = getFormInfo( idForm, 'validateForm' );
         console.log( $validateForm );
 
         for(var i in $jsonData.jvErrors) {
-          errObj = $jsonData.jvErrors[i];
+          var errObj = $jsonData.jvErrors[i];
           console.log( errObj );
 
           if( errObj.fieldName !== false ) {
             if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
-              $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
+              var $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
               if( typeof $defMess !== 'string' ) {
                 $defMess = $defMess( errObj.ruleParams );
               }
@@ -432,7 +438,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
           }
           else {
             console.log( errObj.JVshowErrors );
-            showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
+            showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
           }
         }
         // if( $jsonData.formError !== '' ) $validateForm.showErrors( {'submit': $jsonData.formError} );
@@ -449,7 +455,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 
 function deleteFormFileEvent( evnt ) {
   console.log( 'deleteFormFileEvent: ', evnt );
-  $fileField = $( evnt.target );
+  var $fileField = $( evnt.target );
   var idForm = $fileField.attr( 'data-form_id' );
   var fieldName = $fileField.attr( 'data-fieldname' );
   var cgIntFrmId = $( '#' + idForm ).attr( 'data-token_id' );
@@ -483,7 +489,7 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
     else {
       console.log( 'deleteFormFile.done...ERROR' );
       for(var i in response.jvErrors) {
-        errObj = response.jvErrors[i];
+        var errObj = response.jvErrors[i];
         console.log( errObj );
 
         if( errObj.fieldName !== false ) {
@@ -493,7 +499,7 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
         }
         else {
           console.log( errObj.JVshowErrors );
-          showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
+          showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
         }
 
       } // for
@@ -504,8 +510,8 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 
 function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
   console.log( 'fileFieldToOk( '+idForm+', '+fieldName+', '+fileName+', '+fileModId+', '+fileType+' )' );
-  $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-  $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
   $fileField.attr( 'readonly', 'readonly' );
   $fileField.prop( 'disabled', true );
@@ -518,12 +524,12 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
   $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName ).show();
   console.log( 'SHOW: .cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName );
 
-  $fileFieldInfo = $( '<div>' ).addClass( 'fileFieldInfo fileUploadOK formFileDelete' )
-    .attr( { "data-fieldname": fieldName, "data-form_id": idForm } );
+  var $fileFieldInfo = $( '<div>' ).addClass( 'fileFieldInfo fileUploadOK formFileDelete' )
+    .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm } );
 
   // Element to send delete order
   $fileFieldInfo.append( $( '<i>' ).addClass( 'formFileDelete fa fa-trash' )
-    .attr( { "data-fieldname": fieldName, "data-form_id": idForm } )
+    .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm } )
     .on('click', deleteFormFileEvent )
   );
 
@@ -546,8 +552,8 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
 
 function fileFieldToInput( idForm, fieldName ) {
   console.log( 'fileFieldToInput: ', idForm, fieldName );
-  $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-  $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
   // console.log( $fileField );
 
@@ -565,7 +571,7 @@ function fileFieldToInput( idForm, fieldName ) {
 
 function loadImageTh( idForm, fieldName, $fileFieldWrap ) {
   //console.log( 'loadImageTh: ', idForm, fieldName, $fileFieldWrap );
-  $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
 
   var fileObj = false;
   if( $fileField[0].files && $fileField[0].files[0]) {
@@ -655,9 +661,9 @@ function addGroupElement( evnt ) {
       }
       else {
         console.log( 'getGroupElement ERROR' );
-        $validateForm = getFormInfo( idForm, 'validateForm' );
+        var $validateForm = getFormInfo( idForm, 'validateForm' );
         console.log( $validateForm );
-        errObj = $jsonData.jvErrors[0];
+        var errObj = $jsonData.jvErrors[0];
         console.log( errObj.JVshowErrors );
         showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors[0], 'group-' + groupName );
       }
@@ -727,9 +733,9 @@ function removeGroupElement( evnt ) {
       }
       else {
         console.log( 'removeGroupElement ERROR' );
-        $validateForm = getFormInfo( idForm, 'validateForm' );
+        var $validateForm = getFormInfo( idForm, 'validateForm' );
         console.log( $validateForm );
-        errObj = $jsonData.jvErrors[0];
+        var errObj = $jsonData.jvErrors[0];
         console.log( errObj.JVshowErrors );
         showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors[0], 'group-' + groupName );
       }
@@ -784,7 +790,7 @@ function switchFormLang( idForm, lang ) {
 function createSwitchFormLang( idForm ) {
   console.log( 'createSwitchFormLang' );
 
-  if( typeof( langAvailableIds ) == 'object' ) {
+  if( typeof( langAvailableIds ) === 'object' ) {
     var htmlLangSwitch = '';
     htmlLangSwitch += '<div class="langSwitch-wrap">';
     htmlLangSwitch += '<ul class="langSwitch" data-form_id="'+idForm+'">';
@@ -801,8 +807,8 @@ function createSwitchFormLang( idForm ) {
     switchFormLang( idForm, langDefault );
 
     $( 'ul[data-form_id="'+idForm+'"].langSwitch li' ).on( "click", function() {
-      newLang = $( this ).data( 'lang' );
-      if( newLang != langForm ) {
+      var newLang = $( this ).data( 'lang' );
+      if( newLang !== langForm ) {
         switchFormLang( idForm, newLang );
       }
     });
