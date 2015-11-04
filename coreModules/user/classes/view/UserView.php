@@ -154,13 +154,13 @@ class UserView extends View
       'filters' => array('id' => $id ),
       'affectsDependences' => array( 'FiledataModel')
     ))->fetch();
+
     if(!$dataVO){
       Cogumelo::redirect( SITE_URL.'404' );
     }
 
-    foreach( $dataVO->getKeys() as $keyVO ) {
-      $dataArray[ $keyVO ] = $dataVO->getter( $keyVO );
-    }
+    $dataArray = $dataVO->getAllData('onlydata');
+
     $fileDep = $dataVO->getterDependence( 'avatar' );
     if( $fileDep !== false ) {
       foreach( $fileDep as $fileModel ) {
@@ -186,30 +186,50 @@ class UserView extends View
     $form = new FormController( 'userForm', '/user/senduserform' ); //actionform
     $form->setSuccess( 'redirect', '/' );
 
-    $form->setField( 'id', array( 'type' => 'reserved', 'value' => null ) );
 
-    $form->setField( 'avatar', array( 'type' => 'file', 'id' => 'inputFicheiro',
-      'placeholder' => 'Escolle un ficheiro', 'label' => 'Colle un ficheiro',
-      'destDir' => '/users' ) );
-    $form->setField( 'login', array( 'placeholder' => 'Login' ) );
+    $fieldsInfo = array(
+      'id' => array(
+        'params' => array( 'type' => 'reserved', 'value' => null )
+      ),
+      'avatar' => array(
+        'params' => array(
+          'type' => 'file',
+          'id' => 'inputFicheiro',
+          'placeholder' => 'Escolle un ficheiro',
+          'label' => 'Colle un ficheiro',
+          'destDir' => '/users'
+        )
+      ),
+
+      'login' => array(
+        'params' => array( 'placeholder' => 'Login' ),
+        'rules' => array( 'required' => true )
+      ),
+      'name' => array(
+        'params' => array( 'placeholder' => 'Name' ),
+      ),
+      'surname' => array(
+        'params' => array( 'placeholder' => 'Surname' ),
+      ),
+      'email' => array(
+        'params' => array( 'placeholder' => 'Email' ),
+        'rules' => array( 'required' => true )
+      ),
+      'description' => array(
+        'params' => array( 'type' => 'textarea', 'placeholder' => 'Descripción'),
+        'translate' => true
+      )
+    );
+
+    $form->definitionsToForm( $fieldsInfo );
+
     //Esto es para verificar si es un create
     if(!isset($data) || $data == ''){
       $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña' ) );
       $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => 'Repite contraseña' ) );
     }
 
-    $form->setField( 'name', array( 'placeholder' => 'Nombre' ) );
-    $form->setField( 'surname', array( 'placeholder' => 'Apellidos' ) );
-    $form->setField( 'email', array( 'placeholder' => 'Email' ) );
-
-    $form->setField( 'description', array( 'type' => 'textarea', 'placeholder' => 'Descripción' ) );
-
-
     $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
-
-    /******************************************************************************************** VALIDATIONS */
-    $form->setValidationRule( 'login', 'required' );
-    $form->setValidationRule( 'email', 'required' );
 
     //Esto es para verificar si es un create
     if(!isset($data) || $data == ''){
