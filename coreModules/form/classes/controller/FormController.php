@@ -616,18 +616,23 @@ class FormController implements Serializable {
     * @return array
     */
   public function multilangFieldNames( $fieldName ) {
-    $fieldNames = array();
+    $newFieldNames = array();
+
+    $originalFieldNames = is_array( $fieldName ) ? $fieldName : array( $fieldName );
+
 
     if( $this->langAvailable === false || count( $this->langAvailable ) <= 1 ) {
-      $fieldNames[] = $fieldName;
+      $newFieldNames[] = $originalFieldNames;
     }
     else {
-      foreach( $this->langAvailable as $lang ) {
-        $fieldNames[] = $fieldName.'_'.$lang;
+      foreach( $originalFieldNames as $fieldName ) {
+        foreach( $this->langAvailable as $lang ) {
+          $newFieldNames[] = $fieldName.'_'.$lang;
+        }
       }
     }
 
-    return $fieldNames;
+    return $newFieldNames;
   }
 
   /**
@@ -1267,6 +1272,9 @@ class FormController implements Serializable {
 
               $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
               $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+              /**
+              QUITAR FILES_APP_PATH
+              */
               $fullDestPath = self::FILES_APP_PATH . $destDir;
               if( !is_dir( $fullDestPath ) ) {
                 // TODO: CAMBIAR PERMISOS 0777
@@ -1304,6 +1312,9 @@ class FormController implements Serializable {
 
               $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
               $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+              /**
+              QUITAR FILES_APP_PATH
+              */
               $fullDestPath = self::FILES_APP_PATH . $destDir;
               if( !is_dir( $fullDestPath ) ) {
                 // TODO: CAMBIAR PERMISOS 0777
@@ -1388,6 +1399,9 @@ class FormController implements Serializable {
         error_log( print_r( $fileFieldValue, true ) );
 
         if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] === 'LOADED' ) {
+          /**
+          QUITAR FILES_APP_PATH
+          */
           $absLocationActual = self::FILES_APP_PATH . $fileFieldValue['values']['absLocation'];
           $absLocationAnterior = $fileFieldValue['validate']['absLocation'];
 
@@ -1882,9 +1896,7 @@ class FormController implements Serializable {
         $html['input'] = '<input name="'.$fieldName.'"';
         // $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
         $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
-
-error_log( 'FILE --- '.print_r( $field, true ) );
-
+        error_log( 'FILE --- '.print_r( $field, true ) );
         break;
 
       case 'reserved':
