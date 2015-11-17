@@ -51,18 +51,28 @@ class FiledataController {
   /**
     Creates a database FiledataModel register and save
   */
-  public function saveFile( $absoluteOriginFile, $relativeDestPath , $fileName ) {
+  public function saveFile( $originFile, $relativeDestPath , $fileName, $originFileIsRelative = true  ) {
 
+    if( $originFileIsRelative ) {
+      $absFrom = APP_BASE_PATH. $originFile;
+    }
+    else {
+      $absFrom = $originFile;
+    }
+
+    //die($absFrom);
     filedata::load('model/FiledataModel.php');
     $fileDB = false;
 
-    if( file_exists($absoluteOriginFile) ) {
+    if( file_exists($absFrom) ) {
 
       $fileDB = new FiledataModel( array('originalName' => $fileName ) );
 
       $fileDB->save();
 
-      $secureFileName = $this->secureFileName( $fileName );
+      //$secureFileName = $this->secureFileName( $fileName );
+
+      $secureFileName = $fileName;
 
       if( file_exists( $relativeDestPath.'/'.$secureFileName ) ){
         $realDestName = $fileDB->getter('id') .$secureFileName;
@@ -71,25 +81,29 @@ class FiledataController {
         $realDestName = $secureFileName;
       }
 
+      if( !is_dir(MOD_FILEDATA_APP_PATH.$relativeDestPath) ) {
+        mkdir(MOD_FILEDATA_APP_PATH.$relativeDestPath, 0755, true);
+      }
 
-      if( copy ( $absoluteOriginFile, MOD_FILEDATA_APP_PATH.$relativeDestPath.'/'.$realDestName) ) {
+      if( copy ( $absFrom, MOD_FILEDATA_APP_PATH.$relativeDestPath.'/'.$realDestName ) ) {
         $finfo = new finfo(FILEINFO_MIME, "/usr/share/misc/magic");
-        $fileDB->setter('type', $finfo->file($absoluteOriginFile) );
-        finfo_close($finfo);
+        $fileDB->setter('type', $finfo->file($absFrom) );
+        //finfo_close($finfo);
 
-        $fileDB->setter('size', filesize( $absoluteOriginFile ) );
+        $fileDB->setter('size', filesize( $absFrom ) );
         $fileDB->setter('name', $realDestName );
         $fileDB->setter('absLocation', $relativeDestPath.'/'.$realDestName );
 
         $fileDB->save();
       }
       else {
+        cogumelo::error( 'FiledataController cant copy the file to: '. MOD_FILEDATA_APP_PATH.$relativeDestPath.'/'.$realDestName);
         $fileDB->delete();
       }
 
     }
     else {
-      cogumelo::error( 'FiledataController cant find the file path to save: '.$absoluteOriginFile);
+      cogumelo::error( 'FiledataController cant find the file path to save: '.$absFrom);
     }
 
     return $fileDB;
