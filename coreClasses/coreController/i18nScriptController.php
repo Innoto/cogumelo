@@ -16,13 +16,13 @@ class i18nScriptController {
 	var $modules;
 	var $lc_1;
 	var $dir_lc = array();
-	
+
 	function __construct()
 	{
 		$this->dir_path = I18N_LOCALE;
 	    $this->dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
 	    $this->dir_modules = SITE_PATH.'modules/';
-	    $this->dir_modules_dist = COGUMELO_DIST_LOCATION;
+	    $this->dir_modules_dist = COGUMELO_DIST_LOCATION.'/distModules/';
 	    $this->textdomain="messages";
 	    global $C_ENABLED_MODULES, $LANG_AVAILABLE;
 	    $this->modules = $C_ENABLED_MODULES;
@@ -59,7 +59,7 @@ class i18nScriptController {
 	        while ($file = readdir($handle)) {
 	            if ($file==$this->textdomain.'.po'){
 	              $exist = true;
-	            }  
+	            }
 	          }
 	       }
 
@@ -78,17 +78,14 @@ class i18nScriptController {
 		$cogumeloFiles = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php','js','tpl'), false);
 		$cogumeloFilesModule = CacheUtilsController::listFolderFiles($this->dir_modules, array('php','js','tpl'), false);
 		$cogumeloFilesModuleC = CacheUtilsController::listFolderFiles($this->dir_modules_c, array('php','js','tpl'), false);
-		$appFiles = CacheUtilsController::listFolderFiles(COGUMELO_DIST_LOCATION, array('php','js','tpl'), false);
-
-		$files = array_merge($cogumeloFiles, $appFiles);
-		$filesMod = array_merge($cogumeloFilesModule, $cogumeloFilesModuleC);
+		$appFiles = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('php','js','tpl'), false);
 
 		// get all the files unless files into modules folder, excluding tmp and vendor folders
 		if ($files){
 		    foreach($files as $i => $dir){
-		      	if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false 
+		      	if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false
 		      	&& strpos($dir,'/vendor/')===false && strpos($dir,'/vendorPackages/')===false
-		        && strpos($dir,'/vendorServer/')===false && strpos($dir,'/tmp/')===false){ 
+		        && strpos($dir,'/vendorServer/')===false && strpos($dir,'/tmp/')===false){
 		      		$parts = explode('.',$dir->getRealPath());
 				    switch($parts[1]){
 				      case 'php':
@@ -96,21 +93,34 @@ class i18nScriptController {
 				        break;
 				      case 'js':
 				        $filesAll['js'][$i] = $dir->getRealPath();
-				        break;	
+				        break;
 				      case 'tpl':
 				        $filesAll['tpl'][$i] = $dir->getRealPath();
-				        break;	
+				        break;
 				    }
 				}
 		    }
 		}
+		/* App modules (rTypes) */
+		$filesAppModules = $this->getModuleFiles($cogumeloFilesModule, $this->dir_modules);
+		/* Cogumelo core modules */
+		$filesCoreModules = $this->getModuleFiles($cogumeloFilesModuleC, $this->dir_modules_c);
+		/* Distribution modules */
+		$filesDistModules = $this->getModuleFiles($appFiles, $this->dir_modules_dist);
 
+		// We combine all the arrays that we've got in an only array
+		$filesModules = array_merge_recursive($filesAppModules, $filesCoreModules, $filesDistModules);
+
+/*
 		// get the .php files into modules folder
 	    if ($filesMod && $this->modules){
 			foreach ($this->modules as $i => $dir) {
+
 			    foreach ($filesMod as $k => $file) {
 				    $outMod = explode('/'.$dir.'/',$file);
+						//echo "dir -> ".$dir."\n";
 				    if (sizeof($outMod)==2){
+
 				    	if(ModuleController::getRealFilePath($outMod[1], $dir)){
   		        			$parts = explode('.',$file);
   		        			switch($parts[1]){
@@ -119,19 +129,21 @@ class i18nScriptController {
 						        break;
 						      case 'js':
 						        $filesModules['js'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
-						        break;	
+						        break;
 						      case 'tpl':
 						        $filesModules['tpl'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
-						        break;	
+						        break;
 						    }
 				    	}
-				    } 
+				    }
 				}
 			}
 		}
 
-	    // We combine all the arrays that we've got in an only array
-	    $filesArray = array_merge_recursive($filesAll, $filesModules);
+*/
+// We combine all the arrays that we've got in an only array
+$filesArray = array_merge_recursive($filesAll, $filesModules);
+
 
 	    /************************** PHP e JS *******************************/
 
@@ -171,8 +183,8 @@ class i18nScriptController {
 	    foreach ($this->dir_lc as $l){
 	      exec($smartygettext.' -o '.$l.'/'.$this->textdomain.'_tpl.po '.TPL_TMP);
 	      // Now we have to combine this PO file with the PO file we had previusly and discard the tmp file
-	      
-	      exec ('msgcat --use-first '.$l.'/'.$this->textdomain.'_prev.po '.$l.'/'.$this->textdomain.'_tpl.po > '.$l.'/'.$this->textdomain.'.po'); 
+
+	      exec ('msgcat --use-first '.$l.'/'.$this->textdomain.'_prev.po '.$l.'/'.$this->textdomain.'_tpl.po > '.$l.'/'.$this->textdomain.'.po');
 	      exec ('rm '.$l.'/'.$this->textdomain.'_tpl.po');
 	      exec ('rm '.$l.'/'.$this->textdomain.'_prev.po');
 	    }
@@ -196,7 +208,7 @@ class i18nScriptController {
   	* Translate files.po into .json to be used in client
   	*/
 	function c_i18n_json() {
-		foreach ($this->lc_1 as $l){
+		foreach ($this->dir_lc as $l){
 			$myarray = explode('_',$l);
 	    	$lang = $myarray[0];
 			exec('i18next-conv -l '.$this->textdomain.' -s '.I18N_LOCALE.$l.'/LC_MESSAGES/'.$this->textdomain.'.po -t '.COGUMELO_LOCATION.'/packages/sampleApp/httpdocs/locales/'.$lang.'/translation.json');
@@ -210,13 +222,41 @@ class i18nScriptController {
 		else if($_SERVER["REMOTE_ADDR"] == "127.0.0.1")
 		{
 			shell_exec('find '.COGUMELO_LOCATION.'/. ../app/. -iname "*.php" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code utf-8 -d c_project -o ../app/i18n/c_project.pot -L PHP');
-				
+
 			foreach(explode(',', 'gl,es,en') as $lng) {
 				shell_exec('msgmerge -U ../app/i18n/c_project_'.$lng.'.po ../app/i18n/c_project.pot');
 			}
-	
+
 		}
 	}
-	
-	
+
+	function getModuleFiles($modFiles, $relPath){
+		$filesModule = array();
+		if ($modFiles && $this->modules){
+			foreach ($this->modules as $i => $dir) {
+					foreach ($modFiles as $k => $file) {
+						$outMod = explode($relPath.$dir.'/',$file);
+						if (sizeof($outMod)==2){
+							if(ModuleController::getRealFilePath($outMod[1], $dir)){
+										$parts = explode('.',$file);
+										switch($parts[1]){
+									case 'php':
+										$filesModule['php'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+										break;
+									case 'js':
+										$filesModule['js'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+										break;
+									case 'tpl':
+										$filesModule['tpl'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+										break;
+								}
+							}
+						}
+					}
+				}
+		}
+		return $filesModule;
+	}
+
+
 }

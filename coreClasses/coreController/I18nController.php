@@ -5,7 +5,7 @@ class I18nController {
 	* Prepare the enviroment to localize the project
 	*/
 	static function setLang($url_path = false) {
-		
+
 		global $C_LANG, $LANG_AVAILABLE;
 
 	    if ($url_path){
@@ -27,23 +27,23 @@ class I18nController {
 	}
 
 	static function getLang($url) {
-		$m= self::processUrl($url);		
+		$m= self::processUrl($url);
 
 		if(array_key_exists(1,$m))
 			return str_replace('/', '',$m[1]);
 		else
 			return LANG_DEFAULT;
 	}
-		
+
 	static function extractUrl($url) {
 		$m= self::processUrl($url);
-		
+
 		if(array_key_exists(2,$m))
 			return $m[2];
 		else
 			return $url;
 	}
-		
+
 	static function processUrl($url) {
 		foreach(explode(',', 'gl,es,en') as $lng) {
 			if(preg_match('^('.$lng.'/)(.*)^', $url, $m))
