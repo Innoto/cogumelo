@@ -208,15 +208,29 @@ class FormValidators extends FormValidatorsExtender {
 
   // http://jqueryvalidation.org/accept-method
   private function val_accept( $value, $param ) {
+    $result = false;
+
     if( !is_array( $param ) ) {
       // Split param on commas in case we have multiple types we can accept
       $param = str_replace( ' ', '', $param );
       $param = explode( ',', $param );
     }
 
-    // TODO: Cambiar in_array por regex
+    foreach( $param as $test ) {
+      if( $test === $value['validate'][ 'type' ] ) {
+        $result = true;
+        break;
+      }
+      else {
+        $test = str_replace( '*', '.*', $test );
+        if( preg_match( '/^'.$test.'$/', $value['validate'][ 'type' ] ) ) {
+          $result = true;
+          break;
+        }
+      }
+    }
 
-    return in_array( $value['validate'][ 'type' ], $param );
+    return $result;
   }
 
 
