@@ -6,12 +6,12 @@
  *
  * @package Cogumelo Model
  */
-class MysqlDAORelationship 
+class MysqlDAORelationship
 {
 
 
   var $filters = array();
-  var $whereData = array(); 
+  var $whereData = array();
   var $joinType = 'LEFT';
 
   function __construct() {
@@ -22,9 +22,9 @@ class MysqlDAORelationship
    * Get joins from VO or Model Class
    *
    * @return string
-   */  
+   */
   function getVOJoins( $VOClass, $joinType, $resolveDependences, $filters = array() ) {
-    
+
     $this->filters = $filters;
     $this->joinType = $joinType;
     $ret = '';
@@ -44,7 +44,7 @@ class MysqlDAORelationship
    * @param object $vo VO or Model relationship object (From tmp files)
    *
    * @return string
-   */  
+   */
   function joins($vo) {
     $joinList = '';
 
@@ -58,7 +58,7 @@ class MysqlDAORelationship
         // Any table
         $joinList .= $this->leftJoin( $this->selectGroupConcat( $voRel, $this->joins( $voRel ) ), $voRel );
       }
-      
+
     }
 
     return $joinList;
@@ -72,7 +72,7 @@ class MysqlDAORelationship
    * @param object $vo VO or Model relationship object (From tmp files)
    *
    * @return string
-   */  
+   */
   function leftJoin($select, $sonVo ) {
     return " ".$this->joinType." JOIN ( ".$select." ) as ".$sonVo->table."_serialized  ON ".$sonVo->table."_serialized.".$sonVo->relatedWithId." = ".$sonVo->parentTable.".".$sonVo->parentId;
   }
@@ -84,7 +84,7 @@ class MysqlDAORelationship
    * @param object $vo VO or Model relationship object (From tmp files)
    *
    * @return string
-   */  
+   */
   function selectConcat( $vo ) {
 
     $where = $this->setWheres( $vo->vo );
@@ -99,7 +99,7 @@ class MysqlDAORelationship
    * @param string $joins join string
    *
    * @return string
-   */  
+   */
   function selectGroupConcat( $vo, $joins ) {
     $where = $this->setWheres( $vo->vo );
     return " SELECT " .$this->cols($vo). " , concat('{', ". $this->jsonCols($vo) ." ". $this->getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins .$where. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
@@ -112,7 +112,7 @@ class MysqlDAORelationship
    * @param object $vo VO or Model relationship object (From tmp files)
    *
    * @return string
-   */  
+   */
   function jsonCols($vo) {
 
     $returnCols = '';
@@ -132,7 +132,7 @@ class MysqlDAORelationship
    * @param object $vo VO or Model relationship object (From tmp files)
    *
    * @return string
-   */  
+   */
   function cols($vo) {
     $returnCols = '';
     $coma = '';
@@ -161,6 +161,10 @@ class MysqlDAORelationship
     if( $colType == 'BOOLEAN' ) {
       $retStr = "ASCII( COALESCE(".$vo->table.".".$colKey.", 'null') )";
     }
+    else
+    if( $colType == 'GEOMETRY' ) {
+      $retStr = "ASCII( AsText( COALESCE(".$vo->table.".".$colKey.", 'null')) )";
+    }
 
     return $retStr;
   }
@@ -171,14 +175,14 @@ class MysqlDAORelationship
    * @param object $vo VO or Model relationship object (From tmp files)
    *
    * @return string
-   */  
+   */
   function getGroupConcats ($vo) {
     $groupConcats = '';
 
     foreach( $vo->relationship as $voRel) {
       $groupConcats .= "',\"".$voRel->parentTable.".".$voRel->table."\": [', COALESCE( group_concat(".$voRel->table."_serialized.".$voRel->table."),'' ) , ']',";
     }
-    
+
     return $groupConcats;
   }
 
@@ -192,7 +196,7 @@ class MysqlDAORelationship
       foreach ($this->filters as $fK => $fD) {
         preg_match('#'.$voName.'\.(.*)#', $fK, $matches);
         if( sizeof($matches)>0 ) {
-          $found[ $matches[1] ] = $fD;        
+          $found[ $matches[1] ] = $fD;
         }
 
       }
@@ -244,7 +248,7 @@ class MysqlDAORelationship
         }
 
       }
-    
+
     }
 
 
@@ -264,4 +268,4 @@ class MysqlDAORelationship
     return $this->whereData;
   }
 
-} 
+}
