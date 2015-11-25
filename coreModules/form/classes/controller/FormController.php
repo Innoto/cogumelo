@@ -1752,164 +1752,168 @@ class FormController implements Serializable {
   public function getHtmlFieldArray( $fieldName ) {
     $html = array();
 
-    $field = $this->getField( $fieldName );
+    if( $field = $this->getField( $fieldName ) ) {
 
-    $cloneOf = $this->getFieldInternal( $fieldName, 'cloneOf' );
-    $groupName = $this->getFieldInternal( $fieldName, 'groupName' );
+      $cloneOf = $this->getFieldInternal( $fieldName, 'cloneOf' );
+      $groupName = $this->getFieldInternal( $fieldName, 'groupName' );
 
-    $myFielId = isset( $field['id'] ) ? $field['id'] : false;
+      $myFielId = isset( $field['id'] ) ? $field['id'] : false;
 
-    //$myFielId = ( $myFielId === false && isset( $field['htmlEditor'] ) ) ? $fieldName : false;
-    if( isset( $field['htmlEditor'] ) ) {
-      $this->htmlEditor = true;
-      if( $myFielId === false ) {
-        $myFielId = $fieldName;
+      //$myFielId = ( $myFielId === false && isset( $field['htmlEditor'] ) ) ? $fieldName : false;
+      if( isset( $field['htmlEditor'] ) ) {
+        $this->htmlEditor = true;
+        if( $myFielId === false ) {
+          $myFielId = $fieldName;
+        }
       }
-    }
 
-    $html['fieldType'] = $field['type'];
+      $html['fieldType'] = $field['type'];
 
-    if( isset( $field['label'] ) ) {
-      $html['label'] = '<label';
-      $html['label'] .= ( $myFielId ? ' for="'.$myFielId.'"' : '' );
-      $html['label'] .= ' class="'.self::CSS_PRE.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
-      $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
-      $html['label'] .= '>'.$field['label'].'</label>';
-    }
-
-    $attribs = ' form="'.$this->id.'"';
-    $attribs .= ( $myFielId ? ' id="'.$myFielId.'"' : '' );
-    $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$fieldName.
-      ( ( $field['type'] === 'file' ) ? ' '.self::CSS_PRE.'-fileField' : '' ).
-      ( $cloneOf ? ' '.self::CSS_PRE.'-cloneOf-'.$cloneOf : '' ).
-      ( $groupName ? ' '.self::CSS_PRE.'-group-'.$groupName : '' ).
-      ( isset( $field['htmlEditor'] ) ? ' '.self::CSS_PRE.'-htmlEditor' : '' ).
-      ( isset( $field['class'] ) ? ' '.$field['class'] : '' ).
-      '"';
-    $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
-    $attribs .= isset( $field['title'] ) ? ' title="'.$field['title'].'"' : '';
-    $attribs .= isset( $field['placeholder'] ) ? ' placeholder="'.$field['placeholder'].'"' : '';
-    $attribs .= isset( $field['maxlength'] ) ? ' maxlength="'.$field['maxlength'].'"' : '';
-    $attribs .= isset( $field['size'] ) ? ' size="'.$field['size'].'"' : '';
-    $attribs .= isset( $field['cols'] ) ? ' cols="'.$field['cols'].'"' : '';
-    $attribs .= isset( $field['rows'] ) ? ' rows="'.$field['rows'].'"' : '';
-    $attribs .= isset( $field['multiple'] ) ? ' multiple="multiple"' : '';
-    $attribs .= isset( $field['readonly'] ) ? ' readonly="readonly"' : '';
-    $attribs .= isset( $field['disabled'] ) ? ' disabled="disabled"' : '';
-    $attribs .= isset( $field['hidden'] ) ? ' hidden="hidden"' : '';
-    $attribs .= isset( $field['htmlEditor'] ) ? ' contenteditable="true"' : '';
-
-    foreach( $field as $dataKey => $dataValue ) {
-      if( strpos( $dataKey, 'data-' ) === 0 ) {
-        $attribs .= ' '.$dataKey.'="'.$dataValue.'"';
+      if( isset( $field['label'] ) ) {
+        $html['label'] = '<label';
+        $html['label'] .= ( $myFielId ? ' for="'.$myFielId.'"' : '' );
+        $html['label'] .= ' class="'.self::CSS_PRE.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
+        $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
+        $html['label'] .= '>'.$field['label'].'</label>';
       }
-    }
 
-    switch( $field['type'] ) {
-      case 'select':
-        $html['inputOpen'] = '<select name="'.$fieldName.'"'. $attribs.'>';
+      $attribs = ' form="'.$this->id.'"';
+      $attribs .= ( $myFielId ? ' id="'.$myFielId.'"' : '' );
+      $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$fieldName.
+        ( ( $field['type'] === 'file' ) ? ' '.self::CSS_PRE.'-fileField' : '' ).
+        ( $cloneOf ? ' '.self::CSS_PRE.'-cloneOf-'.$cloneOf : '' ).
+        ( $groupName ? ' '.self::CSS_PRE.'-group-'.$groupName : '' ).
+        ( isset( $field['htmlEditor'] ) ? ' '.self::CSS_PRE.'-htmlEditor' : '' ).
+        ( isset( $field['class'] ) ? ' '.$field['class'] : '' ).
+        '"';
+      $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
+      $attribs .= isset( $field['title'] ) ? ' title="'.$field['title'].'"' : '';
+      $attribs .= isset( $field['placeholder'] ) ? ' placeholder="'.$field['placeholder'].'"' : '';
+      $attribs .= isset( $field['maxlength'] ) ? ' maxlength="'.$field['maxlength'].'"' : '';
+      $attribs .= isset( $field['size'] ) ? ' size="'.$field['size'].'"' : '';
+      $attribs .= isset( $field['cols'] ) ? ' cols="'.$field['cols'].'"' : '';
+      $attribs .= isset( $field['rows'] ) ? ' rows="'.$field['rows'].'"' : '';
+      $attribs .= isset( $field['multiple'] ) ? ' multiple="multiple"' : '';
+      $attribs .= isset( $field['readonly'] ) ? ' readonly="readonly"' : '';
+      $attribs .= isset( $field['disabled'] ) ? ' disabled="disabled"' : '';
+      $attribs .= isset( $field['hidden'] ) ? ' hidden="hidden"' : '';
+      $attribs .= isset( $field['htmlEditor'] ) ? ' contenteditable="true"' : '';
 
-        $html['options'] = array();
-        if( isset($field['options']) && is_array($field['options']) && count($field['options'])>0 ) {
-          foreach( $field['options'] as $val => $text ) {
-            if( is_array( $text ) && isset( $text['value'] ) ) {
-              $optInfo = $text;
-              $optInput = '<option value="'. htmlspecialchars( $optInfo[ 'value' ] ) .'"';
-              if( isset( $optInfo[ 'disabled' ] ) && $optInfo[ 'disabled' ] ) {
-                $optInput .= ' disabled';
+      foreach( $field as $dataKey => $dataValue ) {
+        if( strpos( $dataKey, 'data-' ) === 0 ) {
+          $attribs .= ' '.$dataKey.'="'.$dataValue.'"';
+        }
+      }
+
+      switch( $field['type'] ) {
+        case 'select':
+          $html['inputOpen'] = '<select name="'.$fieldName.'"'. $attribs.'>';
+
+          $html['options'] = array();
+          if( isset($field['options']) && is_array($field['options']) && count($field['options'])>0 ) {
+            foreach( $field['options'] as $val => $text ) {
+              if( is_array( $text ) && isset( $text['value'] ) ) {
+                $optInfo = $text;
+                $optInput = '<option value="'. htmlspecialchars( $optInfo[ 'value' ] ) .'"';
+                if( isset( $optInfo[ 'disabled' ] ) && $optInfo[ 'disabled' ] ) {
+                  $optInput .= ' disabled';
+                }
+                foreach( $optInfo as $dataKey => $dataValue ) {
+                  if( strpos( $dataKey, 'data-' ) === 0 ) {
+                    $optInput .= ' '.$dataKey.'="'.$dataValue.'"';
+                  }
+                }
+                $optInput .= '>' . $optInfo[ 'text' ] . '</option>';
+                $html[ 'options' ][ $optInfo[ 'value' ] ] = array(
+                  'input' => $optInput,
+                  'text' => $optInfo[ 'text' ]
+                );
               }
-              foreach( $optInfo as $dataKey => $dataValue ) {
-                if( strpos( $dataKey, 'data-' ) === 0 ) {
-                  $optInput .= ' '.$dataKey.'="'.$dataValue.'"';
+              else {
+                $html['options'][$val] = array(
+                  'input' => '<option value="'.htmlspecialchars( $val ).'">'.$text.'</option>',
+                  'text' => $text
+                );
+              }
+            }
+            // Colocamos los selected
+            if( isset( $field['value'] ) ) {
+              $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
+              $dataOrder = 1;
+              foreach( $values as $val ) {
+                if( isset( $html['options'][$val]['input'] ) ) {
+                  $html['options'][$val]['input'] = str_replace(
+                    'option value="'.htmlspecialchars( $val ).'"',
+                    'option data-order="'.$dataOrder.'" value="'.htmlspecialchars( $val ).'" selected="selected"',
+                    $html['options'][$val]['input'] );
+                  $dataOrder++;
+                  if( !isset( $field['multiple'] ) ) {
+                    break; // Si no es multiple, solo puede tener 1 valor
+                  }
                 }
               }
-              $optInput .= '>' . $optInfo[ 'text' ] . '</option>';
-              $html[ 'options' ][ $optInfo[ 'value' ] ] = array(
-                'input' => $optInput,
-                'text' => $optInfo[ 'text' ]
-              );
-            }
-            else {
-              $html['options'][$val] = array(
-                'input' => '<option value="'.htmlspecialchars( $val ).'">'.$text.'</option>',
-                'text' => $text
-              );
             }
           }
-          // Colocamos los selected
+
+          $html['inputClose'] = '</select><!-- select '.$fieldName.' -->';
+          break;
+
+        case 'checkbox':
+        case 'radio':
+          $html['options'] = array();
+          foreach( $field['options'] as $val => $text ) {
+            $html['options'][$val] = array();
+            $html['options'][$val]['input'] = '<input name="'.$fieldName.'"'.
+              ' value="'.htmlspecialchars( $val ).'"'.
+              ' type="'.$field['type'].'"'.$attribs.'>';
+            $html['options'][$val]['text'] = $text;
+            $html['options'][$val]['label'] = $text!='' ? '<label>'.$text.'</label>' : '';
+          }
+          // Colocamos los checked
           if( isset( $field['value'] ) ) {
             $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
-            $dataOrder = 1;
             foreach( $values as $val ) {
               if( isset( $html['options'][$val]['input'] ) ) {
                 $html['options'][$val]['input'] = str_replace(
-                  'option value="'.htmlspecialchars( $val ).'"',
-                  'option data-order="'.$dataOrder.'" value="'.htmlspecialchars( $val ).'" selected="selected"',
+                  'name="'.$fieldName.'" value="'.htmlspecialchars( $val ).'"',
+                  'name="'.$fieldName.'" value="'.htmlspecialchars( $val ).'" checked="checked"',
                   $html['options'][$val]['input'] );
-                $dataOrder++;
-                if( !isset( $field['multiple'] ) ) {
-                  break; // Si no es multiple, solo puede tener 1 valor
+                if( $field['type']=='radio' ) {
+                  break; // Radio solo puede tener 1 valor
                 }
               }
             }
           }
-        }
+          break;
 
-        $html['inputClose'] = '</select><!-- select '.$fieldName.' -->';
-        break;
+        case 'textarea':
+          $html['inputOpen'] = '<textarea name="'.$fieldName.'"'.$attribs.'>';
+          $html['value'] = isset( $field['value'] ) ? htmlspecialchars( $field['value'] ) : '';
+          $html['inputClose'] = '</textarea>';
+          break;
 
-      case 'checkbox':
-      case 'radio':
-        $html['options'] = array();
-        foreach( $field['options'] as $val => $text ) {
-          $html['options'][$val] = array();
-          $html['options'][$val]['input'] = '<input name="'.$fieldName.'"'.
-            ' value="'.htmlspecialchars( $val ).'"'.
-            ' type="'.$field['type'].'"'.$attribs.'>';
-          $html['options'][$val]['text'] = $text;
-          $html['options'][$val]['label'] = $text!='' ? '<label>'.$text.'</label>' : '';
-        }
-        // Colocamos los checked
-        if( isset( $field['value'] ) ) {
-          $values = is_array( $field['value'] ) ? $field['value'] : array( $field['value'] );
-          foreach( $values as $val ) {
-            if( isset( $html['options'][$val]['input'] ) ) {
-              $html['options'][$val]['input'] = str_replace(
-                'name="'.$fieldName.'" value="'.htmlspecialchars( $val ).'"',
-                'name="'.$fieldName.'" value="'.htmlspecialchars( $val ).'" checked="checked"',
-                $html['options'][$val]['input'] );
-              if( $field['type']=='radio' ) {
-                break; // Radio solo puede tener 1 valor
-              }
-            }
-          }
-        }
-        break;
+        case 'file':
+          $html['input'] = '<input name="'.$fieldName.'"';
+          // $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
+          $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
+          // error_log( 'FILE --- '.print_r( $field, true ) );
+          break;
 
-      case 'textarea':
-        $html['inputOpen'] = '<textarea name="'.$fieldName.'"'.$attribs.'>';
-        $html['value'] = isset( $field['value'] ) ? htmlspecialchars( $field['value'] ) : '';
-        $html['inputClose'] = '</textarea>';
-        break;
+        case 'reserved':
+          $html = array();
+          break;
 
-      case 'file':
-        $html['input'] = '<input name="'.$fieldName.'"';
-        // $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
-        $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
-        error_log( 'FILE --- '.print_r( $field, true ) );
-        break;
-
-      case 'reserved':
-        $html = array();
-        break;
-
-      default:
-        // button, file, hidden, password, range, text, color, date, datetime, datetime-local,
-        // email, image, month, number, search, tel, time, url, week
-        $html['input'] = '<input name="'.$fieldName.'"';
-        $html['input'] .= isset( $field['value'] ) ? ' value="'.htmlspecialchars( $field['value'] ).'"' : '';
-        $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
-        break;
+        default:
+          // button, file, hidden, password, range, text, color, date, datetime, datetime-local,
+          // email, image, month, number, search, tel, time, url, week
+          $html['input'] = '<input name="'.$fieldName.'"';
+          $html['input'] .= isset( $field['value'] ) ? ' value="'.htmlspecialchars( $field['value'] ).'"' : '';
+          $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
+          break;
+      }
+    } // if( $field = $this->getField( $fieldName ) )
+    else {
+      error_log( 'form->getHtmlFieldArray Error: No existe '.$fieldName );
     }
 
     return $html;
