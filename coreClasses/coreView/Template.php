@@ -62,16 +62,16 @@ class Template extends Smarty
     $this->setCacheDir( $this->cgmSmartyCacheDir );
 
 
-    global $COGUMELO_SMARTY_GLOBALS, $COGUMELO_SMARTY_CONSTANTS;
-    if( is_array( $COGUMELO_SMARTY_GLOBALS ) && count( $COGUMELO_SMARTY_GLOBALS ) > 0 ) {
-      foreach( $COGUMELO_SMARTY_GLOBALS as $globalKey ) {
+    global $MEDIASERVER_SMARTY_GLOBALS, $MEDIASERVER_SMARTY_CONSTANTS;
+    if( is_array( $MEDIASERVER_SMARTY_GLOBALS ) && count( $MEDIASERVER_SMARTY_GLOBALS ) > 0 ) {
+      foreach( $MEDIASERVER_SMARTY_GLOBALS as $globalKey ) {
         if( isset( $GLOBALS[ $globalKey ] ) ) {
           $this->assign( 'GLOBAL_'.$globalKey, $GLOBALS[ $globalKey ] );
         }
       }
     }
-    if( is_array( $COGUMELO_SMARTY_CONSTANTS ) && count( $COGUMELO_SMARTY_CONSTANTS ) > 0 ) {
-      foreach( $COGUMELO_SMARTY_CONSTANTS as $key => $value ) {
+    if( is_array( $MEDIASERVER_SMARTY_CONSTANTS ) && count( $MEDIASERVER_SMARTY_CONSTANTS ) > 0 ) {
+      foreach( $MEDIASERVER_SMARTY_CONSTANTS as $key => $value ) {
         $this->assign( $key, $value );
       }
     }
