@@ -623,7 +623,6 @@ function createFileFieldDropZone( idForm, fieldName ) {
   fileFieldDropZoneElem.addEventListener( 'drop', fileFieldDropZoneDrop, false);
   fileFieldDropZoneElem.addEventListener( 'dragover', fileFieldDropZoneDragOver, false);
 }
-
 function removeFileFieldDropZone( idForm, fieldName ) {
   console.log( 'removeFileFieldDropZone: ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
