@@ -164,6 +164,11 @@ class MysqlDAORelationship
     else
     if( $colType == 'GEOMETRY' ) {
       $retStr = "ASCII( AsText( COALESCE(".$vo->table.".".$colKey.", 'null')) )";
+
+
+      $retStr = "if(".$vo->table.".".$colKey." is not null,  astext(".$vo->table.".".$colKey."),'null' )";
+
+
     }
 
     return $retStr;
