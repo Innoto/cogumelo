@@ -603,17 +603,27 @@ function createFileFieldDropZone( idForm, fieldName ) {
   console.log( 'createFileFieldDropZone: ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+  var $fileDefLabel = $fileFieldWrap.find( 'label' );
 
-  var $fileFieldDropZone = $( '<div>' ).addClass( 'fileFieldDropZone fileFieldDropZoneWait' )
+  $buttonText = ( $fileDefLabel.length > 0 ) ? $fileDefLabel.html() : 'Upload file';
+
+  var $fileFieldDropZone = $( '<label>' ).addClass( 'fileFieldDropZone fileFieldDropZoneWait' )
     .attr( {
       'id': 'fileFieldDropZone_' + idForm + '_' + fieldName,
+      'for': $fileField.attr( 'id' ),
       'data-fieldname': fieldName, 'data-form_id': idForm,
-      'style': 'text-align: center; background-color: #efe; padding:1em;'
+      'style': 'text-align:center; cursor:pointer;'
     });
 
-  $fileFieldDropZone.append( '<i class="fa fa-upload fa-5x" style="color: rgb(90, 183, 128);"></i>' );
+  $fileFieldDropZone.append(
+    '<i class="fa fa-cloud-upload" style="font-size:100px; color:#7fb1c7;"></i>'+
+    '<br><input type="button" class="cgmMForm-field" value="' + $buttonText + '">'
+  );
 
   $fileFieldWrap.append( $fileFieldDropZone );
+
+  $fileField.hide();
+  $fileDefLabel.hide();
 
   // Setup the fileFieldDropZone listeners.
   //$fileFieldDropZoneElem = $( '.fileFieldDropZone' );
