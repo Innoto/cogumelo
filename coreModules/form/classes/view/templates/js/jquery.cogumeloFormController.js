@@ -617,7 +617,19 @@ function createFileFieldDropZone( idForm, fieldName ) {
 
   $fileFieldDropZone.append(
     '<i class="fa fa-cloud-upload" style="font-size:100px; color:#7fb1c7;"></i>'+
-    '<br><input type="button" class="cgmMForm-field" value="' + $buttonText + '">'
+    '<br><span class="cgmMForm-button-js">' + $buttonText + '</span>'+
+    // '<br><input type="button" class="cgmMForm-field" value="' + $buttonText + '">'
+    '<style>'+
+    '.cgmMForm-button-js {'+
+    ' background-color: transparent; background-image: none; border: 2px solid #7fb1c7; border-radius: 2px;'+
+    ' color: #7fb1c7; cursor: pointer; font-size: 14px; font-weight: normal; line-height: 1.42857;'+
+    ' margin-bottom: 5px; padding: 5px 15px; text-align: center; text-transform: uppercase;'+
+    ' vertical-align: middle; white-space: nowrap;'+
+    '}'+
+    '.cgmMForm-button-js:hover {'+
+    ' background-color: #528ba4; border: 2px solid #5497b4; color: #ffffff; text-decoration: none;'+
+    '}'+
+    '</style>'
   );
 
   $fileFieldWrap.append( $fileFieldDropZone );
