@@ -187,7 +187,7 @@
     $relArray['relationship'] = array();
 
 
-    if( $deep < 2 ) {
+    if( $deep < 4 ) {
       $allVOsRel = self::getAllRelScheme();
 
 
