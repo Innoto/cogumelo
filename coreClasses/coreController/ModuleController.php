@@ -110,7 +110,7 @@ class ModuleController
           $retPath = COGUMELO_LOCATION.'/coreModules/'.$module.'/'.$file_relative_path;
         }
         else {
-          Cogumelo::error("ModuleController: '".$file_relative_path."'' not found into module '".$module."' ");
+          Cogumelo::debug("ModuleController: '".$file_relative_path."'' not found into module '".$module."' ");
         }
 
       }
