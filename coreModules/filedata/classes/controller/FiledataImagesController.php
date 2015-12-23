@@ -205,7 +205,7 @@ class FiledataImagesController {
 
         if( isset( $this->profile['rasterColor'] ) ) {
           // Para dar color en la carga de formatos raster
-          $svg = preg_replace( '/(style="fill:)(#[0-9a-f]+)(")/', '${1}'.$this->profile['rasterColor'].'${3}', $svg );
+          $svg = preg_replace( '/(style="fill:)(#[0-9a-f]+)([;"])/', '${1}'.$this->profile['rasterColor'].'${3}', $svg );
         }
 
         //error_log( 'SVG: '.$svg );
