@@ -21,7 +21,7 @@ class FiledataImagesController {
 
 
   public function __construct( $fileId = false ) {
-    error_log( 'FiledataImagesController __construct: ' . $fileId );
+    //error_log( 'FiledataImagesController __construct: ' . $fileId );
 
     $filedataCtrl = new FiledataController( $fileId );
     $this->fileId = $filedataCtrl->fileId;
@@ -30,7 +30,7 @@ class FiledataImagesController {
 
 
   public function loadFileInfo( $fileId ) {
-    error_log( 'FiledataImagesController: loadFileInfo(): ' . $fileId );
+    //error_log( 'FiledataImagesController: loadFileInfo(): ' . $fileId );
 
     if( $this->fileId !== $fileId || $this->fileInfo === false ) {
       $filedataCtrl->loadFileInfo( $fileId );
@@ -38,19 +38,20 @@ class FiledataImagesController {
       $this->fileInfo = $filedataCtrl->fileInfo;
     }
 
-    error_log( print_r( $this->fileInfo, true ) );
+    //error_log( print_r( $this->fileInfo, true ) );
     return $this->fileInfo;
   }
 
   public function setProfile( $profile ) {
-    error_log( "FiledataImagesController: setProfile( $profile )" );
+    //error_log( "FiledataImagesController: setProfile( $profile )" );
 
     global $IMAGE_PROFILES;
 
     if( $profile && isset( $IMAGE_PROFILES[ $profile ] ) ) {
       $conf = $IMAGE_PROFILES[ $profile ];
 
-      $this->profile = array();
+      //$this->profile = array();
+      $this->profile = $IMAGE_PROFILES[ $profile ];
       $this->profile['idName'] = $profile;
 
       $this->profile['width'] = ( isset( $conf['width'] ) ) ? $conf['width'] : 0; // 0 by default
@@ -58,13 +59,14 @@ class FiledataImagesController {
 
       $this->profile['cut'] = ( isset( $conf['cut'] ) ) ? $conf['cut'] : true; // true by default
       $this->profile['enlarge'] = ( isset( $conf['enlarge'] ) ) ? $conf['enlarge'] : true; // true by default
-      // $this->profile['no_cache'] = ( isset( $conf['no_cache'] ) ) ? $conf['no_cache'] : false; // false by default
 
       $this->profile['saveFormat'] = ( isset( $conf['saveFormat'] ) ) ? $conf['saveFormat'] : false;
       $this->profile['saveName'] = ( isset( $conf['saveName'] ) ) ? $conf['saveName'] : false;
       $this->profile['saveQuality'] = ( isset( $conf['saveQuality'] ) ) ? $conf['saveQuality'] : false;
 
-      error_log( "FiledataImagesController: this->profile = $this->profile['idName']" );
+      $this->profile['cache'] = ( isset( $conf['cache'] ) ) ? $conf['cache'] : true; // true by default
+
+      //error_log( 'FiledataImagesController: this->profile = '.$this->profile['idName'] );
     }
     else {
       $this->profile=false;
@@ -74,7 +76,7 @@ class FiledataImagesController {
   }
 
   public function getRouteProfile( $profile ) {
-    error_log( "FiledataImagesController: getRouteProfile( $profile )" );
+    //error_log( "FiledataImagesController: getRouteProfile( $profile )" );
     $imgRoute = false;
     $imgRouteOriginal = $this->filesAppPath . $this->fileInfo['absLocation'];
 
@@ -82,26 +84,24 @@ class FiledataImagesController {
       if( $this->setProfile( $profile ) ) {
         $imgRoute = $this->filesCachePath .'/'. $this->fileInfo['id'] .'/'.
           $this->profile['idName'] .'/'. $this->fileInfo['name'];
-        error_log( "FiledataImagesController: getRouteProfile( $profile ): $imgRoute" );
+        //error_log( "FiledataImagesController: getRouteProfile( $profile ): $imgRoute" );
 
-        /**
-         QUITAR !!!
-        */
-        // unlink( $imgRoute );
-
-        if( !file_exists( $imgRoute ) ) {
+        if( !$this->profile['cache'] || !file_exists( $imgRoute ) ) {
+          if( file_exists( $imgRoute ) ) {
+            unlink( $imgRoute );
+          }
           $imgRoute = $this->createImageProfile( $imgRouteOriginal, $imgRoute );
         }
       }
       else {
         // Original
         $imgRoute = $this->filesCachePath .'/'. $this->fileInfo['id'] .'/'. $this->fileInfo['name'];
-        error_log( "FiledataImagesController: getRouteProfile( NONE ): $imgRoute" );
-        if( !file_exists( $imgRoute ) ) {
+        //error_log( "FiledataImagesController: getRouteProfile( NONE ): $imgRoute" );
+        if( $this->profile['cache'] && !file_exists( $imgRoute ) ) {
           $toRouteDir = pathinfo( $imgRoute, PATHINFO_DIRNAME );
-          error_log( "toRouteDir = $toRouteDir" );
+          //error_log( "toRouteDir = $toRouteDir" );
           if( !file_exists( $toRouteDir ) ) {
-            error_log( "mkdir $toRouteDir" );
+            //error_log( "mkdir $toRouteDir" );
             mkdir ( $toRouteDir, 0770, true );
           }
           if( !copy( $imgRouteOriginal, $imgRoute ) ) {
@@ -117,30 +117,109 @@ class FiledataImagesController {
     else {
       $imgRouteInfo = pathinfo( $imgRoute );
       $linkIdRoute = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['id'] .'.'. $imgRouteInfo['extension'];
-      if( !file_exists( $linkIdRoute ) ) {
-        error_log( "symlink( $imgRoute, $linkIdRoute )" );
+      if( $this->profile['cache'] && !file_exists( $linkIdRoute ) ) {
+        //error_log( "symlink( $imgRoute, $linkIdRoute )" );
         symlink( $imgRoute, $linkIdRoute );
       }
     }
-    error_log( "FiledataImagesController: getRouteProfile = $imgRoute" );
+    //error_log( "FiledataImagesController: getRouteProfile = $imgRoute" );
     return $imgRoute;
   }
 
 
   public function createImageProfile( $fromRoute, $toRoute ) {
+    error_log( '---' );error_log( '---' );error_log( '---' );
     error_log( 'FiledataImagesController: createImageProfile(): ' );
     error_log( $fromRoute );
+    error_log( 'mime_content_type: '.mime_content_type( $fromRoute ) );
     error_log( $toRoute );
 
     $resultOK = true;
 
     if( $this->profile && file_exists( $fromRoute ) && !file_exists( $toRoute ) ) {
       $im = new Imagick();
-      $imageFH = fopen( $fromRoute, 'rb' );
+      $mimeType = mime_content_type( $fromRoute );
 
-      $im->readimagefile( $imageFH );
-      $im->trimImage( 0 );
-      $im->setImagePage( 0, 0, 0, 0 );
+      if( isset( $this->profile['backgroundColor'] ) ) {
+        $im->setBackgroundColor( new ImagickPixel( $this->profile['backgroundColor'] ) );
+      }
+      else {
+        $im->setBackgroundColor( new ImagickPixel( 'transparent' ) );
+      }
+
+
+      if( strpos( $mimeType, 'image/svg' ) === 0 ) {
+        // Imagenes SVG
+        $svg = file_get_contents( $fromRoute );
+
+        // Machaco el tamaño de lienzo
+        $svg = preg_replace( '/(width|height)="(.*?)"/', '${1}="128px"', $svg );
+        //error_log( 'SVG: '.$svg );
+
+        if( isset( $this->profile['rasterResolution'] ) ) {
+          // Para dar calidad en la carga de formatos raster
+          $im->setResolution( $this->profile['rasterResolution']['x'], $this->profile['rasterResolution']['y'] );
+        }
+        else {
+          // Buscamos que la conversión a px iguale o supere el tamaño solicitado
+          $imSvg = new Imagick();
+          $density = 120;
+          $imSvg->setResolution( $density, $density );
+          $imSvg->readImageBlob( $svg );
+          $imSvg->trimImage( 0 ); // Recorta deixando so a imaxe
+          $imSvg->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
+          $imSvgSize = $imSvg->getImageGeometry();
+          $x = $imSvgSize['width'];
+          $y = $imSvgSize['height'];
+          $tx = $this->profile['width'];
+          $ty = $this->profile['height'];
+          error_log( "SVG iniciales $x $y $tx $ty $density ---" );
+          if( $this->profile['cut'] ) {
+            // Escala para axustar un eixo e corta no outro
+            if( $ty < intval( $tx*$y/$x ) ) {
+              $ty = intval( $tx*$y/$x );
+              $density = 1 + intval( $density * $ty / $y );
+            }
+            else {
+              $tx = intval( $ty*$x/$y );
+              $density = 1 + intval( $density * $tx / $x );
+            }
+          }
+          else { // Escala para axustar un eixo e queda corto o outro
+            if( $ty > intval( $tx*$y/$x ) ) {
+              $ty = intval( $tx*$y/$x );
+              $density = 1 + intval( $density * $ty / $y );
+            }
+            else {
+              $tx = intval( $ty*$x/$y );
+              $density = 1 + intval( $density * $tx / $x );
+            }
+          }
+          error_log( "SVG finales $x $y $tx $ty $density ---" );
+          $imSvg->clear();
+          $imSvg->destroy();
+
+          $im->setResolution( $density, $density );
+        }
+
+
+        if( isset( $this->profile['rasterColor'] ) ) {
+          // Para dar color en la carga de formatos raster
+          $svg = preg_replace( '/(style="fill:)(#[0-9a-f]+)(")/', '${1}'.$this->profile['rasterColor'].'${3}', $svg );
+        }
+
+        //error_log( 'SVG: '.$svg );
+        $im->readImageBlob( $svg );
+        $im->trimImage( 0 ); // Recorta deixando so a imaxe
+        $im->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
+      }
+      else {
+        // Imagenes no SVG
+        $im->readimagefile( fopen( $fromRoute, 'rb' ) );
+        // $im->trimImage( 0 ); // Recorta deixando so a imaxe
+        $im->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
+      }
+
 
       $imSize = $im->getImageGeometry();
       $x = $imSize['width'];
@@ -229,21 +308,17 @@ class FiledataImagesController {
 
 
       // DEBUG info:
-      $imSize = $im->getImageGeometry();
-      $x = $imSize['width'];
-      $y = $imSize['height'];
-      $tx = $this->profile['width'];
-      $ty = $this->profile['height'];
-      error_log( "Datos finales $x $y $tx $ty ---" );
+      $dbSize = $im->getImageGeometry();
+      error_log( 'Datos finales '.$dbSize['width'].' '.$dbSize['height'].' '.$this->profile['width'].' '.$this->profile['height'].' ---' );
 
 
       $toRouteInfo = pathinfo( $toRoute );
       // [dirname]/[basename]
       // [dirname]/[filename].[extension]
 
-      error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
+      //error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
       if( !file_exists( $toRouteInfo['dirname'] ) ) {
-        error_log( 'mkdir '.$toRouteInfo['dirname'] );
+        //error_log( 'mkdir '.$toRouteInfo['dirname'] );
         mkdir ( $toRouteInfo['dirname'], 0770, true );
       }
 
@@ -272,7 +347,7 @@ class FiledataImagesController {
         //$im->setImageCompressionQuality(90);
 
 
-        error_log( 'FiledataImagesController: createImageProfile: writeImage '.$toRoute );
+        //error_log( 'FiledataImagesController: createImageProfile: writeImage '.$toRoute );
         $im->writeImage( $toRoute );
       }
       else {
@@ -283,18 +358,24 @@ class FiledataImagesController {
       $im->destroy();
     }
 
+    error_log( '---' );error_log( '---' );error_log( '---' );
     return $toRoute;
   }
 
 
   public function sendImage( $imgInfo ) {
+    error_log( 'FiledataImagesController: sendImage '. print_r( $imgInfo, true ) );
+
     $result = false;
 
     if( file_exists( $imgInfo['route'] ) ) {
 
+      /*
       if( !isset( $imgInfo['type'] ) ) {
         $imgInfo['type'] = mime_content_type( $imgInfo['route'] );
       }
+      */
+      $imgInfo['type'] = mime_content_type( $imgInfo['route'] );
 
       if( !isset( $imgInfo['name'] ) ) {
         $imgInfo['name'] = substr( strrchr( $imgInfo['route'], '/' ), 1 );
@@ -314,6 +395,12 @@ class FiledataImagesController {
 
       // print image
       readfile( $imgInfo['route'] );
+
+      // TODO: Revisar
+      if( isset( $this->profile['cache'] ) && !$this->profile['cache'] ) {
+        unlink( $imgInfo['route'] );
+      }
+
       $result = true;
     }
     else {
