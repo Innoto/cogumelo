@@ -12,7 +12,7 @@ class FiledataController {
   var $fileInfo = false;
 
   public function __construct( $fileId = false ) {
-    error_log( 'FiledataController __construct: ' . $fileId );
+    //error_log( 'FiledataController __construct: ' . $fileId );
 
     if( $fileId ) {
       $this->fileInfo = $this->loadFileInfo( $fileId );
@@ -28,7 +28,7 @@ class FiledataController {
     Load File info
   */
   public function loadFileInfo( $fileId ) {
-    error_log( 'FiledataController: loadFileInfo(): ' . $fileId );
+    //error_log( 'FiledataController: loadFileInfo(): ' . $fileId );
 
     if( $this->fileId !== $fileId || $this->fileInfo === false ) {
       $this->fileId = false;
@@ -43,7 +43,7 @@ class FiledataController {
       }
     }
 
-    error_log( print_r( $this->fileInfo, true ) );
+    //error_log( print_r( $this->fileInfo, true ) );
     return $this->fileInfo;
   } // function loadFileInfo()
 
@@ -51,7 +51,7 @@ class FiledataController {
   /**
     Creates a database FiledataModel register and save
   */
-  public function saveFile( $originFile, $relativeDestPath , $fileName, $originFileIsRelative = true  ) {
+  public function saveFile( $originFile, $relativeDestPath, $fileName, $originFileIsRelative = true ) {
 
     if( $originFileIsRelative ) {
       $absFrom = APP_BASE_PATH. $originFile;

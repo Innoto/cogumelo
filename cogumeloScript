@@ -106,11 +106,17 @@ if( $argc > 1 ) {
 
     /* We execute this two actions from web as we need to operate with the apache permissions*/
     case 'flush': // delete temporary files
+      echo "\n --- setPermissionsDevel:\n";
       setPermissionsDevel();
+      echo "\n --- actionFlush:\n";
       actionFlush();
-      actionCompileTranslations();
+      // echo "\n --- actionCompileTranslations:\n";
+      // actionCompileTranslations();
+      echo "\n --- actionGenerateClientCaches:\n";
       actionGenerateClientCaches();
+      echo "\n --- setPermissionsDevel:\n";
       setPermissionsDevel();
+      echo "\n --- DONE\n";
       break;
 
     case 'rotateLogs':
