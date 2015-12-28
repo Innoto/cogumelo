@@ -336,8 +336,20 @@ class Template extends Smarty
       }
 
       // assign
-      $this->assign( 'css_includes', $lessConfInclude . $this->getClientStylesHtml() );
-      $this->assign( 'js_includes', $jsConfInclude . $this->lessClientCompiler() . $this->getClientScriptHtml() );
+
+      $clientIncludes = '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.js"></script>' . "\n";
+
+      $clientIncludes .=  $lessConfInclude . $this->getClientStylesHtml();
+      $clientIncludes .= $jsConfInclude . $this->lessClientCompiler() . $this->getClientScriptHtml() ;
+
+      $this->assign('client_includes', $clientIncludes );
+
+
+/*
+      $this->assign('js_includes', $jsConfInclude . $this->lessClientCompiler() . $this->getClientScriptHtml() );
+      $this->assign('css_includes', $lessConfInclude . $this->getClientStylesHtml() );
+*/
+
 
 
 
@@ -383,9 +395,8 @@ class Template extends Smarty
 
     if( $this->tpl ) {
       // assign
-      $this->assign( 'css_includes', $this->getClientStylesHtml( true ) );
-      $this->assign( 'js_includes', $this->getClientScriptHtml( true ) );
 
+      $this->assign('client_includes',  $this->getClientScriptHtml( true ) . $this->getClientStylesHtml( true )  );
 
 
       foreach( $this->blocks as $blockName => $blockObjects ) {
