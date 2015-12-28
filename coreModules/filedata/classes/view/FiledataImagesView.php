@@ -38,7 +38,7 @@ class FiledataImagesView extends View {
   */
   public function showImg( $urlParams = false ) {
 
-    error_log( 'FiledataWeb: showImg(): ' . print_r( $urlParams, true ) );
+    error_log( 'FiledataImagesView: showImg(): ' . print_r( $urlParams, true ) );
 
     if( isset( $urlParams[ 'fileId' ] ) ) {
       $imageCtrl = new FiledataImagesController( $urlParams[ 'fileId' ] );
@@ -59,9 +59,9 @@ class FiledataImagesView extends View {
         $imgInfo['route'] = $imageCtrl->getRouteProfile( $urlParams[ 'profile' ] );
 
 
-        if( file_exists( $imgInfo['route'] ) && strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
+        if( $imageCtrl->profile['cache'] && file_exists( $imgInfo['route'] ) && strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
           $urlRedirect = substr( $imgInfo['route'], strlen( $this->webBasePath ) );
-          error_log( "FiledataWeb: showImg(): urlRedirect = $urlRedirect" );
+          error_log( "FiledataImagesView: showImg(): urlRedirect = $urlRedirect" );
           Cogumelo::redirect( SITE_HOST . $urlRedirect );
         }
         else {
@@ -82,7 +82,6 @@ class FiledataImagesView extends View {
     else {
       cogumelo::error( 'Imposible mostrar el elemento solicitado.2' );
     }
-
   } // function showImg()
 
 
