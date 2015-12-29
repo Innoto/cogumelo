@@ -1,7 +1,6 @@
 var cogumelo = cogumelo || {};
 
 
-console.log(cogumelo.includedPaths)
 
 // prevent declares twice
 if( typeof cogumelo.includes == "undefined"  ) {
