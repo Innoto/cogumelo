@@ -32,8 +32,9 @@ if( typeof cogumelo.includes == "undefined"  ) {
             $('<link />', {
               href: e.src,
               rel: 'stylesheet/less',
+              async:true,
               type: 'text/css'
-            }).appendTo('body')[0]
+            }).appendTo('head')[0]
           );
 
           cogumelo.includedPaths.push(e.src);
@@ -41,16 +42,18 @@ if( typeof cogumelo.includes == "undefined"  ) {
         else if(e.type=='text/css') {
           $("<link/>", {
             rel: e.rel,
+            async:true,
             type: "text/css",
             href: e.src
-          }).appendTo("body");
+          }).appendTo("head");
 
           cogumelo.includedPaths.push(e.src);
         }
         else if(e.type=='text/javascript') {
-          //scriptsLoadNow.push(  e.src  );
+
+
           var jsLink = $("<script type='text/javascript' src='"+e.src+"'>");
-          $("body").append(jsLink);
+          $("head").append(jsLink);
 
           cogumelo.includedPaths.push(e.src);
         }
