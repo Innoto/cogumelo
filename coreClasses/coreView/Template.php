@@ -241,12 +241,12 @@ class Template extends Smarty
     if( !$ignoreAutoincludes ) {
       foreach ( $this->js_autoincludes as $includeKey => $include) {
 
-        $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => false , 'type'=> $include['type'], 'onlyOnce' => true );
+        $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => false , 'type'=> $include['type'] );
       }
     }
 
     foreach ( $this->js_includes as $includeKey => $include) {
-      $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => false , 'type'=> $include['type'], 'onlyOnce' => true );
+      $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => false , 'type'=> $include['type'] );
     }
 
 
@@ -282,12 +282,12 @@ class Template extends Smarty
     if( !$ignoreAutoincludes ) {
       foreach ( $this->css_autoincludes as $includeKey => $include) {
 
-        $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'], 'onlyOnce' => true );
+        $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
       }
     }
 
     foreach ( $this->css_includes as $includeKey => $include) {
-      $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'], 'onlyOnce' => true );
+      $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
     }
 
 
