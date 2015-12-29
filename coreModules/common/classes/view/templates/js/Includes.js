@@ -33,7 +33,7 @@ if( typeof cogumelo.includes == "undefined"  ) {
               href: e.src,
               rel: 'stylesheet/less',
               type: 'text/css'
-            }).appendTo('head')[0]
+            }).appendTo('body')[0]
           );
 
           cogumelo.includedPaths.push(e.src);
@@ -43,14 +43,14 @@ if( typeof cogumelo.includes == "undefined"  ) {
             rel: e.rel,
             type: "text/css",
             href: e.src
-          }).appendTo("head");
+          }).appendTo("body");
 
           cogumelo.includedPaths.push(e.src);
         }
         else if(e.type=='text/javascript') {
           //scriptsLoadNow.push(  e.src  );
           var jsLink = $("<script type='text/javascript' src='"+e.src+"'>");
-          $("head").append(jsLink);
+          $("body").append(jsLink);
 
           cogumelo.includedPaths.push(e.src);
         }
