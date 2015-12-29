@@ -138,17 +138,21 @@ class Template extends Smarty
         break;
     }
 
-    $include_chain = '<script type="text/javascript" src="'.$base_path.$file_path.'"></script>';
 
-    if( $is_autoinclude ){
-      if ( in_array( $include_chain, $this->js_autoincludes ) === false ) {
-        $this->js_autoincludes[] = $include_chain;
-      }
+    $includeObj = array(
+      'type' => "text/javascript",
+      'src' => $base_path.$file_path
+    );
+
+
+    $includeRef = $base_path.$file_path;
+
+
+    if( $is_autoinclude ) {
+        $this->js_autoincludes[$includeRef] = $includeObj;
     }
     else {
-      if ( in_array( $include_chain, $this->js_includes ) === false ) {
-        $this->js_includes[] = $include_chain;
-      }
+        $this->js_includes[$includeRef] = $includeObj;
     }
   }
 
@@ -194,18 +198,21 @@ class Template extends Smarty
       $lessCompiledExtension  = '';
     }
 
+    $includeObj = array(
+      'rel' => $file_rel,
+      'type' => "text/css",
+      'src' => $base_path.$file_path . $lessCompiledExtension
+    );
 
-    $include_chain = '<link rel="'.$file_rel.'" type="text/css" href="'.$base_path.$file_path.  $lessCompiledExtension.'">';
+
+    $includeRef = $base_path.$file_path.$lessCompiledExtension;
+
 
     if( $is_autoinclude ) {
-      if ( in_array( $include_chain, $this->css_autoincludes ) === false ) {
-        $this->css_autoincludes[] = $include_chain;
-      }
+        $this->css_autoincludes[$includeRef] = $includeObj;
     }
     else {
-      if ( in_array( $include_chain, $this->css_includes ) === false ) {
-        $this->css_includes[] = $include_chain;
-      }
+        $this->css_includes[$includeRef] = $includeObj;
     }
   }
 
@@ -216,13 +223,40 @@ class Template extends Smarty
    *
    * @return string $is_autoinclude
    **/
+
   public function getClientScriptHtml( $ignoreAutoincludes = false ) {
-    if( $ignoreAutoincludes ) {
-      $html = implode( "\n", array_unique( $this->js_includes ) );
+
+    $itemsToInclude = array();
+    $html = '';
+
+
+
+    $itemsToInclude[$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js'] = array(
+      'src'=> $this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js',
+      'rel' => false ,
+      'type'=> 'text/javascript',
+      'onlyOnce' => true
+    );
+
+    if( !$ignoreAutoincludes ) {
+      foreach ( $this->js_autoincludes as $includeKey => $include) {
+
+        $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => false , 'type'=> $include['type'], 'onlyOnce' => true );
+      }
     }
-    else {
-      $html = implode( "\n", array_unique( array_merge( $this->js_autoincludes, $this->js_includes ) ) );
+
+    foreach ( $this->js_includes as $includeKey => $include) {
+      $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => false , 'type'=> $include['type'], 'onlyOnce' => true );
     }
+
+
+    // generate the javascript include call
+
+    foreach( $itemsToInclude as $include ) {
+      $html .= "\t".str_replace('\\/', '/', json_encode( $include ) ) . ",  \n";;
+    }
+
+
 
     return( $html );
   }
@@ -235,12 +269,36 @@ class Template extends Smarty
    * @return string $is_autoinclude
    **/
   public function getClientStylesHtml( $ignoreAutoincludes = false ) {
-    if( $ignoreAutoincludes ) {
-      $html = implode( "\n", array_unique( $this->css_includes ) );
+    $itemsToInclude = array();
+    $html = '';
+
+    if( $this->cgmMediaserverCompileLess == false ) {
+      $src = $this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/lessConfConstants.less';
+      $itemsToInclude[$src] =  array('src'=> $src, 'rel' => "stylesheet/less" , 'type'=> 'text/css', 'onlyOnce' => true );
     }
-    else {
-      $html = implode( "\n", array_unique( array_merge( $this->css_autoincludes, $this->css_includes ) ) );
+
+
+
+    if( !$ignoreAutoincludes ) {
+      foreach ( $this->css_autoincludes as $includeKey => $include) {
+
+        $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'], 'onlyOnce' => true );
+      }
     }
+
+    foreach ( $this->css_includes as $includeKey => $include) {
+      $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'], 'onlyOnce' => true );
+    }
+
+
+    // generate the javascript include call
+    foreach( $itemsToInclude as $include ) {
+      $html .= "\t".str_replace('\\/', '/', json_encode( $include ) ) . ",\n";
+    }
+
+
+
+
 
     return( $html );
   }
@@ -327,20 +385,31 @@ class Template extends Smarty
         }
       }
 
-      // conf Variables
-      $lessConfInclude = '';
-      $jsConfInclude = '<script type="text/javascript" src="'.$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js'.'"></script>'."\n";
 
-      if( $this->cgmMediaserverCompileLess == false ) {
-        $lessConfInclude = '<link rel="stylesheet/less" type="text/css" href="'.$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/lessConfConstants.less'.'">'."\n";
+
+      // Basic includes and includers
+      $clientIncludes = "\n";
+      $clientIncludes .= '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.js"></script>' . "\n";
+      $clientIncludes .= '<script type="text/javascript" src="/media/module/common/js/Includes.js"></script>' . "\n";
+      if( !$this->cgmMediaserverCompileLess ) {
+        $clientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
+          'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
+          '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>';
       }
 
-      // assign
 
-      $clientIncludes = '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.js"></script>' . "\n";
 
-      $clientIncludes .=  $lessConfInclude . $this->getClientStylesHtml();
-      $clientIncludes .= $jsConfInclude . $this->lessClientCompiler() . $this->getClientScriptHtml() ;
+      $clientIncludes .= "\t<script>\n";
+
+
+      $clientIncludes .= '$.holdReady( true );'."\n";
+
+      $clientIncludes .= 'cogumelo.includes(['. "\n";
+      $clientIncludes .= $this->getClientStylesHtml();
+      $clientIncludes .= $this->getClientScriptHtml() ;
+      $clientIncludes .= ']);'."\n\n";
+      $clientIncludes .= "\t</script>\n";
+
 
       $this->assign('client_includes', $clientIncludes );
 
@@ -422,21 +491,5 @@ class Template extends Smarty
   }
 
 
-  /**
-   Introduce o script para compilar o LESS con JS
-   *
-   * @return string $ret
-   **/
-  public function lessClientCompiler() {
-    $ret = '';
-
-    if( !$this->cgmMediaserverCompileLess ) {
-      $ret = "\n".'<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
-        'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
-        '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>';
-    }
-
-    return $ret;
-  }
 
 }
