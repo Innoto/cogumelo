@@ -7,7 +7,7 @@
   <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
 
 
-  {$css_includes}
+  {$client_includes}
 
   <script>
     less = {
@@ -21,8 +21,6 @@
       errorReporting: 'console'
     };
   </script>
-
-  {$js_includes}
 
   <script>
 
