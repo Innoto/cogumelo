@@ -223,7 +223,7 @@ class FormValidators extends FormValidatorsExtender {
       }
       else {
         $test = str_replace( '*', '.*', $test );
-        if( preg_match( '/^'.$test.'$/', $value['validate'][ 'type' ] ) ) {
+        if( preg_match( '#^'.$test.'$#', $value['validate'][ 'type' ] ) ) {
           $result = true;
           break;
         }
