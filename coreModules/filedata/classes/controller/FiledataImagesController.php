@@ -60,11 +60,74 @@ class FiledataImagesController {
       $this->profile['cut'] = ( isset( $conf['cut'] ) ) ? $conf['cut'] : true; // true by default
       $this->profile['enlarge'] = ( isset( $conf['enlarge'] ) ) ? $conf['enlarge'] : true; // true by default
 
+      $this->profile['backgroundColor'] = ( isset( $conf['backgroundColor'] ) ) ? $conf['backgroundColor'] : 'transparent'; // 'transparent' by default
+
       $this->profile['saveFormat'] = ( isset( $conf['saveFormat'] ) ) ? $conf['saveFormat'] : false;
       $this->profile['saveName'] = ( isset( $conf['saveName'] ) ) ? $conf['saveName'] : false;
       $this->profile['saveQuality'] = ( isset( $conf['saveQuality'] ) ) ? $conf['saveQuality'] : false;
 
       $this->profile['cache'] = ( isset( $conf['cache'] ) ) ? $conf['cache'] : true; // true by default
+
+      if( isset( $this->profile['padding'] ) && count( $this->profile['padding'] ) !== 4 ) {
+        if( !is_array( $this->profile['padding'] ) ) {
+          $p = $this->profile['padding'];
+          $this->profile['padding'] = array( $p, $p, $p, $p );
+        }
+        else {
+          switch( count( $this->profile['padding'] ) ) {
+            case '1':
+              $p = $this->profile['padding'];
+              $this->profile['padding'] = array( $p, $p, $p, $p );
+              break;
+            case '2':
+              $this->profile['padding'][] = $this->profile['padding']['0'];
+              $this->profile['padding'][] = $this->profile['padding']['1'];
+              break;
+            case '3':
+              $this->profile['padding'][] = $this->profile['padding']['1'];
+              break;
+          }
+        }
+      }
+
+      if( isset( $this->profile['backgroundImg'] ) ) {
+        if( !file_exists( $this->profile['backgroundImg'] ) ) {
+          if( file_exists( WEB_BASE_PATH . $this->profile['backgroundImg'] ) ) {
+            $this->profile['backgroundImg'] = WEB_BASE_PATH . $this->profile['backgroundImg'];
+          }
+          else {
+            if( preg_match( '#^/module/(?P<module>.*?)(?P<tplPath>/.*)$#', $this->profile['backgroundImg'], $matches ) ) {
+              // Contenido dentro de un modulo
+              $tplFile = ModuleController::getRealFilePath( 'classes/view/templates'.$matches['tplPath'], $matches['module'] );
+              if( $tplFile ) {
+                error_log( 'Ficheiro '.$matches['tplPath'].' en Modulo '.$matches['module'] );
+                $this->profile['backgroundImg'] = $tplFile;
+              }
+              else {
+                error_log( 'ERROR: Non existe '.$matches['tplPath'].' en Modulo '.$matches['module'] );
+                unset( $this->profile['backgroundImg'] );
+              }
+            }
+            else {
+              if( preg_match( '#^/app(?P<imgPath>/.*)$#', $this->profile['backgroundImg'], $matches ) ) {
+                // Contenido dentro de APP
+                if( file_exists( APP_BASE_PATH . $matches['imgPath'] ) ) {
+                  error_log( 'Ficheiro '.$matches['imgPath'].' en APP' );
+                  $this->profile['backgroundImg'] = APP_BASE_PATH . $matches['imgPath'];
+                }
+                else {
+                  error_log( 'ERROR: Non existe '.$matches['imgPath'].' en APP' );
+                  unset( $this->profile['backgroundImg'] );
+                }
+              }
+              else {
+                error_log( 'ERROR: Non existe '.$this->profile['backgroundImg'] );
+                unset( $this->profile['backgroundImg'] );
+              }
+            }
+          }
+        }
+      }
 
       //error_log( 'FiledataImagesController: this->profile = '.$this->profile['idName'] );
     }
@@ -140,12 +203,8 @@ class FiledataImagesController {
       $im = new Imagick();
       $mimeType = mime_content_type( $fromRoute );
 
-      if( isset( $this->profile['backgroundColor'] ) ) {
-        $im->setBackgroundColor( new ImagickPixel( $this->profile['backgroundColor'] ) );
-      }
-      else {
-        $im->setBackgroundColor( new ImagickPixel( 'transparent' ) );
-      }
+      //$im->setBackgroundColor( new ImagickPixel( $this->profile['backgroundColor'] ) );
+      $im->setBackgroundColor( new ImagickPixel( 'transparent' ) );
 
 
       if( strpos( $mimeType, 'image/svg' ) === 0 ) {
@@ -166,7 +225,7 @@ class FiledataImagesController {
           $density = 120;
           $imSvg->setResolution( $density, $density );
           $imSvg->readImageBlob( $svg );
-          $imSvg->trimImage( 0 ); // Recorta deixando so a imaxe
+          // $imSvg->trimImage( 0 ); // Recorta deixando so a imaxe
           $imSvg->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
           $imSvgSize = $imSvg->getImageGeometry();
           $x = $imSvgSize['width'];
@@ -210,7 +269,7 @@ class FiledataImagesController {
 
         //error_log( 'SVG: '.$svg );
         $im->readImageBlob( $svg );
-        $im->trimImage( 0 ); // Recorta deixando so a imaxe
+        // $im->trimImage( 0 ); // Recorta deixando so a imaxe
         $im->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
       }
       else {
@@ -220,12 +279,15 @@ class FiledataImagesController {
         $im->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
       }
 
-
       $imSize = $im->getImageGeometry();
       $x = $imSize['width'];
       $y = $imSize['height'];
       $tx = $this->profile['width'];
       $ty = $this->profile['height'];
+      if( isset( $this->profile['padding'] ) ) {
+        $tx = $tx - $this->profile['padding']['1'] - $this->profile['padding']['3'];
+        $ty = $ty - $this->profile['padding']['0'] - $this->profile['padding']['2'];
+      }
       error_log( "Datos iniciales $x $y $tx $ty ---" );
 
       if( $tx !== 0 || $ty !== 0 ) {
@@ -300,6 +362,44 @@ class FiledataImagesController {
           error_log( "Valores para cortar $x $y $tx $ty $px $py ---" );
         }
       }
+
+
+
+      // PADDING !!!
+      if( isset( $this->profile['padding'] ) ) {
+        $marco = new Imagick();
+        //$marco->newImage( $this->profile['width'], $this->profile['height'], new ImagickPixel( $this->profile['backgroundColor'] ) );
+        $marco->newImage( $this->profile['width'], $this->profile['height'], new ImagickPixel( 'transparent' ) );
+        $marco->setImageVirtualPixelMethod( Imagick::VIRTUALPIXELMETHOD_TRANSPARENT );
+        $marco->compositeImage( $im, Imagick::COMPOSITE_DEFAULT, $this->profile['padding']['3'], $this->profile['padding']['0'] );
+        $im->clear();
+        $im = $marco;
+      }
+
+
+
+      // CHAPA !!!
+      if( isset( $this->profile['backgroundImg'] ) ) {
+        $chapa = new Imagick( $this->profile['backgroundImg'] );
+        $im->setImageVirtualPixelMethod( Imagick::VIRTUALPIXELMETHOD_TRANSPARENT );
+        //$im->setImageArtifact( 'compose:args', "1,0,-0.5,0.5" );
+        $im->compositeImage( $chapa, Imagick::COMPOSITE_OVERLAY, 0, 0 );
+        $chapa->clear();
+      }
+
+
+
+      // backgroundColor !!!
+      if( isset( $this->profile['backgroundColor'] ) ) {
+        $fonfo = new Imagick();
+        $imSize = $im->getImageGeometry();
+        $fonfo->newImage( $imSize['width'], $imSize['height'], new ImagickPixel( $this->profile['backgroundColor'] ) );
+        $fonfo->setImageVirtualPixelMethod( Imagick::VIRTUALPIXELMETHOD_TRANSPARENT );
+        $fonfo->compositeImage( $im, Imagick::COMPOSITE_DEFAULT, 0, 0 );
+        $im->clear();
+        $im = $fonfo;
+      }
+
 
 
       if( $this->profile['saveQuality'] ) {
