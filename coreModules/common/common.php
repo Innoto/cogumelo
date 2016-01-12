@@ -12,7 +12,7 @@ class common extends Module
     "id" => "jquery",
     "params" => array("jQuery#2.1.4"),
     "installer" => "bower",
-    "includes" => array("dist/jquery.js")
+    "includes" => array()
   ),
    array(
      "id" =>"less",
