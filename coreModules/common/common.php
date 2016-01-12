@@ -8,12 +8,12 @@ class common extends Module
   public $version = "";
 
   public $dependences = array(
-   array(
-     "id" =>"jquery",
-     "params" => array("jquery"),
-     "installer" => "bower",
-     "includes" => array("")
-   ),
+  array(
+    "id" => "jquery",
+    "params" => array("jQuery#2.1.4"),
+    "installer" => "bower",
+    "includes" => array("dist/jquery.js")
+  ),
    array(
      "id" =>"less",
      "params" => array("less"),

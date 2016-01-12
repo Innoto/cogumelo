@@ -10,9 +10,10 @@ class devel extends Module
   public $version = "2.0";
   public $dependences = array(
    // BOWER
+
    array(
      "id" => "jquery",
-     "params" => array("jquery"),
+     "params" => array("jQuery#2.1.4"),
      "installer" => "bower",
      "includes" => array("dist/jquery.js")
    ),
@@ -78,4 +79,3 @@ class devel extends Module
   }
 
 }
-
