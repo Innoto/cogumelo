@@ -379,13 +379,26 @@ Class VO
     $value = null;
     $cols = $this->getCols();
 
-    if(
-      (!$lang && array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] ) )
+
+
+    // If there's a current lang
+    global $C_LANG;
+    if($C_LANG) {
+      $autoLang = $C_LANG;
+    }
+    else {
+      $autoLang = LANG_DEFAULT;
+    }
+
+
+
+    if( (!$lang && array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] ) )
     {
-      $getterkey .= '_'.LANG_DEFAULT;
+      $getterkey .= '_'.$autoLang;
     }
     else
-    if( $lang ) {
+    if( $lang && array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] ) 
+    {
       $getterkey .= '_'.$lang;
     }
 
