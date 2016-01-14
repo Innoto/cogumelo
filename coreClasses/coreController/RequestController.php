@@ -20,7 +20,7 @@ class RequestController
 
 
   public function __construct( $urlPatterns, $url_path, $include_base_path = false ) {
-    //error_log( 'RequestController::__construct: urlPatterns, '.$url_path.', '.$include_base_path );
+    // error_log( 'RequestController::__construct: urlPatterns, '.$url_path.', '.$include_base_path );
     // error_log( 'urlPatterns='.print_r( $urlPatterns, true ) );
 
     $this->urlPatterns = $urlPatterns;
@@ -67,6 +67,8 @@ class RequestController
 
 
   private function readPatternAction( $url_path, $url_pattern_action ) {
+    // error_log( 'RequestController::readPatternAction '.print_r( $url_path, true ).' - '.$url_pattern_action );
+
     if( preg_match( '^(redirect:)(.*)^', $url_pattern_action, $m ) ) {
       self::redirect( $m[2] );
     }
@@ -86,7 +88,7 @@ class RequestController
 
 
   public static function redirect( $redirect_url, $httpCode = '301' ) {
-    //error_log( 'RequestController::redirect '.$redirect_url );
+    // error_log( 'RequestController::redirect '.$redirect_url );
     /*
     if( $httpCode === '301' ) {
       header( 'HTTP/1.1 301 Moved Permanently' );
@@ -103,7 +105,7 @@ class RequestController
 
 
   public function view( $url_path, $view_reference ) {
-    //error_log( 'RequestController::view: '.$url_path.', '.$view_reference  );
+    // error_log( 'RequestController::view '.print_r( $url_path, true ).' - '.$view_reference  );
 
     preg_match( '^(.*)::(.*)^', $view_reference, $m );
     $classname = $m['1'];
@@ -125,7 +127,7 @@ class RequestController
 
 
   public function getLeftoeverUrl() {
-    //error_log( 'RequestController::getLeftoeverUrl' );
+    // error_log( 'RequestController::getLeftoeverUrl' );
 
     return $this->leftover_url;
   }
@@ -169,14 +171,15 @@ class RequestController
   }
 
   // gets the url parameters, validate them in function of the validation passed and returns and array with pairs key=>value
-  static function processUrlParams($urlParams, $validation) {
-    error_log( 'RequestController::processUrlParams' );
+  static public function processUrlParams( $urlParams, $validation ) {
+    // error_log( 'RequestController::processUrlParams' );
 
     $url_parts = explode('/', ltrim($urlParams[1], '/') );
     $params = array();
 
-    if( sizeof( $url_parts ) > 1 ) {
-      for($i=0;$i<sizeof($url_parts);$i=$i+2){
+    $c = count( $url_parts );
+    if( $c > 1 ) {
+      for( $i=0; $i<$c; $i=$i+2 ) {
         $par = $url_parts[$i];
         if ($validation[$par]){
           if (preg_match ( $validation[$par] , $url_parts[$i+1])){
