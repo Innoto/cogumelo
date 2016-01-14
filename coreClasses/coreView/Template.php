@@ -389,6 +389,7 @@ class Template extends Smarty
 
       // Basic includes and includers
       $clientIncludes = "\n";
+      $clientIncludes .= '<script type="text/javascript"> if( typeof $ != "undefined"){ jqueryIsLoaded = true; }else { jqueryIsLoaded = false; }</script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.js"></script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="/media/module/common/js/Includes.js"></script>' . "\n";
       if( !$this->cgmMediaserverCompileLess ) {

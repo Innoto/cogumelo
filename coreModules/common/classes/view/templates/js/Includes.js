@@ -2,6 +2,16 @@ var cogumelo = cogumelo || {};
 
 
 
+// PREVENTS JQUERY CONFLICTS WITH MULTIPLE LOADS
+if( jqueryIsLoaded === true ) {
+  $ = originalJQueryObject;
+}
+else {
+  originalJQueryObject = $ = $.noConflict();
+}
+
+
+
 // prevent declares twice
 if( typeof cogumelo.includes == "undefined"  ) {
 
