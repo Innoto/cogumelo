@@ -212,8 +212,16 @@ class FiledataImagesController {
         $svg = file_get_contents( $fromRoute );
 
         // Machaco el tamaño de lienzo
-        $svg = preg_replace( '/(width|height)="(.*?)"/', '${1}="128px"', $svg );
-        //error_log( 'SVG: '.$svg );
+        if( strpos( $svg, 'viewBox' ) !== false ) {
+          $svg = preg_replace( '/(\s+)(width|height)="(.*?)"/', '${1}${2}="128px"', $svg );
+          //$svg = preg_replace( '/viewBox="(.*?)"/', 'viewBox="0 0 128 128"', $svg );
+        }
+        else {
+          $svg = preg_replace( '/(\s+)(width)="(.*?)"/',  '${1}${2}="32px"', $svg );
+          $svg = preg_replace( '/(\s+)(height)="(.*?)"/', '${1}${2}="32px"'."\n".'${1}viewBox="0 0 32 32"', $svg );
+        }
+
+        error_log( 'SVG: '.$svg );
 
         if( isset( $this->profile['rasterResolution'] ) ) {
           // Para dar calidad en la carga de formatos raster
