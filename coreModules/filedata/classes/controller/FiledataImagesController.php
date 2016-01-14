@@ -220,8 +220,7 @@ class FiledataImagesController {
           $svg = preg_replace( '/(\s+)(width)="(.*?)"/',  '${1}${2}="32px"', $svg );
           $svg = preg_replace( '/(\s+)(height)="(.*?)"/', '${1}${2}="32px"'."\n".'${1}viewBox="0 0 32 32"', $svg );
         }
-
-        error_log( 'SVG: '.$svg );
+        // error_log( 'SVG: '.$svg );
 
         if( isset( $this->profile['rasterResolution'] ) ) {
           // Para dar calidad en la carga de formatos raster
