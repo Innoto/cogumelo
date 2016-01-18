@@ -81,8 +81,8 @@ class i18nScriptController {
 		$appFiles = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('php','js','tpl'), false);
 
 		// get all the files unless files into modules folder, excluding tmp and vendor folders
-		if ($files){
-		    foreach($files as $i => $dir){
+		if ($appFiles){
+		    foreach($appFiles as $i => $dir){
 		      	if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false
 		      	&& strpos($dir,'/vendor/')===false && strpos($dir,'/vendorPackages/')===false
 		        && strpos($dir,'/vendorServer/')===false && strpos($dir,'/tmp/')===false){
@@ -101,6 +101,7 @@ class i18nScriptController {
 				}
 		    }
 		}
+
 		/* App modules (rTypes) */
 		$filesAppModules = $this->getModuleFiles($cogumeloFilesModule, $this->dir_modules);
 		/* Cogumelo core modules */
@@ -111,7 +112,7 @@ class i18nScriptController {
 		// We combine all the arrays that we've got in an only array
 		$filesModules = array_merge_recursive($filesAppModules, $filesCoreModules, $filesDistModules);
 
-/*
+
 		// get the .php files into modules folder
 	    if ($filesMod && $this->modules){
 			foreach ($this->modules as $i => $dir) {
@@ -140,9 +141,12 @@ class i18nScriptController {
 			}
 		}
 
-*/
+
 // We combine all the arrays that we've got in an only array
 $filesArray = array_merge_recursive($filesAll, $filesModules);
+
+
+
 
 
 	    /************************** PHP e JS *******************************/
@@ -177,7 +181,9 @@ $filesArray = array_merge_recursive($filesAll, $filesModules);
 
 	    // copiamos os ficheiros nun dir temporal
 	    foreach ($filesArray['tpl'] as $a){
-	      exec('cp '.$a.' '.TPL_TMP);
+				$a_parts = explode('/home/proxectos/',$a);
+				$name = str_replace('/','_',$a_parts[1]);
+	      exec('cp '.$a.' '.TPL_TMP.'/'.$name);
 	    }
 
 	    foreach ($this->dir_lc as $l){
