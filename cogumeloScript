@@ -113,7 +113,12 @@ if( $argc > 1 ) {
       // echo "\n --- actionCompileTranslations:\n";
       // actionCompileTranslations();
       echo "\n --- actionGenerateClientCaches:\n";
-      actionGenerateClientCaches();
+      if( MEDIASERVER_PRODUCTION_MODE ) {
+        actionGenerateClientCaches();
+      }
+      else {
+        echo "\nPasamos porque no estamos en PRODUCTION MODE\n";
+      }
       echo "\n --- setPermissionsDevel:\n";
       setPermissionsDevel();
       echo "\n --- DONE\n";

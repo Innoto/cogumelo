@@ -4,10 +4,11 @@ var cogumelo = cogumelo || {};
 
 // PREVENTS JQUERY CONFLICTS WITH MULTIPLE LOADS
 if( jqueryIsLoaded === true ) {
+  jQuery = originalJQueryObject;
   $ = originalJQueryObject;
 }
 else {
-  originalJQueryObject = $ = $.noConflict();
+  originalJQueryObject = $ = jQuery = $.noConflict();
 }
 
 
