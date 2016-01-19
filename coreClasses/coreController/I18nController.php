@@ -67,4 +67,32 @@ class I18nController {
     }
     return $m;
   }
+
+ /* Se a url actual non ten idioma, redirixe á páxina co idioma do navegador */
+  public static function redirectLang() {
+    global $LANG_AVAILABLE;
+    $langsAvailable = array_keys( $LANG_AVAILABLE );
+
+    $browserLang_all = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    $browserLang_parts = explode('-',$browserLang_all);
+    $browserLang = $browserLang_parts[0];
+
+    $currentUrl = explode('/', $_SERVER['REQUEST_URI']);
+
+    if ($currentUrl[1]===''){ //home sen idioma
+      Cogumelo::Redirect($_SERVER['REQUEST_URI'].$browserLang);
+    }
+    else{ // páxina que colga da home
+      $has_lang = false;
+      foreach( $langsAvailable as $lng ) { // se ten idioma
+        if ($currentUrl['1']===$lng){
+          $has_lang = true;
+        }
+      }
+      if(!$has_lang){
+        Cogumelo::Redirect($browserLang.$_SERVER['REQUEST_URI']);
+      }
+    }
+  }
+
 }
