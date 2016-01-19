@@ -83,15 +83,18 @@ class I18nController {
       Cogumelo::Redirect($_SERVER['REQUEST_URI'].$browserLang);
     }
     else{ // páxina que colga da home
-      $has_lang = false;
-      foreach( $langsAvailable as $lng ) { // se ten idioma
-        if ($currentUrl['1']===$lng){
-          $has_lang = true;
+      if (sizeof($currentUrl)==2){
+        $has_lang = false;
+        foreach( $langsAvailable as $lng ) { // se ten idioma
+          if ($currentUrl['1']===$lng){
+            $has_lang = true;
+          }
+        }
+        if(!$has_lang){
+          Cogumelo::Redirect($browserLang.$_SERVER['REQUEST_URI']);
         }
       }
-      if(!$has_lang){
-        Cogumelo::Redirect($browserLang.$_SERVER['REQUEST_URI']);
-      }
+
     }
   }
 
