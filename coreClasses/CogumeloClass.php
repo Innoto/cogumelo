@@ -59,7 +59,10 @@ class CogumeloClass extends Singleton
   }
 
   public function __construct() {
+    global $C_SESSION_ID;
+
     session_start();
+    $C_SESSION_ID = session_id();
   }
 
   public function exec() {
