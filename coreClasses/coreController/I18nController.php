@@ -69,7 +69,8 @@ class I18nController {
   }
 
  /* Se a url actual non ten idioma, redirixe á páxina co idioma do navegador */
-  public static function redirectLang() {
+  public static function redirectLang($page) {
+
     global $LANG_AVAILABLE;
     $langsAvailable = array_keys( $LANG_AVAILABLE );
 
@@ -79,11 +80,13 @@ class I18nController {
 
     $currentUrl = explode('/', $_SERVER['REQUEST_URI']);
 
-    if ($currentUrl[1]===''){ //home sen idioma
-      Cogumelo::Redirect($_SERVER['REQUEST_URI'].$browserLang);
-    }
-    else{ // páxina que colga da home
-      if (sizeof($currentUrl)==2){
+    switch($page){
+      case 'home';
+        if ($currentUrl[1]===''){ //home sen idioma
+          Cogumelo::Redirect($_SERVER['REQUEST_URI'].$browserLang);
+        }
+        break;
+      case 'explorer';
         $has_lang = false;
         foreach( $langsAvailable as $lng ) { // se ten idioma
           if ($currentUrl['1']===$lng){
@@ -93,8 +96,7 @@ class I18nController {
         if(!$has_lang){
           Cogumelo::Redirect($browserLang.$_SERVER['REQUEST_URI']);
         }
-      }
-
+        break;
     }
   }
 
