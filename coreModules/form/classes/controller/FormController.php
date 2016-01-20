@@ -1531,7 +1531,7 @@ class FormController implements Serializable {
   public function getHtmlForm() {
     $html='';
 
-    $html .= $this->getHtmpOpen()."\n";
+    $html .= $this->getHtmlOpen()."\n";
     $html .= $this->getHtmlFieldsAndGroups()."\n";
     $html .= $this->getHtmlClose()."\n";
 
@@ -1540,11 +1540,14 @@ class FormController implements Serializable {
     return $html;
   }
 
+  public function getHtmpOpen() {
+    return $this->getHtmlOpen();
+  }
   /**
     Recupera el html de la apertura del form
     @return string
    */
-  public function getHtmpOpen() {
+  public function getHtmlOpen() {
     $html='';
 
     $html .= '<form name="'.$this->getName().'" id="'.$this->id.'" data-token_id="'.$this->getTokenId().'" ';
