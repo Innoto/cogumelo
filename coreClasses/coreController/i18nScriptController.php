@@ -22,6 +22,7 @@ class i18nScriptController {
 		$this->dir_path = I18N_LOCALE;
 	    $this->dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
 	    $this->dir_modules = SITE_PATH.'modules/';
+			$this->dir_main = SITE_PATH.'classes/view/';
 	    $this->dir_modules_dist = COGUMELO_DIST_LOCATION.'/distModules/';
 	    $this->textdomain="messages";
 	    global $C_ENABLED_MODULES, $LANG_AVAILABLE;
@@ -78,7 +79,9 @@ class i18nScriptController {
 		$cogumeloFiles = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php','js','tpl'), false);
 		$cogumeloFilesModule = CacheUtilsController::listFolderFiles($this->dir_modules, array('php','js','tpl'), false);
 		$cogumeloFilesModuleC = CacheUtilsController::listFolderFiles($this->dir_modules_c, array('php','js','tpl'), false);
-		$appFiles = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('php','js','tpl'), false);
+		$appFilesModule = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('php','js','tpl'), false);
+		$appFilesMain = CacheUtilsController::listFolderFiles($this->dir_main, array('php','js','tpl'), false);
+		$appFiles = array_merge_recursive($appFilesModule, $appFilesMain);
 
 		// get all the files unless files into modules folder, excluding tmp and vendor folders
 		if ($appFiles){
@@ -87,20 +90,21 @@ class i18nScriptController {
 		      	&& strpos($dir,'/vendor/')===false && strpos($dir,'/vendorPackages/')===false
 		        && strpos($dir,'/vendorServer/')===false && strpos($dir,'/tmp/')===false){
 		      		$parts = explode('.',$dir->getRealPath());
-				    switch($parts[1]){
-				      case 'php':
-				        $filesAll['php'][$i] = $dir->getRealPath();
-				        break;
-				      case 'js':
-				        $filesAll['js'][$i] = $dir->getRealPath();
-				        break;
-				      case 'tpl':
-				        $filesAll['tpl'][$i] = $dir->getRealPath();
-				        break;
-				    }
-				}
+					    switch($parts[1]){
+					      case 'php':
+					        $filesAll['php'][$i] = $dir->getRealPath();
+					        break;
+					      case 'js':
+					        $filesAll['js'][$i] = $dir->getRealPath();
+					        break;
+					      case 'tpl':
+					        $filesAll['tpl'][$i] = $dir->getRealPath();
+					        break;
+					    }
+						}
 		    }
 		}
+
 
 		/* App modules (rTypes) */
 		$filesAppModules = $this->getModuleFiles($cogumeloFilesModule, $this->dir_modules);
@@ -178,6 +182,8 @@ $filesArray = array_merge_recursive($filesAll, $filesModules);
 
 	    $smartygettext = DEPEN_COMPOSER_PATH.'/smarty-gettext/smarty-gettext/tsmarty2c.php';
 	    exec( 'chmod 700 '.$smartygettext );
+
+
 
 	    // copiamos os ficheiros nun dir temporal
 	    foreach ($filesArray['tpl'] as $a){
