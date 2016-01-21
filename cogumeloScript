@@ -110,8 +110,8 @@ if( $argc > 1 ) {
       setPermissionsDevel();
       echo "\n --- actionFlush:\n";
       actionFlush();
-      // echo "\n --- actionCompileTranslations:\n";
-      // actionCompileTranslations();
+      echo "\n --- actionCompileTranslations:\n";
+      actionCompileTranslations();
       echo "\n --- actionGenerateClientCaches:\n";
       if( MEDIASERVER_PRODUCTION_MODE ) {
         actionGenerateClientCaches();
