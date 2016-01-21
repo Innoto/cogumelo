@@ -117,7 +117,7 @@ class FiledataWeb extends View {
 
     $filePath = $basePath . $fileInfo['absLocation'];
 
-    error_log( 'FiledataWeb: filePath = ' . $filePath );
+    // error_log( 'FiledataWeb: filePath = ' . $filePath );
     // error_log( 'FiledataWeb: filesize = ' . filesize( $filePath ) );
 
     if( file_exists( $filePath ) ) {

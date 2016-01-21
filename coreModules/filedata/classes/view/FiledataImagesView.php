@@ -37,8 +37,7 @@ class FiledataImagesView extends View {
     Mostramos una imagen de Form
   */
   public function showImg( $urlParams = false ) {
-
-    error_log( 'FiledataImagesView: showImg(): ' . print_r( $urlParams, true ) );
+    // error_log( 'FiledataImagesView: showImg(): ' . print_r( $urlParams, true ) );
 
     if( isset( $urlParams[ 'fileId' ] ) ) {
       $imageCtrl = new FiledataImagesController( $urlParams[ 'fileId' ] );

@@ -100,7 +100,7 @@ class FiledataImagesController {
               // Contenido dentro de un modulo
               $tplFile = ModuleController::getRealFilePath( 'classes/view/templates'.$matches['tplPath'], $matches['module'] );
               if( $tplFile ) {
-                error_log( 'Ficheiro '.$matches['tplPath'].' en Modulo '.$matches['module'] );
+                // error_log( 'Ficheiro '.$matches['tplPath'].' en Modulo '.$matches['module'] );
                 $this->profile['backgroundImg'] = $tplFile;
               }
               else {
@@ -112,7 +112,7 @@ class FiledataImagesController {
               if( preg_match( '#^/app(?P<imgPath>/.*)$#', $this->profile['backgroundImg'], $matches ) ) {
                 // Contenido dentro de APP
                 if( file_exists( APP_BASE_PATH . $matches['imgPath'] ) ) {
-                  error_log( 'Ficheiro '.$matches['imgPath'].' en APP' );
+                  // error_log( 'Ficheiro '.$matches['imgPath'].' en APP' );
                   $this->profile['backgroundImg'] = APP_BASE_PATH . $matches['imgPath'];
                 }
                 else {
@@ -191,11 +191,11 @@ class FiledataImagesController {
 
 
   public function createImageProfile( $fromRoute, $toRoute ) {
-    error_log( '---' );error_log( '---' );error_log( '---' );
-    error_log( 'FiledataImagesController: createImageProfile(): ' );
-    error_log( $fromRoute );
-    error_log( 'mime_content_type: '.mime_content_type( $fromRoute ) );
-    error_log( $toRoute );
+    // error_log( '---' );error_log( '---' );error_log( '---' );
+    // error_log( 'FiledataImagesController: createImageProfile(): ' );
+    // error_log( $fromRoute );
+    // error_log( 'mime_content_type: '.mime_content_type( $fromRoute ) );
+    // error_log( $toRoute );
 
     $resultOK = true;
 
@@ -239,7 +239,7 @@ class FiledataImagesController {
           $y = $imSvgSize['height'];
           $tx = $this->profile['width'];
           $ty = $this->profile['height'];
-          error_log( "SVG iniciales $x $y $tx $ty $density ---" );
+          // error_log( "SVG iniciales $x $y $tx $ty $density ---" );
           if( $this->profile['cut'] ) {
             // Escala para axustar un eixo e corta no outro
             if( $ty < intval( $tx*$y/$x ) ) {
@@ -261,7 +261,7 @@ class FiledataImagesController {
               $density = 1 + intval( $density * $tx / $x );
             }
           }
-          error_log( "SVG finales $x $y $tx $ty $density ---" );
+          // error_log( "SVG finales $x $y $tx $ty $density ---" );
           $imSvg->clear();
           $imSvg->destroy();
 
@@ -295,7 +295,7 @@ class FiledataImagesController {
         $tx = $tx - $this->profile['padding']['1'] - $this->profile['padding']['3'];
         $ty = $ty - $this->profile['padding']['0'] - $this->profile['padding']['2'];
       }
-      error_log( "Datos iniciales $x $y $tx $ty ---" );
+      // error_log( "Datos iniciales $x $y $tx $ty ---" );
 
       if( $tx !== 0 || $ty !== 0 ) {
         // Cambios en las medidas
@@ -332,7 +332,7 @@ class FiledataImagesController {
             else {
               $ty = $y;
             }
-            error_log( "Cortar sin ampliar: $x $y $tx $ty ---" );
+            // error_log( "Cortar sin ampliar: $x $y $tx $ty ---" );
           }
           else { // Reduce para axustar un eixo e queda corto o outro
             $escalar = true;
@@ -345,11 +345,11 @@ class FiledataImagesController {
           }
         }
 
-        error_log( "Datos recalculados $x $y $tx $ty ---" );
+        // error_log( "Datos recalculados $x $y $tx $ty ---" );
 
         if( $escalar ) {
 
-          error_log( "Valores para escalar: $x $y $tx $ty ---" );
+          // error_log( "Valores para escalar: $x $y $tx $ty ---" );
 
           $im->scaleImage( $tx, $ty, false );
 
@@ -359,14 +359,14 @@ class FiledataImagesController {
           $tx = $this->profile['width'];
           $ty = $this->profile['height'];
 
-          error_log( "Xa escalado: $x $y $tx $ty ---" );
+          // error_log( "Xa escalado: $x $y $tx $ty ---" );
         }
 
         if( $tx < $x || $ty < $y ) {
           $px = intval( ($x-$tx)/2 );
           $py = intval( ($y-$ty)/2 );
           $im->cropImage( $tx, $ty, $px, $py );
-          error_log( "Valores para cortar $x $y $tx $ty $px $py ---" );
+          // error_log( "Valores para cortar $x $y $tx $ty $px $py ---" );
         }
       }
 
@@ -416,7 +416,7 @@ class FiledataImagesController {
 
       // DEBUG info:
       $dbSize = $im->getImageGeometry();
-      error_log( 'Datos finales '.$dbSize['width'].' '.$dbSize['height'].' '.$this->profile['width'].' '.$this->profile['height'].' ---' );
+      // error_log( 'Datos finales '.$dbSize['width'].' '.$dbSize['height'].' '.$this->profile['width'].' '.$this->profile['height'].' ---' );
 
 
       $toRouteInfo = pathinfo( $toRoute );
@@ -465,13 +465,13 @@ class FiledataImagesController {
       $im->destroy();
     }
 
-    error_log( '---' );error_log( '---' );error_log( '---' );
+    // error_log( '---' );error_log( '---' );error_log( '---' );
     return $toRoute;
   }
 
 
   public function sendImage( $imgInfo ) {
-    error_log( 'FiledataImagesController: sendImage '. print_r( $imgInfo, true ) );
+    // error_log( 'FiledataImagesController: sendImage '. print_r( $imgInfo, true ) );
 
     $result = false;
 
