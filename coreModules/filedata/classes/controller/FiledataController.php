@@ -86,9 +86,14 @@ class FiledataController {
       }
 
       if( copy ( $absFrom, MOD_FILEDATA_APP_PATH.$relativeDestPath.'/'.$realDestName ) ) {
-        $finfo = new finfo(FILEINFO_MIME, "/usr/share/misc/magic");
-        $fileDB->setter('type', $finfo->file($absFrom) );
+        //$finfo = new finfo(FILEINFO_MIME, "/usr/share/misc/magic");
+        //$fileDB->setter('type', $finfo->file($absFrom) );
         //finfo_close($finfo);
+
+        // mime type
+        $finfo = finfo_open( FILEINFO_MIME_TYPE );
+        $fileDB->setter('type', finfo_file( $finfo, $absFrom ) );
+
 
         $fileDB->setter('size', filesize( $absFrom ) );
         $fileDB->setter('name', $realDestName );
