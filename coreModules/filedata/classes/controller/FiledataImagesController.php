@@ -164,8 +164,10 @@ class FiledataImagesController {
           $toRouteDir = pathinfo( $imgRoute, PATHINFO_DIRNAME );
           //error_log( "toRouteDir = $toRouteDir" );
           if( !file_exists( $toRouteDir ) ) {
-            //error_log( "mkdir $toRouteDir" );
-            mkdir ( $toRouteDir, 0770, true );
+            error_log( 'mkdir '.$toRouteDir );
+            $maskPrev = umask( 0 );
+            mkdir ( $toRouteDir, 0775, true );
+            umask( $maskPrev );
           }
           if( !copy( $imgRouteOriginal, $imgRoute ) ) {
             error_log( "FiledataImagesController: ERROR in copy( $imgRouteOriginal, $imgRoute )" );
@@ -425,8 +427,10 @@ class FiledataImagesController {
 
       //error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
       if( !file_exists( $toRouteInfo['dirname'] ) ) {
-        //error_log( 'mkdir '.$toRouteInfo['dirname'] );
-        mkdir ( $toRouteInfo['dirname'], 0770, true );
+        error_log( 'mkdir '.$toRouteInfo['dirname'] );
+        $maskPrev = umask( 0 );
+        mkdir ( $toRouteInfo['dirname'], 0775, true );
+        umask( $maskPrev );
       }
 
       if( is_writable( $toRouteInfo['dirname'] ) ) {
