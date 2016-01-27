@@ -551,7 +551,7 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
   // Element to send delete order
   $fileFieldInfo.append( $( '<i>' ).addClass( 'formFileDelete fa fa-trash' )
     .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm } )
-    .on('click', deleteFormFileEvent )
+    .on( 'click', deleteFormFileEvent )
   );
 
   if( fileModId === false || !fileType || fileType.indexOf( 'image' ) !== 0 ) {
@@ -940,7 +940,7 @@ function createSwitchFormLang( idForm ) {
 
     switchFormLang( idForm, langDefault );
 
-    $( 'ul[data-form_id="'+idForm+'"].langSwitch li' ).on( "click", function() {
+    $( 'ul[data-form_id="'+idForm+'"].langSwitch li' ).on( 'click', function() {
       var newLang = $( this ).data( 'lang' );
       if( newLang !== langForm ) {
         switchFormLang( idForm, newLang );
