@@ -1232,22 +1232,6 @@ class FormController implements Serializable {
   /**********************************************************************/
 
   /**
-    Convierte el tamaño de memoria de formato php.ini a bytes
-    @param string $size Tamaño de la memoria configurada en php.ini
-    @return integer
-   */
-  private function phpIni2Bytes( $size ) {
-    if( preg_match( '/([\d\.]+)([KMG])/i', $size, $match ) ) {
-      $pos = array_search( $match[2], array( 'K', 'M', 'G' ) );
-      if( $pos !== false ) {
-        $size = $match[1] * pow( 1024, $pos + 1 );
-      }
-    }
-
-    return $size;
-  }
-
-  /**
     Procesa los ficheros temporales del form para colocarlos en su lugar definitivo y registrarlos
     @return boolean
    */
@@ -1269,99 +1253,103 @@ class FormController implements Serializable {
           switch( $fileFieldValue['status'] ) {
             case 'LOAD':
               error_log( 'processFileFields: LOAD' );
+              $fileFieldValue['status'] = 'LOADED';
+              $fileFieldValue['values'] = $fileFieldValue['validate'];
+              $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
+              $this->setFieldValue( $fieldName, $fileFieldValue );
+              $this->updateFieldToSession( $fieldName );
+              error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+              /*
+                $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
+                $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+                // QUITAR FILES_APP_PATH
+                $fullDestPath = self::FILES_APP_PATH . $destDir;
+                if( !is_dir( $fullDestPath ) ) {
+                  // TODO: CAMBIAR PERMISOS 0777
+                  if( !mkdir( $fullDestPath, 0777, true ) ) {
+                    $result = false;
+                    $this->addFieldRuleError( $fieldName, 'cogumelo',
+                      'La subida del fichero ha fallado. (MD)' );
+                    error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
+                  }
+                }
 
-              $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
-              $destDir = $this->getFieldParam( $fieldName, 'destDir' );
-              /**
-              QUITAR FILES_APP_PATH
+                if( !$this->existErrors() ) {
+                  // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
+                  error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                  if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
+                    $result = false;
+                    $this->addFieldRuleError( $fieldName, 'cogumelo',
+                      'La subida del fichero ha fallado. (MF)' );
+                    error_log( 'Imposible mover el fichero al directorio adecuado.' .
+                      $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                  }
+                }
+
+                if( !$this->existErrors() ) {
+                  $fileFieldValue['status'] = 'LOADED';
+                  $fileFieldValue['values'] = $fileFieldValue['validate'];
+                  $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
+                  $this->setFieldValue( $fieldName, $fileFieldValue );
+                  $this->updateFieldToSession( $fieldName );
+                  error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                }
               */
-              $fullDestPath = self::FILES_APP_PATH . $destDir;
-              if( !is_dir( $fullDestPath ) ) {
-                // TODO: CAMBIAR PERMISOS 0777
-                if( !mkdir( $fullDestPath, 0777, true ) ) {
-                  $result = false;
-                  $this->addFieldRuleError( $fieldName, 'cogumelo',
-                    'La subida del fichero ha fallado. (MD)' );
-                  error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
-                }
-              }
-
-              if( !$this->existErrors() ) {
-                // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-                error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
-                if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
-                  $result = false;
-                  $this->addFieldRuleError( $fieldName, 'cogumelo',
-                    'La subida del fichero ha fallado. (MF)' );
-                  error_log( 'Imposible mover el fichero al directorio adecuado.' .
-                    $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
-                }
-              }
-
-              if( !$this->existErrors() ) {
-                $fileFieldValue['status'] = 'LOADED';
-                $fileFieldValue['values'] = $fileFieldValue['validate'];
-                $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
-                $this->setFieldValue( $fieldName, $fileFieldValue );
-                $this->updateFieldToSession( $fieldName );
-                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
-              }
               break;
             case 'REPLACE':
               error_log( 'processFileFields: REPLACE' );
+              $fileFieldValue['values'] = $fileFieldValue['validate'];
+              $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
+              $this->setFieldValue( $fieldName, $fileFieldValue );
+              $this->updateFieldToSession( $fieldName );
+              error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+              /*
+                $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
+                $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+                // QUITAR FILES_APP_PATH
+                $fullDestPath = self::FILES_APP_PATH . $destDir;
+                if( !is_dir( $fullDestPath ) ) {
+                  // TODO: CAMBIAR PERMISOS 0777
+                  if( !mkdir( $fullDestPath, 0777, true ) ) {
+                    $result = false;
+                    $this->addFieldRuleError( $fieldName, 'cogumelo',
+                      'La subida del fichero ha fallado. (MD)' );
+                    error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
+                  }
+                }
 
-              $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
-              $destDir = $this->getFieldParam( $fieldName, 'destDir' );
-              /**
-              QUITAR FILES_APP_PATH
+                if( !$this->existErrors() ) {
+                  // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
+                  error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                  if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
+                    $result = false;
+                    $this->addFieldRuleError( $fieldName, 'cogumelo',
+                      'La subida del fichero ha fallado. (MF)' );
+                    error_log( 'Imposible mover el fichero al directorio adecuado.' .
+                      $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                  }
+                }
+
+                if( !$this->existErrors() ) {
+                  //$fileFieldValue['status'] = 'LOADED';
+                  $fileFieldValue['values'] = $fileFieldValue['validate'];
+                  $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
+                  $this->setFieldValue( $fieldName, $fileFieldValue );
+                  $this->updateFieldToSession( $fieldName );
+                  error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                }
               */
-              $fullDestPath = self::FILES_APP_PATH . $destDir;
-              if( !is_dir( $fullDestPath ) ) {
-                // TODO: CAMBIAR PERMISOS 0777
-                if( !mkdir( $fullDestPath, 0777, true ) ) {
-                  $result = false;
-                  $this->addFieldRuleError( $fieldName, 'cogumelo',
-                    'La subida del fichero ha fallado. (MD)' );
-                  error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
-                }
-              }
-
-              if( !$this->existErrors() ) {
-                // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-                error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
-                if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
-                  $result = false;
-                  $this->addFieldRuleError( $fieldName, 'cogumelo',
-                    'La subida del fichero ha fallado. (MF)' );
-                  error_log( 'Imposible mover el fichero al directorio adecuado.' .
-                    $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
-                }
-              }
-
-              if( !$this->existErrors() ) {
-                //$fileFieldValue['status'] = 'LOADED';
-                $fileFieldValue['values'] = $fileFieldValue['validate'];
-                $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
-                $this->setFieldValue( $fieldName, $fileFieldValue );
-                $this->updateFieldToSession( $fieldName );
-                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
-              }
-
               break;
             case 'DELETE':
               error_log( 'processFileFields: DELETE' );
-
               // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
-
               $fileFieldValue['values'] = $fileFieldValue['prev'];
               $this->setFieldValue( $fieldName, $fileFieldValue );
               $this->updateFieldToSession( $fieldName );
               error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
-
               break;
             case 'EXIST':
               error_log( 'processFileFields OK: EXIST - NADA QUE HACER' );
-
               $fileFieldValue['values'] = $fileFieldValue['prev'];
               $this->setFieldValue( $fieldName, $fileFieldValue );
               $this->updateFieldToSession( $fieldName );
@@ -1399,27 +1387,30 @@ class FormController implements Serializable {
         error_log( print_r( $fileFieldValue, true ) );
 
         if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] === 'LOADED' ) {
-          /**
-          QUITAR FILES_APP_PATH
+          $fileFieldValue['status'] = 'LOAD';
+          unset( $fileFieldValue['values'] );
+          $this->setFieldValue( $fieldName, $fileFieldValue );
+          $this->updateFieldToSession( $fieldName );
+          error_log( 'Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
+          /*
+            // QUITAR FILES_APP_PATH
+            $absLocationActual = self::FILES_APP_PATH . $fileFieldValue['values']['absLocation'];
+            $absLocationAnterior = $fileFieldValue['validate']['absLocation'];
+            error_log( 'Devolvendo ' . $absLocationActual .' a '. $absLocationAnterior );
+            if( !rename( $absLocationActual, $absLocationAnterior ) ) {
+              $result = false;
+              $this->addFieldRuleError( $fieldName, 'cogumelo',
+                'La subida del fichero ha fallado. (MR)' );
+              error_log( 'Imposible devolver el fichero al directorio adecuado.' . $absLocationActual .' a '. $absLocationAnterior );
+            }
+            else {
+              $fileFieldValue['status'] = 'LOAD';
+              unset( $fileFieldValue['values'] );
+              $this->setFieldValue( $fieldName, $fileFieldValue );
+              $this->updateFieldToSession( $fieldName );
+              error_log( 'Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
+            }
           */
-          $absLocationActual = self::FILES_APP_PATH . $fileFieldValue['values']['absLocation'];
-          $absLocationAnterior = $fileFieldValue['validate']['absLocation'];
-
-          error_log( 'Devolvendo ' . $absLocationActual .' a '. $absLocationAnterior );
-          if( !rename( $absLocationActual, $absLocationAnterior ) ) {
-            $result = false;
-            $this->addFieldRuleError( $fieldName, 'cogumelo',
-              'La subida del fichero ha fallado. (MR)' );
-            error_log( 'Imposible devolver el fichero al directorio adecuado.' . $absLocationActual .' a '. $absLocationAnterior );
-          }
-          else {
-            $fileFieldValue['status'] = 'LOAD';
-            unset( $fileFieldValue['values'] );
-            $this->setFieldValue( $fieldName, $fileFieldValue );
-            $this->updateFieldToSession( $fieldName );
-            error_log( 'Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
-          }
-
         } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] === 'LOADED' )
       } // if( $this->getFieldType( $fieldName ) === 'file' )
     } // foreach( $this->getFieldsNamesArray() as $fieldName )
@@ -1437,17 +1428,35 @@ class FormController implements Serializable {
 
 
   /**
+    Convierte el tamaño de memoria de formato php.ini a bytes
+    @param string $size Tamaño de la memoria configurada en php.ini
+    @return integer
+   */
+  private function phpIni2Bytes( $size ) {
+    if( preg_match( '/([\d\.]+)([KMG])/i', $size, $match ) ) {
+      $pos = array_search( $match[2], array( 'K', 'M', 'G' ) );
+      if( $pos !== false ) {
+        $size = $match[1] * pow( 1024, $pos + 1 );
+      }
+    }
+
+    return $size;
+  }
+
+  /**
     Mover con seguridad un fichero del tmp de PHP al tmp de nuestra aplicacion
     @param string $fileTmpLoc Fichero temporal de PHP
     @param string $fileName Nombre del fichero
     @return string Fichero temporal de la App. En caso de error: false
    */
-  public function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName ) {
-    // error_log( 'tmpPhpFile2tmpFormFile: '.$fileTmpLoc.' --- '.$fileName);
+  public function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName, $fieldName ) {
+    error_log( 'tmpPhpFile2tmpFormFile: '.$fileTmpLoc.' --- '.$fileName.' --- '.$fieldName);
     $result = false;
     $error = false;
 
-    $tmpCgmlFormPath = self::FILES_TMP_PATH .'/'. preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getTokenId() );
+    $tmpCgmlFormPath = self::FILES_TMP_PATH .'/'.
+      preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getTokenId() ).
+      '-'.$fieldName;
     if( !is_dir( $tmpCgmlFormPath ) ) {
       /**
        TODO: CAMBIAR PERMISOS 0777
@@ -1475,7 +1484,7 @@ class FormController implements Serializable {
     }
 
     // error_log( 'tmpPhpFile2tmpFormFile ERROR: '.$error );
-    // error_log( 'tmpPhpFile2tmpFormFile RET: '.$result );
+    error_log( 'tmpPhpFile2tmpFormFile RET: '.$result );
 
     return $result;
   } // function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName )

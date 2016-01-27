@@ -139,7 +139,7 @@ class FiledataImagesController {
   }
 
   public function getRouteProfile( $profile ) {
-    //error_log( "FiledataImagesController: getRouteProfile( $profile )" );
+    // error_log( "FiledataImagesController: getRouteProfile( $profile )" );
     $imgRoute = false;
     $imgRouteOriginal = $this->filesAppPath . $this->fileInfo['absLocation'];
 
@@ -427,7 +427,7 @@ class FiledataImagesController {
 
       //error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
       if( !file_exists( $toRouteInfo['dirname'] ) ) {
-        error_log( 'mkdir '.$toRouteInfo['dirname'] );
+        // error_log( 'mkdir '.$toRouteInfo['dirname'] );
         $maskPrev = umask( 0 );
         mkdir ( $toRouteInfo['dirname'], 0775, true );
         umask( $maskPrev );
@@ -519,6 +519,37 @@ class FiledataImagesController {
     }
 
     return $result;
+  }
+
+
+  public function clearCache( $fileId ) {
+    // error_log( 'FiledataImagesController: clearCache(): ' . $fileId );
+
+    $imgCacheRoute = $this->filesCachePath .'/'. $fileId .'/';
+    if( is_dir( $imgCacheRoute ) ) {
+      $this->rmdirRec( $imgCacheRoute );
+    }
+  }
+
+  public function rmdirRec( $dir ) {
+    // error_log( 'FiledataImagesController: rmdirRec(): '. $dir );
+    if( is_dir( $dir ) ) {
+      $dirElements = scandir( $dir );
+      if( is_array( $dirElements ) && count( $dirElements ) > 0 ) {
+        foreach( $dirElements as $object ) {
+          if( $object != '.' && $object != '..' ) {
+            if( is_dir( $dir.'/'.$object ) ) {
+              $this->rmdirRec( $dir.'/'.$object );
+            }
+            else {
+              unlink( $dir.'/'.$object );
+            }
+          }
+        }
+      }
+      reset( $dirElements );
+      rmdir( $dir );
+    }
   }
 
 } // FiledataImagesController
