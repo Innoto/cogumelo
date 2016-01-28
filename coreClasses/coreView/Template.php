@@ -226,13 +226,21 @@ class Template extends Smarty
 
   public function getClientScriptHtml( $ignoreAutoincludes = false ) {
 
+    global $C_LANG;
     $itemsToInclude = array();
     $html = '';
 
 
+    if( $C_LANG ) {
+      $langUrl = $C_LANG.'/';
+    }
+    else {
+      $langUrl = '';
+    }
+    //echo $langUrl . $itemsToInclude[$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js';
 
-    $itemsToInclude[$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js'] = array(
-      'src'=> $this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js',
+    $itemsToInclude[$this->cgmMediaserverHost . $langUrl . $this->cgmMediaserverUrlDir.'/jsConfConstants.js'] = array(
+      'src'=> $this->cgmMediaserverHost . $langUrl . $this->cgmMediaserverUrlDir.'/jsConfConstants.js',
       'rel' => false ,
       'type'=> 'text/javascript',
       'onlyOnce' => true
