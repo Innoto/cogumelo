@@ -110,8 +110,8 @@ if( $argc > 1 ) {
       setPermissionsDevel();
       echo "\n --- actionFlush:\n";
       actionFlush();
-      // echo "\n --- actionCompileTranslations:\n";
-      // actionCompileTranslations();
+      echo "\n --- actionCompileTranslations:\n";
+      actionCompileTranslations();
       echo "\n --- actionGenerateClientCaches:\n";
       if( MEDIASERVER_PRODUCTION_MODE ) {
         actionGenerateClientCaches();
@@ -178,7 +178,7 @@ function printOptions(){
     * generateClientCaches    Cache all js, css, compiled less and other client files
     * setPermissions          Set the files/folders permission
     * setPermissionsDevel     Set the files/folders permission
-    * installDependences          Install all modules dependencies
+    * installDependences      Install all modules dependencies
 
  + Database
     * createDB                Create a database
@@ -186,12 +186,12 @@ function printOptions(){
       - createTables            Generate the tables
       - createRelSchemes        Generate relationship tmp files
       - initModules             Execute '::moduleRc()' of all modules
-    * bckDB                       Do a DB backup (optional arg: filename)
-    * restoreDB                   Restore a database
+    * bckDB                   Do a DB backup (optional arg: filename)
+    * restoreDB               Restore a database
 
  + Internationalization
-    * generateTranslations        Get all the web text into a file.po
-    * compileTranslations         Compile file.po and get the translations ready
+    * generateTranslations    Get all the web text into a file.po
+    * compileTranslations     Compile file.po and get the translations ready
   \n\n";
 }
 

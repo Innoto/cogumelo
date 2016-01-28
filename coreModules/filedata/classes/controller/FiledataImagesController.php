@@ -100,7 +100,7 @@ class FiledataImagesController {
               // Contenido dentro de un modulo
               $tplFile = ModuleController::getRealFilePath( 'classes/view/templates'.$matches['tplPath'], $matches['module'] );
               if( $tplFile ) {
-                error_log( 'Ficheiro '.$matches['tplPath'].' en Modulo '.$matches['module'] );
+                // error_log( 'Ficheiro '.$matches['tplPath'].' en Modulo '.$matches['module'] );
                 $this->profile['backgroundImg'] = $tplFile;
               }
               else {
@@ -112,7 +112,7 @@ class FiledataImagesController {
               if( preg_match( '#^/app(?P<imgPath>/.*)$#', $this->profile['backgroundImg'], $matches ) ) {
                 // Contenido dentro de APP
                 if( file_exists( APP_BASE_PATH . $matches['imgPath'] ) ) {
-                  error_log( 'Ficheiro '.$matches['imgPath'].' en APP' );
+                  // error_log( 'Ficheiro '.$matches['imgPath'].' en APP' );
                   $this->profile['backgroundImg'] = APP_BASE_PATH . $matches['imgPath'];
                 }
                 else {
@@ -139,7 +139,7 @@ class FiledataImagesController {
   }
 
   public function getRouteProfile( $profile ) {
-    //error_log( "FiledataImagesController: getRouteProfile( $profile )" );
+    // error_log( "FiledataImagesController: getRouteProfile( $profile )" );
     $imgRoute = false;
     $imgRouteOriginal = $this->filesAppPath . $this->fileInfo['absLocation'];
 
@@ -164,8 +164,10 @@ class FiledataImagesController {
           $toRouteDir = pathinfo( $imgRoute, PATHINFO_DIRNAME );
           //error_log( "toRouteDir = $toRouteDir" );
           if( !file_exists( $toRouteDir ) ) {
-            //error_log( "mkdir $toRouteDir" );
-            mkdir ( $toRouteDir, 0770, true );
+            error_log( 'mkdir '.$toRouteDir );
+            $maskPrev = umask( 0 );
+            mkdir ( $toRouteDir, 0775, true );
+            umask( $maskPrev );
           }
           if( !copy( $imgRouteOriginal, $imgRoute ) ) {
             error_log( "FiledataImagesController: ERROR in copy( $imgRouteOriginal, $imgRoute )" );
@@ -191,11 +193,11 @@ class FiledataImagesController {
 
 
   public function createImageProfile( $fromRoute, $toRoute ) {
-    error_log( '---' );error_log( '---' );error_log( '---' );
-    error_log( 'FiledataImagesController: createImageProfile(): ' );
-    error_log( $fromRoute );
-    error_log( 'mime_content_type: '.mime_content_type( $fromRoute ) );
-    error_log( $toRoute );
+    // error_log( '---' );error_log( '---' );error_log( '---' );
+    // error_log( 'FiledataImagesController: createImageProfile(): ' );
+    // error_log( $fromRoute );
+    // error_log( 'mime_content_type: '.mime_content_type( $fromRoute ) );
+    // error_log( $toRoute );
 
     $resultOK = true;
 
@@ -239,7 +241,7 @@ class FiledataImagesController {
           $y = $imSvgSize['height'];
           $tx = $this->profile['width'];
           $ty = $this->profile['height'];
-          error_log( "SVG iniciales $x $y $tx $ty $density ---" );
+          // error_log( "SVG iniciales $x $y $tx $ty $density ---" );
           if( $this->profile['cut'] ) {
             // Escala para axustar un eixo e corta no outro
             if( $ty < intval( $tx*$y/$x ) ) {
@@ -261,7 +263,7 @@ class FiledataImagesController {
               $density = 1 + intval( $density * $tx / $x );
             }
           }
-          error_log( "SVG finales $x $y $tx $ty $density ---" );
+          // error_log( "SVG finales $x $y $tx $ty $density ---" );
           $imSvg->clear();
           $imSvg->destroy();
 
@@ -295,7 +297,7 @@ class FiledataImagesController {
         $tx = $tx - $this->profile['padding']['1'] - $this->profile['padding']['3'];
         $ty = $ty - $this->profile['padding']['0'] - $this->profile['padding']['2'];
       }
-      error_log( "Datos iniciales $x $y $tx $ty ---" );
+      // error_log( "Datos iniciales $x $y $tx $ty ---" );
 
       if( $tx !== 0 || $ty !== 0 ) {
         // Cambios en las medidas
@@ -332,7 +334,7 @@ class FiledataImagesController {
             else {
               $ty = $y;
             }
-            error_log( "Cortar sin ampliar: $x $y $tx $ty ---" );
+            // error_log( "Cortar sin ampliar: $x $y $tx $ty ---" );
           }
           else { // Reduce para axustar un eixo e queda corto o outro
             $escalar = true;
@@ -345,11 +347,11 @@ class FiledataImagesController {
           }
         }
 
-        error_log( "Datos recalculados $x $y $tx $ty ---" );
+        // error_log( "Datos recalculados $x $y $tx $ty ---" );
 
         if( $escalar ) {
 
-          error_log( "Valores para escalar: $x $y $tx $ty ---" );
+          // error_log( "Valores para escalar: $x $y $tx $ty ---" );
 
           $im->scaleImage( $tx, $ty, false );
 
@@ -359,14 +361,14 @@ class FiledataImagesController {
           $tx = $this->profile['width'];
           $ty = $this->profile['height'];
 
-          error_log( "Xa escalado: $x $y $tx $ty ---" );
+          // error_log( "Xa escalado: $x $y $tx $ty ---" );
         }
 
         if( $tx < $x || $ty < $y ) {
           $px = intval( ($x-$tx)/2 );
           $py = intval( ($y-$ty)/2 );
           $im->cropImage( $tx, $ty, $px, $py );
-          error_log( "Valores para cortar $x $y $tx $ty $px $py ---" );
+          // error_log( "Valores para cortar $x $y $tx $ty $px $py ---" );
         }
       }
 
@@ -416,7 +418,7 @@ class FiledataImagesController {
 
       // DEBUG info:
       $dbSize = $im->getImageGeometry();
-      error_log( 'Datos finales '.$dbSize['width'].' '.$dbSize['height'].' '.$this->profile['width'].' '.$this->profile['height'].' ---' );
+      // error_log( 'Datos finales '.$dbSize['width'].' '.$dbSize['height'].' '.$this->profile['width'].' '.$this->profile['height'].' ---' );
 
 
       $toRouteInfo = pathinfo( $toRoute );
@@ -425,8 +427,10 @@ class FiledataImagesController {
 
       //error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
       if( !file_exists( $toRouteInfo['dirname'] ) ) {
-        //error_log( 'mkdir '.$toRouteInfo['dirname'] );
-        mkdir ( $toRouteInfo['dirname'], 0770, true );
+        // error_log( 'mkdir '.$toRouteInfo['dirname'] );
+        $maskPrev = umask( 0 );
+        mkdir ( $toRouteInfo['dirname'], 0775, true );
+        umask( $maskPrev );
       }
 
       if( is_writable( $toRouteInfo['dirname'] ) ) {
@@ -465,13 +469,13 @@ class FiledataImagesController {
       $im->destroy();
     }
 
-    error_log( '---' );error_log( '---' );error_log( '---' );
+    // error_log( '---' );error_log( '---' );error_log( '---' );
     return $toRoute;
   }
 
 
   public function sendImage( $imgInfo ) {
-    error_log( 'FiledataImagesController: sendImage '. print_r( $imgInfo, true ) );
+    // error_log( 'FiledataImagesController: sendImage '. print_r( $imgInfo, true ) );
 
     $result = false;
 
@@ -515,6 +519,37 @@ class FiledataImagesController {
     }
 
     return $result;
+  }
+
+
+  public function clearCache( $fileId ) {
+    // error_log( 'FiledataImagesController: clearCache(): ' . $fileId );
+
+    $imgCacheRoute = $this->filesCachePath .'/'. $fileId .'/';
+    if( is_dir( $imgCacheRoute ) ) {
+      $this->rmdirRec( $imgCacheRoute );
+    }
+  }
+
+  public function rmdirRec( $dir ) {
+    // error_log( 'FiledataImagesController: rmdirRec(): '. $dir );
+    if( is_dir( $dir ) ) {
+      $dirElements = scandir( $dir );
+      if( is_array( $dirElements ) && count( $dirElements ) > 0 ) {
+        foreach( $dirElements as $object ) {
+          if( $object != '.' && $object != '..' ) {
+            if( is_dir( $dir.'/'.$object ) ) {
+              $this->rmdirRec( $dir.'/'.$object );
+            }
+            else {
+              unlink( $dir.'/'.$object );
+            }
+          }
+        }
+      }
+      reset( $dirElements );
+      rmdir( $dir );
+    }
   }
 
 } // FiledataImagesController

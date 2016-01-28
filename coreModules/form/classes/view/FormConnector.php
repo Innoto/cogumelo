@@ -11,8 +11,7 @@ form::autoIncludes();
  *
  * @package Module Form
  **/
-class FormConnector extends View
-{
+class FormConnector extends View {
 
   public function __construct( $base_dir ) {
     parent::__construct( $base_dir );
@@ -127,7 +126,9 @@ class FormConnector extends View
             // El fichero ha superado las validaciones. Ajustamos sus valores finales y los almacenamos.
             // error_log( 'FU: Validado o ficheiro subido...' );
 
-            $tmpCgmlFileLocation = $form->tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName );
+
+            $tmpCgmlFileLocation = $form->tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName, $fieldName );
+
             if( $tmpCgmlFileLocation === false ) {
               error_log( 'FU: Fallo de move_uploaded_file movendo '.$fieldName.': ('.$fileTmpLoc.')' );
               $form->addFieldRuleError( $fieldName, 'cogumelo',
