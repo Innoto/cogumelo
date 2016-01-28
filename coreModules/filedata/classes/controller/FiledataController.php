@@ -229,7 +229,7 @@ class FiledataController {
 
     }
     else {
-      cogumelo::error( 'FiledataController cant find the file path to save: '.$absFrom);
+      cogumelo::error( 'FiledataController cant find the file path to save. ');
       // error_log( 'FiledataController cant find the file path to save: '.$absFrom);
     }
 
