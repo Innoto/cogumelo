@@ -16,7 +16,7 @@ class RoleModel extends Model
     ),
     'name' => array(
       'type' => 'CHAR',
-      'size' => '10'
+      'size' => '30'
     ),
     'description'=> array(
       'type' => 'TEXT',
