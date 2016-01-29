@@ -40,10 +40,10 @@ class mediaserver extends Module
   function __construct() {
     $this->addUrlPatterns( '#'.MEDIASERVER_FINAL_CACHE_PATH.'/jsConfConstants.js#', 'view:ConfConstantsView::javascript' );
     $this->addUrlPatterns( '#'.MOD_MEDIASERVER_URL_DIR.'/jsConfConstants.js#', 'view:ConfConstantsView::javascript' );
-    $this->addUrlPatterns( '#'.MOD_MEDIASERVER_URL_DIR.'/lessConfConstants.less#', 'view:ConfConstantsView::less' );
+    $this->addUrlPatterns( '#^'.MOD_MEDIASERVER_URL_DIR.'/lessConfConstants.less#', 'view:ConfConstantsView::less' );
 
-    $this->addUrlPatterns( '#'.MOD_MEDIASERVER_URL_DIR.'/module(.*)#', 'view:MediaserverView::module' );
-    $this->addUrlPatterns( '#'.MOD_MEDIASERVER_URL_DIR.'(.*)#', 'view:MediaserverView::application' );
+    $this->addUrlPatterns( '#^'.MOD_MEDIASERVER_URL_DIR.'/module(.*)#', 'view:MediaserverView::module' );
+    $this->addUrlPatterns( '#^'.MOD_MEDIASERVER_URL_DIR.'(.*)#', 'view:MediaserverView::application' );
     $this->addUrlPatterns( '#(.+\/)?classes/view/templates/(.+)\.less$#', 'view:MediaserverView::onClientLess');
 
   }
