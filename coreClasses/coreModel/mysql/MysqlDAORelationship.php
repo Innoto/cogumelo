@@ -169,7 +169,7 @@ class MysqlDAORelationship
     else
     if ( $colType == 'CHAR'  || $colType == 'VARCHAR' ){
       $toScape = '"';
-      $scaped = '';
+      $scaped = '\\\"';
       $retStr = "REPLACE( COALESCE(" . $vo->table.".".$colKey.", 'null'), '".$toScape."', '".$scaped."' )";
     }
 
