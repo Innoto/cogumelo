@@ -338,4 +338,23 @@ class CogumeloClass extends Singleton
   // Metodos duplicados en Module.php
   //
 
+
+
+  public static function getSetupValue( $path ) {
+    // error_log( 'Cogumelo::getSetupValue: '.$path );
+    global $CGMLCONF;
+    $value = null;
+
+    $parts = explode( ':', $path );
+    $stack = '[\'' . implode( '\'][\'', $parts ) . '\']';
+    $fai = '$valid = isset( $CGMLCONF'. $stack .');';
+    eval( $fai );
+    if( $valid ) {
+      $fai = '$value = $CGMLCONF'. $stack .';';
+      eval( $fai );
+    }
+
+    return $value;
+  }
+
 }
