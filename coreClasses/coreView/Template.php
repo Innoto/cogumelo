@@ -380,6 +380,10 @@ class Template extends Smarty
 
       global $cogumeloIncludesCSS;
       global $cogumeloIncludesJS;
+      global $C_LANG;
+
+
+      $langUrl = '/'.$C_LANG;
 
       if( is_array( $cogumeloIncludesCSS ) ) {
         foreach( $cogumeloIncludesCSS as $fileCss ) {
@@ -400,6 +404,7 @@ class Template extends Smarty
       $clientIncludes .= '<script type="text/javascript"> if( typeof $ != "undefined"){ jqueryIsLoaded = true; }else { jqueryIsLoaded = false; }</script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="/media/module/common/js/Includes.js"></script>' . "\n";
+      $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
       if( !$this->cgmMediaserverCompileLess ) {
         $clientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
           'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
