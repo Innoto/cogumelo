@@ -99,7 +99,6 @@ if( $argc > 1 ) {
     case 'jsonTranslations':
       Cogumelo::load('coreController/i18nScriptController.php');
       $i18nscriptController = new i18nScriptController();
-      $i18nscriptController->setEnviroment();
       $i18nscriptController->c_i18n_json();
       echo "The files.json are ready to be used!\n";
       break;
@@ -147,7 +146,7 @@ else{
 function actionCompileTranslations() {
   Cogumelo::load('coreController/i18nScriptController.php');
   $i18nscriptController = new i18nScriptController();
-  $i18nscriptController->setEnviroment();
+  /*$i18nscriptController->setEnviroment();*/
   $i18nscriptController->c_i18n_compile();
   /* generate json for js */
   $i18nscriptController->c_i18n_json();
