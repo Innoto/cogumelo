@@ -16,6 +16,7 @@ class i18nScriptController {
 	var $modules;
 	var $lc_1;
 	var $dir_lc = array();
+	var $lang = array();
 
 	function __construct()
 	{
@@ -30,6 +31,7 @@ class i18nScriptController {
 	    $this->lang = $LANG_AVAILABLE;
 
 	    foreach ($LANG_AVAILABLE as $l => $lang){
+				$this->lang[$l] = $lang['i18n'];
 	    	$this->dir_lc[$l] = $this->dir_path.$lang['i18n'].'/LC_MESSAGES';
 	    }
 	}
@@ -67,6 +69,20 @@ class i18nScriptController {
     	return $exist;
 	}
 
+	function checkJsTranslations($l){
+		$exist = false;
+		if (is_dir($l)){
+					$handle = opendir($l);
+					while ($file = readdir($handle)) {
+							if ($file==$this->textdomain.'_js.po'){
+								$exist = true;
+							}
+						}
+				 }
+
+			return $exist;
+	}
+
 	/**
     * Get all the text to be translated and update or create a file.po if not exists
     */
@@ -79,6 +95,7 @@ class i18nScriptController {
 		$cogumeloFiles = CacheUtilsController::listFolderFiles(COGUMELO_LOCATION, array('php','js','tpl'), false);
 		$cogumeloFilesModule = CacheUtilsController::listFolderFiles($this->dir_modules, array('php','js','tpl'), false);
 		$cogumeloFilesModuleC = CacheUtilsController::listFolderFiles($this->dir_modules_c, array('php','js','tpl'), false);
+
 		$appFilesModule = CacheUtilsController::listFolderFiles($this->dir_modules_dist, array('php','js','tpl'), false);
 		$appFilesMain = CacheUtilsController::listFolderFiles($this->dir_main, array('php','js','tpl'), false);
 		$appFiles = array_merge_recursive($appFilesModule, $appFilesMain);
@@ -106,6 +123,8 @@ class i18nScriptController {
 		}
 
 
+
+		// get all the files into modules folder
 		/* App modules (rTypes) */
 		$filesAppModules = $this->getModuleFiles($cogumeloFilesModule, $this->dir_modules);
 		/* Cogumelo core modules */
@@ -118,39 +137,55 @@ class i18nScriptController {
 
 
 		// get the .php files into modules folder
-	    if ($filesMod && $this->modules){
+		if ($filesModules && $this->modules){
 			foreach ($this->modules as $i => $dir) {
+				foreach ($filesModules as $filesModule) {
+					foreach ($filesModule as $k => $file) {
+						$outMod = explode('/'.$dir.'/',$file);
 
-			    foreach ($filesMod as $k => $file) {
-				    $outMod = explode('/'.$dir.'/',$file);
-						//echo "dir -> ".$dir."\n";
-				    if (sizeof($outMod)==2){
+						if (sizeof($outMod)==2){
 
-				    	if(ModuleController::getRealFilePath($outMod[1], $dir)){
-  		        			$parts = explode('.',$file);
-  		        			switch($parts[1]){
-						      case 'php':
-						        $filesModules['php'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
-						        break;
-						      case 'js':
-						        $filesModules['js'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
-						        break;
-						      case 'tpl':
-						        $filesModules['tpl'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
-						        break;
-						    }
-				    	}
-				    }
+							if(ModuleController::getRealFilePath($outMod[1], $dir)){
+									$parts = explode('.',$file);
+									switch($parts[1]){
+										case 'php':
+											$filesModules['php'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+											break;
+										case 'js':
+											$filesModules['js'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+											break;
+										case 'tpl':
+											$filesModules['tpl'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+											break;
+									}
+							}
+						}
+					}
 				}
 			}
 		}
 
-
-// We combine all the arrays that we've got in an only array
-$filesArray = array_merge_recursive($filesAll, $filesModules);
-
+    // We combine all the arrays that we've got in an only array
+    $filesArray = array_merge_recursive($filesAll, $filesModules);
 
 
+		/************************** JS *******************************/
+
+		//Now save the php.po file with the result
+		foreach ($this->dir_lc as $l){
+			if ($this->checkJsTranslations($l)){ //merge
+				//Scan the js code to find the latest gettext entries
+				$entriesJs = Gettext\Extractors\JsCode::fromFile($filesArray['js']);
+				//Get the translations of the code that are stored in a po file
+				$oldEntries = Gettext\Extractors\Po::fromFile($l.'/'.$this->textdomain.'_js.po');
+				//Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
+				$entriesJs->mergeWith($oldEntries); //now $entries has all the values
+			}
+			else{ //create
+				$entriesJs = Gettext\Extractors\JsCode::fromFile($filesArray['js']);
+			}
+		Gettext\Generators\Po::toFile($entriesJs, $l.'/'.$this->textdomain.'_prev_js.po');
+		}
 
 
 	    /************************** PHP e JS *******************************/
@@ -160,30 +195,24 @@ $filesArray = array_merge_recursive($filesAll, $filesModules);
 	      if ($this->checkTranslations($l)){ //merge
 		      //Scan the php code to find the latest gettext entries
 		      $entriesPhp = Gettext\Extractors\PhpCode::fromFile($filesArray['php']);
-		      $entriesJs = Gettext\Extractors\JsCode::fromFile($filesArray['js']);
-
-		      $entriesJs->mergeWith($entriesPhp);
 
 		      //Get the translations of the code that are stored in a po file
 		      $oldEntries = Gettext\Extractors\Po::fromFile($l.'/'.$this->textdomain.'.po');
 
 		      //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-		      $entriesJs->mergeWith($oldEntries); //now $entries has all the values
+		      $entriesPhp->mergeWith($oldEntries); //now $entries has all the values
 		    }
 		    else{ //create
 		      $entriesPhp = Gettext\Extractors\PhpCode::fromFile($filesArray['php']);
-		      $entriesJs = Gettext\Extractors\JsCode::fromFile($filesArray['js']);
-		      $entriesJs->mergeWith($entriesPhp);
+		      $entriesPhp->mergeWith($entriesPhp);
 		    }
-		  Gettext\Generators\Po::toFile($entriesJs, $l.'/'.$this->textdomain.'_prev.po');
+		  Gettext\Generators\Po::toFile($entriesPhp, $l.'/'.$this->textdomain.'_prev.po');
 	    }
 
 	    /**************************** TPL ********************************/
 
 	    $smartygettext = DEPEN_COMPOSER_PATH.'/smarty-gettext/smarty-gettext/tsmarty2c.php';
 	    exec( 'chmod 700 '.$smartygettext );
-
-
 
 	    // copiamos os ficheiros nun dir temporal
 	    foreach ($filesArray['tpl'] as $a){
@@ -197,8 +226,10 @@ $filesArray = array_merge_recursive($filesAll, $filesModules);
 	      // Now we have to combine this PO file with the PO file we had previusly and discard the tmp file
 
 	      exec ('msgcat --use-first '.$l.'/'.$this->textdomain.'_prev.po '.$l.'/'.$this->textdomain.'_tpl.po > '.$l.'/'.$this->textdomain.'.po');
+				exec ('msgcat --use-first '.$l.'/'.$this->textdomain.'_prev_js.po > '.$l.'/'.$this->textdomain.'_js.po');
 	      exec ('rm '.$l.'/'.$this->textdomain.'_tpl.po');
 	      exec ('rm '.$l.'/'.$this->textdomain.'_prev.po');
+				exec ('rm '.$l.'/'.$this->textdomain.'_prev_js.po');
 	    }
 
 	    exec ('rm '.TPL_TMP.'/*.tpl');
@@ -221,9 +252,9 @@ $filesArray = array_merge_recursive($filesAll, $filesModules);
   	*/
 	function c_i18n_json() {
 		foreach ($this->dir_lc as $l){
-			$myarray = explode('_',$l);
-	    	$lang = $myarray[0];
-			exec('i18next-conv -l '.$this->textdomain.' -s '.I18N_LOCALE.$l.'/LC_MESSAGES/'.$this->textdomain.'.po -t '.COGUMELO_LOCATION.'/packages/sampleApp/httpdocs/locales/'.$lang.'/translation.json');
+				//$myarray = explode('LC_MESSAGES',$l);
+	    	//$lang = $myarray[0];
+				exec('i18next-conv -l '.$this->textdomain.' -s '.$l.'/'.$this->textdomain.'_js.po -t '.$l.'/translation.json');
 	    }
 	}
 
