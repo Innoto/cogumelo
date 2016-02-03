@@ -119,7 +119,7 @@ class MysqlDAORelationship
     $coma = '';
 
     foreach($vo->cols as $col) {
-      $returnCols .= "'".$coma."\"".$vo->table.".".$col."\": ' ,'\"', ".$this->colToString($col, $vo).",'\"', ";
+      $returnCols .= "'".$coma."\"".$vo->table.".".$col."\": ' ,'\"', " . $this->colToString($col, $vo) . ",'\"', ";
       $coma = ',';
     }
 
@@ -164,11 +164,13 @@ class MysqlDAORelationship
     else
     if( $colType == 'GEOMETRY' ) {
       $retStr = "ASCII( AsText( COALESCE(".$vo->table.".".$colKey.", 'null')) )";
-
-
       $retStr = "if(".$vo->table.".".$colKey." is not null,  astext(".$vo->table.".".$colKey."),'null' )";
-
-
+    }
+    else
+    if ( $colType == 'CHAR'  || $colType == 'VARCHAR' ){
+      $toScape = '"';
+      $scaped = '\\\"';
+      $retStr = "REPLACE( COALESCE(" . $vo->table.".".$colKey.", 'null'), '".$toScape."', '".$scaped."' )";
     }
 
     return $retStr;
