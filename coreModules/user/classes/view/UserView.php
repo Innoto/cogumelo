@@ -531,32 +531,85 @@ class UserView extends View
 
       $user->save();
 
-//var_dump( $user->getAllData() );
+      //var_dump( $user->getAllData() );
 
-      if( $userAvatar ){
+      if( $userAvatar ) {
         //var_dump( $userAvatar );
-        if( $userAvatar['status'] === "DELETE"){
-          //IMG DELETE
-          //var_dump('delete');
-          $user->deleteDependence( 'avatar', true );
-        }
-        elseif( $userAvatar['status'] === "REPLACE"){
-          //IMG UPDATE
-          //var_dump('replace');
-          $user->deleteDependence( 'avatar', true);
-          $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
-        }else{
-          //var_dump('else');
-          //IMG CREATE
-          $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
-        }
-      }
+        /*
+          if( $userAvatar['status'] === "DELETE"){
+            //IMG DELETE
+            //var_dump('delete');
+            $user->deleteDependence( 'avatar', true );
+          }
+          elseif( $userAvatar['status'] === "REPLACE"){
+            //IMG UPDATE
+            //var_dump('replace');
+            $user->deleteDependence( 'avatar', true);
+            $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
+          }else{
+            //var_dump('else');
+            //IMG CREATE
+            $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
+          }
+        */
 
-//echo "==========";
 
-//var_dump( $user->getAllData()  );
+        $filedataCtrl = new FiledataController();
+        $newFiledataObj = false;
 
-      $user->save( array( 'affectsDependences' => true ));
+        switch( $userAvatar['status'] ) {
+          case 'LOADED':
+            $userAvatarValues = $userAvatar['values'];
+            $newFiledataObj = $filedataCtrl->createNewFile( $userAvatarValues );
+            // error_log( 'To Model - newFiledataObj ID: '.$newFiledataObj->getter( 'id' ) );
+            if( $newFiledataObj ) {
+              // $user->setterDependence( 'avatar', $newFiledataObj );
+              $user->setter( 'avatar', $newFiledataObj->getter( 'id' ) );
+            }
+            break;
+          case 'REPLACE':
+            // error_log( 'To Model - fileInfoPrev: '. print_r( $userAvatar[ 'prev' ], true ) );
+            $userAvatarValues = $userAvatar['values'];
+            $prevFiledataId = $user->getter( 'avatar' );
+            $newFiledataObj = $filedataCtrl->createNewFile( $userAvatarValues );
+            // error_log( 'To Model - newFiledataObj ID: '.$newFiledataObj->getter( 'id' ) );
+            if( $newFiledataObj ) {
+              // error_log( 'To Model - deleteFile ID: '.$prevFiledataId );
+              // $user->deleteDependence( 'avatar', true );
+              // $user->setterDependence( 'avatar', $newFiledataObj );
+              $user->setter( 'avatar', $newFiledataObj->getter( 'id' ) );
+              $filedataCtrl->deleteFile( $prevFiledataId );
+            }
+            break;
+          case 'DELETE':
+            if( $prevFiledataId = $user->getter( 'avatar' ) ) {
+              // error_log( 'To Model - prevFiledataId: '.$prevFiledataId );
+              $filedataCtrl->deleteFile( $prevFiledataId );
+              // $user->deleteDependence( 'avatar', true );
+              $user->setter( 'avatar', null );
+            }
+            break;
+          case 'EXIST':
+            $userAvatarValues = $userAvatar[ 'values' ];
+            if( $prevFiledataId = $user->getter( 'avatar' ) ) {
+              // error_log( 'To Model - UPDATE prevFiledataId: '.$prevFiledataId );
+              $filedataCtrl->updateInfo( $prevFiledataId, $userAvatarValues );
+            }
+            break;
+          default:
+            // error_log( 'To Model: DEFAULT='.$userAvatar['status'] );
+            break;
+        } // switch( $userAvatar['status'] )
+
+
+
+      } // if( $userAvatar )
+
+      //echo "==========";
+      //var_dump( $user->getAllData()  );
+
+      $user->save();
+      // $user->save( array( 'affectsDependences' => true ) );
 
       /*Asignacion de ROLE user*/
       if($asignRole){
