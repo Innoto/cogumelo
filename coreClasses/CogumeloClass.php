@@ -231,7 +231,7 @@ class CogumeloClass extends Singleton
       require_once(ModuleController::getRealFilePath('classes/controller/UserSessionController.php', 'user'));
       $userSessionControl = new UserSessionController();
       if($user = $userSessionControl->getUser()) {
-        $res = $user->getter('login');
+        $res = $user['user']->getter('login');
       }
       else{
         $res = "";
