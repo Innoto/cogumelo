@@ -149,6 +149,8 @@ function actionCompileTranslations() {
   $i18nscriptController = new i18nScriptController();
   $i18nscriptController->setEnviroment();
   $i18nscriptController->c_i18n_compile();
+  /* generate json for js */
+  $i18nscriptController->c_i18n_json();
   echo "\nThe files.mo are ready to be used!\n\n";
 }
 
