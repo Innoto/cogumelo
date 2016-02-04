@@ -252,9 +252,8 @@ class i18nScriptController {
   	*/
 	function c_i18n_json() {
 		foreach ($this->dir_lc as $l){
-				//$myarray = explode('LC_MESSAGES',$l);
-	    	//$lang = $myarray[0];
-				exec('i18next-conv -l '.$this->textdomain.' -s '.$l.'/'.$this->textdomain.'_js.po -t '.$l.'/translation.json');
+				exec('php '.$this->dir_modules_c.'/i18nServer/classes/po2json.php -i '.$l.'/'.$this->textdomain.'_js.po -o '.$l.'/translation.json');
+				//exec('i18next-conv -l '.$this->textdomain.' -s '.$l.'/'.$this->textdomain.'_js.po -t '.$l.'/translation.json');
 	    }
 	}
 

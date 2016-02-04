@@ -215,6 +215,9 @@ class UserView extends View
         'params' => array( 'placeholder' => 'Email' ),
         'rules' => array( 'required' => true )
       ),
+      'active' => array(
+        'params' => array( 'type' => 'checkbox', 'class' => 'switchery', 'options'=> array( '1' => __('Active') ))
+      ),
       'description' => array(
         'params' => array( 'type' => 'textarea', 'placeholder' => 'Descripción'),
         'translate' => true
@@ -468,6 +471,7 @@ class UserView extends View
 
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
+
       //Validaciones extra
       $userControl = new UserModel();
       // Donde diferenciamos si es un update o un create para validar el login
@@ -508,7 +512,6 @@ class UserView extends View
 
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
-      $valuesArray['active'] = 0;
 
        // Donde diferenciamos si es un update o un create
       if( !isset($valuesArray['id']) || !$valuesArray['id'] ){
