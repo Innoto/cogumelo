@@ -24,11 +24,6 @@ class RoleModel extends Model
     )
   );
 
-  static $insertValues = array(
-    array('name' => 'superAdmin', 'description' => 'SuperAdmin'),
-    array('name' => 'user', 'description' => 'User'),
-  );
-
   function __construct($datarray = array(),  $otherRelObj= false )
   {
     parent::__construct($datarray, $otherRelObj );

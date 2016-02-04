@@ -20,14 +20,13 @@ class RolePermissionModel extends Model
     ),
 
     'permission' => array(
-      'type'=>'FOREIGN',
-      'vo' => 'PermissionModel',
-      'key' => 'id'
-    )    
+      'type' => 'CHAR',
+      'size' => '100',
+    )
   );
 
   static $extraFilters = array();
-  
+
   function __construct($datarray = array(),  $otherRelObj= false )
   {
     parent::__construct($datarray, $otherRelObj );
