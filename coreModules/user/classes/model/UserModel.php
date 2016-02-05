@@ -95,7 +95,7 @@ class UserModel extends Model
   {
     $userO = $this->listItems( array('filters' => array('login' => $login), 'affectsDependences' => array( 'UserPermissionModel') ))->fetch();
     if( $userO ){
-      $data = ($userO->getter('password') == sha1($password)) ? true : false;
+      $data = (($userO->getter('password') == sha1($password)) && ($userO->getter('active') == 1)) ? true : false;
     }
     else{
       $data = false;
