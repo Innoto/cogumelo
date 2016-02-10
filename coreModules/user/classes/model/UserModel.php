@@ -106,8 +106,10 @@ class UserModel extends Model
 
       $userPermissionArray = $userO->getterDependence('id', 'UserPermissionModel');
       $uPermArray = array();
-      foreach ($userPermissionArray as $key => $uPerm) {
-        $uPermArray[] = $uPerm->getter('permission');
+      if($userPermissionArray) {
+        foreach ($userPermissionArray as $key => $uPerm) {
+          $uPermArray[] = $uPerm->getter('permission');
+        }
       }
       $userO->setter('timeLastLogin' , date("Y-m-d H:i:s", time()));
       $userO->save();
