@@ -93,10 +93,9 @@ class UserModel extends Model
   **/
   function authenticateUser($login, $password)
   {
-    $userO = $this->listItems( array('filters' => array('login' => $login)) )->fetch();
-
+    $userO = $this->listItems( array('filters' => array('login' => $login), 'affectsDependences' => array( 'UserPermissionModel') ))->fetch();
     if( $userO ){
-      $data = ($userO->getter('password') == sha1($password)) ? true : false;
+      $data = (($userO->getter('password') == sha1($password)) && ($userO->getter('active') == 1)) ? true : false;
     }
     else{
       $data = false;
@@ -104,9 +103,20 @@ class UserModel extends Model
 
     if($data) {
       Cogumelo::log("authenticateUser SUCCEED with login=".$login, "UserLog");
+
+      $userPermissionArray = $userO->getterDependence('id', 'UserPermissionModel');
+      $uPermArray = array();
+      if($userPermissionArray) {
+        foreach ($userPermissionArray as $key => $uPerm) {
+          $uPermArray[] = $uPerm->getter('permission');
+        }
+      }
       $userO->setter('timeLastLogin' , date("Y-m-d H:i:s", time()));
       $userO->save();
-      $data = $userO;
+
+      $data = array();
+      $data['data'] = $userO->data;
+      $data['permissions'] = $uPermArray;
     }
     else {
       Cogumelo::log("authenticateUser FAILED with login=".$login.". User NOT authenticated", "UserLog");
@@ -132,4 +142,3 @@ class UserModel extends Model
     return $data;
   }
 }
-
