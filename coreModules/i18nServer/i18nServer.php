@@ -14,7 +14,7 @@ class i18nServer extends Module {
 
   public function __construct() {
     global $C_LANG;
-    $this->addUrlPatterns( '#^jsTranslations/getJson.js$#', 'view:GetTranslations::getJson' );
+    $this->addUrlPatterns( '#^jsTranslations/getJson.js(\?.*)?$#', 'view:GetTranslations::getJson' );
   }
 
 }
