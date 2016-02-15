@@ -30,6 +30,7 @@ class Template extends Smarty
   var $cgmMediaserverCompileLess = MEDIASERVER_PRODUCTION_MODE;
   var $cgmMediaserverHost = MEDIASERVER_HOST;
   var $cgmMediaserverUrlDir = false;
+  var $cgmMediaUrlDir = MOD_MEDIASERVER_URL_DIR;
 
 
   /**
@@ -43,8 +44,8 @@ class Template extends Smarty
     if( MEDIASERVER_PRODUCTION_MODE ) {
       $this->cgmMediaserverUrlDir = MEDIASERVER_FINAL_CACHE_PATH;
     }
-    else{
-      $this->cgmMediaserverUrlDir =MOD_MEDIASERVER_URL_DIR;
+    else {
+      $this->cgmMediaserverUrlDir = MOD_MEDIASERVER_URL_DIR;
     }
 
     parent::__construct();
@@ -114,15 +115,15 @@ class Template extends Smarty
 
 
     if( substr( $file_path, -3) == '.js'  && MEDIASERVER_NOT_CACHE_JS == true ){
-      $mediaPath = 'media';
+      $mediaPath = '/' . $this->cgmMediaUrlDir;
     }
     else {
-      $mediaPath = $this->cgmMediaserverUrlDir;
+      $mediaPath = $this->cgmMediaserverHost . $this->cgmMediaserverUrlDir;
     }
 
     switch( $module ) {
       case false:
-        $base_path = '/'.$mediaPath.'/';
+        $base_path = $mediaPath.'/';
         break;
       case 'vendor':
         $base_path = $this->cgmMediaserverHost.'vendor/';
@@ -134,7 +135,7 @@ class Template extends Smarty
         $base_path = $this->cgmMediaserverHost.'vendor/manual/';
         break;
       default:
-        $base_path = '/'.$mediaPath.'/module/'.$module.'/';
+        $base_path = $mediaPath.'/module/'.$module.'/';
         break;
     }
 
@@ -238,30 +239,30 @@ class Template extends Smarty
       $langUrl = '';
     }
     //echo $langUrl . $itemsToInclude[$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js';
-
-    $itemsToInclude[$this->cgmMediaserverHost . $langUrl . $this->cgmMediaserverUrlDir.'/jsConfConstants.js'] = array(
-      'src'=> $this->cgmMediaserverHost . $langUrl . $this->cgmMediaserverUrlDir.'/jsConfConstants.js',
+    /*
+    $itemsToInclude[ '/' . $langUrl . $this->cgmMediaUrlDir.'/jsConfConstants.js' ] = array(
+      'src'=> '/' . $langUrl . $this->cgmMediaUrlDir.'/jsConfConstants.js',
       'rel' => false ,
-      'type'=> 'text/javascript',
+      'type' => 'text/javascript',
       'onlyOnce' => true
     );
+    */
 
     if( !$ignoreAutoincludes ) {
-      foreach ( $this->js_autoincludes as $includeKey => $include) {
-
-        $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => false , 'type'=> $include['type'] );
+      foreach( $this->js_autoincludes as $includeKey => $include ) {
+        $itemsToInclude[ $includeKey ] = array( 'src'=> $include['src'], 'rel' => false , 'type'=> $include['type'] );
       }
     }
 
-    foreach ( $this->js_includes as $includeKey => $include) {
-      $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => false , 'type'=> $include['type'] );
+    foreach( $this->js_includes as $includeKey => $include ) {
+      $itemsToInclude[ $includeKey ] = array( 'src'=> $include['src'], 'rel' => false , 'type'=> $include['type'] );
     }
 
 
     // generate the javascript include call
 
     foreach( $itemsToInclude as $include ) {
-      $html .= "\t".str_replace('\\/', '/', json_encode( $include ) ) . ",  \n";;
+      $html .= "\t".str_replace('\\/', '/', json_encode( $include ) ) . ",  \n";
     }
 
 
@@ -288,13 +289,12 @@ class Template extends Smarty
 
 
     if( !$ignoreAutoincludes ) {
-      foreach ( $this->css_autoincludes as $includeKey => $include) {
-
+      foreach( $this->css_autoincludes as $includeKey => $include ) {
         $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
       }
     }
 
-    foreach ( $this->css_includes as $includeKey => $include) {
+    foreach( $this->css_includes as $includeKey => $include ) {
       $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
     }
 
@@ -401,9 +401,10 @@ class Template extends Smarty
 
       // Basic includes and includers
       $clientIncludes = "\n";
-      $clientIncludes .= '<script type="text/javascript"> if( typeof $ != "undefined"){ jqueryIsLoaded = true; }else { jqueryIsLoaded = false; }</script>' . "\n";
+      $clientIncludes .= '<script type="text/javascript">jqueryIsLoaded = ( typeof $ !== "undefined" );</script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="/media/module/common/js/Includes.js"></script>' . "\n";
+      $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
       if( !$this->cgmMediaserverCompileLess ) {
         $clientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
