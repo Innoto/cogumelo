@@ -34,6 +34,12 @@ class CogumeloClass extends Singleton
        "includes" => array('libs/Smarty.class.php')
      ),
      array(
+       "id" => "jquery",
+       "params" => array("jQuery#2.1.4"),
+       "installer" => "bower",
+       "includes" => array()
+     ),
+     array(
        "id" => "gettext",
        "params" => array('Gettext'),
        "installer" => 'manual',
@@ -44,7 +50,20 @@ class CogumeloClass extends Singleton
      "params" => array('smarty-gettext/smarty-gettext', '~1.1.1'),
      "installer" => "composer",
      "includes" => array('block.t.php')
+     ),
+     array(
+       "id" =>"rsvp",
+       "params" => array('rsvp'),
+       "installer" => 'manual',
+       "includes" => array()
+     ),
+     array(
+       "id" =>"basket",
+       "params" => array('basket'),
+       "installer" => 'manual',
+       "includes" => array()
      )
+
   );
 
   // Set autoincludes
