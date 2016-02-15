@@ -426,7 +426,7 @@ class Template extends Smarty
       $clientIncludes .= '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
       $clientIncludes .= '<script src="http://rsvpjs-builds.s3.amazonaws.com/rsvp-latest.min.js"></script>' . "\n";
-      $clientIncludes .= '<script src="https://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
+      $clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
 
       //$clientIncludes .= '<script src="/vendor/bower/rsvp/rsvp.min.js"></script>' . "\n";
       //$clientIncludes .= '<script src="/vendor/bower/basket.js/lib/basket.js"></script>' . "\n";
