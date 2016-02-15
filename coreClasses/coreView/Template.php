@@ -454,6 +454,14 @@ class Template extends Smarty
       $clientIncludes .= "\t".'else {' . "\n";
       $clientIncludes .= "\t".'  originalJQueryObject = $ = jQuery = $.noConflict();' . "\n";
       $clientIncludes .= "\t".'}' . "\n";
+
+      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {' . "\n";
+      $clientIncludes .= "\t".'  if ( options.dataType == \'script\' || originalOptions.dataType == \'script\' ) {' . "\n";
+      $clientIncludes .= "\t".'      options.cache = true;' . "\n";
+      $clientIncludes .= "\t".'  }' . "\n";
+      $clientIncludes .= "\t".'});' . "\n";
+
+
       $clientIncludes .= "</script>\n\n";
 
 
