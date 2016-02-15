@@ -250,19 +250,20 @@ class Template extends Smarty
 
     if( !$ignoreAutoincludes ) {
       foreach( $this->js_autoincludes as $includeKey => $include ) {
-        $itemsToInclude[ $includeKey ] = array( 'src'=> $include['src'], 'rel' => false , 'type'=> $include['type'] );
+        $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'rel' => false , 'type'=> $include['type'],  'type'=> 1 );
       }
     }
 
     foreach( $this->js_includes as $includeKey => $include ) {
-      $itemsToInclude[ $includeKey ] = array( 'src'=> $include['src'], 'rel' => false , 'type'=> $include['type'] );
+      $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'rel' => false , 'type'=> $include['type'], 'skipCache' => 'true' );
     }
 
 
     // generate the javascript include call
-
+    $coma = '';
     foreach( $itemsToInclude as $include ) {
-      $html .= "\t".str_replace('\\/', '/', json_encode( $include ) ) . ",  \n";
+      $html .= "\t".$coma.str_replace('\\/', '/', json_encode( $include ) ) . " \n";
+      $coma=',';
     }
 
 
@@ -283,32 +284,35 @@ class Template extends Smarty
 
     if( $this->cgmMediaserverCompileLess == false ) {
       $src = $this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/lessConfConstants.less';
-      $itemsToInclude[$src] =  array('src'=> $src, 'rel' => "stylesheet/less" , 'type'=> 'text/css', 'onlyOnce' => true );
+      //$itemsToInclude[$src] =  array('src'=> $src, 'rel' => "stylesheet/less" , 'type'=> 'text/css', 'onlyOnce' => true );
+      $itemsToInclude[$src] =  "<link href='".$src."' rel='stylesheet/less' type='text/css' >";
     }
 
 
 
     if( !$ignoreAutoincludes ) {
-      foreach( $this->css_autoincludes as $includeKey => $include ) {
-        $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
+      foreach ( $this->css_autoincludes as $includeKey => $include) {
+        //$itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
+        $itemsToInclude[$includeKey] = "<link href='".$include['src']."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
       }
     }
 
-    foreach( $this->css_includes as $includeKey => $include ) {
-      $itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
+    foreach ( $this->css_includes as $includeKey => $include) {
+      //$itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
+      $itemsToInclude[$includeKey] = "<link href='".$include['src']."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
     }
 
 
     // generate the javascript include call
     foreach( $itemsToInclude as $include ) {
-      $html .= "\t".str_replace('\\/', '/', json_encode( $include ) ) . ",\n";
+      $html .=  $include   . "\n";
     }
 
 
 
 
 
-    return( $html );
+    return( $html . "\n\n");
   }
 
 
@@ -398,8 +402,9 @@ class Template extends Smarty
       }
 
 
-
+      $clientIncludes = "\n";
       // Basic includes and includers
+      /*
       $clientIncludes = "\n";
       $clientIncludes .= '<script type="text/javascript">jqueryIsLoaded = ( typeof $ !== "undefined" );</script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
@@ -411,19 +416,58 @@ class Template extends Smarty
           'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
           '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>';
       }
+*/
 
+      // prevent jquery conflicts
+      $clientIncludes .= "<script>\n";
+      $clientIncludes .= "\t".'jqueryIsLoaded = ( typeof $ !== "undefined" );' . "\n";
+      $clientIncludes .= "\t</script>\n\n";
+
+      $clientIncludes .= '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
+      $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
+      $clientIncludes .= '<script src="http://rsvpjs-builds.s3.amazonaws.com/rsvp-latest.min.js"></script>' . "\n";
+      $clientIncludes .= '<script src="https://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
+
+      //$clientIncludes .= '<script src="/vendor/bower/rsvp/rsvp.min.js"></script>' . "\n";
+      //$clientIncludes .= '<script src="/vendor/bower/basket.js/lib/basket.js"></script>' . "\n";
+
+      $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
+
+
+      $clientIncludes .= $this->getClientStylesHtml();
+
+
+      if( !$this->cgmMediaserverCompileLess ) {
+       $clientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
+         'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
+         '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
+         '<script type="text/javascript"> less.refresh();  </script>';
+      }
+
+      $clientIncludes .= "<script>\n";
+
+      $clientIncludes .= "\t".'// prevent jquery conflicts' . "\n";
+      $clientIncludes .= "\t".'if( jqueryIsLoaded === true ) {' . "\n";
+      $clientIncludes .= "\t".'  jQuery = originalJQueryObject;' . "\n";
+      $clientIncludes .= "\t".'  $ = originalJQueryObject;' . "\n";
+      $clientIncludes .= "\t".'}' . "\n";
+      $clientIncludes .= "\t".'else {' . "\n";
+      $clientIncludes .= "\t".'  originalJQueryObject = $ = jQuery = $.noConflict();' . "\n";
+      $clientIncludes .= "\t".'}' . "\n";
+      $clientIncludes .= "</script>\n\n";
 
 
       $clientIncludes .= "\t<script>\n";
 
 
       $clientIncludes .= '$.holdReady( true );'."\n";
-
-      $clientIncludes .= 'cogumelo.includes(['. "\n";
-      $clientIncludes .= $this->getClientStylesHtml();
+      if( !$this->cgmMediaserverCompileLess ) {
+        $clientIncludes .= 'basket.clear();'."\n";
+      }
+      $clientIncludes .= 'basket.require('. "\n";
       $clientIncludes .= $this->getClientScriptHtml() ;
-      $clientIncludes .= ']);'."\n\n";
-      $clientIncludes .= "\t</script>\n";
+      $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
+      $clientIncludes .= "\t</script>\n\n\n";
 
 
       $this->assign('client_includes', $clientIncludes );
