@@ -17,6 +17,12 @@ class form extends Module {
       'includes' => array( 'dist/jquery.validate.js', 'dist/additional-methods.js' )
     ),
     array(
+      'id' =>'ckEditorFix',
+      'params' => array( 'ckEditorFix' ),
+      'installer' => 'manual',
+      'includes' => array( 'ckEditorFix.js' ),
+    ),
+    array(
       'id' =>'ckeditor',
       'params' => array( 'ckeditor#standard/stable' ),
       'installer' => 'bower',
