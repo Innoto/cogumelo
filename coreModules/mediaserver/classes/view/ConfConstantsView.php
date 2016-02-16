@@ -19,11 +19,54 @@ class ConfConstantsView {
   }
 
 
+  /**
+   * Construimos dinamicamente el contenido de jsConfConstants.js con la información solicitada
+   *
+   * @global TYPE $MEDIASERVER_JAVASCRIPT_GLOBALS
+   * @global TYPE $MEDIASERVER_JAVASCRIPT_CONSTANTS
+   **/
   public function javascript(){
-    $jsContent = '/* COGUMELO SETUP CONSTANTS */'."\n";
+    $jsContent = '/* COGUMELO SETUP INFO */'."\n";
 
-    global $MEDIASERVER_JAVASCRIPT_GLOBALS, $MEDIASERVER_JAVASCRIPT_CONSTANTS;
+    $publicConfCode = '';
+    $publicConfJs = Cogumelo::getSetupValue( 'mediaserver:publicConf:javascript:globalVars' );
+    if( $publicConfJs && is_array( $publicConfJs ) && count( $publicConfJs ) > 0 ) {
+      foreach( $publicConfJs as $globalKey ) {
+        if( isset( $GLOBALS[ $globalKey ] ) ) {
+          $jsValue = $this->valueToJs( $GLOBALS[ $globalKey ] );
+          if( $jsValue !== null ) {
+            $publicConfCode .= '  \''.$globalKey.'\': '.$jsValue.','."\n";
+          }
+        }
+      }
+    }
+    $setupFields = Cogumelo::getSetupValue( 'mediaserver:publicConf:javascript:setupFields' );
+    if( $setupFields && is_array( $setupFields ) && count( $setupFields ) > 0 ) {
+      foreach( $setupFields as $setupField ) {
+        $jsValue = $this->valueToJs( Cogumelo::getSetupValue( $setupField ) );
+        if( $jsValue !== null ) {
+          $publicConfCode .= '  \''. strtr( $setupField, ':', '_' ) .'\': '.$jsValue.','."\n";
+        }
+      }
+    }
+    $publicConfJs = Cogumelo::getSetupValue( 'mediaserver:publicConf:javascript:vars' );
+    if( $publicConfJs && is_array( $publicConfJs ) && count( $publicConfJs ) > 0 ) {
+      foreach( $publicConfJs as $name => $value ) {
+        $jsValue = $this->valueToJs( $value );
+        if( $jsValue !== null ) {
+          $publicConfCode .= '  \''.$name.'\': '.$jsValue.','."\n";
+        }
+      }
+    }
+    if( $publicConfCode !== '' ) {
+      $jsContent .= "\n".'var cogumelo = cogumelo || {};'."\n\n";
+      $jsContent .= 'cogumelo.publicConf = {'."\n".
+        rtrim( $publicConfCode, " ,\n\r" )."\n".
+        '};'."\n\n";
+    }
 
+
+    global $MEDIASERVER_JAVASCRIPT_GLOBALS;
     if( is_array( $MEDIASERVER_JAVASCRIPT_GLOBALS ) && count( $MEDIASERVER_JAVASCRIPT_GLOBALS ) > 0 ) {
       foreach( $MEDIASERVER_JAVASCRIPT_GLOBALS as $globalKey ) {
         if( isset( $GLOBALS[ $globalKey ] ) ) {
@@ -34,7 +77,7 @@ class ConfConstantsView {
         }
       }
     }
-
+    global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
     if( is_array( $MEDIASERVER_JAVASCRIPT_CONSTANTS ) && count( $MEDIASERVER_JAVASCRIPT_CONSTANTS ) > 0 ) {
       foreach( $MEDIASERVER_JAVASCRIPT_CONSTANTS as $name => $value ) {
         $jsValue = $this->valueToJs( $value );
@@ -43,9 +86,11 @@ class ConfConstantsView {
         }
       }
     }
-    $jsContent .= '/* END SETUP CONSTANTS */'."\n";
 
 
+    $jsContent .= '/* END COGUMELO SETUP INFO */'."\n";
+
+    // Enviamos el contenido de jsConfConstants.js
     header('Content-Type: application/javascript');
     echo $jsContent;
   }

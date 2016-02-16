@@ -115,7 +115,7 @@ class Template extends Smarty
 
 
     if( substr( $file_path, -3) == '.js'  && MEDIASERVER_NOT_CACHE_JS == true ){
-      $mediaPath = '/' . $this->cgmMediaUrlDir;
+      $mediaPath = $this->cgmMediaserverHost . $this->cgmMediaUrlDir;
     }
     else {
       $mediaPath = $this->cgmMediaserverHost . $this->cgmMediaserverUrlDir;
@@ -126,13 +126,9 @@ class Template extends Smarty
         $base_path = $mediaPath.'/';
         break;
       case 'vendor':
-        $base_path = $this->cgmMediaserverHost.'vendor/';
-        break;
       case 'vendor/bower':
-        $base_path = $this->cgmMediaserverHost.'vendor/bower/';
-        break;
       case 'vendor/manual':
-        $base_path = $this->cgmMediaserverHost.'vendor/manual/';
+        $base_path = $this->cgmMediaserverHost . $module . '/';
         break;
       default:
         $base_path = $mediaPath.'/module/'.$module.'/';
@@ -454,6 +450,14 @@ class Template extends Smarty
       $clientIncludes .= "\t".'else {' . "\n";
       $clientIncludes .= "\t".'  originalJQueryObject = $ = jQuery = $.noConflict();' . "\n";
       $clientIncludes .= "\t".'}' . "\n";
+
+      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {' . "\n";
+      $clientIncludes .= "\t".'  if ( options.dataType == \'script\' || originalOptions.dataType == \'script\' ) {' . "\n";
+      $clientIncludes .= "\t".'      options.cache = true;' . "\n";
+      $clientIncludes .= "\t".'  }' . "\n";
+      $clientIncludes .= "\t".'});' . "\n";
+
+
       $clientIncludes .= "</script>\n\n";
 
 
