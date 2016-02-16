@@ -13,16 +13,18 @@ class devel extends Module
 
    array(
      "id" => "jquery",
-     "params" => array("jQuery#2.1.4"),
+     "params" => array("jquery"),
      "installer" => "bower",
      "includes" => array("dist/jquery.js")
    ),
+
    array(
      "id" =>"jquery-ui",
      "params" => array("jquery-ui"),
      "installer" => "bower",
      "includes" => array("jquery-ui.js", "themes/smoothness/jquery-ui.css")
    ),
+
    array(
      "id" =>"less",
      "params" => array("less"),
