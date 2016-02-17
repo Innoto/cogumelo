@@ -25,11 +25,6 @@ class detectMobile extends Module {
 
 
   public function __construct() {
-
-    //detectMobile::autoIncludes();
-    //$detect = new Mobile_Detect;
-    //$isMobile = $detect->isMobile();
-    //Cogumelo::setSetupValue( 'cogumelo:detectMobile:isMobile', $isMobile );
-
+    $this->addUrlPatterns( '#^()\/?()$#', 'noendview:DetectMobileView::detectMobile' );
   }
 }
