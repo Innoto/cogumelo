@@ -23,7 +23,8 @@ class DetectMobileView extends View
 
     $detect = new Mobile_Detect;
     $isMobile = $detect->isMobile();
-var_dump($isMobile);
     Cogumelo::setSetupValue( 'cogumelo:detectMobile:isMobile', $isMobile );
+
+    var_dump(Cogumelo::getSetupValue( 'cogumelo:detectMobile:isMobile' ));
   }
 }
