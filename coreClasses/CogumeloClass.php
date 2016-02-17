@@ -35,7 +35,7 @@ class CogumeloClass extends Singleton
      ),
      array(
        "id" => "jquery",
-       "params" => array("jquery"),
+       "params" => array("jQuery#2.2"),
        "installer" => "bower",
        "includes" => array()
      ),

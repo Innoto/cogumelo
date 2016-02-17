@@ -13,7 +13,7 @@ class devel extends Module
 
    array(
      "id" => "jquery",
-     "params" => array("jquery"),
+     "params" => array("jQuery#2.2"),
      "installer" => "bower",
      "includes" => array("dist/jquery.js")
    ),
