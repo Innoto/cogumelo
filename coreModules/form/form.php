@@ -12,7 +12,7 @@ class form extends Module {
 
     array(
       'id' => 'jquery-validation',
-      'params' => array( 'jquery-validation' ),
+      'params' => array( 'jquery-validate#1.14' ),
       'installer' => 'bower',
       'includes' => array( 'dist/jquery.validate.js', 'dist/additional-methods.js' )
     ),
