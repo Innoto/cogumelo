@@ -437,7 +437,17 @@ class Template extends Smarty
        $clientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
          'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
          '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
-         '<script type="text/javascript"> less.refresh();  </script>';
+         '<script type="text/javascript">'.
+         ' var lessReady = false;'.
+         ' less.pageLoadFinished.then('.
+         '  function() {'.
+         '   lessReady=true; $.holdReady( false ); '.
+         '  }'.
+         ' );'.
+         '</script>';
+      }
+      else {
+        $clientIncludes .= '<script>var less = false;</script>';
       }
 
       $clientIncludes .= "<script>\n";
@@ -470,7 +480,12 @@ class Template extends Smarty
       }
       $clientIncludes .= 'basket.require('. "\n";
       $clientIncludes .= $this->getClientScriptHtml() ;
-      $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
+      $clientIncludes .= ').then(function () { '."\n";
+
+      $clientIncludes .= ' if( less ) { if(lessReady) {$.holdReady( false ); } } else { $.holdReady( false ); }'. "\n";
+      $clientIncludes .= ' '. "\n";
+
+      $clientIncludes .= '});'. "\n\n";
       $clientIncludes .= "\t</script>\n\n\n";
 
 
