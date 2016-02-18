@@ -246,12 +246,12 @@ class Template extends Smarty
 
     if( !$ignoreAutoincludes ) {
       foreach( $this->js_autoincludes as $includeKey => $include ) {
-        $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'rel' => false , 'type'=> $include['type'],  'type'=> 1 );
+        $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'rel' => false , 'type'=> $include['type'],  'type'=> 1, 'expire'=>1 );
       }
     }
 
     foreach( $this->js_includes as $includeKey => $include ) {
-      $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'rel' => false , 'type'=> $include['type'], 'skipCache' => 'true' );
+      $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'rel' => false , 'type'=> $include['type'], 'skipCache' => 'true',  'expire'=>1 );
     }
 
 
