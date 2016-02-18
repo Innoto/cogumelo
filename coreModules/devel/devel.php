@@ -19,12 +19,12 @@ class devel extends Module
    ),
 
    array(
-     "id" =>"jquery-ui",
-     "params" => array("jquery-ui"),
-     "installer" => "bower",
-     "includes" => array("jquery-ui.js", "themes/smoothness/jquery-ui.css")
+    "id" => "bootstrap",
+    "params" => array("bootstrap#v3.3"),
+    "installer" => "bower",
+    "includes" => array("dist/js/bootstrap.min.js")
    ),
-
+   
    array(
      "id" =>"less",
      "params" => array("less"),

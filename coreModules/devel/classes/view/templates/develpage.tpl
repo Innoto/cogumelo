@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=0.8, user-scalable=no">
   <title>Cogumelo Devel!</title>
 
   <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
-
-
   {$client_includes}
-
-
   <script>
     less = {
       env: "development",
@@ -24,37 +23,28 @@
   </script>
 
   <script>
-
     var erData = {$erData};
-
     {literal}
     function hideContainer(){
       $(".container").hide();
     }
-
     {/literal}
-</script>
-
-
+  </script>
 
   <style>
     .node {
       stroke: #fff;
       stroke-width: 1.5px;
     }
-
     .link {
       stroke: #999;
       stroke-opacity: .8;
     }
   </style>
-
-
-
 </head>
 
-<body>
 
+<body>
 <div id="header">
   <img id="logo" src="/media/module/devel/img/cogumelo_logo.png" >
   <h1>DEVEL</h1>
@@ -70,14 +60,17 @@
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
   <div id="logs_tabs" class="container" style="display:none;">
-    <ul>
+    <ul class="nav nav-tabs" role="tablist">
       {foreach key=key item=name_log from=$list_file_logs}
-        <li><a href="#{$name_log}">{$name_log}</a></li>
+        <li role="presentation"><a href="#{$name_log}" aria-controls="{$name_log}" role="tab" data-toggle="tab">{$name_log}</a></li>
       {/foreach}
     </ul>
-    {foreach key=key item=name_log from=$list_file_logs}
-      <div id="{$name_log}" class="container_log"></div>
-    {/foreach}
+    <!-- Tab panes -->
+    <div class="tab-content">
+     {foreach key=key item=name_log from=$list_file_logs}
+       <div id="{$name_log}" role="tabpanel" class="tab-pane active container_log">...</div>
+     {/foreach}
+    </div>
   </div>
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
@@ -356,6 +349,5 @@
   </div>
 
 </div>
-
 </body>
 </html>

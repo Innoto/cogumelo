@@ -1,6 +1,6 @@
 
 $(document).ready(function(){
-  $( "#logs_tabs" ).tabs(); 
+  //$( "#logs_tabs" ).tabs(); 
   readLogs();
   autoLoadDebugger();
   drawERScheme();
@@ -16,18 +16,18 @@ function readLogs(){
       url: "/devel/read_logs",
       data : "",
       dataType: "json"
-      
+
     }).done(function(e){
 
       $.each(e, function(index, val) {
         $("#"+val.log_name).prepend('<div class="cll_container">'+val.data_log+'</div>');
-        $("#"+val.log_name).find("div.cll_container").animate({ color : 'green'}, 15000).removeClass('cll_container');        
+        $("#"+val.log_name).find("div.cll_container").animate({ color : 'green'}, 15000).removeClass('cll_container');
       });
     }).fail(function(e){
       console.log("Ajax no finish data load");
     });
   },5000);
-    
+
 }
 
 
@@ -42,11 +42,11 @@ function loadDebugger(){
     type: "POST",
     url: "/devel/get_debugger",
     dataType: "json",
-    cache: false      
+    cache: false
   }).done(function(e){
     $.each( e , function( key, val ) {
-      $('.debugItemsContainer').append('<div class="headerDebugItem"><h3>'+val.comment+'</h3><span>'+val.date+'</span></div><div class="debugItemContainer">'+val.debuging+'</div>');   
-    });      
+      $('.debugItemsContainer').append('<div class="headerDebugItem"><h3>'+val.comment+'</h3><span>'+val.date+'</span></div><div class="debugItemContainer">'+val.debuging+'</div>');
+    });
   }).fail(function(e){
     console.log("fallo ou baleiro");
   });
@@ -95,7 +95,7 @@ function drawERScheme() {
     $.each( e.relationship, function( i2, e2 ){
 
       var relTo = 0;
-      $.each( erData, function(i3,e3) { 
+      $.each( erData, function(i3,e3) {
         if(e3.name == e2) {
           relTo = i3;
         }
@@ -120,10 +120,9 @@ function drawERScheme() {
 
 
 
-  drawERD(  
+  drawERD(
     '#svgDiv',
     diagramDataObj,
         cola
     );
 }
-
