@@ -12,8 +12,8 @@ class DBUtils
    {
 
 
-     $className = ucfirst(DB_ENGINE) ."DBUtils";
-     $classFile = 'coreModel/'. DB_ENGINE . '/'. ucfirst(DB_ENGINE) ."DBUtils";
+     $className = ucfirst(cogumeloGetSetupValue( 'db:engine' )) ."DBUtils";
+     $classFile = 'coreModel/'. cogumeloGetSetupValue( 'db:engine' ) . '/'. ucfirst(cogumeloGetSetupValue( 'db:engine' )) ."DBUtils";
      Cogumelo::load($classFile.'.php');
 
 

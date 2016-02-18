@@ -85,13 +85,13 @@ class DevelView extends View
     global $C_ENABLED_MODULES;
 
     $this->template->assign("infoCogumeloLocation" , COGUMELO_LOCATION);
-    $this->template->assign("infoDBEngine" , DB_ENGINE);
-    $this->template->assign("infoDBHostName" , DB_HOSTNAME);
-    $this->template->assign("infoDBPort" , DB_PORT);
-    $this->template->assign("infoDBUser" , DB_USER);
-    $this->template->assign("infoDBName" , DB_NAME);
+    $this->template->assign("infoDBEngine" , cogumeloGetSetupValue( 'db:engine' ));
+    $this->template->assign("infoDBHostName" , cogumeloGetSetupValue( 'db:hostname' ));
+    $this->template->assign("infoDBPort" , cogumeloGetSetupValue( 'db:port' ));
+    $this->template->assign("infoDBUser" , cogumeloGetSetupValue( 'db:user' ));
+    $this->template->assign("infoDBName" , cogumeloGetSetupValue( 'db:name' ));
 
-    if(DB_ALLOW_CACHE){
+    if(cogumeloGetSetupValue( 'db:allowCache' )){
       $this->template->assign("infoDBAllowCache" , 'True');
     }
     else{
@@ -104,18 +104,18 @@ class DevelView extends View
     $this->template->assign("infoSiteUrlHttp" , SITE_URL_HTTP);
     $this->template->assign("infoSiteUrlHttps" , SITE_URL_HTTPS);
     $this->template->assign("infoSiteUrlCurrent" , SITE_URL_CURRENT);
-    $this->template->assign("infoSmtpHost" , SMTP_HOST);
-    $this->template->assign("infoSmtpPort" , SMTP_PORT);
-    $this->template->assign("infoSmtpAuth" , SMTP_AUTH);
-    $this->template->assign("infoSmtpUser" , SMTP_USER);
-    $this->template->assign("infoSysMailFromName" , SYS_MAIL_FROM_NAME);
-    $this->template->assign("infoSysMailFromEmail" , SYS_MAIL_FROM_EMAIL);
-    $this->template->assign("infoSmartyConfig" , SMARTY_CONFIG);
-    $this->template->assign("infoSmartyCompile" , SMARTY_COMPILE);
-    $this->template->assign("infoSmartyCache" , SMARTY_CACHE);
-    $this->template->assign("infoMediaServerHost" , MEDIASERVER_HOST);
-    $this->template->assign("infoMediaServerTmpCachePath" , MEDIASERVER_TMP_CACHE_PATH);
-    $this->template->assign("infoMediaServerFinalCachePath" , MEDIASERVER_FINAL_CACHE_PATH);
+    $this->template->assign("infoSmtpHost" , cogumeloGetSetupValue( 'smtp:host' ));
+    $this->template->assign("infoSmtpPort" , cogumeloGetSetupValue( 'smtp:port' ));
+    $this->template->assign("infoSmtpAuth" , cogumeloGetSetupValue( 'smtp:auth' ));
+    $this->template->assign("infoSmtpUser" , cogumeloGetSetupValue( 'smtp:user' ));
+    $this->template->assign("infoSysMailFromName" , cogumeloGetSetupValue( 'smtp:fromName' ));
+    $this->template->assign("infoSysMailFromEmail" , cogumeloGetSetupValue( 'smtp:fromEmail' ));
+    $this->template->assign("infoSmartyConfig" , cogumeloGetSetupValue( 'smarty:configPath' ));
+    $this->template->assign("infoSmartyCompile" , cogumeloGetSetupValue( 'smarty:compilePath' ));
+    $this->template->assign("infoSmartyCache" , cogumeloGetSetupValue( 'smarty:cachePath' ) );
+    $this->template->assign("infoMediaServerHost" , cogumeloGetSetupValue( 'mod:mediaserver:host' ));
+    $this->template->assign("infoMediaServerTmpCachePath" , cogumeloGetSetupValue( 'mod:mediaserver:tmpCachePath' ));
+    $this->template->assign("infoMediaServerFinalCachePath" , cogumeloGetSetupValue( 'mod:mediaserver:cachePath' ));
 
 
 
@@ -124,46 +124,44 @@ class DevelView extends View
       $stringEnabledModules = $stringEnabledModules." ".$em." ";
     }
     $this->template->assign("infoCEnabledModules" , $stringEnabledModules);
-    $this->template->assign("infoBck" , BCK);
-    $this->template->assign("infoLogDir" , LOGDIR);
+    $this->template->assign("infoBck" , cogumeloGetSetupValue( 'script:backupPath' ));
+    $this->template->assign("infoLogDir" , cogumeloGetSetupValue( 'logs:path' ));
 
-    if(LOG_RAW_SQL){
+    if(cogumeloGetSetupValue( 'logs:rawSql' ) ){
       $this->template->assign("infoLogRawSql" , 'True');
     }
     else{
       $this->template->assign("infoLogRawSql" , 'False');
     }
-    if(DEBUG){
+    if(cogumeloGetSetupValue( 'logs:debug' )){
       $this->template->assign("infoDebug" , 'True');
     }
     else{
       $this->template->assign("infoDebug" , 'False');
     }
 
-    if(ERRORS){
+    if(cogumeloGetSetupValue( 'logs:error' ) ){
       $this->template->assign("infoErrors" , 'True');
     }
     else{
       $this->template->assign("infoErrors" , 'False');
     }
 
-    if(MOD_DEVEL_ALLOW_ACCESS){
+    if(cogumeloGetSetupValue( 'mod:devel:allowAccess' )){
       $this->template->assign("infoModDevelAllowAccess" , 'True');
     }
     else{
       $this->template->assign("infoModDevelAllowAccess" , 'False');
     }
-    if(GETTEXT_UPDATE){
+    if(cogumeloGetSetupValue( 'i18n:gettextUpdate' )){
       $this->template->assign("infoGetTextUpdate" , 'True');
     }
     else{
       $this->template->assign("infoGetTextUpdate" , 'False');
     }
 
-    global $LANG_AVAILABLE;
-
-    $this->template->assign("infoLangDefault" , LANG_DEFAULT);
-    $this->template->assign("infoLangAvailable" , implode(',',array_keys($LANG_AVAILABLE)) );
+    $this->template->assign("infoLangDefault" , cogumeloGetSetupValue('lang:default'));
+    $this->template->assign("infoLangAvailable" , implode(',',array_keys(cogumeloGetSetupValue( 'lang:available' ))) );
 
   }
 

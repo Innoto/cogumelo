@@ -294,9 +294,9 @@
   * @return void
   */
   static function createModelRelTreeFiles() {
-    Cogumelo::load('coreModel/'.DB_ENGINE.'/'.ucfirst( DB_ENGINE ).'DAORelationship.php');
+    Cogumelo::load('coreModel/'.cogumeloGetSetupValue( 'db:engine' ).'/'.ucfirst( cogumeloGetSetupValue( 'db:engine' ) ).'DAORelationship.php');
 
-    eval( '$mrel = new '.ucfirst( DB_ENGINE ).'DAORelationship();' );
+    eval( '$mrel = new '.ucfirst( cogumeloGetSetupValue( 'db:engine' ) ).'DAORelationship();' );
 
     foreach( self::listVOs() as $voName => $vo) {
 

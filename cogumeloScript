@@ -40,7 +40,7 @@ if( $argc > 1 ) {
       break;
 
     case 'createDB': // create database
-      doBackup(DB_NAME, DB_USER, DB_PASSWORD, false);
+      doBackup(cogumeloGetSetupValue( 'db:name' ), cogumeloGetSetupValue( 'db:user' ), cogumeloGetSetupValue( 'db:password' ), false);
       createDB();
       break;
 
@@ -49,7 +49,7 @@ if( $argc > 1 ) {
       break;
 
     case 'createTables': // create database tables
-      doBackup(DB_NAME, DB_USER, DB_PASSWORD, false);
+      doBackup(cogumeloGetSetupValue( 'db:name' ), cogumeloGetSetupValue( 'db:user' ), cogumeloGetSetupValue( 'db:password' ), false);
       createTables();
       break;
 
@@ -65,13 +65,13 @@ if( $argc > 1 ) {
         $file = false;
       }
 
-      doBackup(DB_NAME, DB_USER, DB_PASSWORD, $file);
+      doBackup(cogumeloGetSetupValue( 'db:name' ), cogumeloGetSetupValue( 'db:user' ), cogumeloGetSetupValue( 'db:password' ), $file);
       break;
 
     case 'restoreDB': // restore the backup of a given db
       if( $argc > 2 ) {
         $file = $argv[2];//name of the backup file
-        restoreDB(DB_NAME, DB_USER, DB_PASSWORD, $file);
+        restoreDB(cogumeloGetSetupValue( 'db:name' ), cogumeloGetSetupValue( 'db:user' ), cogumeloGetSetupValue( 'db:password' ), $file);
       }
       else {
         echo "You must specify the file to restore\n";

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Connection Abstract class 
+ * Connection Abstract class
  *
  * @package Cogumelo Model
  */
@@ -10,17 +10,17 @@ abstract class Connection
 	/**
 	 * get connection object
    *
-   * @param mixed $devel_data 
+   * @param mixed $devel_data
    *
    * @return object
    */
 	public static function factory($devel_data = false)
 	{
 
-		$class = 'coreModel/'. DB_ENGINE . '/'. ucfirst(DB_ENGINE) ."Connection";
+		$class = 'coreModel/'. cogumeloGetSetupValue( 'db:engine' ) . '/'. ucfirst(cogumeloGetSetupValue( 'db:engine' )) ."Connection";
 		Cogumelo::load($class.'.php');
-		
-		$dbObj = ucfirst(DB_ENGINE)."Connection";
+
+		$dbObj = ucfirst(cogumeloGetSetupValue( 'db:engine' ))."Connection";
 
     if( !$devel_data ) {
 

@@ -271,7 +271,7 @@ class MysqlDAO extends DAO {
 
 
     if($resolveDependences) {
-      $this->execSQL($connectionControl,'SET group_concat_max_len='.DB_MYSQL_GROUPCONCAT_MAX_LEN.';');
+      $this->execSQL($connectionControl,'SET group_concat_max_len='.cogumeloGetSetupValue( 'db:mysqlGroupconcatMaxLen' ).';');
     }
 
     $strSQL = "SELECT ".

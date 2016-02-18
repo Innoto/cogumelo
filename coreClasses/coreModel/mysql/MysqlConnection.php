@@ -35,9 +35,9 @@ class MysqlConnection extends Connection
     }
     else {
 
-      $this->DB_USER = DB_USER;
-      $this->DB_PASSWORD = DB_PASSWORD;
-      $this->DB_NAME = DB_NAME;
+      $this->DB_USER = cogumeloGetSetupValue( 'db:user' );
+      $this->DB_PASSWORD = cogumeloGetSetupValue( 'db:password' );
+      $this->DB_NAME = cogumeloGetSetupValue( 'db:name' );
     }
 
 
@@ -53,12 +53,12 @@ class MysqlConnection extends Connection
   function connect() {
 
     if($this->db == false) {
-      $this->db = new mysqli(DB_HOSTNAME ,$this->DB_USER , $this->DB_PASSWORD, $this->DB_NAME,  DB_PORT);
+      $this->db = new mysqli(cogumeloGetSetupValue( 'db:hostname' ) ,$this->DB_USER , $this->DB_PASSWORD, $this->DB_NAME,  cogumeloGetSetupValue( 'db:port' ));
       if ($this->db->connect_error) {
           Cogumelo::debug(mysqli_connect_error());
       }
       else {
-          Cogumelo::debug("MYSQLI: Connection Stablished to ".DB_HOSTNAME);
+          Cogumelo::debug("MYSQLI: Connection Stablished to ".cogumeloGetSetupValue( 'db:hostname' ));
       }
 
     }
