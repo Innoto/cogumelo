@@ -29,7 +29,7 @@ class ConfConstantsView {
     $jsContent = '/* COGUMELO SETUP INFO */'."\n";
 
     $publicConfCode = '';
-    $publicConfJs = Cogumelo::getSetupValue( 'mediaserver:publicConf:javascript:globalVars' );
+    $publicConfJs = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:javascript:globalVars' );
     if( $publicConfJs && is_array( $publicConfJs ) && count( $publicConfJs ) > 0 ) {
       foreach( $publicConfJs as $globalKey ) {
         if( isset( $GLOBALS[ $globalKey ] ) ) {
@@ -40,7 +40,7 @@ class ConfConstantsView {
         }
       }
     }
-    $setupFields = Cogumelo::getSetupValue( 'mediaserver:publicConf:javascript:setupFields' );
+    $setupFields = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:javascript:setupFields' );
     if( $setupFields && is_array( $setupFields ) && count( $setupFields ) > 0 ) {
       foreach( $setupFields as $setupField ) {
         $jsValue = $this->valueToJs( Cogumelo::getSetupValue( $setupField ) );
@@ -49,7 +49,7 @@ class ConfConstantsView {
         }
       }
     }
-    $publicConfJs = Cogumelo::getSetupValue( 'mediaserver:publicConf:javascript:vars' );
+    $publicConfJs = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:javascript:vars' );
     if( $publicConfJs && is_array( $publicConfJs ) && count( $publicConfJs ) > 0 ) {
       foreach( $publicConfJs as $name => $value ) {
         $jsValue = $this->valueToJs( $value );
