@@ -214,28 +214,20 @@ class Template extends Smarty
   }
 
   /**
-   Crea el HTML que carga los Scripts
+   * Crea el HTML que carga los Scripts
    *
    * @param bool $ignoreAutoincludes
    *
-   * @return string $is_autoinclude
+   * @return string $html
    **/
-
   public function getClientScriptHtml( $ignoreAutoincludes = false ) {
-
-    global $C_LANG;
     $itemsToInclude = array();
     $html = '';
 
-
-    if( $C_LANG ) {
-      $langUrl = $C_LANG.'/';
-    }
-    else {
-      $langUrl = '';
-    }
-    //echo $langUrl . $itemsToInclude[$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js';
     /*
+    global $C_LANG;
+    $langUrl = ( $C_LANG ) ? $C_LANG.'/' : '';
+    //echo $langUrl . $itemsToInclude[$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js';
     $itemsToInclude[ '/' . $langUrl . $this->cgmMediaUrlDir.'/jsConfConstants.js' ] = array(
       'src'=> '/' . $langUrl . $this->cgmMediaUrlDir.'/jsConfConstants.js',
       'rel' => false ,
@@ -243,6 +235,28 @@ class Template extends Smarty
       'onlyOnce' => true
     );
     */
+
+    $itemsToInclude = $this->getClientScriptArray( $ignoreAutoincludes );
+
+    // generate the javascript include call
+    $coma = '';
+    foreach( $itemsToInclude as $include ) {
+      $html .= "\t".$coma.str_replace('\\/', '/', json_encode( $include ) ) . " \n";
+      $coma=',';
+    }
+
+    return( $html );
+  }
+
+  /**
+   * Crea una lista con los Scripts a cargar
+   *
+   * @param bool $ignoreAutoincludes
+   *
+   * @return array $itemsToInclude
+   **/
+  public function getClientScriptArray( $ignoreAutoincludes = false ) {
+    $itemsToInclude = array();
 
     if( !$ignoreAutoincludes ) {
       foreach( $this->js_autoincludes as $includeKey => $include ) {
@@ -254,25 +268,24 @@ class Template extends Smarty
       $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'skipCache' => 'true' );
     }
 
-
-    // generate the javascript include call
-    $coma = '';
-    foreach( $itemsToInclude as $include ) {
-      $html .= "\t".$coma.str_replace('\\/', '/', json_encode( $include ) ) . " \n";
-      $coma=',';
+    // Carga recursivamente los estilos de los fragmentos/bloques
+    foreach( $this->blocks as $blockName => $blockObjects ) {
+      foreach( $blockObjects as $blockTemplate ) {
+        $itemsToInclude = array_merge( $itemsToInclude, $blockTemplate->getClientScriptArray( $ignoreAutoincludes ) );
+      }
     }
 
-
-
-    return( $html );
+    return( $itemsToInclude );
   }
 
+
+
   /**
-   Crea el HTML que carga los Styles
+   * Crea el HTML que carga los Styles
    *
    * @param bool $ignoreAutoincludes
    *
-   * @return string $is_autoinclude
+   * @return string $html
    **/
   public function getClientStylesHtml( $ignoreAutoincludes = false ) {
     $itemsToInclude = array();
@@ -284,31 +297,46 @@ class Template extends Smarty
       $itemsToInclude[$src] =  "<link href='".$src."' rel='stylesheet/less' type='text/css' >";
     }
 
-
-
-    if( !$ignoreAutoincludes ) {
-      foreach ( $this->css_autoincludes as $includeKey => $include) {
-        //$itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
-        $itemsToInclude[$includeKey] = "<link href='".$include['src']."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
-      }
-    }
-
-    foreach ( $this->css_includes as $includeKey => $include) {
-      //$itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
-      $itemsToInclude[$includeKey] = "<link href='".$include['src']."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
-    }
-
+    $itemsToInclude = array_merge( $itemsToInclude, $this->getClientStylesArray( $ignoreAutoincludes ) );
 
     // generate the javascript include call
     foreach( $itemsToInclude as $include ) {
       $html .=  $include   . "\n";
     }
 
-
-
-
-
     return( $html . "\n\n");
+  }
+
+  /**
+   * Crea una lista con los Styles a cargar
+   *
+   * @param bool $ignoreAutoincludes
+   *
+   * @return array $itemsToInclude
+   **/
+  public function getClientStylesArray( $ignoreAutoincludes = false ) {
+    $itemsToInclude = array();
+
+    if( !$ignoreAutoincludes ) {
+      foreach( $this->css_autoincludes as $includeKey => $include ) {
+        //$itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
+        $itemsToInclude[ $includeKey ] = "<link href='".$include['src']."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
+      }
+    }
+
+    foreach( $this->css_includes as $includeKey => $include ) {
+      //$itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
+      $itemsToInclude[ $includeKey ] = "<link href='".$include['src']."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
+    }
+
+    // Carga recursivamente los estilos de los fragmentos/bloques
+    foreach( $this->blocks as $blockName => $blockObjects ) {
+      foreach( $blockObjects as $blockTemplate ) {
+        $itemsToInclude = array_merge( $itemsToInclude, $blockTemplate->getClientStylesArray( $ignoreAutoincludes ) );
+      }
+    }
+
+    return( $itemsToInclude );
   }
 
 
@@ -412,7 +440,7 @@ class Template extends Smarty
           'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
           '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>';
       }
-*/
+      */
 
       // prevent jquery conflicts
       $clientIncludes .= "<script>\n";
@@ -434,7 +462,7 @@ class Template extends Smarty
 
 
       if( !$this->cgmMediaserverCompileLess ) {
-       $clientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
+        $clientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
          'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
          '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
          '<script type="text/javascript"> less.refresh();  </script>';
@@ -474,7 +502,7 @@ class Template extends Smarty
       $clientIncludes .= "\t</script>\n\n\n";
 
 
-      $this->assign('client_includes', $clientIncludes );
+      $this->assign( 'client_includes', $clientIncludes );
 
 
 /*
@@ -528,8 +556,7 @@ class Template extends Smarty
     if( $this->tpl ) {
       // assign
 
-      $this->assign('client_includes',  $this->getClientScriptHtml( true ) . $this->getClientStylesHtml( true )  );
-
+      $this->assign( 'client_includes',  $this->getClientScriptHtml( true ) . $this->getClientStylesHtml( true ) );
 
       foreach( $this->blocks as $blockName => $blockObjects ) {
         $htmlBlock = '';
