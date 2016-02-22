@@ -27,6 +27,7 @@ class  DevelDBController
 
     $returnStrArray = array();
     $aditionalRcSQL = '';
+
     foreach( VOUtils::listVOs() as $voKey => $vo ) {
 
       $evo = new $voKey();
