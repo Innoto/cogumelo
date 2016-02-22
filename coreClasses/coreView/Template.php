@@ -162,21 +162,21 @@ class Template extends Smarty
    **/
   public function addClientStyles( $file_path, $module = false, $is_autoinclude = false ) {
 
+    $mediaPath = ( cogumeloGetSetupValue( 'mod:mediaserver:productionMode' ) )
+      ? $this->cgmMediaserverUrlDir
+      : $this->cgmMediaUrlDir;
+
     switch( $module ) {
       case false:
-        $base_path = '/'.$this->cgmMediaserverUrlDir.'/';
+        $base_path = $this->cgmMediaserverHost.$mediaPath.'/';
         break;
       case 'vendor':
-        $base_path = $this->cgmMediaserverHost.'vendor/';
-        break;
       case 'vendor/bower':
-        $base_path = $this->cgmMediaserverHost.'vendor/bower/';
-        break;
       case 'vendor/manual':
-        $base_path = $this->cgmMediaserverHost.'vendor/manual/';
+        $base_path = $this->cgmMediaserverHost.$module.'/';
         break;
       default:
-        $base_path = '/'.$this->cgmMediaserverUrlDir.'/module/'.$module.'/';
+        $base_path = $this->cgmMediaserverHost.$mediaPath.'/module/'.$module.'/';
         break;
     }
 
