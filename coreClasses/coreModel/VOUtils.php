@@ -370,15 +370,17 @@
     $ret = false;
 
 
-
-    if(file_exists( APP_TMP_PATH.'/modelRelationship/'.$nameVO.'.json' )){
-      $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ] = json_decode(
-                    file_get_contents(APP_TMP_PATH.'/modelRelationship/'.$nameVO.'.json')
-              );
-        $ret = &$COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
+    if( isset($COGUMELO_RELATIONSHIP_MODEL[ $nameVO ] )) {
+      $ret = clone $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
     }
-
-
+    else {
+      if(file_exists( APP_TMP_PATH.'/modelRelationship/'.$nameVO.'.json' )){
+        $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ] = json_decode(
+                      file_get_contents(APP_TMP_PATH.'/modelRelationship/'.$nameVO.'.json')
+                );
+          $ret = clone $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
+      }
+    }
 
     return self::limitRelObj( $ret, $resolveDependences );
   }
