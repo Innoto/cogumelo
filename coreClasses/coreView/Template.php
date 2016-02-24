@@ -499,13 +499,13 @@ class Template extends Smarty
       $clientIncludes .= "\t".'jqueryIsLoaded = ( typeof $ !== "undefined" );' . "\n";
       $clientIncludes .= "</script>\n\n";
 
-      $clientIncludes .= '<script type="text/javascript" src="'.$this->cgmMediaserverHost.'/vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
+      $clientIncludes .= '<script type="text/javascript" src="'.$this->cgmMediaserverHost.'vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://rsvpjs-builds.s3.amazonaws.com/rsvp-latest.min.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
 
-      $clientIncludes .= '<script src="'.$this->cgmMediaserverHost.'/vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
-      $clientIncludes .= '<script src="'.$this->cgmMediaserverHost.'/vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
+      $clientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
+      $clientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
 
       $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
 
