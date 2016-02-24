@@ -51,8 +51,43 @@ class LessController {
   public function getLessVarsFromSetup() {
     $lessVars = array();
 
-    global $MEDIASERVER_LESS_GLOBALS, $MEDIASERVER_LESS_CONSTANTS;
+    $data = array( 'publicConf' => array() );
+    $publicConf = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:less:globalVars' );
+    if( $publicConf && is_array( $publicConf ) && count( $publicConf ) > 0 ) {
+      foreach( $publicConf as $globalKey ) {
+        if( isset( $GLOBALS[ $globalKey ] ) ) {
+          $lessValue = $this->valueToLess( $GLOBALS[ $globalKey ] );
+          if( $lessValue !== null ) {
+            $data['publicConf'][ $globalKey ] = $lessValue;
+          }
+        }
+      }
+    }
+    $setupFields = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:less:setupFields' );
+    if( $setupFields && is_array( $setupFields ) && count( $setupFields ) > 0 ) {
+      foreach( $setupFields as $setupField ) {
+        $lessValue = $this->valueToLess( Cogumelo::getSetupValue( $setupField ) );
+        if( $lessValue !== null ) {
+          $data['publicConf'][ strtr( $setupField, ':', '_' ) ] = $lessValue;
+        }
+      }
+    }
+    $publicConf = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:less:vars' );
+    if( $publicConf && is_array( $publicConf ) && count( $publicConf ) > 0 ) {
+      foreach( $publicConf as $name => $value ) {
+        $lessValue = $this->valueToLess( $value );
+        if( $lessValue !== null ) {
+          $data['publicConf'][ $name ] = $lessValue;
+        }
+      }
+    }
+    foreach( $data['publicConf'] as $key => $value ) {
+      $lessVars[ 'cogumelo_publicConf_'.$key ] = $value;
+    }
 
+
+
+    global $MEDIASERVER_LESS_GLOBALS, $MEDIASERVER_LESS_CONSTANTS;
     if( is_array( $MEDIASERVER_LESS_GLOBALS ) && count( $MEDIASERVER_LESS_GLOBALS ) > 0 ) {
       foreach( $MEDIASERVER_LESS_GLOBALS as $globalKey ) {
         if( isset( $GLOBALS[ $globalKey ] ) ) {
@@ -63,7 +98,6 @@ class LessController {
         }
       }
     }
-
     if( is_array( $MEDIASERVER_LESS_CONSTANTS ) && count( $MEDIASERVER_LESS_CONSTANTS ) > 0 ) {
       foreach( $MEDIASERVER_LESS_CONSTANTS as $name => $value ) {
         //$lessContent .= '@'.$name.' : "'.$value.'";'."\n";

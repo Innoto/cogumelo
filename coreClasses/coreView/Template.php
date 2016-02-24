@@ -1,6 +1,7 @@
 <?php
 
 Cogumelo::load('coreController/ModuleController.php');
+mediaserver::load('controller/LessController.php');
 
 //
 //  Template Class (Extends smarty library)
@@ -62,6 +63,40 @@ class Template extends Smarty
     $this->setCompileDir( $this->cgmSmartyCompileDir );
     $this->setCacheDir( $this->cgmSmartyCacheDir );
 
+    $this->loadSmartyPublicConf();
+
+
+    // Smarty Hack: http://www.smarty.net/forums/viewtopic.php?t=21352&sid=88c6bbab5fb1fd84d3e4f18857d3d10e
+    Smarty::muteExpectedErrors(); // IGNORANDO ERRORES de Smarty
+  }
+
+
+  public function loadSmartyPublicConf() {
+    $data = array( 'publicConf' => array() );
+
+    $publicConf = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:smarty:globalVars' );
+    if( $publicConf && is_array( $publicConf ) && count( $publicConf ) > 0 ) {
+      foreach( $publicConf as $globalKey ) {
+        if( isset( $GLOBALS[ $globalKey ] ) ) {
+          $data['publicConf'][ $globalKey ] = $GLOBALS[ $globalKey ];
+        }
+      }
+    }
+    $setupFields = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:smarty:setupFields' );
+    if( $setupFields && is_array( $setupFields ) && count( $setupFields ) > 0 ) {
+      foreach( $setupFields as $setupField ) {
+        $data['publicConf'][ strtr( $setupField, ':', '_' ) ] = Cogumelo::getSetupValue( $setupField );
+      }
+    }
+    $publicConf = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:smarty:vars' );
+    if( $publicConf && is_array( $publicConf ) && count( $publicConf ) > 0 ) {
+      foreach( $publicConf as $name => $value ) {
+        $data['publicConf'][ $name ] = $value;
+      }
+    }
+
+    $this->assign( 'cogumelo', $data );
+
 
     global $MEDIASERVER_SMARTY_GLOBALS, $MEDIASERVER_SMARTY_CONSTANTS;
     if( is_array( $MEDIASERVER_SMARTY_GLOBALS ) && count( $MEDIASERVER_SMARTY_GLOBALS ) > 0 ) {
@@ -76,11 +111,28 @@ class Template extends Smarty
         $this->assign( $key, $value );
       }
     }
-
-
-    // Smarty Hack: http://www.smarty.net/forums/viewtopic.php?t=21352&sid=88c6bbab5fb1fd84d3e4f18857d3d10e
-    Smarty::muteExpectedErrors(); // IGNORANDO ERRORES de Smarty
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   /**
@@ -445,15 +497,15 @@ class Template extends Smarty
       // prevent jquery conflicts
       $clientIncludes .= "<script>\n";
       $clientIncludes .= "\t".'jqueryIsLoaded = ( typeof $ !== "undefined" );' . "\n";
-      $clientIncludes .= "\t</script>\n\n";
+      $clientIncludes .= "</script>\n\n";
 
-      $clientIncludes .= '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
+      $clientIncludes .= '<script type="text/javascript" src="'.$this->cgmMediaserverHost.'/vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
       $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://rsvpjs-builds.s3.amazonaws.com/rsvp-latest.min.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
 
-      $clientIncludes .= '<script src="/vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
-      $clientIncludes .= '<script src="/vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
+      $clientIncludes .= '<script src="'.$this->cgmMediaserverHost.'/vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
+      $clientIncludes .= '<script src="'.$this->cgmMediaserverHost.'/vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
 
       $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
 
@@ -461,12 +513,21 @@ class Template extends Smarty
       $clientIncludes .= $this->getClientStylesHtml();
 
 
+      $lessController = new LessController();
+      $lessGlobalVars = $lessController->getLessVarsFromSetup();
+      $lessGlobalVarsJs = '';
+      foreach( $lessGlobalVars as $key => $value ) {
+        $lessGlobalVarsJs .= ' '.$key.': "'.$value.'",';
+      }
+      $lessGlobalVarsJs = rtrim( $lessGlobalVarsJs, ', ' );
       if( !$this->cgmMediaserverCompileLess ) {
         $clientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
-         'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
-         '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
-         '<script type="text/javascript"> less.refresh();  </script>';
+          ' globalVars: { '.$lessGlobalVarsJs.' }, '.
+          ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
+          '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
+          '<script type="text/javascript"> less.refresh();  </script>';
       }
+
 
       $clientIncludes .= "<script>\n";
 
@@ -501,29 +562,19 @@ class Template extends Smarty
       $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
       $clientIncludes .= "\t</script>\n\n\n";
 
-
       $this->assign( 'client_includes', $clientIncludes );
-
-
-/*
+      /*
       $this->assign('js_includes', $jsConfInclude . $this->lessClientCompiler() . $this->getClientScriptHtml() );
       $this->assign('css_includes', $lessConfInclude . $this->getClientStylesHtml() );
-*/
-
-
-
+      */
 
       foreach( $this->blocks as $blockName => $blockObjects ) {
         $htmlBlock = '';
-
         foreach( $blockObjects as $blockTemplate ) {
           $htmlBlock .= $blockTemplate->execBlock();
         }
-
         $this->assign( $blockName, $htmlBlock );
       }
-
-
 
       if( $toString ) {
         $htmlCode = $this->fetch( $this->tpl );
