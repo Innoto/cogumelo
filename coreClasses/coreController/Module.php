@@ -61,6 +61,25 @@ class Module
     $dependencesControl->loadModuleDependence( get_called_class(), $idDependence, $installer );
   }
 
+
+    /**
+    * un-register the module
+    */
+    public static function unRegister() {
+
+      devel::load('model/ModuleRegisterModel.php');
+
+      $moduleRegisterControl = new ModuleRegisterModel();
+      $moduleRegisters = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>static::class ) ));
+
+      eval('$instance = new '.static::class.'();');
+
+      if( $regModuleInfo = $moduleRegisters->fetch() ) {
+        $regModuleInfo->delete();
+      }
+
+    }
+
   /**
   * register or update module register
   */
@@ -69,13 +88,16 @@ class Module
     devel::load('model/ModuleRegisterModel.php');
 
     $moduleRegisterControl = new ModuleRegisterModel();
-    $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>self::getClass() ) ));
+    $moduleRegisters = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>static::class ) ));
 
-    if( $regModuleInfo = $moduleRegisterControl->fetch() ) {
-      $regModuleInfo->setter( 'deployVersion', self::version );
+    eval('$instance = new '.static::class.'();');
+
+    if( $regModuleInfo = $moduleRegisters->fetch() ) {
+      $regModuleInfo->setter( 'deployVersion', $instance->version );
+      $regModuleInfo->save();
     }
     else {
-      $reg = new ModuleRegisterModel( array('name'=>self::getClass() ,'firstVersion'=> self::version, 'deployVersion'=> self::version) );
+      $reg = new ModuleRegisterModel( array('name'=>static::class ,'firstVersion'=> $instance->version) );
       $reg->save();
     }
 

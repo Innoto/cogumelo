@@ -36,7 +36,14 @@ if( $argc > 1 ) {
       // createDB();
       createTables();
       createRelSchemes();
+      unRegisterModules();
+      registerModules();
       initModules();
+      break;
+
+    case 'deploy':
+      deployModels();
+      registerModules();
       break;
 
     case 'createDB': // create database
@@ -52,6 +59,15 @@ if( $argc > 1 ) {
       doBackup(cogumeloGetSetupValue( 'db:name' ), cogumeloGetSetupValue( 'db:user' ), cogumeloGetSetupValue( 'db:password' ), false);
       createTables();
       break;
+
+    case 'unRegisterModules': // register
+      unRegisterModules();
+      break;
+
+    case 'registerModules': // register
+      registerModules();
+      break;
+
 
     case 'initModules': // execute ::moduleRc() of all modules
       initModules();
@@ -186,7 +202,12 @@ function printOptions(){
     * generateModel           Execute all options below in the same order
       - createTables            Generate the tables
       - createRelSchemes        Generate relationship tmp files
+      - unRegisterModules       Clear all module version registers
+      - registerModules         Create module version registers
       - initModules             Execute '::moduleRc()' of all modules
+    * deploy                  Deploy
+      - deployModels            Execute deploy SQL acording current module versions
+      - registerModules         Update module version registers
     * bckDB                   Do a DB backup (optional arg: filename)
     * restoreDB               Restore a database
 
@@ -272,6 +293,37 @@ function createTables(){
 
   $develdbcontrol->createTables();
   echo "\nGenerated db tables\n";
+}
+
+
+function unRegisterModules() {
+
+global $C_ENABLED_MODULES;
+
+
+foreach( $C_ENABLED_MODULES as $moduleName ) {
+  require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+
+  eval( $moduleName.'::unRegister();' );
+}
+
+echo "\nDeleted all module registers\n";
+
+}
+
+function registerModules() {
+  global $C_ENABLED_MODULES;
+
+
+  foreach( $C_ENABLED_MODULES as $moduleName ) {
+    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+
+    echo( "\nRegister: ".$moduleName."::register()\n" );
+    eval( $moduleName.'::register();' );
+  }
+
+  echo "\nModules registered\n";
+
 }
 
 function initModules() {
