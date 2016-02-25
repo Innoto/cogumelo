@@ -3,6 +3,9 @@ Cogumelo::load('coreModel/Connection.php');
 Cogumelo::load('coreModel/DAO.php');
 
 define( 'COGUMELO_ERROR', 'cogumelo_error_2203b5b6531bc7251a85e3af3b8dca09');
+define( 'COGUMELO_NULL', 'cogumelo_null_2203b5b6531bc7251a85e3af3b8dca09');
+
+
 
 /**
  * Facade for Data

@@ -122,8 +122,8 @@ Class VO
 
 
       $escapedData = str_replace(
-                                  array("\n","\r","\t"),
-                                  array('\\n', '\\r', '\\t'),
+                                  array("\n","\r","\t", '"'.COGUMELO_NULL.'"'),
+                                  array('\\n', '\\r', '\\t', 'null'),
                                   $data
                     );
 
@@ -397,7 +397,7 @@ Class VO
       $getterkey .= '_'.$autoLang;
     }
     else
-    if( $lang && array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] ) 
+    if( $lang && array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] )
     {
       $getterkey .= '_'.$lang;
     }

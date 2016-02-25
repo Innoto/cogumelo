@@ -146,7 +146,7 @@ class MysqlDAORelationship
   }
 
   function colToString( $colKey, $vo ) {
-    $retStr = "COALESCE(".$vo->table.".".$colKey.", null)";
+    $retStr = "COALESCE(".$vo->table.".".$colKey.", '".COGUMELO_NULL."')";
 
     $col = false;
     $colType =  false;
@@ -159,18 +159,18 @@ class MysqlDAORelationship
 
 
     if( $colType == 'BOOLEAN' ) {
-      $retStr = "ASCII( COALESCE(".$vo->table.".".$colKey.", null) )";
+      $retStr = "ASCII( COALESCE(".$vo->table.".".$colKey.", '".COGUMELO_NULL."') )";
     }
     else
     if( $colType == 'GEOMETRY' ) {
-      $retStr = "ASCII( AsText( COALESCE(".$vo->table.".".$colKey.", null)) )";
-      $retStr = "if(".$vo->table.".".$colKey." is not null,  astext(".$vo->table.".".$colKey."),null )";
+      $retStr = "ASCII( AsText( COALESCE(".$vo->table.".".$colKey.", '".COGUMELO_NULL."')) )";
+      $retStr = "if(".$vo->table.".".$colKey." is not null,  astext(".$vo->table.".".$colKey."),'".COGUMELO_NULL."' )";
     }
     else
     if ( $colType == 'CHAR'  || $colType == 'VARCHAR' ){
       $toScape = '"';
       $scaped = '\\\"';
-      $retStr = "REPLACE( COALESCE(" . $vo->table.".".$colKey.", null), '".$toScape."', '".$scaped."' )";
+      $retStr = "REPLACE( COALESCE(" . $vo->table.".".$colKey.", '".COGUMELO_NULL."'), '".$toScape."', '".$scaped."' )";
     }
 
     return $retStr;
