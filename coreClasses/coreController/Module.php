@@ -39,7 +39,9 @@ class Module
   }
 
 
-  // Set autoincludes
+  /**
+  * Set autoincludes
+  */
   public static function autoIncludes() {
 
     // error_log( 'Module::autoincludes ' . get_called_class() );
@@ -48,7 +50,9 @@ class Module
     $dependencesControl->loadModuleIncludes( get_called_class() );
   }
 
-
+  /**
+  * Load Dependences
+  */
   public static function loadDependence( $idDependence, $installer = false ) {
 
     // error_log( 'Module::loadDependence ' . get_called_class() );
@@ -57,11 +61,43 @@ class Module
     $dependencesControl->loadModuleDependence( get_called_class(), $idDependence, $installer );
   }
 
-/*
-  public static function moduleRc(){
+  /**
+  * register or update module register
+  */
+  public static function register() {
+
+    devel::load('model/ModuleRegisterModel.php');
+
+    $moduleRegisterControl = new ModuleRegisterModel();
+    $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>self::getClass() ) ));
+
+    if( $regModuleInfo = $moduleRegisterControl->fetch() ) {
+      $regModuleInfo->setter( 'deployVersion', self::version );
+    }
+    else {
+      $reg = new ModuleRegisterModel( array('name'=>self::getClass() ,'firstVersion'=> self::version, 'deployVersion'=> self::version) );
+      $reg->save();
+    }
 
   }
-*/
+
+  /**
+  * check last registered version
+  */
+  public static function checkRegisteredVersion() {
+    devel::load('model/ModuleRegisterModel.php');
+    $version = false;
+
+    $moduleRegisterControl = new ModuleRegisterModel();
+    $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>self::getClass() ) ));
+
+    if( $regModuleInfo = $moduleRegisterControl->fetch() ) {
+      $version = $regModuleInfo->getter('deployVersion');
+    }
+
+    return $version;
+  }
+
 
 //
 // Metodos duplicados en CogumeloClass.php

@@ -20,6 +20,7 @@ Class Model extends VO {
 
   var $notCreateDBTable = false;
   var $rcSQL = '';
+  var $deploySQL = array();
 
   function __construct( $datarray= array(), $otherRelObj = false ) {
 
