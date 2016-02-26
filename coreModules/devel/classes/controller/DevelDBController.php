@@ -53,6 +53,34 @@ class  DevelDBController
     return $returnStrArray;
   }
 
+  public function deployModels() {
+    $returnStrArray = array();
+    $aditionalRcSQL = '';
+
+    foreach( VOUtils::listVOs() as $voKey => $vo ) {
+
+      $evo = new $voKey();
+
+      // deploy SQL
+      if( sizeof( $evo->deploySQL ) > 0 ){
+        $aditionalRcSQL .= "\n# deploy SQL for ".$voKey.".php\n";
+        //$aditionalRcSQL .= $evo->rcSQL;
+        var_dump($evo->deploySQL);
+
+
+
+      }
+
+    }
+
+    // add all rc custom SQL at bottom
+    if( $aditionalRcSQL !== '' ) {
+      $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
+    }
+
+    return $returnStrArray;
+  }
+
 
   public function getTablesSQL() {
     $returnStrArray = array();

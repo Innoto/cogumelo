@@ -46,6 +46,10 @@ if( $argc > 1 ) {
       registerModules();
       break;
 
+    case 'deployModels':
+      deployModels();
+      break;
+
     case 'createDB': // create database
       doBackup(cogumeloGetSetupValue( 'db:name' ), cogumeloGetSetupValue( 'db:user' ), cogumeloGetSetupValue( 'db:password' ), false);
       createDB();
@@ -295,6 +299,22 @@ function createTables(){
   echo "\nGenerated db tables\n";
 }
 
+
+function deployModels() {
+
+  global $C_ENABLED_MODULES;
+
+  foreach( $C_ENABLED_MODULES as $moduleName ) {
+    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+  }
+
+
+  $develdbcontrol = new DevelDBController();
+
+  $develdbcontrol->deployModels();
+  echo "\nModules deploy SQL code executed\n";
+
+}
 
 function unRegisterModules() {
 
