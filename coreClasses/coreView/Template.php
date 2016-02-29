@@ -312,7 +312,7 @@ class Template extends Smarty
 
     if( !$ignoreAutoincludes ) {
       foreach( $this->js_autoincludes as $includeKey => $include ) {
-        $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'skipCache' => 'true' );
+        $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'expire' => 1 );
       }
     }
 
