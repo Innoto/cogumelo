@@ -528,7 +528,7 @@ class Template extends Smarty
           '<script type="text/javascript"> less.refresh();  </script>';
       }
 
-      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
+
 
 /*
       $clientIncludes .= "<script>\n";
@@ -558,7 +558,7 @@ class Template extends Smarty
 
       $clientIncludes .= "\t<script>\n";
 
-
+      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
 
 
       $clientIncludes .= '$.holdReady( true );'."\n";
