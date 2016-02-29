@@ -312,7 +312,7 @@ class Template extends Smarty
 
     if( !$ignoreAutoincludes ) {
       foreach( $this->js_autoincludes as $includeKey => $include ) {
-        $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'expire'=>1 );
+        $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'skipCache' => 'true' );
       }
     }
 
@@ -531,6 +531,7 @@ class Template extends Smarty
 
       $clientIncludes .= "<script>\n";
 
+      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
       $clientIncludes .= "\t".'// prevent jquery conflicts' . "\n";
       $clientIncludes .= "\t".'if( jqueryIsLoaded === true ) {' . "\n";
       $clientIncludes .= "\t".'  jQuery = originalJQueryObject;' . "\n";
