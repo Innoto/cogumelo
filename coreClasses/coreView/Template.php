@@ -478,7 +478,7 @@ class Template extends Smarty
       }
 
 
-      $clientIncludes = "\n";
+      $mainClientIncludes = "\n";
       // Basic includes and includers
       /*
       $clientIncludes = "\n";
@@ -493,24 +493,24 @@ class Template extends Smarty
           '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>';
       }
       */
-
+/*
       // prevent jquery conflicts
-      $clientIncludes .= "<script>\n";
-      $clientIncludes .= "\t".'jqueryIsLoaded = ( typeof $ !== "undefined" );' . "\n";
-      $clientIncludes .= "</script>\n\n";
-
-      $clientIncludes .= '<script type="text/javascript" src="'.$this->cgmMediaserverHost.'vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
-      $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
+      $mainClientIncludes .= "<script>\n";
+      $mainClientIncludes .= "\t".'jqueryIsLoaded = ( typeof $ !== "undefined" );' . "\n";
+      $mainClientIncludes .= "</script>\n\n";
+*/
+      $mainClientIncludes .= '<script type="text/javascript" src="'.$this->cgmMediaserverHost.'vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
+      $mainClientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://rsvpjs-builds.s3.amazonaws.com/rsvp-latest.min.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
 
-      $clientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
-      $clientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
+      $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
+      $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
 
-      $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
+      $mainClientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
 
 
-      $clientIncludes .= $this->getClientStylesHtml();
+      $mainClientIncludes .= $this->getClientStylesHtml();
 
 
       $lessController = new LessController();
@@ -521,7 +521,7 @@ class Template extends Smarty
       }
       $lessGlobalVarsJs = rtrim( $lessGlobalVarsJs, ', ' );
       if( !$this->cgmMediaserverCompileLess ) {
-        $clientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
+        $mainClientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
           ' globalVars: { '.$lessGlobalVarsJs.' }, '.
           ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
           '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
@@ -553,7 +553,7 @@ class Template extends Smarty
       $clientIncludes .= "</script>\n\n";
 */
 
-      $mainClientIncludes = $clientIncludes;
+
       $clientIncludes = "\n";
 
       $clientIncludes .= "\t<script>\n";
