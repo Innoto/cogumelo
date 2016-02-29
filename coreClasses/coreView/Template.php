@@ -528,7 +528,9 @@ class Template extends Smarty
           '<script type="text/javascript"> less.refresh();  </script>';
       }
 
+      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
 
+/*
       $clientIncludes .= "<script>\n";
 
       $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
@@ -549,9 +551,14 @@ class Template extends Smarty
 
 
       $clientIncludes .= "</script>\n\n";
+*/
 
+      $mainClientIncludes = $clientIncludes;
+      $clientIncludes = "\n";
 
       $clientIncludes .= "\t<script>\n";
+
+
 
 
       $clientIncludes .= '$.holdReady( true );'."\n";
@@ -563,6 +570,7 @@ class Template extends Smarty
       $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
       $clientIncludes .= "\t</script>\n\n\n";
 
+      $this->assign( 'main_client_includes', $mainClientIncludes );
       $this->assign( 'client_includes', $clientIncludes );
       /*
       $this->assign('js_includes', $jsConfInclude . $this->lessClientCompiler() . $this->getClientScriptHtml() );
