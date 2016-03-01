@@ -7,7 +7,7 @@ class form extends Module {
 
 
   public $name = 'form';
-  public $version = '';
+  public $version = 1.0;
   public $dependences = array(
 
     array(

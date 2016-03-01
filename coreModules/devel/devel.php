@@ -7,7 +7,7 @@ Cogumelo::load("coreController/Module.php");
 class devel extends Module
 {
   public $name = "devel";
-  public $version = 2.0;
+  public $version = 1.0;
   public $dependences = array(
    // BOWER
 

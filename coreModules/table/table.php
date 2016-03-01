@@ -5,7 +5,7 @@ Cogumelo::load("coreController/Module.php");
 class table extends Module
 {
   public $name = "table";
-  public $version = "";
+  public $version = 1.0;
 
   public $dependences = array(
 
@@ -32,12 +32,12 @@ class table extends Module
   );
 
 
- 
+
   function __construct() {
 
   }
 
-  static function getTableHtml( $tableId, $tableDataUrl ) {    
+  static function getTableHtml( $tableId, $tableDataUrl ) {
     return TableView::getTableHtml( $tableId, $tableDataUrl );
   }
 

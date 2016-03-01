@@ -4,7 +4,7 @@
 class i18nServer extends Module {
 
   public $name = 'i18nServer';
-  public $version = '1.0';
+  public $version = 1.0;
 
   public $dependences = array(  );
 

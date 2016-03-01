@@ -7,7 +7,7 @@ class detectMobile extends Module {
 
 
   public $name = 'detectMobile';
-  public $version = '';
+  public $version = 1.0;
   public $dependences = array(
 
     array(

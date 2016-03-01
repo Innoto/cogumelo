@@ -6,10 +6,10 @@ Cogumelo::load("coreController/Module.php");
 class testmodule extends Module
 {
   public $name = "test";
-  public $version = "";
+  public $version = 1.0;
   public $dependences = array();
   public $includesCommon = array();
-  
+
   function __construct() {
     $this->addUrlPatterns( '#^cousa/vo/?$#', 'view:Cousadmin::vo' );
     $this->addUrlPatterns( '#^cousa/mostrar/?$#', 'view:Cousadmin::mostra_cousa' );
