@@ -40,7 +40,8 @@ class i18nScriptController {
     * Prepare the enviroment to localize the project
     */
 	function setEnviroment() {
-	    $locale= $this->lang[LANG_DEFAULT]['i18n'];
+
+	    $locale= $this->lang[LANG_DEFAULT];
 
 	    putenv('LANGUAGE='.$locale);
 	    putenv('LANG='.$locale);
