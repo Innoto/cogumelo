@@ -5,7 +5,7 @@ Cogumelo::load("coreController/Module.php");
 class filedata extends Module {
 
   public $name = 'filedata';
-  public $version = '';
+  public $version = 1.0;
   public $dependences = array();
   public $includesCommon = array(
     'controller/FiledataController.php',

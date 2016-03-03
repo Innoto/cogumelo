@@ -29,17 +29,24 @@ class UserPermissionModel extends Model {
 
   var $notCreateDBTable = true;
 
-  var $rcSQL = '
-    DROP VIEW IF EXISTS user_userPermission;
-    CREATE VIEW user_userPermission AS
-      SELECT DISTINCT
-        user_userRole.user AS user,
-        user_rolePermission.permission AS permission
-      FROM `user_userRole`
-        JOIN `user_rolePermission`
-      WHERE user_rolePermission.role = user_userRole.role
-      ;
-  ';
+  var $deploySQL = array(
+    // All Times
+    'user#1.0' => array(
+      'executeOnGenerateModelToo' => true,
+      'sql'=> '
+        DROP VIEW IF EXISTS user_userPermission;
+        CREATE VIEW user_userPermission AS
+          SELECT DISTINCT
+            user_userRole.user AS user,
+            user_rolePermission.permission AS permission
+          FROM `user_userRole`
+            JOIN `user_rolePermission`
+          WHERE user_rolePermission.role = user_userRole.role
+          ;
+      '
+    )
+  );
+
 
 
   public function __construct( $datarray = array(), $otherRelObj = false ) {

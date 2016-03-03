@@ -5,7 +5,7 @@ Cogumelo::load("coreController/Module.php");
 class common extends Module
 {
   public $name = "common";
-  public $version = "";
+  public $version = 1.0;
 
   public $dependences = array(
    array(

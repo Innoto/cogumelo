@@ -6,7 +6,7 @@ Cogumelo::load("coreController/Module.php");
 class mediaserver extends Module
 {
   public $name = "mediaserver";
-  public $version = "";
+  public $version = 1.0;
 
   public $dependences = array(
     // COMPOSER
