@@ -35,7 +35,6 @@ class UserModel extends Model
       'type' => 'CHAR',
       'size' => '50'
     ),
-
     'description'=> array(
       'type' => 'TEXT',
       'size' => '300',
