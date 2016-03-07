@@ -65,7 +65,7 @@ class UserView extends View
   public function loginFormDefine() {
 
     $form = new FormController( 'loginForm', '/user/sendloginform' ); //actionform
-    $form->setField( 'userLogin', array( 'placeholder' => 'Login' ));
+    $form->setField( 'userLogin', array( 'placeholder' => 'Email' ));
     $form->setField( 'userPassword', array( 'type' => 'password', 'placeholder' => 'Contraseña') );
     $form->setField( 'loginSubmit', array( 'type' => 'submit', 'value' => 'Entrar' ) );
     /************************************************************** VALIDATIONS */
@@ -202,7 +202,11 @@ class UserView extends View
       ),
 
       'login' => array(
-        'params' => array( 'placeholder' => 'Login' ),
+        'params' => array( 'type' => 'reserved', 'placeholder' => 'Login' ),
+        'rules' => array( 'required' => true )
+      ),
+      'email' => array(
+        'params' => array( 'placeholder' => 'Email' ),
         'rules' => array( 'required' => true )
       ),
       'name' => array(
@@ -211,10 +215,7 @@ class UserView extends View
       'surname' => array(
         'params' => array( 'placeholder' => 'Surname' ),
       ),
-      'email' => array(
-        'params' => array( 'placeholder' => 'Email' ),
-        'rules' => array( 'required' => true )
-      ),
+
       'active' => array(
         'params' => array( 'type' => 'checkbox', 'class' => 'switchery', 'options'=> array( '1' => __('Active') ))
       ),
@@ -475,20 +476,20 @@ class UserView extends View
       //Validaciones extra
       $userControl = new UserModel();
       // Donde diferenciamos si es un update o un create para validar el login
-      $loginExist = $userControl->listItems( array('filters' => array('login' => $form->getFieldValue('login'))) )->fetch();
+      $loginExist = $userControl->listItems( array('filters' => array('email' => $form->getFieldValue('email'))) )->fetch();
 
       if( isset($valuesArray['id']) && $valuesArray['id'] ){
         $user = $userControl->listItems( array('filters' => array('id' => $valuesArray['id'])) )->fetch();
-        if($valuesArray['login'] !== $user->getter('login')){
+        if($valuesArray['email'] !== $user->getter('email')){
           if($loginExist){
-            $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
+            $form->addFieldRuleError('email', 'cogumelo', 'El campo email específicado ya esta en uso.');
           }
         }
       }
       else{
         // Create: comprobamos si el login existe y si existe mostramos error.
         if($loginExist){
-          $form->addFieldRuleError('login', 'cogumelo', 'El campo login específicado ya esta en uso.');
+          $form->addFieldRuleError('email', 'cogumelo', 'El campo email específicado ya esta en uso.');
         }
       }
     }
@@ -521,7 +522,7 @@ class UserView extends View
         $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
         $asignRole = true;
       }
-
+      $valuesArray['login'] = $valuesArray['email'];
       $userAvatar = $valuesArray['avatar'];
       unset($valuesArray['avatar']);
 
