@@ -210,8 +210,7 @@ function printOptions(){
       - registerModules         Create module version registers
       - initModules             Execute '::moduleRc()' of all modules
     * deploy                  Deploy
-      - deployModels            Execute deploy SQL acording current module versions
-      - registerModules         Update module version registers
+      - deployModels            Execute deploy SQL acording current module versions and update register models
     * bckDB                   Do a DB backup (optional arg: filename)
     * restoreDB               Restore a database
 
@@ -338,7 +337,7 @@ function registerModules() {
   foreach( $C_ENABLED_MODULES as $moduleName ) {
     require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
 
-    echo( "\nRegister: ".$moduleName."::register()\n" );
+
     eval( $moduleName.'::register();' );
   }
 
