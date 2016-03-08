@@ -73,7 +73,7 @@ class  DevelDBController
     }
 
     foreach(explode( "\n", $aditionalRcSQL ) as $dLine ) {
-      Cogumelo::log( $dLine ,'deploy');
+      Cogumelo::log( $dLine ,'cogumelo_deploy');
     }
 
 
