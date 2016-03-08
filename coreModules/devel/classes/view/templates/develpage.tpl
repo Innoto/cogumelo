@@ -8,6 +8,7 @@
   <title>Cogumelo Devel!</title>
 
   <link href='http://fonts.googleapis.com/css?family=Ubuntu+Mono' rel='stylesheet' type='text/css'>
+  {$main_client_includes}
   {$client_includes}
   <script>
     less = {
@@ -325,8 +326,12 @@
       <div id="svgDiv"></div>
     </fieldset>
     <fieldset>
-      <legend>SQL</legend>
+      <legend>Generate Model SQL: This code will executed in generateModel action </legend>
       <div class="infoSQL">{foreach $data_sql as $item}{$item}{/foreach}</div>
+    </fieldset>
+    <fieldset>
+      <legend>Deploy SQL: This code will executed in deploy action</legend>
+      <div class="infoSQL">{foreach $deploy_sql as $item}{$item}{/foreach}</div>
     </fieldset>
   </div>
 

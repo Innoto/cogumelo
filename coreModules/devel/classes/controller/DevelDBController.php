@@ -63,12 +63,6 @@ class  DevelDBController
 
       $evo = new $voKey();
 
-      // deploy SQL
-/*      if( sizeof( $evo->deploySQL ) > 0 ){
-        $aditionalRcSQL .= "\n# deploy SQL for ".$voKey.".php\n";
-        //$aditionalRcSQL .= $evo->rcSQL;
-        var_dump($evo->deploySQL);
-      }*/
       $aditionalRcSQL .= $this->getModelDeploySQL($voKey, $evo);
 
     }
@@ -82,27 +76,70 @@ class  DevelDBController
   }
 
 
-  private function getModelDeploySQL( $modelName, $model, $getGenerateModelSQL = false ) {
+  private function getModelDeploySQL( $modelName, $model, $getOnlyGenerateModelSQL = false ) {
     $retSQL = '';
 
     if( sizeof( $model->deploySQL ) > 0 ){
-      $retSQL .= "\n# deploy SQL for ".$modelName.".php\n";
+      $retSQL .= "\n## Deploy SQL for ".$modelName.".php\n";
 
 
       foreach( $model->deploySQL as $dKey => $d) {
-        if($getGenerateModelSQL === true && isset($d['executeOnGenerateModelToo']) && $d['executeOnGenerateModelToo'] === true) {
+        if($getOnlyGenerateModelSQL === true && isset($d['executeOnGenerateModelToo']) && $d['executeOnGenerateModelToo'] === true) {
           // GENERATEMODEL
           $retSQL .= $d['sql'];
         }
         else {
           // DEPLOY
+          if( preg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $dKey, $matches ) ) {
+            $deployModuleName = $matches[1];
 
+            eval( '$currentModuleVersion = (float) (new '.$deployModuleName.')->version;' );
+            eval( '$registeredModuleVersion = (float) '.$deployModuleName.'::checkRegisteredVersion();' );
+
+            $deployModuleVersion = (float) $matches[2];
+
+            if( class_exists( $deployModuleName ) ) {
+
+              //echo( '$registeredVersion = (float) '.$moduleName.'::checkRegisteredVersion();' );
+              //eval( '$currentModuleVersion = (float) '.$deployModuleName.'::v();' );
+              //echo "VERSION:".$deployModuleVersion." - ".$registeredVersion;
+
+              if( $deployModuleVersion > $registeredModuleVersion  &&  $deployModuleVersion <= $currentModuleVersion && isset($d['sql']) ) {
+                $retSQL .= "# Module $deployModuleName deploy code from versions: ( $registeredModuleVersion ) to ( $currentModuleVersion ) \n";
+                $retSQL .= $d['sql'];
+
+              }
+            }
+
+          }
         }
       }
     }
+
     return $retSQL;
   }
 
+
+  public function getDeploysSQL() {
+    $sqlStr = '';
+
+    global $C_ENABLED_MODULES;
+
+    foreach( $C_ENABLED_MODULES as $moduleName ) {
+      require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+    }
+
+    foreach( VOUtils::listVOs() as $voKey => $vo ) {
+
+      $evo = new $voKey();
+
+      $sqlStr .= $this->getModelDeploySQL($voKey, $evo);
+
+    }
+
+
+    return $sqlStr;
+  }
 
   public function getTablesSQL() {
     $returnStrArray = array();

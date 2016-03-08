@@ -44,6 +44,7 @@ class DevelView extends View
     $this->logs();
     $this->infoSetup();
     $this->DBSQL();
+    $this->deploySQL();
     $this->infoUrls();
 
     $this->template->exec();
@@ -79,6 +80,17 @@ class DevelView extends View
       $data_sql[$k] = SqlFormatter::format($v);
     }
     $this->template->assign("data_sql" , $data_sql);
+  }
+
+  function deploySQL() {
+
+    // ER diagram data
+    Cogumelo::load('coreModel/VOUtils.php');
+    $this->template->assign('erData', json_encode(VOUtils::getAllRelScheme()) );
+
+
+    $this->template->assign("deploy_sql" ,  str_replace( "\n", '<br>',  $this->get_sql_deploy() ));
+
   }
 
   function infoSetup(){
@@ -178,6 +190,11 @@ class DevelView extends View
   function get_sql_tables(){
     $fvotdbcontrol = new DevelDBController();
     return ($fvotdbcontrol->getTablesSQL() );
+  }
+
+  function get_sql_deploy() {
+    $fvotdbcontrol = new DevelDBController();
+    return ($fvotdbcontrol->getDeploysSQL() );
   }
 
   function get_debugger(){

@@ -97,7 +97,7 @@ class Module
       $regModuleInfo->save();
     }
     else {
-      $reg = new ModuleRegisterModel( array('name'=>static::class ,'firstVersion'=> $instance->version) );
+      $reg = new ModuleRegisterModel( array('name'=>static::class ,'firstVersion'=> $instance->version, 'deployVersion'=> $instance->version) );
       $reg->save();
     }
 
@@ -111,9 +111,9 @@ class Module
     $version = false;
 
     $moduleRegisterControl = new ModuleRegisterModel();
-    $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>self::getClass() ) ));
+    $moduleRegisteredList = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>static::class  ) ));
 
-    if( $regModuleInfo = $moduleRegisterControl->fetch() ) {
+    if( $regModuleInfo = $moduleRegisteredList->fetch() ) {
       $version = $regModuleInfo->getter('deployVersion');
     }
 
