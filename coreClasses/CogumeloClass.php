@@ -395,14 +395,14 @@ class CogumeloClass extends Singleton
     return $CGMLCONF;
   }
 
-  public static function getSetupValue( $path ) {
+  public static function getSetupValue( $path = '' ) {
     // error_log( 'Cogumelo::getSetupValue: '.$path );
     global $CGMLCONF;
     $value = null;
 
     $parts = explode( ':', $path );
-    $stack = '[\'' . implode( '\'][\'', $parts ) . '\']';
-    $fai = '$valid = isset( $CGMLCONF'. $stack .');';
+    $stack = ( $parts[0] === '' ) ? '' : '[\'' . implode( '\'][\'', $parts ) . '\']';
+    $fai = '$valid = isset( $CGMLCONF'. $stack .' );';
     eval( $fai );
     if( $valid ) {
       $fai = '$value = $CGMLCONF'. $stack .';';
