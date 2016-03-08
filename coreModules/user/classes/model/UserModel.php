@@ -33,7 +33,8 @@ class UserModel extends Model
     ),
     'email'=> array(
       'type' => 'CHAR',
-      'size' => '50'
+      'size' => '50',
+      'unique' => true
     ),
     'description'=> array(
       'type' => 'TEXT',
