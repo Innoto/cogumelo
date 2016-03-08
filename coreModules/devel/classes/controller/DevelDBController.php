@@ -72,6 +72,12 @@ class  DevelDBController
       $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
     }
 
+    foreach(explode( "\n", $aditionalRcSQL ) as $dLine ) {
+      Cogumelo::log( $dLine ,'deploy');
+    }
+
+
+
     return $returnStrArray;
   }
 
