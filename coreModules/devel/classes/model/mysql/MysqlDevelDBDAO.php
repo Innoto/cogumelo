@@ -133,7 +133,7 @@ class MysqlDevelDBDAO extends MysqlDAO
 
     }
 
-    $uniques_str = ( count($uniques)>0 )? ', UNIQUE (`'.implode(',',$uniques).'`)' : '';
+    $uniques_str = ( count($uniques)>0 )? ', UNIQUE ('.implode(',',$uniques).')' : '';
     $primarykeys_str = ( count($primarykeys)>0 )? ', PRIMARY KEY  USING BTREE (`'.implode(',',$primarykeys).'`)' : '';
     $indexes_str = '';
     if( sizeof($indexes) ) {

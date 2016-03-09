@@ -120,6 +120,13 @@ class Module
     return $version;
   }
 
+  public function  moduleRC() {
+
+  }
+
+  public function  moduleDeploy() {
+
+  }
 
 //
 // Metodos duplicados en CogumeloClass.php
