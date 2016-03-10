@@ -562,7 +562,8 @@ class Template extends Smarty
 
 
       $clientIncludes .= '$.holdReady( true );'."\n";
-      if( !$this->cgmMediaserverCompileLess ) {
+      //if( !$this->cgmMediaserverCompileLess ) {
+      if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false || (Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === true &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) == true ) ) {
         $clientIncludes .= 'basket.clear();'."\n";
       }
       $clientIncludes .= 'basket.require('. "\n";
