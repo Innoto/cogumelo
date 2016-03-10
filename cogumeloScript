@@ -326,16 +326,18 @@ function deployModels() {
 
 function unRegisterModules() {
 
-global $C_ENABLED_MODULES;
+  global $C_ENABLED_MODULES;
 
 
-foreach( $C_ENABLED_MODULES as $moduleName ) {
-  require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+  foreach( $C_ENABLED_MODULES as $moduleName ) {
+    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
 
-  eval( $moduleName.'::unRegister();' );
-}
+    eval( $moduleName.'::unRegister();' );
+  }
+  // Register the app version
+  Cogumelo::unRegister();
 
-echo "\nDeleted all module registers\n";
+  echo "\nDeleted all module registers\n";
 
 }
 
@@ -343,12 +345,14 @@ function registerModules() {
   global $C_ENABLED_MODULES;
 
 
+  // Register modules
   foreach( $C_ENABLED_MODULES as $moduleName ) {
     require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-
-
     eval( $moduleName.'::register();' );
   }
+
+  // Register the app version
+  Cogumelo::register();
 
   echo "\nModules registered\n";
 

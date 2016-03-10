@@ -412,4 +412,71 @@ class CogumeloClass extends Singleton
     return $value;
   }
 
+
+  /**
+  * un-register the app
+  */
+  public static function unRegister() {
+
+    devel::load('model/ModuleRegisterModel.php');
+
+    $moduleRegisterControl = new ModuleRegisterModel();
+    $moduleRegisters = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>static::class ) ));
+
+
+
+    if( $regModuleInfo = $moduleRegisters->fetch() ) {
+      $regModuleInfo->delete();
+    }
+
+  }
+
+  /**
+  * register or update app register
+  */
+  public static function register() {
+
+    devel::load('model/ModuleRegisterModel.php');
+
+    $moduleRegisterControl = new ModuleRegisterModel();
+    $moduleRegisters = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=> static::class ) ));
+
+
+    if( $regModuleInfo = $moduleRegisters->fetch() ) {
+      $regModuleInfo->setter( 'deployVersion', static::checkCurrentVersion() );
+      $regModuleInfo->save();
+    }
+    else {
+      $reg = new ModuleRegisterModel( array('name'=>static::class ,'firstVersion'=> static::checkCurrentVersion(), 'deployVersion'=> static::checkCurrentVersion() ) );
+      $reg->save();
+    }
+
+  }
+
+  /**
+  * check last registered version
+  */
+  public static function checkRegisteredVersion() {
+    devel::load('model/ModuleRegisterModel.php');
+    $version = false;
+
+    $moduleRegisterControl = new ModuleRegisterModel();
+    $moduleRegisteredList = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>static::class  ) ));
+
+    if( $regModuleInfo = $moduleRegisteredList->fetch() ) {
+      $version = $regModuleInfo->getter('deployVersion');
+    }
+
+    return $version;
+  }
+
+
+  /**
+  * check current app version
+  */
+  public static function checkCurrentVersion() {
+    return  Cogumelo::$version;
+  }
+
+
 }

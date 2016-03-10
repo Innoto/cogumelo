@@ -99,7 +99,7 @@ class  DevelDBController
           if( preg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $dKey, $matches ) ) {
             $deployModuleName = $matches[1];
 
-            eval( '$currentModuleVersion = (float) (new '.$deployModuleName.')->version;' );
+            eval( '$currentModuleVersion = (float) '.$deployModuleName.'::checkCurrentVersion();' );
             eval( '$registeredModuleVersion = (float) '.$deployModuleName.'::checkRegisteredVersion();' );
 
             $deployModuleVersion = (float) $matches[2];
