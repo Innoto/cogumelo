@@ -31,7 +31,8 @@ class UserPermissionModel extends Model {
 
   var $deploySQL = array(
     // All Times
-    'user#1.0' => array(
+    array(
+      'version' => 'user#1.0',
       'executeOnGenerateModelToo' => true,
       'sql'=> '
         DROP VIEW IF EXISTS user_userPermission;

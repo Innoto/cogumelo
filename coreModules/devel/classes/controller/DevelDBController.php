@@ -89,14 +89,14 @@ class  DevelDBController
       $retSQL .= "\n## Deploy SQL for ".$modelName.".php\n";
 
 
-      foreach( $model->deploySQL as $dKey => $d) {
+      foreach( $model->deploySQL as $d) {
         if($getOnlyGenerateModelSQL === true && isset($d['executeOnGenerateModelToo']) && $d['executeOnGenerateModelToo'] === true) {
           // GENERATEMODEL
           $retSQL .= $d['sql'];
         }
         else {
           // DEPLOY
-          if( preg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $dKey, $matches ) ) {
+          if( preg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $d['version'], $matches ) ) {
             $deployModuleName = $matches[1];
 
             eval( '$currentModuleVersion = (float) '.$deployModuleName.'::checkCurrentVersion();' );
