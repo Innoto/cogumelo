@@ -39,7 +39,7 @@ if( $argc > 1 ) {
       unRegisterModules();
       registerModules();
       initModules();
-      deployModules();
+      deployModules(true);
       break;
 
     case 'deploy':
@@ -370,8 +370,8 @@ function initModules() {
     require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
 
     if( method_exists( $moduleName, 'moduleRc' ) ) {
-      echo( "\nINIT: ".$moduleName."::moduleRc()\n" );
-      eval( $moduleName.'::moduleRc();' );
+      echo( "\nINIT: ".$moduleName."::moduleRc( )\n" );
+      eval( $moduleName.'::moduleRc( );' );
     }
   }
 
@@ -379,7 +379,7 @@ function initModules() {
 }
 
 
-function deployModules() {
+function deployModules($isFirstGenerateModel = false) {
   global $C_ENABLED_MODULES;
 
   setPermissionsDevel();
@@ -391,8 +391,8 @@ function deployModules() {
     require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
 
     if( method_exists( $moduleName, 'moduleRc' ) ) {
-      echo( "\nDEPLOY: ".$moduleName."::moduleDeploy()\n" );
-      eval( $moduleName.'::moduleDeploy();' );
+      echo( "\nDEPLOY: ".$moduleName."::moduleDeploy( $isFirstGenerateModel )\n" );
+      eval( $moduleName.'::moduleDeploy($isFirstGenerateModel);' );
     }
   }
 
