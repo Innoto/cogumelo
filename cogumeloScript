@@ -383,9 +383,6 @@ function deployModules($isFirstGenerateModel = false) {
   global $C_ENABLED_MODULES;
 
   setPermissionsDevel();
-  exec('rm -R '.MOD_FILEDATA_APP_PATH);
-  exec('rm -R '.MOD_FILEDATA_CACHE_PATH);
-  setPermissionsDevel();
 
   foreach( $C_ENABLED_MODULES as $moduleName ) {
     require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
