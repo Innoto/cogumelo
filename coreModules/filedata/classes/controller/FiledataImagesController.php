@@ -184,7 +184,8 @@ class FiledataImagesController {
       $linkIdRoute = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['id'] .'.'. $imgRouteInfo['extension'];
       if( $this->profile['cache'] && !file_exists( $linkIdRoute ) ) {
         //error_log( "symlink( $imgRoute, $linkIdRoute )" );
-        symlink( $imgRoute, $linkIdRoute );
+        // symlink( $imgRoute, $linkIdRoute );
+        symlink( $imgRouteInfo['basename'], $linkIdRoute );
       }
     }
     //error_log( "FiledataImagesController: getRouteProfile = $imgRoute" );
