@@ -24,14 +24,6 @@ class devel extends Module
     "installer" => "bower",
     "includes" => array("dist/js/bootstrap.min.js")
    ),
-
-   array(
-     "id" =>"less",
-     "params" => array("less"),
-     "installer" => "bower",
-     "includes" => array("dist/less.min.js")
-   ),
-
    array(
      "id" =>"d3",
      "params" => array("d3"),
@@ -58,6 +50,7 @@ class devel extends Module
      "installer" => "composer",
      "includes" => array("lib/SqlFormatter.php")
    )
+
   );
 
   public $includesCommon = array(
