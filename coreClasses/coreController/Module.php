@@ -62,42 +62,41 @@ class Module
   }
 
 
-    /**
-    * un-register the module
-    */
-    public static function unRegister() {
-
-      devel::load('model/ModuleRegisterModel.php');
-
-      $moduleRegisterControl = new ModuleRegisterModel();
-      $moduleRegisters = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>static::class ) ));
-
-      eval('$instance = new '.static::class.'();');
-
-      if( $regModuleInfo = $moduleRegisters->fetch() ) {
-        $regModuleInfo->delete();
-      }
-
-    }
-
   /**
-  * register or update module register
+  * un-register the app
   */
-  public static function register() {
+  public static function unRegister() {
 
     devel::load('model/ModuleRegisterModel.php');
 
     $moduleRegisterControl = new ModuleRegisterModel();
     $moduleRegisters = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>static::class ) ));
 
-    eval('$instance = new '.static::class.'();');
+
 
     if( $regModuleInfo = $moduleRegisters->fetch() ) {
-      $regModuleInfo->setter( 'deployVersion', $instance->version );
+      $regModuleInfo->delete();
+    }
+
+  }
+
+  /**
+  * register or update app register
+  */
+  public static function register() {
+
+    devel::load('model/ModuleRegisterModel.php');
+
+    $moduleRegisterControl = new ModuleRegisterModel();
+    $moduleRegisters = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=> static::class ) ));
+
+
+    if( $regModuleInfo = $moduleRegisters->fetch() ) {
+      $regModuleInfo->setter( 'deployVersion', static::checkCurrentVersion() );
       $regModuleInfo->save();
     }
     else {
-      $reg = new ModuleRegisterModel( array('name'=>static::class ,'firstVersion'=> $instance->version, 'deployVersion'=> $instance->version) );
+      $reg = new ModuleRegisterModel( array('name'=>static::class ,'firstVersion'=> static::checkCurrentVersion(), 'deployVersion'=> static::checkCurrentVersion() ) );
       $reg->save();
     }
 
@@ -118,6 +117,15 @@ class Module
     }
 
     return $version;
+  }
+
+
+  /**
+  * check current module version
+  */
+  public static function checkCurrentVersion() {
+    eval('$instance = new '.static::class.'();');
+    return $instance->version;
   }
 
   public function  moduleRC() {
