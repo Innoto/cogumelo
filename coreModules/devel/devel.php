@@ -69,6 +69,7 @@ class devel extends Module {
     $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/get_sql_tables$#', 'view:DevelView::get_sql_tables' );
     $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/phpinfo$#', 'view:DevelView::develPhpInfo' );
     $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/phpinfo[/\#\?]+.*#', 'view:DevelView::develPhpInfo' );
+    $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/GC#', 'view:DevelView::runGarbageCollectors' );
 
     $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/porto#', 'view:DevelView::develPorto' );
 

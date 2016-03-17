@@ -54,8 +54,6 @@ class FiledataModel extends Model {
     while( $objElem = $listModel->fetch() ) {
       $objElem->delete();
     }
-
-    return $idsInUse;
   }
 
 

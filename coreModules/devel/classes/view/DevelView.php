@@ -145,18 +145,27 @@ class DevelView extends View
 
 
 
+  public function runGarbageCollectors() {
+    header("Content-Type: text/plain");
+
+    $modules = array( 'Filedata' );
+
+    foreach( $modules as $moduleName ) {
+      $modelName = $moduleName.'Model';
+      $moduleName::load('model/'.$modelName.'.php');
+      $vo = new $modelName();
+      echo "Lanzando garbageCollector() del modelo ".$modelName."\n";
+      $vo->garbageCollector();
+      echo "...Listo\n\n";
+    }
+  }
+
 
 
   public function develPorto() {
 
     header("Content-Type: text/plain");
-
-    $moduleName = 'Filedata';
-
-    $modelName = $moduleName.'Model';
-    $moduleName::load('model/'.$modelName.'.php');
-    $vo = new $modelName();
-    echo "\nIDs en uso: ".implode( ', ', $vo->garbageCollector() )."\n\n";
+    echo "Porto\n\n";
 
     /*
       $rTypeIdName = $this->getRTypeIdName( $rTypeId );
