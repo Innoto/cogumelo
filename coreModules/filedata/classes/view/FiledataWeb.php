@@ -5,16 +5,16 @@ Cogumelo::load('coreView/View.php');
 
 class FiledataWeb extends View {
 
-  /**
-    Ruta a partir de la que se crean los directorios y ficheros subidos
-  */
-  const FILES_APP_PATH = MOD_FORM_FILES_APP_PATH;
+  // Ruta a partir de la que se crean los directorios y ficheros subidos
+  var $filesAppPath = false;
 
 
   public function __construct( $baseDir = false ){
     parent::__construct( $baseDir );
 
     filedata::autoIncludes();
+
+    $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
   }
 
   /**
@@ -34,7 +34,7 @@ class FiledataWeb extends View {
   */
   public function webFileShow( $urlParams ) {
     // error_log( 'FiledataWeb: webFileShow()' . $urlParams['1'] );
-    $this->fileSendCommon( $urlParams['1'], self::FILES_APP_PATH, 'web' );
+    $this->fileSendCommon( $urlParams['1'], $this->filesAppPath, 'web' );
   } // function webFileShow()
 
 
@@ -44,7 +44,7 @@ class FiledataWeb extends View {
   */
   public function webFormFileShow( $urlParams ) {
     // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['1'] );
-    $this->fileSendCommon( $urlParams['1'], self::FILES_APP_PATH, 'web' );
+    $this->fileSendCommon( $urlParams['1'], $this->filesAppPath, 'web' );
   } // function webFormFileShow()
 
 
@@ -54,7 +54,7 @@ class FiledataWeb extends View {
   */
   public function webFormFileDownload( $urlParams ) {
     // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['1'] );
-    $this->fileSendCommon( $urlParams['1'], self::FILES_APP_PATH, 'download' );
+    $this->fileSendCommon( $urlParams['1'], $this->filesAppPath, 'download' );
   } // function webFormFileShow()
 
 

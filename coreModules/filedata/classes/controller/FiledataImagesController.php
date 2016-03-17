@@ -7,9 +7,9 @@ class FiledataImagesController {
   var $filedataCtrl = false;
 
   // Ruta a partir de la que se crean los directorios y ficheros subidos
-  var $filesAppPath = MOD_FILEDATA_APP_PATH;
+  var $filesAppPath = false;
   // Ruta a partir de la que se crean los directorios y ficheros procesados
-  var $filesCachePath = MOD_FILEDATA_CACHE_PATH;
+  var $filesCachePath = false;
 
   var $fileId = false;
   var $fileInfo = false;
@@ -26,6 +26,9 @@ class FiledataImagesController {
     $filedataCtrl = new FiledataController( $fileId );
     $this->fileId = $filedataCtrl->fileId;
     $this->fileInfo = $filedataCtrl->fileInfo;
+
+    $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
+    $this->filesCachePath = Cogumelo::getSetupValue( 'mod:filedata:cachePath' );
   }
 
 

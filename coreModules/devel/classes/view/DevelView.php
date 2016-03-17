@@ -7,20 +7,19 @@ devel::autoIncludes();
 class DevelView extends View
 {
 
-  function __construct($base_dir) {
-    parent::__construct($base_dir);
-
+  public function __construct( $base_dir ) {
+    parent::__construct( $base_dir );
   }
 
   /**
   * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
-  function accessCheck() {
-/*
+  public function accessCheck() {
+    /*
     global $DEVEL_ALLOWED_HOSTS;
     if( !in_array($_SERVER["REMOTE_ADDR"], $DEVEL_ALLOWED_HOSTS) ){
-*/
+    */
     if( !MOD_DEVEL_ALLOW_ACCESS ) {
       Cogumelo::error("Must be developer to enter on this site");
       RequestController::redirect(SITE_URL_CURRENT.'');
@@ -38,7 +37,7 @@ class DevelView extends View
     }
   }
 
-  function main($url_path=''){
+  public function main( $url_path = '' ) {
     $this->template->setTpl('develpage.tpl', 'devel');
 
     $this->logs();
@@ -54,21 +53,22 @@ class DevelView extends View
   //
   // actions Logs
   //
-  function logs( ){
+  public function logs() {
     $list_file_logs_path = glob(SITE_PATH."log/*.log");
     $list_file_logs = str_replace(SITE_PATH."log/", "", $list_file_logs_path);
     $list_file_logs = str_replace(".log", "", $list_file_logs);
     $this->template->assign("list_file_logs" , $list_file_logs);
   }
 
-  function read_logs(){ //LLamada a Ajax para buscar mas lineas
+  //LLamada a Ajax para buscar mas lineas
+  public function read_logs() {
     $readerlogcontrol = new LogReaderController();
     $content_logs = $readerlogcontrol->read_logs();
     header("Content-Type: application/json"); //return only JSON data
     echo json_encode($content_logs);
   }
 
-  function DBSQL(){
+  public function DBSQL() {
 
     // ER diagram data
     Cogumelo::load('coreModel/VOUtils.php');
@@ -76,13 +76,13 @@ class DevelView extends View
 
     // SQL code
     $data_sql = $this->get_sql_tables();
-    foreach ($data_sql as $k => $v) {
+    foreach( $data_sql as $k => $v ) {
       $data_sql[$k] = SqlFormatter::format($v);
     }
     $this->template->assign("data_sql" , $data_sql);
   }
 
-  function deploySQL() {
+  public function deploySQL() {
 
     // ER diagram data
     Cogumelo::load('coreModel/VOUtils.php');
@@ -93,11 +93,11 @@ class DevelView extends View
 
   }
 
-  function infoSetup(){
+  public function infoSetup() {
     $this->template->assign("infoConf" , @Kint::dump( Cogumelo::getSetupValue() ) );
   }
 
-  function infoUrls(){
+  public function infoUrls() {
     $regexlist = new UrlListController();
     $this->template->assign("dataUrls",  $regexlist->listUrls());
   }
@@ -106,23 +106,22 @@ class DevelView extends View
   //
   // Actions
   //
-
-  function get_sql_tables(){
+  public function get_sql_tables() {
     $fvotdbcontrol = new DevelDBController();
     return ($fvotdbcontrol->getTablesSQL() );
   }
 
-  function get_sql_deploy() {
+  public function get_sql_deploy() {
     $fvotdbcontrol = new DevelDBController();
     return ($fvotdbcontrol->getDeploysSQL() );
   }
 
-  function get_debugger(){
+  public function get_debugger() {
     $temp_debugs = Cogumelo::objDebugPull();
     $result_debugs = array();
     header("Content-Type: application/json"); //return only JSON data
     if(isset($temp_debugs)){
-      foreach ($temp_debugs as $val_debug){
+      foreach( $temp_debugs as $val_debug ) {
         if($val_debug['creation_date']['minutes'] < 10){
           $val_debug['creation_date']['minutes'] = "0".$val_debug['creation_date']['minutes'];
         }
@@ -140,8 +139,39 @@ class DevelView extends View
     }
   }
 
-  function develPhpInfo(){
+  public function develPhpInfo() {
     phpinfo();
   }
 
+
+
+
+
+  public function develPorto() {
+
+    header("Content-Type: text/plain");
+
+    $moduleName = 'Filedata';
+
+    $modelName = $moduleName.'Model';
+    $moduleName::load('model/'.$modelName.'.php');
+    $vo = new $modelName();
+    echo "\nIDs en uso: ".implode( ', ', $vo->garbageCollector() )."\n\n";
+
+    /*
+      $rTypeIdName = $this->getRTypeIdName( $rTypeId );
+      if( class_exists( $rTypeIdName ) ) {
+        // error_log( "GeozzyResourceView: getRTypeCtrl = $rTypeIdName" );
+        $rTypeIdName::autoIncludes();
+        $rTypeCtrlClassName = $rTypeIdName.'Controller';
+        $this->rTypeCtrl = new $rTypeCtrlClassName( $this );
+      }
+
+      $rTypeModel = new ResourcetypeModel();
+      $rTypeList = $rTypeModel->listItems( array( 'filters' => array( 'id' => $rTypeId ) ) );
+      if( $rTypeInfo = $rTypeList->fetch() ) {
+        $rTypeIdName = $rTypeInfo->getter( 'idName' );
+      }
+    */
+  }
 }
