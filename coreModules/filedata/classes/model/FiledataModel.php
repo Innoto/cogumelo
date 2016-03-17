@@ -52,6 +52,7 @@ class FiledataModel extends Model {
 
     $listModel = $this->listItems( array( 'filters' => array( 'notInId' => $idsInUse ) ) );
     while( $objElem = $listModel->fetch() ) {
+      echo "Borramos obj. id:".$objElem->getter('id')."\n";
       $objElem->delete();
     }
   }
