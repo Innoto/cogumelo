@@ -200,13 +200,16 @@ class UserView extends View
           'destDir' => '/users'
         )
       ),
-
       'login' => array(
         'params' => array( 'type' => 'reserved', 'placeholder' => 'Login' ),
         'rules' => array( 'required' => true )
       ),
       'email' => array(
-        'params' => array( 'placeholder' => 'Email' ),
+        'params' => array( 'id' => 'email', 'placeholder' => 'Email' ),
+        'rules' => array( 'required' => true )
+      ),
+      'repeatEmail' => array(
+        'params' => array( 'id' => 'repeatEmail', 'placeholder' => 'Repeat email' ),
         'rules' => array( 'required' => true )
       ),
       'name' => array(
@@ -215,7 +218,6 @@ class UserView extends View
       'surname' => array(
         'params' => array( 'placeholder' => 'Surname' ),
       ),
-
       'active' => array(
         'params' => array( 'type' => 'checkbox', 'class' => 'switchery', 'options'=> array( '1' => __('Active') ))
       ),
@@ -245,6 +247,7 @@ class UserView extends View
     $form->setValidationRule( 'avatar', 'accept', 'image/jpeg' );
     //$form->setValidationRule( 'avatar', 'required' );
     $form->setValidationRule( 'email', 'email' );
+    $form->setValidationRule( 'email', 'equalTo', '#repeatEmail' );
 
     if(!isset($data) || $data !== ''){
       $form->loadArrayValues( $data );
