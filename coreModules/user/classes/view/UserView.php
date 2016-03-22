@@ -526,9 +526,10 @@ class UserView extends View
         $asignRole = true;
       }
       $valuesArray['login'] = $valuesArray['email'];
-      $userAvatar = $valuesArray['avatar'];
-      unset($valuesArray['avatar']);
-
+      if( array_key_exists( 'avatar', $valuesArray) ){
+        $userAvatar = $valuesArray['avatar'];
+        unset($valuesArray['avatar']);
+      }
       $user = new UserModel( $valuesArray );
 
 
@@ -540,7 +541,7 @@ class UserView extends View
 
       //var_dump( $user->getAllData() );
 
-      if( $userAvatar ) {
+      if( isset($userAvatar) && $userAvatar ) {
         //var_dump( $userAvatar );
         /*
           if( $userAvatar['status'] === "DELETE"){
