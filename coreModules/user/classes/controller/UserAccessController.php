@@ -38,6 +38,23 @@ class UserAccessController
   }
 
   //
+  // Login an Admin User
+  //
+  function userAutoLogin($login)
+  {
+    $usermodel= new UserModel();
+    if($logeduser = $usermodel->authenticateUserOnlyLogin( $login )) {
+      $this->sessioncontrol->setUser($logeduser);
+      Cogumelo::log("Accepted User authentication: user ".$login." is logged", 'UserLog');
+      return true;
+    }
+    else {
+      //Cogumelo::log("Failed User authentication: user ".$login, 'UserLog');
+      return false;
+    }
+  }
+
+  //
   // Logout a User
   //
   function userLogout()

@@ -45,6 +45,10 @@ class UserModel extends Model
       'type' => 'INT',
       'size' => '1'
     ),
+    'verified'=> array(
+      'type' => 'INT',
+      'size' => '1'
+    ),
     'timeLastLogin' => array(
       'type'=>'DATETIME'
     ),
@@ -85,12 +89,6 @@ class UserModel extends Model
   }
 
 
-  /**
-  * undocumented function
-  *
-  * @return void
-  * @author
-  **/
   function authenticateUser($login, $password)
   {
     $userO = $this->listItems( array('filters' => array('login' => $login), 'affectsDependences' => array( 'UserPermissionModel') ))->fetch();
@@ -102,25 +100,42 @@ class UserModel extends Model
     }
 
     if($data) {
-      Cogumelo::log("authenticateUser SUCCEED with login=".$login, "UserLog");
-
-      $userPermissionArray = $userO->getterDependence('id', 'UserPermissionModel');
-      $uPermArray = array();
-      if($userPermissionArray) {
-        foreach ($userPermissionArray as $key => $uPerm) {
-          $uPermArray[] = $uPerm->getter('permission');
-        }
-      }
-      $userO->setter('timeLastLogin' , date("Y-m-d H:i:s", time()));
-      $userO->save();
-
-      $data = array();
-      $data['data'] = $userO->data;
-      $data['permissions'] = $uPermArray;
+      $data = $this->loginIsOk($userO);
     }
     else {
       Cogumelo::log("authenticateUser FAILED with login=".$login.". User NOT authenticated", "UserLog");
     }
+    return $data;
+  }
+
+  function authenticateUserOnlyLogin($login)
+  {
+    $userO = $this->listItems( array('filters' => array('login' => $login), 'affectsDependences' => array( 'UserPermissionModel') ))->fetch();
+    if($userO) {
+      $data = $this->loginIsOk($userO);
+    }
+    else {
+      Cogumelo::log("authenticateUser FAILED with login=".$login.". User NOT authenticated", "UserLog");
+    }
+    return $data;
+  }
+
+  function loginIsOk( $userO ){
+    Cogumelo::log("authenticateUser SUCCEED with login=".$userO->getter('login'), "UserLog");
+
+    $userPermissionArray = $userO->getterDependence('id', 'UserPermissionModel');
+    $uPermArray = array();
+    if($userPermissionArray) {
+      foreach ($userPermissionArray as $key => $uPerm) {
+        $uPermArray[] = $uPerm->getter('permission');
+      }
+    }
+    $userO->setter('timeLastLogin' , date("Y-m-d H:i:s", time()));
+    $userO->save();
+
+    $data = array();
+    $data['data'] = $userO->data;
+    $data['permissions'] = $uPermArray;
 
     return $data;
   }
