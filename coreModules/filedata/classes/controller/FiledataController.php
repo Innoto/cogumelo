@@ -3,14 +3,11 @@
 
 class FiledataController {
 
-  /**
-    Ruta a partir de la que se crean los directorios y ficheros subidos
-  */
-  const FILES_APP_PATH = MOD_FORM_FILES_APP_PATH;
+  // Ruta a partir de la que se crean los directorios y ficheros subidos
+  var $filesAppPath = false;
 
   var $fileId = false;
   var $fileInfo = false;
-  var $filesAppPath = MOD_FILEDATA_APP_PATH;
 
   private $replaceAcents = array(
     'from' => array( 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï',
@@ -42,6 +39,8 @@ class FiledataController {
 
   public function __construct( $fileId = false ) {
     // error_log( 'FiledataController __construct: ' . $fileId );
+
+    $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
 
     if( $fileId ) {
       $this->fileInfo = $this->loadFileInfo( $fileId );
@@ -278,19 +277,33 @@ class FiledataController {
     Delete a database FiledataModel register and files
   */
   public function deleteFile( $fileId ) {
-    // error_log( 'FiledataController: deleteFile(): ' . $fileId );
+    error_log( 'FiledataController: deleteFile(): ' . $fileId );
+    $objModel = new FiledataModel();
+    $listModel = $objModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) );
 
-    filedata::load('controller/FiledataImagesController.php');
-    $fileImageCtrl = new FiledataImagesController();
-    $fileImageCtrl->clearCache( $fileId );
-
-    if( $filedataObj = new FiledataModel( array( 'id' => $fileId ) ) ) {
-
-      // TODO: Falta ver se eliminamos o ficheiro do disco
-
+    if( $listModel && $filedataObj = $listModel->fetch() ) {
       $filedataObj->delete();
     }
-  } // function deleteFile()
+  } // function deleteFile( $fileId )
+
+
+  /**
+    Remove server files
+  */
+  public function removeServerFiles( $voFile ) {
+    error_log( 'FiledataController: removeServerFiles(): ' . $voFile->getter('id') );
+
+    error_log( 'FiledataController: removeServerFiles(): clearCache '.$voFile->getter('id') );
+    filedata::load('controller/FiledataImagesController.php');
+    $fileImageCtrl = new FiledataImagesController();
+    $fileImageCtrl->clearCache( $voFile->getter('id') );
+
+    $serverFile = Cogumelo::getSetupValue( 'mod:filedata:filePath' ).$voFile->getter('absLocation');
+    error_log( 'FiledataController: removeServerFiles(): unlink '.$serverFile );
+    if( file_exists( $serverFile ) ) {
+      unlink( $serverFile );
+    }
+  } // function removeServerFiles( $voFile )
 
 
   /**

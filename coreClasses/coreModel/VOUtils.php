@@ -1,14 +1,14 @@
 <?php
 
-  global $COGUMELO_RELATIONSHIP_MODEL;
-  $COGUMELO_RELATIONSHIP_MODEL = array();
+global $COGUMELO_RELATIONSHIP_MODEL;
+$COGUMELO_RELATIONSHIP_MODEL = array();
 
-  /**
-  * Utils for VO objects and relationship
-  *
-  * @package Cogumelo Model
-  */
-  class VOUtils {
+/**
+* Utils for VO objects and relationship
+*
+* @package Cogumelo Model
+*/
+class VOUtils {
 
 
   /**
@@ -16,15 +16,14 @@
   *
   * @return array
   */
-  static function listVOs() {
-
+  public static function listVOs() {
     $voarray = array();
 
     // VOs into APP
     $voarray = self::mergeVOs($voarray, SITE_PATH.'classes/model/' ); // scan app model dir
 
     global $C_ENABLED_MODULES;
-    foreach($C_ENABLED_MODULES as $modulename) {
+    foreach( $C_ENABLED_MODULES as $modulename ) {
       // modules into APP
 
       $voarray = self::mergeVOs($voarray, SITE_PATH.'modules/'.$modulename.'/classes/model/', $modulename );
@@ -33,7 +32,6 @@
       // modules into COGUMELO
       $voarray = self::mergeVOs($voarray, COGUMELO_LOCATION.'/coreModules/'.$modulename.'/classes/model/', $modulename );
     }
-
 
     return $voarray;
   }
@@ -44,7 +42,7 @@
   *
   * @return array
   */
-  static function includeVOs() {
+  public static function includeVOs() {
     return self::listVOs();
   }
 
@@ -58,7 +56,7 @@
   *
   * @return array
   */
-  static function mergeVOs($voarray, $dir, $modulename='app') {
+  public static function mergeVOs( $voarray, $dir, $modulename = 'app' ) {
     $vos = array();
 
     // VO's from APP
@@ -93,13 +91,13 @@
   *
   * @return array
   */
-  static function getVOCols($voName) {
+  public static function getVOCols( $voName ) {
     $retCols = array();
 
     $vo = new $voName();
 
     foreach( $vo->getCols(true) as $colK => $col ) {
-        $retCols[] = $colK;
+      $retCols[] = $colK;
     }
 
     return $retCols;
@@ -115,24 +113,19 @@
   *
   * @return array
   */
-  static function getVOConnections( $VOInstance, $includeKeys= false ) {
+  public static function getVOConnections( $VOInstance, $includeKeys = false ) {
     $relationships = array();
 
-    if( sizeof( $VOInstance->getCols(true) ) > 0 ) {
-      foreach ( $VOInstance->getCols(true) as $attrKey=>$attr ) {
+    $cols = $VOInstance->getCols(true);
+    if( count( $cols ) > 0 ) {
+      foreach( $cols as $attrKey => $attr ) {
         if( array_key_exists( 'type', $attr ) && $attr['type'] == 'FOREIGN' ){
-
           if( !$includeKeys ) {
             $relationships[] =  $attr['vo'];
           }
           else {
-
-
-            $relationships[] =  array('vo' =>  $attr['vo'] , 'key' => $attrKey, 'related'=>$attr['key'] );
-
-
+            $relationships[] =  array( 'vo' => $attr['vo'] , 'key' => $attrKey, 'related'=>$attr['key'] );
           }
-
         }
       }
     }
@@ -147,22 +140,65 @@
   *
   * @return array
   */
-  static function getAllRelScheme() {
-
+  public static function getAllRelScheme() {
     $ret = array();
 
-    foreach ( self::listVOs() as $voName=>$voDef) {
+    foreach( self::listVOs() as $voName => $voDef ) {
       $vo = new $voName();
       $ret[ $voName ] = array(
-                      'name' => $voName,
-                      'relationship' => self::getVOConnections( $vo ),
-                      'extendedRelationship' => self::getVOConnections( $vo, true ),
-                      'elements' => sizeof( $vo->getCols(true) ),
-                      'module' => $voDef['module']
-                    );
+        'name' => $voName,
+        'relationship' => self::getVOConnections( $vo ),
+        'extendedRelationship' => self::getVOConnections( $vo, true ),
+        'elements' => count( $vo->getCols(true) ),
+        'module' => $voDef['module']
+      );
     }
 
     return $ret;
+  }
+
+
+
+  /**
+  * Get the IDs in use of a model in all models
+  *
+  * @return array
+  */
+  public static function getIdsInUse( $modelRelName ) {
+    // echo "\n getIdsInUse( $modelRelName )\n\n";
+    $modelRelIds = array();
+
+    // Usado en Filedata
+
+    $voNames = array_keys( self::listVOs() );
+    foreach( $voNames as $voName ) {
+      $vo = new $voName();
+      $extendedRelationship = self::getVOConnections( $vo, true );
+      if( is_array( $extendedRelationship ) ) {
+        // Buscamos relaciones de este modelo con el modelo indicado y anotamos los campos.
+        $depModelKeys = array();
+        foreach( $extendedRelationship as $relationship ) {
+          if( $relationship['vo'] === $modelRelName ) {
+            $depModelKeys[] = $relationship['key'];
+          }
+        }
+        // Si hay campos que relacionen los dos modelos, recuperamos los IDs en uso en este.
+        if( count( $depModelKeys ) > 0 ) {
+          $listModel = $vo->listItems( array( 'fields' => $depModelKeys ) );
+          while( $objElem = $listModel->fetch() ) {
+            foreach( $depModelKeys as $fieldName ) {
+              $fieldValue = $objElem->getter( $fieldName );
+              if( $fieldValue && is_numeric( $fieldValue ) ) {
+                $modelRelIds[ $fieldValue ] = true;
+              }
+            }
+          }
+        }
+      }
+    }
+    $modelRelIds = array_keys( $modelRelIds ); // Nos quedamos con los keys que son los IDs
+
+    return( count($modelRelIds) ? $modelRelIds : false );
   }
 
 
@@ -175,13 +211,13 @@
   *
   * @return array
   */
-  static function getVORelationship( $voName, $parentInfo=array( 'parentVO' => false, 'parentTable'=>false, 'parentId'=>false, 'relatedWithId'=>false, 'preventCircle'=>array() ), $deep=1 ) {
+  public static function getVORelationship( $voName, $parentInfo = array( 'parentVO' => false, 'parentTable'=>false, 'parentId'=>false, 'relatedWithId'=>false, 'preventCircle'=>array() ), $deep = 1 ) {
 
     $vo = new $voName();
     $relArray = array(
-                        'vo' => $voName,
-                        'table' => $vo::$tableName
-                      );
+      'vo' => $voName,
+      'table' => $vo::$tableName
+    );
     $relArray = array_merge( $relArray, $parentInfo);
 
     $relArray['cols'] = self::getVOCols( $voName );
@@ -192,7 +228,7 @@
       $allVOsRel = self::getAllRelScheme();
 
 
-      if( sizeof( $allVOsRel ) > 0) {
+      if( count( $allVOsRel ) > 0) {
         foreach( $allVOsRel as $roRel ) {
           if(
             (
@@ -201,32 +237,31 @@
             ) &&
             ( !in_array( $roRel['name'], $parentInfo['preventCircle']) )
           ) {
-
-
-
-              // prevent circle relationships array
-              if( sizeof($parentInfo['preventCircle']) === 0 ) {
-                $preventCircle = array($voName);
-              }
-              else {
-                array_push( $parentInfo['preventCircle'], $voName);
-                $preventCircle = $parentInfo['preventCircle'];
-              }
-
-
-              $sonParentArray = array(
-               'parentVO' => $voName,
-               'parentTable'=> $vo::$tableName,
-               'parentId'=> 'NO',
-               'relatedWithId'=> 'NO',
-               'preventCircle' => $preventCircle
-              );
-
-
-              $relArray['relationship'] = array_merge( $relArray['relationship'] , self::findRelFromIn( $allVOsRel[$voName]['extendedRelationship'] , $roRel['name'] , $voName ,  $sonParentArray, $deep++) );
-              $relArray['relationship'] = array_merge( $relArray['relationship'] , self::findRelFromOut( $roRel['extendedRelationship'] , $voName,  $roRel['name'],  $sonParentArray, $deep++ ) );
-
+            // prevent circle relationships array
+            if( count( $parentInfo['preventCircle'] ) === 0 ) {
+              $preventCircle = array($voName);
             }
+            else {
+              array_push( $parentInfo['preventCircle'], $voName);
+              $preventCircle = $parentInfo['preventCircle'];
+            }
+
+
+            $sonParentArray = array(
+              'parentVO' => $voName,
+              'parentTable'=> $vo::$tableName,
+              'parentId'=> 'NO',
+              'relatedWithId'=> 'NO',
+              'preventCircle' => $preventCircle
+            );
+
+            $relArray['relationship'] = array_merge( $relArray['relationship'],
+              self::findRelFromIn( $allVOsRel[$voName]['extendedRelationship'],
+                $roRel['name'], $voName, $sonParentArray, $deep++ ) );
+            $relArray['relationship'] = array_merge( $relArray['relationship'],
+              self::findRelFromOut( $roRel['extendedRelationship'], $voName, $roRel['name'],
+                $sonParentArray, $deep++ ) );
+          }
         }
       }
     }
@@ -235,7 +270,7 @@
   }
 
 
-  static function findRelFromOut( $rel , $voSearch, $voToRegister, $sonParentArray, $deep) {
+  public static function findRelFromOut( $rel, $voSearch, $voToRegister, $sonParentArray, $deep ) {
     $retArray = array();
     foreach( $rel as $r ) {
       if( $r['vo'] == $voSearch ) {
@@ -249,7 +284,7 @@
   }
 
 
-  static function findRelFromIn( $rel , $voSearch, $voToRegister, $sonParentArray, $deep) {
+  public static function findRelFromIn( $rel, $voSearch, $voToRegister, $sonParentArray, $deep ) {
     $retArray = array();
     foreach( $rel as $r ) {
       if( $r['vo'] == $voSearch ) {
@@ -271,14 +306,14 @@
   *
   * @return array
   */
-  static function relIndex( $voRel, $parentArrayKey=false, $relsArray = array() ) {
+  public static function relIndex( $voRel, $parentArrayKey = false, $relsArray = array() ) {
 
 
-    $currentArrayKey = sizeof($relsArray);
+    $currentArrayKey = count($relsArray);
     $relsArray[] = array( 'voName' => $voRel['vo'], 'parentKey' => $parentArrayKey );
 
 
-    if( array_key_exists('relationship', $voRel) && sizeof( $voRel['relationship'] ) > 0  ) {
+    if( array_key_exists('relationship', $voRel) && count( $voRel['relationship'] ) > 0  ) {
       foreach( $voRel['relationship'] as $relVO ){
           $relsArray = self::relIndex( $relVO, $currentArrayKey, $relsArray );
       }
@@ -291,15 +326,14 @@
   /**
   * Generate temporal json files with relationship descriptions
   *
-  *
   * @return void
   */
-  static function createModelRelTreeFiles() {
+  public static function createModelRelTreeFiles() {
     Cogumelo::load('coreModel/'.cogumeloGetSetupValue( 'db:engine' ).'/'.ucfirst( cogumeloGetSetupValue( 'db:engine' ) ).'DAORelationship.php');
 
     eval( '$mrel = new '.ucfirst( cogumeloGetSetupValue( 'db:engine' ) ).'DAORelationship();' );
 
-    foreach( self::listVOs() as $voName => $vo) {
+    foreach( self::listVOs() as $voName => $vo ) {
 
       $relVO = self::getVORelationship($voName);
       //var_dump($relVO);
@@ -317,7 +351,7 @@
   *
   * @return array
   */
-  static function getRelkeys( $nameVO, $tableAsKey = false, $resolveDependences=false ) {
+  public static function getRelkeys( $nameVO, $tableAsKey = false, $resolveDependences = false ) {
     return self::getRelKeysByRelObj( self::getRelObj( $nameVO, $resolveDependences ), $tableAsKey );
   }
 
@@ -331,14 +365,14 @@
   *
   * @return array
   */
-  static function getRelKeysByRelObj( $voRel, $tableAsKey= false ) {
+  public static function getRelKeysByRelObj( $voRel, $tableAsKey = false ) {
     $relKeys = false;
 
     if($voRel) {
       $relKeys = array();
 
-      if( sizeof($voRel->relationship) > 0 ) {
-        foreach ($voRel->relationship as $voName => $rel) {
+      if( count($voRel->relationship) > 0 ) {
+        foreach( $voRel->relationship as $voName => $rel ) {
           if( $tableAsKey ){
             $relKeys[$rel->table] = $rel->vo;
           }
@@ -355,13 +389,13 @@
 
 
   /**
-  * gets Relationship object from global array. If not exist this global array reads it from temporal .json
+  * Gets Relationship object from global array. If not exist this global array reads it from temporal .json
   *
   * @param string $nameVO VO or Model name
   *
   * @return object
   */
-  static function getRelObj($nameVO, $resolveDependences = true) {
+  public static function getRelObj( $nameVO, $resolveDependences = true ) {
 
 
     ini_set('memory_limit','1024M'); // SET BIT LIMIT WHEN GENERATING MODEL
@@ -394,16 +428,16 @@
   *
   * @return object
   */
-  static function limitRelObj($relObj, $resolveDependences) {
+  public static function limitRelObj( $relObj, $resolveDependences ) {
 
 
 
 
-    if( is_array( $resolveDependences ) && sizeof( $relObj->relationship ) > 0 ) {
+    if( is_array( $resolveDependences ) && count( $relObj->relationship ) > 0 ) {
 
       $relationshipArray = array();
       $currentRel = (array) $relObj->relationship;
-      foreach ( $currentRel   as $rok => $ro) {
+      foreach( $currentRel as $rok => $ro ) {
 
         global $subCONTAMIERDA;
         if(!$subCONTAMIERDA)  {
@@ -430,31 +464,26 @@
 
 
 
-  static function completeRelObject( $originalRelArray, $newRelArray, $listToResolve ) {
+  public static function completeRelObject( $originalRelArray, $newRelArray, $listToResolve ) {
     $relList = $newRelArray;
 
-      $voName = array_shift( $listToResolve );
+    $voName = array_shift( $listToResolve );
 
-      foreach( $originalRelArray as $rel ){
-
-        if( $rel->vo == $voName ) {
-
-          // mirar se está dentro de reList para non machacalo
-          $nRelationship = array();
-          if(sizeof( $relList) >0 ){
-            foreach( $relList as $rel2){
-              if( $rel2->vo == $voName ) {
-                $nRelationship[] = $rel2;
-              }
+    foreach( $originalRelArray as $rel ) {
+      if( $rel->vo == $voName ) {
+        // mirar se está dentro de reList para non machacalo
+        $nRelationship = array();
+        if( count( $relList) > 0 ){
+          foreach( $relList as $rel2 ) {
+            if( $rel2->vo == $voName ) {
+              $nRelationship[] = $rel2;
             }
           }
-
-          $relList = array_merge($relList, self::completeRelObject($rel, $nRelationship  , $listToResolve)  );
         }
+
+        $relList = array_merge($relList, self::completeRelObject($rel, $nRelationship  , $listToResolve)  );
       }
-
-
-
+    }
 
     return $relList;
   }
@@ -462,17 +491,17 @@
 
 
   /**
-  * get all voNames of index array from the selected element folowing indexes
+  * Get all voNames of index array from the selected element folowing indexes
   *
   * @param array $retIndex index list
   * @param mixed $ref voName or index parentkey
   *
   * @return array
   */
-  static function limitRelIndex( $relIndex, $ref ) {
+  public static function limitRelIndex( $relIndex, $ref ) {
     $retArray = array();
 
-    if( sizeof( $relIndex ) > 0 ) {
+    if( count( $relIndex ) > 0 ) {
       while( $rel = array_pop($relIndex) ) {
 
         // is an VO
@@ -481,7 +510,7 @@
         }
         // is a parent key
         else
-        if( is_numeric( $ref ) && (sizeof( $relIndex ) ) == $ref && $ref != 0) {
+        if( is_numeric( $ref ) && (count( $relIndex )) == $ref && $ref != 0) {
           $retArray = array_merge( self::limitRelIndex( $relIndex, $rel->parentKey ), array($rel->voName) );
         }
 
@@ -500,18 +529,17 @@
   *
   * @return object
   */
-  static function searchVOinRelObj($voName, $relObj) {
+  public static function searchVOinRelObj( $voName, $relObj ) {
     $relObjSon = -1;
 
-    if( sizeof($relObj->relationship ) > 0 ){
-      foreach ($relObj->relationship as $candidate) {
+    if( count( $relObj->relationship ) > 0 ) {
+      foreach( $relObj->relationship as $candidate ) {
         if( $candidate->vo == $voName ){
           $relObjSon = $candidate;
           break;
         }
       }
     }
-
 
     return $relObjSon;
   }

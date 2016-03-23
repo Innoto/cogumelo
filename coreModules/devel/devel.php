@@ -4,8 +4,8 @@
 
 Cogumelo::load("coreController/Module.php");
 
-class devel extends Module
-{
+class devel extends Module {
+
   public $name = "devel";
   public $version = 1.0;
   public $dependences = array(
@@ -62,13 +62,16 @@ class devel extends Module
     'js/drawERD.js'
   );
 
-  function __construct() {
+  public function __construct() {
     $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'$#', 'view:DevelView::main' );
     $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/read_logs$#', 'view:DevelView::read_logs' );
     $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/get_debugger#', 'view:DevelView::get_debugger' );
     $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/get_sql_tables$#', 'view:DevelView::get_sql_tables' );
     $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/phpinfo$#', 'view:DevelView::develPhpInfo' );
     $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/phpinfo[/\#\?]+.*#', 'view:DevelView::develPhpInfo' );
+    $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/GC#', 'view:DevelView::runGarbageCollectors' );
+
+    $this->addUrlPatterns( '#^'.cogumeloGetSetupValue( 'mod:devel:url' ).'/porto#', 'view:DevelView::develPorto' );
 
     //Cogumelo::error( print_r( $this->getUrlPatternsToArray(), true ) );
   }
