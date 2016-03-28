@@ -64,6 +64,16 @@ class UserModel extends Model
 
   );
 
+  var $deploySQL = array(
+    array(
+      'version' => 'user#1.2',
+      'sql'=> '
+        ALTER TABLE user_user
+        ADD COLUMN verified INT
+      '
+    )
+  );
+
   static $extraFilters = array(
       'find' => "UPPER(surname)  LIKE CONCAT('%',UPPER(?),'%') OR login LIKE CONCAT('%', UPPER(?), '%')",
 //      'login' => "login = CONCAT('', ? ,'')"
