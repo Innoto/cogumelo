@@ -13,8 +13,9 @@ abstract class MailController
 {
 	var $templatecontrol;
 	var $mailSender;
+	var $mailBody;
 
-	function __construct()
+	function __construct( $vars, $template, $module == false )
 	{
 
 		Cogumelo::load('coreView/Template.php');
@@ -22,23 +23,29 @@ abstract class MailController
 
 		$this->templatecontrol = new Template();
 		$this->mailSender = new MailSender();
+
+		$this->parseMail($vars, $template, $module)
 	}
 
 
   /*
+	* @param array vars variables array
   * @param string $template tpl file path
-  * @param array template variables array
+	* @param string $module module name
   */
-	function parseMail($template, $vars) {
+	function parseMail($vars, $template, $module == false) {
 
 		foreach($vars as $varkey => $variable)
 			$this->templatecontrol->assign($varkey, $variable);
 
-		$mailbody = $this->templatecontrol->setTpl($template);
+		$this->templatecontrol->setTpl($template, $module);
 		//$this->templatecontrol->clearAllAssign();
 
-		return $mailbody;
+		$this->mailbody = $this->templatecontrol->execToString();
+	}
+
+	function send( $adresses, $subject='', $body='', $files = false, $from_name = cogumeloGetSetupValue( 'smtp:fromName' ), $from_mail = cogumeloGetSetupValue( 'smtp:fromMail' ) ) {
+		return $this->MailSender( $adresses, $subject, $body, $files, $from_name, $from_mail);
 	}
 
 }
-

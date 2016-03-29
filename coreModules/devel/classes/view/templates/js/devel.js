@@ -1,6 +1,5 @@
 
 $(document).ready(function(){
-  //$( "#logs_tabs" ).tabs(); 
   readLogs();
   autoLoadDebugger();
   drawERScheme();
