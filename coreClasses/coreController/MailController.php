@@ -9,14 +9,14 @@
 * @author: pablinhob
 */
 
-abstract class MailController
+class MailController
 {
 	var $templatecontrol;
 	var $mailSender;
 	var $mailBody;
+	var $mailFiles = false;
 
-	function __construct( $vars, $template, $module == false )
-	{
+	function __construct( $vars, $template, $module = false )	{
 
 		Cogumelo::load('coreView/Template.php');
 		Cogumelo::load('coreController/MailSender.php');
@@ -24,7 +24,7 @@ abstract class MailController
 		$this->templatecontrol = new Template();
 		$this->mailSender = new MailSender();
 
-		$this->parseMail($vars, $template, $module)
+		$this->parseMail($vars, $template, $module);
 	}
 
 
@@ -33,19 +33,48 @@ abstract class MailController
   * @param string $template tpl file path
 	* @param string $module module name
   */
-	function parseMail($vars, $template, $module == false) {
+	function parseMail($vars, $template, $module = false) {
 
-		foreach($vars as $varkey => $variable)
-			$this->templatecontrol->assign($varkey, $variable);
+
+		if( is_array($vars) && sizeof($vars) > 0 ) {
+			foreach($vars as $varkey => $variable) {
+				$this->templatecontrol->assign($varkey, $variable);
+			}
+		}
 
 		$this->templatecontrol->setTpl($template, $module);
 		//$this->templatecontrol->clearAllAssign();
 
-		$this->mailbody = $this->templatecontrol->execToString();
+		$this->mailBody = $this->templatecontrol->execToString();
 	}
 
-	function send( $adresses, $subject='', $body='', $files = false, $from_name = cogumeloGetSetupValue( 'smtp:fromName' ), $from_mail = cogumeloGetSetupValue( 'smtp:fromMail' ) ) {
-		return $this->MailSender( $adresses, $subject, $body, $files, $from_name, $from_mail);
+	/*
+	* @param array files paths
+  */
+	function setFiles( $files ) {
+		$this->mailFiles = $files;
+	}
+
+
+	/*
+  * @param mixed $adresses are string of array of strings with recipient of mail sent
+  * @param string $subject is the subject of the mail
+  * @param string $from_name sender name. Default is specified in conf.
+  * @param string $from_mail sender e-mail. Default especified in conf.
+  */
+	function send($adresses, $subject='', $from_name = false, $from_mail = false )	{
+
+
+		if( $from_mail == false ) {
+
+			$from_mail = cogumeloGetSetupValue( 'smtp:fromName' );
+		}
+
+		if( $from_mail == false) {
+			$from_mail = cogumeloGetSetupValue( 'smtp:fromMail' );
+		}
+
+		return $this->mailSender->send( $adresses, $subject, $this->mailBody, $this->mailFiles, $from_name, $from_mail);
 	}
 
 }

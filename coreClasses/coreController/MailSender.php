@@ -16,7 +16,7 @@ Class MailSender
 
 	function __construct()
 	{
-		$this->phpmailer = new PHPMailer();
+		$this->phpmailer = new PHPMailer( true );
 
 		//$this->phpmailer->IsSMTP();
 	 	$this->phpmailer->SMTPAuth = cogumeloGetSetupValue( 'smtp:auth' );
@@ -38,8 +38,17 @@ Class MailSender
   * @param string $from_name sender name. Default is specified in conf.
   * @param string $from_maiol sender e-mail. Default especified in conf.
   */
-	function send($adresses, $subject='', $body='', $files = false, $from_name = cogumeloGetSetupValue( 'smtp:fromName' ), $from_mail = cogumeloGetSetupValue( 'smtp:fromMail' ))
-	{
+	function send($adresses, $subject='', $body='', $files = false, $from_name = false, $from_mail = false ) {
+
+		if( $from_mail == false ){
+			$from_mail = cogumeloGetSetupValue( 'smtp:fromName' );
+		}
+
+		if( $from_mail == false ) {
+			$from_mail = cogumeloGetSetupValue( 'smtp:fromMail' );
+		}
+
+
 		// If $adresses is an array of adresses include all into mail
 		if( is_array($adresses) )
 			foreach($adresses as $adress)	$this->phpmailer->AddAddress($adress);
@@ -52,8 +61,10 @@ Class MailSender
 			else
 				$this->phpmailer->AddAttachment($files);
 		}
-		$this->phpmailer->FromName = $from_name;
-		$this->phpmailer->From = $from_mail;
+		//$this->phpmailer->FromName = $from_name;
+		//$this->phpmailer->From = $from_mail;
+
+		$this->phpmailer->SetFrom($from_mail, $from_name);
 
 		$this->phpmailer->Subject = $subject;
 		$this->phpmailer->isHTML(true);
