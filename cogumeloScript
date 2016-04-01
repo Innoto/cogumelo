@@ -37,9 +37,10 @@ if( $argc > 1 ) {
       createTables();
       createRelSchemes();
       unRegisterModules();
-      registerModules();
       initModules();
+      deployModels(true);
       deployModules(true);
+
       break;
 
     case 'deploy':

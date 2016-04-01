@@ -37,7 +37,7 @@ class  DevelDBController
         $aditionalRcSQL .= "\n# Aditional rcSQL for ".$voKey.".php\n";
         $aditionalRcSQL .= $evo->rcSQL;
       }*/
-      $aditionalRcSQL .= $this->getModelDeploySQL($voKey, $evo, true); // get deploys that specify model
+//      $aditionalRcSQL .= $this->getModelDeploySQL($voKey, $evo, true); // get deploys that specify model
 
 
       if( !$evo->notCreateDBTable ) {
@@ -49,7 +49,7 @@ class  DevelDBController
 
     // add all rc custom SQL at bottom
     if( $aditionalRcSQL !== '' ) {
-      $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
+      //$returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
     }
 
     return $returnStrArray;
@@ -57,25 +57,28 @@ class  DevelDBController
 
   public function deployModels() {
     $returnStrArray = array();
-    $aditionalRcSQL = '';
+    //$aditionalRcSQL = '';
 
     foreach( VOUtils::listVOs() as $voKey => $vo ) {
 
       $evo = new $voKey();
 
-      $aditionalRcSQL .= $this->getModelDeploySQL($voKey, $evo);
-
+      $aditionalRcSQL = $this->getModelDeploySQL($voKey, $evo);
+      if( $aditionalRcSQL !== '' ) {
+        $this->data->aditionalExec( $aditionalRcSQL );
+        Cogumelo::log( $aditionalRcSQL ,'cogumelo_deploy');
+      }
     }
 
     // add all rc custom SQL at bottom
     if( $aditionalRcSQL !== '' ) {
-      $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
+      //$returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
     }
-
+/*
     foreach(explode( "\n", $aditionalRcSQL ) as $dLine ) {
       Cogumelo::log( $dLine ,'cogumelo_deploy');
     }
-
+*/
 
 
     return $returnStrArray;
