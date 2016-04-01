@@ -55,7 +55,7 @@ class  DevelDBController
     return $returnStrArray;
   }
 
-  public function deployModels() {
+  public function deployModels(  $getOnlyGenerateModelSQL = false ) {
     $returnStrArray = array();
     //$aditionalRcSQL = '';
 
@@ -63,8 +63,9 @@ class  DevelDBController
 
       $evo = new $voKey();
 
-      $aditionalRcSQL = $this->getModelDeploySQL($voKey, $evo);
+      $aditionalRcSQL = $this->getModelDeploySQL($voKey, $evo, $getOnlyGenerateModelSQL);
       if( $aditionalRcSQL !== '' ) {
+        echo "\nDeploy model for " . $evo->name. "\n";
         $this->data->aditionalExec( $aditionalRcSQL );
         Cogumelo::log( $aditionalRcSQL ,'cogumelo_deploy');
       }
@@ -88,14 +89,18 @@ class  DevelDBController
   private function getModelDeploySQL( $modelName, $model, $getOnlyGenerateModelSQL = false ) {
     $retSQL = '';
 
+
+
     if( sizeof( $model->deploySQL ) > 0 ){
       $retSQL .= "\n## Deploy SQL for ".$modelName.".php\n";
 
 
       foreach( $model->deploySQL as $d) {
-        if($getOnlyGenerateModelSQL === true && isset($d['executeOnGenerateModelToo']) && $d['executeOnGenerateModelToo'] === true) {
-          // GENERATEMODEL
-          $retSQL .= $d['sql'];
+        if($getOnlyGenerateModelSQL === true ) {
+          if( isset($d['executeOnGenerateModelToo']) && $d['executeOnGenerateModelToo'] === true ) {
+            // GENERATEMODEL
+            $retSQL .= $d['sql'];
+          }
         }
         else {
           // DEPLOY
@@ -104,6 +109,8 @@ class  DevelDBController
 
             eval( '$currentModuleVersion = (float) '.$deployModuleName.'::checkCurrentVersion();' );
             eval( '$registeredModuleVersion = (float) '.$deployModuleName.'::checkRegisteredVersion();' );
+
+//var_dump(array($currentModuleVersion ,$registeredModuleVersion ))
 
             $deployModuleVersion = (float) $matches[2];
 
