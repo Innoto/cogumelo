@@ -113,7 +113,7 @@ class Module
     $moduleRegisteredList = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=>static::class  ) ));
 
     if( $regModuleInfo = $moduleRegisteredList->fetch() ) {
-      $version = $regModuleInfo->getter('deployVersion');
+      $version = round( $regModuleInfo->getter('deployVersion'), 3);
     }
 
     return $version;
