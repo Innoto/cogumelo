@@ -107,8 +107,8 @@ class  DevelDBController
           if( preg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $d['version'], $matches ) ) {
             $deployModuleName = $matches[1];
 
-            eval( '$currentModuleVersion = (float) '.$deployModuleName.'::checkCurrentVersion();' );
-            eval( '$registeredModuleVersion = (float) '.$deployModuleName.'::checkRegisteredVersion();' );
+            eval( '$currentModuleVersion = round( (float) '.$deployModuleName.'::checkCurrentVersion(),3 );' );
+            eval( '$registeredModuleVersion = round( (float) '.$deployModuleName.'::checkRegisteredVersion(),3 );' );
 
 //var_dump(array($currentModuleVersion ,$registeredModuleVersion ))
 
@@ -120,7 +120,14 @@ class  DevelDBController
               //eval( '$currentModuleVersion = (float) '.$deployModuleName.'::v();' );
               //echo "VERSION:".$deployModuleVersion." - ".$registeredVersion;
 
-              if( $deployModuleVersion > $registeredModuleVersion  &&  $deployModuleVersion <= $currentModuleVersion && isset($d['sql']) ) {
+              if(
+                $deployModuleVersion > $registeredModuleVersion  &&
+                $deployModuleVersion <= $currentModuleVersion &&
+                isset($d['sql'])
+              ) {
+                //var_dump( $deployModuleVersion );
+                //var_dump( $currentModuleVersion );
+
                 $retSQL .= "# Module $deployModuleName deploy code from versions: ( $registeredModuleVersion ) to ( $currentModuleVersion ) \n";
                 $retSQL .= $d['sql'];
 
