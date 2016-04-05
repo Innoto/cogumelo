@@ -7,27 +7,30 @@
 * Mail sender encapsulates the original phpmailer library to make less difficult it's use
 *
 * @author: pablinhob
+* @author: jmpmato
 */
-class MailSender {
+class MailSenderGmail {
 
   var $phpmailer;
 
   public function __construct() {
-
-    echo "\nCAMBIO: Ahora hay multiples MailSender, dependiendo de 'type' de la conf. de 'mail'\n\n";
-    die( "\nCAMBIO: Ahora hay multiples MailSender, dependiendo de 'type' de la conf. de 'mail'\n\n" );
-
-
-
-    /*
     $this->phpmailer = new PHPMailer( true );
 
-    //$this->phpmailer->IsSMTP();
-    $this->phpmailer->SMTPAuth = cogumeloGetSetupValue( 'smtp:auth' );
-    $this->phpmailer->Host = cogumeloGetSetupValue( 'smtp:host' );
-    $this->phpmailer->Port = cogumeloGetSetupValue( 'smtp:port' );
-    $this->phpmailer->Username = cogumeloGetSetupValue( 'smtp:user' );
-    $this->phpmailer->Password = cogumeloGetSetupValue( 'smtp:pass' );
+    echo "\nTODO: Pendiente de implementar por la complejidad de XOAUTH2\n\n";
+    exit();
+
+    // TODO: Pendiente de implementar por la complejidad de XOAUTH2
+    // https://github.com/PHPMailer/PHPMailer/wiki/Using-Gmail-with-XOAUTH2
+    // https://github.com/PHPMailer/PHPMailer/wiki/Troubleshooting
+    // https://developers.google.com/gmail/xoauth2_protocol
+
+    /*
+    $this->phpmailer->IsSMTP();
+    $this->phpmailer->SMTPAuth = Cogumelo::getSetupValue( 'mail:auth' );
+    $this->phpmailer->Host = Cogumelo::getSetupValue( 'mail:host' );
+    $this->phpmailer->Port = Cogumelo::getSetupValue( 'mail:port' );
+    $this->phpmailer->Username = Cogumelo::getSetupValue( 'mail:user' );
+    $this->phpmailer->Password = Cogumelo::getSetupValue( 'mail:pass' );
     $this->phpmailer->SMTPKeepAlive = true;
     $this->phpmailer->CharSet = 'UTF-8';
     */
@@ -39,23 +42,23 @@ class MailSender {
    *
    * @param mixed $adresses are string of array of strings with recipient of mail sent
    * @param string $subject is the subject of the mail
-   * @param string $body of the e-mail
+   * @param string $bodyPlain of the e-mail
+   * @param string $bodyHtml of the e-mail
    * @param mixed $files string or array of strings of filepaths
    * @param string $from_name sender name. Default is specified in conf.
    * @param string $from_maiol sender e-mail. Default especified in conf.
    *
    * @return boolean $mailResult
    **/
-  /*
-  public function send( $adresses, $subject = '', $body = '', $files = false, $from_name = false, $from_mail = false ) {
+  public function send( $adresses, $subject, $bodyPlain = false, $bodyHtml = false, $files = false, $from_name = false, $from_mail = false ) {
     $mailResult = false;
 
-    if( $from_name == false ){
-      $from_name = cogumeloGetSetupValue( 'smtp:fromName' );
+    if( !$from_name ){
+      $from_name = Cogumelo::getSetupValue( 'mail:fromName' );
     }
 
-    if( $from_mail == false ) {
-      $from_mail = cogumeloGetSetupValue( 'smtp:fromMail' );
+    if( !$from_mail ) {
+      $from_mail = Cogumelo::getSetupValue( 'mail:fromEmail' );
     }
 
 
@@ -84,8 +87,17 @@ class MailSender {
     $this->phpmailer->AddReplyTo( $from_mail, $from_name );
 
     $this->phpmailer->Subject = $subject;
-    $this->phpmailer->isHTML( true );
-    $this->phpmailer->Body = $body;
+
+    if( $bodyHtml ) {
+      $this->phpmailer->isHTML( true );
+      $this->phpmailer->Body = $bodyHtml;
+      if( $bodyPlain ) {
+        $this->phpmailer->AltBody = $bodyPlain;
+      }
+    }
+    else {
+      $this->phpmailer->Body = $bodyPlain;
+    }
 
     $mailResult = $this->phpmailer->Send();
 
@@ -95,12 +107,11 @@ class MailSender {
     else {
       Cogumelo::debug( 'Mail ERROR('.$this->phpmailer->MessageID.'): Adresses: '.var_export($adresses, true), 3 );
       Cogumelo::debug( 'Mail ERROR('.$this->phpmailer->MessageID.'): ErrorInfo: '.$this->phpmailer->ErrorInfo, 3 );
-      Cogumelo::error( 'Error Sending mail' );
+      Cogumelo::error( 'Error sending mail' );
     }
 
     $this->phpmailer->ClearAllRecipients();
 
     return $mailResult;
   }
-  */
 }
