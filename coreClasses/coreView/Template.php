@@ -617,7 +617,26 @@ class Template extends Smarty
     if( $this->tpl ) {
       // assign
 
-      $this->assign( 'client_includes',  $this->getClientScriptHtml( true ) . $this->getClientStylesHtml( true ) );
+
+      $clientIncludes = "\n";
+
+      $clientIncludes .= "\t<script>\n";
+
+      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
+
+
+      $clientIncludes .= '$.holdReady( true );'."\n";
+      //if( !$this->cgmMediaserverCompileLess ) {
+      if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false || (Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === true &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) == true ) ) {
+        $clientIncludes .= 'basket.clear();'."\n";
+      }
+      $clientIncludes .= 'basket.require('. "\n";
+      $clientIncludes .= $this->getClientScriptHtml() ;
+      $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
+      $clientIncludes .= "\t</script>\n\n\n";
+
+
+      $this->assign( 'client_includes',  $clientIncludes );
 
       foreach( $this->blocks as $blockName => $blockObjects ) {
         $htmlBlock = '';

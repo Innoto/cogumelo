@@ -37,7 +37,7 @@ class  DevelDBController
         $aditionalRcSQL .= "\n# Aditional rcSQL for ".$voKey.".php\n";
         $aditionalRcSQL .= $evo->rcSQL;
       }*/
-      $aditionalRcSQL .= $this->getModelDeploySQL($voKey, $evo, true); // get deploys that specify model
+//      $aditionalRcSQL .= $this->getModelDeploySQL($voKey, $evo, true); // get deploys that specify model
 
 
       if( !$evo->notCreateDBTable ) {
@@ -49,33 +49,37 @@ class  DevelDBController
 
     // add all rc custom SQL at bottom
     if( $aditionalRcSQL !== '' ) {
-      $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
+      //$returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
     }
 
     return $returnStrArray;
   }
 
-  public function deployModels() {
+  public function deployModels(  $getOnlyGenerateModelSQL = false ) {
     $returnStrArray = array();
-    $aditionalRcSQL = '';
+    //$aditionalRcSQL = '';
 
     foreach( VOUtils::listVOs() as $voKey => $vo ) {
 
       $evo = new $voKey();
 
-      $aditionalRcSQL .= $this->getModelDeploySQL($voKey, $evo);
-
+      $aditionalRcSQL = $this->getModelDeploySQL($voKey, $evo, $getOnlyGenerateModelSQL);
+      if( $aditionalRcSQL !== '' ) {
+        echo "\nDeploy model for " . $evo->name. "\n";
+        $this->data->aditionalExec( $aditionalRcSQL );
+        Cogumelo::log( $aditionalRcSQL ,'cogumelo_deploy');
+      }
     }
 
     // add all rc custom SQL at bottom
     if( $aditionalRcSQL !== '' ) {
-      $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
+      //$returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
     }
-
+/*
     foreach(explode( "\n", $aditionalRcSQL ) as $dLine ) {
       Cogumelo::log( $dLine ,'cogumelo_deploy');
     }
-
+*/
 
 
     return $returnStrArray;
@@ -85,14 +89,18 @@ class  DevelDBController
   private function getModelDeploySQL( $modelName, $model, $getOnlyGenerateModelSQL = false ) {
     $retSQL = '';
 
+
+
     if( sizeof( $model->deploySQL ) > 0 ){
       $retSQL .= "\n## Deploy SQL for ".$modelName.".php\n";
 
 
       foreach( $model->deploySQL as $d) {
-        if($getOnlyGenerateModelSQL === true && isset($d['executeOnGenerateModelToo']) && $d['executeOnGenerateModelToo'] === true) {
-          // GENERATEMODEL
-          $retSQL .= $d['sql'];
+        if($getOnlyGenerateModelSQL === true ) {
+          if( isset($d['executeOnGenerateModelToo']) && $d['executeOnGenerateModelToo'] === true ) {
+            // GENERATEMODEL
+            $retSQL .= $d['sql'];
+          }
         }
         else {
           // DEPLOY
@@ -102,6 +110,8 @@ class  DevelDBController
             eval( '$currentModuleVersion = (float) '.$deployModuleName.'::checkCurrentVersion();' );
             eval( '$registeredModuleVersion = (float) '.$deployModuleName.'::checkRegisteredVersion();' );
 
+//var_dump(array($currentModuleVersion ,$registeredModuleVersion ))
+
             $deployModuleVersion = (float) $matches[2];
 
             if( class_exists( $deployModuleName ) ) {
@@ -110,7 +120,14 @@ class  DevelDBController
               //eval( '$currentModuleVersion = (float) '.$deployModuleName.'::v();' );
               //echo "VERSION:".$deployModuleVersion." - ".$registeredVersion;
 
-              if( $deployModuleVersion > $registeredModuleVersion  &&  $deployModuleVersion <= $currentModuleVersion && isset($d['sql']) ) {
+              if(
+                $deployModuleVersion > $registeredModuleVersion  &&
+                $deployModuleVersion <= $currentModuleVersion &&
+                isset($d['sql'])
+              ) {
+                //var_dump( $deployModuleVersion );
+                //var_dump( $currentModuleVersion );
+
                 $retSQL .= "# Module $deployModuleName deploy code from versions: ( $registeredModuleVersion ) to ( $currentModuleVersion ) \n";
                 $retSQL .= $d['sql'];
 

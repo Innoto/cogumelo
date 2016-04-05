@@ -38,8 +38,10 @@ if( $argc > 1 ) {
       createRelSchemes();
       unRegisterModules();
       registerModules();
+      deployModels(true);
       initModules();
       deployModules(true);
+
       break;
 
     case 'deploy':
@@ -308,7 +310,7 @@ function createTables(){
 }
 
 
-function deployModels() {
+function deployModels( $isFirstGenerateModel = false ) {
 
   global $C_ENABLED_MODULES;
 
@@ -319,7 +321,7 @@ function deployModels() {
 
   $develdbcontrol = new DevelDBController();
 
-  $develdbcontrol->deployModels();
+  $develdbcontrol->deployModels( $isFirstGenerateModel );
   echo "\nModules deploy SQL code executed\n";
 
 }
