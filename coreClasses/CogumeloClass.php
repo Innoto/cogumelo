@@ -23,7 +23,7 @@ class CogumeloClass extends Singleton
 
      array(
        "id" => "phpmailer",
-       "params" => array("phpmailer/phpmailer", "5.2.9"),
+       "params" => array("phpmailer/phpmailer", "5.2.14"),
        "installer" => "composer",
        "includes" => array("class.phpmailer.php")
      ),
