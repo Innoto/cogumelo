@@ -391,7 +391,7 @@ function deployModules($isFirstGenerateModel = false) {
 
     if( method_exists( $moduleName, 'moduleRc' ) ) {
       echo( "\nDEPLOY: ".$moduleName."::moduleDeploy( $isFirstGenerateModel )\n" );
-      eval( $moduleName.'::moduleDeploy($isFirstGenerateModel);' );
+      eval( '(new '.$moduleName.')->moduleDeploy($isFirstGenerateModel);' );
     }
   }
 
