@@ -216,12 +216,12 @@ class FormConnector extends View {
         'fileSize' => $fileFieldValuePrev['temp']['size'],
         'fileType' => $fileFieldValuePrev['temp']['type'] );
       header('Content-Type: application/json; charset=utf-8');
-      echo $form->jsonFormOk( $moreInfo );
+      echo $form->getJsonOk( $moreInfo );
     }
     else {
       $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'] );
       header('Content-Type: application/json; charset=utf-8');
-      echo $form->jsonFormError( $moreInfo );
+      echo $form->getJsonError( $moreInfo );
     }
   } // function uploadFormFile() {
 
@@ -314,12 +314,12 @@ class FormConnector extends View {
     if( !$form->existErrors() ) {
       $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'] );
       header('Content-Type: application/json; charset=utf-8');
-      echo $form->jsonFormOk( $moreInfo );
+      echo $form->getJsonOk( $moreInfo );
     }
     else {
       $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'] );
       header('Content-Type: application/json; charset=utf-8');
-      echo $form->jsonFormError( $moreInfo );
+      echo $form->getJsonError( $moreInfo );
     }
   } // function deleteFormFile() {
 

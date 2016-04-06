@@ -4,8 +4,6 @@ error_reporting( -1 );
 /*
   CAMBIOS
 
-  jsonFormError - getJsonFormError
-  jsonFormOk - getJsonFormOk
   setValidationRule - setFieldRule
   getValuesArray - getFieldsValueArray
   getFieldsNamesArray - getFieldNamesArray
@@ -2016,11 +2014,11 @@ class FormController implements Serializable {
   public function getJsonResponse( $moreInfo = false ) {
     $json = '';
     if( !$this->existErrors() ) {
-      $json = $this->jsonFormOk( $moreInfo );
+      $json = $this->getJsonOk( $moreInfo );
     }
     else {
       // $this->addFormError( 'NO SE HAN GUARDADO LOS DATOS.', 'formError' );
-      $json = $this->jsonFormError( $moreInfo );
+      $json = $this->getJsonError( $moreInfo );
     }
 
     return $json;
