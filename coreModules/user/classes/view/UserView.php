@@ -10,7 +10,6 @@ user::autoIncludes();
 class UserView extends View
 {
 
-
   public function __construct( $baseDir = false ){
     parent::__construct( $baseDir );
   }
@@ -23,7 +22,14 @@ class UserView extends View
   public function accessCheck() {
     return true;
   }
-
+  /**
+  * Set User setUserSetup
+  **/
+  public function setUserSetup(){
+    $useraccesscontrol = new UserAccessController();
+    $user = $useraccesscontrol->getSessiondata();
+    Cogumelo::setSetupValue( 'user:session', $user );
+  }
 
   /**
    * Example login form

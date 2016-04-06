@@ -28,6 +28,7 @@ class user extends Module
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/sendloginform$#', 'view:UserView::sendLoginForm' );
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/registerform$#', 'view:UserView::userForm' );
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/senduserform$#', 'view:UserView::sendUserForm' );
+    $this->addUrlPatterns( '#^()\/?()$#', 'noendview:UserView::setUserSetup' );
   }
 
   public function moduleRc() {

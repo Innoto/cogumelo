@@ -2,7 +2,6 @@
 
 error_reporting( -1 );
 /*
-
   CAMBIOS
 
   jsonFormError - getJsonFormError
@@ -27,24 +26,26 @@ error_reporting( -1 );
 class FormController implements Serializable {
 
   /**
-    Prefijo para marcar las clases CSS creadas automaticamente
+   * Prefijo para marcar las clases CSS creadas automaticamente
    */
   const CSS_PRE = MOD_FORM_CSS_PRE;
   /**
-    Ruta a partir de la que se crean los directorios y ficheros subidos
+   * Ruta a partir de la que se crean los directorios y ficheros subidos
    */
   const FILES_APP_PATH = MOD_FORM_FILES_APP_PATH;
   /**
-    Ruta a partir de la que se crean los directorios y ficheros temporales subidos
+   * Ruta a partir de la que se crean los directorios y ficheros temporales subidos
    */
   const FILES_TMP_PATH = MOD_FORM_FILES_TMP_PATH;
 
+  /** @var string Idioma por defecto */
   public $langDefault = false;
+  /** @var array Lista de idiomas disponibles */
   public $langAvailable = false;
 
+  private $tokenId = false; // Identificador interno del formulario
   private $name = false;
   private $id = false;
-  private $tokenId = false;
   private $action = false;
   private $success = false;
   private $method = 'post';
@@ -410,8 +411,9 @@ class FormController implements Serializable {
   }
 
   /**
-    Carga los valores del VO
-    @param VO $dataVO Datos cargados por el programa
+   * Carga los valores del VO
+   *
+   * @param VO $dataVO Datos cargados por el programa
    */
   public function loadVOValues( $dataVO ) {
     if( gettype( $dataVO ) == 'object' ) {
@@ -424,8 +426,9 @@ class FormController implements Serializable {
   }
 
   /**
-    Carga los valores del VO
-    @param VO $dataVO Datos cargados por el programa
+   * Carga los valores desde un array en el que coincidan la clave con un campo
+   *
+   * @param array $dataArray Datos preparados para añadir al formulario
    */
   public function loadArrayValues( $dataArray ) {
     // error_log( 'loadArrayValues: ' . print_r( $dataArray, true ) );
@@ -558,10 +561,11 @@ class FormController implements Serializable {
   }
 
   /**
-    Establece un parametro interno en un campo
-    @param string $fieldName Nombre del campo
-    @param string $paramName Nombre del parametro
-    @param mixed $value Valor del parametro
+   * Establece un parametro interno en un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $paramName Nombre del parametro
+   * @param mixed $value Valor del parametro
    */
   public function setFieldInternal( $fieldName, $paramName, $value ) {
     if( array_key_exists( $fieldName, $this->fields ) ) {
@@ -573,9 +577,9 @@ class FormController implements Serializable {
   }
 
   /**
-    Crea los campos y les asigna las reglas en form
-
-    @param $definitions Array fields info
+   * Crea los campos y les asigna las reglas en form
+   *
+   * @param $definitions Array fields info
    */
   public function definitionsToForm( $definitions ) {
     foreach( $definitions as $fieldName => $definition ) {
@@ -609,12 +613,12 @@ class FormController implements Serializable {
   }
 
   /**
-    * Crea un array con los nombre del los campos para un elemento multilang
-    *
-    * @param string $fieldName Nombre del campo
-    *
-    * @return array
-    */
+   * Crea un array con los nombre del los campos para cada idioma
+   *
+   * @param string|array $fieldName Nombre del campo
+   *
+   * @return array
+   */
   public function multilangFieldNames( $fieldName ) {
     $newFieldNames = array();
 
@@ -636,9 +640,10 @@ class FormController implements Serializable {
   }
 
   /**
-    Clona un campo del formulario, sus parametros y reglas.
-    @param string $fieldName Nombre del campo origen
-    @param string $newFieldName Nombre del campo clonado
+   * Clona un campo del formulario, sus parametros y reglas.
+   *
+   * @param string $fieldName Nombre del campo origen
+   * @param string $newFieldName Nombre del campo clonado
    */
   public function cloneField( $fieldName, $newFieldName, $newFieldId = false ) {
     $result = false;
@@ -668,8 +673,9 @@ class FormController implements Serializable {
   } // function cloneField
 
   /**
-    Recupera los contenidos no internos de un campo del formulario
-    @param string $fieldName Nombre del campo
+   * Recupera los contenidos no internos de un campo del formulario
+   *
+   * @param string $fieldName Nombre del campo
    */
   public function getField( $fieldName ) {
     $result = null;
@@ -683,9 +689,11 @@ class FormController implements Serializable {
   } // function getField
 
   /**
-    Recupera el valor de un campo
-    @param string $fieldName Nombre del campo
-    @return mixed
+   * Recupera el valor de un campo
+   *
+   * @param string $fieldName Nombre del campo
+   *
+   * @return mixed
    */
   public function getFieldValue( $fieldName ) {
 
@@ -1700,9 +1708,12 @@ class FormController implements Serializable {
     foreach( $fieldNames as $fieldName ) {
       if( $this->getFieldInternal( $fieldName, 'groupCloneRoot' ) !== true ) {
         // Procesamos los campos que no son raiz de campos agrupados
-        $html[ $fieldName ] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.
-          ( $this->getFieldType( $fieldName ) === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
-          '">'.$this->getHtmlField( $fieldName ).'</div>';
+        $htmlField = $this->getHtmlField( $fieldName );
+        if( $htmlField !== '' ) {
+          $html[ $fieldName ] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.
+            ( $this->getFieldType( $fieldName ) === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
+            '">'.$htmlField.'</div>';
+        }
       }
     }
 
@@ -1967,8 +1978,8 @@ class FormController implements Serializable {
   }
 
   /**
-    * Elimina una o todas las tareas que se han definido para el navegador al finalizar bien el submit
-    */
+   * Elimina una o todas las tareas que se han definido para el navegador al finalizar bien el submit
+   */
   public function removeSuccess( $name = false ) {
     // error_log( 'removeSuccess: ' . print_r( $this->success, true ) );
 
@@ -1985,8 +1996,9 @@ class FormController implements Serializable {
   }
 
   /**
-    Recupera las tareas que se han definido para el navegador al finalizar bien el submit
-    @return array
+   * Recupera las tareas que se han definido para el navegador al finalizar bien el submit
+   *
+   * @return array
    */
   public function getSuccess() {
     // error_log( 'getSuccess: ' . print_r( $this->success, true ) );
@@ -1995,8 +2007,11 @@ class FormController implements Serializable {
   }
 
   /**
-    Recupera un JSON con el Ok o los errores que hay que enviar al navegador
-    @return string JSON
+   * Recupera un JSON con el Ok o los errores que hay que enviar al navegador
+   *
+   * @param mixed $moreInfo Added to json in the 'moreInfo' field
+   *
+   * @return string
    */
   public function getJsonResponse( $moreInfo = false ) {
     $json = '';
@@ -2012,8 +2027,11 @@ class FormController implements Serializable {
   }
 
   /**
-    Envía el JSON con el Ok o los errores al navegador
-    @return string JSON
+   * Envía el JSON con el Ok o los errores al navegador
+   *
+   * @param mixed $moreInfo Added to json in the 'moreInfo' field
+   *
+   * @return string
    */
   public function sendJsonResponse( $moreInfo = false ) {
     $json = $this->getJsonResponse( $moreInfo );
@@ -2025,17 +2043,11 @@ class FormController implements Serializable {
   }
 
   /**
-    Recupera un JSON de OK con los sucesos que hay que lanzar en el navegador
-    @return string JSON
-   */
-  public function jsonFormOk( $moreInfo = false ) {
-
-    return $this->getJsonOk( $moreInfo );
-  }
-
-  /**
-    Recupera un JSON de OK con los sucesos que hay que lanzar en el navegador
-    @return string JSON
+   * Recupera un JSON de OK con los sucesos que hay que lanzar en el navegador
+   *
+   * @param mixed $moreInfo Added to json in the 'moreInfo' field
+   *
+   * @return string
    */
   public function getJsonOk( $moreInfo = false ) {
     $result = array(
@@ -2051,17 +2063,11 @@ class FormController implements Serializable {
   }
 
   /**
-    Recupera un JSON de ERROR con los errores que hay que mostrar en el navegador
-    @return string JSON
-   */
-  public function jsonFormError( $moreInfo = false ) {
-
-    return $this->getJsonError( $moreInfo );
-  }
-
-  /**
-    Recupera un JSON de ERROR con los errores que hay que mostrar en el navegador
-    @return string JSON
+   * Recupera un JSON de ERROR con los errores que hay que mostrar en el navegador
+   *
+   * @param mixed $moreInfo Added to json in the 'moreInfo' field
+   *
+   * @return string
    */
   public function getJsonError( $moreInfo = false ) {
     $jvErrors = array();
@@ -2104,10 +2110,11 @@ class FormController implements Serializable {
   /**********************************************************************/
 
   /**
-    Establece una regla de validacion para un campo
-    @param string $fieldName Nombre del campo
-    @param string $ruleName Nombre de la regla
-    @param mixed $ruleParams
+   * Establece una regla de validacion para un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $ruleName Nombre de la regla
+   * @param mixed $ruleParams Parámetros de la regla
    */
   public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
     if( isset( $this->fields[ $fieldName ] ) ) {
