@@ -522,10 +522,10 @@ class Template extends Smarty
       $lessGlobalVarsJs = rtrim( $lessGlobalVarsJs, ', ' );
       if( !$this->cgmMediaserverCompileLess ) {
         $mainClientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
-          ' globalVars: { '.$lessGlobalVarsJs.' }, '.
+          ' globalVars: { '.$lessGlobalVarsJs.' }, render: function(){alert(23)}, '.
           ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
           '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
-          '<script type="text/javascript"> less.refresh();  </script>';
+          '<script type="text/javascript"> less.pageLoadFinished.then( function() { $.holdReady( false );} ) </script>';
       }
 
 
@@ -568,7 +568,13 @@ class Template extends Smarty
       }
       $clientIncludes .= 'basket.require('. "\n";
       $clientIncludes .= $this->getClientScriptHtml() ;
-      $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
+
+      if( !$this->cgmMediaserverCompileLess){
+        $clientIncludes .= ').then(function () {  });'."\n\n";
+      }
+      else {
+        $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
+      }
       $clientIncludes .= "\t</script>\n\n\n";
 
       $this->assign( 'main_client_includes', $mainClientIncludes );
