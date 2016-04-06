@@ -411,8 +411,9 @@ class FormController implements Serializable {
   }
 
   /**
-    Carga los valores del VO
-    @param VO $dataVO Datos cargados por el programa
+   * Carga los valores del VO
+   *
+   * @param VO $dataVO Datos cargados por el programa
    */
   public function loadVOValues( $dataVO ) {
     if( gettype( $dataVO ) == 'object' ) {
@@ -425,8 +426,9 @@ class FormController implements Serializable {
   }
 
   /**
-    Carga los valores del VO
-    @param VO $dataVO Datos cargados por el programa
+   * Carga los valores desde un array en el que coincidan la clave con un campo
+   *
+   * @param array $dataArray Datos preparados para añadir al formulario
    */
   public function loadArrayValues( $dataArray ) {
     // error_log( 'loadArrayValues: ' . print_r( $dataArray, true ) );
@@ -1706,9 +1708,12 @@ class FormController implements Serializable {
     foreach( $fieldNames as $fieldName ) {
       if( $this->getFieldInternal( $fieldName, 'groupCloneRoot' ) !== true ) {
         // Procesamos los campos que no son raiz de campos agrupados
-        $html[ $fieldName ] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.
-          ( $this->getFieldType( $fieldName ) === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
-          '">'.$this->getHtmlField( $fieldName ).'</div>';
+        $htmlField = $this->getHtmlField( $fieldName );
+        if( $htmlField !== '' ) {
+          $html[ $fieldName ] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.
+            ( $this->getFieldType( $fieldName ) === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
+            '">'.$htmlField.'</div>';
+        }
       }
     }
 
@@ -2004,7 +2009,7 @@ class FormController implements Serializable {
   /**
    * Recupera un JSON con el Ok o los errores que hay que enviar al navegador
    *
-   * @param mixed|false Information that is added to json in the 'moreInfo' field
+   * @param mixed $moreInfo Added to json in the 'moreInfo' field
    *
    * @return string
    */
@@ -2024,7 +2029,7 @@ class FormController implements Serializable {
   /**
    * Envía el JSON con el Ok o los errores al navegador
    *
-   * @param mixed|false Information that is added to json in the 'moreInfo' field
+   * @param mixed $moreInfo Added to json in the 'moreInfo' field
    *
    * @return string
    */
@@ -2040,7 +2045,7 @@ class FormController implements Serializable {
   /**
    * Recupera un JSON de OK con los sucesos que hay que lanzar en el navegador
    *
-   * @param mixed|false Information that is added to json in the 'moreInfo' field
+   * @param mixed $moreInfo Added to json in the 'moreInfo' field
    *
    * @return string
    */
@@ -2060,7 +2065,7 @@ class FormController implements Serializable {
   /**
    * Recupera un JSON de ERROR con los errores que hay que mostrar en el navegador
    *
-   * @param mixed|false Information that is added to json in the 'moreInfo' field
+   * @param mixed $moreInfo Added to json in the 'moreInfo' field
    *
    * @return string
    */
@@ -2105,10 +2110,11 @@ class FormController implements Serializable {
   /**********************************************************************/
 
   /**
-    Establece una regla de validacion para un campo
-    @param string $fieldName Nombre del campo
-    @param string $ruleName Nombre de la regla
-    @param mixed $ruleParams
+   * Establece una regla de validacion para un campo
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $ruleName Nombre de la regla
+   * @param mixed $ruleParams Parámetros de la regla
    */
   public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
     if( isset( $this->fields[ $fieldName ] ) ) {
