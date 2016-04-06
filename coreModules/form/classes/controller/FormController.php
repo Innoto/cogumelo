@@ -1712,6 +1712,9 @@ class FormController implements Serializable {
             ( $this->getFieldType( $fieldName ) === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
             '">'.$htmlField.'</div>';
         }
+        else {
+          $html[ $fieldName ] = '';
+        }
       }
     }
 
