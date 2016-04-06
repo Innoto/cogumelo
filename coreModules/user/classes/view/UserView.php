@@ -457,13 +457,7 @@ class UserView extends View
   public function sendUserForm() {
     $form = $this->actionUserForm();
     $this->registerOk($form);
-
-    if( $form->existErrors() ) {
-      echo $form->jsonFormError();
-    }
-    else {
-      echo $form->jsonFormOk();
-    }
+    $form->sendJsonResponse();
   }
 
 

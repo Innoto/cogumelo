@@ -92,26 +92,6 @@ class RoleView extends View
 
 
   /**
-   *
-   * Example of an external action register
-   *
-   * @return void
-   *
-   **/
-  /*function sendRoleForm() {
-
-    $form = $this->actionRoleForm();
-    $this->roleFormOk($form);
-
-    if( $form->existErrors() ) {
-      echo $form->jsonFormError();
-    }
-    else {
-      echo $form->jsonFormOk();
-    }
-  }*/
-
-  /**
    * Assigns the forms validations
    *
    * @return $form
