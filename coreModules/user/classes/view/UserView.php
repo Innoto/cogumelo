@@ -26,8 +26,6 @@ class UserView extends View
   * Set User setUserSetup
   **/
   public function setUserSetup(){
-    var_dump('eeeeee');
-
     $useraccesscontrol = new UserAccessController();
     $user = $useraccesscontrol->getSessiondata();
     Cogumelo::setSetupValue( 'user:session', $user );
