@@ -516,12 +516,16 @@ class UserView extends View
 
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
+Cogumelo::console($valuesArray);
+      $password = false;
 
-       // Donde diferenciamos si es un update o un create
-      if( !isset($valuesArray['id']) || !$valuesArray['id'] ){
+      if( array_key_exists('password', $valuesArray)){
         $password = $valuesArray['password'];
         unset($valuesArray['password']);
         unset($valuesArray['password2']);
+      }
+       // Donde diferenciamos si es un update o un create
+      if( !isset($valuesArray['id']) || !$valuesArray['id'] ){
         $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
         $asignRole = true;
       }
@@ -532,8 +536,8 @@ class UserView extends View
       }
       $user = new UserModel( $valuesArray );
 
-
-      if(isset($password)){
+Cogumelo::console($password);
+      if(isset($password) && $password){
         $user->setPassword( $password );
       }
 
