@@ -25,6 +25,6 @@ class detectMobile extends Module {
 
 
   public function __construct() {
-    $this->addUrlPatterns( '#^()\/?()$#', 'noendview:DetectMobileView::detectMobile' );
+    $this->addUrlPatterns( '#^()\/?()#', 'noendview:DetectMobileView::detectMobile' );
   }
 }
