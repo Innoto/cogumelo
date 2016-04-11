@@ -7,9 +7,7 @@ class CacheUtilsController {
   //  LESS METHODS
   //
 
-
-
-  static function generateAllLessCaches() {
+  public static function generateAllLessCaches() {
 
     $mediaserverControl = new MediaserverController();
 
@@ -19,8 +17,8 @@ class CacheUtilsController {
     // list, compile and cache files
     $tmpLessFiles = self::listFolderFiles( $tmpLessDir , array('less'),  false);
 
-    if( sizeof($tmpLessFiles) > 0 ){
-      foreach ($tmpLessFiles as $lessFilePath) {
+    if( count($tmpLessFiles) > 0 ){
+      foreach( $tmpLessFiles as $lessFilePath ) {
 
         $path = str_replace($tmpLessDir, '' , $lessFilePath );
 
@@ -46,20 +44,17 @@ class CacheUtilsController {
   }
 
   // crea estructura con todos os arquivos LESS para a súa futura compilación
-  static function prepareLessTmpdir( ){
+  public static function prepareLessTmpdir() {
     global $CACHE_UTILS_LESS_TMPDIR;
     global $C_ENABLED_MODULES;
-
 
     if( $CACHE_UTILS_LESS_TMPDIR ) {
       $destino = $CACHE_UTILS_LESS_TMPDIR;
     }
     else {
-
-
       $destino = MEDIASERVER_TMP_CACHE_PATH.'/lesstmp/'.self::generateLessTmpdirName().'/';
 
-      mkdir($destino);
+      mkdir( $destino, 0777, true );
 
       $cacheableFolder = 'classes/view/templates/';
 
@@ -104,7 +99,7 @@ class CacheUtilsController {
   }
 
 
-  static function copyLessTmpdir($origDir, $filePath, $destDir){
+  public static function copyLessTmpdir( $origDir, $filePath, $destDir ) {
 
     $includeFiles = array('less');
     $fileList = self::listFolderFiles( $origDir.$filePath , $includeFiles, false );
@@ -119,16 +114,15 @@ class CacheUtilsController {
 
   }
 
-  static function removeLessTmpdir( $dir = false ){
-
+  public static function removeLessTmpdir( $dir = false ) {
     global $CACHE_UTILS_LESS_TMPDIR;
 
     if( $CACHE_UTILS_LESS_TMPDIR ) {
-      if(!$dir)
-         $dir = $CACHE_UTILS_LESS_TMPDIR;
-
+      if( !$dir ) {
+        $dir = $CACHE_UTILS_LESS_TMPDIR;
+      }
       $files = array_diff(scandir($dir), array('.','..'));
-      foreach ($files as $file) {
+      foreach( $files as $file ) {
         (is_dir("$dir/$file")) ? self::removeLessTmpdir("$dir/$file") : unlink("$dir/$file");
       }
       rmdir($dir);
@@ -136,12 +130,11 @@ class CacheUtilsController {
   }
 
 
-  static function generateLessTmpdirName() {
-
+  public static function generateLessTmpdirName() {
     $length = 5;
     $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
     $randomString = '';
-    for ($i = 0; $i < $length; $i++) {
+    for( $i = 0; $i < $length; $i++ ) {
       $randomString .= $characters[rand(0, strlen($characters) - 1)];
     }
 
@@ -159,7 +152,7 @@ class CacheUtilsController {
 
 
 
-  static function generateAllCaches() {
+  public static function generateAllCaches() {
 
     global $C_ENABLED_MODULES;
     $cacheableFolder = 'classes/view/templates/';
@@ -195,22 +188,20 @@ class CacheUtilsController {
 
   }
 
-  static function cacheFolder( $folder , $moduleName = false ) {
+  public static function cacheFolder( $folder, $moduleName = false ) {
     $mediaserverControl = new MediaserverController();
 
     $fileList = self::listFolderFiles( $folder , array('php', 'tpl', 'less'), true );
 
-    if( sizeof( $fileList ) > 0 )
-    {
+    if( count( $fileList ) > 0 ) {
       foreach ( $fileList as $filePath ) {
         $mediaserverControl->cacheContent( str_replace($folder, '' , $filePath ), $moduleName, true );
       }
     }
-
   }
 
   // recursive list folder
-  static function listFolderFiles( $folder , $extensions, $excludeExtensions ) {
+  public static function listFolderFiles( $folder, $extensions, $excludeExtensions ) {
     $paths = array();
 
     if( is_dir( $folder ) ) {
@@ -220,19 +211,19 @@ class CacheUtilsController {
           RecursiveIteratorIterator::CATCH_GET_CHILD // Ignore "Permission denied"
       );
 
-      foreach ($iter as $path) {
-          if ( is_file($path) ) {
-            if( $excludeExtensions ) {
-              if( self::excludeExtensions($path, $extensions ) ) {
-                $paths[] = $path;
-              }
-            }
-            else {
-              if( self::includeExtensions($path, $extensions ) ) {
-                $paths[] = $path;
-              }
+      foreach( $iter as $path ) {
+        if( is_file($path) ) {
+          if( $excludeExtensions ) {
+            if( self::excludeExtensions($path, $extensions ) ) {
+              $paths[] = $path;
             }
           }
+          else {
+            if( self::includeExtensions($path, $extensions ) ) {
+              $paths[] = $path;
+            }
+          }
+        }
       }
 
     }
@@ -242,7 +233,7 @@ class CacheUtilsController {
 
 
   // exclude path that have an extensión of array
-  static function excludeExtensions( $filePath, $extArray ) {
+  public static function excludeExtensions( $filePath, $extArray ) {
     $ret = true;
     $found = false;
 
@@ -260,7 +251,7 @@ class CacheUtilsController {
   }
 
   // include path that have an extensión of array
-  static function includeExtensions( $filePath, $extArray ) {
+  public static function includeExtensions( $filePath, $extArray ) {
     $ret = false;
 
     foreach ( $extArray as $ext ) {
