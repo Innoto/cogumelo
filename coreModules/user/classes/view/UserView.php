@@ -516,7 +516,7 @@ class UserView extends View
 
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
-Cogumelo::console($valuesArray);
+
       $password = false;
 
       if( array_key_exists('password', $valuesArray)){
@@ -536,7 +536,6 @@ Cogumelo::console($valuesArray);
       }
       $user = new UserModel( $valuesArray );
 
-Cogumelo::console($password);
       if(isset($password) && $password){
         $user->setPassword( $password );
       }
