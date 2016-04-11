@@ -147,7 +147,7 @@ class LessController {
         if( !$arrAssoc ) { // No conocemos como crear arrays asociativos en Less
           foreach( $value as $valueKey => $valueData ) {
             if( is_array( $valueData ) ) { // No conocemos como crear arrays anidados en Less
-              error_log( 'ConfConstantsView: No conocemos como crear arrays asociativos en Less' );
+              Cogumelo::debug( 'LessController->valueToLess: No conocemos como crear arrays asociativos en Less' );
               $arrResult = null;
               break;
             }
@@ -161,7 +161,7 @@ class LessController {
         }
         else {
           $arrResult = null;
-          error_log( 'ConfConstantsView: No conocemos como crear arrays asociativos en Less' );
+          Cogumelo::debug( 'LessController->valueToLess: No conocemos como crear arrays asociativos en Less' );
         }
 
         if( $arrResult !== null ) {
@@ -185,8 +185,7 @@ class LessController {
     }
 
     if( $lessValue === null ) {
-      error_log( 'ConfConstantsView valueToLess: No hemos convertido este valor de tipo '.gettype( $value ) );
-      error_log( print_r( $value, true ) );
+      Cogumelo::debug( 'LessController->valueToLess: No hemos convertido este valor de tipo '.gettype( $value ) );
     }
     return $lessValue;
   }
