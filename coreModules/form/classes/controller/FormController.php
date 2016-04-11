@@ -1934,7 +1934,7 @@ class FormController implements Serializable {
       }
     } // if( $field = $this->getField( $fieldName ) )
     else {
-      error_log( 'form->getHtmlFieldArray Error: No existe '.$fieldName );
+      Cogumelo::debug( 'form->getHtmlFieldArray Error: No existe '.$fieldName );
     }
 
     return $html;
