@@ -136,8 +136,6 @@ class UserView extends View
       $res = $userAccessControl->userLogin($valuesArray['userLogin'], $valuesArray['userPassword']);
 
       if(!$res){
-        $form->addFieldRuleError('userLogin', 'cogumelo', '');
-        $form->addFieldRuleError('userPassword', 'cogumelo', '');
         $form->addFormError('El login y/o contraseña son erróneos');
       }
     }
