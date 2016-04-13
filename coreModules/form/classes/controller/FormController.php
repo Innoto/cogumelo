@@ -1960,30 +1960,33 @@ class FormController implements Serializable {
   }
 
   /**
-    Añade tareas para ejecutar en el navegador al finalizar bien el submit
-    @param string $name Clave del suceso: accept, redirect, ...
-    @param string $success Contenido del evento: Msg, url, ...
+   * Añade tareas para ejecutar en el navegador al finalizar bien el submit
+   *
+   * @param string $successName Nombre clave del suceso: accept, redirect, ...
+   * @param mixed $successParam Contenido del evento: Msg, url, ...
    */
-  public function setSuccess( $name, $success = true ) {
-    //error_log( 'setSuccess: name='. $name . ' success=' .  $success );
-    // jsEval : Ejecuta el texto indicado con un eval
-    // accept : Muestra el texto como un alert
-    // redirect : Pasa a la url indicada con un window.location.replace
-    // reload : window.location.reload
-    // resetForm : Borra el formulario
+  public function setSuccess( $successName, $successParam = true ) {
+    //error_log( 'setSuccess: name='. $successName . ' param=' .  $successParam );
+    // 'jsEval' : Ejecuta el texto indicado con un eval
+    // 'accept' : Muestra el texto como un alert
+    // 'redirect' : Pasa a la url indicada con un window.location.replace
+    // 'reload' : window.location.reload
+    // 'resetForm' : Borra el formulario
 
-    $this->success[ $name ] = $success;
+    $this->success[ $successName ] = $successParam;
   }
 
   /**
    * Elimina una o todas las tareas que se han definido para el navegador al finalizar bien el submit
+   *
+   * @param string $successName Nombre clave del suceso: accept, redirect, ... De no indicarse, serán TODOS
    */
-  public function removeSuccess( $name = false ) {
+  public function removeSuccess( $successName = false ) {
     // error_log( 'removeSuccess: ' . print_r( $this->success, true ) );
 
-    if( $name ) {
-      if( isset( $this->success[ $name ] ) ) {
-        unset( $this->success[ $name ] );
+    if( $successName ) {
+      if( isset( $this->success[ $successName ] ) ) {
+        unset( $this->success[ $successName ] );
       }
     }
     else {
@@ -2352,36 +2355,48 @@ class FormController implements Serializable {
   }
 
   /**
-    Añade un mensaje de error al formulario
-    @param string $paramName
-    @param string $paramName
-    @return TYPE
+   * Añade un mensaje de error al formulario
+   *
+   * @param string $msgError Mensaje de error
+   * @param string $msgClass
    */
-  public function addFormError( $msgText, $msgClass = false ) {
-    error_log( "addFormError: $msgText, $msgClass" );
-    $this->formErrors[] = array( 'msgText' => $msgText, 'msgClass' => $msgClass );
+  public function addFormError( $msgError, $msgClass = false ) {
+    error_log( "addFormError: $msgError, $msgClass" );
+    $this->formErrors[] = array( 'msgText' => $msgError, 'msgClass' => $msgClass );
   }
 
   /**
-    Añade un mensaje de error a un campo del formulario
-    @param string $fieldName Nombre del campo
-    @param TYPE $paramName
-    @return TYPE
+   * Añade un mensaje de error a un campo del formulario
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $msgError Mensaje de error
    */
-  public function addFieldRuleError( $fieldName, $ruleName, $msgRuleError = false ) {
-    error_log( "addFieldRuleError: $fieldName, $ruleName, $msgRuleError " );
-    $this->fieldErrors[ $fieldName ][ $ruleName ] = $msgRuleError;
+  public function addFieldError( $fieldName, $msgError ) {
+    $this->addFieldRuleError( $fieldName, 'cogumelo', $msgError = false );
   }
 
   /**
-    Añade un mensaje de error a un grupo del formulario
-    @param string $fieldName Nombre del campo
-    @param TYPE $paramName
-    @return TYPE
+   * Añade un mensaje de error a una regla de un campo del formulario
+   *
+   * @param string $fieldName Nombre del campo
+   * @param string $ruleName
+   * @param string $msgError Mensaje de error
    */
-  public function addGroupRuleError( $groupName, $ruleName, $msgRuleError = false ) {
-    error_log( "addGroupRuleError: $groupName, $ruleName, $msgRuleError " );
-    $this->fieldErrors[ $groupName ][ $ruleName ] = $msgRuleError;
+  public function addFieldRuleError( $fieldName, $ruleName, $msgError = false ) {
+    error_log( "addFieldRuleError: $fieldName, $ruleName, $msgError " );
+    $this->fieldErrors[ $fieldName ][ $ruleName ] = $msgError;
+  }
+
+  /**
+   * Añade un mensaje de error una regla de un grupo del formulario
+   *
+   * @param string $groupName Nombre del grupo
+   * @param string $ruleName
+   * @param string $msgError Mensaje de error
+   */
+  public function addGroupRuleError( $groupName, $ruleName, $msgError = false ) {
+    error_log( "addGroupRuleError: $groupName, $ruleName, $msgError " );
+    $this->fieldErrors[ $groupName ][ $ruleName ] = $msgError;
   }
 
   /**
