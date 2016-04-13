@@ -1,9 +1,8 @@
+/**
+ *  Gestión de informacion en cliente
+ */
 
-/*
-  Gestión de informacion en cliente
-*/
-
-var cogumeloFormControllerFormsInfo = [];
+var cogumeloFormControllerFormsInfo = cogumeloFormControllerFormsInfo || [];
 var langForm = false;
 
 
