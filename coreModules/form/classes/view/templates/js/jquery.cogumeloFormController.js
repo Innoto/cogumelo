@@ -1,15 +1,16 @@
 /**
  *  Gestión de informacion en cliente
  */
+var cogumelo = cogumelo || {};
+cogumelo.formControllerFormsInfo = cogumelo.formControllerFormsInfo || [];
 
-var cogumeloFormControllerFormsInfo = cogumeloFormControllerFormsInfo || [];
 var langForm = false;
 
 
 function getFormInfoIndex( idForm ) {
   var index = false;
-  for( var i = cogumeloFormControllerFormsInfo.length - 1; i >= 0; i-- ) {
-    if( cogumeloFormControllerFormsInfo[i].idForm === idForm ) {
+  for( var i = cogumelo.formControllerFormsInfo.length - 1; i >= 0; i-- ) {
+    if( cogumelo.formControllerFormsInfo[i].idForm === idForm ) {
       index = i;
       break;
     }
@@ -22,10 +23,10 @@ function getFormInfoIndex( idForm ) {
 function setFormInfo( idForm, key, value ) {
   var index = getFormInfoIndex( idForm );
   if( index === false ) {
-    index = cogumeloFormControllerFormsInfo.length;
-    cogumeloFormControllerFormsInfo[ index ] = { idForm: idForm };
+    index = cogumelo.formControllerFormsInfo.length;
+    cogumelo.formControllerFormsInfo[ index ] = { idForm: idForm };
   }
-  cogumeloFormControllerFormsInfo[ index ][ key ] = value;
+  cogumelo.formControllerFormsInfo[ index ][ key ] = value;
 }
 
 
@@ -35,7 +36,7 @@ function getFormInfo( idForm, key ) {
   var index = getFormInfoIndex( idForm );
 
   if( index !== false ) {
-    result = cogumeloFormControllerFormsInfo[ index ][ key ];
+    result = cogumelo.formControllerFormsInfo[ index ][ key ];
   }
 
   return result;
