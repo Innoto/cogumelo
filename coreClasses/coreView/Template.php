@@ -14,7 +14,7 @@ class Template extends Smarty
 
   var $fileBacktrace = false;
 
-  var $blocks = array();
+  var $fragments = array();
 
   var $css_autoincludes = array();
   var $css_includes = array();
@@ -136,23 +136,40 @@ class Template extends Smarty
 
 
   /**
-   Establece el contenido de un bloque
+   Establece el contenido de un Fragmento
    *
-   * @param string $blockName
-   * @param string $blockObject
+   * @param string $fragmentName
+   * @param string $fragmentObject
    **/
-  public function setBlock( $blockName, $blockObject ) {
-    $this->blocks[ $blockName ] = array( $blockObject );
+  public function setFragment( $fragmentName, $fragmentObject ) {
+    $this->fragments[ $fragmentName ] = array();
+    $this->addToFragment( $fragmentName, $fragmentObject );
   }
 
   /**
-   Añade otro template al contenido de un bloque
+   Añade otro template al contenido de un Fragmento
    *
-   * @param string $blockName
-   * @param string $blockObject
+   * @param string $fragmentName
+   * @param string $fragmentObject
    **/
-  public function addToBlock( $blockName, $blockObject ) {
-    $this->blocks[ $blockName ][] = $blockObject;
+  public function addToFragment( $fragmentName, $fragmentObject ) {
+    if( gettype( $fragmentObject ) === 'object' && get_class( $fragmentObject ) === 'Template' ) {
+      $this->fragments[ $fragmentName ][] = $fragmentObject;
+    }
+    else {
+      Cogumelo::error( 'ERROR: Intento de añadir algo que no es un Template ('.gettype( $fragmentObject ).') al Fragmento '.$fragmentName );
+      error_log( 'ERROR: Intento de añadir algo que no es un Template ('.gettype( $fragmentObject ).') al Fragmento '.$fragmentName );
+      foreach( debug_backtrace( true, 5 ) as $trace ) {
+        error_log( $trace['file'] .' ('. $trace['line'] .') '. $trace['function'] );
+      }
+    }
+  }
+  // Metodos "ALIAS" que hay que dejar de usar
+  public function setBlock( $fragmentName, $fragmentObject ) {
+    $this->setFragment( $fragmentName, $fragmentObject );
+  }
+  public function addToBlock( $fragmentName, $fragmentObject ) {
+    $this->addToFragment( $fragmentName, $fragmentObject );
   }
 
 
@@ -214,7 +231,7 @@ class Template extends Smarty
    **/
   public function addClientStyles( $file_path, $module = false, $is_autoinclude = false ) {
 
-    $mediaPath = ( cogumeloGetSetupValue( 'mod:mediaserver:productionMode' ) )
+    $mediaPath = ( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) )
       ? $this->cgmMediaserverUrlDir
       : $this->cgmMediaUrlDir;
 
@@ -320,10 +337,10 @@ class Template extends Smarty
       $itemsToInclude[ $includeKey ] = array( 'url'=> $include['src'], 'skipCache' => 'true' );
     }
 
-    // Carga recursivamente los estilos de los fragmentos/bloques
-    foreach( $this->blocks as $blockName => $blockObjects ) {
-      foreach( $blockObjects as $blockTemplate ) {
-        $itemsToInclude = array_merge( $itemsToInclude, $blockTemplate->getClientScriptArray( $ignoreAutoincludes ) );
+    // Carga recursivamente los estilos de los fragmentos
+    foreach( $this->fragments as $fragmentName => $fragmentObjects ) {
+      foreach( $fragmentObjects as $fragmentTemplate ) {
+        $itemsToInclude = array_merge( $itemsToInclude, $fragmentTemplate->getClientScriptArray( $ignoreAutoincludes ) );
       }
     }
 
@@ -381,10 +398,10 @@ class Template extends Smarty
       $itemsToInclude[ $includeKey ] = "<link href='".$include['src']."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
     }
 
-    // Carga recursivamente los estilos de los fragmentos/bloques
-    foreach( $this->blocks as $blockName => $blockObjects ) {
-      foreach( $blockObjects as $blockTemplate ) {
-        $itemsToInclude = array_merge( $itemsToInclude, $blockTemplate->getClientStylesArray( $ignoreAutoincludes ) );
+    // Carga recursivamente los estilos de los fragmentos
+    foreach( $this->fragments as $fragmentName => $fragmentObjects ) {
+      foreach( $fragmentObjects as $fragmentTemplate ) {
+        $itemsToInclude = array_merge( $itemsToInclude, $fragmentTemplate->getClientStylesArray( $ignoreAutoincludes ) );
       }
     }
 
@@ -584,12 +601,12 @@ class Template extends Smarty
       $this->assign('css_includes', $lessConfInclude . $this->getClientStylesHtml() );
       */
 
-      foreach( $this->blocks as $blockName => $blockObjects ) {
-        $htmlBlock = '';
-        foreach( $blockObjects as $blockTemplate ) {
-          $htmlBlock .= $blockTemplate->execBlock();
+      foreach( $this->fragments as $fragmentName => $fragmentObjects ) {
+        $htmlFragment = '';
+        foreach( $fragmentObjects as $fragmentTemplate ) {
+          $htmlFragment .= $fragmentTemplate->execFragment();
         }
-        $this->assign( $blockName, $htmlBlock );
+        $this->assign( $fragmentName, $htmlFragment );
       }
 
       if( $toString ) {
@@ -614,16 +631,14 @@ class Template extends Smarty
    *
    * @return string $htmlCode
    **/
-  public function execBlock() {
+  public function execFragment() {
 
-    // error_log( 'Template->execBlock() === ' . $this->tpl );
+    // error_log( 'Template->execFragment() === ' . $this->tpl );
 
     $htmlCode = '';
 
     if( $this->tpl ) {
       // assign
-
-
       $clientIncludes = "\n";
 
       $clientIncludes .= "\t<script>\n";
@@ -644,14 +659,14 @@ class Template extends Smarty
 
       $this->assign( 'client_includes',  $clientIncludes );
 
-      foreach( $this->blocks as $blockName => $blockObjects ) {
-        $htmlBlock = '';
+      foreach( $this->fragments as $fragmentName => $fragmentObjects ) {
+        $htmlFragment = '';
 
-        foreach( $blockObjects as $blockTemplate ) {
-          $htmlBlock .= $blockTemplate->execBlock();
+        foreach( $fragmentObjects as $fragmentTemplate ) {
+          $htmlFragment .= $fragmentTemplate->execFragment();
         }
 
-        $this->assign( $blockName, $htmlBlock );
+        $this->assign( $fragmentName, $htmlFragment );
       }
 
 
@@ -666,6 +681,9 @@ class Template extends Smarty
     return( $htmlCode );
   }
 
+  public function execBlock() {
+    $this->execFragment();
+  }
 
 
 }

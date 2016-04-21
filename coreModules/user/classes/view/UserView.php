@@ -26,8 +26,6 @@ class UserView extends View
   * Set User setUserSetup
   **/
   public function setUserSetup(){
-    var_dump('eeeeee');
-
     $useraccesscontrol = new UserAccessController();
     $user = $useraccesscontrol->getSessiondata();
     Cogumelo::setSetupValue( 'user:session', $user );
@@ -138,8 +136,6 @@ class UserView extends View
       $res = $userAccessControl->userLogin($valuesArray['userLogin'], $valuesArray['userPassword']);
 
       if(!$res){
-        $form->addFieldRuleError('userLogin', 'cogumelo', '');
-        $form->addFieldRuleError('userPassword', 'cogumelo', '');
         $form->addFormError('El login y/o contraseña son erróneos');
       }
     }
@@ -519,11 +515,15 @@ class UserView extends View
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
 
-       // Donde diferenciamos si es un update o un create
-      if( !isset($valuesArray['id']) || !$valuesArray['id'] ){
+      $password = false;
+
+      if( array_key_exists('password', $valuesArray)){
         $password = $valuesArray['password'];
         unset($valuesArray['password']);
         unset($valuesArray['password2']);
+      }
+       // Donde diferenciamos si es un update o un create
+      if( !isset($valuesArray['id']) || !$valuesArray['id'] ){
         $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
         $asignRole = true;
       }
@@ -534,8 +534,7 @@ class UserView extends View
       }
       $user = new UserModel( $valuesArray );
 
-
-      if(isset($password)){
+      if(isset($password) && $password){
         $user->setPassword( $password );
       }
 
