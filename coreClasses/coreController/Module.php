@@ -21,7 +21,7 @@ class Module
   public $version = "";
   public $dependences = array();
   public $includesCommon = array();
-
+  public $autoIncludeAlways = false;
 
   /**
   * Load module

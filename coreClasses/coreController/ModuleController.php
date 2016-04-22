@@ -77,11 +77,10 @@ class ModuleController
     foreach( $C_ENABLED_MODULES as $module_name ) {
       $mod_path = $this->module_paths[$module_name];
       require_once($mod_path.'/'.$module_name.'.php');
-      //echo( 'echo( '.$module_name.'->autoIncludeAlways);');
-      //exit;
-      $expr1 = eval( 'return property_exists ("'.$module_name.'", "autoIncludeAlways");');
 
-      if( $expr1 ) {
+      $modInstance = new $module_name();
+
+      if( $modInstance->autoIncludeAlways === true ) {
         eval( $module_name.'::autoIncludes();');
       }
     }
