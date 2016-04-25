@@ -361,7 +361,7 @@ Class DependencesController {
       $cogumeloIncludesCSS = array();
     }
 
-    if( !$this->isInIncludesArray($includeFile, $cogumeloIncludesCSS) ) {
+    if( !$this->isInIncludesArray($includeFile, $cogumeloIncludesCSS, $module) ) {
       array_push($cogumeloIncludesCSS, array('src'=>$includeFile, 'module'=>$module ) );
     }
   }
@@ -374,18 +374,18 @@ Class DependencesController {
       $cogumeloIncludesJS = array();
     }
 
-    if( !$this->isInIncludesArray($includeFile, $cogumeloIncludesJS) ) {
+    if( !$this->isInIncludesArray($includeFile, $cogumeloIncludesJS, $module) ) {
       array_push($cogumeloIncludesJS, array('src'=>$includeFile, 'module'=>$module ) );
     }
   }
 
 
-  public function isInIncludesArray( $file, $includesArray ) {
+  public function isInIncludesArray( $file, $includesArray, $module ) {
     $ret = false;
 
     if( count( $includesArray ) > 0 ) {
       foreach( $includesArray as $includedFile ) {
-        if($includedFile['src'] == $file ) {
+        if($includedFile['src'] == $file  && $includedFile['module'] == $module  ) {
           $ret = true;
         }
       }
