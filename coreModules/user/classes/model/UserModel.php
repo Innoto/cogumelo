@@ -66,10 +66,17 @@ class UserModel extends Model
 
   var $deploySQL = array(
     array(
-      'version' => 'user#1.3',
+      'version' => 'user#1.4',
       'sql'=> '
         ALTER TABLE user_user
-        ADD COLUMN verified BOOLEAN DEFAULT 0
+        ALTER COLUMN verified BOOLEAN DEFAULT 0
+      '
+    ),
+    array(
+      'version' => 'user#1.2',
+      'sql'=> '
+        ALTER TABLE user_user
+        Add COLUMN verified INT
       '
     )
   );
