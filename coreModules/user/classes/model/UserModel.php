@@ -46,8 +46,8 @@ class UserModel extends Model
       'size' => '1'
     ),
     'verified'=> array(
-      'type' => 'INT',
-      'size' => '1'
+      'type' => 'BOOLEAN',
+      'default' => 0
     ),
     'timeLastLogin' => array(
       'type'=>'DATETIME'
@@ -66,10 +66,10 @@ class UserModel extends Model
 
   var $deploySQL = array(
     array(
-      'version' => 'user#1.2',
+      'version' => 'user#1.3',
       'sql'=> '
         ALTER TABLE user_user
-        ADD COLUMN verified INT
+        ADD COLUMN verified BOOLEAN DEFAULT 0
       '
     )
   );
@@ -142,9 +142,9 @@ class UserModel extends Model
     }
     $userO->setter('timeLastLogin' , date("Y-m-d H:i:s", time()));
     $userO->save();
-
     $data = array();
-    $data['data'] = $userO->data;
+    $userAllData = $userO->getAllData();
+    $data['data'] = $userAllData['data'];
     $data['permissions'] = $uPermArray;
 
     return $data;
