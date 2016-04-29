@@ -271,7 +271,18 @@ Class VO
    *
    * @return void
    */
-  function &setter( $setterkey, $value = null, $lang = false ) {
+  function &setter( $setterkey, $val = null, $lang = false ) {
+
+    if( $val === true ) {
+      $value = 1;
+    }
+    else
+    if( $val === false ){
+      $value = 0;
+    }
+    else {
+      $value = $val;
+    }
 
     $cols = $this->getCols();
 
