@@ -154,7 +154,7 @@ class MysqlDevelDBDAO extends MysqlDAO
     $type = "";
     $size = "";
 
-    if( array_key_exists('default', $col ) ) {
+    if( array_key_exists('default', $col ) && $col['default'] !== NULL ) {
       if( is_numeric($col['default']) ){
         $extrapkey = ' DEFAULT '.$col['default'].' ';
       }
