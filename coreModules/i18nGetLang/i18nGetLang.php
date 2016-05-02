@@ -12,7 +12,7 @@ class i18nGetLang extends Module
   public function __construct(){
 
     $i = 0;
-    $langsConf = Cogumelo::getSetupValue( 'lang:available' )
+    $langsConf = Cogumelo::getSetupValue( 'lang:available' );
     if( $langsConf ) {
       foreach( $langsConf as $l => $lang ) {
         $lang_array[$i] = $l;
