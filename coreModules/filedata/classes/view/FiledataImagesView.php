@@ -8,9 +8,9 @@ class FiledataImagesView extends View {
 
 
   // Ruta a partir de la que se crean los directorios y ficheros subidos
-  var $filesAppPath = MOD_FILEDATA_APP_PATH;
+  var $filesAppPath = false;
   // Ruta a partir de la que se crean los directorios y ficheros procesados
-  var $filesCachePath = MOD_FILEDATA_CACHE_PATH;
+  var $filesCachePath = false;
   // Ruta a partir de la que trabaja el servidor web
   var $webBasePath = WEB_BASE_PATH;
 
@@ -19,6 +19,8 @@ class FiledataImagesView extends View {
     parent::__construct( $baseDir );
 
     filedata::autoIncludes();
+    $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
+    $this->filesCachePath = Cogumelo::getSetupValue( 'mod:filedata:cachePath' );
   }
 
   /**

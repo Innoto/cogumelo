@@ -11,11 +11,10 @@ class i18nGetLang extends Module
 
   public function __construct(){
 
-    global $LANG_AVAILABLE;
-
     $i = 0;
-    if( $LANG_AVAILABLE ) {
-      foreach( $LANG_AVAILABLE as $l => $lang ) {
+    $langsConf = Cogumelo::getSetupValue( 'lang:available' )
+    if( $langsConf ) {
+      foreach( $langsConf as $l => $lang ) {
         $lang_array[$i] = $l;
         $i = $i +1;
       }
@@ -33,7 +32,7 @@ class i18nGetLang extends Module
       }
     }
     else {
-      $patron = LANG_DEFAULT;
+      $patron = Cogumelo::getSetupValue( 'lang:default' );
     }
     // error_log( 'i18nGetLang patron: '.$patron );
 

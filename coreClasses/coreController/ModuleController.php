@@ -96,16 +96,16 @@ class ModuleController
     $retPath = false;
 
     if(!$module) {
-      if( file_exists( SITE_PATH.$file_relative_path ) ) {
-        $retPath = SITE_PATH.$file_relative_path;
+      if( file_exists( APP_BASE_PATH.'/'.$file_relative_path ) ) {
+        $retPath = APP_BASE_PATH.'/'.$file_relative_path;
       }
     }
     else {
       global $C_ENABLED_MODULES;
       if(in_array($module, $C_ENABLED_MODULES)) {
         // APP modules
-        if( file_exists( SITE_PATH.'/modules/'.$module.'/'.$file_relative_path ) ) {
-          $retPath = SITE_PATH.'/modules/'.$module.'/'.$file_relative_path;
+        if( file_exists( APP_BASE_PATH.'/modules/'.$module.'/'.$file_relative_path ) ) {
+          $retPath = APP_BASE_PATH.'/modules/'.$module.'/'.$file_relative_path;
         }
         // DIST modules
         else if( COGUMELO_DIST_LOCATION !== false && file_exists( COGUMELO_DIST_LOCATION.'/distModules/'.$module.'/'.$file_relative_path ) ) {

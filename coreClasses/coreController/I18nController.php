@@ -7,18 +7,19 @@ class I18nController {
   public static function setLang( $url_path = false ) {
     // error_log( 'I18nController::setLang '.print_r( $url_path, true ) );
 
-    global $C_LANG, $LANG_AVAILABLE;
+    global $C_LANG;
 
     if( $url_path ) {
       $C_LANG = $url_path[1];
     }
     else{
-      $C_LANG = LANG_DEFAULT;
+      $C_LANG = Cogumelo::getSetupValue( 'lang:default' );
     }
 
     $domain = 'messages';
-    $locale = $LANG_AVAILABLE[$C_LANG]['i18n'].'.utf8';
-    $locale_dir = I18N_LOCALE;
+    $langsAvailable = Cogumelo::getSetupValue( 'lang:available' );
+    $locale = $langsAvailable[ $C_LANG ]['i18n'].'.utf8';
+    $locale_dir = Cogumelo::getSetupValue( 'i18n:localePath' );
 
     setlocale( LC_ALL, $locale );
     putenv( "LC_ALL=$locale" );
@@ -36,7 +37,7 @@ class I18nController {
       return str_replace( '/', '', $m[1] );
     }
     else {
-      return LANG_DEFAULT;
+      return Cogumelo::getSetupValue( 'lang:default' );
     }
   }
 
@@ -54,8 +55,7 @@ class I18nController {
   */
 
   public static function processUrl( $url ) {
-    global $LANG_AVAILABLE;
-    $langsAvailable = array_keys( $LANG_AVAILABLE );
+    $langsAvailable = array_keys( cogumeloGetSetupValue( 'lang:available' ) );
     foreach( $langsAvailable as $lng ) {
       if( preg_match( '^'.$lng.'/?', $url ) ) {
         $m = array( $url, $lng.'/', '' );
@@ -69,10 +69,9 @@ class I18nController {
   }
 
  /* Se a url actual non ten idioma, redirixe á páxina co idioma do navegador */
-  public static function redirectLang($page) {
+  public static function redirectLang( $page ) {
 
-    global $LANG_AVAILABLE;
-    $langsAvailable = array_keys( $LANG_AVAILABLE );
+    $langsAvailable = array_keys( Cogumelo::getSetupValue( 'lang:available' ) );
 
     $browserLang_all = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
     $browserLang_parts = explode('-',$browserLang_all);

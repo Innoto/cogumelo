@@ -23,22 +23,10 @@ error_reporting( -1 );
  */
 class FormController implements Serializable {
 
-  /**
-   * Prefijo para marcar las clases CSS creadas automaticamente
-   */
-  const CSS_PRE = MOD_FORM_CSS_PRE;
-  /**
-   * Ruta a partir de la que se crean los directorios y ficheros subidos
-   */
-  const FILES_APP_PATH = MOD_FORM_FILES_APP_PATH;
-  /**
-   * Ruta a partir de la que se crean los directorios y ficheros temporales subidos
-   */
-  const FILES_TMP_PATH = MOD_FORM_FILES_TMP_PATH;
+  public $cssPrefix = false; // Prefijo para marcar las clases CSS creadas automaticamente
+  public $tmpFilesPath = false; // Ruta a partir de la que se crean los directorios y ficheros temporales subidos
 
-  /** @var string Idioma por defecto */
   public $langDefault = false;
-  /** @var array Lista de idiomas disponibles */
   public $langAvailable = false;
 
   private $tokenId = false; // Identificador interno del formulario
@@ -92,9 +80,10 @@ class FormController implements Serializable {
 
 
   /**
-    Constructor. Crea el TokenId y, si se envian, establece Name y Action del formulario
-    @param string $name Name del formulario
-    @param string $action Action del formulario
+   * Constructor. Crea el TokenId y, si se envian, establece Name y Action del formulario
+   *
+   * @param string $name Name del formulario
+   * @param string $action Action del formulario
    */
   public function __construct( $name = false, $action = false ) {
     $this->getTokenId( 'new'.$name.$action );
@@ -105,10 +94,13 @@ class FormController implements Serializable {
       $this->setAction( $action );
     }
 
-    $this->langDefault = LANG_DEFAULT;
-    global $LANG_AVAILABLE;
-    if( isset( $LANG_AVAILABLE ) && is_array( $LANG_AVAILABLE ) ) {
-      $this->langAvailable = array_keys( $LANG_AVAILABLE );
+    $this->cssPrefix = Cogumelo::getSetupValue( 'mod:form:cssPrefix' );
+    $this->tmpPath = Cogumelo::getSetupValue( 'mod:form:tmpPath' );
+
+    $this->langDefault = cogumeloGetSetupValue( 'lang:default' );
+    $langsConf = cogumeloGetSetupValue( 'lang:available' );
+    if( is_array( $langsConf ) ) {
+      $this->langAvailable = array_keys( $langsConf );
     }
   }
 
@@ -1460,13 +1452,13 @@ class FormController implements Serializable {
     $result = false;
     $error = false;
 
-    $tmpCgmlFormPath = self::FILES_TMP_PATH .'/'.
+    $tmpCgmlFormPath = $this->tmpPath .'/'.
       preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getTokenId() ).
       '-'.$fieldName;
     if( !is_dir( $tmpCgmlFormPath ) ) {
       /**
-       TODO: CAMBIAR PERMISOS 0777
-      */
+       * TODO: CAMBIAR PERMISOS 0777
+       */
       if( !mkdir( $tmpCgmlFormPath, 0777, true ) ) {
         $error = 'Imposible crear el dir. necesario: '.$tmpCgmlFormPath;
         error_log($error);
@@ -1478,8 +1470,8 @@ class FormController implements Serializable {
 
       $tmpLocationCgml = $tmpCgmlFormPath .'/'. $secureName;
       /**
-       TODO: FALTA VER QUE NON SE PISE UN ANTERIOR!!!
-      */
+       * TODO: FALTA VER QUE NON SE PISE UN ANTERIOR!!!
+       */
       if( !move_uploaded_file( $fileTmpLoc, $tmpLocationCgml ) ) {
         $error = 'Fallo de move_uploaded_file pasando ('.$fileTmpLoc.') a ('.$tmpLocationCgml.')';
         error_log($error);
@@ -1566,7 +1558,7 @@ class FormController implements Serializable {
     $html='';
 
     $html .= '<form name="'.$this->getName().'" id="'.$this->id.'" data-token_id="'.$this->getTokenId().'" ';
-    $html .= ' class="'.self::CSS_PRE.' '.self::CSS_PRE.'-form-'.$this->getName().'" ';
+    $html .= ' class="'.$this->cssPrefix.' '.$this->cssPrefix.'-form-'.$this->getName().'" ';
     if( $this->action ) {
       $html .= ' action="'.$this->action.'"';
     }
@@ -1632,7 +1624,7 @@ class FormController implements Serializable {
     $html = '';
 
     if( $this->issetGroup( $groupName ) ) {
-      $html = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-group-wrap '.self::CSS_PRE.'-group-'.$groupName.'">'."\n";
+      $html = '<div class="'.$this->cssPrefix.'-wrap '.$this->cssPrefix.'-group-wrap '.$this->cssPrefix.'-group-'.$groupName.'">'."\n";
       $html .= '<label>Grupo '.$groupName.'</label>'."\n";
 
       $groupLimits = $this->getGroupLimits( $groupName );
@@ -1648,11 +1640,11 @@ class FormController implements Serializable {
           $html .= $this->getHtmlGroupElement( $groupName, $idElem )."\n";
         }
         $html .= '<div data-form_id="'.$this->id.'" class="addGroupElement '.
-          self::CSS_PRE.'-group-'.$groupName.'" groupName="'.$groupName.'">MAS</div>'."\n";
+          $this->cssPrefix.'-group-'.$groupName.'" groupName="'.$groupName.'">MAS</div>'."\n";
         $html .= '<div class="JQVMC-group-'.$groupName.'"></div>'."\n";
       }
 
-      $html .= '</div><!-- /'.self::CSS_PRE.'-group-'.$groupName.' -->';
+      $html .= '</div><!-- /'.$this->cssPrefix.'-group-'.$groupName.' -->';
     }
 
     return $html;
@@ -1676,14 +1668,14 @@ class FormController implements Serializable {
         }
       }
 
-      $html .= '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-groupElem'.
-        ( $idElem !== false ? ' '.self::CSS_PRE.'-groupElem_C_'.$idElem : '' ).
+      $html .= '<div class="'.$this->cssPrefix.'-wrap '.$this->cssPrefix.'-groupElem'.
+        ( $idElem !== false ? ' '.$this->cssPrefix.'-groupElem_C_'.$idElem : '' ).
         '">'."\n";
 
       $html .= implode( "\n", $this->getHtmlFieldsArray( $groupFieldNames ) )."\n";
 
       if( $idElem !== false ) {
-        $html .= '<div data-form_id="'.$this->id.'" class="removeGroupElement '.self::CSS_PRE.'-group-'.$groupName.'" '.
+        $html .= '<div data-form_id="'.$this->id.'" class="removeGroupElement '.$this->cssPrefix.'-group-'.$groupName.'" '.
           'groupName="'.$groupName.'" groupIdElem="'.$idElem.'">QUITAR</div>'."\n";
       }
 
@@ -1708,8 +1700,8 @@ class FormController implements Serializable {
         // Procesamos los campos que no son raiz de campos agrupados
         $htmlField = $this->getHtmlField( $fieldName );
         if( $htmlField !== '' ) {
-          $html[ $fieldName ] = '<div class="'.self::CSS_PRE.'-wrap '.self::CSS_PRE.'-field-'.$fieldName.
-            ( $this->getFieldType( $fieldName ) === 'file' ? ' '.self::CSS_PRE.'-fileField ' : '' ).
+          $html[ $fieldName ] = '<div class="'.$this->cssPrefix.'-wrap '.$this->cssPrefix.'-field-'.$fieldName.
+            ( $this->getFieldType( $fieldName ) === 'file' ? ' '.$this->cssPrefix.'-fileField ' : '' ).
             '">'.$htmlField.'</div>';
         }
       }
@@ -1793,18 +1785,18 @@ class FormController implements Serializable {
       if( isset( $field['label'] ) ) {
         $html['label'] = '<label';
         $html['label'] .= ( $myFielId ? ' for="'.$myFielId.'"' : '' );
-        $html['label'] .= ' class="'.self::CSS_PRE.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
+        $html['label'] .= ' class="'.$this->cssPrefix.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
         $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
         $html['label'] .= '>'.$field['label'].'</label>';
       }
 
       $attribs = ' form="'.$this->id.'"';
       $attribs .= ( $myFielId ? ' id="'.$myFielId.'"' : '' );
-      $attribs .= ' class="'.self::CSS_PRE.'-field '.self::CSS_PRE.'-field-'.$fieldName.
-        ( ( $field['type'] === 'file' ) ? ' '.self::CSS_PRE.'-fileField' : '' ).
-        ( $cloneOf ? ' '.self::CSS_PRE.'-cloneOf-'.$cloneOf : '' ).
-        ( $groupName ? ' '.self::CSS_PRE.'-group-'.$groupName : '' ).
-        ( isset( $field['htmlEditor'] ) ? ' '.self::CSS_PRE.'-htmlEditor' : '' ).
+      $attribs .= ' class="'.$this->cssPrefix.'-field '.$this->cssPrefix.'-field-'.$fieldName.
+        ( ( $field['type'] === 'file' ) ? ' '.$this->cssPrefix.'-fileField' : '' ).
+        ( $cloneOf ? ' '.$this->cssPrefix.'-cloneOf-'.$cloneOf : '' ).
+        ( $groupName ? ' '.$this->cssPrefix.'-group-'.$groupName : '' ).
+        ( isset( $field['htmlEditor'] ) ? ' '.$this->cssPrefix.'-htmlEditor' : '' ).
         ( isset( $field['class'] ) ? ' '.$field['class'] : '' ).
         '"';
       $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';

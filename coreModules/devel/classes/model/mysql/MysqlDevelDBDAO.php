@@ -112,9 +112,7 @@ class MysqlDevelDBDAO extends MysqlDAO
 
       if( isset( $col['multilang'] ) && $col['multilang'] == true &&  $col['type'] != 'FOREIGN'  ) {
 
-        global $LANG_AVAILABLE;
-
-        foreach( array_keys($LANG_AVAILABLE) as $langKey ) {
+        foreach( array_keys(Cogumelo::getSetupValue( 'lang:available' )) as $langKey ) {
 
           $retMLC = $this->multilangCols( $colkey.'_'.$langKey, $col,  $primarykeys, $uniques, $lines );
           $primarykeys = $retMLC['primarykeys'];
@@ -136,7 +134,7 @@ class MysqlDevelDBDAO extends MysqlDAO
     $uniques_str = ( count($uniques)>0 )? ', UNIQUE ('.implode(',',$uniques).')' : '';
     $primarykeys_str = ( count($primarykeys)>0 )? ', PRIMARY KEY  USING BTREE (`'.implode(',',$primarykeys).'`)' : '';
     $indexes_str = '';
-    if( sizeof($indexes) ) {
+    if( count($indexes) ) {
       foreach( $indexes as $index ) {
         $indexes_str .= ",INDEX  (`".$index."`)";
       }

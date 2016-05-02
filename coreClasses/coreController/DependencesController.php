@@ -285,13 +285,11 @@ Class DependencesController {
 
             switch ($this->typeIncludeFile( $includeFile )) {
               case 'serverScript':
-                //Cogumelo::debug( 'Including vendor:'.SITE_PATH.'../httpdocs/vendorServer/'.$include_folder.'/'.$includeFile );
+                //Cogumelo::debug( 'Including vendor:'.WEB_BASE_PATH.'/vendorServer/'.$include_folder.'/'.$includeFile );
                 require_once( DEPEN_COMPOSER_PATH.'/'.$include_folder.'/'.$includeFile );
                 break;
               case 'clientScript':
-
                 $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor/'.$installer );
-
                 break;
               case 'styles':
                 $this->addIncludeCSS( $include_folder.'/'.$includeFile, 'vendor/'.$installer );

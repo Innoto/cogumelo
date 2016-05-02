@@ -54,10 +54,10 @@ class DevelView extends View
   // actions Logs
   //
   public function logs() {
-    $list_file_logs_path = glob(SITE_PATH."log/*.log");
-    $list_file_logs = str_replace(SITE_PATH."log/", "", $list_file_logs_path);
-    $list_file_logs = str_replace(".log", "", $list_file_logs);
-    $this->template->assign("list_file_logs" , $list_file_logs);
+    $list_file_logs_path = glob( Cogumelo::getSetupValue( 'logs:path' ).'/*.log' );
+    $list_file_logs = str_replace( Cogumelo::getSetupValue( 'logs:path' ).'/', '', $list_file_logs_path );
+    $list_file_logs = str_replace( '.log', '', $list_file_logs );
+    $this->template->assign( 'list_file_logs' , $list_file_logs );
   }
 
   //LLamada a Ajax para buscar mas lineas

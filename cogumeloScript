@@ -1,7 +1,7 @@
 <?php
 
-require_once( COGUMELO_LOCATION."/coreClasses/CogumeloClass.php" );
-require_once( SITE_PATH."/Cogumelo.php" );
+require_once( COGUMELO_LOCATION.'/coreClasses/CogumeloClass.php' );
+require_once( APP_BASE_PATH.'/Cogumelo.php' );
 
 global $_C;
 $_C =Cogumelo::get();
@@ -183,19 +183,19 @@ function actionCompileTranslations() {
 
 
 function actionFlush() {
-  echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=flush' );
+  echo file_get_contents( cogumeloSetSetupValue( 'script:cogumeloServerUrl' ) . '?q=flush' );
   echo "\nTemporary files deleted!\n\n";
 }
 
 
 function actionRotateLogs() {
-  echo file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=rotate_logs' );
+  echo file_get_contents( cogumeloSetSetupValue( 'script:cogumeloServerUrl' ) . '?q=rotate_logs' );
   echo "\nRotate Logs done!\n\n";
 }
 
 
 function actionGenerateClientCaches() {
-  file_get_contents( COGUMELO_ADMINSCRIPT_URL . '?q=client_caches' );
+  file_get_contents( cogumeloSetSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches' );
   echo "\nClient caches generated\n\n";
 }
 
@@ -237,7 +237,7 @@ function createDB(){
 
   $user = false;
 
-  $fileConnectionsInfo = SITE_PATH.'conf/default-connections-info.php';
+  $fileConnectionsInfo = APP_BASE_PATH.'/conf/default-connections-info.php';
   if( file_exists( $fileConnectionsInfo ) ) {
     include $fileConnectionsInfo;
     if( defined( 'DDBB_PRIV_USER' ) && defined( 'DDBB_PRIV_PASS' ) ) {
@@ -364,8 +364,8 @@ function initModules() {
   global $C_ENABLED_MODULES;
 
   setPermissionsDevel();
-  exec('rm -R '.MOD_FILEDATA_APP_PATH);
-  exec('rm -R '.MOD_FILEDATA_CACHE_PATH);
+  exec('rm -R '.Cogumelo::getSetupValue( 'mod:filedata:filePath' ) );
+  exec('rm -R '.Cogumelo::getSetupValue( 'mod:filedata:cachePath' ) );
   setPermissionsDevel();
 
   foreach( $C_ENABLED_MODULES as $moduleName ) {
@@ -381,7 +381,7 @@ function initModules() {
 }
 
 
-function deployModules($isFirstGenerateModel = false) {
+function deployModules( $isFirstGenerateModel = false ) {
   global $C_ENABLED_MODULES;
 
   setPermissionsDevel();
@@ -399,16 +399,20 @@ function deployModules($isFirstGenerateModel = false) {
 }
 
 function makeAppPaths() {
-  global $lc, $LANG_AVAILABLE;
+  global $lc;
   $md = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ),
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ),
-    LOGDIR,
-    MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, MOD_FILEDATA_CACHE_PATH,
-    BCK, I18N, I18N_LOCALE,TPL_TMP );
+    Cogumelo::getSetupValue( 'logs:path' ),
+    Cogumelo::getSetupValue( 'mod:form:tmpPath' ),
+    Cogumelo::getSetupValue( 'mod:filedata:filePath' ),
+    Cogumelo::getSetupValue( 'mod:filedata:cachePath' ),
+    Cogumelo::getSetupValue( 'script:backupPath' ),
+    cogumeloGetSetupValue( 'i18n:path' ), cogumeloGetSetupValue( 'i18n:localePath' ),
+    TPL_TMP );
 
-  foreach( $LANG_AVAILABLE as $lang ) {
-    $md[] = I18N_LOCALE.$lang['i18n'].'/LC_MESSAGES';
+  foreach( cogumeloGetSetupValue( 'lang:available' ) as $lang ) {
+    $md[] = cogumeloGetSetupValue( 'i18n:localePath' ).'/'.$lang['i18n'].'/LC_MESSAGES';
   }
 
   foreach( $md as $dir ) {
@@ -425,26 +429,36 @@ function setPermissions( $devel = false ) {
 
   $extPerms = $devel ? ',ugo+rX' : '';
 
-  exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
-    APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+  exec( 'sudo chown -R $USER:www-data '.
+    WEB_BASE_PATH.' '.APP_BASE_PATH.' '.APP_TMP_PATH.' '.
+    SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
-    LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
+    Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
+    Cogumelo::getSetupValue( 'logs:path' ).' '.
+    Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
+    Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
+    cogumeloGetSetupValue( 'i18n:path' ).' '.cogumeloGetSetupValue( 'i18n:localePath' ).' '.
+    TPL_TMP  );
 
   exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH );
 
   exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.APP_BASE_PATH );
 
   // Path que necesitan escritura Apache
-  exec( 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+  exec( 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
+    SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.LOGDIR.' '.
-    MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.MOD_FILEDATA_CACHE_PATH.' '.
-    I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
+    Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
+    Cogumelo::getSetupValue( 'logs:path' ).' '.
+    Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
+    Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
+    Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '.
+    cogumeloGetSetupValue( 'i18n:path' ).' '.cogumeloGetSetupValue( 'i18n:localePath' ).' '.
+    TPL_TMP  );
 
   // Solo usuario administrador
-  exec( 'sudo chown $USER:$USER '.BCK );
-  exec( 'chmod -R go-rwx '.BCK );
+  exec( 'sudo chown $USER:$USER '.Cogumelo::getSetupValue( 'script:backupPath' ) );
+  exec( 'chmod -R go-rwx '.Cogumelo::getSetupValue( 'script:backupPath' ) );
 
   echo "Permissions ready!\n";
 }
@@ -459,7 +473,7 @@ function doBackup( $db, $user, $passwd, $file ) {
     $file = date('Ymd-His').'-'.$db.'.sql';
   }
 
-  $dir = BCK;
+  $dir = Cogumelo::getSetupValue( 'script:backupPath' );
 
   popen( 'mysqldump -u ' . $user . ' -p' . $passwd .' '. $db . '> ' . $dir . '/' . $file, 'r' );
   exec( 'gzip ' . $dir . '/' . $file );
@@ -468,7 +482,7 @@ function doBackup( $db, $user, $passwd, $file ) {
 }
 
 function restoreDB( $db, $user, $passwd, $file ) {
-  $dir = BCK;
+  $dir = Cogumelo::getSetupValue( 'script:backupPath' );
   $file_parts = explode('.',$dir.$file);
 
   if ($file_parts[2] == 'gz'){

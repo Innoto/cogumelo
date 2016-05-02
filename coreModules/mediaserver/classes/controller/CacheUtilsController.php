@@ -78,7 +78,7 @@ class CacheUtilsController {
 
         // app modules
         self::copyLessTmpdir(
-          SITE_PATH.'/modules/',
+          APP_BASE_PATH.'/modules/',
           $moduleName.'/'.$cacheableFolder,
           $destino
         );
@@ -87,7 +87,7 @@ class CacheUtilsController {
 
       // app files
       self::copyLessTmpdir(
-        SITE_PATH.'/',
+        APP_BASE_PATH.'/',
         $cacheableFolder,
         $destino
       );
@@ -175,13 +175,13 @@ class CacheUtilsController {
 
       // app modules
       self::cacheFolder(
-        SITE_PATH.'/modules/'.$moduleName.'/'.$cacheableFolder,
+        APP_BASE_PATH.'/modules/'.$moduleName.'/'.$cacheableFolder,
         $moduleName
       );
     }
 
     // app files
-    self::cacheFolder( SITE_PATH.'/'.$cacheableFolder );
+    self::cacheFolder( APP_BASE_PATH.'/'.$cacheableFolder );
 
     // all less files
     self::generateAllLessCaches();

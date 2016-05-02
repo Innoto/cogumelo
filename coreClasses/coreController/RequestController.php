@@ -30,7 +30,7 @@ class RequestController
       $this->include_base_path = $include_base_path;
     }
     else {
-      $this->include_base_path = SITE_PATH;
+      $this->include_base_path = APP_BASE_PATH;
       $this->is_last_request = true; // is last request on app
     }
 

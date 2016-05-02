@@ -128,7 +128,7 @@ class CogumeloClass extends Singleton
     }
     else {
       $filename =  $classname;
-      $file_path = SITE_PATH. 'classes/'. $filename;
+      $file_path = APP_BASE_PATH. '/classes/'. $filename;
     }
 
     // check if file exist
@@ -145,7 +145,7 @@ class CogumeloClass extends Singleton
   //  include Vendor libs
   //
   public static function vendorLoad( $loadFile ) {
-    require_once SITE_PATH.'../httpdocs/vendorServer/'.$loadFile;
+    require_once WEB_BASE_PATH.'/vendorServer/'.$loadFile;
   }
 
 
@@ -164,7 +164,7 @@ class CogumeloClass extends Singleton
 
     $error_msg = 'Warning: '.$errstr.' on file "'.$errfile.'" line:'.$errline;
 
-    if(DEBUG){
+    if(Cogumelo::getSetupValue( 'logs:debug' )){
       //self::console(debug_backtrace(), $error_msg );
     }
 
@@ -177,7 +177,7 @@ class CogumeloClass extends Singleton
 
     if($last_error!=null) {
       $error_msg = 'Fatal error: '.$last_error['message'].' on file "'.$last_error['file'].'" line: '.$last_error['line'];
-      if(DEBUG) {
+      if( Cogumelo::getSetupValue( 'logs:debug' ) ) {
         //self::console($last_error, $error_msg);
       }
       self::error($error_msg);
@@ -188,7 +188,7 @@ class CogumeloClass extends Singleton
   //  LOGS
   //
   public static function error( $description ) {
-    if(ERRORS === true) {
+    if( Cogumelo::getSetupValue( 'logs:error' ) === true ) {
       echo '<br>Cogumelo error: '.$description."\n";
     }
 
@@ -196,13 +196,13 @@ class CogumeloClass extends Singleton
   }
 
   public static function debug( $description ) {
-    if(DEBUG === true) {
+    if( Cogumelo::getSetupValue( 'logs:debug' ) === true ) {
       self::log($description, 'cogumelo_debug');
     }
   }
 
   public static function debugSQL( $description ) {
-    if(DEBUG === true) {
+    if( Cogumelo::getSetupValue( 'logs:debug' ) === true ) {
       self::log($description, 'cogumelo_debug_sql');
     }
   }
@@ -229,7 +229,7 @@ class CogumeloClass extends Singleton
           '['. date('y-m-d H:i:s',time()) .'] ' .
           '['. $_SERVER['REMOTE_ADDR'] .'] ' .
           '[Session '. self::getUserInfo().'] ' .
-          str_replace("\n", '\n', $texto)."\n", 3, LOGDIR.$fich_log.'.log'
+          str_replace("\n", '\n', $texto)."\n", 3, Cogumelo::getSetupValue( 'logs:path' ).'/'.$fich_log.'.log'
         );
       }
     }
@@ -276,7 +276,7 @@ class CogumeloClass extends Singleton
     $debug_object_maxlifetime = 60; // in seconds
     $result_array = array();
 
-    if( DEBUG &&
+    if( Cogumelo::getSetupValue( 'logs:debug' ) &&
       isset($_SESSION['cogumelo_dev_obj_array'])  &&
       $_SESSION['cogumelo_dev_obj_array'] != '' &&
       $_SESSION['cogumelo_dev_obj_array'] != null &&
@@ -307,7 +307,7 @@ class CogumeloClass extends Singleton
   }
 
   public static function objDebugPush( $obj, $comment ) {
-    if(DEBUG && isset($obj)){
+    if(Cogumelo::getSetupValue( 'logs:debug' ) && isset($obj)){
 
       $session_array = array();
 

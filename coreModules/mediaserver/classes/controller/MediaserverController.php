@@ -57,7 +57,7 @@ class MediaserverController {
   */
   public function serveContent( $path, $module = false ) {
 
-    if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false || 
+    if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false ||
       ( substr($path , -3) === '.js' &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) ) )
     {
       $this->cacheContent( $path, $module );
@@ -76,10 +76,10 @@ class MediaserverController {
   */
   public function copyAndMoveFile( $minify = false ) {
 
-    $tmp_cache = MEDIASERVER_TMP_CACHE_PATH .'/'. $this->modulePath . $this->urlPath;
-    $final_cache = SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH .'/'. $this->modulePath . $this->urlPath;
+    $tmp_cache = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ) .'/'. $this->modulePath . $this->urlPath;
+    $final_cache = WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) .'/'. $this->modulePath . $this->urlPath;
 
-    if( !file_exists( $tmp_cache && MEDIASERVER_HOST == '/' ) ) {
+    if( !file_exists( $tmp_cache && Cogumelo::getSetupValue( 'mod:mediaserver:host' ) === '/' ) ) {
       // create tmp folder
       $this->createDirPath( $tmp_cache );
 
@@ -112,8 +112,8 @@ class MediaserverController {
   public function compileAndMoveLessFile( $minify = false ) {
 
     $lessControl = new LessController();
-    $tmp_cache = MEDIASERVER_TMP_CACHE_PATH .'/'. $this->modulePath . $this->urlPath.'.css';
-    $final_cache = SITE_PATH.'../httpdocs/'.MEDIASERVER_FINAL_CACHE_PATH .'/'. $this->modulePath . $this->urlPath.'.css' ;
+    $tmp_cache = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ) .'/'. $this->modulePath . $this->urlPath.'.css';
+    $final_cache = WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) .'/'. $this->modulePath . $this->urlPath.'.css' ;
 
     // create tmp folder
     $this->createDirPath( $tmp_cache );
@@ -156,27 +156,27 @@ class MediaserverController {
       // js file
       if( substr($this->urlPath , -3) == '.js' ) {
         header('Content-Type: text/javascript');
-        readfile( SITE_PATH.'../httpdocs/' . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
+        readfile( WEB_BASE_PATH.'/' . Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath  );
       }
       else if( substr($this->urlPath , -4) == '.css' ) {
         // css or
         header('Content-Type: text/css');
-        readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
+        readfile( WEB_BASE_PATH.'/'.  Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath  );
       }
       else if( substr($this->urlPath , -5) == '.less' ) {
         // less file without compilation
         header('Content-Type: text');
-        readfile( SITE_PATH.'../httpdocs/'.  MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath  );
+        readfile( WEB_BASE_PATH.'/'.  Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath  );
       }
       else {
         // redirect to file
-        RequestController::redirect( MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath );
+        RequestController::redirect( Cogumelo::getSetupValue( 'mod:mediaserver:host' ) . Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath );
       }
     }
     else {
       // redirect to file
-      if(file_exists( MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath ) ) {
-        RequestController::redirect( MEDIASERVER_HOST . MEDIASERVER_FINAL_CACHE_PATH . $this->modulePath . $this->urlPath );
+      if(file_exists( Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath ) ) {
+        RequestController::redirect( Cogumelo::getSetupValue( 'mod:mediaserver:host' ) . Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath );
       }
     }
   }

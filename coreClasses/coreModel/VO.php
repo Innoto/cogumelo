@@ -221,12 +221,11 @@ Class VO
    * @return array
    */
   function getCols( $realCols = false ){
-    global $LANG_AVAILABLE;
     $retCols = array();
 
     foreach( $this::$cols as $colK=>$col ) {
       if( isset($col['multilang']) && $col['multilang'] == true && $realCols) {
-        foreach ( array_keys($LANG_AVAILABLE) as $langKey) {
+        foreach ( array_keys(Cogumelo::getSetupValue( 'lang:available' )) as $langKey) {
           $retCols[ $colK.'_'.$langKey ] = $col;
         }
       }
@@ -292,8 +291,9 @@ Class VO
       ( $lang && array_key_exists($setterkey, $cols ) )
     ) {
 
-      if(!$lang)
-        $lang = LANG_DEFAULT;
+      if(!$lang) {
+        $lang = Cogumelo::getSetupValue( 'lang:default' );
+      }
 
       $setterkey .= '_'.$lang;
     }
@@ -324,10 +324,8 @@ Class VO
 
 
   function langKey( $key, $getKey = false ) {
-
-    global $LANG_AVAILABLE;
     $ret = false;
-    $regex = '#(.*)_(('.implode(')|(', array_keys($LANG_AVAILABLE) ).'))#';
+    $regex = '#(.*)_(('.implode(')|(', array_keys(Cogumelo::getSetupValue( 'lang:available' )) ).'))#';
 
     $pm = preg_match($regex, $key, $match);
 
@@ -398,7 +396,7 @@ Class VO
       $autoLang = $C_LANG;
     }
     else {
-      $autoLang = LANG_DEFAULT;
+      $autoLang = Cogumelo::getSetupValue( 'lang:default' );
     }
 
 

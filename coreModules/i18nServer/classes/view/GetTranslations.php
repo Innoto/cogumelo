@@ -20,30 +20,29 @@ class GetTranslations extends View
   // load json from i18n
   public function getJson() {
 
-    global $C_LANG, $LANG_AVAILABLE;
+    global $C_LANG;
 
-    $lang = $LANG_AVAILABLE[$C_LANG]['i18n'];
+    $langArray = Cogumelo::getSetupValue( 'lang:available' );
+    $lang = $langArray[ $C_LANG ]['i18n'];
 
-    $json_path = I18N_LOCALE.$lang.'/LC_MESSAGES/translation.json';
+    $json_path = cogumeloGetSetupValue( 'i18n:localePath' ).'/'.$lang.'/LC_MESSAGES/translation.json';
 
     if (file_exists($json_path)){
-        header( 'application/javascript' );
-        $json = file_get_contents($json_path);
-        $res = "var jsonTraduccions=".$json.";
-                function __(cadea){
-                  var res = cadea;
-                  $.each(jsonTraduccions, function(i,item){
-                    if(i === cadea){
-                      if (item)
-                        res=item;
-                      return false;
-                    }
-                  });
-                  return res;
-                }";
-        print($res);
-
+      header( 'application/javascript' );
+      $json = file_get_contents($json_path);
+      $res = 'var jsonTraduccions='.$json.';
+        function __(cadea){
+          var res = cadea;
+          $.each(jsonTraduccions, function(i,item){
+            if(i === cadea){
+              if (item)
+                res=item;
+              return false;
+            }
+          });
+          return res;
+        }';
+      print($res);
     }
-
   }
 }

@@ -20,13 +20,13 @@ class VOUtils {
     $voarray = array();
 
     // VOs into APP
-    $voarray = self::mergeVOs($voarray, SITE_PATH.'classes/model/' ); // scan app model dir
+    $voarray = self::mergeVOs($voarray, APP_BASE_PATH.'/classes/model/' ); // scan app model dir
 
     global $C_ENABLED_MODULES;
     foreach( $C_ENABLED_MODULES as $modulename ) {
       // modules into APP
 
-      $voarray = self::mergeVOs($voarray, SITE_PATH.'modules/'.$modulename.'/classes/model/', $modulename );
+      $voarray = self::mergeVOs($voarray, APP_BASE_PATH.'/modules/'.$modulename.'/classes/model/', $modulename );
       // modules into DIST
       $voarray = self::mergeVOs($voarray, COGUMELO_DIST_LOCATION.'/distModules/'.$modulename.'/classes/model/', $modulename );
       // modules into COGUMELO
