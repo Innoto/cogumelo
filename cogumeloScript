@@ -183,19 +183,19 @@ function actionCompileTranslations() {
 
 
 function actionFlush() {
-  echo file_get_contents( cogumeloSetSetupValue( 'script:cogumeloServerUrl' ) . '?q=flush' );
+  echo file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=flush' );
   echo "\nTemporary files deleted!\n\n";
 }
 
 
 function actionRotateLogs() {
-  echo file_get_contents( cogumeloSetSetupValue( 'script:cogumeloServerUrl' ) . '?q=rotate_logs' );
+  echo file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=rotate_logs' );
   echo "\nRotate Logs done!\n\n";
 }
 
 
 function actionGenerateClientCaches() {
-  file_get_contents( cogumeloSetSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches' );
+  file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches' );
   echo "\nClient caches generated\n\n";
 }
 
@@ -408,11 +408,11 @@ function makeAppPaths() {
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ),
     Cogumelo::getSetupValue( 'mod:filedata:cachePath' ),
     Cogumelo::getSetupValue( 'script:backupPath' ),
-    cogumeloGetSetupValue( 'i18n:path' ), cogumeloGetSetupValue( 'i18n:localePath' ),
+    Cogumelo::getSetupValue( 'i18n:path' ), Cogumelo::getSetupValue( 'i18n:localePath' ),
     TPL_TMP );
 
-  foreach( cogumeloGetSetupValue( 'lang:available' ) as $lang ) {
-    $md[] = cogumeloGetSetupValue( 'i18n:localePath' ).'/'.$lang['i18n'].'/LC_MESSAGES';
+  foreach( Cogumelo::getSetupValue( 'lang:available' ) as $lang ) {
+    $md[] = Cogumelo::getSetupValue( 'i18n:localePath' ).'/'.$lang['i18n'].'/LC_MESSAGES';
   }
 
   foreach( $md as $dir ) {
@@ -437,7 +437,7 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'logs:path' ).' '.
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
-    cogumeloGetSetupValue( 'i18n:path' ).' '.cogumeloGetSetupValue( 'i18n:localePath' ).' '.
+    Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
     TPL_TMP  );
 
   exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH );
@@ -453,7 +453,7 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '.
-    cogumeloGetSetupValue( 'i18n:path' ).' '.cogumeloGetSetupValue( 'i18n:localePath' ).' '.
+    Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
     TPL_TMP  );
 
   // Solo usuario administrador
