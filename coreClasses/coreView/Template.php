@@ -7,8 +7,8 @@ mediaserver::load('controller/LessController.php');
 //  Template Class (Extends smarty library)
 //
 
-class Template extends Smarty
-{
+class Template extends Smarty {
+
   var $tpl = false;
   var $baseDir;
 
@@ -28,10 +28,10 @@ class Template extends Smarty
   var $cgmSmartyCompileDir = SMARTY_COMPILE;
   var $cgmSmartyCacheDir = SMARTY_CACHE;
 
-  var $cgmMediaserverCompileLess = MEDIASERVER_PRODUCTION_MODE;
-  var $cgmMediaserverHost = MEDIASERVER_HOST;
+  var $cgmMediaserverCompileLess = false;
+  var $cgmMediaserverHost = false;
   var $cgmMediaserverUrlDir = false;
-  var $cgmMediaUrlDir = MOD_MEDIASERVER_URL_DIR;
+  var $cgmMediaUrlDir = false;
 
 
   /**
@@ -42,11 +42,15 @@ class Template extends Smarty
   public function __construct( $baseDir = false ) {
     // Call Smarty's constructor
 
-    if( MEDIASERVER_PRODUCTION_MODE ) {
-      $this->cgmMediaserverUrlDir = MEDIASERVER_FINAL_CACHE_PATH;
+    $this->cgmMediaserverCompileLess = Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' );
+    $this->cgmMediaserverHost = Cogumelo::getSetupValue( 'mod:mediaserver:host' );
+    $this->cgmMediaUrlDir = Cogumelo::getSetupValue( 'mod:mediaserver:path' );
+
+    if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) ) {
+      $this->cgmMediaserverUrlDir = Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' );
     }
     else {
-      $this->cgmMediaserverUrlDir = MOD_MEDIASERVER_URL_DIR;
+      $this->cgmMediaserverUrlDir = Cogumelo::getSetupValue( 'mod:mediaserver:path' );
     }
 
     parent::__construct();
@@ -98,6 +102,7 @@ class Template extends Smarty
     $this->assign( 'cogumelo', $data );
 
 
+
     global $MEDIASERVER_SMARTY_GLOBALS, $MEDIASERVER_SMARTY_CONSTANTS;
     if( is_array( $MEDIASERVER_SMARTY_GLOBALS ) && count( $MEDIASERVER_SMARTY_GLOBALS ) > 0 ) {
       foreach( $MEDIASERVER_SMARTY_GLOBALS as $globalKey ) {
@@ -111,27 +116,8 @@ class Template extends Smarty
         $this->assign( $key, $value );
       }
     }
+
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -183,7 +169,7 @@ class Template extends Smarty
   public function addClientScript( $file_path, $module = false, $is_autoinclude = false ) {
 
 
-    if( substr( $file_path, -3) == '.js'  && MEDIASERVER_NOT_CACHE_JS == true ){
+    if( substr( $file_path, -3) === '.js'  && Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) === true ){
       $mediaPath = $this->cgmMediaserverHost . $this->cgmMediaUrlDir;
     }
     else {
@@ -292,18 +278,6 @@ class Template extends Smarty
   public function getClientScriptHtml( $ignoreAutoincludes = false ) {
     $itemsToInclude = array();
     $html = '';
-
-    /*
-    global $C_LANG;
-    $langUrl = ( $C_LANG ) ? $C_LANG.'/' : '';
-    //echo $langUrl . $itemsToInclude[$this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/jsConfConstants.js';
-    $itemsToInclude[ '/' . $langUrl . $this->cgmMediaUrlDir.'/jsConfConstants.js' ] = array(
-      'src'=> '/' . $langUrl . $this->cgmMediaUrlDir.'/jsConfConstants.js',
-      'rel' => false ,
-      'type' => 'text/javascript',
-      'onlyOnce' => true
-    );
-    */
 
     $itemsToInclude = $this->getClientScriptArray( $ignoreAutoincludes );
 
@@ -474,11 +448,9 @@ class Template extends Smarty
     $htmlCode = '';
 
     if( $this->tpl ) {
-
       global $cogumeloIncludesCSS;
       global $cogumeloIncludesJS;
       global $C_LANG;
-
 
       $langUrl = '/'.$C_LANG;
 
@@ -497,36 +469,13 @@ class Template extends Smarty
 
       $mainClientIncludes = "\n";
       // Basic includes and includers
-      /*
-      $clientIncludes = "\n";
-      $clientIncludes .= '<script type="text/javascript">jqueryIsLoaded = ( typeof $ !== "undefined" );</script>' . "\n";
-      $clientIncludes .= '<script type="text/javascript" src="/vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
-      $clientIncludes .= '<script type="text/javascript" src="/media/module/common/js/Includes.js"></script>' . "\n";
-      $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
-      $clientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
-      if( !$this->cgmMediaserverCompileLess ) {
-        $clientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
-          'functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
-          '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>';
-      }
-      */
-/*
-      // prevent jquery conflicts
-      $mainClientIncludes .= "<script>\n";
-      $mainClientIncludes .= "\t".'jqueryIsLoaded = ( typeof $ !== "undefined" );' . "\n";
-      $mainClientIncludes .= "</script>\n\n";
-*/
       $mainClientIncludes .= '<script type="text/javascript" src="'.$this->cgmMediaserverHost.'vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://rsvpjs-builds.s3.amazonaws.com/rsvp-latest.min.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
-
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
-
       $mainClientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
-
-
       $mainClientIncludes .= $this->getClientStylesHtml();
 
 
@@ -545,39 +494,9 @@ class Template extends Smarty
           '<script type="text/javascript"> less.pageLoadFinished.then( function() { $.holdReady( false );} ) </script>';
       }
 
-
-
-/*
-      $clientIncludes .= "<script>\n";
-
-      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
-      $clientIncludes .= "\t".'// prevent jquery conflicts' . "\n";
-      $clientIncludes .= "\t".'if( jqueryIsLoaded === true ) {' . "\n";
-      $clientIncludes .= "\t".'  jQuery = originalJQueryObject;' . "\n";
-      $clientIncludes .= "\t".'  $ = originalJQueryObject;' . "\n";
-      $clientIncludes .= "\t".'}' . "\n";
-      $clientIncludes .= "\t".'else {' . "\n";
-      $clientIncludes .= "\t".'  originalJQueryObject = $ = jQuery = $.noConflict();' . "\n";
-      $clientIncludes .= "\t".'}' . "\n";
-
-      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) {' . "\n";
-      $clientIncludes .= "\t".'  if ( options.dataType == \'script\' || originalOptions.dataType == \'script\' ) {' . "\n";
-      $clientIncludes .= "\t".'      options.cache = true;' . "\n";
-      $clientIncludes .= "\t".'  }' . "\n";
-      $clientIncludes .= "\t".'});' . "\n";
-
-
-      $clientIncludes .= "</script>\n\n";
-*/
-
-
       $clientIncludes = "\n";
-
       $clientIncludes .= "\t<script>\n";
-
       $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
-
-
       $clientIncludes .= '$.holdReady( true );'."\n";
       //if( !$this->cgmMediaserverCompileLess ) {
       if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false || (Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === true &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) == true ) ) {
@@ -585,7 +504,6 @@ class Template extends Smarty
       }
       $clientIncludes .= 'basket.require('. "\n";
       $clientIncludes .= $this->getClientScriptHtml() ;
-
       if( !$this->cgmMediaserverCompileLess){
         $clientIncludes .= ').then(function () {  });'."\n\n";
       }
@@ -593,9 +511,8 @@ class Template extends Smarty
         $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
       }
       $clientIncludes .= "\t</script>\n\n\n";
-
-      $this->assign( 'main_client_includes', $mainClientIncludes );
       $this->assign( 'client_includes', $clientIncludes );
+      $this->assign( 'main_client_includes', $mainClientIncludes );
       /*
       $this->assign('js_includes', $jsConfInclude . $this->lessClientCompiler() . $this->getClientScriptHtml() );
       $this->assign('css_includes', $lessConfInclude . $this->getClientStylesHtml() );

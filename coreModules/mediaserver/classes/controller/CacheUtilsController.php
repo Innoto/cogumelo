@@ -52,7 +52,7 @@ class CacheUtilsController {
       $destino = $CACHE_UTILS_LESS_TMPDIR;
     }
     else {
-      $destino = MEDIASERVER_TMP_CACHE_PATH.'/lesstmp/'.self::generateLessTmpdirName().'/';
+      $destino = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).'/lesstmp/'.self::generateLessTmpdirName().'/';
 
       mkdir( $destino, 0777, true );
 

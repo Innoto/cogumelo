@@ -30,10 +30,6 @@ class LessController {
     $this->less->setImportDir( $lessTmpDir );
 
     // set less variables (Defined in setup)
-    /*
-    global $MEDIASERVER_LESS_CONSTANTS;
-    $this->less->setVariables( $MEDIASERVER_LESS_CONSTANTS ) ;
-    */
     $this->less->setVariables( $this->getLessVarsFromSetup() ) ;
 
 

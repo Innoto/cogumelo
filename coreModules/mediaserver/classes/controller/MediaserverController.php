@@ -57,7 +57,9 @@ class MediaserverController {
   */
   public function serveContent( $path, $module = false ) {
 
-    if( MEDIASERVER_PRODUCTION_MODE == false || ( substr($path , -3) == '.js' &&  MEDIASERVER_NOT_CACHE_JS ) ) {
+    if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false || 
+      ( substr($path , -3) === '.js' &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) ) )
+    {
       $this->cacheContent( $path, $module );
     }
     else {
@@ -150,7 +152,7 @@ class MediaserverController {
 
     Cogumelo::debug("Mediaserver, serving file: ".$this->realFilePath);
 
-    if( !MEDIASERVER_PRODUCTION_MODE || ( substr($this->urlPath , -3) == '.js' &&  MEDIASERVER_NOT_CACHE_JS ) )  {
+    if( !Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) || ( substr($this->urlPath , -3) == '.js' &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) ) )  {
       // js file
       if( substr($this->urlPath , -3) == '.js' ) {
         header('Content-Type: text/javascript');

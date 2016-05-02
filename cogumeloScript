@@ -59,7 +59,7 @@ if( $argc > 1 ) {
       break;
 
     case 'createDB': // create database
-      doBackup(cogumeloGetSetupValue( 'db:name' ), cogumeloGetSetupValue( 'db:user' ), cogumeloGetSetupValue( 'db:password' ), false);
+      doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), false);
       createDB();
       break;
 
@@ -68,7 +68,7 @@ if( $argc > 1 ) {
       break;
 
     case 'createTables': // create database tables
-      doBackup(cogumeloGetSetupValue( 'db:name' ), cogumeloGetSetupValue( 'db:user' ), cogumeloGetSetupValue( 'db:password' ), false);
+      doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), false);
       createTables();
       break;
 
@@ -93,13 +93,13 @@ if( $argc > 1 ) {
         $file = false;
       }
 
-      doBackup(cogumeloGetSetupValue( 'db:name' ), cogumeloGetSetupValue( 'db:user' ), cogumeloGetSetupValue( 'db:password' ), $file);
+      doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), $file);
       break;
 
     case 'restoreDB': // restore the backup of a given db
       if( $argc > 2 ) {
         $file = $argv[2];//name of the backup file
-        restoreDB(cogumeloGetSetupValue( 'db:name' ), cogumeloGetSetupValue( 'db:user' ), cogumeloGetSetupValue( 'db:password' ), $file);
+        restoreDB(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), $file);
       }
       else {
         echo "You must specify the file to restore\n";
@@ -140,7 +140,7 @@ if( $argc > 1 ) {
       echo "\n --- actionCompileTranslations:\n";
       actionCompileTranslations();
       echo "\n --- actionGenerateClientCaches:\n";
-      if( MEDIASERVER_PRODUCTION_MODE ) {
+      if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) ) {
         actionGenerateClientCaches();
       }
       else {
@@ -401,7 +401,9 @@ function deployModules($isFirstGenerateModel = false) {
 function makeAppPaths() {
   global $lc, $LANG_AVAILABLE;
   $md = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
-    MEDIASERVER_TMP_CACHE_PATH, WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH, LOGDIR,
+    Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ),
+    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ),
+    LOGDIR,
     MOD_FORM_FILES_TMP_PATH, MOD_FORM_FILES_APP_PATH, MOD_FILEDATA_CACHE_PATH,
     BCK, I18N, I18N_LOCALE,TPL_TMP );
 
@@ -425,7 +427,8 @@ function setPermissions( $devel = false ) {
 
   exec( 'sudo chown -R $USER:www-data '.WEB_BASE_PATH.' '.APP_BASE_PATH.' '.
     APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
-    MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.
+    Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
+    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
     LOGDIR.' '.MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
 
   exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH );
@@ -434,7 +437,8 @@ function setPermissions( $devel = false ) {
 
   // Path que necesitan escritura Apache
   exec( 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
-    MEDIASERVER_TMP_CACHE_PATH.' '.WEB_BASE_PATH.'/'.MEDIASERVER_FINAL_CACHE_PATH.' '.LOGDIR.' '.
+    Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
+    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.LOGDIR.' '.
     MOD_FORM_FILES_TMP_PATH.' '.MOD_FORM_FILES_APP_PATH.' '.MOD_FILEDATA_CACHE_PATH.' '.
     I18N.' '.I18N_LOCALE.' '.TPL_TMP  );
 
