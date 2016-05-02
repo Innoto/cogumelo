@@ -152,7 +152,7 @@ class TableView {
         <button class="clearFilters">Clear filters</button>
       </div>
       <div class="tableActions clearfix">
-        <div class="addElem"><img src="/media/module/table/img/add.png" alt="Add"></div>
+        <div class="addElem"><img src="{$cogumelo.publicConf.media}/module/table/img/add.png" alt="Add"></div>
         <div class="exportContainer">
           <select class="exportSelect">
 

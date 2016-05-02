@@ -236,8 +236,8 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.setHeaders = function() {
 
-    var orderUpImg = '<img src="/media/module/table/img/up.png">';
-    var orderDownImg = '<img src="/media/module/table/img/down.png">';
+    var orderUpImg = '<img src="'+cogumelo.publicConf.media+'/module/table/img/up.png">';
+    var orderDownImg = '<img src="'+cogumelo.publicConf.media+'/module/table/img/down.png">';
     var h = '<th><div class="selectAll"><input class="headCheckBox" type="checkbox"></div></th>';
 
 

@@ -47,7 +47,7 @@
 
 <body>
 <div id="header">
-  <img id="logo" src="/media/module/devel/img/cogumelo_logo.png" >
+  <img id="logo" src="{$cogumelo.publicConf.media}/module/devel/img/cogumelo_logo.png" >
   <h1>DEVEL</h1>
   <ul id="options_header_menu">
     <li id ="dbsql_link"><a onclick="hideContainer(); $('#dbsql_container').show();"  href="#dbsql">[Database]</a></li>
