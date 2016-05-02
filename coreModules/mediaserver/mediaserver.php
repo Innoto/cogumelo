@@ -24,7 +24,7 @@ class mediaserver extends Module
     ),
     array(
       "id" => "cssmin",
-      "params" => array("less.php/less.php", "1.7.0.2"),
+      "params" => array("oyejorge/less.php", "1.7.0.2"),
       "installer" => "composer",
       "includes" => array("lessc.inc.php")
     )
