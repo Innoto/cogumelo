@@ -402,6 +402,7 @@ function makeAppPaths() {
   global $lc;
   $md = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ),
+    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ),
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ),
     Cogumelo::getSetupValue( 'logs:path' ),
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ),
@@ -433,7 +434,8 @@ function setPermissions( $devel = false ) {
     WEB_BASE_PATH.' '.APP_BASE_PATH.' '.APP_TMP_PATH.' '.
     SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
+    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
+    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
     Cogumelo::getSetupValue( 'logs:path' ).' '.
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
@@ -448,7 +450,8 @@ function setPermissions( $devel = false ) {
   exec( 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
     SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
+    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
+    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
     Cogumelo::getSetupValue( 'logs:path' ).' '.
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
