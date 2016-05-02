@@ -51,7 +51,7 @@ function createFilesTitleField( idForm ) {
     // console.log( 'createFilesTitleField after ', this );
 
     var fileField = this;
-    var langs = ( typeof( langAvailableIds ) === 'object' ) ? langAvailableIds : [''];
+    var langs = ( typeof( cogumelo.publicConf.lang_available ) === 'object' ) ? cogumelo.publicConf.lang_available : [''];
     var html = '<div class="cgmMForm-wrap cgmMForm-'+idForm+' cgmMForm-fileFields-'+idForm+
       ' cgmMForm-titleFileField_'+fileField.name+'" style="display:none">'+"\n";
 
@@ -90,7 +90,7 @@ function hideFileTitleField( idForm, fieldName ) {
 
   var $fileField = $( 'input[form="'+idForm+'"][name="'+fieldName+'"]' );
   // Clear data-fm_title
-  var langs = ( typeof( langAvailableIds ) === 'object' ) ? langAvailableIds : [''];
+  var langs = ( typeof( cogumelo.publicConf.langAvailableIds ) === 'object' ) ? cogumelo.publicConf.langAvailableIds : [''];
   $.each( langs, function( i, lang ) {
     var filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
     $fileField.attr( 'data-'+filefielddata, '' );
@@ -924,21 +924,21 @@ function switchFormLang( idForm, lang ) {
 function createSwitchFormLang( idForm ) {
   console.log( 'createSwitchFormLang' );
 
-  if( typeof( langAvailableIds ) === 'object' ) {
+  if( typeof( cogumelo.publicConf.langAvailableIds ) === 'object' ) {
     var htmlLangSwitch = '';
     htmlLangSwitch += '<div class="langSwitch-wrap">';
     htmlLangSwitch += '<ul class="langSwitch" data-form_id="'+idForm+'">';
-    $.each( langAvailableIds, function( index, lang ) {
+    $.each( cogumelo.publicConf.langAvailableIds, function( index, lang ) {
       htmlLangSwitch += '<li class="langSwitch-'+lang+'" data-lang="'+lang+'">'+lang;
     });
     htmlLangSwitch += '</ul>';
     htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-globe fa-fw"></i></span>';
     htmlLangSwitch += '</div>';
 
-    $( '[form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + langDefault ).parent().before( htmlLangSwitch );
-    $( '.cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + langDefault ).parent().before( htmlLangSwitch );
+    $( '[form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault ).parent().before( htmlLangSwitch );
+    $( '.cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault ).parent().before( htmlLangSwitch );
 
-    switchFormLang( idForm, langDefault );
+    switchFormLang( idForm, cogumelo.publicConf.langDefault );
 
     $( 'ul[data-form_id="'+idForm+'"].langSwitch li' ).on( 'click', function() {
       var newLang = $( this ).data( 'lang' );
