@@ -152,7 +152,7 @@ class TableView {
         <button class="clearFilters">Clear filters</button>
       </div>
       <div class="tableActions clearfix">
-        <div class="addElem"><img src="{$cogumelo.publicConf.media}/module/table/img/add.png" alt="Add"></div>
+        <div class="addElem"><img src="'.Cogumelo::getSetupValue('publicConf:vars:media').'/module/table/img/add.png" alt="Add"></div>
         <div class="exportContainer">
           <select class="exportSelect">
 
@@ -164,8 +164,8 @@ class TableView {
         <!-- Paginador -->
         <div class="tablePaginator">
           <div class="tablePage"><input type="text" value="1"> de <span class="totalPages">1</span></div>
-          <div class="tablePreviousPage"><img src="/media/module/table/img/a-left.png" alt="previous page"></div>
-          <div class="tableNextPage"><img src="/media/module/table/img/a-right.png" alt="next page"></div>
+          <div class="tablePreviousPage"><img src="'.Cogumelo::getSetupValue('publicConf:vars:media').'/module/table/img/a-left.png" alt="previous page"></div>
+          <div class="tableNextPage"><img src="'.Cogumelo::getSetupValue('publicConf:vars:media').'/module/table/img/a-right.png" alt="next page"></div>
         </div>
       </div>
 
@@ -177,8 +177,8 @@ class TableView {
     <!-- Paginador -->
     <div class="tablePaginator ">
       <div class="tablePage"><input type="text" value="1"> de <span class="totalPages">1</span></div>
-      <div class="tablePreviousPage"><img src="/media/module/table/img/a-left.png" alt="previous page"></div>
-      <div class="tableNextPage"><img src="/media/module/table/img/a-right.png" alt="next page"></div>
+      <div class="tablePreviousPage"><img src="'.Cogumelo::getSetupValue('publicConf:vars:media').'/module/table/img/a-left.png" alt="previous page"></div>
+      <div class="tableNextPage"><img src="'.Cogumelo::getSetupValue('publicConf:vars:media').'/module/table/img/a-right.png" alt="next page"></div>
     </div>
   </div>
   <!-- END HTML TABLE id: "' . $tableId . '" data url: "' . $tableDataUrl . '" -->
