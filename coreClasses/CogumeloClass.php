@@ -213,18 +213,23 @@ class CogumeloClass extends Singleton
 
 
     if( !$COGUMELO_DISABLE_LOGS ) {
-      // Rodeo para evitar "PHP Notice:  Use of undefined constant MOD_DEVEL_URL_DIR"
-      $arrayDefines = get_defined_constants();
-      if(
-        $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/read_logs' &&
-        $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/get_debugger'
+
+      // // Rodeo para evitar "PHP Notice:  Use of undefined constant MOD_DEVEL_URL_DIR"
+      // $arrayDefines = get_defined_constants();
+      // if(
+      //   $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/read_logs' &&
+      //   $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/get_debugger'
+      // ) {
+      //   $ignore = true;
+      // }
+
+      // if( $ignore ) {
+
+      $develUrl = Cogumelo::getSetupValue( 'mod:devel:url' );
+      if( $develUrl &&
+        $_SERVER['REQUEST_URI'] != '/'.$develUrl.'/read_logs' &&
+        $_SERVER['REQUEST_URI'] != '/'.$develUrl.'/get_debugger'
       ) {
-        $ignore = true;
-      }
-
-      if( $ignore ) {
-
-
         error_log(
           '['. date('y-m-d H:i:s',time()) .'] ' .
           '['. $_SERVER['REMOTE_ADDR'] .'] ' .

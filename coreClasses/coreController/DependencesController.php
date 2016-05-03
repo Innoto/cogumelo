@@ -114,13 +114,15 @@ Class DependencesController {
   public function installDependencesBower( $dependences ) {
     echo "\n === Bower dependences ===\n\n";
 
-    if( !is_dir( DEPEN_BOWER_PATH ) ) {
-      if( !mkdir( DEPEN_BOWER_PATH, 0755, true ) ) {
+    $bowerPath = Cogumelo::getSetupValue( 'dependences:bowerPath' );
+
+    if( !is_dir( $bowerPath ) ) {
+      if( !mkdir( $bowerPath, 0755, true ) ) {
         echo "The destination folder does not exist and have permission to create \n";
       }
     }
 
-    $jsonBowerRC = '{ "directory": "'.str_replace( PRJ_BASE_PATH, '', DEPEN_BOWER_PATH ).'", '.
+    $jsonBowerRC = '{ "directory": "'.str_replace( PRJ_BASE_PATH, '', $bowerPath ).'", '.
       ' "json": "'. PRJ_BASE_PATH . '/bower.json" }';
     $fh = fopen( PRJ_BASE_PATH . '/.bowerrc', 'w' );
       fwrite( $fh, $jsonBowerRC );
@@ -155,13 +157,15 @@ Class DependencesController {
   public function installDependencesComposer( $dependences ) {
     echo "\n === Composer dependences ===\n\n";
 
-    if( !is_dir( DEPEN_COMPOSER_PATH ) ) {
-      if( !mkdir( DEPEN_COMPOSER_PATH, 0755, true ) ) {
+    $composerPath = Cogumelo::getSetupValue( 'dependences:composerPath' );
+
+    if( !is_dir( $composerPath ) ) {
+      if( !mkdir( $composerPath, 0755, true ) ) {
         echo "The destination folder does not exist and have permission to create \n";
       }
     }
 
-    $finalArrayDep = array( "require" => array(), "config" => array( "vendor-dir" => DEPEN_COMPOSER_PATH ) );
+    $finalArrayDep = array( "require" => array(), "config" => array( "vendor-dir" => $composerPath ) );
     foreach( $dependences as $depKey => $dep ){
       foreach( $dep as $params ){
         $finalArrayDep['require'][$params[0]] = $params[1];
@@ -184,8 +188,10 @@ Class DependencesController {
   public function installDependencesManual( $dependences ) {
     echo "\n === Manual dependences ===\n\n";
 
-    if( !is_dir( DEPEN_MANUAL_PATH ) ) {
-      if( !mkdir( DEPEN_MANUAL_PATH, 0755, true ) ) {
+    $manualPath = Cogumelo::getSetupValue( 'dependences:manualPath' );
+
+    if( !is_dir( $manualPath ) ) {
+      if( !mkdir( $manualPath, 0755, true ) ) {
         echo "The destination folder does not exist and have permission to create \n";
       }
     }
@@ -193,7 +199,7 @@ Class DependencesController {
     foreach( $dependences as $depKey => $dep ){
       foreach( $dep as $params ) {
         echo "Installing ".$params[0]."\n";
-        $manualCmd = 'cp -r '.DEPEN_MANUAL_REPOSITORY.'/'.$params[0].' '.DEPEN_MANUAL_PATH.'/';
+        $manualCmd = 'cp -r '.Cogumelo::getSetupValue( 'dependences:manualRepositoryPath' ).'/'.$params[0].' '.$manualPath.'/';
         exec( $manualCmd );
       }
     }
@@ -286,7 +292,7 @@ Class DependencesController {
             switch ($this->typeIncludeFile( $includeFile )) {
               case 'serverScript':
                 //Cogumelo::debug( 'Including vendor:'.WEB_BASE_PATH.'/vendorServer/'.$include_folder.'/'.$includeFile );
-                require_once( DEPEN_COMPOSER_PATH.'/'.$include_folder.'/'.$includeFile );
+                require_once( Cogumelo::getSetupValue( 'dependences:composerPath' ).'/'.$include_folder.'/'.$includeFile );
                 break;
               case 'clientScript':
                 $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor/'.$installer );

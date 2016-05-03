@@ -3,8 +3,8 @@
 /**
  * i18nScriptController Class
  */
-require_once( DEPEN_MANUAL_PATH.'/Gettext/src/autoloader.php' );
-require_once( DEPEN_MANUAL_PATH.'/Gettext/src/Translator.php' );
+require_once( Cogumelo::getSetupValue( 'dependences:manualPath' ).'/Gettext/src/autoloader.php' );
+require_once( Cogumelo::getSetupValue( 'dependences:manualPath' ).'/Gettext/src/Translator.php' );
 
 class i18nScriptController {
 
@@ -207,12 +207,12 @@ class i18nScriptController {
           $entriesPhp = Gettext\Extractors\PhpCode::fromFile($filesArray['php']);
           $entriesPhp->mergeWith($entriesPhp);
         }
-      Gettext\Generators\Po::toFile($entriesPhp, $l.'/'.$this->textdomain.'_prev.po');
+        Gettext\Generators\Po::toFile($entriesPhp, $l.'/'.$this->textdomain.'_prev.po');
       }
 
       /**************************** TPL ********************************/
 
-      $smartygettext = DEPEN_COMPOSER_PATH.'/smarty-gettext/smarty-gettext/tsmarty2c.php';
+      $smartygettext = Cogumelo::getSetupValue( 'dependences:composerPath' ).'/smarty-gettext/smarty-gettext/tsmarty2c.php';
       exec( 'chmod 700 '.$smartygettext );
 
       // copiamos os ficheiros nun dir temporal
