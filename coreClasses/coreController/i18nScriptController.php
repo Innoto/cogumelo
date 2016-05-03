@@ -219,11 +219,11 @@ class i18nScriptController {
       foreach ($filesArray['tpl'] as $a){
         $a_parts = explode('/home/proxectos/',$a);
         $name = str_replace('/','_',$a_parts[1]);
-        exec('cp '.$a.' '.TPL_TMP.'/'.$name);
+        exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$name);
       }
 
       foreach ($this->dir_lc as $l){
-        exec($smartygettext.' -o '.$l.'/'.$this->textdomain.'_tpl.po '.TPL_TMP);
+        exec($smartygettext.' -o '.$l.'/'.$this->textdomain.'_tpl.po '.Cogumelo::getSetupValue( 'smarty:tmpPath' ));
         // Now we have to combine this PO file with the PO file we had previusly and discard the tmp file
 
         exec ('msgcat --use-first '.$l.'/'.$this->textdomain.'_prev.po '.$l.'/'.$this->textdomain.'_tpl.po > '.$l.'/'.$this->textdomain.'.po');
@@ -233,7 +233,7 @@ class i18nScriptController {
         exec ('rm '.$l.'/'.$this->textdomain.'_prev_js.po');
       }
 
-      exec ('rm '.TPL_TMP.'/*.tpl');
+      exec ('rm '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/*.tpl');
     error_reporting(E_ALL);
   }
 
@@ -265,7 +265,7 @@ class i18nScriptController {
     else if($_SERVER["REMOTE_ADDR"] == "127.0.0.1") {
       shell_exec('find '.COGUMELO_LOCATION.'/. ../app/. -iname "*.php" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code utf-8 -d c_project -o ../app/i18n/c_project.pot -L PHP');
 
-      foreach( cogumeloGetSetupValue( 'lang:available' ) as $lngKey => $values ) {
+      foreach( Cogumelo::getSetupValue( 'lang:available' ) as $lngKey => $values ) {
         shell_exec('msgmerge -U ../app/i18n/c_project_'.$lngKey.'.po ../app/i18n/c_project.pot');
       }
 

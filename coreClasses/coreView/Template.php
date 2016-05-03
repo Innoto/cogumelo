@@ -24,9 +24,9 @@ class Template extends Smarty {
   /**
    * Globals
    **/
-  var $cgmSmartyConfigDir = SMARTY_CONFIG;
-  var $cgmSmartyCompileDir = SMARTY_COMPILE;
-  var $cgmSmartyCacheDir = SMARTY_CACHE;
+  var $cgmSmartyConfigDir = false;
+  var $cgmSmartyCompileDir = false;
+  var $cgmSmartyCacheDir = false;
 
   var $cgmMediaserverCompileLess = false;
   var $cgmMediaserverHost = false;
@@ -41,6 +41,9 @@ class Template extends Smarty {
    **/
   public function __construct( $baseDir = false ) {
     // Call Smarty's constructor
+    $this->cgmSmartyConfigDir = Cogumelo::getSetupValue( 'smarty:configPath' );
+    $this->cgmSmartyCompileDir = Cogumelo::getSetupValue( 'smarty:compilePath' );
+    $this->cgmSmartyCacheDir = Cogumelo::getSetupValue( 'smarty:cachePath' );
 
     $this->cgmMediaserverCompileLess = Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' );
     $this->cgmMediaserverHost = Cogumelo::getSetupValue( 'mod:mediaserver:host' );

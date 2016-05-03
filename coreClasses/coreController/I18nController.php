@@ -55,7 +55,7 @@ class I18nController {
   */
 
   public static function processUrl( $url ) {
-    $langsAvailable = array_keys( cogumeloGetSetupValue( 'lang:available' ) );
+    $langsAvailable = array_keys( Cogumelo::getSetupValue( 'lang:available' ) );
     foreach( $langsAvailable as $lng ) {
       if( preg_match( '^'.$lng.'/?', $url ) ) {
         $m = array( $url, $lng.'/', '' );

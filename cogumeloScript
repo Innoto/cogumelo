@@ -400,7 +400,9 @@ function deployModules( $isFirstGenerateModel = false ) {
 
 function makeAppPaths() {
   global $lc;
-  $md = array( APP_TMP_PATH, SMARTY_CONFIG, SMARTY_COMPILE, SMARTY_CACHE,
+  $md = array( APP_TMP_PATH,
+    Cogumelo::getSetupValue( 'smarty:configPath' ), Cogumelo::getSetupValue( 'smarty:compilePath' ),
+    Cogumelo::getSetupValue( 'smarty:cachePath' ), Cogumelo::getSetupValue( 'smarty:tmpPath' ),
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ),
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ),
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ),
@@ -409,8 +411,8 @@ function makeAppPaths() {
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ),
     Cogumelo::getSetupValue( 'mod:filedata:cachePath' ),
     Cogumelo::getSetupValue( 'script:backupPath' ),
-    Cogumelo::getSetupValue( 'i18n:path' ), Cogumelo::getSetupValue( 'i18n:localePath' ),
-    TPL_TMP );
+    Cogumelo::getSetupValue( 'i18n:path' ), Cogumelo::getSetupValue( 'i18n:localePath' )
+  );
 
   foreach( Cogumelo::getSetupValue( 'lang:available' ) as $lang ) {
     $md[] = Cogumelo::getSetupValue( 'i18n:localePath' ).'/'.$lang['i18n'].'/LC_MESSAGES';
@@ -432,15 +434,16 @@ function setPermissions( $devel = false ) {
 
   exec( 'sudo chown -R $USER:www-data '.
     WEB_BASE_PATH.' '.APP_BASE_PATH.' '.APP_TMP_PATH.' '.
-    SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+    Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
+    Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
     Cogumelo::getSetupValue( 'logs:path' ).' '.
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
-    Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
-    TPL_TMP  );
+    Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
+  );
 
   exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH );
 
@@ -448,7 +451,8 @@ function setPermissions( $devel = false ) {
 
   // Path que necesitan escritura Apache
   exec( 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
-    SMARTY_CONFIG.' '.SMARTY_COMPILE.' '.SMARTY_CACHE.' '.
+    Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
+    Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
@@ -456,8 +460,8 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '.
-    Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
-    TPL_TMP  );
+    Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
+  );
 
   // Solo usuario administrador
   exec( 'sudo chown $USER:$USER '.Cogumelo::getSetupValue( 'script:backupPath' ) );
