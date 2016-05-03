@@ -21,9 +21,6 @@ class ConfConstantsView {
 
   /**
    * Construimos dinamicamente el contenido de jsConfConstants.js con la información solicitada
-   *
-   * @global TYPE $MEDIASERVER_JAVASCRIPT_GLOBALS
-   * @global TYPE $MEDIASERVER_JAVASCRIPT_CONSTANTS
    **/
   public function javascript(){
     $jsContent = '/* COGUMELO SETUP INFO */'."\n";
@@ -66,26 +63,26 @@ class ConfConstantsView {
     }
 
 
-    global $MEDIASERVER_JAVASCRIPT_GLOBALS;
-    if( is_array( $MEDIASERVER_JAVASCRIPT_GLOBALS ) && count( $MEDIASERVER_JAVASCRIPT_GLOBALS ) > 0 ) {
-      foreach( $MEDIASERVER_JAVASCRIPT_GLOBALS as $globalKey ) {
-        if( isset( $GLOBALS[ $globalKey ] ) ) {
-          $jsValue = $this->valueToJs( $GLOBALS[ $globalKey ] );
-          if( $jsValue !== null ) {
-            $jsContent .= 'var GLOBAL_'.$globalKey.' = '.$jsValue.';'."\n";
-          }
-        }
-      }
-    }
-    global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
-    if( is_array( $MEDIASERVER_JAVASCRIPT_CONSTANTS ) && count( $MEDIASERVER_JAVASCRIPT_CONSTANTS ) > 0 ) {
-      foreach( $MEDIASERVER_JAVASCRIPT_CONSTANTS as $name => $value ) {
-        $jsValue = $this->valueToJs( $value );
-        if( $jsValue !== null ) {
-          $jsContent .= 'var '.$name.' = '.$jsValue.';'."\n";
-        }
-      }
-    }
+    // global $MEDIASERVER_JAVASCRIPT_GLOBALS;
+    // if( is_array( $MEDIASERVER_JAVASCRIPT_GLOBALS ) && count( $MEDIASERVER_JAVASCRIPT_GLOBALS ) > 0 ) {
+    //   foreach( $MEDIASERVER_JAVASCRIPT_GLOBALS as $globalKey ) {
+    //     if( isset( $GLOBALS[ $globalKey ] ) ) {
+    //       $jsValue = $this->valueToJs( $GLOBALS[ $globalKey ] );
+    //       if( $jsValue !== null ) {
+    //         $jsContent .= 'var GLOBAL_'.$globalKey.' = '.$jsValue.';'."\n";
+    //       }
+    //     }
+    //   }
+    // }
+    // global $MEDIASERVER_JAVASCRIPT_CONSTANTS;
+    // if( is_array( $MEDIASERVER_JAVASCRIPT_CONSTANTS ) && count( $MEDIASERVER_JAVASCRIPT_CONSTANTS ) > 0 ) {
+    //   foreach( $MEDIASERVER_JAVASCRIPT_CONSTANTS as $name => $value ) {
+    //     $jsValue = $this->valueToJs( $value );
+    //     if( $jsValue !== null ) {
+    //       $jsContent .= 'var '.$name.' = '.$jsValue.';'."\n";
+    //     }
+    //   }
+    // }
 
 
     $jsContent .= '/* END COGUMELO SETUP INFO */'."\n";

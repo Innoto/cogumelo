@@ -83,26 +83,26 @@ class LessController {
 
 
 
-    global $MEDIASERVER_LESS_GLOBALS, $MEDIASERVER_LESS_CONSTANTS;
-    if( is_array( $MEDIASERVER_LESS_GLOBALS ) && count( $MEDIASERVER_LESS_GLOBALS ) > 0 ) {
-      foreach( $MEDIASERVER_LESS_GLOBALS as $globalKey ) {
-        if( isset( $GLOBALS[ $globalKey ] ) ) {
-          $lessValue = $this->valueToLess( $GLOBALS[ $globalKey ] );
-          if( $lessValue !== null ) {
-            $lessVars[ 'GLOBAL_'.$globalKey ] = $lessValue;
-          }
-        }
-      }
-    }
-    if( is_array( $MEDIASERVER_LESS_CONSTANTS ) && count( $MEDIASERVER_LESS_CONSTANTS ) > 0 ) {
-      foreach( $MEDIASERVER_LESS_CONSTANTS as $name => $value ) {
-        //$lessContent .= '@'.$name.' : "'.$value.'";'."\n";
-        $lessValue = $this->valueToLess( $value );
-        if( $lessValue !== null ) {
-          $lessVars[ $name ] = $lessValue;
-        }
-      }
-    }
+    // global $MEDIASERVER_LESS_GLOBALS, $MEDIASERVER_LESS_CONSTANTS;
+    // if( is_array( $MEDIASERVER_LESS_GLOBALS ) && count( $MEDIASERVER_LESS_GLOBALS ) > 0 ) {
+    //   foreach( $MEDIASERVER_LESS_GLOBALS as $globalKey ) {
+    //     if( isset( $GLOBALS[ $globalKey ] ) ) {
+    //       $lessValue = $this->valueToLess( $GLOBALS[ $globalKey ] );
+    //       if( $lessValue !== null ) {
+    //         $lessVars[ 'GLOBAL_'.$globalKey ] = $lessValue;
+    //       }
+    //     }
+    //   }
+    // }
+    // if( is_array( $MEDIASERVER_LESS_CONSTANTS ) && count( $MEDIASERVER_LESS_CONSTANTS ) > 0 ) {
+    //   foreach( $MEDIASERVER_LESS_CONSTANTS as $name => $value ) {
+    //     //$lessContent .= '@'.$name.' : "'.$value.'";'."\n";
+    //     $lessValue = $this->valueToLess( $value );
+    //     if( $lessValue !== null ) {
+    //       $lessVars[ $name ] = $lessValue;
+    //     }
+    //   }
+    // }
 
     return ( count( $lessVars ) > 0 ) ? $lessVars : false;
   }

@@ -106,19 +106,19 @@ class Template extends Smarty {
 
 
 
-    global $MEDIASERVER_SMARTY_GLOBALS, $MEDIASERVER_SMARTY_CONSTANTS;
-    if( is_array( $MEDIASERVER_SMARTY_GLOBALS ) && count( $MEDIASERVER_SMARTY_GLOBALS ) > 0 ) {
-      foreach( $MEDIASERVER_SMARTY_GLOBALS as $globalKey ) {
-        if( isset( $GLOBALS[ $globalKey ] ) ) {
-          $this->assign( 'GLOBAL_'.$globalKey, $GLOBALS[ $globalKey ] );
-        }
-      }
-    }
-    if( is_array( $MEDIASERVER_SMARTY_CONSTANTS ) && count( $MEDIASERVER_SMARTY_CONSTANTS ) > 0 ) {
-      foreach( $MEDIASERVER_SMARTY_CONSTANTS as $key => $value ) {
-        $this->assign( $key, $value );
-      }
-    }
+    // global $MEDIASERVER_SMARTY_GLOBALS, $MEDIASERVER_SMARTY_CONSTANTS;
+    // if( is_array( $MEDIASERVER_SMARTY_GLOBALS ) && count( $MEDIASERVER_SMARTY_GLOBALS ) > 0 ) {
+    //   foreach( $MEDIASERVER_SMARTY_GLOBALS as $globalKey ) {
+    //     if( isset( $GLOBALS[ $globalKey ] ) ) {
+    //       $this->assign( 'GLOBAL_'.$globalKey, $GLOBALS[ $globalKey ] );
+    //     }
+    //   }
+    // }
+    // if( is_array( $MEDIASERVER_SMARTY_CONSTANTS ) && count( $MEDIASERVER_SMARTY_CONSTANTS ) > 0 ) {
+    //   foreach( $MEDIASERVER_SMARTY_CONSTANTS as $key => $value ) {
+    //     $this->assign( $key, $value );
+    //   }
+    // }
 
   }
 
