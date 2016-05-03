@@ -15,31 +15,32 @@ class Cache {
 
   var $mc = false;
 
-  function __construct() {
+  public function __construct() {
     $this->mc = new Memcached();
-    
-    global $MEMCACHED_HOST_ARRAY;
-    foreach( $MEMCACHED_HOST_ARRAY as $host) {
-      $this->mc->addServer($host['host'], $host['port']);
+
+    $hostArray = Cogumelo::getSetupValue( 'memcached:hostArray' );
+    if( $hostArray ) {
+      foreach( $hostArray as $host ) {
+        $this->mc->addServer( $host['host'], $host['port'] );
+      }
     }
-
   }
 
-  /*
-  * @param string $query is the query string
-  * @param array $variables the variables for the query prepared statment
-  */
-  function getCache($query){
-    return $this->mc->get( $query); 
+  /**
+   * @param string $query is the query string
+   * @param array $variables the variables for the query prepared statment
+   */
+  public function getCache( $query ) {
+    return $this->mc->get( $query);
   }
 
 
-  /*
-  * @param string $query is the query string
-  * @param array $variables the variables for the query prepared statment
-  */
-  function setCache($query, $data){
-    return $this->mc->set( $query, $data, MEMCACHED_EXPIRATION_TIME); 
+  /**
+   * @param string $query is the query string
+   * @param array $variables the variables for the query prepared statment
+   */
+  public function setCache( $query, $data ){
+    return $this->mc->set( $query, $data, Cogumelo::getSetupValue( 'memcached:expirationTime' ) );
   }
 
 }

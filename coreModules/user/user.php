@@ -1,7 +1,7 @@
 <?php
 
 Cogumelo::load("coreController/Module.php");
-require_once APP_BASE_PATH.'/conf/geozzyRolesPermissions.php';
+require_once APP_BASE_PATH.'/conf/inc/geozzyRolesPermissions.php';
 
 define('MOD_USER_URL_DIR', 'user');
 

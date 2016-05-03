@@ -237,7 +237,7 @@ function createDB(){
 
   $user = false;
 
-  $fileConnectionsInfo = APP_BASE_PATH.'/conf/default-connections-info.php';
+  $fileConnectionsInfo = APP_BASE_PATH.'/conf/inc/default-connections-info.php';
   if( file_exists( $fileConnectionsInfo ) ) {
     include $fileConnectionsInfo;
     if( defined( 'DDBB_PRIV_USER' ) && defined( 'DDBB_PRIV_PASS' ) ) {
