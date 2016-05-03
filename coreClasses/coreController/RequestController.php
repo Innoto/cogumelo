@@ -140,15 +140,16 @@ class RequestController
 
     // require class script from views folder
     // include( '/home/proxectos/geozzy/distModules/geozzy/classes/controller/UrlAliasController.php' );
-    if( defined( 'COGUMELO_APP_URL_ALIAS_CONTROLLER' ) && file_exists( COGUMELO_APP_URL_ALIAS_CONTROLLER ) ) {
-      include( COGUMELO_APP_URL_ALIAS_CONTROLLER );
+
+    $urlAliasControllerClassFile = Cogumelo::getSetupValue( 'urlAliasController:classFile' );
+    if( $urlAliasControllerClassFile && file_exists( $urlAliasControllerClassFile ) ) {
+      include( $urlAliasControllerClassFile );
       $urlAliasController = new UrlAliasController();
       $alternative = $urlAliasController->getAlternative( $this->url_path );
     }
 
 
     if( $alternative ) {
-      error_log( 'RequestController::notAppUrl $alternative= '. print_r( $alternative, true ) );
       if( $alternative[ 'code' ] === 'alias' ) {
         error_log( 'RequestController::notAppUrl Alias-viewUrl '.$alternative[ 'url' ] );
         global $_C;

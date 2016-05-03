@@ -48,13 +48,10 @@ class FiledataImagesController {
   public function setProfile( $profile ) {
     //error_log( "FiledataImagesController: setProfile( $profile )" );
 
-    global $IMAGE_PROFILES;
+    $conf = Cogumelo::getSetupValue( 'mod:filedata:profile:'.$profile );
 
-    if( $profile && isset( $IMAGE_PROFILES[ $profile ] ) ) {
-      $conf = $IMAGE_PROFILES[ $profile ];
-
-      //$this->profile = array();
-      $this->profile = $IMAGE_PROFILES[ $profile ];
+    if( $conf ) {
+      $this->profile = $conf;
       $this->profile['idName'] = $profile;
 
       $this->profile['width'] = ( isset( $conf['width'] ) ) ? $conf['width'] : 0; // 0 by default
