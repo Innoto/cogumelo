@@ -202,7 +202,7 @@ class FiledataController {
       $relativeDestPath = ( isset( $filedataInfo['destDir'] ) ) ? $filedataInfo['destDir'] : '';
 
       if( file_exists( $this->filesAppPath.$relativeDestPath.'/'.$secureFileName ) ){
-        error_log( 'FiledataController: createFile - COLISION: '.$this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
+        error_log( 'FiledataController: (Notice) createFile - COLISION: '.$this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
         $filePathInfo = pathinfo( $secureFileName );
         $secureFileName = $filePathInfo['filename'] .'_fdmi'. $filedataObj->getter('id') .'.'. $filePathInfo['extension'];
       }
@@ -277,7 +277,7 @@ class FiledataController {
     Delete a database FiledataModel register and files
   */
   public function deleteFile( $fileId ) {
-    error_log( 'FiledataController: deleteFile(): ' . $fileId );
+    // error_log( 'FiledataController: deleteFile(): ' . $fileId );
     $objModel = new FiledataModel();
     $listModel = $objModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) );
 
@@ -291,15 +291,15 @@ class FiledataController {
     Remove server files
   */
   public function removeServerFiles( $voFile ) {
-    error_log( 'FiledataController: removeServerFiles(): ' . $voFile->getter('id') );
+    // error_log( 'FiledataController: removeServerFiles(): ' . $voFile->getter('id') );
 
-    error_log( 'FiledataController: removeServerFiles(): clearCache '.$voFile->getter('id') );
+    // error_log( 'FiledataController: removeServerFiles(): clearCache '.$voFile->getter('id') );
     filedata::load('controller/FiledataImagesController.php');
     $fileImageCtrl = new FiledataImagesController();
     $fileImageCtrl->clearCache( $voFile->getter('id') );
 
     $serverFile = Cogumelo::getSetupValue( 'mod:filedata:filePath' ).$voFile->getter('absLocation');
-    error_log( 'FiledataController: removeServerFiles(): unlink '.$serverFile );
+    // error_log( 'FiledataController: removeServerFiles(): unlink '.$serverFile );
     if( file_exists( $serverFile ) ) {
       unlink( $serverFile );
     }

@@ -41,9 +41,9 @@ class FormConnector extends View {
   }
 
   private function uploadFormFile() {
-    error_log( '--------------------------------' );
-    error_log( ' FormConnector - uploadFormFile ' );
-    error_log( '--------------------------------' );
+    // error_log( '--------------------------------' );
+    // error_log( ' FormConnector - uploadFormFile ' );
+    // error_log( '--------------------------------' );
 
     $form = new FormController();
     $error = false;
@@ -140,7 +140,7 @@ class FormConnector extends View {
 
               if( isset( $fileFieldValuePrev['status'] ) && $fileFieldValuePrev['status'] !== false ) {
                 if( $fileFieldValuePrev['status'] === 'DELETE' ) {
-                  error_log( 'FU: Todo OK e estado REPLACE...' );
+                  // error_log( 'FU: Todo OK e estado REPLACE...' );
 
                   $fileFieldValuePrev['status'] = 'REPLACE';
                   $fileFieldValuePrev['temp'] = array(
@@ -158,7 +158,7 @@ class FormConnector extends View {
                 }
               }
               else {
-                error_log( 'FU: Todo OK e estado LOAD...' );
+                // error_log( 'FU: Todo OK e estado LOAD...' );
 
                 $fileFieldValuePrev = array(
                   'status' => 'LOAD',
@@ -174,7 +174,7 @@ class FormConnector extends View {
 
 
               if( !$form->existErrors() ) {
-                error_log( 'FU: OK con el ficheiro subido... Se persiste...' );
+                // error_log( 'FU: OK con el ficheiro subido... Se persiste...' );
 
                 $form->setFieldValue( $fieldName, $fileFieldValuePrev );
                 // Persistimos formObj para cuando se envíe el formulario completo
@@ -226,15 +226,15 @@ class FormConnector extends View {
   } // function uploadFormFile() {
 
   private function deleteFormFile() {
-    error_log( '--------------------------------' );
-    error_log( ' FormConnector - deleteFormFile ' );
-    error_log( '--------------------------------' );
+    // error_log( '--------------------------------' );
+    // error_log( ' FormConnector - deleteFormFile ' );
+    // error_log( '--------------------------------' );
 
     $form = new FormController();
     $error = false;
 
-    error_log( 'POST:' );
-    error_log( print_r( $_POST, true ) );
+    // error_log( 'POST:' );
+    // error_log( print_r( $_POST, true ) );
 
     if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'] ) ) {
 
@@ -252,25 +252,25 @@ class FormConnector extends View {
         if( isset( $fileFieldValuePrev['status'] ) && $fileFieldValuePrev['status'] !== false ) {
           switch( $fileFieldValuePrev['status'] ) {
             case 'LOAD':
-              error_log( 'FDelete: LOAD - Borramos: '.$fileFieldValuePrev['temp']['absLocation'] );
+              // error_log( 'FDelete: LOAD - Borramos: '.$fileFieldValuePrev['temp']['absLocation'] );
 
               unlink( $fileFieldValuePrev['temp']['absLocation'] );
               $fileFieldValuePrev = null;
               break;
             case 'EXIST':
-              error_log( 'FDelete: EXIST - Marcamos para borrar: '.$fileFieldValuePrev['prev']['absLocation'] );
+              // error_log( 'FDelete: EXIST - Marcamos para borrar: '.$fileFieldValuePrev['prev']['absLocation'] );
 
               $fileFieldValuePrev['status'] = 'DELETE';
               break;
             case 'REPLACE':
-              error_log( 'FDelete: REPLACE - Borramos: '.$fileFieldValuePrev['temp']['absLocation'] );
+              // error_log( 'FDelete: REPLACE - Borramos: '.$fileFieldValuePrev['temp']['absLocation'] );
 
               $fileFieldValuePrev['status'] = 'DELETE';
               unlink( $fileFieldValuePrev['temp']['absLocation'] );
               $fileFieldValuePrev['temp'] = null;
               break;
             default:
-              error_log( 'FDelete: Intentando borrar con status erroneo: ' . $fileFieldValuePrev['status'] );
+              // error_log( 'FDelete: Intentando borrar con status erroneo: ' . $fileFieldValuePrev['status'] );
 
               $form->addFieldRuleError( $fieldName, 'cogumelo',
                 'Intento de sobreescribir un fichero existente' );
@@ -279,7 +279,7 @@ class FormConnector extends View {
 
         }
         else {
-          error_log( 'FDelete: Intentando eliminar un fichero sin estado.' );
+          error_log( 'FDelete: Error intentando eliminar un fichero sin estado.' );
 
           $form->addFieldRuleError( $fieldName, 'cogumelo',
             'Intento de borrar un fichero inexistente' );
@@ -287,7 +287,7 @@ class FormConnector extends View {
 
 
         if( !$form->existErrors() ) {
-          error_log( 'FDelete: OK. Guardando el nuevo estado... Se persiste...' . $fileFieldValuePrev['status'] );
+          // error_log( 'FDelete: OK. Guardando el nuevo estado... Se persiste...' . $fileFieldValuePrev['status'] );
 
           $form->setFieldValue( $fieldName, $fileFieldValuePrev );
           // Persistimos formObj para cuando se envíe el formulario completo
@@ -381,9 +381,9 @@ class FormConnector extends View {
 
 
   private function getGroupElement() {
-    error_log( '---------------------------------' );
-    error_log( ' FormConnector - getGroupElement ' );
-    error_log( '---------------------------------' );
+    // error_log( '---------------------------------' );
+    // error_log( ' FormConnector - getGroupElement ' );
+    // error_log( '---------------------------------' );
 
     $groupIdElem = false; // Id de la nueva instancia del grupo
     $htmlGroupElement = false; // HTML de la nueva instancia del grupo
@@ -446,9 +446,9 @@ class FormConnector extends View {
 
 
   private function removeGroupElement() {
-    error_log( '------------------------------------' );
-    error_log( ' FormConnector - removeGroupElement ' );
-    error_log( '------------------------------------' );
+    // error_log( '------------------------------------' );
+    // error_log( ' FormConnector - removeGroupElement ' );
+    // error_log( '------------------------------------' );
 
     $form = new FormController();
 

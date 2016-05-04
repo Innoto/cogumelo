@@ -62,7 +62,7 @@ class FiledataImagesView extends View {
 
         if( $imageCtrl->profile['cache'] && file_exists( $imgInfo['route'] ) && strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
           $urlRedirect = substr( $imgInfo['route'], strlen( $this->webBasePath ) );
-          error_log( "FiledataImagesView: showImg(): urlRedirect = $urlRedirect" );
+          // error_log( "FiledataImagesView: showImg(): urlRedirect = $urlRedirect" );
           Cogumelo::redirect( SITE_HOST . $urlRedirect );
         }
         else {

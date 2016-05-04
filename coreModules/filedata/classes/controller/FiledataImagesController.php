@@ -164,7 +164,7 @@ class FiledataImagesController {
           $toRouteDir = pathinfo( $imgRoute, PATHINFO_DIRNAME );
           //error_log( "toRouteDir = $toRouteDir" );
           if( !file_exists( $toRouteDir ) ) {
-            error_log( 'mkdir '.$toRouteDir );
+            // error_log( 'mkdir '.$toRouteDir );
             $maskPrev = umask( 0 );
             mkdir ( $toRouteDir, 0775, true );
             umask( $maskPrev );
