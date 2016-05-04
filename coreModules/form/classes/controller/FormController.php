@@ -1695,14 +1695,16 @@ class FormController implements Serializable {
     if( $fieldNames === false ) {
       $fieldNames = $this->getFieldsNamesArray();
     }
-    foreach( $fieldNames as $fieldName ) {
-      if( $this->getFieldInternal( $fieldName, 'groupCloneRoot' ) !== true ) {
-        // Procesamos los campos que no son raiz de campos agrupados
-        $htmlField = $this->getHtmlField( $fieldName );
-        if( $htmlField !== '' ) {
-          $html[ $fieldName ] = '<div class="'.$this->cssPrefix.'-wrap '.$this->cssPrefix.'-field-'.$fieldName.
-            ( $this->getFieldType( $fieldName ) === 'file' ? ' '.$this->cssPrefix.'-fileField ' : '' ).
-            '">'.$htmlField.'</div>';
+    if( is_array( $fieldNames ) && count($fieldNames) > 0 ) {
+      foreach( $fieldNames as $fieldName ) {
+        if( $this->getFieldInternal( $fieldName, 'groupCloneRoot' ) !== true ) {
+          // Procesamos los campos que no son raiz de campos agrupados
+          $htmlField = $this->getHtmlField( $fieldName );
+          if( $htmlField !== '' ) {
+            $html[ $fieldName ] = '<div class="'.$this->cssPrefix.'-wrap '.$this->cssPrefix.'-field-'.$fieldName.
+              ( $this->getFieldType( $fieldName ) === 'file' ? ' '.$this->cssPrefix.'-fileField ' : '' ).
+              '">'.$htmlField.'</div>';
+          }
         }
       }
     }
