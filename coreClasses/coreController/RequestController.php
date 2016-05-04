@@ -134,7 +134,7 @@ class RequestController
 
 
   public function notAppUrl() {
-    error_log( 'RequestController::notAppUrl '.$this->url_path );
+    // error_log( 'RequestController::notAppUrl '.$this->url_path );
 
     $alternative = false;
 
@@ -151,7 +151,7 @@ class RequestController
 
     if( $alternative ) {
       if( $alternative[ 'code' ] === 'alias' ) {
-        error_log( 'RequestController::notAppUrl Alias-viewUrl '.$alternative[ 'url' ] );
+        error_log( '(Notice) RequestController::notAppUrl Alias-viewUrl '.$alternative[ 'url' ] );
         global $_C;
         $_C->viewUrl( $alternative[ 'url' ] );
         /**
@@ -160,7 +160,7 @@ class RequestController
         */
       }
       else {
-        error_log( 'RequestController::notAppUrl Redirect '.$alternative[ 'code' ].' a '.$alternative[ 'url' ] );
+        error_log( '(Notice) RequestController::notAppUrl Redirect '.$alternative[ 'code' ].' a '.$alternative[ 'url' ] );
         $this->redirect( $alternative[ 'url' ], $alternative[ 'code' ] );
       }
     }
