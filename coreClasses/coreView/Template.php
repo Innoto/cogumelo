@@ -153,13 +153,15 @@ class Template extends Smarty {
       }
     }
   }
+
+
   // Metodos "ALIAS" que hay que dejar de usar
-  public function setBlock( $fragmentName, $fragmentObject ) {
-    $this->setFragment( $fragmentName, $fragmentObject );
-  }
-  public function addToBlock( $fragmentName, $fragmentObject ) {
-    $this->addToFragment( $fragmentName, $fragmentObject );
-  }
+  // public function setBlock( $fragmentName, $fragmentObject ) {
+  //   $this->setFragment( $fragmentName, $fragmentObject );
+  // }
+  // public function addToBlock( $fragmentName, $fragmentObject ) {
+  //   $this->addToFragment( $fragmentName, $fragmentObject );
+  // }
 
 
   /**
@@ -589,8 +591,6 @@ class Template extends Smarty {
         $this->assign( $fragmentName, $htmlFragment );
       }
 
-
-
       $htmlCode = $this->fetch( $this->tpl );
       Cogumelo::debug( 'Template class displays tpl '.$this->tpl );
     }
@@ -601,9 +601,7 @@ class Template extends Smarty {
     return( $htmlCode );
   }
 
-  public function execBlock() {
-    $this->execFragment();
-  }
-
-
+  // public function execBlock() {
+  //   $this->execFragment();
+  // }
 }
