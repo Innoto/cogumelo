@@ -428,12 +428,20 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
     },
     */
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
+      console.log( 'Executando fileFieldToOk...' );
+      console.log( $jsonData );
+
       var idForm = $jsonData.moreInfo.idForm;
       var fieldName = $jsonData.moreInfo.fieldName;
       $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .progressBar' ).hide();
 
       if( $jsonData.result === 'ok' ) {
+
         fileFieldToOk( idForm, fieldName, $jsonData.moreInfo.fileName, false, false );
+
+        if( $.isFunction( cogumelo[$jsonData.success.fileUpload] ) ) {
+          cogumelo[$jsonData.success.fileUpload]( idForm, fieldName, $jsonData.moreInfo.cgIntFrmId );
+        }
       }
       else {
         console.log( 'uploadFile ERROR' );
@@ -464,7 +472,6 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
         }
         // if( $jsonData.formError !== '' ) $validateForm.showErrors( {'submit': $jsonData.formError} );
       }
-
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
       console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
@@ -506,6 +513,9 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 
       fileFieldToInput( idForm, fieldName );
 
+      if( $.isFunction( cogumelo[response.success.fileDelete] ) ) {
+        cogumelo[response.success.fileDelete]( idForm, fieldName, response.moreInfo.cgIntFrmId );
+      }
     }
     else {
       console.log( 'deleteFormFile.done...ERROR' );

@@ -48,12 +48,13 @@ class FormConnector extends View {
     $form = new FormController();
     $error = false;
 
+    $idForm = isset( $_POST['idForm'] ) ? $_POST['idForm'] : false;
+
     // error_log( 'FILES:' ); error_log( print_r( $_FILES, true ) );
     // error_log( 'POST:' ); error_log( print_r( $_POST, true ) );
 
-    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'], $_FILES['ajaxFileUpload'] ) ) {
+    if( isset( $_POST['cgIntFrmId'], $_POST['fieldName'], $_FILES['ajaxFileUpload'] ) ) {
 
-      $idForm     = $_POST['idForm'];
       $cgIntFrmId = $_POST['cgIntFrmId'];
       $fieldName  = $_POST['fieldName'];
 
@@ -104,6 +105,9 @@ class FormConnector extends View {
 
         // Recuperamos formObj y validamos el fichero temporal
         if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' ) {
+
+          $idForm = $form->getId();
+
           // Guardamos los datos previos del campo
           $fileFieldValuePrev = $form->getFieldValue( $fieldName );
           // Creamos un objeto temporal para validarlo
@@ -199,30 +203,27 @@ class FormConnector extends View {
           $form->addFieldRuleError( $fieldName, 'cogumelo',
             'La subida del fichero ha fallado. (FO)' );
         }
-
       } // if( !$error ) // Recuperamos formObj y validamos el fichero temporal
-
     } // if( isset( ... ) )
     else { // no parece haber fichero
       $form->addFieldRuleError( $_POST['fieldName'], 'cogumelo',
         'La subida del fichero ha fallado. (IS)' );
     }
 
+    $moreInfo = array(
+      'idForm' => $idForm,
+      'cgIntFrmId' => $_POST['cgIntFrmId'],
+      'fieldName' => $_POST['fieldName']
+    );
+    if( !$form->existErrors() ) {
+      $moreInfo['fileName'] = $fileFieldValuePrev['temp']['name'];
+      $moreInfo['fileSize'] = $fileFieldValuePrev['temp']['size'];
+      $moreInfo['fileType'] = $fileFieldValuePrev['temp']['type'];
+    }
 
     // Notificamos el resultado al UI
-    if( !$form->existErrors() ) {
-      $moreInfo = array( 'idForm' => $_POST['idForm'], 'fieldName' => $_POST['fieldName'],
-        'fileName' => $fileFieldValuePrev['temp']['name'],
-        'fileSize' => $fileFieldValuePrev['temp']['size'],
-        'fileType' => $fileFieldValuePrev['temp']['type'] );
-      header('Content-Type: application/json; charset=utf-8');
-      echo $form->getJsonOk( $moreInfo );
-    }
-    else {
-      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'] );
-      header('Content-Type: application/json; charset=utf-8');
-      echo $form->getJsonError( $moreInfo );
-    }
+    $form->sendJsonResponse( $moreInfo );
+
   } // function uploadFormFile() {
 
   private function deleteFormFile() {
@@ -236,14 +237,17 @@ class FormConnector extends View {
     // error_log( 'POST:' );
     // error_log( print_r( $_POST, true ) );
 
-    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['fieldName'] ) ) {
+    $idForm = isset( $_POST['idForm'] ) ? $_POST['idForm'] : false;
 
-      $idForm     = $_POST['idForm'];
+    if( isset( $_POST['cgIntFrmId'], $_POST['fieldName'] ) ) {
+
       $cgIntFrmId = $_POST['cgIntFrmId'];
       $fieldName  = $_POST['fieldName'];
 
       // Recuperamos formObj y validamos el fichero temporal
       if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' ) {
+
+        $idForm = $form->getId();
 
         // Guardamos los datos previos del campo
         $fileFieldValuePrev = $form->getFieldValue( $fieldName );
@@ -285,7 +289,6 @@ class FormConnector extends View {
             'Intento de borrar un fichero inexistente' );
         }
 
-
         if( !$form->existErrors() ) {
           // error_log( 'FDelete: OK. Guardando el nuevo estado... Se persiste...' . $fileFieldValuePrev['status'] );
 
@@ -302,7 +305,6 @@ class FormConnector extends View {
         $form->addFieldRuleError( $fieldName, 'cogumelo',
           'Los datos del fichero no han llegado bien al servidor. FORM' );
       }
-
     } // if( isset( ... ) )
     else { // no parece haber fichero
       $form->addFieldRuleError( $_POST['fieldName'], 'cogumelo',
@@ -310,17 +312,15 @@ class FormConnector extends View {
     }
 
 
+    $moreInfo = array(
+      'idForm' => $idForm,
+      'cgIntFrmId' => $_POST['cgIntFrmId'],
+      'fieldName' => $_POST['fieldName']
+    );
+
     // Notificamos el resultado al UI
-    if( !$form->existErrors() ) {
-      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'] );
-      header('Content-Type: application/json; charset=utf-8');
-      echo $form->getJsonOk( $moreInfo );
-    }
-    else {
-      $moreInfo = array( 'idForm' => $idForm, 'fieldName' => $_POST['fieldName'] );
-      header('Content-Type: application/json; charset=utf-8');
-      echo $form->getJsonError( $moreInfo );
-    }
+    $form->sendJsonResponse( $moreInfo );
+
   } // function deleteFormFile() {
 
   /**
@@ -391,10 +391,10 @@ class FormConnector extends View {
 
     $form = new FormController();
 
-    if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['groupName'] ) ) {
+    if( isset( $_POST['cgIntFrmId'], $_POST['idForm'], $_POST['groupName'] ) ) {
 
-      $idForm     = $_POST['idForm'];
       $cgIntFrmId = $_POST['cgIntFrmId'];
+      $idForm     = $_POST['idForm'];
       $groupName  = $_POST['groupName'];
 
       // Recuperamos formObj y validamos el grupo
@@ -512,7 +512,7 @@ class FormConnector extends View {
   pasos
 
   1.- Sube o ficheiro + ver que existe en tmp e ten tamaño
-  http://php.net/manual/es/function.is-uploaded-file.php
+  http://php.net/manual/function.is-uploaded-file.php
   http://es1.php.net/manual/en/function.filesize.php
   Controlar upload_max_filesize e post_max_size
   To upload large files, this value must be larger than upload_max_filesize.
@@ -520,7 +520,7 @@ class FormConnector extends View {
   Generally speaking, memory_limit should be larger than post_max_size.
 
   2.- Validadores - Se non valida, eliminar en form e en srv.
-  http://es1.php.net/manual/en/function.finfo-file.php
+  http://php.net/manual/function.finfo-file.php
   $finfo = new finfo(FILEINFO_MIME_TYPE);
   $finfo->file($_FILES['upfile']['tmp_name'])
 
@@ -529,11 +529,11 @@ class FormConnector extends View {
   mb_strlen($filename,"UTF-8") > 225
   make sure the file name in English characters, numbers and (_-.) symbols.
   preg_match("`^[-0-9A-Z_\.]+$`i",$filename)
-  http://php.net/manual/es/ini.core.php#ini.open-basedir
+  http://php.net/manual/ini.core.php#ini.open-basedir
   http://php.net/pathinfo
-  http://es1.php.net/manual/en/function.chmod.php
-  http://es1.php.net/manual/en/function.move-uploaded-file.php
-  http://php.net/manual/en/function.sha1-file.php
+  http://php.net/manual/function.chmod.php
+  http://php.net/manual/function.move-uploaded-file.php
+  http://php.net/manual/function.sha1-file.php
 
   4.- Gardar no obj FORM e voltalo a meter na sesion
 

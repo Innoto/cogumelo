@@ -441,7 +441,7 @@ class FormController implements Serializable {
   public function setField( $fieldName, $params = false ) {
     $this->fields[ $fieldName ][ 'name' ] = $fieldName;
     $this->fields[ $fieldName ][ 'cgIntFrmFieldInfo' ] = array();
-    if( $params ) {
+    if( $params && is_array($params) && count($params)>0 ) {
       foreach( $params as $key => $value ) {
         $this->fields[ $fieldName ][ $key ] = $value;
       }
