@@ -27,6 +27,50 @@ class FormConnector extends View {
   }
 
 
+  public function execCommand() {
+    if( isset( $_POST['execute'] ) ) {
+      switch( $_POST['execute'] ) {
+        case 'keepAlive':
+          $this->keepAlive();
+          break;
+        case 'removeGroupElement':
+          $this->removeGroupElement();
+          break;
+        case 'getGroupElement':
+          $this->getGroupElement();
+          break;
+        default:
+          error_log( 'ERROR - FormConnector::execCommand - Comando no soportado: '.$_POST['execute'] );
+          break;
+      }
+    }
+    else {
+      error_log( 'ERROR - FormConnector::execCommand - Datos erroneos' );
+    }
+  }
+
+
+  public function keepAlive() {
+    error_log( '(Notice) FormConnector::keepAlive' );
+
+    $form = new FormController();
+    $error = false;
+
+    if( isset( $_POST['cgIntFrmId'] ) && $form->loadFromSession( $_POST['cgIntFrmId'] ) ) {
+      $form->saveToSession();
+    }
+    else { // no parece haber fichero
+      $form->addFormError( 'No existe el form' );
+    }
+
+    $moreInfo = array(
+      'cgIntFrmId' => $_POST['cgIntFrmId']
+    );
+
+    // Notificamos el resultado al UI
+    $form->sendJsonResponse( $moreInfo );
+
+  }
 
 
 
@@ -368,16 +412,6 @@ class FormConnector extends View {
 
 
 
-
-
-  public function groupElement() {
-    if( isset( $_POST['execute'] ) && $_POST['execute'] === 'removeGroupElement' ) {
-      $this->removeGroupElement();
-    }
-    else {
-      $this->getGroupElement();
-    }
-  }
 
 
   private function getGroupElement() {

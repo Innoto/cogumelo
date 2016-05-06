@@ -36,6 +36,7 @@ class FormController implements Serializable {
   private $success = false;
   private $method = 'post';
   private $enctype = 'multipart/form-data';
+  private $keepAlive = true;
   private $fields = array();
   private $rules = array();
   private $groups = array();
@@ -166,6 +167,15 @@ class FormController implements Serializable {
   }
 
   /**
+   * Establece el uso o no del proceso de keep alive
+   *
+   * @param bool $status Action del formulario
+   */
+  public function setKeepAlive( $status = true ) {
+    $this->keepAlive = ($status) ? true : false;
+  }
+
+  /**
     Recupera todos los datos importantes en un array serializado
     @return string
    */
@@ -179,6 +189,7 @@ class FormController implements Serializable {
     $data[ 'success' ] = $this->success;
     $data[ 'method' ] = $this->method;
     $data[ 'enctype' ] = $this->enctype;
+    $data[ 'keepAlive' ] = $this->keepAlive;
     $data[ 'fields' ] = $this->fields;
     $data[ 'rules' ] = $this->rules;
     $data[ 'groups' ] = $this->groups;
@@ -202,6 +213,7 @@ class FormController implements Serializable {
     $this->success = $data[ 'success' ];
     $this->method = $data[ 'method' ];
     $this->enctype = $data[ 'enctype' ];
+    $this->keepAlive = $data[ 'keepAlive' ];
     $this->fields = $data[ 'fields' ];
     $this->rules = $data[ 'rules' ];
     $this->groups = $data[ 'groups' ];
@@ -1960,11 +1972,18 @@ class FormController implements Serializable {
    */
   public function setSuccess( $successName, $successParam = true ) {
     //error_log( 'setSuccess: name='. $successName . ' param=' .  $successParam );
+    // 'onSubmitOk' : JS function
+    // 'onSubmitError' : JS function
+    // 'onFileUpload' : JS function
+    // 'onFileDelete' : JS function
+
+    // Tareas predefinidas para cuando un formulario finaliza correctamente
     // 'jsEval' : Ejecuta el texto indicado con un eval
     // 'accept' : Muestra el texto como un alert
     // 'redirect' : Pasa a la url indicada con un window.location.replace
     // 'reload' : window.location.reload
     // 'resetForm' : Borra el formulario
+
 
     $this->success[ $successName ] = $successParam;
   }
@@ -2084,7 +2103,8 @@ class FormController implements Serializable {
 
     $result = array(
       'result' => ( count( $this->fields ) > 1 ) ? 'error' : 'errorSession',
-      'jvErrors' => $jvErrors
+      'jvErrors' => $jvErrors,
+      'success' => $this->getSuccess()
     );
     if( $moreInfo !== false ) {
       $result['moreInfo'] = $moreInfo;

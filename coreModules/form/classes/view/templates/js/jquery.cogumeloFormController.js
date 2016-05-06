@@ -2,15 +2,33 @@
  *  Gestión de informacion en cliente
  */
 var cogumelo = cogumelo || {};
-cogumelo.formControllerFormsInfo = cogumelo.formControllerFormsInfo || [];
+cogumelo.formController = cogumelo.formController || {};
+
+cogumelo.formController.formsInfo = cogumelo.formController.formsInfo || [];
+
+cogumelo.formController.keepAliveTimer = cogumelo.formController.keepAliveTimer || setInterval( formKeepAlive, 300000 );
 
 var langForm = false;
 
 
+
+
+
+function getForms() {
+  var result = [];
+
+  for( var i = cogumelo.formController.formsInfo.length - 1; i >= 0; i-- ) {
+    result.push( cogumelo.formController.formsInfo[i].idForm );
+  }
+
+  return result;
+}
+
+
 function getFormInfoIndex( idForm ) {
   var index = false;
-  for( var i = cogumelo.formControllerFormsInfo.length - 1; i >= 0; i-- ) {
-    if( cogumelo.formControllerFormsInfo[i].idForm === idForm ) {
+  for( var i = cogumelo.formController.formsInfo.length - 1; i >= 0; i-- ) {
+    if( cogumelo.formController.formsInfo[i].idForm === idForm ) {
       index = i;
       break;
     }
@@ -23,10 +41,10 @@ function getFormInfoIndex( idForm ) {
 function setFormInfo( idForm, key, value ) {
   var index = getFormInfoIndex( idForm );
   if( index === false ) {
-    index = cogumelo.formControllerFormsInfo.length;
-    cogumelo.formControllerFormsInfo[ index ] = { idForm: idForm };
+    index = cogumelo.formController.formsInfo.length;
+    cogumelo.formController.formsInfo[ index ] = { idForm: idForm };
   }
-  cogumelo.formControllerFormsInfo[ index ][ key ] = value;
+  cogumelo.formController.formsInfo[ index ][ key ] = value;
 }
 
 
@@ -36,11 +54,61 @@ function getFormInfo( idForm, key ) {
   var index = getFormInfoIndex( idForm );
 
   if( index !== false ) {
-    result = cogumelo.formControllerFormsInfo[ index ][ key ];
+    result = cogumelo.formController.formsInfo[ index ][ key ];
   }
 
   return result;
 }
+
+
+
+
+
+
+
+
+function formKeepAlive() {
+  console.log( 'keepAlive' );
+  formIds = getForms();
+  console.log( 'keepAlive formIds --- ',formIds );
+  $.each( formIds, function( i, idForm ){
+    console.log( 'keepAlive idForm --- ',idForm );
+    formKeepAliveById( idForm );
+  });
+}
+
+
+function formKeepAliveById( idForm ) {
+  console.log( 'formKeepAliveById '+idForm );
+
+  var cgIntFrmId = $( '#' + idForm ).attr( 'data-token_id' );
+
+  var formData = new FormData();
+  formData.append( 'execute', 'keepAlive' );
+  formData.append( 'idForm', idForm );
+  formData.append( 'cgIntFrmId', cgIntFrmId );
+
+  console.log( 'formData --- ',formData );
+
+  $.ajax({
+    url: '/cgml-form-command', type: 'POST',
+    data: formData, cache: false, contentType: false, processData: false,
+    success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
+      console.log( 'formKeepAliveById $jsonData --- ', $jsonData );
+      var idForm = ($jsonData.moreInfo.idForm) ? $jsonData.moreInfo.idForm : false;
+      if( $jsonData.result === 'ok' ) {
+        console.log( 'formKeepAliveById OK --- ',idForm );
+      }
+      else {
+        console.log( 'formKeepAliveById ERROR' );
+      }
+    }
+  });
+}
+
+
+
+
 
 
 function createFilesTitleField( idForm ) {
@@ -254,8 +322,12 @@ function formDoneOk( form, response ) {
   console.log( response );
 
   // var $validateForm = getFormInfo( $( form ).attr( 'id' ), 'validateForm' );
+  var idForm = $( form ).attr( 'id' );
 
   var successActions = response.success;
+  if ( successActions.onSubmitOk ) {
+    eval( successActions.onSubmitOk+'( idForm );' );
+  }
   if ( successActions.jsEval ) {
     eval( successActions.jsEval );
   }
@@ -271,6 +343,7 @@ function formDoneOk( form, response ) {
   }
   if ( successActions.resetForm ) {
     $( form )[0].reset();
+    alert( 'Falta borrar los campos FILE !!!' );
   }
   // alert( 'Form Submit OK' );
 }
@@ -280,7 +353,13 @@ function formDoneError( form, response ) {
   console.log( 'formDoneError' );
   console.log( response );
 
-  var $validateForm = getFormInfo( $( form ).attr( 'id' ), 'validateForm' );
+  var idForm = $( form ).attr( 'id' );
+  var $validateForm = getFormInfo( idForm, 'validateForm' );
+
+  var successActions = response.success;
+  if ( successActions.onSubmitError ) {
+    eval( successActions.onSubmitError+'( idForm );' );
+  }
 
   if( response.result === 'errorSession' ) {
     // No se ha podido recuperar el form en el servidor porque ha caducado
@@ -439,8 +518,9 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 
         fileFieldToOk( idForm, fieldName, $jsonData.moreInfo.fileName, false, false );
 
-        if( $.isFunction( cogumelo[$jsonData.success.fileUpload] ) ) {
-          cogumelo[$jsonData.success.fileUpload]( idForm, fieldName, $jsonData.moreInfo.cgIntFrmId );
+        var successActions = $jsonData.success;
+        if( successActions.onFileUpload ) {
+          eval( successActions.onFileUpload+'( idForm, fieldName );' );
         }
       }
       else {
@@ -513,8 +593,9 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 
       fileFieldToInput( idForm, fieldName );
 
-      if( $.isFunction( cogumelo[response.success.fileDelete] ) ) {
-        cogumelo[response.success.fileDelete]( idForm, fieldName, response.moreInfo.cgIntFrmId );
+      var successActions = response.success;
+      if( successActions.onFileDelete ) {
+        eval( successActions.onFileDelete+'( idForm, fieldName );' );
       }
     }
     else {
