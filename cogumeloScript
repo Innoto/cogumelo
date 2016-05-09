@@ -407,6 +407,7 @@ function makeAppPaths() {
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ),
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ),
     Cogumelo::getSetupValue( 'logs:path' ),
+    Cogumelo::getSetupValue( 'session:savePath' ),
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ),
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ),
     Cogumelo::getSetupValue( 'mod:filedata:cachePath' ),
@@ -440,6 +441,7 @@ function setPermissions( $devel = false ) {
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
     Cogumelo::getSetupValue( 'logs:path' ).' '.
+    Cogumelo::getSetupValue( 'session:savePath' ).' '.
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
     Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
@@ -457,6 +459,7 @@ function setPermissions( $devel = false ) {
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
     Cogumelo::getSetupValue( 'logs:path' ).' '.
+    Cogumelo::getSetupValue( 'session:savePath' ).' '.
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '.
