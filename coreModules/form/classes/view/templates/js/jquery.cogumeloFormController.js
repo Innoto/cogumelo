@@ -6,6 +6,7 @@ cogumelo.formController = cogumelo.formController || {};
 
 cogumelo.formController.formsInfo = cogumelo.formController.formsInfo || [];
 
+cogumelo.publicConf.session_lifetime = cogumelo.publicConf.session_lifetime || 900;
 cogumelo.formController.keepAliveTimer = cogumelo.formController.keepAliveTimer || setInterval( formKeepAlive, 990*cogumelo.publicConf.session_lifetime );
 
 var langForm = false;
