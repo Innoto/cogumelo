@@ -2,12 +2,10 @@
 
 Cogumelo::load('coreModel/mysql/MysqlDAO.php');
 
-//
-//  Mysql MysqlDevelDBDAO DAO
-//
-
-class MysqlDevelDBDAO extends MysqlDAO
-{
+/**
+ *  Mysql MysqlDevelDBDAO DAO
+ */
+class MysqlDevelDBDAO extends MysqlDAO {
 
   static $conversion_types = array(
     'TINYINT' => 'TINYINT',
@@ -35,11 +33,10 @@ class MysqlDevelDBDAO extends MysqlDAO
   );
 
   public function createSchemaDB( $connection ) {
-
     $resultado =  array();
 
-    $strSQL0 = "DROP DATABASE IF EXISTS ". cogumeloGetSetupValue( 'db:name' ) ;
-    $strSQL1 = "CREATE DATABASE ". cogumeloGetSetupValue( 'db:name' ) ;
+    $strSQL0 = "DROP DATABASE IF EXISTS ". Cogumelo::getSetupValue( 'db:name' ) ;
+    $strSQL1 = "CREATE DATABASE ". Cogumelo::getSetupValue( 'db:name' ) ;
     $strSQL2 = "GRANT ".
         "SELECT, ".
         "INSERT, ".
@@ -52,8 +49,8 @@ class MysqlDevelDBDAO extends MysqlDAO
         "DROP, ".
         "SHOW VIEW, ".
         "CREATE VIEW ".
-      "ON ". cogumeloGetSetupValue( 'db:name' ) .".* ".
-      "TO '". cogumeloGetSetupValue( 'db:user' ) ."'@'localhost' IDENTIFIED BY '". cogumeloGetSetupValue( 'db:password' ) ."' ";
+      "ON ". Cogumelo::getSetupValue( 'db:name' ) .".* ".
+      "TO '". Cogumelo::getSetupValue( 'db:user' ) ."'@'localhost' IDENTIFIED BY '". Cogumelo::getSetupValue( 'db:password' ) ."' ";
 
     $resultado[] = $this->execSQL($connection, $strSQL0, array() );
     $resultado[] = $this->execSQL($connection, $strSQL1, array() );
@@ -152,7 +149,7 @@ class MysqlDevelDBDAO extends MysqlDAO
     $type = "";
     $size = "";
 
-    if( array_key_exists('default', $col ) && $col['default'] !== NULL ) {
+    if( array_key_exists('default', $col ) && $col['default'] !== null ) {
       if( is_numeric($col['default']) ){
         $extrapkey = ' DEFAULT '.$col['default'].' ';
       }

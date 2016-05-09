@@ -98,8 +98,8 @@ class FormController implements Serializable {
     $this->cssPrefix = Cogumelo::getSetupValue( 'mod:form:cssPrefix' );
     $this->tmpPath = Cogumelo::getSetupValue( 'mod:form:tmpPath' );
 
-    $this->langDefault = cogumeloGetSetupValue( 'lang:default' );
-    $langsConf = cogumeloGetSetupValue( 'lang:available' );
+    $this->langDefault = Cogumelo::getSetupValue( 'lang:default' );
+    $langsConf = Cogumelo::getSetupValue( 'lang:available' );
     if( is_array( $langsConf ) ) {
       $this->langAvailable = array_keys( $langsConf );
     }

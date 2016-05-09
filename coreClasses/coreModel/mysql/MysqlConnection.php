@@ -20,14 +20,13 @@ class MysqlConnection extends Connection
 
 
   /**
-   * fetch just one result
+   * Fetch just one result
    *
    * @param array $db_devel_auth in case of cogumelo Script process
    *
    * @return object
    */
-  function __construct($db_devel_auth = false){
-
+  public function __construct( $db_devel_auth = false ) {
     if($db_devel_auth) {
       $this->DB_USER = $db_devel_auth['DB_USER'];
       $this->DB_PASSWORD = $db_devel_auth['DB_PASSWORD'];
@@ -35,12 +34,10 @@ class MysqlConnection extends Connection
     }
     else {
 
-      $this->DB_USER = cogumeloGetSetupValue( 'db:user' );
-      $this->DB_PASSWORD = cogumeloGetSetupValue( 'db:password' );
-      $this->DB_NAME = cogumeloGetSetupValue( 'db:name' );
+      $this->DB_USER = Cogumelo::getSetupValue( 'db:user' );
+      $this->DB_PASSWORD = Cogumelo::getSetupValue( 'db:password' );
+      $this->DB_NAME = Cogumelo::getSetupValue( 'db:name' );
     }
-
-
     $this->connect();
   }
 
@@ -50,17 +47,15 @@ class MysqlConnection extends Connection
    *
    * @return void
    */
-  function connect() {
-
+  public function connect() {
     if($this->db == false) {
-      $this->db = new mysqli(cogumeloGetSetupValue( 'db:hostname' ) ,$this->DB_USER , $this->DB_PASSWORD, $this->DB_NAME,  cogumeloGetSetupValue( 'db:port' ));
+      $this->db = new mysqli(Cogumelo::getSetupValue( 'db:hostname' ) ,$this->DB_USER , $this->DB_PASSWORD, $this->DB_NAME,  Cogumelo::getSetupValue( 'db:port' ));
       if ($this->db->connect_error) {
           Cogumelo::debug(mysqli_connect_error());
       }
       else {
-          Cogumelo::debug("MYSQLI: Connection Stablished to ".cogumeloGetSetupValue( 'db:hostname' ));
+          Cogumelo::debug("MYSQLI: Connection Stablished to ".Cogumelo::getSetupValue( 'db:hostname' ));
       }
-
     }
   }
 
@@ -69,13 +64,10 @@ class MysqlConnection extends Connection
    *
    * @return void
    */
-  public function transactionStart()
-  {
+  public function transactionStart() {
     Cogumelo::debug("DB TRANSACTION START");
     mysqli_query($this->db ,"START TRANSACTION;");
     mysqli_query($this->db ,"BEGIN;");
-
-
   }
 
 
@@ -84,8 +76,7 @@ class MysqlConnection extends Connection
    *
    * @return void
    */
-  public function transactionCommit()
-  {
+  public function transactionCommit() {
     mysqli_query($this->db ,"COMMIT;");
   }
 
@@ -94,8 +85,7 @@ class MysqlConnection extends Connection
    *
    * @return void
    */
-  public function transactionRollback()
-  {
+  public function transactionRollback() {
     mysqli_query($this->db ,"ROLLBACK;");
   }
 

@@ -25,7 +25,7 @@ class GetTranslations extends View
     $langArray = Cogumelo::getSetupValue( 'lang:available' );
     $lang = $langArray[ $C_LANG ]['i18n'];
 
-    $json_path = cogumeloGetSetupValue( 'i18n:localePath' ).'/'.$lang.'/LC_MESSAGES/translation.json';
+    $json_path = Cogumelo::getSetupValue( 'i18n:localePath' ).'/'.$lang.'/LC_MESSAGES/translation.json';
 
     if (file_exists($json_path)){
       header( 'application/javascript' );

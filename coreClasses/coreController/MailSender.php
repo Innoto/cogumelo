@@ -23,11 +23,11 @@ class MailSender {
     $this->phpmailer = new PHPMailer( true );
 
     //$this->phpmailer->IsSMTP();
-    $this->phpmailer->SMTPAuth = cogumeloGetSetupValue( 'smtp:auth' );
-    $this->phpmailer->Host = cogumeloGetSetupValue( 'smtp:host' );
-    $this->phpmailer->Port = cogumeloGetSetupValue( 'smtp:port' );
-    $this->phpmailer->Username = cogumeloGetSetupValue( 'smtp:user' );
-    $this->phpmailer->Password = cogumeloGetSetupValue( 'smtp:pass' );
+    $this->phpmailer->SMTPAuth = Cogumelo::getSetupValue( 'smtp:auth' );
+    $this->phpmailer->Host = Cogumelo::getSetupValue( 'smtp:host' );
+    $this->phpmailer->Port = Cogumelo::getSetupValue( 'smtp:port' );
+    $this->phpmailer->Username = Cogumelo::getSetupValue( 'smtp:user' );
+    $this->phpmailer->Password = Cogumelo::getSetupValue( 'smtp:pass' );
     $this->phpmailer->SMTPKeepAlive = true;
     $this->phpmailer->CharSet = 'UTF-8';
     */
@@ -51,11 +51,11 @@ class MailSender {
     $mailResult = false;
 
     if( $from_name == false ){
-      $from_name = cogumeloGetSetupValue( 'smtp:fromName' );
+      $from_name = Cogumelo::getSetupValue( 'smtp:fromName' );
     }
 
     if( $from_mail == false ) {
-      $from_mail = cogumeloGetSetupValue( 'smtp:fromMail' );
+      $from_mail = Cogumelo::getSetupValue( 'smtp:fromMail' );
     }
 
 
