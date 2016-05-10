@@ -74,7 +74,7 @@ class MysqlDAORelationship
    * @return string
    */
   function leftJoin($select, $sonVo ) {
-    return " ".$this->joinType." JOIN ( ".$select." ) as ".$sonVo->table."_serialized  ON ".$sonVo->table."_serialized.".$sonVo->relatedWithId." = ".$sonVo->parentTable.".".$sonVo->parentId;
+    return " ".$this->joinType." JOIN ( ".$select." ) as " . $sonVo->parentId."_".$sonVo->table."_serialized  ON ".$sonVo->parentId."_".$sonVo->table."_serialized.".$sonVo->relatedWithId." = ".$sonVo->parentTable.".".$sonVo->parentId;
   }
 
 
@@ -187,7 +187,7 @@ class MysqlDAORelationship
     $groupConcats = '';
 
     foreach( $vo->relationship as $voRel) {
-      $groupConcats .= "',\"".$voRel->parentTable.".".$voRel->table."\": [', COALESCE( group_concat(".$voRel->table."_serialized.".$voRel->table."),'' ) , ']',";
+      $groupConcats .= "',\"".$voRel->parentTable.".".$voRel->table."\": [', COALESCE( group_concat(".$voRel->parentId."_".$voRel->table."_serialized.".$voRel->table."),'' ) , ']',";
     }
 
     return $groupConcats;

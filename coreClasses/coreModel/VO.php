@@ -59,6 +59,7 @@ Class VO
     }
 
     $this->depKeys = VOUtils::getRelKeysByRelObj( $this->relObj, true );
+
     $this->setVarList( $datarray );
   }
 
@@ -82,10 +83,13 @@ Class VO
         $datakey = $k;
       }
 
+
+
+
       // set dependence VOs
       if( is_array($this->depKeys) && array_key_exists( $datakey , $this->depKeys) ){
         if( $data ) {
-          $this->setDepVOs( $data, $this->depKeys[$datakey], VOUtils::searchVOinRelObj( $this->depKeys[$datakey], $this->relObj) );
+          $this->setDepVOs( $data, $this->depKeys[$datakey], VOUtils::searchVOinRelObj( $this->depKeys[$datakey], $datakey ,$this->relObj) );
         }
       }
       // set cols
@@ -106,7 +110,6 @@ Class VO
    * @return void
    */
   function setDepVOs( $data, $voName, $relObj ) {
-
 
     if( is_array($data) ) {
       foreach( $data as $d ) {
@@ -181,6 +184,7 @@ Class VO
       $retVO = new $voName( (array) $dataVO, $relObj );
       $this->depData[ $key] [] = $retVO;
     }
+
 
     return $retVO;
   }
@@ -433,6 +437,7 @@ Class VO
       $depReturn = $this->depData[ $reference ];
     }
 
+
     if( $onlyModel && $depReturn ) {
       $depsFiltered = array();
 
@@ -541,6 +546,8 @@ Class VO
     // relationship cols
     if( $resolveDependences ) {
       $retFields = array_merge($retFields, VOUtils::getRelKeys(  $this->name, false, $resolveDependences ) );
+      //var_dump(VOUtils::getRelKeys(  $this->name, false, $resolveDependences ));
+      //exit;
     }
 
     return implode(', ', $retFields);
