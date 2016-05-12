@@ -374,10 +374,11 @@ class VOUtils {
       if( count($voRel->relationship) > 0 ) {
         foreach( $voRel->relationship as $voName => $rel ) {
           if( $tableAsKey ){
-            $relKeys[$rel->table] = $rel->vo;
+            $relKeys[$rel->parentId."_".$rel->table] =  $rel->vo ;
           }
           else {
-            $relKeys[$rel->vo] = $rel->table;
+            $relKeys[$rel->parentId."_".$rel->table] = $rel->parentId."_".$rel->table."_serialized.".$rel->table." AS ".$rel->parentId."_".$rel->table;
+            //$relKeys[$rel->vo] = $rel->table."_serialized.".$rel->table;
           }
         }
       }
@@ -529,14 +530,27 @@ class VOUtils {
   *
   * @return object
   */
-  public static function searchVOinRelObj( $voName, $relObj ) {
+  public static function searchVOinRelObj( $voName, $dataKey, $relObj ) {
     $relObjSon = -1;
+
+
+
+
 
     if( count( $relObj->relationship ) > 0 ) {
       foreach( $relObj->relationship as $candidate ) {
+
         if( $candidate->vo == $voName ){
-          $relObjSon = $candidate;
-          break;
+
+
+          //var_dump($dataKey);
+          //var_dump($candidate->parentId.'_'.$candidate->table);
+
+          if( $candidate->parentId.'_'.$candidate->table == $dataKey ) {
+            $relObjSon = $candidate;
+            break;
+          }
+
         }
       }
     }

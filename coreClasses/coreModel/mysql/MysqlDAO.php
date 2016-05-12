@@ -281,7 +281,7 @@ class MysqlDAO extends DAO {
       $joins.
       $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
 
-//echo $strSQL;
+
 //exit;
 //var_dump($joinWhereArrays);
 //exit;
@@ -336,7 +336,8 @@ class MysqlDAO extends DAO {
   * @return string
   */
   function getKeysToString($VO, $fields, $resolveDependences ) {
-    $keys = explode(',', $VO->getKeysToString($fields, $resolveDependences ));
+
+    $keys = explode(', ', $VO->getKeysToString($fields, $resolveDependences ));
     $procesedKeys = array();
     foreach($keys as $key) {
 
