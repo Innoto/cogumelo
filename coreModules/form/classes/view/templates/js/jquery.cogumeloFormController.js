@@ -7,7 +7,8 @@ cogumelo.formController = cogumelo.formController || {};
 cogumelo.formController.formsInfo = cogumelo.formController.formsInfo || [];
 
 cogumelo.publicConf.session_lifetime = cogumelo.publicConf.session_lifetime || 900;
-cogumelo.formController.keepAliveTimer = cogumelo.formController.keepAliveTimer || setInterval( formKeepAlive, 990*cogumelo.publicConf.session_lifetime );
+// Lanzamos formKeepAlive cuando pasa el 90% del tiempo session_lifetime
+cogumelo.formController.keepAliveTimer = cogumelo.formController.keepAliveTimer || setInterval( formKeepAlive, 900*cogumelo.publicConf.session_lifetime );
 
 var langForm = false;
 
@@ -69,18 +70,18 @@ function getFormInfo( idForm, key ) {
 
 
 function formKeepAlive() {
-  console.log( 'keepAlive' );
+  // console.log( 'keepAlive' );
   formIds = getForms();
-  console.log( 'keepAlive formIds --- ',formIds );
+  // console.log( 'keepAlive formIds --- ',formIds );
   $.each( formIds, function( i, idForm ){
-    console.log( 'keepAlive idForm --- ',idForm );
+    // console.log( 'keepAlive idForm --- ',idForm );
     formKeepAliveById( idForm );
   });
 }
 
 
 function formKeepAliveById( idForm ) {
-  console.log( 'formKeepAliveById '+idForm );
+  // console.log( 'formKeepAliveById '+idForm );
 
   var cgIntFrmId = $( '#' + idForm ).attr( 'data-token_id' );
 
@@ -89,19 +90,19 @@ function formKeepAliveById( idForm ) {
   formData.append( 'idForm', idForm );
   formData.append( 'cgIntFrmId', cgIntFrmId );
 
-  console.log( 'formData --- ',formData );
+  // console.log( 'formData --- ', formData );
 
   $.ajax({
     url: '/cgml-form-command', type: 'POST',
     data: formData, cache: false, contentType: false, processData: false,
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-      console.log( 'formKeepAliveById $jsonData --- ', $jsonData );
+      // console.log( 'formKeepAliveById $jsonData --- ', $jsonData );
       var idForm = ($jsonData.moreInfo.idForm) ? $jsonData.moreInfo.idForm : false;
       if( $jsonData.result === 'ok' ) {
-        console.log( 'formKeepAliveById OK --- ',idForm );
+        // console.log( 'formKeepAliveById OK --- ',idForm );
       }
       else {
-        console.log( 'formKeepAliveById ERROR' );
+        console.log( 'formKeepAliveById ERROR',$jsonData );
       }
     }
   });
@@ -155,7 +156,7 @@ function createFilesTitleField( idForm ) {
 }
 
 function hideFileTitleField( idForm, fieldName ) {
-  console.log( 'hideFileTitleField( '+idForm+', '+fieldName+' )' );
+  // console.log( 'hideFileTitleField( '+idForm+', '+fieldName+' )' );
 
   var $fileField = $( 'input[form="'+idForm+'"][name="'+fieldName+'"]' );
   // Clear data-fm_title
@@ -174,7 +175,7 @@ function hideFileTitleField( idForm, fieldName ) {
 
 
 function bindForm( idForm ) {
-  console.log( 'bindForm( '+idForm+' )' );
+  // console.log( 'bindForm( '+idForm+' )' );
   var $inputFileFields = $( 'input:file[form="'+idForm+'"]' );
   if( $inputFileFields.length ) {
     if( !window.File ) {
@@ -195,7 +196,7 @@ function bindForm( idForm ) {
 
 
 function unbindForm( idForm ) {
-  console.log( 'unbindForm( '+idForm+' )' );
+  // console.log( 'unbindForm( '+idForm+' )' );
   $( 'input:file[form="'+idForm+'"]' ).off( 'change' );
   $( '.addGroupElement[data-form_id="'+idForm+'"]' ).off( 'click' );
   $( '.removeGroupElement[data-form_id="'+idForm+'"]' ).off( 'click' );
@@ -211,9 +212,9 @@ function setValidateForm( idForm, rules, messages ) {
 
   $.validator.setDefaults({
     errorPlacement: function(error, element) {
-      console.log( 'JQV errorPlacement:' );
-      console.log( error );
-      console.log( element );
+      // console.log( 'JQV errorPlacement:' );
+      // console.log( error );
+      // console.log( element );
       //console.log( 'Busco #JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       var $msgContainer = $( '#JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       if ( $msgContainer.length > 0 ) {
@@ -224,9 +225,9 @@ function setValidateForm( idForm, rules, messages ) {
       }
     },
     showErrors: function( errorMap, errorList ) {
-      console.log( 'JQV showErrors:' );
-      console.log( errorMap );
-      console.log( errorList );
+      // console.log( 'JQV showErrors:' );
+      // console.log( errorMap );
+      // console.log( errorList );
       // $("#summary").html("Your form contains "+ this.numberOfInvalids()+ " errors, see details below.");
 
       // Lanzamos el metodo original
@@ -235,7 +236,7 @@ function setValidateForm( idForm, rules, messages ) {
   });
 
 
-  console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
+  // console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
   var $validateForm = $( '#'+idForm ).validate({
     // debug: true,
     errorClass: 'formError',
@@ -243,7 +244,7 @@ function setValidateForm( idForm, rules, messages ) {
     rules: rules,
     messages: messages,
     submitHandler: function ( form ) {
-      console.log( 'Executando validate.submitHandler...' );
+      // console.log( 'Executando validate.submitHandler...' );
       $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
       $( form ).find( '.submitRun' ).show();
       $.ajax( {
@@ -253,15 +254,15 @@ function setValidateForm( idForm, rules, messages ) {
         dataType : 'json'
       } )
       .done( function ( response ) {
-        console.log( 'Executando validate.submitHandler.done...' );
+        // console.log( 'Executando validate.submitHandler.done...' );
         //console.log( response );
         if( response.result === 'ok' ) {
           // alert( 'Form Submit OK' );
-          console.log( 'Form Done: OK' );
+          // console.log( 'Form Done: OK' );
           formDoneOk( form, response );
         }
         else {
-          console.log( 'Form Done: ERROR' );
+          console.log( 'Form Done: ERROR',response );
           formDoneError( form, response );
         }
         $( form ).find( '[type="submit"]' ).removeAttr('disabled');
@@ -274,7 +275,7 @@ function setValidateForm( idForm, rules, messages ) {
   // JQUERY VALIDATE HACK !!! (Start)
   //
   $validateForm.findByName = function( name ) {
-    console.log( 'JQV cgmlHACK findByName: ', name );
+    // console.log( 'JQV cgmlHACK findByName: ', name );
     var $form = $( this.currentForm );
     var $elem = $form.find( '[name="' + name + '"]' );
     if( $elem.length !== 1 ) {
@@ -291,7 +292,7 @@ function setValidateForm( idForm, rules, messages ) {
   };
   $validateForm.hideTheseReal = $validateForm.hideThese;
   $validateForm.hideThese = function( errors ) {
-    console.log( 'JQV cgmlHACK hideThese: ', errors );
+    // console.log( 'JQV cgmlHACK hideThese: ', errors );
     // errors.not( this.containers ).text( "" );
     // this.addWrapper( errors ).hide();
     $validateForm.hideTheseReal( errors );
@@ -300,7 +301,7 @@ function setValidateForm( idForm, rules, messages ) {
   // JQUERY VALIDATE HACK !!! (End)
   //
 
-  console.log( 'VALIDATE PREPARADO: ', $validateForm );
+  // console.log( 'VALIDATE PREPARADO: ', $validateForm );
 
 
   // Bind file fields and group actions...
@@ -319,8 +320,8 @@ function setValidateForm( idForm, rules, messages ) {
 
 
 function formDoneOk( form, response ) {
-  console.log( 'formDoneOk' );
-  console.log( response );
+  // console.log( 'formDoneOk' );
+  // console.log( response );
 
   // var $validateForm = getFormInfo( $( form ).attr( 'id' ), 'validateForm' );
   var idForm = $( form ).attr( 'id' );
@@ -364,7 +365,7 @@ function formDoneError( form, response ) {
 
   if( response.result === 'errorSession' ) {
     // No se ha podido recuperar el form en el servidor porque ha caducado
-    console.log( 'formDoneError: errorSession' );
+    // console.log( 'formDoneError: errorSession' );
     showErrorsValidateForm( $( form ), 'Form session expired. Reload', 'formError' );
     if( confirm( 'Reload to get valid From?' ) ) {
       window.location.reload();
@@ -373,7 +374,7 @@ function formDoneError( form, response ) {
   else {
     for( var i in response.jvErrors ) {
       var errObj = response.jvErrors[i];
-      console.log( errObj );
+      // console.log( errObj );
 
       if( errObj.fieldName !== false ) {
         if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
@@ -402,7 +403,7 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
 
   // Replantear!!!
 
-  console.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
+  // console.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
   var msgLabel = '<label class="formError">'+msgText+'</label>';
   var $msgContainer = false;
   if( msgClass !== false ) {
@@ -429,7 +430,7 @@ function inputFileFieldChange( evnt ) {
 
 
 function processFilesInputFileField( files, idForm, fieldName ) {
-  console.log( 'processFilesInputFileField(): ', files, idForm, fieldName );
+  // console.log( 'processFilesInputFileField(): ', files, idForm, fieldName );
   var valid = checkInputFileField( files, idForm, fieldName );
 
   if( valid ) {
@@ -442,9 +443,9 @@ function processFilesInputFileField( files, idForm, fieldName ) {
 
 
 function checkInputFileField( files, idForm, fieldName ) {
-  console.log( 'checkInputFileField(): ' );
-  console.log( files );
-  console.log( fieldName );
+  // console.log( 'checkInputFileField(): ' );
+  // console.log( files );
+  // console.log( fieldName );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
 
   var $fileField = $( 'input[name="' + fieldName + '"][form="' + idForm + '"]' );
@@ -464,7 +465,7 @@ function checkInputFileField( files, idForm, fieldName ) {
 
 
 function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
-  console.log( 'uploadFile(): ', file );
+  // console.log( 'uploadFile(): ', file );
 
   var formData = new FormData();
   formData.append( 'ajaxFileUpload', file );
@@ -508,8 +509,8 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
     },
     */
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-      console.log( 'Executando fileFieldToOk...' );
-      console.log( $jsonData );
+      // console.log( 'Executando fileFieldToOk...' );
+      // console.log( $jsonData );
 
       var idForm = $jsonData.moreInfo.idForm;
       var fieldName = $jsonData.moreInfo.fieldName;
@@ -525,15 +526,15 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
         }
       }
       else {
-        console.log( 'uploadFile ERROR' );
+        // console.log( 'uploadFile ERROR' );
         $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( 'Error cargando el fichero.' );
 
         var $validateForm = getFormInfo( idForm, 'validateForm' );
-        console.log( $validateForm );
+        // console.log( $validateForm );
 
         for(var i in $jsonData.jvErrors) {
           var errObj = $jsonData.jvErrors[i];
-          console.log( errObj );
+          // console.log( errObj );
 
           if( errObj.fieldName !== false ) {
             if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
@@ -543,11 +544,11 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
               }
               errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
             }
-            console.log( errObj.JVshowErrors );
+            // console.log( errObj.JVshowErrors );
             $validateForm.showErrors( errObj.JVshowErrors );
           }
           else {
-            console.log( errObj.JVshowErrors );
+            // console.log( errObj.JVshowErrors );
             showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
           }
         }
@@ -563,7 +564,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 
 
 function deleteFormFileEvent( evnt ) {
-  console.log( 'deleteFormFileEvent: ', evnt );
+  // console.log( 'deleteFormFileEvent: ', evnt );
   var $fileField = $( evnt.target );
   var idForm = $fileField.attr( 'data-form_id' );
   var fieldName = $fileField.attr( 'data-fieldname' );
@@ -574,7 +575,7 @@ function deleteFormFileEvent( evnt ) {
 
 
 function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
-  console.log( 'deleteFormFile: ', idForm, fieldName, cgIntFrmId );
+  // console.log( 'deleteFormFile: ', idForm, fieldName, cgIntFrmId );
   var formData = new FormData();
   formData.append( 'execute', 'delete' );
   formData.append( 'idForm', idForm );
@@ -588,8 +589,8 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
     cache: false, contentType: false, processData: false
   } )
   .done( function ( response ) {
-    console.log( 'Executando deleteFormFile.done...' );
-    console.log( response );
+    // console.log( 'Executando deleteFormFile.done...' );
+    // console.log( response );
     if( response.result === 'ok' ) {
 
       fileFieldToInput( idForm, fieldName );
@@ -600,7 +601,7 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
       }
     }
     else {
-      console.log( 'deleteFormFile.done...ERROR' );
+      console.log( 'deleteFormFile.done...ERROR', response );
       for(var i in response.jvErrors) {
         var errObj = response.jvErrors[i];
         console.log( errObj );
@@ -622,7 +623,7 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 
 
 function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
-  console.log( 'fileFieldToOk( '+idForm+', '+fieldName+', '+fileName+', '+fileModId+', '+fileType+' )' );
+  // console.log( 'fileFieldToOk( '+idForm+', '+fieldName+', '+fileName+', '+fileModId+', '+fileType+' )' );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
@@ -635,7 +636,7 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
 
   // Show Title file field
   $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName ).show();
-  console.log( 'SHOW: .cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName );
+  // console.log( 'SHOW: .cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName );
 
   var $fileFieldInfo = $( '<div>' ).addClass( 'fileFieldInfo fileUploadOK formFileDelete' )
     .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm } );
@@ -671,7 +672,7 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
 
 
 function fileFieldToInput( idForm, fieldName ) {
-  console.log( 'fileFieldToInput(): ', idForm, fieldName );
+  // console.log( 'fileFieldToInput(): ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
@@ -692,7 +693,7 @@ function fileFieldToInput( idForm, fieldName ) {
 
 
 function createFileFieldDropZone( idForm, fieldName ) {
-  console.log( 'createFileFieldDropZone: ', idForm, fieldName );
+  // console.log( 'createFileFieldDropZone: ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
   var $fileDefLabel = $fileFieldWrap.find( 'label' );
@@ -731,14 +732,14 @@ function createFileFieldDropZone( idForm, fieldName ) {
 
   // Setup the fileFieldDropZone listeners.
   //$fileFieldDropZoneElem = $( '.fileFieldDropZone' );
-  console.log( 'fileFieldDropZoneElem: ', $fileFieldWrap.find( '.fileFieldDropZone' ) );
+  // console.log( 'fileFieldDropZoneElem: ', $fileFieldWrap.find( '.fileFieldDropZone' ) );
 
   var fileFieldDropZoneElem = document.getElementById( 'fileFieldDropZone_' + idForm + '_' + fieldName );
   fileFieldDropZoneElem.addEventListener( 'drop', fileFieldDropZoneDrop, false);
   fileFieldDropZoneElem.addEventListener( 'dragover', fileFieldDropZoneDragOver, false);
 }
 function removeFileFieldDropZone( idForm, fieldName ) {
-  console.log( 'removeFileFieldDropZone: ', idForm, fieldName );
+  // console.log( 'removeFileFieldDropZone: ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
@@ -747,21 +748,21 @@ function removeFileFieldDropZone( idForm, fieldName ) {
 
 
 function fileFieldDropZoneDrop( evnt ) {
-  console.log( 'fileFieldDropZoneDrop() ', evnt );
+  // console.log( 'fileFieldDropZoneDrop() ', evnt );
   evnt.stopPropagation();
   evnt.preventDefault();
 
   var files = evnt.dataTransfer.files; // FileList object.
-  console.log( 'fileFieldDropZoneDrop files: ', files );
+  // console.log( 'fileFieldDropZoneDrop files: ', files );
 
   if ( files.length === 1 ) {
     var $fileFieldDropZone = $( evnt.target ).closest( '.fileFieldDropZone' );
     var idForm = $fileFieldDropZone.data( 'form_id' );
     var fieldName = $fileFieldDropZone.data( 'fieldname' );
-    console.log( 'fileFieldDropZoneDrop fileFieldDropZone: ', $fileFieldDropZone, idForm, fieldName );
+    // console.log( 'fileFieldDropZoneDrop fileFieldDropZone: ', $fileFieldDropZone, idForm, fieldName );
 
     var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-    console.log( 'fileFieldDropZoneDrop fileField: ', $fileField );
+    // console.log( 'fileFieldDropZoneDrop fileField: ', $fileField );
     $fileField.data( 'dropfiles', files );
     processFilesInputFileField( files, idForm, fieldName );
   }
@@ -786,11 +787,11 @@ function fileFieldDropZoneDragOver( evnt ) {
 
 
 function loadImageTh( idForm, fieldName, fileName, $fileFieldWrap ) {
-  console.log( 'loadImageTh(): ', idForm, fieldName, $fileFieldWrap );
+  // console.log( 'loadImageTh(): ', idForm, fieldName, $fileFieldWrap );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
 
 
-  console.log( 'loadImageTh dropfiles: ',$fileField.data( 'dropfiles' ) );
+  // console.log( 'loadImageTh dropfiles: ',$fileField.data( 'dropfiles' ) );
 
 
   var fileObj = false;
@@ -830,8 +831,8 @@ function loadImageTh( idForm, fieldName, fileName, $fileFieldWrap ) {
 */
 
 function addGroupElement( evnt ) {
-  console.log( 'addGroupElement:' );
-  console.log( evnt );
+  // console.log( 'addGroupElement:' );
+  // console.log( evnt );
 
   var myForm = evnt.target.closest("form");
   var idForm = $( myForm ).attr('id');
@@ -845,9 +846,9 @@ function addGroupElement( evnt ) {
   formData.append( 'cgIntFrmId', cgIntFrmId );
   formData.append( 'groupName', groupName );
 
-  console.log( idForm );
-  console.log( cgIntFrmId );
-  console.log( groupName );
+  // console.log( idForm );
+  // console.log( cgIntFrmId );
+  // console.log( groupName );
 
   // Desactivamos los bins del form durante el proceso
   unbindForm( idForm );
@@ -861,8 +862,8 @@ function addGroupElement( evnt ) {
     // Custom XMLHttpRequest
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
 
-      console.log( 'getGroupElement success:' );
-      console.log( $jsonData );
+      // console.log( 'getGroupElement success:' );
+      // console.log( $jsonData );
 
       var idForm = $jsonData.moreInfo.idForm;
       var groupName = $jsonData.moreInfo.groupName;
@@ -870,37 +871,37 @@ function addGroupElement( evnt ) {
       $( '#' + idForm + ' .JQVMC-group-' + groupName + ' .formError' ).remove();
 
       if( $jsonData.result === 'ok' ) {
-        console.log( 'getGroupElement OK' );
-        console.log( 'idForm: ' + idForm + ' groupName: ' + groupName );
+        // console.log( 'getGroupElement OK' );
+        // console.log( 'idForm: ' + idForm + ' groupName: ' + groupName );
 
         $( $jsonData.moreInfo.htmlGroupElement ).insertBefore(
           '#' + idForm + ' .cgmMForm-group-' + groupName + ' .addGroupElement'
         );
 
         $.each( $jsonData.moreInfo.validationRules, function( fieldName, fieldRules ) {
-          console.log( 'fieldName: ' + fieldName + ' fieldRules: ', fieldRules );
-          console.log( 'ELEM: #' + idForm + ' .cgmMForm-field.cgmMForm-field-' + fieldName );
+          // console.log( 'fieldName: ' + fieldName + ' fieldRules: ', fieldRules );
+          // console.log( 'ELEM: #' + idForm + ' .cgmMForm-field.cgmMForm-field-' + fieldName );
           $( '#' + idForm + ' .cgmMForm-field.cgmMForm-field-' + fieldName ).rules( 'add', fieldRules );
         });
 
-        console.log( 'getGroupElement OK Fin' );
+        // console.log( 'getGroupElement OK Fin' );
       }
       else {
-        console.log( 'getGroupElement ERROR' );
+        // console.log( 'getGroupElement ERROR' );
         var $validateForm = getFormInfo( idForm, 'validateForm' );
-        console.log( $validateForm );
+        // console.log( $validateForm );
         var errObj = $jsonData.jvErrors[0];
-        console.log( errObj.JVshowErrors );
+        // console.log( errObj.JVshowErrors );
         showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors[0], 'group-' + groupName );
       }
 
       // Activamos los bins del form despues del proceso
       bindForm( idForm );
 
-      console.log( 'getGroupElement success: Fin' );
+      // console.log( 'getGroupElement success: Fin' );
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
-      console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
+      // console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
       $( '#status' ).html( 'ERROR: (' + $textStatus + ')' );
 
       // Activamos los bins del form despues del proceso
@@ -911,18 +912,18 @@ function addGroupElement( evnt ) {
 
 
 function removeGroupElement( evnt ) {
-  console.log( 'removeGroupElement:' );
-  console.log( evnt );
+  // console.log( 'removeGroupElement:' );
+  // console.log( evnt );
 
   var myForm = evnt.target.closest("form");
   var idForm = $( myForm ).attr('id');
   var cgIntFrmId = $( myForm ).attr('data-token_id');
   var groupName = $( evnt.target ).attr('groupName');
   var groupIdElem = $( evnt.target ).attr('groupIdElem');
-  console.log( idForm );
-  console.log( cgIntFrmId );
-  console.log( groupName );
-  console.log( groupIdElem );
+  // console.log( idForm );
+  // console.log( cgIntFrmId );
+  // console.log( groupName );
+  // console.log( groupIdElem );
 
   var formData = new FormData();
   formData.append( 'execute', 'removeGroupElement' );
@@ -943,8 +944,8 @@ function removeGroupElement( evnt ) {
     // Custom XMLHttpRequest
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
 
-      console.log( 'removeGroupElement success:' );
-      console.log( $jsonData );
+      // console.log( 'removeGroupElement success:' );
+      // console.log( $jsonData );
 
       var idForm = $jsonData.moreInfo.idForm;
       var groupName = $jsonData.moreInfo.groupName;
@@ -952,27 +953,27 @@ function removeGroupElement( evnt ) {
       $( '#' + idForm + ' .JQVMC-group-' + groupName + ' .formError' ).remove();
 
       if( $jsonData.result === 'ok' ) {
-        console.log( 'removeGroupElement OK' );
-        console.log( idForm, groupName, $jsonData.moreInfo.groupIdElem );
-        console.log( '#' + idForm + ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem );
+        // console.log( 'removeGroupElement OK' );
+        // console.log( idForm, groupName, $jsonData.moreInfo.groupIdElem );
+        // console.log( '#' + idForm + ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem );
         $( '#' + idForm + ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem ).remove();
       }
       else {
-        console.log( 'removeGroupElement ERROR' );
+        // console.log( 'removeGroupElement ERROR' );
         var $validateForm = getFormInfo( idForm, 'validateForm' );
-        console.log( $validateForm );
+        // console.log( $validateForm );
         var errObj = $jsonData.jvErrors[0];
-        console.log( errObj.JVshowErrors );
+        // console.log( errObj.JVshowErrors );
         showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors[0], 'group-' + groupName );
       }
 
       // Activamos los bins del form despues del proceso
       bindForm( idForm );
 
-      console.log( 'removeGroupElement success: Fin' );
+      // console.log( 'removeGroupElement success: Fin' );
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
-      console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
+      // console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
       $( '#status' ).html( 'ERROR: (' + $textStatus + ')' );
 
       // Activamos los bins del form despues del proceso
@@ -984,8 +985,8 @@ function removeGroupElement( evnt ) {
 
 
 function activateHtmlEditor( idForm ) {
-  console.log( 'activateHtmlEditor: ' + idForm );
-  console.log( idForm );
+  // console.log( 'activateHtmlEditor: ' + idForm );
+  // console.log( idForm );
 
   $( 'textarea.cgmMForm-htmlEditor[form="'+idForm+'"]' ).each(
     function( index ) {
@@ -1001,7 +1002,7 @@ function activateHtmlEditor( idForm ) {
 
 
 function switchFormLang( idForm, lang ) {
-  console.log( 'switchFormLang: '+lang );
+  // console.log( 'switchFormLang: '+lang );
   langForm = lang;
   $( '[form="'+idForm+'"].js-tr, [data-form_id="'+idForm+'"].js-tr, '+
     ' .cgmMForm-fileFields-'+idForm+' input.js-tr' )
@@ -1014,7 +1015,7 @@ function switchFormLang( idForm, lang ) {
 }
 
 function createSwitchFormLang( idForm ) {
-  console.log( 'createSwitchFormLang' );
+  // console.log( 'createSwitchFormLang' );
 
   if( typeof( cogumelo.publicConf.langAvailableIds ) === 'object' ) {
     var htmlLangSwitch = '';
