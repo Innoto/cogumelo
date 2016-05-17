@@ -22,46 +22,58 @@ class CogumeloClass extends Singleton
   static $mainDependences = array(
 
      array(
-       "id" => "phpmailer",
-       "params" => array("phpmailer/phpmailer", "5.2.14"),
-       "installer" => "composer",
-       "includes" => array("class.phpmailer.php")
+       'id' => 'phpmailer',
+       'params' => array( 'phpmailer/phpmailer', '5.2.14' ),
+       'installer' => 'composer',
+       'includes' => array('class.phpmailer.php')
+     ),
+     array( // para phpmailer
+       'id' => 'oauth2-client',
+       'params' => array( 'league/oauth2-client', '1.4.*' ),
+       'installer' => 'composer',
+       'includes' => array()
+     ),
+     array( // para phpmailer
+       'id' => 'oauth2-google',
+       'params' => array( 'league/oauth2-google', '1.0.*' ),
+       'installer' => 'composer',
+       'includes' => array()
      ),
      array(
-       "id" => "smarty",
-       "params" => array('smarty/smarty', '3.1.18'),
-       "installer" => 'composer',
-       "includes" => array('libs/Smarty.class.php')
+       'id' => 'smarty',
+       'params' => array('smarty/smarty', '3.1.18'),
+       'installer' => 'composer',
+       'includes' => array('libs/Smarty.class.php')
      ),
      array(
-       "id" => "jquery",
-       "params" => array("jQuery#2.2"),
-       "installer" => "bower",
-       "includes" => array()
+       'id' => 'jquery',
+       'params' => array('jQuery#2.2'),
+       'installer' => 'bower',
+       'includes' => array()
      ),
      array(
-       "id" => "gettext",
-       "params" => array('Gettext'),
-       "installer" => 'manual',
-       "includes" => array('')
+       'id' => 'gettext',
+       'params' => array('Gettext'),
+       'installer' => 'manual',
+       'includes' => array('')
      ),
      array(
-     "id" => "smarty-gettext",
-     "params" => array('smarty-gettext/smarty-gettext', '~1.1.1'),
-     "installer" => "composer",
-     "includes" => array('block.t.php')
+     'id' => 'smarty-gettext',
+     'params' => array('smarty-gettext/smarty-gettext', '~1.1.1'),
+     'installer' => 'composer',
+     'includes' => array('block.t.php')
      ),
      array(
-       "id" =>"rsvp",
-       "params" => array('rsvp'),
-       "installer" => 'manual',
-       "includes" => array()
+       'id' =>'rsvp',
+       'params' => array('rsvp'),
+       'installer' => 'manual',
+       'includes' => array()
      ),
      array(
-       "id" =>"basket",
-       "params" => array('basket'),
-       "installer" => 'manual',
-       "includes" => array()
+       'id' =>'basket',
+       'params' => array('basket'),
+       'installer' => 'manual',
+       'includes' => array()
      )
 
   );
