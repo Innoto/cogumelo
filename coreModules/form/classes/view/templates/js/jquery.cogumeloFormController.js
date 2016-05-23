@@ -700,10 +700,11 @@ function createFileFieldDropZone( idForm, fieldName ) {
 
   $buttonText = ( $fileDefLabel.length > 0 ) ? $fileDefLabel.html() : 'Upload file';
 
-  var $fileFieldDropZone = $( '<label>' ).addClass( 'fileFieldDropZone fileFieldDropZoneWait' )
+  // console.log( 'Preparando DropZone #fileFieldDropZone_' + idForm + '_' + fieldName );
+  var $fileFieldDropZone = $( '<div>' ).addClass( 'fileFieldDropZone fileFieldDropZoneWait' )
     .attr( {
       'id': 'fileFieldDropZone_' + idForm + '_' + fieldName,
-      'for': $fileField.attr( 'id' ),
+      // 'for': $fileField.attr( 'id' ),
       'data-fieldname': fieldName, 'data-form_id': idForm,
       'style': 'text-align:center; cursor:pointer;'
     });
@@ -727,12 +728,10 @@ function createFileFieldDropZone( idForm, fieldName ) {
 
   $fileFieldWrap.append( $fileFieldDropZone );
 
-  // Si el campo no tiene id, simulamos el funcionamiento en el label con jq
-  if( typeof $fileField.attr( 'id' ) === typeof undefined || $fileField.attr( 'id' ) === false || $fileField.attr( 'id' ) === '' ) {
-    $fileFieldDropZone.on( 'click', function() {
-      $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' ).click();
-    });
-  }
+  // Pasamos el click en fileFieldDropZone al input file
+  $fileFieldDropZone.on( 'click', function() {
+    $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' ).click();
+  });
 
   $fileField.hide();
   $fileDefLabel.hide();
