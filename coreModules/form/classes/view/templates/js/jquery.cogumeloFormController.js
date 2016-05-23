@@ -727,6 +727,13 @@ function createFileFieldDropZone( idForm, fieldName ) {
 
   $fileFieldWrap.append( $fileFieldDropZone );
 
+  // Si el campo no tiene id, simulamos el funcionamiento en el label con jq
+  if( typeof $fileField.attr( 'id' ) === typeof undefined || $fileField.attr( 'id' ) === false || $fileField.attr( 'id' ) === '' ) {
+    $fileFieldDropZone.on( 'click', function() {
+      $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' ).click();
+    });
+  }
+
   $fileField.hide();
   $fileDefLabel.hide();
 
