@@ -20,7 +20,6 @@ class CogumeloClass extends Singleton
 
   // main dependences for cogumelo framework
   static $mainDependences = array(
-
      array(
        'id' => 'phpmailer',
        'params' => array( 'phpmailer/phpmailer', '5.2.14' ),
@@ -58,10 +57,10 @@ class CogumeloClass extends Singleton
        'includes' => array('')
      ),
      array(
-     'id' => 'smarty-gettext',
-     'params' => array('smarty-gettext/smarty-gettext', '~1.1.1'),
-     'installer' => 'composer',
-     'includes' => array('block.t.php')
+       'id' => 'smarty-gettext',
+       'params' => array('smarty-gettext/smarty-gettext', '~1.1.1'),
+       'installer' => 'composer',
+       'includes' => array('block.t.php')
      ),
      array(
        'id' =>'rsvp',
@@ -74,8 +73,13 @@ class CogumeloClass extends Singleton
        'params' => array('basket'),
        'installer' => 'manual',
        'includes' => array()
+     ),
+     array(
+       'id' => 'php-jwt',
+       'params' => array('firebase/php-jwt', '3.*'),
+       'installer' => 'composer',
+       'includes' => array('src/JWT.php')
      )
-
   );
 
   // Set autoincludes
@@ -92,12 +96,17 @@ class CogumeloClass extends Singleton
   public function __construct() {
     global $C_SESSION_ID;
 
+    session_name('CGMLTOKENSESSID');
+
+    if( !isset( $_COOKIE['CGMLTOKENSESSID'] ) && isset( $_POST['CGMLTOKENSESSID'] ) ) {
+      session_id( $_POST['CGMLTOKENSESSID'] );
+    }
+
     session_start();
     $C_SESSION_ID = session_id();
   }
 
   public function exec() {
-
     /* i18n */
     Cogumelo::load('coreController/I18nController.php');
     I18nController::setLang();
