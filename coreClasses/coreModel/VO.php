@@ -19,6 +19,9 @@ Class VO
   var $relObj = false;
 
   function __construct(array $datarray, $otherRelObj= false ) {
+
+
+    //var_dump($otherRelObj);
     $this->setData( $datarray, $otherRelObj );
   }
 
@@ -72,7 +75,6 @@ Class VO
    * @return object
    */
   function setVarList(array $datarray) {
-
     // rest of variables
     foreach($datarray as $k=>$data) {
 
@@ -84,12 +86,19 @@ Class VO
       }
 
 
-
-
-      // set dependence VOs
       if( is_array($this->depKeys) && array_key_exists( $datakey , $this->depKeys) ){
+
         if( $data ) {
           $this->setDepVOs( $data, $this->depKeys[$datakey], VOUtils::searchVOinRelObj( $this->depKeys[$datakey], $datakey ,$this->relObj) );
+        }
+      }
+      else if( is_array($this->depKeys) && array_key_exists( $this->getFirstPrimarykeyId().'_'. $datakey , $this->depKeys)  ){
+        if( $data ) {
+
+          $datakey = $this->getFirstPrimarykeyId().'_'.$datakey;
+          $depKey = $this->depKeys[ $datakey ];
+
+          $this->setDepVOs( $data, $depKey, VOUtils::searchVOinRelObj( $depKey , $datakey ,$this->relObj) );
         }
       }
       // set cols
@@ -118,11 +127,6 @@ Class VO
     }
     else
     {
-      //var_dump('['.$data.']');
-      //var_dump( json_decode('['.$data.']') );
-      //var_dump( $json_errors[json_last_error()] );
-      //exit;
-
 
       $escapedData = str_replace(
                                   array("\n","\r","\t", '"'.COGUMELO_NULL.'"'),
@@ -135,6 +139,7 @@ Class VO
 
         if( sizeof($d)>0 ) {
           foreach($d as $dep) {
+            //var_dump($dep);
             $this->setDepVO($dep, $voName, $relObj->parentId, $relObj);
           }
         }
@@ -177,16 +182,18 @@ Class VO
     $retvO = false;
 
     if( $this->isForeignKey( $key ) ){
+
       $retVO = new $voName( (array) $dataVO, $relObj );
       $this->depData[ $key ][] = $retVO;
     }
     else {
+
       $retVO = new $voName( (array) $dataVO, $relObj );
       $this->depData[ $key] [] = $retVO;
     }
 
 
-    return $retVO;
+    return $ret;
   }
 
 

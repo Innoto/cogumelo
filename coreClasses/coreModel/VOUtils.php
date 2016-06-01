@@ -367,7 +367,7 @@ class VOUtils {
   */
   public static function getRelKeysByRelObj( $voRel, $tableAsKey = false ) {
     $relKeys = false;
-
+    
     if($voRel) {
       $relKeys = array();
 
