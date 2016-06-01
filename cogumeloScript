@@ -420,7 +420,7 @@ function makeAppPaths() {
   }
 
   foreach( $md as $dir ) {
-    if( !is_dir( $dir ) ) {
+    if( $dir && $dir !== '' && !is_dir( $dir ) ) {
       if( !mkdir( $dir, 0777, true ) ) {
         echo 'ERROR: Imposible crear el dirirectorio: '.$dir."\n";
       }
