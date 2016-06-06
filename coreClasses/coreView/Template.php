@@ -501,6 +501,23 @@ class Template extends Smarty {
 
       $clientIncludes = "\n";
       $clientIncludes .= "\t<script>\n";
+
+      // LOCALSTORAGE CLEAR AFTER X MINUTES
+      $clientIncludes .= "\t if(typeof Storage !== 'undefined') { \n";
+      $clientIncludes .= "\t   var cogumeloLocalStorageLastUpdate = localStorage.getItem('cogumeloLocalStorageLastUpdate');\n";
+      $clientIncludes .= "\t   var currentTimestamp = new Date().getTime();\n";
+      $clientIncludes .= "\t   var localStorageMaxTime = ".  1000 * 60 * cogumeloGetSetupValue( 'clientLocalStorage:lifetime' ) .";\n";
+
+      $clientIncludes .= "\t   if( cogumeloLocalStorageLastUpdate ) {  \n";
+      $clientIncludes .= "\t      if( (currentTimestamp-cogumeloLocalStorageLastUpdate) > localStorageMaxTime ){ \n";
+      $clientIncludes .= "\t         localStorage.clear(); console.log('Cogumelo: Cleaning Localstorage data') \n";
+      $clientIncludes .= "\t         localStorage.setItem('cogumeloLocalStorageLastUpdate', currentTimestamp );  \n";
+      $clientIncludes .= "\t      }  \n";
+      $clientIncludes .= "\t   }  \n";
+      $clientIncludes .= "\t   else { localStorage.setItem('cogumeloLocalStorageLastUpdate', currentTimestamp ); }  \n";
+      $clientIncludes .= "\t } \n";
+
+      // AJAX PRESET
       $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
       $clientIncludes .= '$.holdReady( true );'."\n";
       //if( !$this->cgmMediaserverCompileLess ) {
