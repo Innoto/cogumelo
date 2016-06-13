@@ -63,23 +63,28 @@ select {
 
 
 /*** Form lang select ***/
-.langSwitch {
-  float: right;
-  margin:0;
-  li {
-    display: none;
-    padding: 0 0.5em;
-    cursor: pointer;
-    font-weight: bold;
-    background-color: #F5F5F5;
+.langSwitch-wrap {
+  &.langSwitch-file {
+    height:30px;
   }
-  &:hover li{
-    display: inline;
+  .langSwitch {
+    float: right;
+    margin:0;
+    li {
+      display: none;
+      padding: 0 0.5em;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #F5F5F5;
+    }
+    &:hover li{
+      display: inline;
+    }
+    .langActive {
+      display: inline; cursor: no-drop;
+      background-color: inherit;
+    }
   }
-  .langActive {
-    display: inline; cursor: no-drop;
-    background-color: inherit;
-  }
+  .langSwitchIcon { float:right; }
 }
-.langSwitchIcon { float:right; }
 /*** Form lang select - End ***/
