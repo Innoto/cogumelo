@@ -1,12 +1,13 @@
 <?php
 
-require_once(COGUMELO_LOCATION.'/coreClasses/coreController/Singleton.php');
-require_once(COGUMELO_LOCATION.'/coreClasses/coreController/ModuleController.php');
-require_once(COGUMELO_LOCATION.'/coreClasses/coreController/DependencesController.php');
-require_once(COGUMELO_LOCATION.'/coreClasses/coreController/I18n.php');
+require_once( COGUMELO_LOCATION.'/coreClasses/coreController/Singleton.php' );
+require_once( COGUMELO_LOCATION.'/coreClasses/coreController/ModuleController.php' );
+require_once( COGUMELO_LOCATION.'/coreClasses/coreController/DependencesController.php' );
+require_once( COGUMELO_LOCATION.'/coreClasses/coreController/I18n.php' );
+require_once( COGUMELO_LOCATION.'/coreModules/cogumeloSession/classes/controller/CogumeloSessionController.php' );
 
-class CogumeloClass extends Singleton
-{
+class CogumeloClass extends Singleton {
+
   public $request;
   public $modules;
 
@@ -94,16 +95,49 @@ class CogumeloClass extends Singleton
   }
 
   public function __construct() {
-    global $C_SESSION_ID;
-
-    session_name('CGMLTOKENSESSID');
-
-    if( !isset( $_COOKIE['CGMLTOKENSESSID'] ) && isset( $_POST['CGMLTOKENSESSID'] ) ) {
-      session_id( $_POST['CGMLTOKENSESSID'] );
-    }
+    $sessionCtrl = new CogumeloSessionController();
+    $sessionCtrl->prepareTokenSessionEnvironment();
 
     session_start();
+    global $C_SESSION_ID;
     $C_SESSION_ID = session_id();
+
+    /*
+      $tkName = 'CGMLTOKENSESSID';
+      session_name( $tkName );
+
+      // -H "Authorization: Bearer mytoken123"
+      // https://tools.ietf.org/html/rfc1945#section-11
+
+      if( !isset( $_COOKIE[ $tkName ] ) ) {
+        if( isset( $_POST[ $tkName ] ) && trim( $_POST[ $tkName ] ) !== '' ) {
+          session_id( $_POST[ $tkName ] );
+        }
+        elseif( isset( $_SERVER[ 'HTTP_X_'.$tkName ] ) && trim( $_SERVER[ 'HTTP_X_'.$tkName ] ) !== '' ) {
+          session_id( $_SERVER[ 'HTTP_X_'.$tkName ] );
+        }
+      }
+    */
+
+    /*
+      var formData = new FormData();
+
+      // Por POST
+      // formData.append( 'CGMLTOKENSESSID', 'MEU-POST-2lv80fl591mpjpm04' );
+
+      $.ajax({
+        url: '/cgml-session.json', type: 'POST',
+
+        // Por HEADER
+        headers: {'X-CGMLTOKENSESSID': 'MEU-HEAD-rropjpm042lv80fl5'},
+
+        data: formData, cache: false, contentType: false, processData: false,
+        success: function setStatusSuccess( $jsonData, $textStatus, $jqXHR ) {
+          console.log( 'jsonData: ', $jsonData );
+          //console.log( $jsonData.status );
+        }
+      });
+    */
   }
 
   public function exec() {
