@@ -345,7 +345,7 @@ function formDoneOk( form, response ) {
   }
   if ( successActions.resetForm ) {
     $( form )[0].reset();
-    alert( 'Falta borrar los campos FILE !!!' );
+    console.log( 'IMPORTANTE: En resetForm falta borrar los campos FILE porque no lo hace el reset!!!' );
   }
   // alert( 'Form Submit OK' );
 }
