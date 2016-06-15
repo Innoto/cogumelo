@@ -574,7 +574,7 @@ class Template extends Smarty {
 
     global $cogumeloIncludesCSS;
     global $cogumeloIncludesJS;
-
+/*
 
     if( is_array( $cogumeloIncludesCSS ) ) {
       foreach( $cogumeloIncludesCSS as $fileCss ) {
@@ -587,7 +587,7 @@ class Template extends Smarty {
         $this->addClientScript( $fileJs['src'], $fileJs['module'], true );
       }
     }
-
+*/
 
     // error_log( 'Template->execFragment() === ' . $this->tpl );
 
