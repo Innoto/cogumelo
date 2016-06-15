@@ -39,6 +39,56 @@ class CogumeloSessionView extends View {
     $this->sendJsonResponse( $info );
   }
 
+  /*
+    Exemplos con jquery (borrando as cookies para forzar o paso de "Token session ID")
+
+    // COGUMELO GET session info
+    $.ajax({
+      url: '/cgml-session.json', type: 'GET',
+      data: formData, cache: false, contentType: false, processData: false,
+      success: function setStatusSuccess( $jsonData, $textStatus, $jqXHR ) {
+        console.log( 'jsonData: ', $jsonData );
+      }
+    });
+
+
+    // User Login
+    var formData = new FormData();
+    formData.append( 'CGMLTOKENSESSID', 'fkvf8lohog874797vkcfs3vq16' );
+    formData.append( 'user', 'jmporto@innoto.es' );
+    formData.append( 'pass', 'olameu' );
+    $.ajax({
+      url: 'http://galiciaagochada/api/core/userlogin', type: 'POST',
+      data: formData, cache: false, contentType: false, processData: false,
+      success: function setStatusSuccess( $jsonData, $textStatus, $jqXHR ) {
+        console.log( 'jsonData: ', $jsonData );
+      }
+    });
+
+
+    // GET User session
+    $.ajax({
+      url: 'http://galiciaagochada/api/core/usersession', type: 'GET',
+      headers: {'X-CGMLTOKENSESSID': 'fkvf8lohog874797vkcfs3vq16'},
+      data: formData, cache: false, contentType: false, processData: false,
+      success: function setStatusSuccess( $jsonData, $textStatus, $jqXHR ) {
+        console.log( 'jsonData: ', $jsonData );
+      }
+    });
+
+
+    // User Logout
+    var formData = new FormData();
+    formData.append( 'CGMLTOKENSESSID', 'fkvf8lohog874797vkcfs3vq16' );
+    $.ajax({
+      url: 'http://galiciaagochada/api/core/userlogout', type: 'POST',
+      data: formData, cache: false, contentType: false, processData: false,
+      success: function setStatusSuccess( $jsonData, $textStatus, $jqXHR ) {
+        console.log( 'jsonData: ', $jsonData );
+      }
+    });
+
+  */
 
   /**
    * Envía el JSON con el Ok o los errores al navegador

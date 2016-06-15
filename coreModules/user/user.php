@@ -5,8 +5,8 @@ require_once APP_BASE_PATH.'/conf/inc/geozzyRolesPermissions.php';
 
 define('MOD_USER_URL_DIR', 'user');
 
-class user extends Module
-{
+class user extends Module {
+
   public $name = "user";
   public $version = 1.5;
   public $dependences = array(
@@ -23,7 +23,7 @@ class user extends Module
 
   );
 
-  function __construct() {
+  public function __construct() {
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/loginform$#', 'view:UserView::loginForm' );
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/sendloginform$#', 'view:UserView::sendLoginForm' );
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/registerform$#', 'view:UserView::userForm' );
@@ -35,10 +35,9 @@ class user extends Module
     user::load('model/RoleModel.php');
     user::load('model/RolePermissionModel.php');
 
-    global $CGMLCONF;
     /**
-    Create roles & permissions
-    */
+     * Create roles & permissions
+     */
     $roleData = array(
       'name' => 'superAdmin',
       'description' => 'SuperAdmin'
@@ -60,9 +59,9 @@ class user extends Module
     $role = new RoleModel($roleData);
     $role->save();
 
-    if( count( $CGMLCONF['user']['roles'] ) > 0 ) {
-      foreach( $CGMLCONF['user']['roles'] as $rol ) {
-
+    $rolesConf = Cogumelo::getSetupValue( 'user:roles' );
+    if( $rolesConf && count( $rolesConf ) > 0 ) {
+      foreach( $rolesConf as $rol ) {
         $roleModel = new RoleModel( $rol );
         $roleModel->save();
 
