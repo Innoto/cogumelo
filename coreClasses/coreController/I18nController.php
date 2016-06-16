@@ -99,4 +99,13 @@ class I18nController {
     }
   }
 
+  /* Devolve a cadea traducida ao idioma especificado */
+  public static function getLangTranslation( $string, $locale){
+    $actLang = setlocale( LC_ALL, 0 );
+    setlocale(LC_ALL, $locale.'.utf8');
+    $translation = __($string);
+    setlocale(LC_ALL, $actLang);
+    return $translation;
+  }
+
 }
