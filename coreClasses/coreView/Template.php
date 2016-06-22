@@ -572,22 +572,6 @@ class Template extends Smarty {
    **/
   public function execFragment() {
 
-    global $cogumeloIncludesCSS;
-    global $cogumeloIncludesJS;
-/*
-
-    if( is_array( $cogumeloIncludesCSS ) ) {
-      foreach( $cogumeloIncludesCSS as $fileCss ) {
-        $this->addClientStyles( $fileCss['src'], $fileCss['module'], true );
-      }
-    }
-
-    if( is_array( $cogumeloIncludesJS ) ){
-      foreach( $cogumeloIncludesJS as $fileJs ){
-        $this->addClientScript( $fileJs['src'], $fileJs['module'], true );
-      }
-    }
-*/
 
     // error_log( 'Template->execFragment() === ' . $this->tpl );
 
