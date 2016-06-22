@@ -95,14 +95,14 @@ class CogumeloClass extends Singleton {
   }
 
   public function __construct() {
-    /*
     $sessionCtrl = new CogumeloSessionController();
     $sessionCtrl->prepareTokenSessionEnvironment();
-    */
 
+    /*
     session_start();
     global $C_SESSION_ID;
     $C_SESSION_ID = session_id();
+    */
   }
 
   public function exec() {
