@@ -7,13 +7,12 @@
 user::load('controller/UserSessionController.php');
 user::load('model/UserModel.php');
 
-class UserAccessController
-{
+class UserAccessController {
+
   //
   // Constructor
   //
-  function UserAccesscontroller()
-  {
+  public function UserAccesscontroller() {
     $this->setSessioncontrol( new UserSessionController() );
     $this->setSessiondata($this->sessioncontrol->getUser());
   }
@@ -23,8 +22,7 @@ class UserAccessController
   //
   // Login an Admin User
   //
-  function userLogin($login, $password)
-  {
+  public function userLogin( $login, $password ) {
     $usermodel= new UserModel();
     if($logeduser = $usermodel->authenticateUser( $login, $password )) {
       $this->sessioncontrol->setUser($logeduser);
@@ -40,8 +38,7 @@ class UserAccessController
   //
   // Login an Admin User
   //
-  function userAutoLogin($login)
-  {
+  public function userAutoLogin( $login ) {
     $usermodel= new UserModel();
     if($logeduser = $usermodel->authenticateUserOnlyLogin( $login )) {
       $this->sessioncontrol->setUser($logeduser);
@@ -57,23 +54,19 @@ class UserAccessController
   //
   // Logout a User
   //
-  function userLogout()
-  {
-    if($currentuser = $this->sessioncontrol->getUser())
-    {
+  public function userLogout() {
+    if($currentuser = $this->sessioncontrol->getUser()) {
       $this->sessioncontrol->delUser();
       Cogumelo::log("User ".$currentuser['data']['login']." Logged out", 'UserLog');
       return true;
     }
-    else
-    {
+    else {
       Cogumelo::log("Unable to Logout", 'UserLog');
       return false;
     }
   }
 
-  function checkPermissions( $permissions = false, $specialPerm = false )
-  {
+  public function checkPermissions( $permissions = false, $specialPerm = false ) {
     if( !is_array($permissions) && $permissions)
     {
       $permissions = array($permissions);
@@ -85,10 +78,10 @@ class UserAccessController
 
     $user = $this->getSessiondata();
     $res = false;
-/*
-Cogumelo::console($user);
-Cogumelo::console($permissions);
-*/
+    /*
+    Cogumelo::console($user);
+    Cogumelo::console($permissions);
+    */
     if( in_array( 'user:superAdmin' , $user['permissions']) ){
       $res = true;
     }
@@ -96,7 +89,7 @@ Cogumelo::console($permissions);
       if(is_array($specialPerm)) {
         //Si tiene permisos especiales
         $res = false;
-        foreach ($specialPerm as $key => $perm){
+        foreach( $specialPerm as $key => $perm ) {
           if(in_array( $perm, $user['permissions'] )){
             $res = true;
             break;
@@ -105,7 +98,7 @@ Cogumelo::console($permissions);
       }
       if(is_array($permissions) && (!$res)){
         $res = true;
-        foreach ($permissions as $key => $perm){
+        foreach( $permissions as $key => $perm ) {
           if(!in_array( $perm, $user['permissions'] )){
             $res = false;
             break;
@@ -120,31 +113,25 @@ Cogumelo::console($permissions);
   //
   // Is current User Loged?
   //
-  function isLogged()
-  {
-    if($this->sessiondata) {
-      return true;
-    }
-    else {
-      return false;
-    }
+  public function isLogged() {
+    return ($this->sessiondata) ? true : false;
   }
 
 
-  function setSessioncontrol($sessioncontrol) {
+  public function setSessioncontrol( $sessioncontrol ) {
     $this->sessioncontrol = $sessioncontrol;
   }
 
-  function getSessioncontrol() {
+  public function getSessioncontrol() {
     // set session data
     return $this->sessioncontrol;
   }
 
-  function setSessiondata($sessiondata){
+  public function setSessiondata( $sessiondata ) {
     $this->sessiondata = $sessiondata;
   }
 
-  function getSessiondata(){
+  public function getSessiondata() {
     return $this->sessiondata;
   }
 
