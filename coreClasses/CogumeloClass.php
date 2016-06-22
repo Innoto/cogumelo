@@ -98,9 +98,11 @@ class CogumeloClass extends Singleton {
     $sessionCtrl = new CogumeloSessionController();
     $sessionCtrl->prepareTokenSessionEnvironment();
 
-    session_start();
-    global $C_SESSION_ID;
-    $C_SESSION_ID = session_id();
+    /*
+      session_start();
+      global $C_SESSION_ID;
+      $C_SESSION_ID = session_id();
+    */
   }
 
   public function exec() {
@@ -437,7 +439,7 @@ class CogumeloClass extends Singleton {
 
 
   /**
-  * un-register the app
+  * Un-register the app
   */
   public static function unRegister() {
 
@@ -455,7 +457,7 @@ class CogumeloClass extends Singleton {
   }
 
   /**
-  * register or update app register
+  * Register or update app register
   */
   public static function register() {
 
@@ -477,7 +479,7 @@ class CogumeloClass extends Singleton {
   }
 
   /**
-  * check last registered version
+  * Check last registered version
   */
   public static function checkRegisteredVersion() {
     devel::load('model/ModuleRegisterModel.php');
@@ -495,7 +497,7 @@ class CogumeloClass extends Singleton {
 
 
   /**
-  * check current app version
+  * Check current app version
   */
   public static function checkCurrentVersion() {
     return  Cogumelo::$version;

@@ -8,7 +8,7 @@ cogumeloSession::autoIncludes();
  * Gestión de sesiones Cogumelo.
  *
  * @package Module CogumeloSession
- **/
+ */
 class CogumeloSessionView extends View {
 
   private $controller = false;
@@ -22,6 +22,7 @@ class CogumeloSessionView extends View {
 
   /**
    * Evaluate the access conditions and report if can continue
+   *
    * @return bool : true -> Access allowed
    */
   public function accessCheck() {
@@ -70,7 +71,7 @@ class CogumeloSessionView extends View {
     $.ajax({
       url: 'http://galiciaagochada/api/core/usersession', type: 'GET',
       headers: {'X-CGMLTOKENSESSID': 'fkvf8lohog874797vkcfs3vq16'},
-      data: formData, cache: false, contentType: false, processData: false,
+      cache: false, contentType: false, processData: false,
       success: function setStatusSuccess( $jsonData, $textStatus, $jqXHR ) {
         console.log( 'jsonData: ', $jsonData );
       }
@@ -87,7 +88,6 @@ class CogumeloSessionView extends View {
         console.log( 'jsonData: ', $jsonData );
       }
     });
-
   */
 
   /**
