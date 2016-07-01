@@ -70,12 +70,12 @@ class FormValidators extends FormValidatorsExtender {
     @param mixed $param (optinal)
     @return bool $validate
   */
-  private function val_regex( $value, $param ) {
+  public function val_regex( $value, $param ) {
     $validate = ( preg_match( $param, $value ) === 1 );
     return $validate;
   }
 
-  private function val_required( $value ) {
+  public function val_required( $value ) {
     $validate = true;
     if( is_array( $value ) ) {
       $validate = ( count( $value ) > 0 );
@@ -86,13 +86,13 @@ class FormValidators extends FormValidatorsExtender {
     return $validate;
   }
 
-  private function val_email( $value ) {
+  public function val_email( $value ) {
     $regex = '/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9]'.
       '(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/';
     return( preg_match( $regex, $value ) === 1 );
   }
 
-  private function val_url( $value ) {
+  public function val_url( $value ) {
     $azP = '[a-z]|[\x{00A0}-\x{D7FF}\x{F900}-\x{FDCF}\x{FDF0}-\x{FFEF}]';
     $azP2 = $azP.'|\d|-|\.|_|~';
     $rx2 = '%[\da-f]{2})|[!\$&\'\(\)\*\+,;=]|:';
@@ -106,108 +106,108 @@ class FormValidators extends FormValidatorsExtender {
     return( preg_match( $regex, $value ) === 1 );
   }
 
-  private function val_date( $value ) {
+  public function val_date( $value ) {
     /*
     */
     return false;
   }
 
-  private function val_dateISO( $value ) {
+  public function val_dateISO( $value ) {
     return preg_match( '/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/',
       $value ) === 1;
   }
 
-  private function val_dateMin( $value, $param ) {
+  public function val_dateMin( $value, $param ) {
     return (strtotime($value) > strtotime($param));
   }
 
-  private function val_dateMax( $value, $param ) {
+  public function val_dateMax( $value, $param ) {
     return (strtotime($value) < strtotime($param));
   }
 
-  private function val_timeMin( $value, $param ) {
+  public function val_timeMin( $value, $param ) {
     return (strtotime($value) > strtotime($param));
   }
 
-  private function val_timeMax( $value, $param ) {
+  public function val_timeMax( $value, $param ) {
     return (strtotime($value) < strtotime($param));
   }
 
-  private function val_dateTimeMin( $value, $param ) {
+  public function val_dateTimeMin( $value, $param ) {
     return (strtotime($value) > strtotime($param));
   }
 
-  private function val_dateTimeMax( $value, $param ) {
+  public function val_dateTimeMax( $value, $param ) {
     return (strtotime($value) < strtotime($param));
   }
 
-  private function val_number( $value ) {
+  public function val_number( $value ) {
     return preg_match( '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/',
       $value ) === 1;
   }
 
-  private function val_numberEU( $value ) {
+  public function val_numberEU( $value ) {
     return preg_match( '/^-?\d+(,\d+)?$/',
       $value ) === 1;
   }
 
-  private function val_digits( $value ) {
+  public function val_digits( $value ) {
     return preg_match( '/^\d+$/',
       $value ) === 1;
   }
 
-  private function val_creditcard( $value ) {
+  public function val_creditcard( $value ) {
     /*
     */
     return false;
   }
 
   // http://jqueryvalidation.org/minlength-method/
-  private function val_minlength( $value, $param ) {
+  public function val_minlength( $value, $param ) {
     return strlen( $value ) >= $param;
   }
 
   // http://jqueryvalidation.org/maxlength-method/
-  private function val_maxlength( $value, $param ) {
+  public function val_maxlength( $value, $param ) {
     return strlen( $value ) <= $param;
   }
 
   // http://jqueryvalidation.org/min-method/
-  private function val_min( $value, $param ) {
+  public function val_min( $value, $param ) {
     return $value >= $param;
   }
 
   // http://jqueryvalidation.org/max-method/
-  private function val_max( $value, $param ) {
+  public function val_max( $value, $param ) {
     return $value <= $param;
   }
 
-  private function val_equalTo( $value, $param ) {
+  public function val_equalTo( $value, $param ) {
     // equalTo implemented in FormController
     return true;
   }
 
-  private function val_inArray( $value, $param ) {
+  public function val_inArray( $value, $param ) {
     return in_array( $value, $param );
   }
 
-  private function val_notInArray( $value, $param ) {
+  public function val_notInArray( $value, $param ) {
     return !in_array( $value, $param );
   }
 
 
-  private function val_maxfilesize( $value, $param ) {
+  public function val_maxfilesize( $value, $param ) {
     return( $value['validate'][ 'size' ] <= $param );
   }
 
 
-  private function val_minfilesize( $value, $param ) {
+  public function val_minfilesize( $value, $param ) {
     return( $value['validate'][ 'size' ] >= $param );
   }
 
 
   // http://jqueryvalidation.org/accept-method
-  private function val_accept( $value, $param ) {
+  public function val_accept( $value, $param ) {
     $result = false;
 
     if( !is_array( $param ) ) {
@@ -235,7 +235,7 @@ class FormValidators extends FormValidatorsExtender {
 
 
   // http://jqueryvalidation.org/extension-method
-  private function val_extension( $value, $param ) {
+  public function val_extension( $value, $param ) {
     if( !is_array( $param ) ) {
       // Split param on commas in case we have multiple extensions we can accept
       $param = str_replace( ' ', '', $param );
