@@ -59,12 +59,22 @@ class UserModel extends Model
     ),
     'timeCreateUser' => array(
       'type' => 'DATETIME'
+    ),
+    'timeLastUpdate' => array(
+      'type' => 'DATETIME'
     )
 
 
   );
 
   var $deploySQL = array(
+    array(
+      'version' => 'user#1.6',
+      'sql'=> '
+        ALTER TABLE user_user
+        Add COLUMN timeLastUpdate DATETIME
+      '
+    ),
     array(
       'version' => 'user#1.5',
       'sql'=> '

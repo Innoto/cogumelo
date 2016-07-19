@@ -8,8 +8,8 @@
 *
 * @author: pablinhob
 */
-class RequestController
-{
+class RequestController {
+
   var $url_path;
   var $include_base_path;
   var $leftover_url = "";
@@ -175,16 +175,19 @@ class RequestController
   static public function processUrlParams( $urlParams, $validation ) {
     // error_log( 'RequestController::processUrlParams' );
 
-    $url_parts = explode('/', ltrim($urlParams[1], '/') );
+    $urlDecoded = urldecode( $urlParams[1] );
+    // error_log( 'RequestController::processUrlParams '.$urlDecoded );
+
+    $url_parts = explode('/', ltrim($urlDecoded, '/') );
     $params = array();
 
     $c = count( $url_parts );
     if( $c > 1 ) {
       for( $i=0; $i<$c; $i=$i+2 ) {
         $par = $url_parts[$i];
-        if ($validation[$par]){
-          if (preg_match ( $validation[$par] , $url_parts[$i+1])){
-            $params[$url_parts[$i]] = $url_parts[$i+1];
+        if( isset( $validation[$par] ) ) {
+          if( preg_match ( $validation[$par], $url_parts[$i+1] ) ) {
+            $params[ $url_parts[$i] ] = $url_parts[$i+1];
           }
         }
       }
