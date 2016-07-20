@@ -218,6 +218,7 @@ class  DevelDBController
 
     if( count($matches[0]) ) {
       for($mi=0; count($matches[0]) > $mi; $mi++ ) {
+        $multilangLines = '';
 
         foreach( array_keys( cogumeloGetSetupValue( 'lang:available')) as $lang  ){
           $multilangLines .= str_replace('$lang', $lang, $matches[1][$mi]);
