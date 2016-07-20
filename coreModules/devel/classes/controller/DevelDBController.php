@@ -96,10 +96,13 @@ class  DevelDBController
 
 
       foreach( $model->deploySQL as $d) {
+
+        $sqlToExecute = $this->renderRichSql( $d['sql'] );
+
         if($getOnlyGenerateModelSQL === true ) {
           if( isset($d['executeOnGenerateModelToo']) && $d['executeOnGenerateModelToo'] === true ) {
             // GENERATEMODEL
-            $retSQL .= $d['sql'];
+            $retSQL .= $sqlToExecute;
           }
         }
         else {
@@ -129,7 +132,7 @@ class  DevelDBController
                 //var_dump( $currentModuleVersion );
 
                 $retSQL .= "# Module $deployModuleName deploy code from versions: ( $registeredModuleVersion ) to ( $currentModuleVersion ) \n";
-                $retSQL .= $d['sql'];
+                $retSQL .= $sqlToExecute;
 
               }
             }
@@ -204,6 +207,29 @@ class  DevelDBController
 
   public function createSchemaDB() {
     return $this->data->createSchemaDB();
+  }
+
+
+  public function renderRichSql( $sql ) {
+
+
+    // Multilang expression
+    preg_match_all( "#[\{]\s*multilang\s*\:\s*(.*?)\s*[\}]#", $sql, $matches);
+
+    if( count($matches[0]) ) {
+      for($mi=0; count($matches[0]) > $mi; $mi++ ) {
+
+        foreach( array_keys( cogumeloGetSetupValue( 'lang:available')) as $lang  ){
+          $multilangLines .= str_replace('$lang', $lang, $matches[1][$mi]);
+        }
+
+        $sql = str_replace($matches[0][$mi], $multilangLines, $sql);
+      }
+    }
+
+    //$debug = var_export($matches, true);
+
+    return $sql;
   }
 
 }
