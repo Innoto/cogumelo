@@ -41,13 +41,15 @@ if( $argc > 1 ) {
       deployModels(true);
       initModules();
       deployModules(true);
-
+      flushAll();
       break;
 
     case 'deploy':
       deployModels();
       deployModules();
       registerModules();
+      createRelSchemes();
+      flushAll();
       break;
 
     case 'deployModels':
@@ -86,12 +88,7 @@ if( $argc > 1 ) {
       break;
 
     case 'bckDB': // do the backup of the db
-      if( $argc > 2 ) {
-        $file = $argv[2].'.sql';//name of the backup file
-      }
-      else {
-        $file = false;
-      }
+      $file = ( $argc > 2 ) ? $argv[2].'.sql' : false;
 
       doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), $file);
       break;
@@ -133,22 +130,8 @@ if( $argc > 1 ) {
 
     /* We execute this two actions from web as we need to operate with the apache permissions*/
     case 'flush': // delete temporary files
-      echo "\n --- setPermissionsDevel:\n";
-      setPermissionsDevel();
-      echo "\n --- actionFlush:\n";
-      actionFlush();
-      echo "\n --- actionCompileTranslations:\n";
-      actionCompileTranslations();
-      echo "\n --- actionGenerateClientCaches:\n";
-      if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) ) {
-        actionGenerateClientCaches();
-      }
-      else {
-        echo "\nPasamos porque no estamos en PRODUCTION MODE\n";
-      }
-      echo "\n --- setPermissionsDevel:\n";
-      setPermissionsDevel();
-      echo "\n --- DONE\n";
+      flushAll();
+      echo "\n --- Flush DONE\n";
       break;
 
     case 'rotateLogs':
@@ -179,6 +162,25 @@ function actionCompileTranslations() {
   /* generate json for js */
   $i18nscriptController->c_i18n_json();
   echo "\nThe files.mo are ready to be used!\n\n";
+}
+
+
+function flushAll() {
+  echo "\n --- setPermissionsDevel:\n";
+  setPermissionsDevel();
+  echo "\n --- actionFlush:\n";
+  actionFlush();
+  echo "\n --- actionCompileTranslations:\n";
+  actionCompileTranslations();
+  echo "\n --- actionGenerateClientCaches:\n";
+  if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) ) {
+    actionGenerateClientCaches();
+  }
+  else {
+    echo "\nPasamos porque no estamos en PRODUCTION MODE\n";
+  }
+  echo "\n --- setPermissionsDevel:\n";
+  setPermissionsDevel();
 }
 
 
