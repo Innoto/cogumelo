@@ -2385,7 +2385,7 @@ class FormController implements Serializable {
    * @param string $msgError Mensaje de error
    */
   public function addFieldError( $fieldName, $msgError ) {
-    $this->addFieldRuleError( $fieldName, 'cogumelo', $msgError = false );
+    $this->addFieldRuleError( $fieldName, 'cogumelo', $msgError );
   }
 
   /**
@@ -2410,6 +2410,14 @@ class FormController implements Serializable {
   public function addGroupRuleError( $groupName, $ruleName, $msgError = false ) {
     // error_log( "addGroupRuleError: $groupName, $ruleName, $msgError " );
     $this->fieldErrors[ $groupName ][ $ruleName ] = $msgError;
+  }
+
+  public function getFormErrors() {
+    return( $this->formErrors );
+  }
+
+  public function getFieldsErrors() {
+    return( $this->fieldErrors );
   }
 
   /**
