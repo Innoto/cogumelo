@@ -59,9 +59,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
     switch (status){
       case "filtered":
-        that.showTableStatus = status;
-        that.filters.hide();
-        that.resumeFilters.show();
+
         break;
       case "openFilters":
         that.showTableStatus = status;
@@ -76,11 +74,15 @@ function cogumeloTable( tableId, tableUrl ) {
         break;
       case "closeFilters":
         that.filters.hide();
+        if(that.extraFilters != false){
+          that.resumeFilters.show();
+        }
+
         break;
       case "clearFilters":
         that.extraFilters = false;
         that.setExtraFilters();
-        that.getFilterValues();
+        that.resumeFilters.hide();
         break;
       case "default":
       default:
@@ -215,7 +217,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.getFilterValues = function() {
     that.extraFilters  = {};
     that.filtersContent.find('select, input').each( function(i,e) {
-      console.log( $(e).attr('data-filter-id'), $(e).val() )
+      //console.log( $(e).attr('data-filter-id'), $(e).val() )
       eval('that.extraFilters.' + $(e).attr('data-filter-id') + ' = "' + $(e).val() + '"' );
     });
 

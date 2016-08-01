@@ -50,7 +50,7 @@ class TableView {
         </div>
       </div>
       <div class="tableResumeFilters clearfix">
-        <span>Estas filtrando por: (Categoria 1, Aceptado).</span>
+        <span>'.__('You are filtering by').': (Resource type, Rutas).</span>
         <button class="clearFilters">Clear filters</button>
       </div>
       <div class="tableActions clearfix">
