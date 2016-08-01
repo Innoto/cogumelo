@@ -37,108 +37,10 @@ class TableView {
             <div class="FilterMain">
               <label>Categoria</label>
               <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
+                <option value="1">Error cargando filtros</option>
               </select>
             </div>
-            <div class="FilterMain">
-              <label>Categoria</label>
-              <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
-              </select>
-            </div>
-            <div class="FilterMain">
-              <label>Categoria</label>
-              <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
-              </select>
 
-              <div class="FilterMain">
-                <label>Categoria</label>
-                <select>
-                  <option value="1">Categoria 1</option>
-                  <option value="2">Categoria 2</option>
-                  <option value="3">Categoria 3</option>
-                </select>
-                <div class="FilterMain">
-                  <label>Categoria</label>
-                  <select>
-                    <option value="1">Categoria 1</option>
-                    <option value="2">Categoria 2</option>
-                    <option value="3">Categoria 3</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="FilterMain">
-              <label>Categoria</label>
-              <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
-              </select>
-            </div>
-            <div class="FilterMain">
-              <label>Categoria</label>
-              <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
-              </select>
-            </div>
-            <div class="FilterMain">
-              <label>Categoria</label>
-              <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
-              </select>
-            </div>
-            <div class="FilterMain">
-              <label>Categoria</label>
-              <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
-              </select>
-            </div>
-            <div class="FilterMain">
-              <label>Categoria</label>
-              <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
-              </select>
-            </div>
-            <div class="FilterMain">
-              <label>Categoria</label>
-              <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
-              </select>
-            </div>
-            <div class="FilterMain">
-              <label>Categoria</label>
-              <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
-              </select>
-            </div>
-            <div class="FilterMain">
-              <label>Categoria</label>
-              <select>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
-              </select>
-            </div>
           </div>
 
           <div class="buttonsContainer">
