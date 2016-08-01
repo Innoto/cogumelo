@@ -2412,10 +2412,16 @@ class FormController implements Serializable {
     $this->fieldErrors[ $groupName ][ $ruleName ] = $msgError;
   }
 
+  /**
+   * Obtiene la lista de errores en el formulario (Globales)
+   */
   public function getFormErrors() {
     return( $this->formErrors );
   }
 
+  /**
+   * Obtiene la lista de errores en los campos del formulario
+   */
   public function getFieldsErrors() {
     return( $this->fieldErrors );
   }
