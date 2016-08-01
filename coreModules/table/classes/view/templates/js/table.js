@@ -27,6 +27,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
   // table elements
   that.filters = $('.'+tableId+'.tableContainer .tableMoreFilters');
+  that.filtersContent = $('.'+tableId+'.tableContainer .tableMoreFilters .MoreFilters .clearfix');
   that.resumeFilters = $('.'+tableId+'.tableContainer .tableResumeFilters');
   that.tableContent = $('.'+tableId+'.tableContainer .tableClass');
   that.tabsContent = $('.'+tableId+'.tableContainer .tableFilters select');
@@ -123,6 +124,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
         that.clearData();
         that.initTabValues();
+        that.setExtraFilters();
         that.setActionValues();
         that.setExportValues();
         that.initOrderValues();
@@ -163,6 +165,48 @@ function cogumeloTable( tableId, tableUrl ) {
       }
 
     }
+  }
+
+  that.setExtraFilters = function() {
+
+
+    that.filtersContent.html('');
+
+    $.each( that.tableData.extraFilters , function(i, e){
+      var opts = '';
+      //console.log(e);
+
+      $.each( e.options , function(i2,e2) {
+
+        var isSelected = ' ';
+
+        if( e.default == i2 ) {
+          isSelected = ' SELECTED ';
+        }
+
+        opts += '<option value="'+ i2 +'" ' + isSelected + ' >' + e2 + '</option>';
+      });
+
+
+      that.filtersContent.append(
+        '<div class="FilterMain">' +
+          '<label> ' + e.title + ' </label>' +
+          '<select data-filter-id="' + i + '" >' +
+            opts +
+          '</select>'+
+        '</div>'
+      );
+    });
+
+
+    that.filtersContent.find('select, input').on("change", that.getFilterValues );
+
+  }
+
+  that.getFilterValues = function() {
+    that.filtersContent.find('select, input').each( function(i,e) {
+      console.log( $(e).attr('data-filter-id'), $(e).val() )
+    });
   }
 
   that.setActionValues = function() {
@@ -518,6 +562,8 @@ function cogumeloTable( tableId, tableUrl ) {
   that.pagersNext.on("click", function(){
     that.setPager(that.currentPage + 1);
   });
+
+
 
 
   // FIRST TIME

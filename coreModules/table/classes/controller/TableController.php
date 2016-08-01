@@ -36,6 +36,7 @@ class TableController{
   var $currentTab = '*';
   var $filters = array();
   var $defaultFilters = array();
+  var $extraFilters = array();
   var $rowsEachPage = 50;
   var $affectsDependences = false;
   var $joinType = 'LEFT';
@@ -149,6 +150,18 @@ class TableController{
   function setDefaultFilters( $defaultFilters ) {
     $this->defaultFilters = $defaultFilters;
   }
+
+  /**
+  * Set extra filters array
+  *
+  * @param array $extratFilter
+  * @return void
+  */
+  function setExtraFilter( $key,  $type, $title, $options, $defaultValue ) {
+
+    $this->extraFilters[$key] = array( 'type' => $type, 'title' => $title, 'options' => $options, 'default' => $defaultValue );
+  }
+
 
 
   /**
@@ -363,7 +376,7 @@ class TableController{
     $this->eachRowUrl = $url;
   }
 
-  /** 
+  /**
   * setNewItemUrl url
   * @param string $url
   * @return void
@@ -401,8 +414,11 @@ class TableController{
         'range' => $this->clientData["range"],
         'order' => $this->orderIntoArray(),
         'affectsDependences' => $this->affectsDependences , //array('ResourceTopicModel'),
-        'joinType' => $this->joinType 
+        'joinType' => $this->joinType
     );
+
+    Cogumelo::console($this->getFilters() );
+
     eval('$lista = $this->model->'. $this->controllerMethodAlias['list'].'( $p );');
     eval('$totalRows = $this->model->'. $this->controllerMethodAlias['count'].'( $p );');
 
@@ -416,6 +432,7 @@ class TableController{
     echo '"colsDef":'.json_encode($this->colsIntoArray() ).',';
     echo '"tabs":'.json_encode($this->tabs).',';
     echo '"filters":'.json_encode($this->filters).',';
+    echo '"extraFilters":'.json_encode($this->extraFilters).',';
     echo '"exports":'.json_encode($this->getExportsForClient()) . ',';
     echo '"actions":'.json_encode($this->getActionsForClient()) . ',';
     echo '"rowsEachPage":'. $this->rowsEachPage .',';
