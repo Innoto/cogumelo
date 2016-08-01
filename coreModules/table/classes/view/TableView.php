@@ -50,8 +50,11 @@ class TableView {
         </div>
       </div>
       <div class="tableResumeFilters clearfix">
-        <span>'.__('You are filtering by').': (Resource type, Rutas).</span>
-        <button class="clearFilters">Clear filters</button>
+        <div>'.__(
+          'You are filtering by').':
+          <span class="filterValues">(Resource type, Rutas). </span>
+          <button class="clearFilters">Clear filters</button>
+        </div>
       </div>
       <div class="tableActions clearfix">
         <div class="addElem"><img src="'.Cogumelo::getSetupValue('publicConf:vars:media').'/module/table/img/add.png" alt="Add"></div>
