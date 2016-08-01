@@ -74,6 +74,7 @@ class TableController{
       $this->clientData['range'] = array(0, $this->rowsEachPage );
     }
 
+
     // filters
     if( $clientdata['filters'] != 'false' ) {
       $this->clientData['filters'] = $clientdata['filters'];
@@ -193,6 +194,21 @@ class TableController{
   */
   function getFilters() {
     $retFilters = array();
+
+    if( $this->clientData['filters'] ) {
+      foreach( $this->clientData['filters'] as $filterKey => $filterValue ) {
+        if( isset($this->extraFilters[$filterKey]) ){
+          if( $filterValue == '*'){
+            unset( $retFilters[$filterKey] );
+          }
+          else {
+            $retFilters[$filterKey] = $filterValue;
+          }
+        }
+
+      }
+      //$retFilters[ $this->searchId ]
+    }
 
     if( $this->clientData['search'] ) {
       $retFilters[ $this->searchId ] = $this->clientData['search'];
@@ -417,7 +433,7 @@ class TableController{
         'joinType' => $this->joinType
     );
 
-    Cogumelo::console($this->getFilters() );
+    //Cogumelo::console($this->getFilters() );
 
     eval('$lista = $this->model->'. $this->controllerMethodAlias['list'].'( $p );');
     eval('$totalRows = $this->model->'. $this->controllerMethodAlias['count'].'( $p );');

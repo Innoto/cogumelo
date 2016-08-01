@@ -18,6 +18,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.range = [];
   that.order = false;
   that.currentTab = false;
+  that.extraFilters = false;
   that.tableData = false;
   that.currentPage = 1;
 
@@ -112,10 +113,10 @@ function cogumeloTable( tableId, tableUrl ) {
       data: {
         exportType: false,
         tab : that.tabsContent.val(),
+        filters: that.extraFilters,
         order: that.order,
         range: currentRange,
         action: action,
-        filters: false,
         search: that.search
 
       },
@@ -124,7 +125,9 @@ function cogumeloTable( tableId, tableUrl ) {
 
         that.clearData();
         that.initTabValues();
-        that.setExtraFilters();
+        if( that.extraFilters == false ){
+          that.setExtraFilters();
+        }
         that.setActionValues();
         that.setExportValues();
         that.initOrderValues();
@@ -198,15 +201,19 @@ function cogumeloTable( tableId, tableUrl ) {
       );
     });
 
-
+    that.filtersContent.find('select, input').unbind("change");
     that.filtersContent.find('select, input').on("change", that.getFilterValues );
 
   }
 
   that.getFilterValues = function() {
+    that.extraFilters  = {};
     that.filtersContent.find('select, input').each( function(i,e) {
       console.log( $(e).attr('data-filter-id'), $(e).val() )
+      eval('that.extraFilters.' + $(e).attr('data-filter-id') + ' = "' + $(e).val() + '"' );
     });
+
+    that.load();
   }
 
   that.setActionValues = function() {
