@@ -43,6 +43,7 @@ function cogumeloTable( tableId, tableUrl ) {
   // buttons and action elements
   that.openFiltersButton = $('.'+tableId+'.tableContainer .openFilters');
   that.closeFiltersButton = $('.'+tableId+'.tableContainer .closeFilters');
+  that.clearFiltersButton = $('.'+tableId+'.tableContainer .clearFilters');
   that.anyColHeaderQstr = '.'+tableId+'.tableContainer table.tableClass tr th';
   that.pagersPrevious = $('.'+tableId+'.tableContainer .tablePaginator .tablePreviousPage');
   that.pagersNext = $('.'+tableId+'.tableContainer .tablePaginator .tableNextPage');
@@ -75,6 +76,11 @@ function cogumeloTable( tableId, tableUrl ) {
         break;
       case "closeFilters":
         that.filters.hide();
+        break;
+      case "clearFilters":
+        that.extraFilters = false;
+        that.setExtraFilters();
+        that.getFilterValues();
         break;
       case "default":
       default:
@@ -525,6 +531,13 @@ function cogumeloTable( tableId, tableUrl ) {
   that.closeFiltersButton.on("click", function(){
     that.interfaceAction('closeFilters');
   });
+
+  // click clear filters
+  that.clearFiltersButton.on("click", function(){
+    that.interfaceAction('clearFilters');
+  });
+
+
 
   // Action select
   that.actionSelect.on("change", function( ){
