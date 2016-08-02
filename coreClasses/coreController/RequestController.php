@@ -16,8 +16,6 @@ class RequestController {
   var $is_last_request = false;
   var $urlPatterns = array();
 
-  var $view404 = 'MasterView::page404';
-
 
   public function __construct( $urlPatterns, $url_path, $include_base_path = false ) {
     // error_log( 'RequestController::__construct: urlPatterns, '.$url_path.', '.$include_base_path );
@@ -138,9 +136,7 @@ class RequestController {
 
     $alternative = false;
 
-    // require class script from views folder
-    // include( '/home/proxectos/geozzy/distModules/geozzy/classes/controller/UrlAliasController.php' );
-
+    // App URL alias controller
     $urlAliasControllerClassFile = Cogumelo::getSetupValue( 'urlAliasController:classFile' );
     if( $urlAliasControllerClassFile && file_exists( $urlAliasControllerClassFile ) ) {
       include( $urlAliasControllerClassFile );
@@ -165,10 +161,14 @@ class RequestController {
       }
     }
     else {
-      Cogumelo::error( "URL not found ".$_SERVER['REQUEST_URI']."\n" );
-      $this->view( '', $this->view404 );
+      Cogumelo::error( 'URL not found '.$_SERVER['REQUEST_URI']."\n" );
+      $error404View = Cogumelo::getSetupValue( 'urlError404:view' );
+      if( $error404View ) {
+        $this->view( '', $error404View );
+      }
     }
-    exit();
+    // 170802 - No rompemos el exec()
+    // exit();
   }
 
   // gets the url parameters, validate them in function of the validation passed and returns and array with pairs key=>value
