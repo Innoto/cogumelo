@@ -213,9 +213,10 @@ function setValidateForm( idForm, rules, messages ) {
   $.validator.setDefaults({
     errorPlacement: function(error, element) {
       // console.log( 'JQV errorPlacement:' );
-      // console.log( error );
-      // console.log( element );
-      //console.log( 'Busco #JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
+      // console.log( 'error', error );
+      // console.log( 'element', element );
+      // console.log( 'this', this );
+      // console.log( 'Busco #JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       var $msgContainer = $( '#JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       if ( $msgContainer.length > 0 ) {
         $msgContainer.append( error );
@@ -226,8 +227,9 @@ function setValidateForm( idForm, rules, messages ) {
     },
     showErrors: function( errorMap, errorList ) {
       // console.log( 'JQV showErrors:' );
-      // console.log( errorMap );
-      // console.log( errorList );
+      // console.log( 'errorMap', errorMap );
+      // console.log( 'errorList', errorList );
+      // console.log( 'this', this );
       // $("#summary").html("Your form contains "+ this.numberOfInvalids()+ " errors, see details below.");
 
       // Lanzamos el metodo original
@@ -255,7 +257,7 @@ function setValidateForm( idForm, rules, messages ) {
       } )
       .done( function ( response ) {
         // console.log( 'Executando validate.submitHandler.done...' );
-        //console.log( response );
+        // console.log( response );
         if( response.result === 'ok' ) {
           // alert( 'Form Submit OK' );
           // console.log( 'Form Done: OK' );
