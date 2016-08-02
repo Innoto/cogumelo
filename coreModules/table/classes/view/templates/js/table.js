@@ -75,7 +75,7 @@ function cogumeloTable( tableId, tableUrl ) {
       case "closeFilters":
         that.filters.hide();
         if(that.extraFilters != false){
-          that.resumeFilters.show();
+          that.showFiltersResume();
         }
 
         break;
@@ -222,6 +222,39 @@ function cogumeloTable( tableId, tableUrl ) {
     });
 
     that.load();
+  }
+
+  that.showFiltersResume = function() {
+
+    var resumeString = '';
+    var coma = '';
+
+    $.each(that.extraFilters, function(i,e){
+      eval('var filter = that.tableData.extraFilters.'+i)
+
+      //console.log( i, title , e );
+      var valueString = e;
+
+
+
+      $.each( filter.options, function(i2,e2) {
+        if(i2 == e) {
+          valueString = e2;
+        }
+      });
+
+      if(e != '*') {
+        resumeString += coma + ' (<b>' + filter.title + '</b>: '+valueString+')';
+      }
+      coma = ',';
+    });
+
+    that.resumeFilters.find('span.filterValues').html( resumeString );
+
+    if( resumeString !== ''){
+      that.resumeFilters.show();
+    }
+
   }
 
   that.setActionValues = function() {
