@@ -87,7 +87,7 @@ class FormController implements Serializable {
    * @param string $action Action del formulario
    */
   public function __construct( $name = false, $action = false ) {
-    $this->getTokenId( 'new'.$name.$action );
+    $this->setTokenId( 'new'.$name.$action );
     if( $name !== false ) {
       $this->setName( $name );
     }
@@ -105,16 +105,32 @@ class FormController implements Serializable {
     }
   }
 
+  /**
+   * Clone. Actualiza el TokenId si se clona el objeto
+   */
+  public function __clone() {
+    $this->setTokenId( 'clone'.$this->getName().$this->getAction() );
+  }
+
+  /**
+    Crea el TokenId único del formulario. NO es el id del FORM.
+    @return string
+   */
+  public function setTokenId( $saltText = '' ) {
+    $tmp = 'cf-'.uniqid().'-'.session_id().'-'.$saltText.rand(0,999);
+    $this->tokenId = sha1( $tmp );
+    $this->setField( 'cgIntFrmId', array( 'type' => 'hidden', 'value' => $this->tokenId ) );
+
+    return $this->tokenId;
+  }
 
   /**
     Recupera el TokenId único del formulario. Si no existe, se crea. NO es el id del FORM.
     @return string
    */
-  public function getTokenId( $saltText = '' ) {
+  public function getTokenId() {
     if( $this->tokenId === false ) {
-      $tmp = 'cf-'.uniqid().'-'.session_id().'-'.$saltText.rand(0,999);
-      $this->tokenId = sha1( $tmp );
-      $this->setField( 'cgIntFrmId', array( 'type' => 'hidden', 'value' => $this->tokenId ) );
+      $this->setTokenId( 'new'.$this->getName().$this->getAction() );
     }
 
     return $this->tokenId;
@@ -128,6 +144,7 @@ class FormController implements Serializable {
   public function setName( $name = false ) {
     $this->name = $name;
     $this->id = $name;
+    $this->setTokenId( 'new'.$name );
   }
 
   /**
@@ -311,7 +328,7 @@ class FormController implements Serializable {
     $formSessionId = 'CGFSI_'.$tokenId;
     if( isset( $_SESSION[ $formSessionId ] ) ) {
       $this->unserialize( $_SESSION[ $formSessionId ] );
-      $result = ( $this->tokenId === $tokenId );
+      $result = ( $this->getTokenId() === $tokenId );
     }
     else {
       error_log( 'ERROR. El FORM no esta en sesion: '.$formSessionId );
@@ -355,7 +372,8 @@ class FormController implements Serializable {
    */
   public function loadPostSession( $tokenId ) {
     $result = false;
-    if( isset( $tokenId ) && $tokenId !== false ) {
+
+    if( $tokenId !== false ) {
       $result = $this->loadFromSession( $tokenId );
     }
 
