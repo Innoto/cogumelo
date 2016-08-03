@@ -292,7 +292,14 @@ Class DependencesController {
             switch ($this->typeIncludeFile( $includeFile )) {
               case 'serverScript':
                 //Cogumelo::debug( 'Including vendor:'.WEB_BASE_PATH.'/vendorServer/'.$include_folder.'/'.$includeFile );
-                require_once( Cogumelo::getSetupValue( 'dependences:composerPath' ).'/'.$include_folder.'/'.$includeFile );
+                if($installer == 'manual') {
+                  require_once( Cogumelo::getSetupValue( 'dependences:manualPath' ).'/'.$include_folder.'/'.$includeFile );
+                }
+                else {
+                  require_once( Cogumelo::getSetupValue( 'dependences:composerPath' ).'/'.$include_folder.'/'.$includeFile );
+                }
+
+
                 break;
               case 'clientScript':
                 $this->addIncludeJS( $include_folder.'/'.$includeFile, 'vendor/'.$installer );
