@@ -30,16 +30,6 @@ class FiledataWeb extends View {
 
 
   /**
-    Visualizamos un fichero
-  */
-  public function webFileShow( $urlParams ) {
-    // error_log( 'FiledataWeb: webFileShow()' . $urlParams['1'] );
-    $this->fileSendCommon( $urlParams['1'], $this->filesAppPath, 'web' );
-  } // function webFileShow()
-
-
-
-  /**
     Visualizamos un fichero de Form
   */
   public function webFormFileShow( $urlParams ) {
