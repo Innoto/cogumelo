@@ -645,7 +645,7 @@ class FormController implements Serializable {
     $originalFieldNames = is_array( $fieldName ) ? $fieldName : array( $fieldName );
 
 
-    if( $this->langAvailable === false || count( $this->langAvailable ) <= 1 ) {
+    if( $this->langAvailable === false || count( $this->langAvailable ) < 1 ) {
       $newFieldNames[] = $originalFieldNames;
     }
     else {

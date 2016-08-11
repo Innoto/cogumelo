@@ -1025,7 +1025,7 @@ function switchFormLang( idForm, lang ) {
 function createSwitchFormLang( idForm ) {
   // console.log( 'createSwitchFormLang' );
 
-  if( typeof( cogumelo.publicConf.langAvailableIds ) === 'object' ) {
+  if( typeof cogumelo.publicConf.langAvailableIds === 'object' && cogumelo.publicConf.langAvailableIds.length > 1 ) {
     var htmlLangSwitch = '';
     htmlLangSwitch += '<div class="langSwitch-wrap">';
     htmlLangSwitch += '<ul class="langSwitch" data-form_id="'+idForm+'">';
