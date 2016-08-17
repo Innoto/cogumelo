@@ -39,12 +39,13 @@ class Cache {
    * @param string $query is the query string
    * @param array $variables the variables for the query prepared statment
    */
-  public function setCache( $query, $data ){
-    return $this->mc->set( $query, $data, Cogumelo::getSetupValue( 'memcached:expirationTime' ) );
+  public function setCache( $query, $data, $expirationTime = false ){
+
+    if( !$expirationTime ) {
+      $expirationTime = Cogumelo::getSetupValue( 'memcached:expirationTime' );
+    }
+
+    return $this->mc->set( $query, $data, $expirationTime );
   }
 
 }
-
-
-
-
