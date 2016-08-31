@@ -123,8 +123,6 @@ class i18nScriptController {
         }
     }
 
-
-
     // get all the files into modules folder
     /* App modules (rTypes) */
     $filesAppModules = $this->getModuleFiles($cogumeloFilesModule, $this->dir_modules);
@@ -135,7 +133,6 @@ class i18nScriptController {
 
     // We combine all the arrays that we've got in an only array
     $filesModules = array_merge_recursive($filesAppModules, $filesCoreModules, $filesDistModules);
-
 
     // get the .php files into modules folder
     if ($filesModules && $this->modules){
@@ -164,6 +161,7 @@ class i18nScriptController {
           }
         }
       }
+
     }
 
     // We combine all the arrays that we've got in an only array
@@ -207,6 +205,7 @@ class i18nScriptController {
           $entriesPhp = Gettext\Extractors\PhpCode::fromFile($filesArray['php']);
           $entriesPhp->mergeWith($entriesPhp);
         }
+
         Gettext\Generators\Po::toFile($entriesPhp, $l.'/'.$this->textdomain.'_prev.po');
       }
 
@@ -273,23 +272,28 @@ class i18nScriptController {
   }
 
   public function getModuleFiles($modFiles, $relPath){
+
+
     $filesModule = array();
     if ($modFiles && $this->modules){
       foreach ($this->modules as $i => $dir) {
+
           foreach ($modFiles as $k => $file) {
+
             $outMod = explode($relPath.$dir.'/',$file);
             if (sizeof($outMod)==2){
+
               if(ModuleController::getRealFilePath($outMod[1], $dir)){
-                    $parts = explode('.',$file);
-                    switch($parts[1]){
+                $parts = explode('.',$file);
+                switch($parts[1]){
                   case 'php':
-                    $filesModule['php'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+                    $filesModule['php'][$k] = ModuleController::getRealFilePath($outMod[1], $dir);
                     break;
                   case 'js':
-                    $filesModule['js'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+                    $filesModule['js'][$k] = ModuleController::getRealFilePath($outMod[1], $dir);
                     break;
                   case 'tpl':
-                    $filesModule['tpl'][$i] = ModuleController::getRealFilePath($outMod[1], $dir);
+                    $filesModule['tpl'][$k] = ModuleController::getRealFilePath($outMod[1], $dir);
                     break;
                 }
               }
