@@ -25,7 +25,7 @@ class TableView {
           <select>
 
           </select>
-          <button class="openFilters">+Filters</button>
+          <button class="openFilters">+'.__("Filters").'</button>
         </div>
         <div class="tableSearch clearfix">
           <form  onsubmit="return false;"><input type="text"><button type="button" class="clear" style="display:none;">X</button><button class="search" type="submit">'.__("Search").'</button></form>
@@ -37,23 +37,22 @@ class TableView {
             <div class="FilterMain">
               <label>Categoria</label>
               <select>
-                <option value="1">Error cargando filtros</option>
+                <option value="1">'.__("Error loading filters").'</option>
               </select>
             </div>
 
           </div>
 
           <div class="buttonsContainer">
-            <button class="clearFilters">Clear filters</button>
-            <button class="closeFilters">Close</button>
+            <button class="clearFilters">'.__("Clear filters").'</button>
+            <button class="closeFilters">'.__("Close").'</button>
           </div>
         </div>
       </div>
       <div class="tableResumeFilters clearfix">
-        <div>'.__(
-          'You are filtering by').':
-          <span class="filterValues">(Resource type, Rutas). </span>
-          <button class="clearFilters">Clear filters</button>
+        <div>'.__("You are filtering by").':
+          <span class="filterValues">'.__("(Resource type, Routes).").'</span>
+          <button class="clearFilters">'.__("Clear filters").'</button>
         </div>
       </div>
       <div class="tableActions clearfix">

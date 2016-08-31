@@ -199,34 +199,34 @@ class UserView extends View
         'params' => array(
           'type' => 'file',
           'id' => 'inputFicheiro',
-          'placeholder' => 'Escolle un ficheiro',
-          'label' => 'Colle un ficheiro',
+          'placeholder' => __('Upload a file'),
+          'label' => __('Upload a file'),
           'destDir' => '/users'
         )
       ),
       'login' => array(
-        'params' => array( 'type' => 'reserved', 'placeholder' => 'Login' ),
+        'params' => array( 'type' => 'reserved', 'placeholder' => __('Login') ),
         'rules' => array( 'required' => true )
       ),
       'email' => array(
-        'params' => array( 'id' => 'email', 'placeholder' => 'Email' ),
+        'params' => array( 'id' => 'email', 'placeholder' => __('Email') ),
         'rules' => array( 'required' => true )
       ),
       'repeatEmail' => array(
-        'params' => array( 'id' => 'repeatEmail', 'placeholder' => 'Repeat email' ),
+        'params' => array( 'id' => 'repeatEmail', 'placeholder' => __('Repeat email') ),
         'rules' => array( 'required' => true )
       ),
       'name' => array(
-        'params' => array( 'placeholder' => 'Name' ),
+        'params' => array( 'placeholder' => __('Name') ),
       ),
       'surname' => array(
-        'params' => array( 'placeholder' => 'Surname' ),
+        'params' => array( 'placeholder' => __('Surname') ),
       ),
       'active' => array(
         'params' => array( 'type' => 'checkbox', 'class' => 'switchery', 'options'=> array( '1' => __('Active') ))
       ),
       'description' => array(
-        'params' => array( 'type' => 'textarea', 'placeholder' => 'Descripción'),
+        'params' => array( 'type' => 'textarea', 'placeholder' => __('Descripción')),
         'translate' => true
       )
     );
@@ -235,8 +235,8 @@ class UserView extends View
 
     //Esto es para verificar si es un create
     if(!isset($data) || $data == ''){
-      $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña' ) );
-      $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => 'Repite contraseña' ) );
+      $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => __('Contraseña') ) );
+      $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => __('Repite contraseña') ) );
     }
 
     $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
@@ -279,14 +279,14 @@ class UserView extends View
 
     $form = new FormController( 'changePasswordForm', '/user/sendchangepasswordform' ); //actionform
 
-    $form->setSuccess( 'accept', 'Contraseña cambiada con exito.' );
+    $form->setSuccess( 'accept', __('Password changed successfully.') );
     $form->setSuccess( 'redirect', '/' );
 
     $form->setField( 'id', array( 'type' => 'reserved', 'value' => $dataVO->getter('id') ));
 
-    $form->setField( 'passwordOld', array( 'id' => 'passwordOld', 'type' => 'password', 'placeholder' => 'Contraseña antigua' ) );
-    $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => 'Contraseña nueva' ) );
-    $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => 'Repite contraseña' ) );
+    $form->setField( 'passwordOld', array( 'id' => 'passwordOld', 'type' => 'password', 'placeholder' => __('Old password' ) );
+    $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => __('New password') ) );
+    $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => __('Repeat password') ) );
 
     $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
 
@@ -335,7 +335,7 @@ class UserView extends View
     $form = new FormController( 'userRoleForm', '/user/assignroleform' ); //actionform
     $form->setSuccess( 'redirect', '/' );
     $form->setField( 'user', array( 'type' => 'reserved', 'value' => $user->getter('id') ));
-    $form->setField( 'checkroles', array( 'type' => 'checkbox', 'label' => 'Selecciona los roles para este usuario', 'value' => $activeRolesCheck,
+    $form->setField( 'checkroles', array( 'type' => 'checkbox', 'label' => __('Select the roles for this user'), 'value' => $activeRolesCheck,
       'options'=> $rolesCheck
     ));
     $form->setValidationRule( 'checkroles', 'required' );
@@ -483,14 +483,14 @@ class UserView extends View
         $user = $userControl->listItems( array('filters' => array('id' => $valuesArray['id'])) )->fetch();
         if($valuesArray['email'] !== $user->getter('email')){
           if($loginExist){
-            $form->addFieldRuleError('email', 'cogumelo', 'El campo email específicado ya esta en uso.');
+            $form->addFieldRuleError('email', 'cogumelo', __('The email specified field already in use'));
           }
         }
       }
       else{
         // Create: comprobamos si el login existe y si existe mostramos error.
         if($loginExist){
-          $form->addFieldRuleError('email', 'cogumelo', 'El campo email específicado ya esta en uso.');
+          $form->addFieldRuleError('email', 'cogumelo', __('The email specified field already in use'));
         }
       }
     }
@@ -509,7 +509,7 @@ class UserView extends View
     $asignRole = false;
 
     if( !$form->processFileFields() ) {
-      $form->addFormError( 'Ha sucedido un problema con los ficheros adjuntos. Puede que sea necesario subirlos otra vez.', 'formError' );
+      $form->addFormError( __('It has happened a problem with attachments. It may be necessary to raise them again.'), 'formError' );
     }
 
     if( !$form->existErrors() ){
@@ -658,10 +658,10 @@ class UserView extends View
 
 
       if( !isset($valuesArray['id']) && !$user ){
-        $form->addFieldRuleError('id', 'cogumelo', 'Error usuario no identificado.');
+        $form->addFieldRuleError('id', 'cogumelo', __('Unknow user'));
       }
       elseif( !$user->equalPassword($valuesArray['passwordOld']) ){
-        $form->addFieldRuleError('passwordOld', 'cogumelo', 'La contraseña antigua no coincide.');
+        $form->addFieldRuleError('passwordOld', 'cogumelo', __('The old password does not match.'));
       }
     }
 
@@ -708,7 +708,7 @@ class UserView extends View
       $valuesArray = $form->getValuesArray();
 
       if( !isset($valuesArray['user'])){
-        $form->addFieldRuleError('id', 'cogumelo', 'Error usuario no identificado.');
+        $form->addFieldRuleError('id', 'cogumelo', __('User Error unidentified'));
       }
     }
 
