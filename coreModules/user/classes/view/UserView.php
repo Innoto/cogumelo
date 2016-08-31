@@ -284,7 +284,7 @@ class UserView extends View
 
     $form->setField( 'id', array( 'type' => 'reserved', 'value' => $dataVO->getter('id') ));
 
-    $form->setField( 'passwordOld', array( 'id' => 'passwordOld', 'type' => 'password', 'placeholder' => __('Old password' ) );
+    $form->setField( 'passwordOld', array( 'id' => 'passwordOld', 'type' => 'password', 'placeholder' => __('Old password') ) );
     $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => __('New password') ) );
     $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => __('Repeat password') ) );
 
