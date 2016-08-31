@@ -28,7 +28,7 @@ class TableView {
           <button class="openFilters">+Filters</button>
         </div>
         <div class="tableSearch clearfix">
-          <form  onsubmit="return false;"><input type="text"><button type="button" class="clear" style="display:none;">X</button><button class="search" type="submit">Search</button></form>
+          <form  onsubmit="return false;"><input type="text"><button type="button" class="clear" style="display:none;">X</button><button class="search" type="submit">'.__("Search").'</button></form>
         </div>
       </div>
       <div class="tableMoreFilters clearfix" style="display:none;">
