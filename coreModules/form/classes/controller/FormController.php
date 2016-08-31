@@ -1899,7 +1899,7 @@ class FormController implements Serializable {
             }
           }
 
-          $html['inputClose'] = '</select><!-- select '.$fieldName.' -->';
+          $html['inputClose'] = '</select>'; // Comentario eliminado (petaba)
           break;
 
         case 'checkbox':
