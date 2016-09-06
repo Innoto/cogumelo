@@ -25,7 +25,8 @@ class CogumeloClass extends Singleton {
        'id' => 'phpmailer',
        'params' => array( 'phpmailer/phpmailer', '5.2.14' ),
        'installer' => 'composer',
-       'includes' => array('class.phpmailer.php')
+       'includes' => array('PHPMailerAutoload.php')
+       // 'includes' => array('class.phpmailer.php')
      ),
      array( // para phpmailer
        'id' => 'oauth2-client',
@@ -74,13 +75,16 @@ class CogumeloClass extends Singleton {
        'params' => array('basket'),
        'installer' => 'manual',
        'includes' => array()
-     ),
+     )
+     /*
+     ,
      array(
        'id' => 'php-jwt',
        'params' => array('firebase/php-jwt', '3.*'),
        'installer' => 'composer',
        'includes' => array('src/JWT.php')
      )
+     */
   );
 
   // Set autoincludes
