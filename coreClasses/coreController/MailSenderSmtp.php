@@ -19,6 +19,7 @@ class MailSenderSmtp {
     //$this->phpmailer->IsSMTP();
     $this->phpmailer->SMTPKeepAlive = true;
     $this->phpmailer->CharSet = 'UTF-8';
+    $this->phpmailer->isSMTP();  // Set mailer to use SMTP
 
     $this->phpmailer->Host = Cogumelo::getSetupValue( 'mail:host' );
     $this->phpmailer->Port = Cogumelo::getSetupValue( 'mail:port' );
@@ -99,6 +100,8 @@ class MailSenderSmtp {
     else {
       $this->phpmailer->Body = $bodyPlain;
     }
+
+    // $this->phpmailer->SMTPDebug = 2; // SOLO TEST - EL FORM NO FUNCIONA CON ESTO!!!
 
     $mailResult = $this->phpmailer->Send();
 
