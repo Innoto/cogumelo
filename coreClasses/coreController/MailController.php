@@ -18,8 +18,12 @@ class MailController {
 
   public function __construct( $vars = false, $tplFile = false, $module = false ) {
     switch( Cogumelo::getSetupValue( 'mail:type' ) ) {
+      case 'local':
+        Cogumelo::load('coreController/MailSenderLocal.php');
+        $this->senderController = new MailSenderLocal();
+        break;
       case 'gmail':
-        Cogumelo::load('coreController/MailSenderSmtp.php');
+        Cogumelo::load('coreController/MailSenderGmail.php');
         $this->senderController = new MailSenderGmail();
         break;
       default: // SMTP
