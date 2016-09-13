@@ -37,19 +37,23 @@ class RequestController {
 
 
   public function exec() {
-    foreach( $this->urlPatterns as $url_pattern_key => $url_pattern_action ) {
-
-      if( preg_match( $url_pattern_key, $this->url_path, $m_url ) ) {
-        if( array_key_exists( 1, $m_url ) ) {
-          $this->readPatternAction( $m_url, $url_pattern_action );
+    if( is_array( $this->urlPatterns ) && count( $this->urlPatterns ) > 0 ) {
+      foreach( $this->urlPatterns as $url_pattern_key => $url_pattern_action ) {
+        if( preg_match( $url_pattern_key, $this->url_path, $m_url ) ) {
+          if( array_key_exists( 1, $m_url ) ) {
+            $this->readPatternAction( $m_url, $url_pattern_action );
+          }
+          else {
+            $this->readPatternAction( '', $url_pattern_action );
+          }
+          if( array_key_exists( 2, $m_url ) ) {
+            $this->leftover_url = $m_url[ '2' ];
+          }
+          /**
+           * WARNING: RETURN !!!
+           */
+          return;
         }
-        else {
-          $this->readPatternAction( '', $url_pattern_action );
-        }
-        if( array_key_exists( 2, $m_url ) ) {
-          $this->leftover_url = $m_url[ '2' ];
-        }
-        return;
       }
     }
 
