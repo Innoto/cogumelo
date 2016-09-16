@@ -70,37 +70,59 @@ class I18nController {
 
  /* Se a url actual non ten idioma, redirixe á páxina co idioma do navegador */
   public static function redirectLang( $page ) {
+    $newLang = Cogumelo::getSetupValue( 'lang:default' );
 
     $langsAvailable = array_keys( Cogumelo::getSetupValue( 'lang:available' ) );
 
-    $browserLang_all = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-    $browserLang_parts = explode('-',$browserLang_all);
-    $browserLang = $browserLang_parts[0];
+    $currentUrlParts = explode( '/', $_SERVER['REQUEST_URI'] );
+    if( !in_array( $currentUrlParts['1'], $langsAvailable ) ) {
+      // No hay idioma en la url. Vamos a cambiarla
 
-    $currentUrl = explode('/', $_SERVER['REQUEST_URI']);
+      $browserLang_all = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 
-    switch($page){
-      case 'home';
-        if ($currentUrl[1]===''){ //home sen idioma
-          Cogumelo::Redirect($_SERVER['REQUEST_URI'].$browserLang);
+      $browserLangs = explode(',',$browserLang_all);
+      foreach( $browserLangs as $browserLang ) {
+        $browserLang = preg_replace( '/[-;].*/', '', $browserLang );
+        if( in_array( $browserLang, $langsAvailable ) ) {
+          $newLang = $browserLang;
+          break;
         }
-        break;
-      case 'explorer';
-        $has_lang = false;
-        foreach( $langsAvailable as $lng ) { // se ten idioma
-          if ($currentUrl['1']===$lng){
-            $has_lang = true;
-          }
-        }
-        if(!$has_lang){
-          Cogumelo::Redirect($browserLang.$_SERVER['REQUEST_URI']);
-        }
-        break;
+      }
+
+      Cogumelo::Redirect( '/'.$newLang.$_SERVER['REQUEST_URI'] );
     }
+
+
+    // $langsAvailable = array_keys( Cogumelo::getSetupValue( 'lang:available' ) );
+
+    // $browserLang_all = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+    // $browserLang_parts = explode('-',$browserLang_all);
+    // $browserLang = $browserLang_parts[0];
+
+    // $currentUrl = explode('/', $_SERVER['REQUEST_URI']);
+
+    // switch($page){
+    //   case 'home';
+    //     if ($currentUrl[1]===''){ //home sen idioma
+    //       Cogumelo::Redirect($_SERVER['REQUEST_URI'].$browserLang);
+    //     }
+    //     break;
+    //   case 'explorer';
+    //     $has_lang = false;
+    //     foreach( $langsAvailable as $lng ) { // se ten idioma
+    //       if ($currentUrl['1']===$lng){
+    //         $has_lang = true;
+    //       }
+    //     }
+    //     if(!$has_lang){
+    //       Cogumelo::Redirect($browserLang.$_SERVER['REQUEST_URI']);
+    //     }
+    //     break;
+    // }
   }
 
   /* Devolve a cadea traducida ao idioma especificado */
-  public static function getLangTranslation( $string, $locale){
+  public static function getLangTranslation( $string, $locale ) {
     $actLang = setlocale( LC_ALL, 0 );
     setlocale(LC_ALL, $locale.'.utf8');
     $translation = __($string);
