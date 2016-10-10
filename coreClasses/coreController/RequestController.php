@@ -165,17 +165,22 @@ class RequestController {
       }
     }
     else {
-      Cogumelo::error( 'URL not found '.$_SERVER['REQUEST_URI']."\n" );
+      Cogumelo::debug( 'URL not found '.$_SERVER['REQUEST_URI']."\n" );
       $error404View = Cogumelo::getSetupValue( 'urlError404:view' );
       if( $error404View ) {
         $this->view( '', $error404View );
+      }
+      else {
+        header("HTTP/1.0 404 Not Found");
+        echo 'HTTP/1.0 404 Not Found';
       }
     }
     // 170802 - No rompemos el exec()
     // exit();
   }
 
-  // gets the url parameters, validate them in function of the validation passed and returns and array with pairs key=>value
+  // gets the url parameters, validate them in function of the validation passed and returns
+  //   and array with pairs key=>value
   static public function processUrlParams( $urlParams, $validation ) {
     // error_log( 'RequestController::processUrlParams' );
 
