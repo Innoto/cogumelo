@@ -109,9 +109,7 @@ class RequestController {
   public function view( $url_path, $view_reference ) {
     // error_log( 'RequestController::view '.print_r( $url_path, true ).' - '.$view_reference  );
 
-    preg_match( '^(.*)::(.*)^', $view_reference, $m );
-    $classname = $m['1'];
-    $methodname = $m['2'];
+    list( $classname, $methodname ) = explode( '::', $view_reference );
 
     // require class script from views folder
     include( $this->include_base_path .'/classes/view/'. $classname.'.php' );
@@ -175,7 +173,11 @@ class RequestController {
   static public function httpError404() {
     Cogumelo::debug( 'URL not found '.$_SERVER['REQUEST_URI']."\n" );
     if( $errorView = Cogumelo::getSetupValue( 'urlError404:view' ) ) {
-      $this->view( '', $errorView );
+      list( $className, $methodName ) = explode( '::', $errorView );
+      // require class script from App views folder
+      include( APP_BASE_PATH . '/classes/view/'. $className.'.php' );
+      eval( '$current_view = new '.$className.'();' );
+      eval( '$current_view->'.$methodName.'();' );
     }
     else {
       header( 'HTTP/1.0 404 Not Found' );
@@ -187,7 +189,11 @@ class RequestController {
   static public function httpError403() {
     Cogumelo::debug( 'URL not found '.$_SERVER['REQUEST_URI']."\n" );
     if( $errorView = Cogumelo::getSetupValue( 'urlError403:view' ) ) {
-      $this->view( '', $errorView );
+      list( $className, $methodName ) = explode( '::', $errorView );
+      // require class script from App views folder
+      include( APP_BASE_PATH . '/classes/view/'. $className.'.php' );
+      eval( '$current_view = new '.$className.'();' );
+      eval( '$current_view->'.$methodName.'();' );
     }
     else {
       header( 'HTTP/1.0 403 Access Forbidden' );
