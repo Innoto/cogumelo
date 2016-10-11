@@ -165,19 +165,36 @@ class RequestController {
       }
     }
     else {
-      Cogumelo::debug( 'URL not found '.$_SERVER['REQUEST_URI']."\n" );
-      $error404View = Cogumelo::getSetupValue( 'urlError404:view' );
-      if( $error404View ) {
-        $this->view( '', $error404View );
-      }
-      else {
-        header("HTTP/1.0 404 Not Found");
-        echo 'HTTP/1.0 404 Not Found';
-      }
+      self::httpError404();
     }
     // 170802 - No rompemos el exec()
     // exit();
   }
+
+
+  static public function httpError404() {
+    Cogumelo::debug( 'URL not found '.$_SERVER['REQUEST_URI']."\n" );
+    if( $errorView = Cogumelo::getSetupValue( 'urlError404:view' ) ) {
+      $this->view( '', $errorView );
+    }
+    else {
+      header( 'HTTP/1.0 404 Not Found' );
+      echo( 'HTTP/1.0 404 Not Found' );
+    }
+  }
+
+
+  static public function httpError403() {
+    Cogumelo::debug( 'URL not found '.$_SERVER['REQUEST_URI']."\n" );
+    if( $errorView = Cogumelo::getSetupValue( 'urlError403:view' ) ) {
+      $this->view( '', $errorView );
+    }
+    else {
+      header( 'HTTP/1.0 403 Access Forbidden' );
+      echo( 'HTTP/1.0 403 Access Forbidden' );
+    }
+  }
+
 
   // gets the url parameters, validate them in function of the validation passed and returns
   //   and array with pairs key=>value
