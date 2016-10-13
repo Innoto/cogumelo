@@ -226,7 +226,7 @@ class CogumeloClass extends Singleton {
   }
 
   public static function debugSQL( $description ) {
-    if( Cogumelo::getSetupValue( 'logs:debug' ) === true ) {
+    if( Cogumelo::getSetupValue( 'logs:rawSql' ) === true ) {
       self::log($description, 'cogumelo_debug_sql');
     }
   }
