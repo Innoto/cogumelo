@@ -92,32 +92,32 @@ class UserModel extends Model
   );
 
   static $extraFilters = array(
-      'find' => "UPPER(surname)  LIKE CONCAT('%',UPPER(?),'%') OR login LIKE CONCAT('%', UPPER(?), '%')",
-//      'login' => "login = CONCAT('', ? ,'')"
-//      'edadmax' => "edad <= ?",
-//      'edadmin' => "edad >= ?"
-    );
+    'find' => "UPPER(surname)  LIKE CONCAT('%',UPPER(?),'%') OR login LIKE CONCAT('%', UPPER(?), '%')",
+    'idIn' => ' user_user.id IN (?) ',
+    // 'login' => "login = CONCAT('', ? ,'')"
+    // 'edadmax' => "edad <= ?",
+    // 'edadmin' => "edad >= ?"
+  );
 
 
-  function __construct( $datarray= array(), $otherRelObj = false ) {
+  public function __construct( $datarray = array(), $otherRelObj = false ) {
     parent::__construct( $datarray, $otherRelObj );
   }
 
-  function isActive(){
+  public function isActive(){
     return $this->getter('active');
   }
 
-  function equalPassword( $password ){
+  public function equalPassword( $password ) {
     return ($this->getter('password') === sha1($password));
   }
 
-  function setPassword( $password ){
+  public function setPassword( $password ){
     $this->setter('password', sha1($password));
   }
 
 
-  function authenticateUser($login, $password)
-  {
+  public function authenticateUser( $login, $password ) {
     $userO = $this->listItems( array('filters' => array('login' => $login), 'affectsDependences' => array( 'UserPermissionModel') ))->fetch();
     if( $userO ){
       $data = (($userO->getter('password') == sha1($password)) && ($userO->getter('active') == 1)) ? true : false;
@@ -135,8 +135,7 @@ class UserModel extends Model
     return $data;
   }
 
-  function authenticateUserOnlyLogin($login)
-  {
+  public function authenticateUserOnlyLogin( $login ) {
     $userO = $this->listItems( array('filters' => array('login' => $login), 'affectsDependences' => array( 'UserPermissionModel') ))->fetch();
     if($userO) {
       $data = $this->loginIsOk($userO);
@@ -147,13 +146,13 @@ class UserModel extends Model
     return $data;
   }
 
-  function loginIsOk( $userO ){
+  public function loginIsOk( $userO ) {
     Cogumelo::log("authenticateUser SUCCEED with login=".$userO->getter('login'), "UserLog");
 
     $userPermissionArray = $userO->getterDependence('id', 'UserPermissionModel');
     $uPermArray = array();
     if($userPermissionArray) {
-      foreach ($userPermissionArray as $key => $uPerm) {
+      foreach( $userPermissionArray as $key => $uPerm ) {
         $uPermArray[] = $uPerm->getter('permission');
       }
     }
@@ -166,14 +165,9 @@ class UserModel extends Model
 
     return $data;
   }
-  /**
-  * undocumented function
-  *
-  * @return void
-  * @author
-  **/
-  function updatePassword($id, $password)
-  {
+
+
+  public function updatePassword( $id, $password ) {
     $data = $this->data->updatePassword($id, $password);
     if($data) {
       Cogumelo::log("UpdatePassword SUCCEED with ID=".$id, "UserLog");
