@@ -8,7 +8,7 @@ abstract class View {
   var $first_execution = true;
   var $template;
 
-  function __construct( $baseDir ) {
+  public function __construct( $baseDir ) {
     if( $this->first_execution ) {
 
       $this->baseDir = $baseDir;
@@ -17,8 +17,10 @@ abstract class View {
 
       $this->template = new Template( $baseDir );
 
-      if(!$this->accessCheck()){
-        Cogumelo::error( 'Acess error on view '. get_called_class() );
+      if( !$this->accessCheck() ){
+        Cogumelo::debug( 'Acess error on view '. get_called_class() );
+        error_log( 'Acess error on view '. get_called_class() );
+        RequestController::httpError403();
         exit;
       }
       else {
@@ -31,7 +33,7 @@ abstract class View {
   * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
-  function accessCheck() {
+  public function accessCheck() {
 
     Cogumelo::error( 'You need to define "accessCheck" into View' );
 
