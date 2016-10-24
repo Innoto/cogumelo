@@ -197,6 +197,7 @@ function actionRotateLogs() {
 
 
 function actionGenerateClientCaches() {
+  echo("Connectiong with ".Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches ... If you have any problem in less compilation, execute this url in browser');
   file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches' );
   echo "\nClient caches generated\n\n";
 }
