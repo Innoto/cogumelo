@@ -26,7 +26,7 @@ class devel extends Module {
    ),
    array(
      "id" =>"d3",
-     "params" => array("d3"),
+     "params" => array("d3#v3.0.6"),
      "installer" => "bower",
      "includes" => array("d3.js")
    ),

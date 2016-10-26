@@ -4,7 +4,7 @@ function drawERD(  svgDiv,  graphData, cola) {
 
    var width = 800,
       height =  20 * graphData.nodes.length + 25*graphData.links.length ;
-
+console.log(d3)
     var color = d3.scale.category20();
 
     var cola = cola.d3adaptor()
@@ -14,7 +14,7 @@ function drawERD(  svgDiv,  graphData, cola) {
 
     var svg = d3.select(svgDiv).append("svg")
         .attr("width", width)
-        .attr("height", height);    
+        .attr("height", height);
 
     graph = graphData;
 
@@ -54,4 +54,3 @@ function drawERD(  svgDiv,  graphData, cola) {
     });
 
 }
-
