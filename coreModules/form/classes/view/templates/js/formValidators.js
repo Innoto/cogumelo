@@ -68,6 +68,17 @@ $.validator.addMethod(
 
 
 $.validator.addMethod(
+  "dateTime",
+  function( value, element ) {
+    console.log( 'dateTime', value, element );
+    valid = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(value);
+    return ( value==='' && this.optional( element ) ) || valid;
+  },
+  $.validator.format("The date format is not YYYY-MM-DD hh:mm:ss")
+);
+
+
+$.validator.addMethod(
   "dateTimeMin",
   function( value, element, param) {
 

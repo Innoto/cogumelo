@@ -113,8 +113,7 @@ class FormValidators extends FormValidatorsExtender {
   }
 
   public function val_dateISO( $value ) {
-    return preg_match( '/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/',
-      $value ) === 1;
+    return preg_match( '/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/', $value ) === 1;
   }
 
   public function val_dateMin( $value, $param ) {
@@ -131,6 +130,10 @@ class FormValidators extends FormValidatorsExtender {
 
   public function val_timeMax( $value, $param ) {
     return (strtotime($value) < strtotime($param));
+  }
+
+  public function val_dateTime( $value ) {
+    return preg_match( '/^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{2}):(\d{2})$/', $value ) === 1;
   }
 
   public function val_dateTimeMin( $value, $param ) {
