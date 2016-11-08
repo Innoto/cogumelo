@@ -720,7 +720,7 @@ class UserView extends View
       if( !isset($valuesArray['user'])){
         $form->addFieldRuleError('id', 'cogumelo', __('User Error unidentified'));
       }
-/*
+
       $useraccesscontrol = new UserAccessController();
       $onlySA = $useraccesscontrol->checkPermissions('only:SA');
       $roleModel = new RoleModel();
@@ -728,7 +728,7 @@ class UserView extends View
       if(!$onlySA && in_array( $role->getter('id'), $valuesArray['checkroles'])){
         $form->addFieldRuleError('id', 'cogumelo', __(' Error unknown role'));
       }
-*/
+
     }
 
     return $form;
