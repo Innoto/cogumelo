@@ -254,6 +254,7 @@ class UserView extends View
     $form->setValidationRule( 'email', 'equalTo', '#repeatEmail' );
 
     if(!isset($data) || $data !== ''){
+      $data['repeatEmail'] = $data['email'];
       $form->loadArrayValues( $data );
     }
 
@@ -328,6 +329,14 @@ class UserView extends View
       array_push( $activeRolesCheck, $rol->getter('role'));
     }
 
+    $useraccesscontrol = new UserAccessController();
+    $onlySA = $useraccesscontrol->checkPermissions('only:SA');
+    if(!$onlySA){
+      if(($key = array_search('superAdmin', $rolesCheck)) !== false) {
+        unset($rolesCheck[$key]);
+      }
+    }
+
     if(!$user){
       Cogumelo::redirect( SITE_URL.'404' );
     }
@@ -335,7 +344,8 @@ class UserView extends View
     $form = new FormController( 'userRoleForm', '/user/assignroleform' ); //actionform
     $form->setSuccess( 'redirect', '/' );
     $form->setField( 'user', array( 'type' => 'reserved', 'value' => $user->getter('id') ));
-    $form->setField( 'checkroles', array( 'type' => 'checkbox', 'label' => __('Select the roles for this user'), 'value' => $activeRolesCheck,
+    $form->setField( 'checkroles', array( 'type' => 'select', 'class' => 'gzzSelect2',
+      'label' => __('Select the roles for this user'), 'value' => $activeRolesCheck, 'multiple' => true,
       'options'=> $rolesCheck
     ));
     $form->setValidationRule( 'checkroles', 'required' );
@@ -660,7 +670,7 @@ class UserView extends View
       if( !isset($valuesArray['id']) && !$user ){
         $form->addFieldRuleError('id', 'cogumelo', __('Unknow user'));
       }
-      elseif( !$user->equalPassword($valuesArray['passwordOld']) ){
+      elseif( $form->getFieldParam('passwordOld', 'type') !=='reserved' && !$user->equalPassword($valuesArray['passwordOld']) ){
         $form->addFieldRuleError('passwordOld', 'cogumelo', __('The old password does not match.'));
       }
     }
@@ -710,6 +720,15 @@ class UserView extends View
       if( !isset($valuesArray['user'])){
         $form->addFieldRuleError('id', 'cogumelo', __('User Error unidentified'));
       }
+
+      $useraccesscontrol = new UserAccessController();
+      $onlySA = $useraccesscontrol->checkPermissions('only:SA');
+      $roleModel = new RoleModel();
+      $role = $roleModel->listItems( array('filters' => array( 'name' => 'superAdmin' )) );
+      if(!$onlySA && in_array( $role->getter('id'), $valuesArray['checkroles'])){
+        $form->addFieldRuleError('id', 'cogumelo', __(' Error unknown role'));
+      }
+
     }
 
     return $form;
