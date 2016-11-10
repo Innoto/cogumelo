@@ -36,6 +36,7 @@ class FormController implements Serializable {
   private $success = false;
   private $method = 'post';
   private $enctype = 'multipart/form-data';
+  private $useCaptcha = false;
   private $keepAlive = true;
   private $fields = array();
   private $rules = array();
@@ -206,6 +207,7 @@ class FormController implements Serializable {
     $data[ 'success' ] = $this->success;
     $data[ 'method' ] = $this->method;
     $data[ 'enctype' ] = $this->enctype;
+    $data[ 'useCaptcha' ] = $this->useCaptcha;
     $data[ 'keepAlive' ] = $this->keepAlive;
     $data[ 'fields' ] = $this->fields;
     $data[ 'rules' ] = $this->rules;
@@ -230,6 +232,7 @@ class FormController implements Serializable {
     $this->success = $data[ 'success' ];
     $this->method = $data[ 'method' ];
     $this->enctype = $data[ 'enctype' ];
+    $this->useCaptcha = $data[ 'useCaptcha' ];
     $this->keepAlive = $data[ 'keepAlive' ];
     $this->fields = $data[ 'fields' ];
     $this->rules = $data[ 'rules' ];
@@ -794,12 +797,13 @@ class FormController implements Serializable {
     * @return TYPE
    */
   public function getFieldsNamesArray() {
+    /*
     $fieldsNamesArray = array();
     foreach( $this->fields as $key => $val ) {
       array_push( $fieldsNamesArray, $key);
     }
-
-    return $fieldsNamesArray;
+    */
+    return array_keys( $this->fields );
   }
 
   /**
@@ -1557,6 +1561,32 @@ class FormController implements Serializable {
 
 
   /**********************************************************************/
+  /***  Captcha (INI)                                                 ***/
+  /**********************************************************************/
+
+
+  public function captchaEnable( $status = null ) {
+    if( $status !== null && Cogumelo::getSetupValue('google:recaptcha:key:site') ) {
+      $this->useCaptcha = ( $status ) ? true : false;
+    }
+
+    return $this->useCaptcha;
+  }
+
+/*
+$verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
+        $responseData = json_decode($verifyResponse);
+        if($responseData->success):
+*/
+
+  /**********************************************************************/
+  /***  Captcha (FIN)                                                 ***/
+  /**********************************************************************/
+
+
+
+
+  /**********************************************************************/
   /***  HTML y JS                                                     ***/
   /**********************************************************************/
 
@@ -1607,11 +1637,6 @@ class FormController implements Serializable {
 
     return implode( "\n", $this->getHtmlFieldsArray() );
   }
-
-
-
-
-
 
 
 
@@ -1967,6 +1992,21 @@ class FormController implements Serializable {
 
 
 
+  /**
+    Recupera el html del Captcha del form
+    @return string
+   */
+  public function getHtmlCaptcha() {
+    $html = '';
+
+    $keySite = Cogumelo::getSetupValue('google:recaptcha:key:site');
+
+    if( $this->captchaEnable() ) {
+      $html = '<div class="g-recaptcha" form="'.$this->getId().'" data-sitekey="'.$keySite.'"></div>';
+    }
+
+    return $html;
+  }
 
 
 
@@ -2484,25 +2524,13 @@ class FormController implements Serializable {
       form::loadDependence( 'ckeditor' );
     }
 
+    $scRules = ( count( $this->rules ) > 0 ) ? json_encode( $this->rules ) : 'false';
+    $scMsgs = ( count( $this->messages ) > 0 ) ? json_encode( $this->messages ) : 'false';
 
-    $html .= '<script>' . "\n";
-
-    $html .= '$( document ).ready( function() {'."\n";
-
-    $html .= '  $validateForm_' . $this->id . ' = setValidateForm( "' . $this->id . '", ';
-    $html .= ( count( $this->rules ) > 0 ) ? json_encode( $this->rules ) : 'false';
-    $html .= ', ';
-    $html .= ( count( $this->messages ) > 0 ) ? json_encode( $this->messages ) : 'false';
-    $html .= ' );'."\n";
-
-    // if( count( $this->messages ) > 0 ) {
-    //   $html .= $separador.'    messages: '.json_encode( $this->messages )."\n";
-    //   $separador = '    ,'."\n";
-    // }
-
-    $html .= '  console.log( $validateForm_'.$this->id.' );'."\n";
-
-
+    $html .= '<'.'script>'."\n".
+      '$( document ).ready( function() {'."\n".
+      '  $validateForm_'.$this->id.' = setValidateForm( "'.$this->id.'", '.$scRules.', '.$scMsgs.' );'."\n".
+      '  console.log( $validateForm_'.$this->id.' );'."\n";
 
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
       if( $this->getFieldType( $fieldName ) === 'file' ) {
@@ -2514,14 +2542,20 @@ class FormController implements Serializable {
       }
     }
 
-
-
     if( $this->htmlEditor ) {
       $html .= '  activateHtmlEditor( "'.$this->id.'" );'."\n";
     }
 
     $html .= '});'."\n";
     $html .= '</script>'."\n";
+
+    if( $this->captchaEnable() ) {
+      $html .= '<'.'script src="https://www.google.com/recaptcha/api.js" async defer></script>'."\n";
+      /*
+      $html .= '<'.'script src="https://www.google.com/recaptcha/api.js?'.
+        'onload=onloadCallback&render=explicit" async defer>'."\n";
+      */
+    }
 
     $html .= '<!-- Cogumelo module form '.$this->getName().' - END -->'."\n";
 

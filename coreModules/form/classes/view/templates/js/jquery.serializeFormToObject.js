@@ -49,6 +49,23 @@ $.fn.serializeFormToObject = function () {
   );
 
 
+  // Google reCAPTCHA
+  $( '.g-recaptcha[form="' + this.attr( 'id' ) + '"] [name="g-recaptcha-response"]' ).each(
+    function( i, elem ) {
+      if( elem.name !== undefined && elem.name !== '' ) {
+        // Set value
+        if( ser[ elem.name ] === undefined ) {
+          ser[ elem.name ] = {};
+        }
+        if( ser[ elem.name ].value === undefined ) {
+          ser[ elem.name ].value = elem.value;
+        }
+        grecaptcha.reset();
+      }
+    }
+  );
+
+
   console.log( 'serializeFormToObject: ', ser );
   return ser;
 };
