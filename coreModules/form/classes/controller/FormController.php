@@ -2032,7 +2032,8 @@ class FormController implements Serializable {
     $keySite = Cogumelo::getSetupValue('google:recaptcha:key:site');
 
     if( $this->captchaEnable() ) {
-      $html = '<div class="g-recaptcha" form="'.$this->getId().'" data-sitekey="'.$keySite.'"></div>';
+      $html = '<div class="'.$this->cssPrefix.'-wrap '.$this->cssPrefix.'-captchaField g-recaptcha" '.
+        ' form="'.$this->getId().'" data-sitekey="'.$keySite.'"></div>';
     }
 
     return $html;
