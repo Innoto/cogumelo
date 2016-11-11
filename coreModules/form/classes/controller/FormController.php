@@ -36,7 +36,8 @@ class FormController implements Serializable {
   private $success = false;
   private $method = 'post';
   private $enctype = 'multipart/form-data';
-  private $useCaptcha = false;
+  private $captchaUse = false;
+  private $captchaResponse = false;
   private $keepAlive = true;
   private $fields = array();
   private $rules = array();
@@ -207,7 +208,7 @@ class FormController implements Serializable {
     $data[ 'success' ] = $this->success;
     $data[ 'method' ] = $this->method;
     $data[ 'enctype' ] = $this->enctype;
-    $data[ 'useCaptcha' ] = $this->useCaptcha;
+    $data[ 'captchaUse' ] = $this->captchaUse;
     $data[ 'keepAlive' ] = $this->keepAlive;
     $data[ 'fields' ] = $this->fields;
     $data[ 'rules' ] = $this->rules;
@@ -232,7 +233,7 @@ class FormController implements Serializable {
     $this->success = $data[ 'success' ];
     $this->method = $data[ 'method' ];
     $this->enctype = $data[ 'enctype' ];
-    $this->useCaptcha = $data[ 'useCaptcha' ];
+    $this->captchaUse = $data[ 'captchaUse' ];
     $this->keepAlive = $data[ 'keepAlive' ];
     $this->fields = $data[ 'fields' ];
     $this->rules = $data[ 'rules' ];
@@ -390,8 +391,16 @@ class FormController implements Serializable {
   public function loadPostValues( $formPost ) {
     // $this->postValues = $formPost;
 
+    if( $this->captchaEnable() ) {
+      $fieldName = 'g-recaptcha-response';
+      if( isset( $formPost[ $fieldName ][ 'value' ] ) ) {
+        $this->captchaResponse = $formPost[ $fieldName ][ 'value' ];
+      }
+    }
+
     // Importando los datos del form e integrando los datos de ficheros subidos
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
+      // error_log( 'Load field '.$fieldName.' value '.print_r( $formPost[ $fieldName ][ 'value' ], true ) );
 
       if( isset( $formPost[ $fieldName ][ 'dataInfo' ] ) && $formPost[ $fieldName ][ 'dataInfo' ] !== false ) {
         // error_log( 'DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
@@ -1560,6 +1569,8 @@ class FormController implements Serializable {
 
 
 
+
+
   /**********************************************************************/
   /***  Captcha (INI)                                                 ***/
   /**********************************************************************/
@@ -1567,21 +1578,40 @@ class FormController implements Serializable {
 
   public function captchaEnable( $status = null ) {
     if( $status !== null && Cogumelo::getSetupValue('google:recaptcha:key:site') ) {
-      $this->useCaptcha = ( $status ) ? true : false;
+      $this->captchaUse = ( $status ) ? true : false;
     }
 
-    return $this->useCaptcha;
+    return $this->captchaUse;
   }
 
-/*
-$verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
-        $responseData = json_decode($verifyResponse);
-        if($responseData->success):
-*/
+  public function getCaptchaResponse() {
+
+    return $this->captchaResponse;
+  }
+
+  public function captchaValidate() {
+    $validate = false;
+
+    $secret = Cogumelo::getSetupValue('google:recaptcha:key:secret');
+    $response = $this->getCaptchaResponse();
+
+    if( $this->captchaEnable() && $response && $secret ) {
+      $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify?'.
+        'secret='.$secret.'&response='.$response;
+      $jsonResponse = file_get_contents( $verifyUrl );
+      error_log( '$jsonResponse: '.$jsonResponse );
+      $response = ( $jsonResponse ) ? json_decode( $jsonResponse ) : false;
+      $validate = ( $response && $response->success ) ? true : false;
+    }
+
+    return $validate;
+  }
+
 
   /**********************************************************************/
   /***  Captcha (FIN)                                                 ***/
   /**********************************************************************/
+
 
 
 
@@ -2331,6 +2361,12 @@ $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteve
 
     // Tienen que existir los validadores y los valores del form
     if( $this->issetValidationObj() ) {
+
+      if( $this->captchaEnable() && !$this->captchaValidate() ) {
+        $this->addFormError( 'Captcha no válido' ); // , $msgClass );
+        error_log( 'Captcha no válido' );
+      }
+
       foreach( $this->rules as $fieldName => $fieldRules ) {
         if( $this->getFieldInternal( $fieldName, 'groupCloneRoot' ) !== true ) {
           // Procesamos los campos que no son raiz de campos agrupados
