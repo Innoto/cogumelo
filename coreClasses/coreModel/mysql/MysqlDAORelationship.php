@@ -146,7 +146,7 @@ class MysqlDAORelationship
   }
 
   function colToString( $colKey, $vo ) {
-    $retStr = "COALESCE(".$vo->table.".".$colKey.", '".COGUMELO_NULL."')";
+    //$retStr = "COALESCE(".$vo->table.".".$colKey.", '".COGUMELO_NULL."')";
 
     $col = false;
     $colType =  false;
@@ -166,11 +166,23 @@ class MysqlDAORelationship
       $retStr = "ASCII( AsText( COALESCE(".$vo->table.".".$colKey.", '".COGUMELO_NULL."')) )";
       $retStr = "if(".$vo->table.".".$colKey." is not null,  astext(".$vo->table.".".$colKey."),'".COGUMELO_NULL."' )";
     }
-    else
-    if ( $colType == 'CHAR'  || $colType == 'VARCHAR' ){
+    else {
       $toScape = '"';
       $scaped = '\\\"';
-      $retStr = "REPLACE( COALESCE(" . $vo->table.".".$colKey.", '".COGUMELO_NULL."'), '".$toScape."', '".$scaped."' )";
+
+
+      // OLD WAY
+      //$retStr = "REPLACE( COALESCE(" . $vo->table.".".$colKey.", '".COGUMELO_NULL."'), '".$toScape."', '".$scaped."' )";
+
+      // NEW WAY
+      $retStr = "REPLACE( " . $vo->table.".".$colKey.", '".$toScape."', '".$scaped."' )";
+      $retStr = "case when " . $vo->table.".".$colKey." is null then '".COGUMELO_NULL."'  else ". $retStr. " END ";
+
+      //$retStr = "CASE  WHEN ". $vo->table.".".$colKey." IS NULL THEN 'LOLAZO'  ELSE 'LOLAZO' END AS ". $vo->table.".".$colKey;
+
+      // NEWEST WAY
+      //$retStr = "COALESCE(" . $vo->table.".".$colKey.", '".COGUMELO_NULL."')";
+
     }
 
     return $retStr;

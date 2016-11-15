@@ -159,7 +159,7 @@ Class VO
         // Show the errors for different depths.
         foreach (range(4, 3, -1) as $depth) {
           echo 'Problem decoding VO JSON : ', $json_errors[json_last_error()], PHP_EOL, PHP_EOL;
-          Cogumelo::error('['.$data.']');
+          Cogumelo::error('Problem decoding VO JSON : ['.$data.']');
         }
       }
 
