@@ -19,6 +19,7 @@ class filedata extends Module {
     // $this->addUrlPatterns( '#^cgmlfilewd/(\d+).*$#', 'view:FiledataWeb::webDownload' );
     $this->addUrlPatterns( '#^cgmlformfilews/(\d+).*$#', 'view:FiledataWeb::webFormFileShow' );
     $this->addUrlPatterns( '#^cgmlformfilewd/(\d+).*$#', 'view:FiledataWeb::webFormFileDownload' );
+    $this->addUrlPatterns( '#^cgmlformpublic/(.*)$#', 'view:FiledataWeb::webFormPublic' );
   }
 
 }

@@ -99,6 +99,21 @@ class FiledataWeb extends View {
   } // function loadFileInfo()
 
 
+  public function webFormPublic( $name ) {
+    //var_dump($name[1]);
+
+    $fileInfo = [
+      'type' => 'png',
+      'originalName' => $name[1],
+      'absLocation' => $name[1]
+    ];
+
+    if( !$this->webShowFile( $fileInfo , cogumeloGetSetupValue( 'mod:filedata:filePathPublic').'/' ) ) {
+      cogumelo::error( 'Imposible mostrar el elemento solicitado.' );
+    }
+  }
+
+
   /**
     Visualizamos el fichero en la web
   */
@@ -155,4 +170,3 @@ class FiledataWeb extends View {
 
 
 } // class FiledataWeb extends View
-
