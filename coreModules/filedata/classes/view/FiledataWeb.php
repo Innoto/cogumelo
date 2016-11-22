@@ -101,15 +101,18 @@ class FiledataWeb extends View {
 
   public function webFormPublic( $name ) {
     //var_dump($name[1]);
+    $n = urldecode(
+      urldecode($name[1]) // elfinder codifica doble
+    );
 
     $fileInfo = [
-      'type' => 'png',
-      'originalName' => $name[1],
-      'absLocation' => $name[1]
+      'type' => 'image',
+      'originalName' => $n,
+      'absLocation' => $n
     ];
 
     if( !$this->webShowFile( $fileInfo , cogumeloGetSetupValue( 'mod:filedata:filePathPublic').'/' ) ) {
-      cogumelo::error( 'Imposible mostrar el elemento solicitado.' );
+      cogumelo::error( 'Imposible mostrar el elemento solicitado: '.$n );
     }
   }
 
