@@ -2,13 +2,13 @@
 
 
 /**
-* MailController Class
-*
-* An interface to use Mailcontroller with smarty template library as in the rest of the views
-*
-* @author: pablinhob
-* @author: jmpmato
-*/
+ * MailController Class
+ *
+ * An interface to use Mailcontroller with smarty template library as in the rest of the views
+ *
+ * @author: pablinhob
+ * @author: jmpmato
+ */
 
 class MailController {
   private $senderController = false;
@@ -71,7 +71,7 @@ class MailController {
   public function parseMail( $vars, $tplFile, $module = false ) {
     Cogumelo::load('coreView/Template.php');
     $objTemplate = new Template();
-    $objTemplate->setTpl($tplFile, $module);
+    $objTemplate->setTpl( $tplFile, $module );
     $this->setBodyHtml( $objTemplate, $vars );
   }
 
@@ -117,20 +117,26 @@ class MailController {
   }
 
 
+
+  public function setReplyTo( $replyMail, $replyName = '' ) {
+    $this->senderController->setReplyTo( $replyMail, $replyName );
+  }
+
+
   /**
    * Envía el correo con esta cabecera y los datos previamente definidos
    * @param mixed $adresses are string of array of strings with recipient of mail sent
    * @param string $subject is the subject of the mail
-   * @param string $from_name sender name. Default is specified in conf.
-   * @param string $from_mail sender e-mail. Default especified in conf.
+   * @param string $fromName sender name. Default is specified in conf.
+   * @param string $fromMail sender e-mail. Default especified in conf.
    **/
-  public function send( $adresses, $subject, $from_name = false, $from_mail = false )  {
-    // send( $adresses, $subject, $bodyPlain = false, $bodyHtml = false, $files = false, $from_name = false, $from_mail = false )
+  public function send( $adresses, $subject, $fromName = false, $fromMail = false )  {
+    // send( $adresses, $subject, $bodyPlain = false, $bodyHtml = false, $files = false, $fromName = false, $fromMail = false )
     $mailSenderResult = false;
 
     if( $this->bodyPlain || $this->bodyHtml ) {
       $mailSenderResult = $this->senderController->send( $adresses, $subject,
-        $this->bodyPlain, $this->bodyHtml, $this->mailFiles, $from_name, $from_mail );
+        $this->bodyPlain, $this->bodyHtml, $this->mailFiles, $fromName, $fromMail );
     }
     else {
       Cogumelo::error( 'Error sending mail: No body.' );

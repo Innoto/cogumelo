@@ -11,7 +11,9 @@
 */
 class MailSenderSmtp {
 
-  var $phpmailer;
+  public $phpmailer;
+  private $replyMail = false;
+  private $replyName = false;
 
   public function __construct() {
     $this->phpmailer = new PHPMailer( true );
@@ -39,6 +41,14 @@ class MailSenderSmtp {
   }
 
 
+  public function setReplyTo( $replyMail, $replyName = '' ) {
+    // $this->phpmailer->ClearReplyTos();
+    // $this->phpmailer->AddReplyTo( $replyMail, $replyName );
+    $this->replyMail = $replyMail;
+    $this->replyName = $replyName;
+  }
+
+
   /**
    * Send mail message
    *
@@ -47,22 +57,21 @@ class MailSenderSmtp {
    * @param string $bodyPlain of the e-mail
    * @param string $bodyHtml of the e-mail
    * @param mixed $files string or array of strings of filepaths
-   * @param string $from_name sender name. Default is specified in conf.
-   * @param string $from_maiol sender e-mail. Default especified in conf.
+   * @param string $fromName sender name. Default is specified in conf.
+   * @param string $fromMail sender e-mail. Default especified in conf.
    *
    * @return boolean $mailResult
    **/
-  public function send( $adresses, $subject, $bodyPlain = false, $bodyHtml = false, $files = false, $from_name = false, $from_mail = false ) {
+  public function send( $adresses, $subject, $bodyPlain = false, $bodyHtml = false, $files = false, $fromName = false, $fromMail = false ) {
     $mailResult = false;
 
-    if( !$from_name ){
-      $from_name = Cogumelo::getSetupValue( 'mail:fromName' );
+    if( !$fromName ){
+      $fromName = Cogumelo::getSetupValue( 'mail:fromName' );
     }
-
-    if( !$from_mail ) {
-      $from_mail = Cogumelo::getSetupValue( 'mail:fromEmail' );
+    if( !$fromMail ) {
+      $fromMail = Cogumelo::getSetupValue( 'mail:fromEmail' );
     }
-
+    $this->phpmailer->SetFrom( $fromMail, $fromName );
 
     // If $adresses is an array of adresses include all into mail
     if( is_array($adresses) ) {
@@ -74,6 +83,20 @@ class MailSenderSmtp {
       $this->phpmailer->AddAddress($adresses);
     }
 
+
+
+    if( $this->replyMail ) {
+      $this->phpmailer->ClearReplyTos();
+      $this->phpmailer->AddReplyTo( $this->replyMail, $this->replyName );
+      // error_log( 'RPL '.$this->replyMail.' - '.$this->replyName );
+    }
+    else {
+      $this->phpmailer->AddReplyTo( $fromMail, $fromName );
+      // error_log( 'FRM '.$fromMail.' - '.$fromName );
+    }
+
+
+
     if( $files ) {
       if( is_array($files) ) {
         foreach( $files as $file ) {
@@ -84,9 +107,6 @@ class MailSenderSmtp {
         $this->phpmailer->AddAttachment($files);
       }
     }
-
-    $this->phpmailer->SetFrom( $from_mail, $from_name );
-    $this->phpmailer->AddReplyTo( $from_mail, $from_name );
 
     $this->phpmailer->Subject = $subject;
 
