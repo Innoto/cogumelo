@@ -187,6 +187,7 @@ class Template extends Smarty {
         break;
       case 'vendor':
       case 'vendor/bower':
+      case 'vendor/composer':
       case 'vendor/manual':
         $base_path = $this->cgmMediaserverHost . $module . '/';
         break;
@@ -232,6 +233,7 @@ class Template extends Smarty {
         break;
       case 'vendor':
       case 'vendor/bower':
+      case 'vendor/composer':      
       case 'vendor/manual':
         $base_path = $this->cgmMediaserverHost.$module.'/';
         break;
