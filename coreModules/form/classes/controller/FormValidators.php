@@ -159,11 +159,79 @@ class FormValidators extends FormValidatorsExtender {
       $value ) === 1;
   }
 
+
   public function val_creditcard( $value ) {
     /*
     */
     return false;
   }
+
+  public function val_dni( $value ) {
+    $result = false;
+
+    if( preg_match('/^([0-9]{8})([A-Z])$/i', $value, $match ) ) {
+      $numero   = $match[1];
+      $letraDni = strtoupper( $match[2] );
+
+      if( $letraDni === substr( 'TRWAGMYFPDXBNJZSQVHLCKE', $numero%23, 1 ) ) {
+        $result = true;
+      }
+    }
+
+    return $result;
+  }
+
+  public function val_nie( $value ) {
+    $result = false;
+
+    if( preg_match('/^([XYZ]?)([0-9]{7})([A-Z])$/i', $value, $match ) ) {
+      $letraNie = strtoupper( $match[1] );
+      $numero   = $match[2];
+      $letraDni = strtoupper( $match[3] );
+
+      // Ajustes NIE
+      $numero = strtr( $letraNie, 'XYZ', '012' ).$numero;
+
+      if( $letraDni === substr( 'TRWAGMYFPDXBNJZSQVHLCKE', $numero%23, 1 ) ) {
+        $result = true;
+      }
+    }
+
+    return $result;
+  }
+
+  public function val_nif( $value ) {
+    $result = false;
+
+    if( preg_match('/^([A-HJ-NP-SUVW])([0-9]{7})([A-J0-9])$/i', $value, $match ) ) {
+      $letraTipo = strtoupper( $match[1] );
+      $numero    = $match[2];
+      $letraCtrl = strtoupper( $match[3] );
+
+      $sum = 0;
+      // summ all even digits
+      for( $i=1; $i<7; $i+=2 ) {
+        $sum += substr( $numero, $i, 1 );
+      }
+      // x2 all odd position digits and sum all of them
+      for( $i=0; $i<7; $i+=2 ) {
+        $t = substr( $numero, $i, 1 ) * 2;
+        $sum += ($t>9) ? 1 + ( $t%10 ) : $t;
+      }
+
+      //Rest to 10 the last digit of the sum
+      $control = 10 - ( $sum%10 );
+
+      //the control can be a numbber or letter
+      if( $letraCtrl == $control || $letraCtrl == substr( 'JABCDEFGHI', $control, 1 ) ) {
+        $result = true;
+      }
+    }
+
+    return $result;
+  }
+
+
 
   // http://jqueryvalidation.org/minlength-method/
   public function val_minlength( $value, $param ) {

@@ -12,6 +12,102 @@ $.validator.addMethod(
 
 
 $.validator.addMethod(
+  "dni",
+  function( value, element ) {
+    var result = false;
+
+    var patt = /^([0-9]{8})([A-Z])$/i;
+    var match = patt.exec( value );
+    if( match ) {
+      var numero    = match[1];
+      var letra_dni = match[2].toUpperCase();
+
+      if( letra_dni === 'TRWAGMYFPDXBNJZSQVHLCKE'.substr( numero%23, 1 ) ) {
+        result = true;
+      }
+    }
+
+    return result;
+  },
+  $.validator.format( 'The DNI format is not NNNNNNNNC' )
+);
+
+$.validator.addMethod(
+  "nie",
+  function( value, element ) {
+    var result = false;
+
+    var patt = /^([XYZ]?)([0-9]{7})([A-Z])$/i;
+    var match = patt.exec( value );
+    if( match ) {
+      var letraNie = match[1].toUpperCase();
+      var numero   = match[2];
+      var letraDni = match[3].toUpperCase();
+
+      // Ajustes NIE
+      switch( letraNie ) {
+        case 'X':
+          numero = '0'+numero;
+        break;
+        case 'Y':
+          numero = '1'+numero;
+        break;
+        case 'Z':
+          numero = '2'+numero;
+        break;
+      }
+
+      if( letraDni === 'TRWAGMYFPDXBNJZSQVHLCKE'.substr( numero%23, 1 ) ) {
+        result = true;
+      }
+    }
+
+    return result;
+  },
+  $.validator.format( 'The NIE format is not CNNNNNNNC' )
+);
+
+$.validator.addMethod(
+  "nif",
+  function( value, element ) {
+    var result = false;
+
+    var patt = /^([A-HJ-NP-SUVW])([0-9]{7})([A-J0-9])$/i;
+    var match = patt.exec( value );
+    if( match ) {
+      var letraTipo = match[1].toUpperCase();
+      var numero    = match[2];
+      var letraCtrl = match[3].toUpperCase();
+
+      var sum = 0;
+      // summ all even digits
+      for( i=1; i<7; i+=2 ) {
+        sum += parseInt( numero.substr( i, 1 ) );
+      }
+      // x2 all odd position digits and sum all of them
+      for( i=0; i<7; i+=2 ) {
+        t = parseInt( numero.substr( i, 1 ) ) * 2;
+        sum += (t>9) ? 1 + ( t%10 ) : t;
+      }
+
+
+      // Rest to 10 the last digit of the sum
+      control = 10 - ( sum%10 );
+
+      // control can be a numbber or letter
+      if( letraCtrl == control || letraCtrl == 'JABCDEFGHI'.substr( control, 1 ) ) {
+        result = true;
+      }
+    }
+
+    return result;
+  },
+  $.validator.format( 'The NIF format is not CNNNNNNNC' )
+);
+
+
+
+$.validator.addMethod(
   "regex",
   function( value, element, param ) {
     return ( value==='' && this.optional( element ) ) || value.search( param ) !== -1;
@@ -70,7 +166,7 @@ $.validator.addMethod(
 $.validator.addMethod(
   "dateTime",
   function( value, element ) {
-    console.log( 'dateTime', value, element );
+    // console.log( 'dateTime', value, element );
     valid = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(value);
     return ( value==='' && this.optional( element ) ) || valid;
   },
