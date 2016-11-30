@@ -373,28 +373,27 @@ function formDoneError( form, response ) {
       window.location.reload();
     }
   }
-  else {
-    for( var i in response.jvErrors ) {
-      var errObj = response.jvErrors[i];
-      // console.log( errObj );
 
-      if( errObj.fieldName !== false ) {
-        if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
-          var $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
-          if( typeof $defMess !== 'string' ) {
-            $defMess = $defMess( errObj.ruleParams );
-          }
-          errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
+  for( var i in response.jvErrors ) {
+    var errObj = response.jvErrors[i];
+    // console.log( errObj );
+
+    if( errObj.fieldName !== false ) {
+      if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
+        var $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
+        if( typeof $defMess !== 'string' ) {
+          $defMess = $defMess( errObj.ruleParams );
         }
-        console.log( 'showErrors: ', errObj.JVshowErrors );
-        $validateForm.showErrors( errObj.JVshowErrors );
+        errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
       }
-      else {
-        console.log( errObj.JVshowErrors );
-        showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
-      }
-    } // for(var i in response.jvErrors)
-  }
+      console.log( 'showErrors: ', errObj.JVshowErrors );
+      $validateForm.showErrors( errObj.JVshowErrors );
+    }
+    else {
+      console.log( errObj.JVshowErrors );
+      showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
+    }
+  } // for(var i in response.jvErrors)
 
   // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
 }

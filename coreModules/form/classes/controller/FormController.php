@@ -2432,7 +2432,7 @@ class FormController implements Serializable {
 
     if( $this->isEmptyFieldValue( $fieldName ) ) {
       if( $this->isRequiredField( $fieldName ) ) {
-        error_log( 'ERROR: evaluateRule( '.$fieldName.', VACIO, required, ...  )' );
+        // error_log( 'ERROR: evaluateRule( '.$fieldName.', VACIO, required, ...  )' );
         $this->addFieldRuleError( $fieldName, 'required' );
         //$this->fieldErrors[ $fieldName ][ 'required' ] = false;
         $fieldValidated = false;
