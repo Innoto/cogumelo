@@ -202,7 +202,7 @@ class FiledataController {
       $relativeDestPath = ( isset( $filedataInfo['destDir'] ) ) ? $filedataInfo['destDir'] : '';
 
       if( file_exists( $this->filesAppPath.$relativeDestPath.'/'.$secureFileName ) ){
-        error_log( 'FiledataController: (Notice) createFile - COLISION: '.$this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
+        // error_log( 'FiledataController: (Notice) createFile - COLISION: '.$this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
         $filePathInfo = pathinfo( $secureFileName );
         $secureFileName = $filePathInfo['filename'] .'_fdmi'. $filedataObj->getter('id') .'.'. $filePathInfo['extension'];
       }
