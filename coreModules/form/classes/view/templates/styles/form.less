@@ -43,7 +43,7 @@ input[type="checkbox"],
 textarea,
 select {
   &.formError {
-    .box-shadow(1px 0px 2px 0px @formErrorColor);
+    .box-shadow(1px 0 2px 0 @formErrorColor);
   }
 }
 
@@ -55,6 +55,11 @@ select {
   .formFileDelete {
     position: absolute; top: 3px; left: 3px;
     color: red; cursor: pointer; font-size: 20px;
+  }
+  .formFileDownload {
+    position: absolute; top: 3px; left: 23px;
+    color: #3333CC; cursor: pointer;
+    font-size: 20px; line-height: 20px;
   }
   .tnImage {
     width: 100%;

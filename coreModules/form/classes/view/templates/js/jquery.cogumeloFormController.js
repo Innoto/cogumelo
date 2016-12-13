@@ -29,6 +29,7 @@ function getForms() {
 
 function getFormInfoIndex( idForm ) {
   var index = false;
+
   for( var i = cogumelo.formController.formsInfo.length - 1; i >= 0; i-- ) {
     if( cogumelo.formController.formsInfo[i].idForm === idForm ) {
       index = i;
@@ -647,6 +648,13 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
     .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm } )
     .on( 'click', deleteFormFileEvent )
   );
+
+  // Element to download
+  if( fileModId !== false ) {
+    $fileFieldInfo.append(
+      $( '<a class="formFileDownload" href="/cgmlformfilewd/'+fileModId+'" target="_blank"><i class="fa fa-download"></i></a>' )
+    );
+  }
 
   if( fileModId === false || !fileType || fileType.indexOf( 'image' ) !== 0 ) {
     $fileFieldInfo.append( '<div class="tnImage" style="text-align: center; line-height: 3em;">' +
