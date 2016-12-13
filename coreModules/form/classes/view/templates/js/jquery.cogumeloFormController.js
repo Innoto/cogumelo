@@ -1035,11 +1035,11 @@ function createSwitchFormLang( idForm ) {
     htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-globe fa-fw"></i></span>';
     htmlLangSwitch += '</div>';
 
-    $langSwitch = $(htmlLangSwitch);
+    $langSwitch = $( htmlLangSwitch );
     $( '[form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault + ':not("input:file")' ).parent().before( $langSwitch );
     $( '.cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault + ':not("input:file")' ).parent().before( $langSwitch );
 
-    $langSwitch.addClass('langSwitch-file');
+    $langSwitch = $( htmlLangSwitch ).addClass('langSwitch-file');
     $( '[type=file][form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault ).parent().before( $langSwitch );
     $( '[type=file].cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault ).parent().before( $langSwitch );
 
