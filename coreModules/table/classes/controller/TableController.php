@@ -106,6 +106,16 @@ class TableController{
     $this->colsDef[$colId] = array('name' => $colName, 'rules' => array() );
   }
 
+  /**
+  * Unset table col
+  *
+  * @param string $colId id of col in VO
+  * @return void
+  */
+  function unsetCol($colId) {
+    unset($this->colsDef[$colId]);
+  }
+
 
   /**
   * Set col Rules
