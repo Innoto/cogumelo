@@ -29,6 +29,7 @@ function getForms() {
 
 function getFormInfoIndex( idForm ) {
   var index = false;
+
   for( var i = cogumelo.formController.formsInfo.length - 1; i >= 0; i-- ) {
     if( cogumelo.formController.formsInfo[i].idForm === idForm ) {
       index = i;
@@ -373,28 +374,27 @@ function formDoneError( form, response ) {
       window.location.reload();
     }
   }
-  else {
-    for( var i in response.jvErrors ) {
-      var errObj = response.jvErrors[i];
-      // console.log( errObj );
 
-      if( errObj.fieldName !== false ) {
-        if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
-          var $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
-          if( typeof $defMess !== 'string' ) {
-            $defMess = $defMess( errObj.ruleParams );
-          }
-          errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
+  for( var i in response.jvErrors ) {
+    var errObj = response.jvErrors[i];
+    // console.log( errObj );
+
+    if( errObj.fieldName !== false ) {
+      if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
+        var $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
+        if( typeof $defMess !== 'string' ) {
+          $defMess = $defMess( errObj.ruleParams );
         }
-        console.log( 'showErrors: ', errObj.JVshowErrors );
-        $validateForm.showErrors( errObj.JVshowErrors );
+        errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
       }
-      else {
-        console.log( errObj.JVshowErrors );
-        showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
-      }
-    } // for(var i in response.jvErrors)
-  }
+      console.log( 'showErrors: ', errObj.JVshowErrors );
+      $validateForm.showErrors( errObj.JVshowErrors );
+    }
+    else {
+      console.log( errObj.JVshowErrors );
+      showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
+    }
+  } // for(var i in response.jvErrors)
 
   // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
 }
@@ -648,6 +648,13 @@ function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
     .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm } )
     .on( 'click', deleteFormFileEvent )
   );
+
+  // Element to download
+  if( fileModId !== false ) {
+    $fileFieldInfo.append(
+      $( '<a class="formFileDownload" href="/cgmlformfilewd/'+fileModId+'" target="_blank"><i class="fa fa-download"></i></a>' )
+    );
+  }
 
   if( fileModId === false || !fileType || fileType.indexOf( 'image' ) !== 0 ) {
     $fileFieldInfo.append( '<div class="tnImage" style="text-align: center; line-height: 3em;">' +
@@ -1036,11 +1043,11 @@ function createSwitchFormLang( idForm ) {
     htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-globe fa-fw"></i></span>';
     htmlLangSwitch += '</div>';
 
-    $langSwitch = $(htmlLangSwitch);
+    $langSwitch = $( htmlLangSwitch );
     $( '[form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault + ':not("input:file")' ).parent().before( $langSwitch );
     $( '.cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault + ':not("input:file")' ).parent().before( $langSwitch );
 
-    $langSwitch.addClass('langSwitch-file');
+    $langSwitch = $( htmlLangSwitch ).addClass('langSwitch-file');
     $( '[type=file][form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault ).parent().before( $langSwitch );
     $( '[type=file].cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault ).parent().before( $langSwitch );
 

@@ -39,17 +39,17 @@ class FormController implements Serializable {
   private $captchaUse = false;
   private $captchaResponse = false;
   private $keepAlive = true;
-  private $fields = array();
-  private $rules = array();
-  private $groups = array();
-  private $messages = array();
+  private $fields = [];
+  private $rules = [];
+  private $groups = [];
+  private $messages = [];
 
   // POST submit
   private $postData = null;
   private $postValues = null;
   private $validationObj = null;
-  private $fieldErrors = array();
-  private $formErrors = array();
+  private $fieldErrors = [];
+  private $formErrors = [];
 
   private $htmlEditor = false;
 
@@ -112,6 +112,34 @@ class FormController implements Serializable {
    */
   public function __clone() {
     $this->setTokenId( 'clone'.$this->getName().$this->getAction() );
+  }
+
+  public function reset( $name = false, $action = false ) {
+    error_log( 'NOTICE: form->reset()' );
+    $formSessionId = 'CGFSI_'.$this->getTokenId();
+    unset( $_SESSION[ $formSessionId ] );
+
+    $this->name = false;
+    $this->id = false;
+    $this->tokenId = false;
+    $this->action = false;
+    $this->success = false;
+    $this->method = 'post';
+    $this->enctype = 'multipart/form-data';
+    $this->captchaUse = false;
+    $this->keepAlive = true;
+    $this->fields = [];
+    $this->rules = [];
+    $this->groups = [];
+    $this->messages = [];
+
+    $this->setTokenId( 'new'.$name.$action );
+    if( $name !== false ) {
+      $this->setName( $name );
+    }
+    if( $action !== false ) {
+      $this->setAction( $action );
+    }
   }
 
   /**
@@ -1824,7 +1852,8 @@ class FormController implements Serializable {
         case 'radio':
           foreach( $htmlFieldArray['options'] as $inputAndText ) {
             //$html .= $inputAndText['input'].$inputAndText['label'];
-            $html .= '<label>'.$inputAndText['input'].'<span class="labelText">'.$inputAndText['text'].'</span></label>';
+            $html .= '<label class="labelOption">'.$inputAndText['input'].'<span class="labelText">'.
+              $inputAndText['text'].'</span></label>';
           }
           $html .= '<span class="JQVMC-'.$fieldName.'-error JQVMC-error"></span>';
           break;
@@ -2060,7 +2089,7 @@ class FormController implements Serializable {
    * @param mixed $successParam Contenido del evento: Msg, url, ...
    */
   public function setSuccess( $successName, $successParam = true ) {
-    //error_log( 'setSuccess: name='. $successName . ' param=' .  $successParam );
+    // error_log( 'setSuccess: name='. $successName . ' param=' .  $successParam );
     // 'onSubmitOk' : JS function
     // 'onSubmitError' : JS function
     // 'onFileUpload' : JS function
@@ -2072,7 +2101,6 @@ class FormController implements Serializable {
     // 'redirect' : Pasa a la url indicada con un window.location.replace
     // 'reload' : window.location.reload
     // 'resetForm' : Borra el formulario
-
 
     $this->success[ $successName ] = $successParam;
   }
@@ -2405,7 +2433,7 @@ class FormController implements Serializable {
 
     if( $this->isEmptyFieldValue( $fieldName ) ) {
       if( $this->isRequiredField( $fieldName ) ) {
-        error_log( 'ERROR: evaluateRule( '.$fieldName.', VACIO, required, ...  )' );
+        // error_log( 'ERROR: evaluateRule( '.$fieldName.', VACIO, required, ...  )' );
         $this->addFieldRuleError( $fieldName, 'required' );
         //$this->fieldErrors[ $fieldName ][ 'required' ] = false;
         $fieldValidated = false;
@@ -2526,7 +2554,6 @@ class FormController implements Serializable {
     @return boolean
    */
   public function existErrors() {
-
     return( count( $this->fieldErrors ) > 0 || count( $this->formErrors ) > 0 );
   }
 
@@ -2536,7 +2563,6 @@ class FormController implements Serializable {
     @return boolean
    */
   public function existFieldErrors( $fieldName ) {
-
     return( isset( $this->fieldErrors[ $fieldName ] ) || count( $this->formErrors[ $fieldName ] ) > 0 );
   }
 
