@@ -16,6 +16,7 @@ class TableController{
   var $control = false;
   var $clientData = array();
   var $colsDef = array();
+  var $colsClasses = array();
 
   var $eachRowUrl = '';
   var $newItemUrl = '';
@@ -114,6 +115,21 @@ class TableController{
   */
   function unsetCol($colId) {
     unset($this->colsDef[$colId]);
+  }
+
+  /**
+  * Set table col classes
+  *
+  * @param string $colId id of col in VO
+  * @param mixed $colClasses string or string array
+  * @return void
+  */
+  function setColClasses($colId, $colClasses) {
+    if( !is_array( $colClasses ) ) {
+      $colClasses = array( $colClasses );
+    }
+
+    $this->colsClasses[$colId] = $colClasses;
   }
 
 
@@ -456,6 +472,7 @@ class TableController{
     echo '{';
     echo '"newItemUrl": "'.$this->newItemUrl.'",';
     echo '"colsDef":'.json_encode($this->colsIntoArray() ).',';
+    echo '"colsClasses":'.json_encode($this->colsClasses ).',';
     echo '"tabs":'.json_encode($this->tabs).',';
     echo '"filters":'.json_encode($this->filters).',';
     echo '"extraFilters":'.json_encode($this->extraFilters).',';

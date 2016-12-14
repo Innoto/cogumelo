@@ -342,8 +342,17 @@ function cogumeloTable( tableId, tableUrl ) {
         var ord = orderUpImg;
       }
 
+
+      if( typeof $(that.tableData.colsClasses).attr( i )  != 'undefined' ) {
+        var colClasses = $(that.tableData.colsClasses).attr( i );
+      }
+      else {
+        var colClasses = '';
+      }
+
+
       h += '' +
-        '<th colKey="' + i + '" class="thKey">' +
+        '<th colKey="' + i + '" class="thKey '+colClasses+' ">' +
         ' <div class="clearfix">' +
         '  <div>' + e + '</div>' +
         '  <div>' + ord + '</div>' +
@@ -441,10 +450,17 @@ function cogumeloTable( tableId, tableUrl ) {
       trows += '<tr class="' + evenClass + '">';
       trows += '<td> <input class="eachRowCheckBox" rowReferenceKey="'+row.rowReferenceKey+'" type="checkbox"> </td>';
 
-
       $.each( row, function( i, e ){
+
+        if( typeof $(that.tableData.colsClasses).attr( i )  != 'undefined' ) {
+          var cowClasses = $(that.tableData.colsClasses).attr( i );
+        }
+        else {
+          var cowClasses = '';
+        }
+
         if( i != 'rowReferenceKey' && i != 'tableUrlString' ){
-          trows += '<td  onclick="window.location=\''+ tUrl + '\';">' + e +'</td>';
+          trows += '<td class="'+cowClasses+'"  onclick="window.location=\''+ tUrl + '\';">' + e +'</td>';
         }
       });
 
