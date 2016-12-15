@@ -3,6 +3,22 @@ $.fn.serializeFormToObject = function () {
 
   var fa = this.serializeArray();
 
+  var getDataInfo = function getDataInfo( elem ) {
+    // PELIGRO: Los valores recuperados por .data() no son fiables!!!
+    var dataInfo = false;
+
+    var attrTmp = elem.attributes;
+    $.each( attrTmp, function( i, attr ) {
+      if( attr.name.indexOf('data-') === 0 ) {
+        if( dataInfo === false ) {
+          dataInfo = {};
+        }
+        dataInfo[ attr.name ] = attr.value;
+      }
+    } );
+
+    return dataInfo;
+  };
 
   $.each( fa, function () {
     if( ser[ this.name ] === undefined ) {
@@ -21,29 +37,41 @@ $.fn.serializeFormToObject = function () {
   $( ':input[form="' + this.attr( 'id' ) + '"]' ).each(
     function( i, elem ) {
       if( elem.name !== undefined && elem.name !== '' ) {
+        $elem = $( elem );
+
         // Set false value
         if( ser[ elem.name ] === undefined ) {
           ser[ elem.name ] = {};
           ser[ elem.name ].value = false;
         }
         // Order select values
-        if( elem.multiple === true && $( elem ).hasClass( 'cgmMForm-order' ) && ser[ elem.name ].value.push ) { // Array de options
+        if( elem.multiple === true && $elem.hasClass( 'cgmMForm-order' ) && ser[ elem.name ].value.push ) { // Array de options
           console.log( 'Ordenando '+ elem.name, ser[ elem.name ] );
-          ser[ elem.name ].value = $( elem ).find( 'option' ).filter( ':selected').toArray()
+          ser[ elem.name ].value = $elem.find( 'option' ).filter( ':selected').toArray()
             .sort( function( a, b ) { return( parseInt( $( a ).data( 'order' ) ) - parseInt( $( b ).data( 'order' ) ) ); } )
             .map( function( e ) { return( e.value ); } );
         }
 
-        $dataInfo = $( elem ).data();
-        // PELIGRO: Los valores recuperados por data() no siven!!!
-        ser[ elem.name ].dataInfo = false;
+        // Cargamos la informacion del los atributos "data-*"
+        var dataInfo = getDataInfo( elem );
+        if( dataInfo ) {
+          ser[ elem.name ].dataInfo = dataInfo;
+        }
 
-        $.each( $dataInfo, function( k, v ) {
-          if( ser[ elem.name ].dataInfo === false ) {
-            ser[ elem.name ].dataInfo = {};
+        // Cargamos la informacion del los atributos "data-*" en campos con opciones
+        if( $elem.is('select') ) {
+          var dataMultiInfo = {};
+          $elem.find(":selected").each( function() {
+            var dataInfo = getDataInfo( this );
+            if( dataInfo ) {
+              dataMultiInfo[ this.value ] = dataInfo;
+            }
+          } );
+          console.log(dataMultiInfo.elements);
+          if( !jQuery.isEmptyObject( dataMultiInfo ) ) {
+            ser[ elem.name ].dataMultiInfo = dataMultiInfo;
           }
-          ser[ elem.name ].dataInfo[ k ] = $( elem ).attr( 'data-'+k );
-        } );
+        }
       }
     }
   );
