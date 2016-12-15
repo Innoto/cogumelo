@@ -65,19 +65,21 @@ function cogumeloTable( tableId, tableUrl ) {
         that.showTableStatus = status;
         that.filters.show();
         that.resumeFilters.hide();
-        break;
-      case "search":
-        that.searchClearButton.show();
-        break
-      case "unsearch":
-        that.searchClearButton.hide();
+        that.openFiltersButton.hide();
         break;
       case "closeFilters":
         that.filters.hide();
         if(that.extraFilters != false){
           that.showFiltersResume();
         }
+        that.openFiltersButton.show();
 
+        break;
+      case "search":
+        that.searchClearButton.show();
+        break
+      case "unsearch":
+        that.searchClearButton.hide();
         break;
       case "clearFilters":
         that.extraFilters = false;
