@@ -430,14 +430,34 @@ class FormController implements Serializable {
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
       // error_log( 'Load field '.$fieldName.' value '.print_r( $formPost[ $fieldName ][ 'value' ], true ) );
 
-      if( isset( $formPost[ $fieldName ][ 'dataInfo' ] ) && $formPost[ $fieldName ][ 'dataInfo' ] !== false ) {
+      if( isset( $formPost[ $fieldName ][ 'dataInfo' ] ) ) {
         // error_log( 'DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
         // $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
+        $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
         foreach( $formPost[ $fieldName ][ 'dataInfo' ] as $key => $value ) {
           // error_log( "setFieldParam: $fieldName, data-$key, $value )" );
-          $this->setFieldParam( $fieldName, 'data-'.$key, $value );
+          // $this->setFieldParam( $fieldName, 'data-'.$key, $value );
+          $this->setFieldParam( $fieldName, $key, $value );
         }
       }
+      if( isset( $formPost[ $fieldName ][ 'dataMultiInfo' ] ) ) {
+        $this->setFieldParam( $fieldName, 'dataMultiInfo', $formPost[ $fieldName ][ 'dataMultiInfo' ] );
+      }
+
+      /*
+        {
+          "value":["67","69","71"],
+          "dataMultiInfo":{
+            "67":{"data-order":"1","data-term-icon":"","data-term-idname":"eduTIC"},
+            "69":{"data-order":"2","data-term-icon":"","data-term-idname":"flipped","data-term-parent":"68"},
+            "71":{"data-order":"3","data-term-icon":"","data-term-idname":"gamificacion","data-term-parent":"68"}
+          }
+        },
+        {
+          "value":false,
+          "dataInfo":{"data-switchery":"true"}
+        }
+      */
 
       if( $this->getFieldType( $fieldName ) !== 'file' ) {
         if( isset( $formPost[ $fieldName ][ 'value' ] ) ) {
