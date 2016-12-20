@@ -311,6 +311,17 @@ class TableController{
     $this->actions[$id] = array('name' => $name, 'actionMethod' => $actionMethod);
   }
 
+  /**
+  * Add Actions to the table and relate it with controller Method
+  *
+  * @param string $name to display it in table action selector
+  * @param string $id for action
+  * @param string $actionMethod method execution with variables iside
+  * @return void
+  */
+  function setActionSeparator() {
+    $this->actions['SEPARATOR_'.sizeof($this->actions)] = false;
+  }
 
   /**
   * Get simple action list for client side

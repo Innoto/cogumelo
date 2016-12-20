@@ -264,7 +264,12 @@ function cogumeloTable( tableId, tableUrl ) {
     that.actionSelect.html("");
 
     $.each(that.tableData.actions, function(i,e) {
-      that.actionSelect.append('<option value='+i+'> ' + e + '</option>');
+      if( e == null ){
+        that.actionSelect.append('<option value="-" disabled>――――――</option>');
+      }
+      else {
+        that.actionSelect.append('<option value='+i+'> ' + e + '</option>');
+      }
     });
 
   }
