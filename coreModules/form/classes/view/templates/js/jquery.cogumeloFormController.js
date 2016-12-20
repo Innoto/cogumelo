@@ -743,7 +743,7 @@ function createFileFieldDropZone( idForm, fieldName ) {
   });
 
   $fileField.hide();
-  $fileDefLabel.hide();
+  // $fileDefLabel.hide();
 
   // Setup the fileFieldDropZone listeners.
   //$fileFieldDropZoneElem = $( '.fileFieldDropZone' );
