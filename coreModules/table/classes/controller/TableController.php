@@ -514,8 +514,10 @@ class TableController{
             $depList = $rowVO->getterDependence('id', $m[1] );
             //Cogumelo::console($depList);
 
-            if(is_array($depList) && count($depList)>0 ) {
-              $row[$colDefKey] = $depList[0]->getter($m[2]);
+            if( is_array($depList) && count($depList)>0 ) {
+              //Cogumelo::console($depList);
+              $row[$colDefKey] = array_pop($depList)->getter($m[2]);
+
             }
             else {
 
