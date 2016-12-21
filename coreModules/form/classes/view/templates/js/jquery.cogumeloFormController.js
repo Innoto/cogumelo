@@ -238,12 +238,14 @@ function setValidateForm( idForm, rules, messages ) {
     }
   });
 
+  basket.require({ url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' });
 
   // console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
   var $validateForm = $( '#'+idForm ).validate({
     // debug: true,
     errorClass: 'formError',
     ignore: '.noValidate',
+    lang: cogumelo.publicConf.C_LANG,
     rules: rules,
     messages: messages,
     submitHandler: function ( form ) {
