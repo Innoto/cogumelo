@@ -367,7 +367,9 @@ class TableController{
     if( is_array( $this->clientData['order'] ) ) {
       $ordArray = array();
       foreach(  $this->clientData['order'] as $ordObj ) {
-        $ordArray[ $ordObj['key'] ] = $ordObj['value'];
+        if(!preg_match('#^(.*)\.(.*)$#', $ordObj['key'], $m ) ) {
+          $ordArray[ $ordObj['key'] ] = $ordObj['value'];
+        }
       }
     }
 
@@ -506,7 +508,25 @@ class TableController{
         $rowId = $row['rowReferenceKey'];
         eval('$row["tableUrlString"] = '.$this->eachRowUrl.';');
         foreach($this->colsDef as $colDefKey => $colDef){
-          $row[$colDefKey] = $rowVO->getter($colDefKey);
+
+          if( preg_match('#^(.*)\.(.*)$#', $colDefKey, $m )) {
+            //Cogumelo::console($rowVO);
+            $depList = $rowVO->getterDependence('id', $m[1] );
+            //Cogumelo::console($depList);
+
+            if(is_array($depList) && count($depList)>0 ) {
+              $row[$colDefKey] = $depList[0]->getter($m[2]);
+            }
+            else {
+
+              $row[$colDefKey] = '' ;
+
+            }
+          }
+          else {
+            $row[$colDefKey] = $rowVO->getter($colDefKey);
+          }
+
         }
 
         // modify row value if have colRules
