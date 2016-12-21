@@ -1947,6 +1947,9 @@ class FormController implements Serializable {
       $attribs .= isset( $field['hidden'] ) ? ' hidden="hidden"' : '';
       $attribs .= isset( $field['htmlEditor'] ) ? ' contenteditable="true"' : '';
 
+      $r = $this->getValidationRules( $fieldName );
+      $attribs .= isset( $r['maxlength'] ) ? ' maxlength="'.$r['maxlength'].'"' : '';
+
       foreach( $field as $dataKey => $dataValue ) {
         if( strpos( $dataKey, 'data-' ) === 0 ) {
           $attribs .= ' '.$dataKey.'="'.$dataValue.'"';
