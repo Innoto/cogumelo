@@ -510,13 +510,19 @@ class TableController{
         foreach($this->colsDef as $colDefKey => $colDef){
 
           if( preg_match('#^(.*)\.(.*)$#', $colDefKey, $m )) {
-            //Cogumelo::console($rowVO);
+
             $depList = $rowVO->getterDependence('id', $m[1] );
-            //Cogumelo::console($depList);
+
 
             if( is_array($depList) && count($depList)>0 ) {
               //Cogumelo::console($depList);
-              $row[$colDefKey] = array_pop($depList)->getter($m[2]);
+              if(isset($depList[0])) {
+                $row[$colDefKey] = $depList[0]->getter($m[2]);
+              }
+              else {
+                $row[$colDefKey] = array_pop($depList)->getter($m[2]);
+              }
+
 
             }
             else {
