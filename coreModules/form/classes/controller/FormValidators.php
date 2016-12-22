@@ -235,12 +235,12 @@ class FormValidators extends FormValidatorsExtender {
 
   // http://jqueryvalidation.org/minlength-method/
   public function val_minlength( $value, $param ) {
-    return strlen( $value ) >= $param;
+    return mb_strlen( $value ) >= $param;
   }
 
   // http://jqueryvalidation.org/maxlength-method/
   public function val_maxlength( $value, $param ) {
-    return strlen( $value ) <= $param;
+    return mb_strlen( $value ) <= $param;
   }
 
   // http://jqueryvalidation.org/min-method/
