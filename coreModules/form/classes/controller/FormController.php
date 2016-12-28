@@ -1684,6 +1684,7 @@ class FormController implements Serializable {
     return $html;
   }
 
+  // Alias por un error de nombre
   public function getHtmpOpen() {
     return $this->getHtmlOpen();
   }
@@ -1696,8 +1697,9 @@ class FormController implements Serializable {
 
     $html .= '<form name="'.$this->getName().'" id="'.$this->id.'" data-token_id="'.$this->getTokenId().'" ';
     $html .= ' class="'.$this->cssPrefix.' '.$this->cssPrefix.'-form-'.$this->getName().'" ';
+    $html .= ' action="javascript:void(0);"';
     if( $this->action ) {
-      $html .= ' action="'.$this->action.'"';
+      $html .= ' data-form-action="'.$this->action.'"';
     }
     $html .= ' method="'.$this->method.'">';
 
@@ -1715,10 +1717,6 @@ class FormController implements Serializable {
 
     return implode( "\n", $this->getHtmlFieldsArray() );
   }
-
-
-
-
 
   /**
     Recupera el html de todos los campos del form
@@ -2070,10 +2068,6 @@ class FormController implements Serializable {
     return $html;
   } // function getHtmlFieldArray
 
-
-
-
-
   /**
     Recupera el html del Captcha del form
     @return string
@@ -2091,10 +2085,6 @@ class FormController implements Serializable {
     return $html;
   }
 
-
-
-
-
   /**
     Recupera el html del cierre del form
     @return string
@@ -2104,6 +2094,63 @@ class FormController implements Serializable {
 
     return $html;
   }
+
+  /**
+    Recupera el html con el JS del form
+    @return string
+   */
+  public function getScriptCode() {
+    $html = '';
+
+    $separador = '';
+
+    $html .= '<!-- Cogumelo module form ' . $this->getName() . ' -->' . "\n";
+
+
+    if( $this->htmlEditor ) {
+      form::loadDependence( 'ckeditor' );
+    }
+
+    $scRules = ( count( $this->rules ) > 0 ) ? json_encode( $this->rules ) : 'false';
+    $scMsgs = ( count( $this->messages ) > 0 ) ? json_encode( $this->messages ) : 'false';
+
+    $html .= '<'.'script>'."\n".
+      '$( document ).ready( function() {'."\n".
+      '  $validateForm_'.$this->id.' = setValidateForm( "'.$this->id.'", '.$scRules.', '.$scMsgs.' );'."\n".
+      '  console.log( $validateForm_'.$this->id.' );'."\n";
+
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+      if( $this->getFieldType( $fieldName ) === 'file' ) {
+        $fileInfo = $this->getFieldValue( $fieldName );
+        if( $fileInfo[ 'status' ] === 'EXIST' ) {
+          $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", '.
+            '"'.$fileInfo[ 'prev' ][ 'name' ].'", "'.$fileInfo[ 'prev' ][ 'id' ].'", "'.$fileInfo[ 'prev' ][ 'type' ].'" );'."\n";
+        }
+      }
+    }
+
+    if( $this->htmlEditor ) {
+      $html .= '  activateHtmlEditor( "'.$this->id.'" );'."\n";
+    }
+
+    $html .= '});'."\n";
+    $html .= '</script>'."\n";
+
+    if( $this->captchaEnable() ) {
+      $html .= '<'.'script src="https://www.google.com/recaptcha/api.js" async defer></script>'."\n";
+      /*
+      $html .= '<'.'script src="https://www.google.com/recaptcha/api.js?'.
+        'onload=onloadCallback&render=explicit" async defer>'."\n";
+      */
+    }
+
+    $html .= '<!-- Cogumelo module form '.$this->getName().' - END -->'."\n";
+
+    //$html .= '<pre>'. print_r( $this->fields, true ) .'</pre>';
+
+    return $html;
+  } // function getScriptCode
+
 
   /**
    * Añade tareas para ejecutar en el navegador al finalizar bien el submit
@@ -2592,63 +2639,5 @@ class FormController implements Serializable {
   /**********************************************************************/
   /***  Validaciones y gestion de errores (FIN)                       ***/
   /**********************************************************************/
-
-
-  /**
-    Recupera el html con el JS del form
-    @return string
-   */
-  public function getScriptCode() {
-    $html = '';
-
-    $separador = '';
-
-    $html .= '<!-- Cogumelo module form ' . $this->getName() . ' -->' . "\n";
-
-
-    if( $this->htmlEditor ) {
-      form::loadDependence( 'ckeditor' );
-    }
-
-    $scRules = ( count( $this->rules ) > 0 ) ? json_encode( $this->rules ) : 'false';
-    $scMsgs = ( count( $this->messages ) > 0 ) ? json_encode( $this->messages ) : 'false';
-
-    $html .= '<'.'script>'."\n".
-      '$( document ).ready( function() {'."\n".
-      '  $validateForm_'.$this->id.' = setValidateForm( "'.$this->id.'", '.$scRules.', '.$scMsgs.' );'."\n".
-      '  console.log( $validateForm_'.$this->id.' );'."\n";
-
-    foreach( $this->getFieldsNamesArray() as $fieldName ) {
-      if( $this->getFieldType( $fieldName ) === 'file' ) {
-        $fileInfo = $this->getFieldValue( $fieldName );
-        if( $fileInfo[ 'status' ] === 'EXIST' ) {
-          $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", '.
-            '"'.$fileInfo[ 'prev' ][ 'name' ].'", "'.$fileInfo[ 'prev' ][ 'id' ].'", "'.$fileInfo[ 'prev' ][ 'type' ].'" );'."\n";
-        }
-      }
-    }
-
-    if( $this->htmlEditor ) {
-      $html .= '  activateHtmlEditor( "'.$this->id.'" );'."\n";
-    }
-
-    $html .= '});'."\n";
-    $html .= '</script>'."\n";
-
-    if( $this->captchaEnable() ) {
-      $html .= '<'.'script src="https://www.google.com/recaptcha/api.js" async defer></script>'."\n";
-      /*
-      $html .= '<'.'script src="https://www.google.com/recaptcha/api.js?'.
-        'onload=onloadCallback&render=explicit" async defer>'."\n";
-      */
-    }
-
-    $html .= '<!-- Cogumelo module form '.$this->getName().' - END -->'."\n";
-
-    //$html .= '<pre>'. print_r( $this->fields, true ) .'</pre>';
-
-    return $html;
-  } // function getScriptCode
-
 
 } // END FormController class

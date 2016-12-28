@@ -212,19 +212,21 @@ function unbindForm( idForm ) {
 function setValidateForm( idForm, rules, messages ) {
 
   $.validator.setDefaults({
-    errorPlacement: function(error, element) {
+    errorPlacement: function( error, element ) {
       // console.log( 'JQV errorPlacement:' );
       // console.log( 'error', error );
-      // console.log( 'element', element );
       // console.log( 'this', this );
       // console.log( 'Busco #JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       var $msgContainer = $( '#JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
-      if ( $msgContainer.length > 0 ) {
+      if( $msgContainer.length > 0 ) {
+        // console.log( 'JQV errorPlacement msgContainer', $msgContainer );
         $msgContainer.append( error );
       }
       else {
+        // console.log( 'JQV errorPlacement element', element );
         error.insertAfter( element );
       }
+      // console.log( 'JQV errorPlacement FIN' );
     },
     showErrors: function( errorMap, errorList ) {
       // console.log( 'JQV showErrors:' );
@@ -235,10 +237,32 @@ function setValidateForm( idForm, rules, messages ) {
 
       // Lanzamos el metodo original
       this.defaultShowErrors();
+
+/*
+      // Posicionamos en el elemento con error que aparece de primero
+      var topErrScroll = 999999;
+      var $topErrWrap = false;
+      $('.formError').each( function() {
+        $wrapElem = $( this ).parents('.cgmMForm-wrap');
+        if( $wrapElem ) {
+          topElem = $wrapElem.offset().top;
+          if( topElem && topErrScroll > topElem ) {
+            topErrScroll = topElem;
+            $topErrWrap = $wrapElem;
+          }
+        }
+      });
+      if( $topErrWrap ) {
+        console.log( 'topErrWrap: ', $topErrWrap.attr('class') );
+        var topErr = $topErrWrap.offset().top + ($topErrWrap.height()/2) - ($(window).height()/2);
+        $(window).scrollTop( topErr );
+      }
+*/
     }
   });
 
-  basket.require({ url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' });
+  // Cargamos el fichero del idioma del entorno
+  basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
 
   // console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
   var $validateForm = $( '#'+idForm ).validate({
@@ -248,31 +272,27 @@ function setValidateForm( idForm, rules, messages ) {
     lang: cogumelo.publicConf.C_LANG,
     rules: rules,
     messages: messages,
-    submitHandler: function ( form ) {
+    submitHandler: function ( form, evnt ) {
       // console.log( 'Executando validate.submitHandler...' );
-      $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
-      $( form ).find( '.submitRun' ).show();
-      $.ajax( {
-        contentType: 'application/json', processData: false,
-        data: JSON.stringify( $( form ).serializeFormToObject() ),
-        type: 'POST', url: $( form ).attr( 'action' ),
-        dataType : 'json'
-      } )
-      .done( function ( response ) {
-        // console.log( 'Executando validate.submitHandler.done...' );
-        // console.log( response );
-        if( response.result === 'ok' ) {
-          // alert( 'Form Submit OK' );
-          // console.log( 'Form Done: OK' );
-          formDoneOk( form, response );
+      $eventTarget = $( evnt.originalEvent.explicitOriginalTarget );
+
+      if( $eventTarget.is( '[type="submit"]' ) ) {
+        // Se ha pulsado en alguno de los elementos de submit
+        if( $eventTarget.attr('data-confirm-text') ) {
+          // Se ha indicado que hay que solicitar confirmacion antes del envio.
+          if( confirm( $eventTarget.attr('data-confirm-text') ) ) {
+            sendValidatedForm( form );
+          }
         }
         else {
-          console.log( 'Form Done: ERROR',response );
-          formDoneError( form, response );
+          sendValidatedForm( form );
         }
-        $( form ).find( '[type="submit"]' ).removeAttr('disabled');
-        $( form ).find( '.submitRun' ).hide();
-      } ); // /.done
+      }
+      else {
+        // Se ha lanzado sin pulsar en alguno de los elementos de submit
+        console.log('Cogumelo Form: Not submit element');
+      }
+
       return false; // required to block normal submit since you used ajax
     }
   });
@@ -323,6 +343,34 @@ function setValidateForm( idForm, rules, messages ) {
   return $validateForm;
 } // function setValidateForm( idForm, rules, messages )
 
+function sendValidatedForm( form ) {
+  // console.log( 'Executando sendValidatedForm...' );
+
+  $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
+  $( form ).find( '.submitRun' ).show();
+
+  $.ajax( {
+    contentType: 'application/json', processData: false,
+    data: JSON.stringify( $( form ).serializeFormToObject() ),
+    type: 'POST', url: $( form ).attr( 'data-form-action' ),
+    dataType : 'json'
+  } )
+  .done( function ( response ) {
+    // console.log( 'Executando validate.submitHandler.done...' );
+    // console.log( response );
+    if( response.result === 'ok' ) {
+      // alert( 'Form Submit OK' );
+      // console.log( 'Form Done: OK' );
+      formDoneOk( form, response );
+    }
+    else {
+      // console.log( 'Form Done: ERROR',response );
+      formDoneError( form, response );
+    }
+    $( form ).find( '[type="submit"]' ).removeAttr('disabled');
+    $( form ).find( '.submitRun' ).hide();
+  } ); // /.done
+}
 
 function formDoneOk( form, response ) {
   // console.log( 'formDoneOk' );
@@ -357,8 +405,8 @@ function formDoneOk( form, response ) {
 
 
 function formDoneError( form, response ) {
-  console.log( 'formDoneError' );
-  console.log( response );
+  // console.log( 'formDoneError' );
+  // console.log( response );
 
   var idForm = $( form ).attr( 'id' );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
@@ -399,6 +447,7 @@ function formDoneError( form, response ) {
   } // for(var i in response.jvErrors)
 
   // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
+  console.log( 'formDoneError (FIN)' );
 }
 
 
