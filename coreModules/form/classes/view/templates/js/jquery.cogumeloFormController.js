@@ -207,9 +207,28 @@ function unbindForm( idForm ) {
   Gestión de informacion en cliente (FIN)
 */
 
+function setSubmitElement( evnt ) {
+  console.log( 'setSubmitElement: ', evnt );
 
+  $elem = $( evnt.target );
+  $( '#'+$elem.attr('form') ).attr('data-submit-element-name', $elem.attr('name') );
+}
+
+function unsetSubmitElement( evnt ) {
+  console.log( 'unsetSubmitElement: ', evnt );
+
+  $elem = $( evnt.target );
+  $( '#'+$elem.attr('form') ).removeAttr('data-submit-element-name');
+}
 
 function setValidateForm( idForm, rules, messages ) {
+
+  $( '[form="'+idForm+'"][type="submit"]' ).on({
+    // 'mouseenter' : setSubmitElement,
+    'focusin' : setSubmitElement,
+    // 'mouseleave' : unsetSubmitElement,
+    'focusout' : unsetSubmitElement
+  });
 
   $.validator.setDefaults({
     errorPlacement: function( error, element ) {
@@ -273,18 +292,18 @@ function setValidateForm( idForm, rules, messages ) {
     rules: rules,
     messages: messages,
     submitHandler: function ( form, evnt ) {
-/*
-TEMPORAL
-      console.log( 'Executando validate.submitHandler...' );
-      console.log( evnt.originalEvent );
+      // Controlamos que el submit se realice desde un elemento de submit
+      $form = $( form );
+      var submitElementName = $form.attr('data-submit-element-name');
+      $form.removeAttr('data-submit-element-name');
+      // console.log( 'submitElementName: '+submitElementName );
 
-      $eventTarget = $( evnt.originalEvent.explicitOriginalTarget );
-
-      if( $eventTarget.is( '[type="submit"]' ) ) {
+      if( submitElementName ) {
         // Se ha pulsado en alguno de los elementos de submit
-        if( $eventTarget.attr('data-confirm-text') ) {
+        $submitElement = $( '[form="'+idForm+'"][name="'+submitElementName+'"]' );
+        if( $submitElement.attr('data-confirm-text') ) {
           // Se ha indicado que hay que solicitar confirmacion antes del envio.
-          if( confirm( $eventTarget.attr('data-confirm-text') ) ) {
+          if( confirm( $submitElement.attr('data-confirm-text') ) ) {
             sendValidatedForm( form );
           }
         }
@@ -296,9 +315,6 @@ TEMPORAL
         // Se ha lanzado sin pulsar en alguno de los elementos de submit
         console.log('Cogumelo Form: Not submit element');
       }
-*/
-      // TEMPORAL
-      sendValidatedForm( form );
 
       return false; // required to block normal submit since you used ajax
     }
