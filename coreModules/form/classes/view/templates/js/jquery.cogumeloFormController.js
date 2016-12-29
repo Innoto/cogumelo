@@ -238,26 +238,26 @@ function setValidateForm( idForm, rules, messages ) {
       // Lanzamos el metodo original
       this.defaultShowErrors();
 
-/*
-      // Posicionamos en el elemento con error que aparece de primero
-      var topErrScroll = 999999;
-      var $topErrWrap = false;
-      $('.formError').each( function() {
-        $wrapElem = $( this ).parents('.cgmMForm-wrap');
-        if( $wrapElem ) {
-          topElem = $wrapElem.offset().top;
-          if( topElem && topErrScroll > topElem ) {
-            topErrScroll = topElem;
-            $topErrWrap = $wrapElem;
+      /*
+        // Posicionamos en el elemento con error que aparece de primero
+        var topErrScroll = 999999;
+        var $topErrWrap = false;
+        $('.formError').each( function() {
+          $wrapElem = $( this ).parents('.cgmMForm-wrap');
+          if( $wrapElem ) {
+            topElem = $wrapElem.offset().top;
+            if( topElem && topErrScroll > topElem ) {
+              topErrScroll = topElem;
+              $topErrWrap = $wrapElem;
+            }
           }
+        });
+        if( $topErrWrap ) {
+          console.log( 'topErrWrap: ', $topErrWrap.attr('class') );
+          var topErr = $topErrWrap.offset().top + ($topErrWrap.height()/2) - ($(window).height()/2);
+          $(window).scrollTop( topErr );
         }
-      });
-      if( $topErrWrap ) {
-        console.log( 'topErrWrap: ', $topErrWrap.attr('class') );
-        var topErr = $topErrWrap.offset().top + ($topErrWrap.height()/2) - ($(window).height()/2);
-        $(window).scrollTop( topErr );
-      }
-*/
+      */
     }
   });
 
@@ -273,7 +273,11 @@ function setValidateForm( idForm, rules, messages ) {
     rules: rules,
     messages: messages,
     submitHandler: function ( form, evnt ) {
-      // console.log( 'Executando validate.submitHandler...' );
+/*
+TEMPORAL
+      console.log( 'Executando validate.submitHandler...' );
+      console.log( evnt.originalEvent );
+
       $eventTarget = $( evnt.originalEvent.explicitOriginalTarget );
 
       if( $eventTarget.is( '[type="submit"]' ) ) {
@@ -292,6 +296,9 @@ function setValidateForm( idForm, rules, messages ) {
         // Se ha lanzado sin pulsar en alguno de los elementos de submit
         console.log('Cogumelo Form: Not submit element');
       }
+*/
+      // TEMPORAL
+      sendValidatedForm( form );
 
       return false; // required to block normal submit since you used ajax
     }
