@@ -71,9 +71,9 @@ class UserView extends View
   public function loginFormDefine() {
 
     $form = new FormController( 'loginForm', '/user/sendloginform' ); //actionform
-    $form->setField( 'userLogin', array( 'placeholder' => 'Email' ));
-    $form->setField( 'userPassword', array( 'type' => 'password', 'placeholder' => 'Contraseña') );
-    $form->setField( 'loginSubmit', array( 'type' => 'submit', 'value' => 'Entrar' ) );
+    $form->setField( 'userLogin', array( 'placeholder' => __('Email') ));
+    $form->setField( 'userPassword', array( 'type' => 'password', 'placeholder' => __('Password') ) );
+    $form->setField( 'loginSubmit', array( 'type' => 'submit', 'value' => __('Sign in' ) ) );
     /************************************************************** VALIDATIONS */
     $form->setValidationRule( 'userLogin', 'required' );
     $form->setValidationRule( 'userPassword', 'required' );

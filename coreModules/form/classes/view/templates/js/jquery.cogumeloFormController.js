@@ -207,24 +207,43 @@ function unbindForm( idForm ) {
   Gestión de informacion en cliente (FIN)
 */
 
+function setSubmitElement( evnt ) {
+  // console.log( 'setSubmitElement: ', evnt );
+  $elem = $( evnt.target );
+  $( '#'+$elem.attr('form') ).attr('data-submit-element-name', $elem.attr('name') );
+}
 
+function unsetSubmitElement( evnt ) {
+  // console.log( 'unsetSubmitElement: ', evnt );
+  $elem = $( evnt.target );
+  $( '#'+$elem.attr('form') ).removeAttr('data-submit-element-name');
+}
 
 function setValidateForm( idForm, rules, messages ) {
 
+  $( '[form="'+idForm+'"][type="submit"]' ).on({
+    // 'mouseenter' : setSubmitElement,
+    'focusin' : setSubmitElement,
+    // 'mouseleave' : unsetSubmitElement,
+    'focusout' : unsetSubmitElement
+  });
+
   $.validator.setDefaults({
-    errorPlacement: function(error, element) {
+    errorPlacement: function( error, element ) {
       // console.log( 'JQV errorPlacement:' );
       // console.log( 'error', error );
-      // console.log( 'element', element );
       // console.log( 'this', this );
       // console.log( 'Busco #JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       var $msgContainer = $( '#JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
-      if ( $msgContainer.length > 0 ) {
+      if( $msgContainer.length > 0 ) {
+        // console.log( 'JQV errorPlacement msgContainer', $msgContainer );
         $msgContainer.append( error );
       }
       else {
+        // console.log( 'JQV errorPlacement element', element );
         error.insertAfter( element );
       }
+      // console.log( 'JQV errorPlacement FIN' );
     },
     showErrors: function( errorMap, errorList ) {
       // console.log( 'JQV showErrors:' );
@@ -235,10 +254,32 @@ function setValidateForm( idForm, rules, messages ) {
 
       // Lanzamos el metodo original
       this.defaultShowErrors();
+
+      /*
+        // Posicionamos en el elemento con error que aparece de primero
+        var topErrScroll = 999999;
+        var $topErrWrap = false;
+        $('.formError').each( function() {
+          $wrapElem = $( this ).parents('.cgmMForm-wrap');
+          if( $wrapElem ) {
+            topElem = $wrapElem.offset().top;
+            if( topElem && topErrScroll > topElem ) {
+              topErrScroll = topElem;
+              $topErrWrap = $wrapElem;
+            }
+          }
+        });
+        if( $topErrWrap ) {
+          console.log( 'topErrWrap: ', $topErrWrap.attr('class') );
+          var topErr = $topErrWrap.offset().top + ($topErrWrap.height()/2) - ($(window).height()/2);
+          $(window).scrollTop( topErr );
+        }
+      */
     }
   });
 
-  basket.require({ url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' });
+  // Cargamos el fichero del idioma del entorno
+  basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
 
   // console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
   var $validateForm = $( '#'+idForm ).validate({
@@ -248,31 +289,31 @@ function setValidateForm( idForm, rules, messages ) {
     lang: cogumelo.publicConf.C_LANG,
     rules: rules,
     messages: messages,
-    submitHandler: function ( form ) {
-      // console.log( 'Executando validate.submitHandler...' );
-      $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
-      $( form ).find( '.submitRun' ).show();
-      $.ajax( {
-        contentType: 'application/json', processData: false,
-        data: JSON.stringify( $( form ).serializeFormToObject() ),
-        type: 'POST', url: $( form ).attr( 'action' ),
-        dataType : 'json'
-      } )
-      .done( function ( response ) {
-        // console.log( 'Executando validate.submitHandler.done...' );
-        // console.log( response );
-        if( response.result === 'ok' ) {
-          // alert( 'Form Submit OK' );
-          // console.log( 'Form Done: OK' );
-          formDoneOk( form, response );
+    submitHandler: function ( form, evnt ) {
+      // Controlamos que el submit se realice desde un elemento de submit
+      $form = $( form );
+      var submitElementName = $form.attr('data-submit-element-name');
+      $form.removeAttr('data-submit-element-name');
+      // console.log( 'submitElementName: '+submitElementName );
+
+      if( submitElementName ) {
+        // Se ha pulsado en alguno de los elementos de submit
+        $submitElement = $( '[form="'+idForm+'"][name="'+submitElementName+'"]' );
+        if( $submitElement.attr('data-confirm-text') ) {
+          // Se ha indicado que hay que solicitar confirmacion antes del envio.
+          if( confirm( $submitElement.attr('data-confirm-text') ) ) {
+            sendValidatedForm( form );
+          }
         }
         else {
-          console.log( 'Form Done: ERROR',response );
-          formDoneError( form, response );
+          sendValidatedForm( form );
         }
-        $( form ).find( '[type="submit"]' ).removeAttr('disabled');
-        $( form ).find( '.submitRun' ).hide();
-      } ); // /.done
+      }
+      else {
+        // Se ha lanzado sin pulsar en alguno de los elementos de submit
+        console.log('Cogumelo Form: Not submit element');
+      }
+
       return false; // required to block normal submit since you used ajax
     }
   });
@@ -323,6 +364,34 @@ function setValidateForm( idForm, rules, messages ) {
   return $validateForm;
 } // function setValidateForm( idForm, rules, messages )
 
+function sendValidatedForm( form ) {
+  // console.log( 'Executando sendValidatedForm...' );
+
+  $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
+  $( form ).find( '.submitRun' ).show();
+
+  $.ajax( {
+    contentType: 'application/json', processData: false,
+    data: JSON.stringify( $( form ).serializeFormToObject() ),
+    type: 'POST', url: $( form ).attr( 'data-form-action' ),
+    dataType : 'json'
+  } )
+  .done( function ( response ) {
+    // console.log( 'Executando validate.submitHandler.done...' );
+    // console.log( response );
+    if( response.result === 'ok' ) {
+      // alert( 'Form Submit OK' );
+      // console.log( 'Form Done: OK' );
+      formDoneOk( form, response );
+    }
+    else {
+      // console.log( 'Form Done: ERROR',response );
+      formDoneError( form, response );
+    }
+    $( form ).find( '[type="submit"]' ).removeAttr('disabled');
+    $( form ).find( '.submitRun' ).hide();
+  } ); // /.done
+}
 
 function formDoneOk( form, response ) {
   // console.log( 'formDoneOk' );
@@ -357,8 +426,8 @@ function formDoneOk( form, response ) {
 
 
 function formDoneError( form, response ) {
-  console.log( 'formDoneError' );
-  console.log( response );
+  // console.log( 'formDoneError' );
+  // console.log( response );
 
   var idForm = $( form ).attr( 'id' );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
@@ -399,6 +468,7 @@ function formDoneError( form, response ) {
   } // for(var i in response.jvErrors)
 
   // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
+  console.log( 'formDoneError (FIN)' );
 }
 
 
