@@ -1,0 +1,30 @@
+{
+  "name": "line-segments-intersect",
+  "version": "0.0.0",
+  "description": "Determine if two line segments intersect each other.",
+  "main": "line-segments-intersect.js",
+  "scripts": {
+    "test": "mocha test/test.js",
+    "build-debug": "browserify line-segments-intersect.js --debug --standalone lineSegmentsIntersect | exorcist dist/line-segments-intersect.js.map > dist/line-segments-intersect.js",
+    "build-min": "browserify line-segments-intersect.js --standalone lineSegmentsIntersect | uglifyjs -c -m > dist/line-segments-intersect.min.js",
+    "build": "npm run build-debug && npm run build-min"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/geosquare/line-segments-intersect"
+  },
+  "keywords": ["line", "segment", "intersect", "overlap", "geometry"],
+  "author": "Gagan Bansal <gaganbansal123@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geosquare/line-segments-intersect/issues"
+  },
+  "homepage": "https://github.com/geosquare/line-segments-intersect",
+  "devDependencies": {
+    "browserify": "^8.1.1",
+    "chai": "^1.10.0",
+    "exorcist": "^0.1.6",
+    "mocha": "^2.1.0",
+    "uglify-js": "^2.4.16"
+  }
+}
