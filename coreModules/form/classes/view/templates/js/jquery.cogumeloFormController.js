@@ -208,13 +208,13 @@ function unbindForm( idForm ) {
 */
 
 function setSubmitElement( evnt ) {
-  console.log( 'setSubmitElement: ', evnt );
+  //console.log( 'setSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).attr('data-submit-element-name', $elem.attr('name') );
 }
 
 function unsetSubmitElement( evnt ) {
-  console.log( 'unsetSubmitElement: ', evnt );
+  //console.log( 'unsetSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).removeAttr('data-submit-element-name');
 }
