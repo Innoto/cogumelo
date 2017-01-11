@@ -220,7 +220,7 @@ function unsetSubmitElement( evnt ) {
 }
 
 function setValidateForm( idForm, rules, messages ) {
-
+console.log('hola');
   $( '[form="'+idForm+'"][type="submit"]' ).on({
     // 'mouseenter' : setSubmitElement,
     'focusin' : setSubmitElement,
