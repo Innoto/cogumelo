@@ -94,7 +94,7 @@ function formKeepAliveById( idForm ) {
   // console.log( 'formData --- ', formData );
 
   $.ajax({
-    url: '/cgml-form-command', type: 'POST',
+    url: window.location.protocol+window.location.host+'/cgml-form-command', type: 'POST',
     data: formData, cache: false, contentType: false, processData: false,
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
       // console.log( 'formKeepAliveById $jsonData --- ', $jsonData );
@@ -554,7 +554,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
   $( '.'+fieldName+'-info[data-form_id="'+idForm+'"]' ).show();
 
   $.ajax({
-    url: '/cgml-form-file-upload', type: 'POST',
+    url: window.location.protocol+window.location.host+'/cgml-form-file-upload', type: 'POST',
     // Form data
     data: formData,
     //Options to tell jQuery not to process data or worry about content-type.
@@ -661,7 +661,7 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
   formData.append( 'cgIntFrmId', cgIntFrmId );
 
   $.ajax( {
-    url: '/cgml-form-file-upload', type: 'POST',
+    url: window.location.protocol+window.location.host+'/cgml-form-file-upload', type: 'POST',
     data: formData,
     //Options to tell jQuery not to process data or worry about content-type.
     cache: false, contentType: false, processData: false
@@ -945,7 +945,7 @@ function addGroupElement( evnt ) {
   unbindForm( idForm );
 
   $.ajax({
-    url: '/cgml-form-group-element', type: 'POST',
+    url: window.location.protocol+window.location.host+'/cgml-form-group-element', type: 'POST',
     // Form data
     data: formData,
     //Options to tell jQuery not to process data or worry about content-type.
@@ -1027,7 +1027,7 @@ function removeGroupElement( evnt ) {
   unbindForm( idForm );
 
   $.ajax({
-    url: '/cgml-form-group-element', type: 'POST',
+    url: window.location.protocol+window.location.host+'/cgml-form-group-element', type: 'POST',
     // Form data
     data: formData,
     //Options to tell jQuery not to process data or worry about content-type.
