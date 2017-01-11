@@ -94,7 +94,7 @@ function formKeepAliveById( idForm ) {
   // console.log( 'formData --- ', formData );
 
   $.ajax({
-    url: window.location.protocol+window.location.host+'/cgml-form-command', type: 'POST',
+    url: '/cgml-form-command', type: 'POST',
     data: formData, cache: false, contentType: false, processData: false,
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
       // console.log( 'formKeepAliveById $jsonData --- ', $jsonData );
@@ -220,7 +220,7 @@ function unsetSubmitElement( evnt ) {
 }
 
 function setValidateForm( idForm, rules, messages ) {
-console.log('hola');
+
   $( '[form="'+idForm+'"][type="submit"]' ).on({
     // 'mouseenter' : setSubmitElement,
     'focusin' : setSubmitElement,
@@ -279,9 +279,9 @@ console.log('hola');
   });
 
   // Cargamos el fichero del idioma del entorno
-//  basket.require( { url: window.location.protocol+window.location.host+'/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+  basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
 
-  console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
+  // console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
   var $validateForm = $( '#'+idForm ).validate({
     // debug: true,
     errorClass: 'formError',
@@ -365,19 +365,16 @@ console.log('hola');
 } // function setValidateForm( idForm, rules, messages )
 
 function sendValidatedForm( form ) {
-   console.log( 'Executando sendValidatedForm...' );
+  // console.log( 'Executando sendValidatedForm...' );
 
   $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
   $( form ).find( '.submitRun' ).show();
 
-  var urlAction = window.location.protocol+window.location.host+$( form ).attr( 'data-form-action' );
-  console.log(urlAction);
-
   $.ajax( {
     contentType: 'application/json', processData: false,
     data: JSON.stringify( $( form ).serializeFormToObject() ),
-    type: 'POST', url: urlAction,
-    dataType : 'jsonp'
+    type: 'POST', url: $( form ).attr( 'data-form-action' ),
+    dataType : 'json'
   } )
   .done( function ( response ) {
     // console.log( 'Executando validate.submitHandler.done...' );
@@ -393,7 +390,6 @@ function sendValidatedForm( form ) {
     }
     $( form ).find( '[type="submit"]' ).removeAttr('disabled');
     $( form ).find( '.submitRun' ).hide();
-
   } ); // /.done
 }
 
@@ -554,7 +550,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
   $( '.'+fieldName+'-info[data-form_id="'+idForm+'"]' ).show();
 
   $.ajax({
-    url: window.location.protocol+window.location.host+'/cgml-form-file-upload', type: 'POST',
+    url: '/cgml-form-file-upload', type: 'POST',
     // Form data
     data: formData,
     //Options to tell jQuery not to process data or worry about content-type.
@@ -661,7 +657,7 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
   formData.append( 'cgIntFrmId', cgIntFrmId );
 
   $.ajax( {
-    url: window.location.protocol+window.location.host+'/cgml-form-file-upload', type: 'POST',
+    url: '/cgml-form-file-upload', type: 'POST',
     data: formData,
     //Options to tell jQuery not to process data or worry about content-type.
     cache: false, contentType: false, processData: false
@@ -945,7 +941,7 @@ function addGroupElement( evnt ) {
   unbindForm( idForm );
 
   $.ajax({
-    url: window.location.protocol+window.location.host+'/cgml-form-group-element', type: 'POST',
+    url: '/cgml-form-group-element', type: 'POST',
     // Form data
     data: formData,
     //Options to tell jQuery not to process data or worry about content-type.
@@ -1027,7 +1023,7 @@ function removeGroupElement( evnt ) {
   unbindForm( idForm );
 
   $.ajax({
-    url: window.location.protocol+window.location.host+'/cgml-form-group-element', type: 'POST',
+    url: '/cgml-form-group-element', type: 'POST',
     // Form data
     data: formData,
     //Options to tell jQuery not to process data or worry about content-type.
