@@ -377,7 +377,7 @@ function sendValidatedForm( form ) {
     contentType: 'application/json', processData: false,
     data: JSON.stringify( $( form ).serializeFormToObject() ),
     type: 'POST', url: urlAction,
-    dataType : 'json'
+    dataType : 'jsonp'
   } )
   .done( function ( response ) {
     // console.log( 'Executando validate.submitHandler.done...' );
