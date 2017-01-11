@@ -279,9 +279,9 @@ function setValidateForm( idForm, rules, messages ) {
   });
 
   // Cargamos el fichero del idioma del entorno
-  basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+  basket.require( { url: window.location.protocol+window.location.host+'/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
 
-  // console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
+  console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
   var $validateForm = $( '#'+idForm ).validate({
     // debug: true,
     errorClass: 'formError',
