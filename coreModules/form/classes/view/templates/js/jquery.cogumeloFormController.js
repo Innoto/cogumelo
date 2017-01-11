@@ -365,7 +365,7 @@ function setValidateForm( idForm, rules, messages ) {
 } // function setValidateForm( idForm, rules, messages )
 
 function sendValidatedForm( form ) {
-  // console.log( 'Executando sendValidatedForm...' );
+   console.log( 'Executando sendValidatedForm...' );
 
   $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
   $( form ).find( '.submitRun' ).show();
