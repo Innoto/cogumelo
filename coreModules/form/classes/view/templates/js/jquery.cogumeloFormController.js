@@ -370,10 +370,13 @@ function sendValidatedForm( form ) {
   $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
   $( form ).find( '.submitRun' ).show();
 
+  var urlAction = window.location.protocol+window.location.host+$( form ).attr( 'data-form-action' );
+  console.log(urlAction);
+
   $.ajax( {
     contentType: 'application/json', processData: false,
     data: JSON.stringify( $( form ).serializeFormToObject() ),
-    type: 'POST', url: $( form ).attr( 'data-form-action' ),
+    type: 'POST', url: urlAction,
     dataType : 'json'
   } )
   .done( function ( response ) {
@@ -390,6 +393,7 @@ function sendValidatedForm( form ) {
     }
     $( form ).find( '[type="submit"]' ).removeAttr('disabled');
     $( form ).find( '.submitRun' ).hide();
+
   } ); // /.done
 }
 
