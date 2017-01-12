@@ -1,3 +1,5 @@
+console.log('Cargando ckeditor-config.js de cogumelo form');
+
 CKEDITOR.editorConfig = function( config ) {
   // http://docs.ckeditor.com/#!/api/CKEDITOR.config
   config.toolbarGroups = [
@@ -9,7 +11,7 @@ CKEDITOR.editorConfig = function( config ) {
     { name: 'tools' },
     { name: 'others' },
     { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-    { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+    { name: 'paragraph',   groups: [ 'align', 'list', 'indent', 'blocks' ] },
     { name: 'colors' },
     { name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
   ];
@@ -26,5 +28,5 @@ CKEDITOR.editorConfig = function( config ) {
 
   config.height = '150';
 
-  config.removePlugins = 'elementspath, resize, autogrow';
+  config.removePlugins = 'elementspath, autogrow';
 };
