@@ -122,7 +122,7 @@ function createFilesTitleField( idForm ) {
     // console.log( 'createFilesTitleField after ', this );
 
     var fileField = this;
-    var langs = ( typeof( cogumelo.publicConf.lang_available ) === 'object' ) ? cogumelo.publicConf.lang_available : [''];
+    var langs = ( typeof( cogumelo.publicConf.langAvailableIds ) === 'object' ) ? cogumelo.publicConf.langAvailableIds : [''];
     var html = '<div class="cgmMForm-wrap cgmMForm-'+idForm+' cgmMForm-fileFields-'+idForm+
       ' cgmMForm-titleFileField_'+fileField.name+'" style="display:none">'+"\n";
 
