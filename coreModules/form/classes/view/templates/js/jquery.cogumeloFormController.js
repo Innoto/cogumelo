@@ -122,7 +122,7 @@ function createFilesTitleField( idForm ) {
     // console.log( 'createFilesTitleField after ', this );
 
     var fileField = this;
-    var langs = ( typeof( cogumelo.publicConf.lang_available ) === 'object' ) ? cogumelo.publicConf.lang_available : [''];
+    var langs = ( typeof( cogumelo.publicConf.langAvailableIds ) === 'object' ) ? cogumelo.publicConf.langAvailableIds : [''];
     var html = '<div class="cgmMForm-wrap cgmMForm-'+idForm+' cgmMForm-fileFields-'+idForm+
       ' cgmMForm-titleFileField_'+fileField.name+'" style="display:none">'+"\n";
 
@@ -208,13 +208,13 @@ function unbindForm( idForm ) {
 */
 
 function setSubmitElement( evnt ) {
-  // console.log( 'setSubmitElement: ', evnt );
+  //console.log( 'setSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).attr('data-submit-element-name', $elem.attr('name') );
 }
 
 function unsetSubmitElement( evnt ) {
-  // console.log( 'unsetSubmitElement: ', evnt );
+  //console.log( 'unsetSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).removeAttr('data-submit-element-name');
 }
@@ -279,7 +279,9 @@ function setValidateForm( idForm, rules, messages ) {
   });
 
   // Cargamos el fichero del idioma del entorno
-  basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+  if(cogumelo.publicConf.C_LANG !== 'en'){
+    basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+  }
 
   // console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
   var $validateForm = $( '#'+idForm ).validate({

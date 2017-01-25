@@ -209,24 +209,24 @@ class UserView extends View
         'rules' => array( 'required' => true )
       ),
       'email' => array(
-        'params' => array( 'id' => 'email', 'placeholder' => __('Email') ),
+        'params' => array( 'label' => __( 'Email' ), 'id' => 'email', 'placeholder' => __('Email') ),
         'rules' => array( 'required' => true )
       ),
       'repeatEmail' => array(
-        'params' => array( 'id' => 'repeatEmail', 'placeholder' => __('Repeat email') ),
+        'params' => array( 'label' => __( 'Repeat email' ), 'id' => 'repeatEmail', 'placeholder' => __('Repeat email') ),
         'rules' => array( 'required' => true )
       ),
       'name' => array(
-        'params' => array( 'placeholder' => __('Name') ),
+        'params' => array( 'label' => __( 'Name' ), 'placeholder' => __('Name') ),
       ),
       'surname' => array(
-        'params' => array( 'placeholder' => __('Surname') ),
+        'params' => array( 'label' => __( 'Surname' ), 'placeholder' => __('Surname') ),
       ),
       'active' => array(
         'params' => array( 'type' => 'checkbox', 'class' => 'switchery', 'options'=> array( '1' => __('Active') ))
       ),
       'description' => array(
-        'params' => array( 'type' => 'textarea', 'placeholder' => __('Descripción')),
+        'params' => array( 'label' => __( 'Description' ), 'type' => 'textarea', 'placeholder' => __('Description')),
         'translate' => true
       )
     );
@@ -235,8 +235,8 @@ class UserView extends View
 
     //Esto es para verificar si es un create
     if(!isset($data) || $data == ''){
-      $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => __('Contraseña') ) );
-      $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => __('Repite contraseña') ) );
+      $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => __('New password') ) );
+      $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => __('Repeat password') ) );
     }
 
     $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
