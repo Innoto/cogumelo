@@ -1,5 +1,7 @@
 <?php
 
+global $COGUMELO_INSTANCED_MODULES;
+$COGUMELO_INSTANCED_MODULES = [];
 
 /**
 * ModuleController Class
@@ -59,12 +61,13 @@ class ModuleController
   }
 
   public function execModule( $module_name ) {
+    global $COGUMELO_INSTANCED_MODULES;
+
     if($this->module_paths[$module_name] == false) {
       Cogumelo::error("Module '".$module_name. "' not found.");
     }
     else {
-      $modulo = new $module_name();
-      $this->request = new RequestController( $modulo->getUrlPatternsToArray(), $this->url_path, $this->module_paths[$module_name] );
+      $this->request = new RequestController( $COGUMELO_INSTANCED_MODULES[$module_name]->getUrlPatternsToArray(), $this->url_path, $this->module_paths[$module_name] );
       $this->url_path = $this->request->getLeftoeverUrl();
       Cogumelo::debug("Reading UrlPatterns from: ".$module_name);
     }
@@ -73,14 +76,15 @@ class ModuleController
   public function includeModules() {
 
     global $C_ENABLED_MODULES;
+    global $COGUMELO_INSTANCED_MODULES;
 
     foreach( $C_ENABLED_MODULES as $module_name ) {
       $mod_path = $this->module_paths[$module_name];
       require_once($mod_path.'/'.$module_name.'.php');
 
-      $modInstance = new $module_name();
+      $COGUMELO_INSTANCED_MODULES[$module_name] = new $module_name();
 
-      if( $modInstance->autoIncludeAlways === true ) {
+      if( $COGUMELO_INSTANCED_MODULES[$module_name]->autoIncludeAlways === true ) {
         eval( $module_name.'::autoIncludes();');
       }
     }

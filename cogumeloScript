@@ -2,6 +2,8 @@
 
 require_once( COGUMELO_LOCATION.'/coreClasses/CogumeloClass.php' );
 require_once( APP_BASE_PATH.'/Cogumelo.php' );
+global $COGUMELO_IS_EXECUTING_FROM_SCRIPT;
+$COGUMELO_IS_EXECUTING_FROM_SCRIPT=true;
 
 global $_C;
 $_C =Cogumelo::get();

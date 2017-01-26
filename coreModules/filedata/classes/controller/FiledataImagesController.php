@@ -498,8 +498,8 @@ class FiledataImagesController {
       header( 'Content-Type: ' . $imgInfo['type'] );
       header( 'Content-Length: ' . filesize( $imgInfo['route'] ) );
 
-      header( 'Expires: 0' );
-      header( 'Cache-Control: must-revalidate, post-check=0, pre-check=0' );
+      // header( 'Expires: 0' );
+      header( 'Cache-Control: must-revalidate' );
       header( 'Pragma: public' );
 
       ob_flush();

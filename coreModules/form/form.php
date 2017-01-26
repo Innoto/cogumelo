@@ -9,7 +9,6 @@ class form extends Module {
   public $name = 'form';
   public $version = 1.0;
   public $dependences = array(
-
     array(
       'id' => 'jquery-validation',
       'params' => array( 'jquery-validate#1.14' ),
@@ -24,12 +23,11 @@ class form extends Module {
     ),
     array(
       'id' =>'ckeditor',
-      'params' => array( 'ckeditor#standard/stable' ),
+      'params' => array( 'ckeditor#full/stable' ),
       'installer' => 'bower',
       'includes' => array( 'ckeditor.js' ),
       'autoinclude' => false
     )
-
   );
 
 
