@@ -8,7 +8,7 @@ define('MOD_USER_URL_DIR', 'user');
 class user extends Module {
 
   public $name = "user";
-  public $version = 1.6;
+  public $version = 1.7;
   public $dependences = array(
 
   );

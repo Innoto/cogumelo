@@ -16,7 +16,7 @@ class UserModel extends Model
     ),
     'login' => array(
       'type' => 'CHAR',
-      'size' => '30',
+      'size' => '255',
       'unique' => true
     ),
     'password'=> array(
@@ -33,7 +33,7 @@ class UserModel extends Model
     ),
     'email'=> array(
       'type' => 'CHAR',
-      'size' => '50',
+      'size' => '255',
       'unique' => true
     ),
     'description'=> array(
@@ -68,6 +68,14 @@ class UserModel extends Model
   );
 
   var $deploySQL = array(
+    array(
+      'version' => 'user#1.7',
+      'sql'=> '
+        ALTER TABLE user_user
+        MODIFY COLUMN email VARCHAR(255),
+        MODIFY COLUMN login VARCHAR(255)
+      '
+    ),
     array(
       'version' => 'user#1.6',
       'sql'=> '
