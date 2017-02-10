@@ -140,11 +140,17 @@ class TableController{
   * @param mixed $regexp the regular expression to match col's row value
   * @param string $finalContent is the result that we want to provide when
   *  variable $value matches (Usually a text). Can be too an operation with other cols
+  * @param bool true -> $finalContent is preg_replace replace param
   * @return void
   */
-  function colRule($colId, $regexp, $finalContent) {
+  function colRule($colId, $regexp, $finalContent, $regex = false ) {
     if( array_key_exists($colId, $this->colsDef) ) {
-      $this->colsDef[$colId]['rules'][] = array('regexp' => $regexp, 'finalContent' => $finalContent );
+      if ( !$regex ) {
+        $this->colsDef[$colId]['rules'][] = array('regexp' => $regexp, 'finalContent' => $finalContent );
+      }
+      else {
+        $this->colsDef[$colId]['rules'][] = array('regexp' => $regexp, 'regexContent' => $finalContent );
+      }
     }
     else {
       Cogumelo::error('Col id "'.$colId.'" not found in table, can`t add col rule');
@@ -543,9 +549,16 @@ class TableController{
           if($colDef['rules'] != array() ) {
 
             foreach($colDef['rules'] as $rule){
-              if(preg_match( $rule['regexp'], $row[$colDefKey])) {
-                eval('$row[$colDefKey] = "'.$rule['finalContent'].'";');
-                break;
+              if( !isset( $rule['regexContent'] ) ) {
+                if(preg_match( $rule['regexp'], $row[$colDefKey])) {
+                  eval('$row[$colDefKey] = "'.$rule['finalContent'].'";');
+                  break;
+                }
+              }
+              else {
+                if( $row[$colDefKey] = preg_replace( $rule['regexp'], $rule['regexContent'], $row[$colDefKey] ) ) {
+                  break;
+                }
               }
             }
           }
