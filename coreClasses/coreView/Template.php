@@ -157,9 +157,11 @@ class Template extends Smarty {
 
   // Metodos "ALIAS" que hay que dejar de usar
   public function setBlock( $fragmentName, $fragmentObject ) {
+    error_log( '---DEPRECATED--- Cambiar setBlock por setFragment en '. debug_backtrace( DEBUG_BACKTRACE_PROVIDE_OBJECT, 1 )[0]['file'] );
     $this->setFragment( $fragmentName, $fragmentObject );
   }
   public function addToBlock( $fragmentName, $fragmentObject ) {
+    error_log( '---DEPRECATED--- Cambiar addToBlock por addToFragment en '. debug_backtrace( DEBUG_BACKTRACE_PROVIDE_OBJECT, 1 )[0]['file'] );
     $this->addToFragment( $fragmentName, $fragmentObject );
   }
 
@@ -233,7 +235,7 @@ class Template extends Smarty {
         break;
       case 'vendor':
       case 'vendor/bower':
-      case 'vendor/composer':      
+      case 'vendor/composer':
       case 'vendor/manual':
         $base_path = $this->cgmMediaserverHost.$module.'/';
         break;

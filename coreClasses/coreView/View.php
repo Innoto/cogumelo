@@ -8,7 +8,8 @@ abstract class View {
   var $first_execution = true;
   var $template;
 
-  public function __construct( $baseDir ) {
+  public function __construct( $baseDir = false ) {
+    // error_log( 'View: __construct() CORE: '. debug_backtrace( DEBUG_BACKTRACE_PROVIDE_OBJECT, 1 )[0]['file'] );
     if( $this->first_execution ) {
 
       $this->baseDir = $baseDir;
