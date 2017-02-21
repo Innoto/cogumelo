@@ -167,6 +167,62 @@ class FiledataController {
   } // function saveFile()
   */
 
+
+
+
+
+
+
+
+  /**
+   * Creates FileModel and register FilegroupModel
+   */
+  public function saveToFileGroup( $filedataInfo, $idGroup = false ) {
+    error_log( 'FiledataController: saveToFileGroup(filedataInfo, idGroup): ' . print_r( $filedataInfo, true ).' - '.$idGroup );
+
+    $filedataObj = $this->createNewFile( $filedataInfo );
+
+    $idGroup = ( $idGroup ) ? $idGroup : 0;
+    $fileGroupData = [ 'idGroup' => $idGroup, 'filedataId' => $filedataObj->getter('id') ];
+
+    $fileGroupObj = new FilegroupModel( $fileGroupData );
+    $fileGroupObj->save();
+    if( !$idGroup ) {
+      $fileGroupObj->setter( 'idGroup', $fileGroupObj->getter('id') );
+      $fileGroupObj->save();
+    }
+
+    return $fileGroupObj;
+  } // function createNewFileGroup()
+
+  /**
+   * Remove a FileModel and unregister from FilegroupModel
+   */
+  public function deleteFromFileGroup( $deleteId, $idGroup ) {
+    error_log( 'FiledataController: deleteFromFileGroup(deleteId, idGroup): '.
+      $deleteId.' - '.$idGroup );
+    $result = false;
+
+    if( $this->deleteFile( $deleteId ) ) {
+      $objModel = new FilegroupModel();
+      $listModel = $objModel->listItems( ['filters' => [ 'idGroup' => $idGroup,
+        'filedataId' => $deleteId ] ] );
+      if( $listModel && $fileGroupObj = $listModel->fetch() ) {
+        $result = $fileGroupObj->delete();
+      }
+    }
+
+    return $result;
+  } // function createNewFileGroup()
+
+
+
+
+
+
+
+
+
   /**
     Creates a database FiledataModel register and copy file
   */
@@ -239,7 +295,7 @@ class FiledataController {
     }
 
     return $filedataObj;
-  } // function saveFile()
+  } // function createNewFile()
 
 
   /**
@@ -270,7 +326,7 @@ class FiledataController {
     }
 
     return $filedataObj;
-  } // function saveFile()
+  } // function updateInfo()
 
 
   /**
@@ -278,12 +334,16 @@ class FiledataController {
   */
   public function deleteFile( $fileId ) {
     // error_log( 'FiledataController: deleteFile(): ' . $fileId );
+    $result = false;
+
     $objModel = new FiledataModel();
     $listModel = $objModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) );
 
     if( $listModel && $filedataObj = $listModel->fetch() ) {
-      $filedataObj->delete();
+      $result = $filedataObj->delete();
     }
+
+    return $result;
   } // function deleteFile( $fileId )
 
 

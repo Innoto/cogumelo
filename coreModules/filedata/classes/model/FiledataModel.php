@@ -38,7 +38,8 @@ class FiledataModel extends Model {
   );
 
   static $extraFilters = array(
-    'notInId' => ' filedata_filedata.id NOT IN (?) '
+    'notInId' => ' filedata_filedata.id NOT IN (?) ',
+    'idIn' => ' filedata_filedata.id IN (?) '
   );
 
   public function __construct( $datarray = array(), $otherRelObj = false ) {
