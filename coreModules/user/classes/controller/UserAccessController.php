@@ -67,24 +67,16 @@ class UserAccessController {
   }
 
   public function checkPermissions( $permissions = false, $specialPerm = false ) {
-    if( !is_array($permissions) && $permissions)
-    {
-      $permissions = array($permissions);
-    }
-    if( !is_array($specialPerm) && $specialPerm)
-    {
-      $specialPerm = array($specialPerm);
-    }
 
-
+    $permissions = ( !is_array($permissions) && $permissions ) ? array($permissions) : $permissions;
+    $specialPerm = ( !is_array($specialPerm) && $specialPerm ) ? array($specialPerm) : $specialPerm;
 
     $user = $this->getSessiondata();
     $res = false;
-
-    /*
+/*
     Cogumelo::console($user);
     Cogumelo::console($permissions);
-    */
+*/
 
     if( $user ) {
       if( in_array( 'user:superAdmin' , $user['permissions']) ){
@@ -112,7 +104,7 @@ class UserAccessController {
         }
       }
     }
-    
+
     return $res;
   }
 
