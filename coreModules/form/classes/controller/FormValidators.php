@@ -268,12 +268,29 @@ class FormValidators extends FormValidatorsExtender {
 
 
   public function val_maxfilesize( $value, $param ) {
-    return( $value['validate'][ 'size' ] <= $param );
-  }
 
+
+
+
+
+
+
+    // return( $value['validate']['size'] <= $param );
+    return true;
+  }
 
   public function val_minfilesize( $value, $param ) {
     return( $value['validate'][ 'size' ] >= $param );
+  }
+
+  public function val_multipleMax( $value, $param ) {
+    // return( $value['validate']['size'] >= $param );
+    return true;
+  }
+
+  public function val_multipleMin( $value, $param ) {
+    // return( $value['validate']['size'] >= $param );
+    return true;
   }
 
 

@@ -103,7 +103,7 @@ function formKeepAliveById( idForm ) {
         // console.log( 'formKeepAliveById OK --- ',idForm );
       }
       else {
-        console.log( 'formKeepAliveById ERROR',$jsonData );
+        // console.log( 'formKeepAliveById ERROR',$jsonData );
       }
     }
   });
@@ -117,14 +117,14 @@ function formKeepAliveById( idForm ) {
 function createFilesTitleField( idForm ) {
   // console.log( 'createFilesTitleField( '+idForm+' )' );
 
-  var $inputFileFields = $( 'input:file[form="'+idForm+'"]' );
+  var $inputFileFields = $( 'input:file[form="'+idForm+'"]' ).not( '[multiple]' );
   $inputFileFields.after( function() {
     // console.log( 'createFilesTitleField after ', this );
 
     var fileField = this;
     var langs = ( typeof( cogumelo.publicConf.langAvailableIds ) === 'object' ) ? cogumelo.publicConf.langAvailableIds : [''];
     var html = '<div class="cgmMForm-wrap cgmMForm-'+idForm+' cgmMForm-fileFields-'+idForm+
-      ' cgmMForm-titleFileField_'+fileField.name+'" style="display:none">'+"\n";
+      ' cgmMForm-titleFileField cgmMForm-titleFileField_'+fileField.name+'" style="display:none">'+"\n";
 
     $.each( langs, function( i, lang ) {
       var name = ( lang !== '' ) ? fileField.name+'_'+lang : fileField.name;
@@ -186,7 +186,12 @@ function bindForm( idForm ) {
     $inputFileFields.on( 'change', inputFileFieldChange );
     $inputFileFields.each(
       function() {
-        createFileFieldDropZone( idForm, $( this ).attr( 'name' ) );
+        var fieldName = $( this ).attr( 'name' );
+        createFileFieldDropZone( idForm, fieldName );
+
+        if( $( this ).attr('multiple') ) {
+          fileFieldGroupWidget( idForm, fieldName );
+        }
       }
     );
   }
@@ -367,7 +372,7 @@ function setValidateForm( idForm, rules, messages ) {
 } // function setValidateForm( idForm, rules, messages )
 
 function sendValidatedForm( form ) {
-  // console.log( 'Executando sendValidatedForm...' );
+  console.log( 'Executando sendValidatedForm...' );
 
   $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
   $( form ).find( '.submitRun' ).show();
@@ -428,8 +433,8 @@ function formDoneOk( form, response ) {
 
 
 function formDoneError( form, response ) {
-  // console.log( 'formDoneError' );
-  // console.log( response );
+  console.log( 'formDoneError' );
+  console.log( response );
 
   var idForm = $( form ).attr( 'id' );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
@@ -479,7 +484,7 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
 
   // Replantear!!!
 
-  // console.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
+  console.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
   var msgLabel = '<label class="formError">'+msgText+'</label>';
   var $msgContainer = false;
   if( msgClass !== false ) {
@@ -541,7 +546,7 @@ function checkInputFileField( files, idForm, fieldName ) {
 
 
 function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
-  // console.log( 'uploadFile(): ', file );
+  console.log( 'uploadFile(): ', file );
 
   var formData = new FormData();
   formData.append( 'ajaxFileUpload', file );
@@ -585,7 +590,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
     },
     */
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-      // console.log( 'Executando fileFieldToOk...' );
+      // console.log( 'Executando fileSendOk...' );
       // console.log( $jsonData );
 
       var idForm = $jsonData.moreInfo.idForm;
@@ -594,7 +599,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 
       if( $jsonData.result === 'ok' ) {
 
-        fileFieldToOk( idForm, fieldName, $jsonData.moreInfo.fileName, false, false );
+        fileSendOk( idForm, fieldName, $jsonData.moreInfo );
 
         var successActions = $jsonData.success;
         if( successActions.onFileUpload ) {
@@ -606,11 +611,11 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
         $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( 'Error cargando el fichero.' );
 
         var $validateForm = getFormInfo( idForm, 'validateForm' );
-        // console.log( $validateForm );
+        // console.log( 'uploadFile ERROR', $validateForm );
 
         for(var i in $jsonData.jvErrors) {
           var errObj = $jsonData.jvErrors[i];
-          // console.log( errObj );
+          // console.log( 'uploadFile ERROR', errObj );
 
           if( errObj.fieldName !== false ) {
             if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
@@ -640,23 +645,29 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 
 
 function deleteFormFileEvent( evnt ) {
-  // console.log( 'deleteFormFileEvent: ', evnt );
+  console.log( 'deleteFormFileEvent: ', evnt );
   var $fileField = $( evnt.target );
   var idForm = $fileField.attr( 'data-form_id' );
   var fieldName = $fileField.attr( 'data-fieldname' );
+  var fileId = $fileField.attr( 'data-file_id' ) || false;
+  var fileTempId = $fileField.attr( 'data-file_temp_id' ) || false;
   var cgIntFrmId = $( '#' + idForm ).attr( 'data-token_id' );
 
-  deleteFormFile( idForm, fieldName, cgIntFrmId );
+  deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId );
 } // function deleteFormFileEvent( evnt )
 
 
-function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
-  // console.log( 'deleteFormFile: ', idForm, fieldName, cgIntFrmId );
+function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
+  console.log( 'deleteFormFile: ', cgIntFrmId, idForm, fieldName, fileId, fileTempId );
   var formData = new FormData();
   formData.append( 'execute', 'delete' );
+  formData.append( 'cgIntFrmId', cgIntFrmId );
   formData.append( 'idForm', idForm );
   formData.append( 'fieldName', fieldName );
-  formData.append( 'cgIntFrmId', cgIntFrmId );
+  formData.append( 'fileId', fileId );
+  if( fileTempId !== false ) {
+    formData.append( 'fileTempId', fileTempId );
+  }
 
   $.ajax( {
     url: '/cgml-form-file-upload', type: 'POST',
@@ -669,7 +680,8 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
     // console.log( response );
     if( response.result === 'ok' ) {
 
-      fileFieldToInput( idForm, fieldName );
+      fileDeleteOk( idForm, fieldName, fileId, fileTempId );
+      // fileFieldToInput( idForm, fieldName );
 
       var successActions = response.success;
       if( successActions.onFileDelete ) {
@@ -698,55 +710,163 @@ function deleteFormFile( idForm, fieldName, cgIntFrmId ) {
 } // function deleteFormFile( idForm, fieldName, cgIntFrmId )
 
 
-function fileFieldToOk( idForm, fieldName, fileName, fileModId, fileType ) {
-  // console.log( 'fileFieldToOk( '+idForm+', '+fieldName+', '+fileName+', '+fileModId+', '+fileType+' )' );
+
+
+
+function fileSendOk( idForm, fieldName, moreInfo ) {
+  console.log( 'fileSendOk: ',idForm,fieldName,moreInfo );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+
+  if( $fileField.attr('multiple') ) {
+
+    var fileInfo = {
+      'id': false,
+      'tempId': moreInfo.tempId,
+      'name': moreInfo.fileName,
+      'type': moreInfo.fileType,
+      'size': moreInfo.fileSize,
+    };
+
+    fileFieldGroupAddElem( idForm, fieldName, fileInfo );
+  }
+  else {
+    fileFieldToOk( idForm, fieldName, moreInfo.fileName, false, false );
+  }
+}
+
+function fileDeleteOk( idForm, fieldName, fileId, fileTempId ) {
+  console.log( 'fileDeleteOk: ', idForm, fieldName, fileId, fileTempId );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+
+  if( $fileField.attr('multiple') ) {
+    fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId );
+  }
+  else {
+    fileFieldToInput( idForm, fieldName );
+  }
+}
+
+
+
+
+
+function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
+  console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileInfo );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  var groupFiles = cogumelo.formController.fileGroup[ $fileField.attr('data-fm_group_id') ];
+
+  console.log( 'groupFiles antes: ',groupFiles );
+
+  groupFiles.push( fileInfo );
+
+  console.log( 'groupFiles despois: ',groupFiles );
+  cogumelo.formController.fileGroup[ $fileField.attr('data-fm_group_id') ] = groupFiles;
+
+  fileFieldGroupWidget( idForm, fieldName );
+}
+
+function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
+  console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileId, fileTempId );
+  var $fileField = $( 'input[name="'+fieldName+'"][form="'+idForm+'"]' );
+  var groupFiles = cogumelo.formController.fileGroup[ $fileField.attr('data-fm_group_id') ];
+
+  var newGroupFiles = jQuery.grep( groupFiles, function( elem ) {
+    // console.log('grep: ',elem);
+    return (
+      ( fileId !== false && elem.id != fileId ) ||
+      ( fileTempId !== false && ( !elem.hasOwnProperty('tempId') || elem.tempId != fileTempId ) )
+    );
+  });
+  cogumelo.formController.fileGroup[ $fileField.attr('data-fm_group_id') ] = newGroupFiles;
+
+  fileFieldGroupWidget( idForm, fieldName );
+}
+
+function fileFieldGroupWidget( idForm, fieldName ) {
+  console.log( 'fileFieldGroupWidget: ', idForm, fieldName );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+  var $fileFieldDropZone = $fileFieldWrap.find( '.fileFieldDropZone' );
+  $fileFieldDropZone.css('background-color','yellow');
+
+  var $filesWrap = $fileFieldWrap.find('.cgmMForm-fileBoxWrap');
+
+  if( $filesWrap.length == 1 ) {
+    $filesWrap = $( $filesWrap[0] );
+    $filesWrap.find('*').remove();
+    // console.log('Xa hai un filesWrap');
+  }
+  else {
+    $filesWrap = $( '<div>' ).addClass( 'cgmMForm-fileBoxWrap clearfix' )
+      .css( { 'background-color': 'green' } );
+    $fileFieldDropZone.before( $filesWrap );
+    // console.log('Creo un filesWrap');
+  }
+
+  var groupFiles = cogumelo.formController.fileGroup[ $fileField.attr('data-fm_group_id') ];
+  $.each( groupFiles, function(){
+    // console.log('Añadimos esto a fileBoxWrap;', this, $filesWrap);
+    $filesWrap.append( fileBox( idForm, fieldName, this, deleteFormFileEvent )
+     .css( {'float': 'left', 'width': '23%', 'margin': '1%' } ) );
+  } );
+}
+
+function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
+  console.log( 'fileBox: ',fileInfo );
+
+  var $fileBoxElem = $( '<div>' ).addClass( 'cgmMForm-fileBoxElem fileFieldInfo fileUploadOK formFileDelete' )
+    .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm, 'data-file_id': fileInfo.id } );
+
+  // Element to send delete order
+  $deleteButton = $( '<i>' ).addClass( 'formFileDelete fa fa-trash' )
+    .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm } )
+    .on( 'click', deleteFunc );
+  if( fileInfo.id !== false ) {
+    $deleteButton.attr( 'data-file_id', fileInfo.id );
+  }
+  else {
+    $deleteButton.attr( 'data-file_temp_id', fileInfo.tempId );
+  }
+  $fileBoxElem.append( $deleteButton );
+
+  // Element to download
+  if( fileInfo.id !== false ) {
+    $fileBoxElem.append( '<a class="formFileDownload" href="/cgmlformfilewd/' + fileInfo.id +
+      '" target="_blank"><i class="fa fa-download"></i></a>' );
+  }
+
+  if( fileInfo.id === false || !fileInfo.type || fileInfo.type.indexOf( 'image' ) !== 0 ) {
+    $fileBoxElem.append( '<img class="tnImage" src="'+cogumelo.publicConf.media+
+      '/module/form/img/loaded.jpg" alt="'+fileInfo.name+'" title="'+fileInfo.name+'"></img>' );
+  }
+  else {
+    $fileBoxElem.append( '<img class="tnImage" src="/cgmlImg/' + fileInfo.id + '/wsdpi4/' +
+      fileInfo.id + '.jpg" alt="'+fileInfo.name+'" title="'+fileInfo.name+'"></img>' );
+  }
+
+  return $fileBoxElem;
+}
+
+
+
+function fileFieldToOk( idForm, fieldName, fileName, fileId, fileType ) {
+  // console.log( 'fileFieldToOk( '+idForm+', '+fieldName+', '+fileName+', '+fileId+', '+fileType+' )' );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
-  $fileField.attr( 'readonly', 'readonly' );
-  $fileField.prop( 'disabled', true );
-  $fileField.hide();
+  $fileField.attr( 'readonly', 'readonly' ).prop( 'disabled', true ).hide();
 
   //$( '#'+fieldName+'-error[data-form_id="'+idForm+'"]' ).hide();
   $( '#' + $fileField.attr('id') + '-error' ).remove();
 
   // Show Title file field
-  $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName ).show();
-  // console.log( 'SHOW: .cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName );
+  // $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName ).show();
+  $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName ).removeAttr('display');
 
-  var $fileFieldInfo = $( '<div>' ).addClass( 'fileFieldInfo fileUploadOK formFileDelete' )
-    .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm } );
+  var fileInfo = { 'id': fileId, 'name': fileName, 'type': fileType };
+  $fileFieldWrap.append( fileBox( idForm, fieldName, fileInfo, deleteFormFileEvent ) );
 
-  // Element to send delete order
-  $fileFieldInfo.append( $( '<i>' ).addClass( 'formFileDelete fa fa-trash' )
-    .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm } )
-    .on( 'click', deleteFormFileEvent )
-  );
-
-  // Element to download
-  if( fileModId !== false ) {
-    $fileFieldInfo.append(
-      $( '<a class="formFileDownload" href="/cgmlformfilewd/'+fileModId+'" target="_blank"><i class="fa fa-download"></i></a>' )
-    );
-  }
-
-  if( fileModId === false || !fileType || fileType.indexOf( 'image' ) !== 0 ) {
-    $fileFieldInfo.append( '<div class="tnImage" style="text-align: center; line-height: 3em;">' +
-      '<i class="fa fa-file fa-5x" style="color: rgb(90, 183, 128);"></i><br>' +
-      fileName + '</div>' );
-    /*
-    $fileFieldInfo.append( '<img class="tnImage" src="/mediaCache/module/form/img/loaded.jpg" ' +
-      ' alt="' + fileName + ' - Uploaded OK" title="' + fileName + ' - Uploaded OK"></img>' );
-    */
-  }
-  else {
-    $fileFieldInfo.append( '<img class="tnImage" src="/cgmlImg/' + fileModId + '/fast/' +
-      fileModId + '.jpg" alt="' + fileName + ' - Uploaded OK" title="' + fileName + ' - Uploaded OK"></img>' );
-  }
-
-  $fileFieldWrap.append( $fileFieldInfo );
-
-  if( fileModId === false ) {
+  if( fileId === false ) {
     loadImageTh( idForm, fieldName, fileName, $fileFieldWrap );
   }
 
@@ -795,9 +915,10 @@ function createFileFieldDropZone( idForm, fieldName ) {
   $fileFieldDropZone.append(
     '<i class="fa fa-cloud-upload" style="font-size:100px; color:#7fb1c7;"></i>'+
     '<br><span class="cgmMForm-button-js">' + $buttonText + '</span>'+
-    // '<br><input type="button" class="cgmMForm-field" value="' + $buttonText + '">'
+    // '<br><div id="list"><p>Avisos:</p></div>'+
+    // '<br><input type="button" class="cgmMForm-field" value="' + $buttonText + '">'+
     '<style>'+
-    '.cgmMForm-button-js {'+
+    '.cgmMForm-button-js { display: inline-block; '+
     ' background-color: transparent; background-image: none; border: 2px solid #7fb1c7; border-radius: 2px;'+
     ' color: #7fb1c7; cursor: pointer; font-size: 14px; font-weight: normal; line-height: 1.42857;'+
     ' margin-bottom: 5px; padding: 5px 15px; text-align: center; text-transform: uppercase;'+
@@ -827,6 +948,7 @@ function createFileFieldDropZone( idForm, fieldName ) {
   fileFieldDropZoneElem.addEventListener( 'drop', fileFieldDropZoneDrop, false);
   fileFieldDropZoneElem.addEventListener( 'dragover', fileFieldDropZoneDragOver, false);
 }
+
 function removeFileFieldDropZone( idForm, fieldName ) {
   // console.log( 'removeFileFieldDropZone: ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
@@ -834,7 +956,6 @@ function removeFileFieldDropZone( idForm, fieldName ) {
 
   $fileFieldWrap.find( '.fileFieldDropZone' ).remove();
 }
-
 
 function fileFieldDropZoneDrop( evnt ) {
   // console.log( 'fileFieldDropZoneDrop() ', evnt );
@@ -844,39 +965,31 @@ function fileFieldDropZoneDrop( evnt ) {
   var files = evnt.dataTransfer.files; // FileList object.
   // console.log( 'fileFieldDropZoneDrop files: ', files );
 
-  if ( files.length === 1 ) {
-    var $fileFieldDropZone = $( evnt.target ).closest( '.fileFieldDropZone' );
-    var idForm = $fileFieldDropZone.data( 'form_id' );
-    var fieldName = $fileFieldDropZone.data( 'fieldname' );
-    // console.log( 'fileFieldDropZoneDrop fileFieldDropZone: ', $fileFieldDropZone, idForm, fieldName );
+  var $fileFieldDropZone = $( evnt.target ).closest( '.fileFieldDropZone' );
+  var idForm = $fileFieldDropZone.data( 'form_id' );
+  var fieldName = $fileFieldDropZone.data( 'fieldname' );
+  // console.log( 'fileFieldDropZoneDrop fileFieldDropZone: ', $fileFieldDropZone, idForm, fieldName );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  // console.log( 'fileFieldDropZoneDrop fileField: ', $fileField );
 
-    var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-    // console.log( 'fileFieldDropZoneDrop fileField: ', $fileField );
+  if( files.length === 1 || $fileField.attr('multiple') ) {
     $fileField.data( 'dropfiles', files );
     processFilesInputFileField( files, idForm, fieldName );
   }
 }
 
-
 function fileFieldDropZoneDragOver( evnt ) {
   // console.log( 'fileFieldDropZoneDragOver event: ', evnt );
   evnt.stopPropagation();
   evnt.preventDefault();
-  //evnt.originalEvent.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+  // evnt.originalEvent.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
   evnt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 }
 
 
 
-
-
-
-
-
-
-
 function loadImageTh( idForm, fieldName, fileName, $fileFieldWrap ) {
-  // console.log( 'loadImageTh(): ', idForm, fieldName, $fileFieldWrap );
+  console.log( 'loadImageTh(): ', idForm, fieldName, $fileFieldWrap );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
 
 
@@ -910,8 +1023,6 @@ function loadImageTh( idForm, fieldName, fileName, $fileFieldWrap ) {
     imageReader.readAsDataURL( fileObj );
   }
 } // function loadImageTh( fileObj, $fileFieldWrap )
-
-
 
 
 
@@ -1098,7 +1209,7 @@ function switchFormLang( idForm, lang ) {
     .parent().hide();
   $( '[form="'+idForm+'"].js-tr.js-tr-'+lang+', [data-form_id="'+idForm+'"].js-tr.js-tr-'+lang+', '+
     ' .cgmMForm-fileFields-'+idForm+' input.js-tr.js-tr-'+lang )
-    .parent().show();
+    .parent().removeAttr('display'); // .parent().show();
   $( 'ul[data-form_id="'+idForm+'"].langSwitch li' ).removeClass( 'langActive' );
   $( 'ul[data-form_id="'+idForm+'"].langSwitch li.langSwitch-'+lang ).addClass( 'langActive' );
 }

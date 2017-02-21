@@ -360,4 +360,28 @@ $.validator.addMethod(
 );
 
 
+// Accept a value from a file input
+$.validator.addMethod(
+  "multipleMax",
+  function(value, element, param) {
+    var valueResponse = true;
+
+    return valueResponse;
+  },
+  $.validator.format("Demasiados ficheros. (Límite: {0} ficheros).")
+);
+
+
+// Accept a value from a file input
+$.validator.addMethod(
+  "multipleMin",
+  function(value, element, param) {
+    var valueResponse = true;
+
+    return valueResponse;
+  },
+  $.validator.format("Pocos ficheros. (Límite: {0} ficheros).")
+);
+
+
 

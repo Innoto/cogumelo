@@ -69,12 +69,12 @@ class FormConnector extends View {
 
     // Notificamos el resultado al UI
     $form->sendJsonResponse( $moreInfo );
-
   }
 
 
 
 
+  // addUrlPatterns( '#^cgml-form-file-upload$#', 'view:FormConnector::fileUpload' );
   public function fileUpload() {
     if( isset( $_POST['execute'] ) && $_POST['execute'] === 'delete' ) {
       $this->deleteFormFile();
@@ -84,16 +84,32 @@ class FormConnector extends View {
     }
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   private function uploadFormFile() {
-    // error_log( '--------------------------------' );
-    // error_log( ' FormConnector - uploadFormFile ' );
-    // error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
+    error_log( ' FormConnector - uploadFormFile ' );
+    error_log( '--------------------------------' );
 
     $form = new FormController();
     $error = false;
 
     $idForm = isset( $_POST['idForm'] ) ? $_POST['idForm'] : false;
 
+    error_log( 'FILES:'.$_FILES['ajaxFileUpload']['name'] );
     // error_log( 'FILES:' ); error_log( print_r( $_FILES, true ) );
     // error_log( 'POST:' ); error_log( print_r( $_POST, true ) );
 
@@ -102,8 +118,9 @@ class FormConnector extends View {
       $cgIntFrmId = $_POST['cgIntFrmId'];
       $fieldName  = $_POST['fieldName'];
 
-      $fileName     = $_FILES['ajaxFileUpload']['name'];     // The file name
       $fileTmpLoc   = $_FILES['ajaxFileUpload']['tmp_name']; // File in the PHP tmp folder
+
+      $fileName     = $_FILES['ajaxFileUpload']['name'];     // The file name
       $fileType     = $_FILES['ajaxFileUpload']['type'];     // The type of file it is
       $fileSize     = $_FILES['ajaxFileUpload']['size'];     // File size in bytes
       $fileErrorId  = $_FILES['ajaxFileUpload']['error'];    // UPLOAD_ERR_OK o errores
@@ -154,6 +171,13 @@ class FormConnector extends View {
 
           // Guardamos los datos previos del campo
           $fileFieldValuePrev = $form->getFieldValue( $fieldName );
+
+
+
+
+          error_log( 'LEEMOS File Field: '.print_r($fileFieldValuePrev,true) );
+
+
           // Creamos un objeto temporal para validarlo
           $tmpFileFieldValue = array(
             'status' => 'LOAD',
@@ -165,14 +189,23 @@ class FormConnector extends View {
               'size' => $fileSize
             )
           );
+
+
+
+
+
           // Almacenamos los datos temporales en el formObj para validarlos
           $form->setFieldValue( $fieldName, $tmpFileFieldValue );
           // Validar input del fichero
           $form->validateField( $fieldName );
 
+
+
+
+
           if( !$form->existErrors() ) {
             // El fichero ha superado las validaciones. Ajustamos sus valores finales y los almacenamos.
-            // error_log( 'FU: Validado o ficheiro subido...' );
+            error_log( 'FU: Validado. Vamos a moverlo...' );
 
 
             $tmpCgmlFileLocation = $form->tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName, $fieldName );
@@ -184,45 +217,65 @@ class FormConnector extends View {
             }
             else {
               // El fichero subido ha pasado todos los controles. Vamos a registrarlo según proceda
-              // error_log( 'FU: Validado e movido...' );
+              error_log( 'FU: Validado y movido. Paso final...' );
 
-              if( isset( $fileFieldValuePrev['status'] ) && $fileFieldValuePrev['status'] !== false ) {
-                if( $fileFieldValuePrev['status'] === 'DELETE' ) {
-                  // error_log( 'FU: Todo OK e estado REPLACE...' );
+              $newFileFieldValue = [
+                'status' => 'LOAD',
+                'temp' => [
+                  'name' => $fileName,
+                  'originalName' => $fileName,
+                  'absLocation' => $tmpCgmlFileLocation,
+                  'type' => $fileType,
+                  'size' => $fileSize
+                ]
+              ];
 
-                  $fileFieldValuePrev['status'] = 'REPLACE';
-                  $fileFieldValuePrev['temp'] = array(
-                    'name' => $fileName,
-                    'originalName' => $fileName,
-                    'absLocation' => $tmpCgmlFileLocation,
-                    'type' => $fileType,
-                    'size' => $fileSize
-                  );
+              if( !$form->getFieldParam( $fieldName, 'multiple' ) ) {
+                // Basic: only one file
+                if( isset( $fileFieldValuePrev['status'] ) && $fileFieldValuePrev['status'] !== false ) {
+                  if( $fileFieldValuePrev['status'] === 'DELETE' ) {
+                    error_log( 'FU: Todo OK. Estado REPLACE...' );
+
+                    $newFileFieldValue['status'] = 'REPLACE';
+                    $fileFieldValuePrev = $newFileFieldValue;
+                  }
+                  else {
+                    error_log( 'FU: Validado pero status erroneo: ' . $fileFieldValuePrev['status'] );
+                    $form->addFieldRuleError( $fieldName, 'cogumelo',
+                      'La subida del fichero ha fallado. (FE)' );
+                  }
                 }
                 else {
-                  error_log( 'FU: Validado pero status erroneo: ' . $fileFieldValuePrev['status'] );
-                  $form->addFieldRuleError( $fieldName, 'cogumelo',
-                    'La subida del fichero ha fallado. (FE)' );
+                  error_log( 'FU: Todo OK. Estado LOAD...' );
+
+                  $fileFieldValuePrev = $newFileFieldValue;
                 }
               }
               else {
-                // error_log( 'FU: Todo OK e estado LOAD...' );
-
-                $fileFieldValuePrev = array(
-                  'status' => 'LOAD',
-                  'temp' => array(
-                    'name' => $fileName,
-                    'originalName' => $fileName,
-                    'absLocation' => $tmpCgmlFileLocation,
-                    'type' => $fileType,
-                    'size' => $fileSize
-                  )
-                );
+                // Multiple: add files
+                error_log( 'FU: Todo OK. Multifile LOAD...' );
+                if( !isset( $fileFieldValuePrev['multiple'] ) ) {
+                  $fileFieldValuePrev['multiple'] = [];
+                  if( isset( $fileFieldValuePrev['status'] ) ) {
+                    $fileFieldValuePrev['multiple'] = [ $fileFieldValuePrev ];
+                  }
+                }
+                $preKeys = array_keys( $fileFieldValuePrev['multiple'] );
+                $fileFieldValuePrev['multiple'][] = $newFileFieldValue;
+                $newKeys = array_diff( array_keys( $fileFieldValuePrev['multiple'] ), $preKeys );
+                $newKey = array_shift( $newKeys );
+                $newFileFieldValue['temp']['tempId'] = $newKey;
+                $fileFieldValuePrev['multiple'][ $newKey ]['temp']['tempId'] = $newKey;
               }
 
-
               if( !$form->existErrors() ) {
-                // error_log( 'FU: OK con el ficheiro subido... Se persiste...' );
+                error_log( 'FU: OK con el ficheiro subido... Se persiste...' );
+
+
+
+
+                error_log( 'GUARDAMOS File Field: '.print_r($fileFieldValuePrev,true) );
+
 
                 $form->setFieldValue( $fieldName, $fileFieldValuePrev );
                 // Persistimos formObj para cuando se envíe el formulario completo
@@ -260,9 +313,15 @@ class FormConnector extends View {
       'fieldName' => $_POST['fieldName']
     );
     if( !$form->existErrors() ) {
-      $moreInfo['fileName'] = $fileFieldValuePrev['temp']['name'];
-      $moreInfo['fileSize'] = $fileFieldValuePrev['temp']['size'];
-      $moreInfo['fileType'] = $fileFieldValuePrev['temp']['type'];
+      $moreInfo['fileName'] = $newFileFieldValue['temp']['name'];
+      $moreInfo['fileSize'] = $newFileFieldValue['temp']['size'];
+      $moreInfo['fileType'] = $newFileFieldValue['temp']['type'];
+      if( isset( $newFileFieldValue['temp']['tempId'] ) ) {
+        $moreInfo['tempId'] = $newFileFieldValue['temp']['tempId'];
+      }
+      else {
+        $moreInfo['tempId'] = false;
+      }
     }
 
     // Notificamos el resultado al UI
@@ -270,10 +329,27 @@ class FormConnector extends View {
 
   } // function uploadFormFile() {
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   private function deleteFormFile() {
-    // error_log( '--------------------------------' );
-    // error_log( ' FormConnector - deleteFormFile ' );
-    // error_log( '--------------------------------' );
+    error_log( '--------------------------------' );
+    error_log( ' FormConnector - deleteFormFile ' );
+    error_log( '--------------------------------' );
 
     $form = new FormController();
     $error = false;
@@ -286,45 +362,72 @@ class FormConnector extends View {
     if( isset( $_POST['cgIntFrmId'], $_POST['fieldName'] ) ) {
 
       $cgIntFrmId = $_POST['cgIntFrmId'];
-      $fieldName  = $_POST['fieldName'];
+      $fieldName = $_POST['fieldName'];
+
 
       // Recuperamos formObj y validamos el fichero temporal
       if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' ) {
 
         $idForm = $form->getId();
 
-        // Guardamos los datos previos del campo
-        $fileFieldValuePrev = $form->getFieldValue( $fieldName );
+        // Cargamos los datos previos del campo
+        $fieldPrev = $form->getFieldValue( $fieldName );
+
+        $fileGroup = false;
+        if( $fieldPrev['status'] === 'GROUP' ) {
+          // Necesitamos informacion extra porque es un grupo de ficheros
+          $fileGroup = $fieldPrev['idGroup'];
+
+          if( isset( $_POST['fileTempId'] ) ) {
+            $multipleIndex = $_POST['fileTempId'];
+          }
+          else {
+            $multipleIndex = 'FID_'.$_POST['fileId'];
+          }
+
+          if( isset( $fieldPrev['multiple'][ $multipleIndex ] ) ) {
+            $fieldPrev = $fieldPrev['multiple'][ $multipleIndex ];
+          }
+          else {
+            $fieldPrev = false;
+          }
+        }
 
 
-        if( isset( $fileFieldValuePrev['status'] ) && $fileFieldValuePrev['status'] !== false ) {
-          switch( $fileFieldValuePrev['status'] ) {
+
+        error_log( 'LEEMOS File Field para BORRAR: '.print_r( $fieldPrev, true ) );
+
+
+
+        if( isset( $fieldPrev['status'] ) && $fieldPrev['status'] !== false ) {
+          switch( $fieldPrev['status'] ) {
             case 'LOAD':
-              // error_log( 'FDelete: LOAD - Borramos: '.$fileFieldValuePrev['temp']['absLocation'] );
+              // error_log( 'FDelete: LOAD - Borramos: '.$fieldPrev['temp']['absLocation'] );
 
-              unlink( $fileFieldValuePrev['temp']['absLocation'] );
-              $fileFieldValuePrev = null;
+              // Garbage collector
+              // unlink( $fieldPrev['temp']['absLocation'] );
+              $fieldPrev = null;
               break;
             case 'EXIST':
-              // error_log( 'FDelete: EXIST - Marcamos para borrar: '.$fileFieldValuePrev['prev']['absLocation'] );
+              // error_log( 'FDelete: EXIST - Marcamos para borrar: '.$fieldPrev['prev']['absLocation'] );
 
-              $fileFieldValuePrev['status'] = 'DELETE';
+              $fieldPrev['status'] = 'DELETE';
               break;
             case 'REPLACE':
-              // error_log( 'FDelete: REPLACE - Borramos: '.$fileFieldValuePrev['temp']['absLocation'] );
+              // error_log( 'FDelete: REPLACE - Borramos: '.$fieldPrev['temp']['absLocation'] );
 
-              $fileFieldValuePrev['status'] = 'DELETE';
-              unlink( $fileFieldValuePrev['temp']['absLocation'] );
-              $fileFieldValuePrev['temp'] = null;
+              $fieldPrev['status'] = 'DELETE';
+              // Garbage collector
+              // unlink( $fieldPrev['temp']['absLocation'] );
+              $fieldPrev['temp'] = null;
               break;
             default:
-              // error_log( 'FDelete: Intentando borrar con status erroneo: ' . $fileFieldValuePrev['status'] );
+              // error_log( 'FDelete: Intentando borrar con status erroneo: ' . $fieldPrev['status'] );
 
               $form->addFieldRuleError( $fieldName, 'cogumelo',
                 'Intento de sobreescribir un fichero existente' );
               break;
           }
-
         }
         else {
           error_log( 'FDelete: Error intentando eliminar un fichero sin estado.' );
@@ -334,9 +437,21 @@ class FormConnector extends View {
         }
 
         if( !$form->existErrors() ) {
-          // error_log( 'FDelete: OK. Guardando el nuevo estado... Se persiste...' . $fileFieldValuePrev['status'] );
+          // error_log( 'FDelete: OK. Guardando el nuevo estado... Se persiste...' . $fieldPrev['status'] );
 
-          $form->setFieldValue( $fieldName, $fileFieldValuePrev );
+
+
+          if( $fileGroup ) {
+            $fieldNew = $fieldPrev;
+            $fieldPrev = $form->getFieldValue( $fieldName );
+            $fieldPrev['multiple'][ $multipleIndex ] = $fieldNew;
+          }
+
+
+
+          error_log( 'GUARDAMOS File Field: '.print_r($fieldPrev,true) );
+
+          $form->setFieldValue( $fieldName, $fieldPrev );
           // Persistimos formObj para cuando se envíe el formulario completo
           $form->saveToSession();
         }

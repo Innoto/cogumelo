@@ -467,21 +467,32 @@ class FormController implements Serializable {
       else {
         if( !$this->isEmptyFieldValue( $fieldName ) ) {
           $fileFieldValue = $this->getFieldValue( $fieldName );
+
+          // error_log( 'FormController::loadPostValues FILE: '.print_r( $fileFieldValue, true ) );
+
           switch( $fileFieldValue['status'] ) {
             case 'LOAD':
-              $fileFieldValue['validate'] = $fileFieldValue['temp'];
-              // error_log( 'loadPostValues: LOAD -> temp' );
-              // error_log( print_r( $fileFieldValue, true ) );
-              break;
             case 'REPLACE':
               $fileFieldValue['validate'] = $fileFieldValue['temp'];
-              // error_log( 'loadPostValues: REPLACE -> temp' );
-              // error_log( print_r( $fileFieldValue, true ) );
               break;
             case 'EXIST':
               $fileFieldValue['validate'] = $fileFieldValue['prev'];
-              // error_log( 'loadPostValues: EXIST -> prev' );
-              // error_log( print_r( $fileFieldValue, true ) );
+              break;
+            case 'GROUP':
+              if( count( $fileFieldValue['multiple'] ) ) {
+                foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
+                  switch( $fileData['status'] ) {
+                    case 'LOAD':
+                    case 'REPLACE':
+                      $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['temp'];
+                      break;
+                    case 'EXIST':
+                      $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
+                      break;
+                  }
+                  error_log( 'FE fileData temp name: '.print_r( $fileFieldValue['multiple'][ $fileKey ], true ) );
+                }
+              }
               break;
           }
           $this->setFieldValue( $fieldName, $fileFieldValue );
@@ -581,6 +592,19 @@ class FormController implements Serializable {
     }
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
   /**
     Establece el valor de un campo
     @param string $fieldName Nombre del campo
@@ -593,35 +617,111 @@ class FormController implements Serializable {
       $this->setFieldParam( $fieldName, 'value', $fieldValue );
     }
     else {
-      if ( isset( $fieldValue ) && is_array( $fieldValue ) ) {
+
+
+
+
+
+
+
+
+
+
+
+
+
+      //
+      // File Field
+      //
+      if( isset( $fieldValue ) && is_array( $fieldValue ) ) {
         // Carga inicial
-        if ( !isset( $fieldValue[ 'status' ] ) ) {
-          $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
 
-          foreach( $this->multilangFieldNames( 'title' ) as $titleLang ) {
-            /**
-              TODO: Arreglar os null en texto
-            */
-            $this->setFieldParam( $fieldName, 'data-fm_'.$titleLang,
-              (isset( $fieldValue[ $titleLang ] ) && $fieldValue[ $titleLang ] !== 'null') ? $fieldValue[ $titleLang ] : '' );
+        if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
+          // Basic: only one file
+          error_log( 'setFieldValue Basic: only one file' );
+          error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
+          if( !isset( $fieldValue[ 'status' ] ) ) {
+            $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
+
+            foreach( $this->multilangFieldNames( 'title' ) as $titleLang ) {
+              /**
+                TODO: Arreglar os null en texto
+              */
+              $this->setFieldParam( $fieldName, 'data-fm_'.$titleLang,
+                (isset( $fieldValue[ $titleLang ] ) && $fieldValue[ $titleLang ] !== 'null') ? $fieldValue[ $titleLang ] : '' );
+            }
+
+            $fieldValue = array( 'status' => 'EXIST', 'prev' => $fieldValue, 'values' => array() );
           }
-
-          $fieldValue = array( 'status' => 'EXIST', 'prev' => $fieldValue, 'values' => array() );
+          else {
+            foreach( $this->multilangFieldNames( 'title' ) as $titleLang ) {
+              $fieldValue[ 'values' ][ $titleLang ] = $this->getFieldParam( $fieldName, 'data-fm_'.$titleLang );
+            }
+          }
         }
         else {
-          foreach( $this->multilangFieldNames( 'title' ) as $titleLang ) {
-            $fieldValue[ 'values' ][ $titleLang ] = $this->getFieldParam( $fieldName, 'data-fm_'.$titleLang );
+          // Multiple: add files
+          error_log( 'setFieldValue Multiple: add files' );
+          error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
+
+
+
+          if( !isset( $fieldValue['multiple'] ) ) {
+            $fieldValue = [ 'multiple' => [ $fieldValue ] ];
           }
+
+          $this->setFieldParam( $fieldName, 'data-fm_group_id', isset( $fieldValue['idGroup'] ) ? $fieldValue['idGroup'] : '' );
+
+          // Este puede que se abandone
+          $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['idGroup'] ) ? $fieldValue['idGroup'] : '' );
+
+          $groupValue = [
+            'status' => 'GROUP',
+            'multiple' => [],
+            'prev' => $fieldValue['multiple']
+          ];
+
+          if( isset( $fieldValue['idGroup'] ) ) {
+            $groupValue['idGroup'] = $fieldValue['idGroup'];
+          }
+
+          foreach( $fieldValue['multiple'] as $key => $fileData ) {
+            $fileId = isset( $fileData['id'] ) ? 'FID_'.$fileData['id'] : $key;
+            if( !isset( $fileData['status'] ) ) {
+              $fileData = [ 'status' => 'EXIST', 'prev' => $fileData ];
+            }
+            $groupValue['multiple'][ $fileId ] = $fileData;
+          }
+          $fieldValue = $groupValue;
         }
 
-        // error_log( 'FILE fieldValue: '. print_r( $fieldValue, true ) );
+
+
+        error_log( 'FILE fieldValue: '. print_r( $fieldValue, true ) );
         $this->setFieldParam( $fieldName, 'value', $fieldValue );
       }
       else {
         $this->setFieldParam( $fieldName, 'value', null );
       }
+
+
+
+
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   /**
     Establece un parametro de un campo
@@ -801,9 +901,7 @@ class FormController implements Serializable {
   public function getFieldParam( $fieldName, $paramName ) {
     $value = null;
 
-    if( array_key_exists( $fieldName, $this->fields ) &&
-      array_key_exists( $paramName, $this->fields[ $fieldName ] ) )
-    {
+    if( isset( $this->fields[ $fieldName ][ $paramName ] ) ) {
       $value = $this->fields[ $fieldName ][ $paramName ];
     }
 
@@ -854,12 +952,7 @@ class FormController implements Serializable {
     * @return TYPE
    */
   public function getFieldsNamesArray() {
-    /*
-    $fieldsNamesArray = array();
-    foreach( $this->fields as $key => $val ) {
-      array_push( $fieldsNamesArray, $key);
-    }
-    */
+
     return array_keys( $this->fields );
   }
 
@@ -1324,6 +1417,10 @@ class FormController implements Serializable {
     @return boolean
    */
   public function processFileFields( $fieldNames = false ) {
+    error_log( '---------------' );
+    error_log( 'FormController: processFileFields(fieldNames): ' . print_r( $fieldNames, true ) );
+    error_log( '---------------' );
+
     $result = true;
 
     if( $fieldNames === false ) {
@@ -1332,119 +1429,169 @@ class FormController implements Serializable {
 
     foreach( $fieldNames as $fieldName ) {
       if( $result && $this->getFieldType( $fieldName ) === 'file' ) {
-        // error_log( 'FILE: Almacenando fileField: '.$fieldName );
+        error_log( 'processFileFields: Almacenando fileField: '.$fieldName );
 
         $fileFieldValue = $this->getFieldValue( $fieldName );
         // error_log( print_r( $fileFieldValue, true ) );
 
-        if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false ) {
-          switch( $fileFieldValue['status'] ) {
-            case 'LOAD':
-              // error_log( 'processFileFields: LOAD' );
-              $fileFieldValue['status'] = 'LOADED';
-              $fileFieldValue['values'] = $fileFieldValue['validate'];
-              $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
-              $this->setFieldValue( $fieldName, $fileFieldValue );
-              $this->updateFieldToSession( $fieldName );
-              // error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
-              /*
-                $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
-                $destDir = $this->getFieldParam( $fieldName, 'destDir' );
-                // QUITAR FILES_APP_PATH
-                $fullDestPath = self::FILES_APP_PATH . $destDir;
-                if( !is_dir( $fullDestPath ) ) {
-                  // TODO: CAMBIAR PERMISOS 0777
-                  if( !mkdir( $fullDestPath, 0777, true ) ) {
-                    $result = false;
-                    $this->addFieldRuleError( $fieldName, 'cogumelo',
-                      'La subida del fichero ha fallado. (MD)' );
-                    error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
-                  }
-                }
+        if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
+          // Basic: only one file
+          error_log( 'processFileFields Basic: only one file' );
+          error_log( 'FILE fileFieldValue inicial: '. print_r( $fileFieldValue, true ) );
 
-                if( !$this->existErrors() ) {
-                  // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-                  error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
-                  if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
-                    $result = false;
-                    $this->addFieldRuleError( $fieldName, 'cogumelo',
-                      'La subida del fichero ha fallado. (MF)' );
-                    error_log( 'Imposible mover el fichero al directorio adecuado.' .
-                      $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+          if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false ) {
+            switch( $fileFieldValue['status'] ) {
+              case 'LOAD':
+                error_log( 'processFileFields: LOAD' );
+                $fileFieldValue['status'] = 'LOADED';
+                $fileFieldValue['values'] = $fileFieldValue['validate'];
+                $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
+                $this->setFieldValue( $fieldName, $fileFieldValue );
+                $this->updateFieldToSession( $fieldName );
+                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                /*
+                  $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
+                  $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+                  // QUITAR FILES_APP_PATH
+                  $fullDestPath = self::FILES_APP_PATH . $destDir;
+                  if( !is_dir( $fullDestPath ) ) {
+                    // TODO: CAMBIAR PERMISOS 0777
+                    if( !mkdir( $fullDestPath, 0777, true ) ) {
+                      $result = false;
+                      $this->addFieldRuleError( $fieldName, 'cogumelo',
+                        'La subida del fichero ha fallado. (MD)' );
+                      error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
+                    }
                   }
-                }
 
-                if( !$this->existErrors() ) {
-                  $fileFieldValue['status'] = 'LOADED';
-                  $fileFieldValue['values'] = $fileFieldValue['validate'];
-                  $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
-                  $this->setFieldValue( $fieldName, $fileFieldValue );
-                  $this->updateFieldToSession( $fieldName );
-                  error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
-                }
-              */
-              break;
-            case 'REPLACE':
-              // error_log( 'processFileFields: REPLACE' );
-              $fileFieldValue['values'] = $fileFieldValue['validate'];
-              $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
-              $this->setFieldValue( $fieldName, $fileFieldValue );
-              $this->updateFieldToSession( $fieldName );
-              // error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
-              /*
-                $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
-                $destDir = $this->getFieldParam( $fieldName, 'destDir' );
-                // QUITAR FILES_APP_PATH
-                $fullDestPath = self::FILES_APP_PATH . $destDir;
-                if( !is_dir( $fullDestPath ) ) {
-                  // TODO: CAMBIAR PERMISOS 0777
-                  if( !mkdir( $fullDestPath, 0777, true ) ) {
-                    $result = false;
-                    $this->addFieldRuleError( $fieldName, 'cogumelo',
-                      'La subida del fichero ha fallado. (MD)' );
-                    error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
+                  if( !$this->existErrors() ) {
+                    // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
+                    error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                    if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
+                      $result = false;
+                      $this->addFieldRuleError( $fieldName, 'cogumelo',
+                        'La subida del fichero ha fallado. (MF)' );
+                      error_log( 'Imposible mover el fichero al directorio adecuado.' .
+                        $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                    }
                   }
-                }
 
-                if( !$this->existErrors() ) {
-                  // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-                  error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
-                  if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
-                    $result = false;
-                    $this->addFieldRuleError( $fieldName, 'cogumelo',
-                      'La subida del fichero ha fallado. (MF)' );
-                    error_log( 'Imposible mover el fichero al directorio adecuado.' .
-                      $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                  if( !$this->existErrors() ) {
+                    $fileFieldValue['status'] = 'LOADED';
+                    $fileFieldValue['values'] = $fileFieldValue['validate'];
+                    $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
+                    $this->setFieldValue( $fieldName, $fileFieldValue );
+                    $this->updateFieldToSession( $fieldName );
+                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
                   }
-                }
+                */
+                break;
+              case 'REPLACE':
+                error_log( 'processFileFields: REPLACE' );
+                $fileFieldValue['values'] = $fileFieldValue['validate'];
+                $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
+                $this->setFieldValue( $fieldName, $fileFieldValue );
+                $this->updateFieldToSession( $fieldName );
+                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                /*
+                  $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
+                  $destDir = $this->getFieldParam( $fieldName, 'destDir' );
+                  // QUITAR FILES_APP_PATH
+                  $fullDestPath = self::FILES_APP_PATH . $destDir;
+                  if( !is_dir( $fullDestPath ) ) {
+                    // TODO: CAMBIAR PERMISOS 0777
+                    if( !mkdir( $fullDestPath, 0777, true ) ) {
+                      $result = false;
+                      $this->addFieldRuleError( $fieldName, 'cogumelo',
+                        'La subida del fichero ha fallado. (MD)' );
+                      error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
+                    }
+                  }
 
-                if( !$this->existErrors() ) {
-                  //$fileFieldValue['status'] = 'LOADED';
-                  $fileFieldValue['values'] = $fileFieldValue['validate'];
-                  $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
-                  $this->setFieldValue( $fieldName, $fileFieldValue );
-                  $this->updateFieldToSession( $fieldName );
-                  error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                  if( !$this->existErrors() ) {
+                    // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
+                    error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                    if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
+                      $result = false;
+                      $this->addFieldRuleError( $fieldName, 'cogumelo',
+                        'La subida del fichero ha fallado. (MF)' );
+                      error_log( 'Imposible mover el fichero al directorio adecuado.' .
+                        $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                    }
+                  }
+
+                  if( !$this->existErrors() ) {
+                    //$fileFieldValue['status'] = 'LOADED';
+                    $fileFieldValue['values'] = $fileFieldValue['validate'];
+                    $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
+                    $this->setFieldValue( $fieldName, $fileFieldValue );
+                    $this->updateFieldToSession( $fieldName );
+                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                  }
+                */
+                break;
+              case 'DELETE':
+                error_log( 'processFileFields: DELETE' );
+                // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
+                $fileFieldValue['values'] = $fileFieldValue['prev'];
+                $this->setFieldValue( $fieldName, $fileFieldValue );
+                $this->updateFieldToSession( $fieldName );
+                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                break;
+              case 'EXIST':
+                error_log( 'processFileFields OK: EXIST - NADA QUE HACER' );
+                $fileFieldValue['values'] = $fileFieldValue['prev'];
+                $this->setFieldValue( $fieldName, $fileFieldValue );
+                $this->updateFieldToSession( $fieldName );
+                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                break;
+            }
+          } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false )
+        }// Basic: only one file
+        else {
+          // Multiple: add files
+          error_log( 'processFileFields Multiple: add files' );
+          error_log( 'FILE fileFieldValue inicial: '. print_r( $fileFieldValue, true ) );
+
+          if( !empty( $fileFieldValue['multiple'] ) ) {
+            foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
+
+              if( isset( $fileData['status'] ) && $fileData['status'] !== false ) {
+                switch( $fileData['status'] ) {
+                  case 'LOAD':
+                    error_log( 'processFileFields: LOAD' );
+                    $fileData['status'] = 'LOADED';
+                    $fileData['values'] = $fileData['validate'];
+                    $fileData['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
+                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileData, true ) );
+                    break;
+                  case 'REPLACE':
+                    error_log( 'processFileFields: REPLACE' );
+                    $fileData['values'] = $fileData['validate'];
+                    $fileData['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
+                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileData, true ) );
+                    break;
+                  case 'DELETE':
+                    error_log( 'processFileFields: DELETE' );
+                    // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
+                    $fileData['values'] = $fileData['prev'];
+                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileData, true ) );
+                    break;
+                  case 'EXIST':
+                    error_log( 'processFileFields OK: EXIST - NADA QUE HACER' );
+                    $fileData['values'] = $fileData['prev'];
+                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileData, true ) );
+                    break;
                 }
-              */
-              break;
-            case 'DELETE':
-              // error_log( 'processFileFields: DELETE' );
-              // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
-              $fileFieldValue['values'] = $fileFieldValue['prev'];
-              $this->setFieldValue( $fieldName, $fileFieldValue );
-              $this->updateFieldToSession( $fieldName );
-              // error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
-              break;
-            case 'EXIST':
-              // error_log( 'processFileFields OK: EXIST - NADA QUE HACER' );
-              $fileFieldValue['values'] = $fileFieldValue['prev'];
-              $this->setFieldValue( $fieldName, $fileFieldValue );
-              $this->updateFieldToSession( $fieldName );
-              // error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
-              break;
-          }
-        } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false )
+              } // if( isset( $fileData['status'] ) && $fileData['status'] !== false )
+
+              $fileFieldValue['multiple'][ $fileKey ] = $fileData;
+            } // foreach
+            $this->setFieldValue( $fieldName, $fileFieldValue );
+            $this->updateFieldToSession( $fieldName );
+          } // if !empty $fileFieldValue['multiple']
+
+        } // Multiple: add files
 
         // TODO: FALTA GUARDA LOS DATOS DEFINITIVOS DEL FICHERO!!!
         // En caso de fallo $result = false;
@@ -1457,6 +1604,9 @@ class FormController implements Serializable {
       $this->revertFileFieldsLoaded();
     }
 
+    error_log( '---------------' );
+    error_log( 'FormController: processFileFields - FIN' );
+    error_log( '---------------' );
     return $result;
   } // function processFileFields
 
@@ -2053,7 +2203,7 @@ class FormController implements Serializable {
           break;
 
         default:
-          // button, file, hidden, password, range, text, color, date, datetime, datetime-local,
+          // button, hidden, password, range, text, color, date, datetime, datetime-local,
           // email, image, month, number, search, tel, time, url, week
           $html['input'] = '<input name="'.$fieldName.'"';
           $html['input'] .= isset( $field['value'] ) ? ' value="'.htmlspecialchars( $field['value'] ).'"' : '';
@@ -2114,8 +2264,33 @@ class FormController implements Serializable {
     $scRules = ( count( $this->rules ) > 0 ) ? json_encode( $this->rules ) : 'false';
     $scMsgs = ( count( $this->messages ) > 0 ) ? json_encode( $this->messages ) : 'false';
 
+    $jsFileGroups = [];
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+      if( $this->getFieldParam( $fieldName, 'type' ) === 'file' && $this->getFieldParam( $fieldName, 'multiple' ) ) {
+        $value = $this->getFieldValue( $fieldName );
+        if( isset( $value['multiple'] ) ) {
+          $jsFileGroups[ $value['idGroup'] ] = [];
+          foreach( $value['multiple'] as $fileInfo ) {
+            $jsFileGroups[ $value['idGroup'] ][] = $fileInfo['prev'];
+          }
+        }
+      }
+    }
+
+
     $html .= '<'.'script>'."\n".
-      '$( document ).ready( function() {'."\n".
+      'var cogumelo = cogumelo || {};'."\n".
+      'cogumelo.formController = cogumelo.formController || {};'."\n\n";
+
+    if( count( $jsFileGroups ) ) {
+      $html .= 'cogumelo.formController.fileGroup = cogumelo.formController.fileGroup || [];'."\n";
+      foreach( $jsFileGroups as $fileGroupId => $fileGroupInfo ) {
+        $html .= 'cogumelo.formController.fileGroup['.$fileGroupId.'] = '.json_encode( $fileGroupInfo ).';'."\n";
+      }
+      $html .= "\n";
+    }
+
+    $html .= '$( document ).ready( function() {'."\n".
       '  $validateForm_'.$this->id.' = setValidateForm( "'.$this->id.'", '.$scRules.', '.$scMsgs.' );'."\n".
       '  console.log( $validateForm_'.$this->id.' );'."\n";
 
@@ -2132,6 +2307,7 @@ class FormController implements Serializable {
     if( $this->htmlEditor ) {
       $html .= '  activateHtmlEditor( "'.$this->id.'" );'."\n";
     }
+
 
     $html .= '});'."\n";
     $html .= '</script>'."\n";
