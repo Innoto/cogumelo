@@ -627,9 +627,20 @@ class FormController implements Serializable {
     if( array_key_exists( $fieldName, $this->fields) ) {
       $done = false;
 
-      if( $paramName === 'value' && $this->getFieldType( $fieldName ) === 'file' ) {
-        $this->fields[ $fieldName ]['value'] = $this->prepareFieldFileValue( $fieldName, $value );
-        $done = true;
+      if( $this->getFieldType( $fieldName ) === 'file' ) {
+/*
+        if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
+          // Only one file
+        }
+        else {
+          // Multiple files
+        }
+*/
+
+        if( $paramName === 'value' ) {
+          $this->fields[ $fieldName ]['value'] = $this->prepareFieldFileValue( $fieldName, $value );
+          $done = true;
+        }
       }
 
       if( !$done ) {
@@ -647,7 +658,7 @@ class FormController implements Serializable {
     @param mixed $fieldValue Valor del campo
    */
   private function prepareFieldFileValue( $fieldName, $fieldValue ) {
-    error_log( 'prepareFieldFileValue: ' . $paramName . ': ' . print_r( $value, true ) );
+    error_log( 'prepareFieldFileValue: ' . $fieldName );
     $newValue = null;
 
     if( !empty( $fieldValue ) && is_array( $fieldValue ) ) {
