@@ -267,6 +267,19 @@ class FormValidators extends FormValidatorsExtender {
   }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
   public function val_maxfilesize( $value, $param ) {
 
 
@@ -292,6 +305,19 @@ class FormValidators extends FormValidatorsExtender {
     // return( $value['validate']['size'] >= $param );
     return true;
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   // http://jqueryvalidation.org/accept-method

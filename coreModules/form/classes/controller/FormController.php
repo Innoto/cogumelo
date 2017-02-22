@@ -2056,7 +2056,7 @@ class FormController implements Serializable {
       $myFielId = isset( $field['id'] ) ? $field['id'] : false;
 
       //$myFielId = ( $myFielId === false && isset( $field['htmlEditor'] ) ) ? $fieldName : false;
-      if( isset( $field['htmlEditor'] ) ) {
+      if( !empty( $field['htmlEditor'] ) ) {
         $this->htmlEditor = true;
         if( $myFielId === false ) {
           $myFielId = $fieldName;

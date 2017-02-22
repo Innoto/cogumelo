@@ -300,6 +300,27 @@ $.validator.addMethod(
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Accept a value from a file input based on size
 $.validator.addMethod(
   "maxfilesize",
@@ -382,6 +403,25 @@ $.validator.addMethod(
   },
   $.validator.format("Pocos ficheros. (Límite: {0} ficheros).")
 );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
