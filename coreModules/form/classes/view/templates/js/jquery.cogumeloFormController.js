@@ -831,7 +831,7 @@ function fileFieldGroupWidget( idForm, fieldName ) {
     $filesWrap = $( '<div>' ).addClass( 'cgmMForm-fileBoxWrap clearfix' )
       // TODO: temporal
       .css( { 'background-color': 'green' } );
-    $fileFieldDropZone.before( $filesWrap );
+    $fileFieldDropZone.after( $filesWrap );
     // console.log('Creo un filesWrap');
   }
 

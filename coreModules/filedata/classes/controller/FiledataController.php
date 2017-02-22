@@ -333,7 +333,7 @@ class FiledataController {
     Delete a database FiledataModel register and files
   */
   public function deleteFile( $fileId ) {
-    // error_log( 'FiledataController: deleteFile(): ' . $fileId );
+    error_log( 'FiledataController: deleteFile(): ' . $fileId );
     $result = false;
 
     $objModel = new FiledataModel();
