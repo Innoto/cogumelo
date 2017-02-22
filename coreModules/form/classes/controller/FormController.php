@@ -543,11 +543,12 @@ class FormController implements Serializable {
     $this->fields[ $fieldName ][ 'name' ] = $fieldName;
     $this->fields[ $fieldName ][ 'cgIntFrmFieldInfo' ] = array();
     if( $params && is_array($params) && count($params)>0 ) {
-      foreach( $params as $key => $value ) {
-        $this->fields[ $fieldName ][ $key ] = $value;
+      foreach( $params as $paramName => $value ) {
+        $this->setFieldParam( $fieldName, $paramName, $value );
+        // $this->fields[ $fieldName ][ $paramName ] = $value;
       }
     }
-    if( !isset( $this->fields[$fieldName]['type'] ) ) {
+    if( empty( $this->fields[$fieldName]['type'] ) ) {
       $this->fields[$fieldName]['type'] = 'text';
     }
 
@@ -611,117 +612,8 @@ class FormController implements Serializable {
     @param mixed $fieldValue Valor del campo
    */
   public function setFieldValue( $fieldName, $fieldValue ) {
-    // $this->setFieldParam( $fieldName, 'value', $fieldValue );
-
-    if( $this->getFieldType( $fieldName ) !== 'file' ) {
-      $this->setFieldParam( $fieldName, 'value', $fieldValue );
-    }
-    else {
-
-
-
-
-
-
-
-
-
-
-
-
-
-      //
-      // File Field
-      //
-      if( isset( $fieldValue ) && is_array( $fieldValue ) ) {
-        // Carga inicial
-
-        if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
-          // Basic: only one file
-          error_log( 'setFieldValue Basic: only one file' );
-          error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
-          if( !isset( $fieldValue[ 'status' ] ) ) {
-            $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
-
-            foreach( $this->multilangFieldNames( 'title' ) as $titleLang ) {
-              /**
-                TODO: Arreglar os null en texto
-              */
-              $this->setFieldParam( $fieldName, 'data-fm_'.$titleLang,
-                (isset( $fieldValue[ $titleLang ] ) && $fieldValue[ $titleLang ] !== 'null') ? $fieldValue[ $titleLang ] : '' );
-            }
-
-            $fieldValue = array( 'status' => 'EXIST', 'prev' => $fieldValue, 'values' => array() );
-          }
-          else {
-            foreach( $this->multilangFieldNames( 'title' ) as $titleLang ) {
-              $fieldValue[ 'values' ][ $titleLang ] = $this->getFieldParam( $fieldName, 'data-fm_'.$titleLang );
-            }
-          }
-        }
-        else {
-          // Multiple: add files
-          error_log( 'setFieldValue Multiple: add files' );
-          error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
-
-
-
-          if( !isset( $fieldValue['multiple'] ) ) {
-            $fieldValue = [ 'multiple' => [ $fieldValue ] ];
-          }
-
-          $this->setFieldParam( $fieldName, 'data-fm_group_id', isset( $fieldValue['idGroup'] ) ? $fieldValue['idGroup'] : '' );
-
-          // Este puede que se abandone
-          $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['idGroup'] ) ? $fieldValue['idGroup'] : '' );
-
-          $groupValue = [
-            'status' => 'GROUP',
-            'multiple' => [],
-            'prev' => $fieldValue['multiple']
-          ];
-
-          if( isset( $fieldValue['idGroup'] ) ) {
-            $groupValue['idGroup'] = $fieldValue['idGroup'];
-          }
-
-          foreach( $fieldValue['multiple'] as $key => $fileData ) {
-            $fileId = isset( $fileData['id'] ) ? 'FID_'.$fileData['id'] : $key;
-            if( !isset( $fileData['status'] ) ) {
-              $fileData = [ 'status' => 'EXIST', 'prev' => $fileData ];
-            }
-            $groupValue['multiple'][ $fileId ] = $fileData;
-          }
-          $fieldValue = $groupValue;
-        }
-
-
-
-        error_log( 'FILE fieldValue: '. print_r( $fieldValue, true ) );
-        $this->setFieldParam( $fieldName, 'value', $fieldValue );
-      }
-      else {
-        $this->setFieldParam( $fieldName, 'value', null );
-      }
-
-
-
-
-    }
+    $this->setFieldParam( $fieldName, 'value', $fieldValue );
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   /**
     Establece un parametro de un campo
@@ -733,12 +625,111 @@ class FormController implements Serializable {
     // error_log( 'setFieldParam: ' . $paramName . ': ' . print_r( $value, true ) );
 
     if( array_key_exists( $fieldName, $this->fields) ) {
-      $this->fields[ $fieldName ][ $paramName ] = $value;
+      $done = false;
+
+      if( $paramName === 'value' && $this->getFieldType( $fieldName ) === 'file' ) {
+        $this->fields[ $fieldName ]['value'] = $this->prepareFieldFileValue( $fieldName, $fieldValue );
+        $done = true;
+      }
+
+      if( !$done ) {
+        $this->fields[ $fieldName ][ $paramName ] = $value;
+      }
     }
     else {
       error_log( 'Error intentando almacenar un parámetro ('.$paramName.') en un campo inexistente: '.$fieldName );
     }
   }
+
+  /**
+    Tratamiento especial para el parametro 'value' de los campos 'file' en setFieldParam()
+    @param string $fieldName Nombre del campo
+    @param mixed $fieldValue Valor del campo
+   */
+  private function prepareFieldFileValue( $fieldName, $fieldValue ) {
+    $newValue = null;
+
+    if( !empty( $fieldValue ) && is_array( $fieldValue ) ) {
+      // Carga inicial
+
+      if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
+        // Only one file
+        error_log( 'setFieldValue Basic: only one file' );
+        error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
+        if( !isset( $fieldValue[ 'status' ] ) ) {
+          $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
+
+          foreach( $this->multilangFieldNames( 'title' ) as $titleLang ) {
+            /**
+              TODO: Arreglar os null en texto
+            */
+            $this->setFieldParam( $fieldName, 'data-fm_'.$titleLang,
+              (isset( $fieldValue[ $titleLang ] ) && $fieldValue[ $titleLang ] !== 'null') ? $fieldValue[ $titleLang ] : '' );
+          }
+
+          $fieldValue = array( 'status' => 'EXIST', 'prev' => $fieldValue, 'values' => array() );
+        }
+        else {
+          foreach( $this->multilangFieldNames( 'title' ) as $titleLang ) {
+            $fieldValue[ 'values' ][ $titleLang ] = $this->getFieldParam( $fieldName, 'data-fm_'.$titleLang );
+          }
+        }
+      }
+      else {
+        // Multiple: add files
+        error_log( 'setFieldValue Multiple: add files' );
+        error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
+
+
+
+        if( !isset( $fieldValue['multiple'] ) ) {
+          $fieldValue = [ 'multiple' => [ $fieldValue ] ];
+        }
+
+        $this->setFieldParam( $fieldName, 'data-fm_group_id', isset( $fieldValue['idGroup'] ) ? $fieldValue['idGroup'] : '' );
+
+        // Este puede que se abandone
+        $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['idGroup'] ) ? $fieldValue['idGroup'] : '' );
+
+        $groupValue = [
+          'status' => 'GROUP',
+          'multiple' => [],
+          'prev' => $fieldValue['multiple']
+        ];
+
+        if( isset( $fieldValue['idGroup'] ) ) {
+          $groupValue['idGroup'] = $fieldValue['idGroup'];
+        }
+
+        foreach( $fieldValue['multiple'] as $key => $fileData ) {
+          $fileId = isset( $fileData['id'] ) ? 'FID_'.$fileData['id'] : $key;
+          if( !isset( $fileData['status'] ) ) {
+            $fileData = [ 'status' => 'EXIST', 'prev' => $fileData ];
+          }
+          $groupValue['multiple'][ $fileId ] = $fileData;
+        }
+        $fieldValue = $groupValue;
+      }
+      error_log( 'FILE fieldValue: '. print_r( $fieldValue, true ) );
+
+
+      $newValue = $fieldValue;
+    }
+
+    return $newValue;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
 
   /**
    * Establece un parametro interno en un campo
