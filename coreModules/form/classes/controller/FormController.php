@@ -627,20 +627,11 @@ class FormController implements Serializable {
     if( array_key_exists( $fieldName, $this->fields) ) {
       $done = false;
 
-      if( $this->getFieldType( $fieldName ) === 'file' ) {
-/*
-        if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
-          // Only one file
-        }
-        else {
-          // Multiple files
-        }
-*/
+      $fieldType = $this->getFieldType( $fieldName );
 
-        if( $paramName === 'value' ) {
-          $this->fields[ $fieldName ]['value'] = $this->prepareFieldFileValue( $fieldName, $value );
-          $done = true;
-        }
+      if( $paramName === 'value' && $fieldType === 'file' ) {
+        $this->fields[ $fieldName ]['value'] = $this->prepareFieldFileValue( $fieldName, $value );
+        $done = true;
       }
 
       if( !$done ) {
