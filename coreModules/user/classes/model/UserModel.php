@@ -25,11 +25,11 @@ class UserModel extends Model
     ),
     'name'=> array(
       'type' => 'CHAR',
-      'size' => '50'
+      'size' => '255'
     ),
     'surname'=> array(
       'type' => 'CHAR',
-      'size' => '100'
+      'size' => '255'
     ),
     'email'=> array(
       'type' => 'CHAR',
@@ -68,6 +68,14 @@ class UserModel extends Model
   );
 
   var $deploySQL = array(
+    array(
+      'version' => 'user#1.8',
+      'sql'=> '
+        ALTER TABLE user_user
+        MODIFY COLUMN name VARCHAR(255),
+        MODIFY COLUMN surname VARCHAR(255)
+      '
+    ),
     array(
       'version' => 'user#1.7',
       'sql'=> '
