@@ -628,7 +628,7 @@ class FormController implements Serializable {
       $done = false;
 
       if( $paramName === 'value' && $this->getFieldType( $fieldName ) === 'file' ) {
-        $this->fields[ $fieldName ]['value'] = $this->prepareFieldFileValue( $fieldName, $fieldValue );
+        $this->fields[ $fieldName ]['value'] = $this->prepareFieldFileValue( $fieldName, $value );
         $done = true;
       }
 
@@ -647,6 +647,7 @@ class FormController implements Serializable {
     @param mixed $fieldValue Valor del campo
    */
   private function prepareFieldFileValue( $fieldName, $fieldValue ) {
+    error_log( 'prepareFieldFileValue: ' . $paramName . ': ' . print_r( $value, true ) );
     $newValue = null;
 
     if( !empty( $fieldValue ) && is_array( $fieldValue ) ) {
