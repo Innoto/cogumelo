@@ -3,8 +3,8 @@
  */
 var cogumelo = cogumelo || {};
 cogumelo.formController = cogumelo.formController || {};
-
 cogumelo.formController.formsInfo = cogumelo.formController.formsInfo || [];
+cogumelo.formController.fileGroup = cogumelo.formController.fileGroup || [];
 
 cogumelo.publicConf.session_lifetime = cogumelo.publicConf.session_lifetime || 900;
 // Lanzamos formKeepAlive cuando pasa el 90% del tiempo session_lifetime
@@ -751,16 +751,30 @@ function fileDeleteOk( idForm, fieldName, fileId, fileTempId ) {
 
 
 function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
-  console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileInfo );
+  console.log( 'fileFieldGroupAddElem: ', idForm, fieldName, fileInfo );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-  var groupFiles = cogumelo.formController.fileGroup[ $fileField.attr('data-fm_group_id') ];
+  var groupId = $fileField.attr('data-fm_group_id');
+  var groupFiles = [];
 
-  console.log( 'groupFiles antes: ',groupFiles );
+  // console.log( 'groupId antes: ',groupId );
+  // console.log( 'groupFiles antes: ',groupFiles );
+
+  if( groupId ) {
+    groupFiles = cogumelo.formController.fileGroup[ groupId ];
+  }
+  else {
+    groupId = idForm+'_'+fieldName;
+    cogumelo.formController.fileGroup[ groupId ] = groupFiles;
+    $fileField.attr( 'data-fm_group_id', groupId );
+  }
+
+  // console.log( 'groupId: ',groupId );
+  // console.log( 'groupFiles: ',groupFiles );
 
   groupFiles.push( fileInfo );
 
-  console.log( 'groupFiles despois: ',groupFiles );
-  cogumelo.formController.fileGroup[ $fileField.attr('data-fm_group_id') ] = groupFiles;
+  // console.log( 'groupFiles despois: ',groupFiles );
+  cogumelo.formController.fileGroup[ groupId ] = groupFiles;
 
   fileFieldGroupWidget( idForm, fieldName );
 }
@@ -768,7 +782,8 @@ function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
 function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
   console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileId, fileTempId );
   var $fileField = $( 'input[name="'+fieldName+'"][form="'+idForm+'"]' );
-  var groupFiles = cogumelo.formController.fileGroup[ $fileField.attr('data-fm_group_id') ];
+  var groupId = $fileField.attr('data-fm_group_id');
+  var groupFiles = cogumelo.formController.fileGroup[ groupId ];
 
   var newGroupFiles = jQuery.grep( groupFiles, function( elem ) {
     // console.log('grep: ',elem);
@@ -777,7 +792,7 @@ function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
       ( fileTempId !== false && ( !elem.hasOwnProperty('tempId') || elem.tempId != fileTempId ) )
     );
   });
-  cogumelo.formController.fileGroup[ $fileField.attr('data-fm_group_id') ] = newGroupFiles;
+  cogumelo.formController.fileGroup[ groupId ] = newGroupFiles;
 
   fileFieldGroupWidget( idForm, fieldName );
 }
@@ -785,11 +800,27 @@ function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
 function fileFieldGroupWidget( idForm, fieldName ) {
   console.log( 'fileFieldGroupWidget: ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  var groupId = $fileField.attr('data-fm_group_id');
+  var groupFiles = [];
+
+  // console.log( 'groupId antes: ',groupId );
+  // console.log( 'groupFiles antes: ',groupFiles );
+
+  if( groupId ) {
+    groupFiles = cogumelo.formController.fileGroup[ groupId ];
+  }
+  else {
+    groupId = idForm+'_'+fieldName;
+    cogumelo.formController.fileGroup[ groupId ] = groupFiles;
+    $fileField.attr( 'data-fm_group_id', groupId );
+  }
+
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
   var $fileFieldDropZone = $fileFieldWrap.find( '.fileFieldDropZone' );
-  $fileFieldDropZone.css('background-color','yellow');
-
   var $filesWrap = $fileFieldWrap.find('.cgmMForm-fileBoxWrap');
+
+  // TODO: temporal
+  $fileFieldDropZone.css('background-color','yellow');
 
   if( $filesWrap.length == 1 ) {
     $filesWrap = $( $filesWrap[0] );
@@ -798,12 +829,12 @@ function fileFieldGroupWidget( idForm, fieldName ) {
   }
   else {
     $filesWrap = $( '<div>' ).addClass( 'cgmMForm-fileBoxWrap clearfix' )
+      // TODO: temporal
       .css( { 'background-color': 'green' } );
     $fileFieldDropZone.before( $filesWrap );
     // console.log('Creo un filesWrap');
   }
 
-  var groupFiles = cogumelo.formController.fileGroup[ $fileField.attr('data-fm_group_id') ];
   $.each( groupFiles, function(){
     // console.log('Añadimos esto a fileBoxWrap;', this, $filesWrap);
     $filesWrap.append( fileBox( idForm, fieldName, this, deleteFormFileEvent )
