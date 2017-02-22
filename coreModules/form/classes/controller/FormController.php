@@ -2079,7 +2079,7 @@ class FormController implements Serializable {
         ( ( $field['type'] === 'file' ) ? ' '.$this->cssPrefix.'-fileField' : '' ).
         ( $cloneOf ? ' '.$this->cssPrefix.'-cloneOf-'.$cloneOf : '' ).
         ( $groupName ? ' '.$this->cssPrefix.'-group-'.$groupName : '' ).
-        ( isset( $field['htmlEditor'] ) ? ' '.$this->cssPrefix.'-htmlEditor' : '' ).
+        ( !empty( $field['htmlEditor'] ) ? ' '.$this->cssPrefix.'-htmlEditor' : '' ).
         ( isset( $field['class'] ) ? ' '.$field['class'] : '' ).
         '"';
       $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
@@ -2093,7 +2093,7 @@ class FormController implements Serializable {
       $attribs .= isset( $field['readonly'] ) ? ' readonly="readonly"' : '';
       $attribs .= isset( $field['disabled'] ) ? ' disabled="disabled"' : '';
       $attribs .= isset( $field['hidden'] ) ? ' hidden="hidden"' : '';
-      $attribs .= isset( $field['htmlEditor'] ) ? ' contenteditable="true"' : '';
+      $attribs .= !empty( $field['htmlEditor'] ) ? ' contenteditable="true"' : '';
 
       $r = $this->getValidationRules( $fieldName );
       $attribs .= isset( $r['maxlength'] ) ? ' maxlength="'.$r['maxlength'].'"' : '';
