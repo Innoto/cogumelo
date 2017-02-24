@@ -510,14 +510,14 @@ function inputFileFieldChange( evnt ) {
 } // function inputFileFieldChange( evnt )
 
 
-function processFilesInputFileField( files, idForm, fieldName ) {
-  // console.log( 'processFilesInputFileField(): ', files, idForm, fieldName );
-  var valid = checkInputFileField( files, idForm, fieldName );
+function processFilesInputFileField( fieldFilesObj, idForm, fieldName ) {
+  // console.log( 'processFilesInputFileField(): ', fieldFilesObj, idForm, fieldName );
+  var valid = checkInputFileField( fieldFilesObj, idForm, fieldName );
 
   if( valid ) {
     var cgIntFrmId = $( '#' + idForm ).attr( 'data-token_id' );
-    for( var i = 0, file; (file = files[i]); i++ ) {
-      uploadFile( file, idForm, fieldName, cgIntFrmId );
+    for( var i = 0, fieldFileObj; (fieldFileObj = fieldFilesObj[i]); i++ ) {
+      uploadFile( fieldFileObj, idForm, fieldName, cgIntFrmId );
     }
   }
 } // function processFilesInputFileField( evnt )
@@ -545,11 +545,11 @@ function checkInputFileField( files, idForm, fieldName ) {
 } // function checkInputFileField( files, idForm, fieldName )
 
 
-function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
-  console.log( 'uploadFile(): ', file );
+function uploadFile( fieldFileObj, idForm, fieldName, cgIntFrmId ) {
+  // console.log( 'uploadFile(): ', fieldFileObj );
 
   var formData = new FormData();
-  formData.append( 'ajaxFileUpload', file );
+  formData.append( 'ajaxFileUpload', fieldFileObj );
   formData.append( 'idForm', idForm );
   formData.append( 'fieldName', fieldName );
   formData.append( 'cgIntFrmId', cgIntFrmId );
@@ -599,7 +599,7 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
 
       if( $jsonData.result === 'ok' ) {
 
-        fileSendOk( idForm, fieldName, $jsonData.moreInfo );
+        fileSendOk( idForm, fieldName, fieldFileObj, $jsonData.moreInfo );
 
         var successActions = $jsonData.success;
         if( successActions.onFileUpload ) {
@@ -641,11 +641,11 @@ function uploadFile( file, idForm, fieldName, cgIntFrmId ) {
       $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .status' ).html( 'Upload Failed (' + $textStatus + ')' );
     }
   });
-} // function uploadFile( file, idForm, fieldName, cgIntFrmId )
+} // function uploadFile( fieldFileObj, idForm, fieldName, cgIntFrmId )
 
 
 function deleteFormFileEvent( evnt ) {
-  console.log( 'deleteFormFileEvent: ', evnt );
+  // console.log( 'deleteFormFileEvent: ', evnt );
   var $fileField = $( evnt.target );
   var idForm = $fileField.attr( 'data-form_id' );
   var fieldName = $fileField.attr( 'data-fieldname' );
@@ -658,7 +658,7 @@ function deleteFormFileEvent( evnt ) {
 
 
 function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
-  console.log( 'deleteFormFile: ', cgIntFrmId, idForm, fieldName, fileId, fileTempId );
+  // console.log( 'deleteFormFile: ', cgIntFrmId, idForm, fieldName, fileId, fileTempId );
   var formData = new FormData();
   formData.append( 'execute', 'delete' );
   formData.append( 'cgIntFrmId', cgIntFrmId );
@@ -713,14 +713,15 @@ function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
 
 
 
-function fileSendOk( idForm, fieldName, moreInfo ) {
-  console.log( 'fileSendOk: ',idForm,fieldName,moreInfo );
+function fileSendOk( idForm, fieldName, fieldFileObj, moreInfo ) {
+  // console.log( 'fileSendOk: ',idForm,fieldName,fieldFileObj,moreInfo );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
 
   if( $fileField.attr('multiple') ) {
 
     var fileInfo = {
       'id': false,
+      'fieldFileObj': fieldFileObj,
       'tempId': moreInfo.tempId,
       'name': moreInfo.fileName,
       'type': moreInfo.fileType,
@@ -735,7 +736,7 @@ function fileSendOk( idForm, fieldName, moreInfo ) {
 }
 
 function fileDeleteOk( idForm, fieldName, fileId, fileTempId ) {
-  console.log( 'fileDeleteOk: ', idForm, fieldName, fileId, fileTempId );
+  // console.log( 'fileDeleteOk: ', idForm, fieldName, fileId, fileTempId );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
 
   if( $fileField.attr('multiple') ) {
@@ -751,7 +752,7 @@ function fileDeleteOk( idForm, fieldName, fileId, fileTempId ) {
 
 
 function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
-  console.log( 'fileFieldGroupAddElem: ', idForm, fieldName, fileInfo );
+  // console.log( 'fileFieldGroupAddElem: ', idForm, fieldName, fileInfo );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = [];
@@ -780,7 +781,7 @@ function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
 }
 
 function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
-  console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileId, fileTempId );
+  // console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileId, fileTempId );
   var $fileField = $( 'input[name="'+fieldName+'"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = cogumelo.formController.fileGroup[ groupId ];
@@ -798,7 +799,7 @@ function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
 }
 
 function fileFieldGroupWidget( idForm, fieldName ) {
-  console.log( 'fileFieldGroupWidget: ', idForm, fieldName );
+  // console.log( 'fileFieldGroupWidget: ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = [];
@@ -820,7 +821,7 @@ function fileFieldGroupWidget( idForm, fieldName ) {
   var $filesWrap = $fileFieldWrap.find('.cgmMForm-fileBoxWrap');
 
   // TODO: temporal
-  $fileFieldDropZone.css('background-color','yellow');
+  // $fileFieldDropZone.css('background-color','yellow');
 
   if( $filesWrap.length == 1 ) {
     $filesWrap = $( $filesWrap[0] );
@@ -828,9 +829,7 @@ function fileFieldGroupWidget( idForm, fieldName ) {
     // console.log('Xa hai un filesWrap');
   }
   else {
-    $filesWrap = $( '<div>' ).addClass( 'cgmMForm-fileBoxWrap clearfix' )
-      // TODO: temporal
-      .css( { 'background-color': 'green' } );
+    $filesWrap = $( '<div>' ).addClass( 'cgmMForm-fileBoxWrap clearfix' );
     $fileFieldDropZone.after( $filesWrap );
     // console.log('Creo un filesWrap');
   }
@@ -843,10 +842,13 @@ function fileFieldGroupWidget( idForm, fieldName ) {
 }
 
 function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
-  console.log( 'fileBox: ',fileInfo );
+  // console.log( 'fileBox: ',fileInfo );
 
   var $fileBoxElem = $( '<div>' ).addClass( 'cgmMForm-fileBoxElem fileFieldInfo fileUploadOK formFileDelete' )
-    .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm, 'data-file_id': fileInfo.id } );
+    .attr( { 'data-form_id': idForm, 'data-fieldname': fieldName, 'data-file_id': fileInfo.id } );
+  if( fileInfo.hasOwnProperty('tempId') ) {
+    $fileBoxElem.attr( 'data-file_tempId', fileInfo.tempId );
+  }
 
   // Element to send delete order
   $deleteButton = $( '<i>' ).addClass( 'formFileDelete fa fa-trash' )
@@ -866,17 +868,66 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
       '" target="_blank"><i class="fa fa-download"></i></a>' );
   }
 
-  if( fileInfo.id === false || !fileInfo.type || fileInfo.type.indexOf( 'image' ) !== 0 ) {
-    $fileBoxElem.append( '<img class="tnImage" src="'+cogumelo.publicConf.media+
-      '/module/form/img/loaded.jpg" alt="'+fileInfo.name+'" title="'+fileInfo.name+'"></img>' );
+  var tnSrc = cogumelo.publicConf.media+'/module/form/img/loaded.jpg';
+
+  if( fileInfo.id !== false && fileInfo.type && fileInfo.type.indexOf( 'image' ) === 0 ) {
+    tnSrc = '/cgmlImg/'+fileInfo.id+'/wsdpi4/'+fileInfo.id+'.jpg';
   }
-  else {
-    $fileBoxElem.append( '<img class="tnImage" src="/cgmlImg/' + fileInfo.id + '/wsdpi4/' +
-      fileInfo.id + '.jpg" alt="'+fileInfo.name+'" title="'+fileInfo.name+'"></img>' );
-  }
+
+  var tnClass = 'tn-';
+  tnClass += (fileInfo.id) ? fileInfo.id : 'N';
+  tnClass += '-';
+  tnClass += fileInfo.hasOwnProperty('tempId') ? fileInfo.tempId : 'N';
+  tnClass += '-id';
+
+  $fileBoxElem.append( '<img class="tnImage '+tnClass+'" data-tnClass="'+tnClass+'" '+
+    'src="'+tnSrc+'" alt="'+fileInfo.name+'" title="'+fileInfo.name+'"></img>' );
+
+  loadImageTn( idForm, fieldName, fileInfo, $fileBoxElem );
 
   return $fileBoxElem;
 }
+
+
+function loadImageTn( idForm, fieldName, fileInfo, $fileBoxElem ) {
+  console.log( 'loadImageTn(): ', idForm, fieldName, fileInfo, $fileBoxElem );
+
+  var fileObj = fileInfo.hasOwnProperty('fieldFileObj') ? fileInfo.fieldFileObj : false;
+
+  if( fileObj && fileObj.type.match('image.*') && fileObj.size < 2000000 ) {
+    // console.log( 'loadImageTn: Preparo FileReader' );
+    var imageReader = new FileReader();
+    imageReader.onload = (
+      function cargado( fileLoaded ) {
+        // console.log( 'loadImageTn: cargado ', fileLoaded );
+        return(
+          function procesando( evnt ) {
+            $tnImage = false;
+            tnClass = $fileBoxElem.find('.tnImage').attr('data-tnClass');
+            // console.log( 'tnClass: ', tnClass );
+
+            if( tnClass ) {
+              $newFileBoxElem = $('.cgmMForm-fileBoxElem[data-form_id="'+idForm+'"][data-fieldname="'+fieldName+'"]');
+              // console.log( 'tnImage newFileBoxElem: ', $newFileBoxElem,idForm,fieldName );
+              if( $newFileBoxElem.length ) {
+                $tnImage = $newFileBoxElem.find( 'img.tnImage.'+tnClass );
+                // console.log( 'tnImage ANTES: ', $tnImage );
+              }
+            }
+            if( $tnImage ) {
+              // console.log( 'tnImage CAMBIANDO SRC ', $tnImage.attr('src'), evnt.target.result );
+              $tnImage.attr( 'src', evnt.target.result );
+            }
+          }
+        );
+      }
+    )( fileObj );
+
+    // Read in the image file as a data URL.
+    console.log( 'loadImageTn: readAsDataURL ',fileObj );
+    imageReader.readAsDataURL( fileObj );
+  }
+} // function loadImageTn( fileObj, $fileBoxElem )
 
 
 
@@ -896,10 +947,6 @@ function fileFieldToOk( idForm, fieldName, fileName, fileId, fileType ) {
 
   var fileInfo = { 'id': fileId, 'name': fileName, 'type': fileType };
   $fileFieldWrap.append( fileBox( idForm, fieldName, fileInfo, deleteFormFileEvent ) );
-
-  if( fileId === false ) {
-    loadImageTh( idForm, fieldName, fileName, $fileFieldWrap );
-  }
 
   removeFileFieldDropZone( idForm, fieldName );
 }
@@ -1017,43 +1064,6 @@ function fileFieldDropZoneDragOver( evnt ) {
   evnt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 }
 
-
-
-function loadImageTh( idForm, fieldName, fileName, $fileFieldWrap ) {
-  console.log( 'loadImageTh(): ', idForm, fieldName, $fileFieldWrap );
-  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-
-
-  // console.log( 'loadImageTh dropfiles: ',$fileField.data( 'dropfiles' ) );
-
-
-  var fileObj = false;
-  if( $fileField[0].files && $fileField[0].files[0]) {
-    fileObj = $fileField[0].files[0];
-  }
-  else {
-    dropfiles = $fileField.data( 'dropfiles' );
-    fileObj = dropfiles[0];
-  }
-
-  if( fileObj && fileObj.type.match('image.*') && fileObj.size < 5000000 ) {
-    var imageReader = new FileReader();
-    imageReader.onload = (
-      function cargado( fileLoaded ) {
-        return(
-          function procesando( evnt ) {
-            // $fileFieldWrap.find( '.tnImage' ).attr( 'src', evnt.target.result );
-            $fileFieldWrap.find( '.tnImage' ).html( '<img class="tnImage" src="' + evnt.target.result + '" ' +
-            ' alt="' + fileName + ' - Uploaded OK" title="' + fileName + ' - Uploaded OK"></img>' );
-          }
-        );
-      }
-    )( fileObj );
-
-    // Read in the image file as a data URL.
-    imageReader.readAsDataURL( fileObj );
-  }
-} // function loadImageTh( fileObj, $fileFieldWrap )
 
 
 
@@ -1240,7 +1250,7 @@ function switchFormLang( idForm, lang ) {
     .parent().hide();
   $( '[form="'+idForm+'"].js-tr.js-tr-'+lang+', [data-form_id="'+idForm+'"].js-tr.js-tr-'+lang+', '+
     ' .cgmMForm-fileFields-'+idForm+' input.js-tr.js-tr-'+lang )
-    .parent().removeAttr('display'); // .parent().show();
+    .parent().show(); //.removeAttr('display');
   $( 'ul[data-form_id="'+idForm+'"].langSwitch li' ).removeClass( 'langActive' );
   $( 'ul[data-form_id="'+idForm+'"].langSwitch li.langSwitch-'+lang ).addClass( 'langActive' );
 }
