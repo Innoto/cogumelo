@@ -549,10 +549,13 @@ function uploadFile( fieldFileObj, idForm, fieldName, cgIntFrmId ) {
   // console.log( 'uploadFile(): ', fieldFileObj );
 
   var formData = new FormData();
-  formData.append( 'ajaxFileUpload', fieldFileObj );
   formData.append( 'idForm', idForm );
   formData.append( 'fieldName', fieldName );
   formData.append( 'cgIntFrmId', cgIntFrmId );
+
+  formData.append( 'tnProfile', 'wsdpi4' );
+
+  formData.append( 'ajaxFileUpload', fieldFileObj );
 
   $( '.'+fieldName+'-info[data-form_id="'+idForm+'"]' ).show();
 
@@ -727,6 +730,7 @@ function fileSendOk( idForm, fieldName, fieldFileObj, moreInfo ) {
       'type': moreInfo.fileType,
       'size': moreInfo.fileSize,
     };
+    fileInfo.fileSrcTn = moreInfo.hasOwnProperty('fileSrcTn') ? moreInfo.fileSrcTn : false;
 
     fileFieldGroupAddElem( idForm, fieldName, fileInfo );
   }
@@ -870,6 +874,9 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
 
   var tnSrc = cogumelo.publicConf.media+'/module/form/img/loaded.jpg';
 
+  if( fileInfo.fileSrcTn ) {
+    tnSrc = fileInfo.fileSrcTn;
+  }
   if( fileInfo.id !== false && fileInfo.type && fileInfo.type.indexOf( 'image' ) === 0 ) {
     tnSrc = '/cgmlImg/'+fileInfo.id+'/wsdpi4/'+fileInfo.id+'.jpg';
   }
@@ -883,7 +890,7 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
   $fileBoxElem.append( '<img class="tnImage '+tnClass+'" data-tnClass="'+tnClass+'" '+
     'src="'+tnSrc+'" alt="'+fileInfo.name+'" title="'+fileInfo.name+'"></img>' );
 
-  loadImageTn( idForm, fieldName, fileInfo, $fileBoxElem );
+  // loadImageTn( idForm, fieldName, fileInfo, $fileBoxElem );
 
   return $fileBoxElem;
 }

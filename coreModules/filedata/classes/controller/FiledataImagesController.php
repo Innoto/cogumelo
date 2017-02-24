@@ -23,6 +23,7 @@ class FiledataImagesController {
   public function __construct( $fileId = false ) {
     //error_log( 'FiledataImagesController __construct: ' . $fileId );
 
+    filedata::load('controller/FiledataController.php');
     $filedataCtrl = new FiledataController( $fileId );
     $this->fileId = $filedataCtrl->fileId;
     $this->fileInfo = $filedataCtrl->fileInfo;
@@ -193,16 +194,19 @@ class FiledataImagesController {
   }
 
 
-  public function createImageProfile( $fromRoute, $toRoute ) {
+  public function createImageProfile( $fromRoute, $toRoute, $toEncode = false ) {
     // error_log( '---' );error_log( '---' );error_log( '---' );
     // error_log( 'FiledataImagesController: createImageProfile(): ' );
     // error_log( $fromRoute );
     // error_log( 'mime_content_type: '.mime_content_type( $fromRoute ) );
     // error_log( $toRoute );
 
-    $resultOK = true;
+    $result = false;
 
     if( $this->profile && file_exists( $fromRoute ) && !file_exists( $toRoute ) ) {
+
+
+
       $im = new Imagick();
       $mimeType = mime_content_type( $fromRoute );
 
@@ -212,75 +216,7 @@ class FiledataImagesController {
 
       if( strpos( $mimeType, 'image/svg' ) === 0 ) {
         // Imagenes SVG
-        $svg = file_get_contents( $fromRoute );
-
-        // Machaco el tamaño de lienzo
-        if( strpos( $svg, 'viewBox' ) !== false ) {
-          $svg = preg_replace( '/(\s+)(width|height)="(.*?)"/', '${1}${2}="128px"', $svg );
-          //$svg = preg_replace( '/viewBox="(.*?)"/', 'viewBox="0 0 128 128"', $svg );
-        }
-        else {
-          $svg = preg_replace( '/(\s+)(width)="(.*?)"/',  '${1}${2}="32px"', $svg );
-          $svg = preg_replace( '/(\s+)(height)="(.*?)"/', '${1}${2}="32px"'."\n".'${1}viewBox="0 0 32 32"', $svg );
-        }
-        // error_log( 'SVG: '.$svg );
-
-        if( isset( $this->profile['rasterResolution'] ) ) {
-          // Para dar calidad en la carga de formatos raster
-          $im->setResolution( $this->profile['rasterResolution']['x'], $this->profile['rasterResolution']['y'] );
-        }
-        else {
-          // Buscamos que la conversión a px iguale o supere el tamaño solicitado
-          $imSvg = new Imagick();
-          $density = 120;
-          $imSvg->setResolution( $density, $density );
-          $imSvg->readImageBlob( $svg );
-          // $imSvg->trimImage( 0 ); // Recorta deixando so a imaxe
-          $imSvg->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
-          $imSvgSize = $imSvg->getImageGeometry();
-          $x = $imSvgSize['width'];
-          $y = $imSvgSize['height'];
-          $tx = $this->profile['width'];
-          $ty = $this->profile['height'];
-          // error_log( "SVG iniciales $x $y $tx $ty $density ---" );
-          if( $this->profile['cut'] ) {
-            // Escala para axustar un eixo e corta no outro
-            if( $ty < intval( $tx*$y/$x ) ) {
-              $ty = intval( $tx*$y/$x );
-              $density = 1 + intval( $density * $ty / $y );
-            }
-            else {
-              $tx = intval( $ty*$x/$y );
-              $density = 1 + intval( $density * $tx / $x );
-            }
-          }
-          else { // Escala para axustar un eixo e queda corto o outro
-            if( $ty > intval( $tx*$y/$x ) ) {
-              $ty = intval( $tx*$y/$x );
-              $density = 1 + intval( $density * $ty / $y );
-            }
-            else {
-              $tx = intval( $ty*$x/$y );
-              $density = 1 + intval( $density * $tx / $x );
-            }
-          }
-          // error_log( "SVG finales $x $y $tx $ty $density ---" );
-          $imSvg->clear();
-          $imSvg->destroy();
-
-          $im->setResolution( $density, $density );
-        }
-
-
-        if( isset( $this->profile['rasterColor'] ) ) {
-          // Para dar color en la carga de formatos raster
-          $svg = preg_replace( '/(style="fill:)(#[0-9a-f]+)([;"])/', '${1}'.$this->profile['rasterColor'].'${3}', $svg );
-        }
-
-        //error_log( 'SVG: '.$svg );
-        $im->readImageBlob( $svg );
-        // $im->trimImage( 0 ); // Recorta deixando so a imaxe
-        $im->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
+        $this->loadPreprocessedSvg( $im, $fromRoute );
       }
       else {
         // Imagenes no SVG
@@ -300,6 +236,8 @@ class FiledataImagesController {
       }
       // error_log( "Datos iniciales $x $y $tx $ty ---" );
 
+
+      // RESIZE
       if( $tx !== 0 || $ty !== 0 ) {
         // Cambios en las medidas
         $escalar = false;
@@ -374,8 +312,7 @@ class FiledataImagesController {
       }
 
 
-
-      // PADDING !!!
+      // PADDING
       if( isset( $this->profile['padding'] ) ) {
         $marco = new Imagick();
         //$marco->newImage( $this->profile['width'], $this->profile['height'], new ImagickPixel( $this->profile['backgroundColor'] ) );
@@ -387,8 +324,7 @@ class FiledataImagesController {
       }
 
 
-
-      // CHAPA !!!
+      // CHAPA
       if( isset( $this->profile['backgroundImg'] ) ) {
         $chapa = new Imagick( $this->profile['backgroundImg'] );
         $im->setImageVirtualPixelMethod( Imagick::VIRTUALPIXELMETHOD_TRANSPARENT );
@@ -398,8 +334,7 @@ class FiledataImagesController {
       }
 
 
-
-      // backgroundColor !!!
+      // backgroundColor
       if( isset( $this->profile['backgroundColor'] ) ) {
         $fonfo = new Imagick();
         $imSize = $im->getImageGeometry();
@@ -416,63 +351,164 @@ class FiledataImagesController {
         $im->setImageCompressionQuality( $this->profile['saveQuality'] );
       }
 
+      if( $this->profile['saveFormat'] ) {
+        $im->setImageFormat( $this->profile['saveFormat'] );
+      }
+
 
       // DEBUG info:
-      $dbSize = $im->getImageGeometry();
+      // $dbSize = $im->getImageGeometry();
       // error_log( 'Datos finales '.$dbSize['width'].' '.$dbSize['height'].' '.$this->profile['width'].' '.$this->profile['height'].' ---' );
 
 
-      $toRouteInfo = pathinfo( $toRoute );
-      // [dirname]/[basename]
-      // [dirname]/[filename].[extension]
 
-      //error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
-      if( !file_exists( $toRouteInfo['dirname'] ) ) {
-        // error_log( 'mkdir '.$toRouteInfo['dirname'] );
-        $maskPrev = umask( 0 );
-        mkdir ( $toRouteInfo['dirname'], 0775, true );
-        umask( $maskPrev );
-      }
 
-      if( is_writable( $toRouteInfo['dirname'] ) ) {
 
-        if( $this->profile['saveFormat'] ) {
-          $saveFormatExt = false;
-          switch( $this->profile['saveFormat'] ) {
-            case 'JPEG':
-              $saveFormatExt = 'jpg';
-              break;
-            case 'PNG':
-              $saveFormatExt = 'png';
-              break;
-          }
-          if( $saveFormatExt ) {
-            $im->setImageFormat( $this->profile['saveFormat'] );
-            $toRoute = $toRouteInfo['dirname'] .'/'. $toRouteInfo['filename'] .'.'. $saveFormatExt;
-          }
+
+
+
+
+
+
+
+      if( !$toEncode ) {
+        $toRouteInfo = pathinfo( $toRoute );
+        // [dirname]/[basename]
+        // [dirname]/[filename].[extension]
+
+        //error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
+        if( !file_exists( $toRouteInfo['dirname'] ) ) {
+          // error_log( 'mkdir '.$toRouteInfo['dirname'] );
+          $maskPrev = umask( 0 );
+          mkdir ( $toRouteInfo['dirname'], 0775, true );
+          umask( $maskPrev );
         }
 
-        if( $this->profile['saveName'] ) {
-          $toRoute = $toRouteInfo['dirname'] .'/'. $this->profile['saveName'];
+        if( is_writable( $toRouteInfo['dirname'] ) ) {
+          if( $this->profile['saveFormat'] ) {
+            $saveFormatExt = false;
+            switch( $this->profile['saveFormat'] ) {
+              case 'JPEG':
+                $saveFormatExt = 'jpg';
+                break;
+              case 'PNG':
+                $saveFormatExt = 'png';
+                break;
+            }
+            if( $saveFormatExt ) {
+              $toRoute = $toRouteInfo['dirname'] .'/'. $toRouteInfo['filename'] .'.'. $saveFormatExt;
+            }
+          }
+
+          if( $this->profile['saveName'] ) {
+            $toRoute = $toRouteInfo['dirname'] .'/'. $this->profile['saveName'];
+          }
+          //$im->setImageCompressionQuality(90);
+          //error_log( 'FiledataImagesController: createImageProfile: writeImage '.$toRoute );
+          $im->writeImage( $toRoute );
         }
-
-        //$im->setImageCompressionQuality(90);
-
-
-        //error_log( 'FiledataImagesController: createImageProfile: writeImage '.$toRoute );
-        $im->writeImage( $toRoute );
+        else {
+          $toRoute = false;
+          cogumelo::error( "Imposible guardar la imagen en $toRoute" );
+        }
+        $result = $toRoute;
       }
       else {
-        $toRoute = false;
-        cogumelo::error( "Imposible guardar la imagen en $toRoute" );
+        // base64 SRC Encode
+        // $result = 'SRC Encode';
+        $im->setImageFormat('JPEG');
+        if( !isset( $this->profile['saveQuality'] ) || $this->profile['saveQuality'] > 30 ) {
+          $im->setImageCompressionQuality(30);
+        }
+
+        $result = 'data:image/jpg;base64,'.base64_encode( $im->getImageBlob() );
+        error_log( 'jpg base64 SRC Encode: '.$result );
       }
+
+
       $im->clear();
       $im->destroy();
     }
 
     // error_log( '---' );error_log( '---' );error_log( '---' );
-    return $toRoute;
+    return $result;
   }
+
+  private function loadPreprocessedSvg( $im, $fromRoute ) {
+    // Imagenes SVG
+    $svg = file_get_contents( $fromRoute );
+
+    // Machaco el tamaño de lienzo
+    if( strpos( $svg, 'viewBox' ) !== false ) {
+      $svg = preg_replace( '/(\s+)(width|height)="(.*?)"/', '${1}${2}="128px"', $svg );
+      //$svg = preg_replace( '/viewBox="(.*?)"/', 'viewBox="0 0 128 128"', $svg );
+    }
+    else {
+      $svg = preg_replace( '/(\s+)(width)="(.*?)"/',  '${1}${2}="32px"', $svg );
+      $svg = preg_replace( '/(\s+)(height)="(.*?)"/', '${1}${2}="32px"'."\n".'${1}viewBox="0 0 32 32"', $svg );
+    }
+    // error_log( 'SVG: '.$svg );
+
+    if( isset( $this->profile['rasterResolution'] ) ) {
+      // Para dar calidad en la carga de formatos raster
+      $im->setResolution( $this->profile['rasterResolution']['x'], $this->profile['rasterResolution']['y'] );
+    }
+    else {
+      // Buscamos que la conversión a px iguale o supere el tamaño solicitado
+      $imSvg = new Imagick();
+      $density = 120;
+      $imSvg->setResolution( $density, $density );
+      $imSvg->readImageBlob( $svg );
+      // $imSvg->trimImage( 0 ); // Recorta deixando so a imaxe
+      $imSvg->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
+      $imSvgSize = $imSvg->getImageGeometry();
+      $x = $imSvgSize['width'];
+      $y = $imSvgSize['height'];
+      $tx = $this->profile['width'];
+      $ty = $this->profile['height'];
+      // error_log( "SVG iniciales $x $y $tx $ty $density ---" );
+      if( $this->profile['cut'] ) {
+        // Escala para axustar un eixo e corta no outro
+        if( $ty < intval( $tx*$y/$x ) ) {
+          $ty = intval( $tx*$y/$x );
+          $density = 1 + intval( $density * $ty / $y );
+        }
+        else {
+          $tx = intval( $ty*$x/$y );
+          $density = 1 + intval( $density * $tx / $x );
+        }
+      }
+      else { // Escala para axustar un eixo e queda corto o outro
+        if( $ty > intval( $tx*$y/$x ) ) {
+          $ty = intval( $tx*$y/$x );
+          $density = 1 + intval( $density * $ty / $y );
+        }
+        else {
+          $tx = intval( $ty*$x/$y );
+          $density = 1 + intval( $density * $tx / $x );
+        }
+      }
+      // error_log( "SVG finales $x $y $tx $ty $density ---" );
+      $imSvg->clear();
+      $imSvg->destroy();
+
+      $im->setResolution( $density, $density );
+    }
+
+
+    if( isset( $this->profile['rasterColor'] ) ) {
+      // Para dar color en la carga de formatos raster
+      $svg = preg_replace( '/(style="fill:)(#[0-9a-f]+)([;"])/', '${1}'.$this->profile['rasterColor'].'${3}', $svg );
+    }
+
+    //error_log( 'SVG: '.$svg );
+    $im->readImageBlob( $svg );
+    // $im->trimImage( 0 ); // Recorta deixando so a imaxe
+    $im->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
+  }
+
+
+
 
 
   public function sendImage( $imgInfo ) {

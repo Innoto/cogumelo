@@ -117,9 +117,12 @@ class FormConnector extends View {
 
       $cgIntFrmId = $_POST['cgIntFrmId'];
       $fieldName  = $_POST['fieldName'];
+      $fieldName  = $_POST['fieldName'];
+
+      $tnProfile  = isset( $_POST['tnProfile'] ) ? $_POST['tnProfile'] : false;
+
 
       $fileTmpLoc   = $_FILES['ajaxFileUpload']['tmp_name']; // File in the PHP tmp folder
-
       $fileName     = $_FILES['ajaxFileUpload']['name'];     // The file name
       $fileType     = $_FILES['ajaxFileUpload']['type'];     // The type of file it is
       $fileSize     = $_FILES['ajaxFileUpload']['size'];     // File size in bytes
@@ -321,6 +324,16 @@ class FormConnector extends View {
       }
       else {
         $moreInfo['tempId'] = false;
+      }
+
+      if( $tnProfile && strpos( $moreInfo['fileType'], 'image' ) === 0 ) {
+        error_log( 'image='.strpos( $moreInfo['fileType'], 'image' ) );
+        error_log( 'VAMOS A CREAR fileSrcTn' );
+        filedata::load('controller/FiledataImagesController.php');
+        $filedataImagesCtrl = new FiledataImagesController();
+        $filedataImagesCtrl->setProfile( $tnProfile );
+        $moreInfo['fileSrcTn'] = $filedataImagesCtrl->createImageProfile(
+          $newFileFieldValue['temp']['absLocation'], false, true );
       }
     }
 
