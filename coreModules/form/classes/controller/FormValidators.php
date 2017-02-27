@@ -106,6 +106,11 @@ class FormValidators extends FormValidatorsExtender {
     return( preg_match( $regex, $value ) === 1 );
   }
 
+  public function val_urlYoutube( $value ) {
+    $regex = '/^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/';
+    return( ( preg_match( $regex, $value ) === 1 ) || empty($value) );
+  }
+
   public function val_date( $value ) {
     /*
     */

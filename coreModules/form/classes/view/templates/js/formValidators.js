@@ -298,7 +298,16 @@ $.validator.addMethod(
 );
 
 
+$.validator.addMethod(
+  "urlYoutube",
+  function( value, element ) {
 
+    var valueUrlYoutube = /^(?:https?:\/\/)?(?:www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/.exec(value);
+
+    return ( value==='' && this.optional( element ) ) || valueUrlYoutube;
+  },
+  $.validator.format("The url is not a Youtube url.")
+);
 
 
 
@@ -403,25 +412,3 @@ $.validator.addMethod(
   },
   $.validator.format("Pocos ficheros. (Límite: {0} ficheros).")
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
