@@ -723,7 +723,17 @@ class FormController implements Serializable {
     return $newValue;
   }
 
-
+  /**
+    Elimina un parametro de un campo
+    @param string $fieldName Nombre del campo
+    @param string $paramName Nombre del parametro
+   */
+  public function removeFieldParam( $fieldName, $paramName ) {
+    if( isset( $this->fields[ $fieldName ][ $paramName ] ) ) {
+      unset( $this->fields[ $fieldName ][ $paramName ] );
+      $this->updateFieldToSession( $fieldName );
+    }
+  }
 
 
 
