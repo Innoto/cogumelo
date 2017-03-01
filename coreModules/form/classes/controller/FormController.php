@@ -490,7 +490,7 @@ class FormController implements Serializable {
                       $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
                       break;
                   }
-                  error_log( 'FE fileData temp name: '.print_r( $fileFieldValue['multiple'][ $fileKey ], true ) );
+                  error_log( 'FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
                 }
               }
               break;
@@ -658,7 +658,7 @@ class FormController implements Serializable {
       if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
         // Only one file
         error_log( 'setFieldValue Basic: only one file' );
-        error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
+        // error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
         if( !isset( $fieldValue[ 'status' ] ) ) {
           $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
 
@@ -681,7 +681,7 @@ class FormController implements Serializable {
       else {
         // Multiple: add files
         error_log( 'setFieldValue Multiple: add files' );
-        error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
+        // error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
 
 
 
@@ -713,9 +713,10 @@ class FormController implements Serializable {
         }
         $fieldValue = $groupValue;
       }
-      error_log( 'FILE fieldValue: '. print_r( $fieldValue, true ) );
 
-
+      error_log( '----------------------------------------------------------' );
+      error_log( 'FILE fieldValue FINAL: '. json_encode( $fieldValue ) );
+      error_log( '----------------------------------------------------------' );
       $newValue = $fieldValue;
     }
 
@@ -1412,7 +1413,7 @@ class FormController implements Serializable {
    */
   public function processFileFields( $fieldNames = false ) {
     error_log( '---------------' );
-    error_log( 'FormController: processFileFields(fieldNames): ' . print_r( $fieldNames, true ) );
+    error_log( 'FormController: processFileFields(fieldNames): ' . json_encode( $fieldNames ) );
     error_log( '---------------' );
 
     $result = true;
@@ -1431,7 +1432,7 @@ class FormController implements Serializable {
         if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
           // Basic: only one file
           error_log( 'processFileFields Basic: only one file' );
-          error_log( 'FILE fileFieldValue inicial: '. print_r( $fileFieldValue, true ) );
+          // error_log( 'FILE fileFieldValue inicial: '. print_r( $fileFieldValue, true ) );
 
           if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false ) {
             switch( $fileFieldValue['status'] ) {
@@ -1442,7 +1443,7 @@ class FormController implements Serializable {
                 $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 /*
                   $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
                   $destDir = $this->getFieldParam( $fieldName, 'destDir' );
@@ -1486,7 +1487,7 @@ class FormController implements Serializable {
                 $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 /*
                   $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
                   $destDir = $this->getFieldParam( $fieldName, 'destDir' );
@@ -1530,14 +1531,14 @@ class FormController implements Serializable {
                 $fileFieldValue['values'] = $fileFieldValue['prev'];
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 break;
               case 'EXIST':
                 error_log( 'processFileFields OK: EXIST - NADA QUE HACER' );
                 $fileFieldValue['values'] = $fileFieldValue['prev'];
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 break;
             }
           } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false )
@@ -1545,7 +1546,7 @@ class FormController implements Serializable {
         else {
           // Multiple: add files
           error_log( 'processFileFields Multiple: add files' );
-          error_log( 'FILE fileFieldValue inicial: '. print_r( $fileFieldValue, true ) );
+          error_log( 'FILE fileFieldValue inicial: '. json_encode( $fileFieldValue ) );
 
           if( !empty( $fileFieldValue['multiple'] ) ) {
             foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
@@ -1557,24 +1558,24 @@ class FormController implements Serializable {
                     $fileData['status'] = 'LOADED';
                     $fileData['values'] = $fileData['validate'];
                     $fileData['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
-                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileData, true ) );
+                    error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                   case 'REPLACE':
                     error_log( 'processFileFields: REPLACE' );
                     $fileData['values'] = $fileData['validate'];
                     $fileData['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
-                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileData, true ) );
+                    error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                   case 'DELETE':
                     error_log( 'processFileFields: DELETE' );
                     // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
                     $fileData['values'] = $fileData['prev'];
-                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileData, true ) );
+                    error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                   case 'EXIST':
                     error_log( 'processFileFields OK: EXIST - NADA QUE HACER' );
                     $fileData['values'] = $fileData['prev'];
-                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileData, true ) );
+                    error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                 }
               } // if( isset( $fileData['status'] ) && $fileData['status'] !== false )
@@ -2292,8 +2293,9 @@ class FormController implements Serializable {
       if( $this->getFieldType( $fieldName ) === 'file' ) {
         $fileInfo = $this->getFieldValue( $fieldName );
         if( $fileInfo[ 'status' ] === 'EXIST' ) {
-          $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", '.
-            '"'.$fileInfo[ 'prev' ][ 'name' ].'", "'.$fileInfo[ 'prev' ][ 'id' ].'", "'.$fileInfo[ 'prev' ][ 'type' ].'" );'."\n";
+          $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", { '.
+            '"id": "'.$fileInfo['prev']['id'].'", "name": "'.$fileInfo['prev']['name'].'", '.
+            '"type": "'.$fileInfo['prev']['type'].'" } );'."\n";
         }
       }
     }

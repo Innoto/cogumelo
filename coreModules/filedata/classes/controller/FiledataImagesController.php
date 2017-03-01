@@ -203,18 +203,22 @@ class FiledataImagesController {
 
     $result = false;
 
-    if( $this->profile && file_exists( $fromRoute ) && !file_exists( $toRoute ) ) {
-
-
-
-      $im = new Imagick();
+    $mimeTypeOrg = false;
+    if( file_exists( $fromRoute ) ) {
       $mimeType = mime_content_type( $fromRoute );
+      if( strpos( $mimeType, 'image' ) === 0 ) {
+        $mimeTypeOrg = $mimeType;
+      }
+    }
+
+    if( $this->profile && $mimeTypeOrg && ( !file_exists( $toRoute ) || $toEncode ) ) {
+      $im = new Imagick();
 
       //$im->setBackgroundColor( new ImagickPixel( $this->profile['backgroundColor'] ) );
       $im->setBackgroundColor( new ImagickPixel( 'transparent' ) );
 
 
-      if( strpos( $mimeType, 'image/svg' ) === 0 ) {
+      if( strpos( $mimeTypeOrg, 'image/svg' ) === 0 ) {
         // Imagenes SVG
         $this->loadPreprocessedSvg( $im, $fromRoute );
       }
@@ -346,7 +350,6 @@ class FiledataImagesController {
       }
 
 
-
       if( $this->profile['saveQuality'] ) {
         $im->setImageCompressionQuality( $this->profile['saveQuality'] );
       }
@@ -358,20 +361,13 @@ class FiledataImagesController {
 
       // DEBUG info:
       // $dbSize = $im->getImageGeometry();
-      // error_log( 'Datos finales '.$dbSize['width'].' '.$dbSize['height'].' '.$this->profile['width'].' '.$this->profile['height'].' ---' );
-
-
-
-
-
-
-
-
-
-
+      // error_log( 'Datos finales '.$dbSize['width'].' '.$dbSize['height'].' '.
+      //   $this->profile['width'].' '.$this->profile['height'].' ---' );
 
 
       if( !$toEncode ) {
+        // Save and get URL
+
         $toRouteInfo = pathinfo( $toRoute );
         // [dirname]/[basename]
         // [dirname]/[filename].[extension]
@@ -414,15 +410,15 @@ class FiledataImagesController {
         $result = $toRoute;
       }
       else {
-        // base64 SRC Encode
-        // $result = 'SRC Encode';
+        // base64 JPEG SRC Encode
         $im->setImageFormat('JPEG');
-        if( !isset( $this->profile['saveQuality'] ) || $this->profile['saveQuality'] > 30 ) {
-          $im->setImageCompressionQuality(30);
+        $maxQuality = 75;
+        if( !isset( $this->profile['saveQuality'] ) || $this->profile['saveQuality'] > $maxQuality ) {
+          $im->setImageCompressionQuality( $maxQuality );
         }
 
         $result = 'data:image/jpg;base64,'.base64_encode( $im->getImageBlob() );
-        error_log( 'jpg base64 SRC Encode: '.$result );
+        error_log( 'jpg base64 SRC Encode strlen: '.strlen($result) );
       }
 
 
@@ -507,6 +503,9 @@ class FiledataImagesController {
     $im->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
   }
 
+  private function getSrvEncode( $im, $fromRoute ) {
+
+  }
 
 
 

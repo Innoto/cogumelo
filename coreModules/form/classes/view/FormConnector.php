@@ -73,7 +73,6 @@ class FormConnector extends View {
 
 
 
-
   // addUrlPatterns( '#^cgml-form-file-upload$#', 'view:FormConnector::fileUpload' );
   public function fileUpload() {
     if( isset( $_POST['execute'] ) && $_POST['execute'] === 'delete' ) {
@@ -83,11 +82,6 @@ class FormConnector extends View {
       $this->uploadFormFile();
     }
   }
-
-
-
-
-
 
 
 
@@ -174,12 +168,7 @@ class FormConnector extends View {
 
           // Guardamos los datos previos del campo
           $fileFieldValuePrev = $form->getFieldValue( $fieldName );
-
-
-
-
           error_log( 'LEEMOS File Field: '.print_r($fileFieldValuePrev,true) );
-
 
           // Creamos un objeto temporal para validarlo
           $tmpFileFieldValue = array(
@@ -193,18 +182,10 @@ class FormConnector extends View {
             )
           );
 
-
-
-
-
           // Almacenamos los datos temporales en el formObj para validarlos
           $form->setFieldValue( $fieldName, $tmpFileFieldValue );
           // Validar input del fichero
           $form->validateField( $fieldName );
-
-
-
-
 
           if( !$form->existErrors() ) {
             // El fichero ha superado las validaciones. Ajustamos sus valores finales y los almacenamos.
@@ -273,13 +254,7 @@ class FormConnector extends View {
 
               if( !$form->existErrors() ) {
                 error_log( 'FU: OK con el ficheiro subido... Se persiste...' );
-
-
-
-
-                error_log( 'GUARDAMOS File Field: '.print_r($fileFieldValuePrev,true) );
-
-
+                // error_log( 'GUARDAMOS File Field: '.print_r($fileFieldValuePrev,true) );
                 $form->setFieldValue( $fieldName, $fileFieldValuePrev );
                 // Persistimos formObj para cuando se envíe el formulario completo
                 $form->saveToSession();
@@ -288,8 +263,6 @@ class FormConnector extends View {
                 error_log( 'FU: Como ha fallado, eliminamos: ' . $tmpCgmlFileLocation );
                 unlink( $tmpCgmlFileLocation );
               }
-
-
             } // else - if( !$tmpCgmlFileLocation )
           } // if( !$form->existErrors() )
           else {
@@ -326,9 +299,10 @@ class FormConnector extends View {
         $moreInfo['tempId'] = false;
       }
 
-      if( $tnProfile && strpos( $moreInfo['fileType'], 'image' ) === 0 ) {
+      if( !empty( $tnProfile ) /*&& strpos( $moreInfo['fileType'], 'image' ) === 0*/ ) {
         error_log( 'image='.strpos( $moreInfo['fileType'], 'image' ) );
         error_log( 'VAMOS A CREAR fileSrcTn' );
+
         filedata::load('controller/FiledataImagesController.php');
         $filedataImagesCtrl = new FiledataImagesController();
         $filedataImagesCtrl->setProfile( $tnProfile );
@@ -339,14 +313,7 @@ class FormConnector extends View {
 
     // Notificamos el resultado al UI
     $form->sendJsonResponse( $moreInfo );
-
   } // function uploadFormFile() {
-
-
-
-
-
-
 
 
 
@@ -539,8 +506,9 @@ class FormConnector extends View {
 
 
 
-
-
+  /**
+   * Agrupaciones de campos
+   */
 
   private function getGroupElement() {
     // error_log( '---------------------------------' );
@@ -655,8 +623,9 @@ class FormConnector extends View {
 
 
 
-
-
+  /**
+   * Configuracion propia de CKEditor
+   */
   public function customCkeditorConfig() {
     $fileInfo = ModuleController::getRealFilePath( 'classes/view/templates/js/ckeditor-config.js', 'form' );
 

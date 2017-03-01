@@ -510,14 +510,14 @@ function inputFileFieldChange( evnt ) {
 } // function inputFileFieldChange( evnt )
 
 
-function processFilesInputFileField( fieldFilesObj, idForm, fieldName ) {
-  // console.log( 'processFilesInputFileField(): ', fieldFilesObj, idForm, fieldName );
-  var valid = checkInputFileField( fieldFilesObj, idForm, fieldName );
+function processFilesInputFileField( formFileObjs, idForm, fieldName ) {
+  // console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
+  var valid = checkInputFileField( formFileObjs, idForm, fieldName );
 
   if( valid ) {
     var cgIntFrmId = $( '#' + idForm ).attr( 'data-token_id' );
-    for( var i = 0, fieldFileObj; (fieldFileObj = fieldFilesObj[i]); i++ ) {
-      uploadFile( fieldFileObj, idForm, fieldName, cgIntFrmId );
+    for( var i = 0, formFileObj; (formFileObj = formFileObjs[i]); i++ ) {
+      uploadFile( formFileObj, idForm, fieldName, cgIntFrmId );
     }
   }
 } // function processFilesInputFileField( evnt )
@@ -545,17 +545,23 @@ function checkInputFileField( files, idForm, fieldName ) {
 } // function checkInputFileField( files, idForm, fieldName )
 
 
-function uploadFile( fieldFileObj, idForm, fieldName, cgIntFrmId ) {
-  // console.log( 'uploadFile(): ', fieldFileObj );
+function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
+  console.log( 'uploadFile(): ', formFileObj );
 
   var formData = new FormData();
   formData.append( 'idForm', idForm );
   formData.append( 'fieldName', fieldName );
   formData.append( 'cgIntFrmId', cgIntFrmId );
 
-  formData.append( 'tnProfile', 'wsdpi4' );
+  var tnProfile = $( 'input[name="'+fieldName+'"][form="'+idForm+'"]' ).attr('data-tnProfile');
+  if( typeof tnProfile === 'undefined' ) {
+    formData.append( 'tnProfile', 'modFormTn' );
+  }
+  if( tnProfile ) {
+    formData.append( 'tnProfile', tnProfile );
+  }
 
-  formData.append( 'ajaxFileUpload', fieldFileObj );
+  formData.append( 'ajaxFileUpload', formFileObj );
 
   $( '.'+fieldName+'-info[data-form_id="'+idForm+'"]' ).show();
 
@@ -602,7 +608,7 @@ function uploadFile( fieldFileObj, idForm, fieldName, cgIntFrmId ) {
 
       if( $jsonData.result === 'ok' ) {
 
-        fileSendOk( idForm, fieldName, fieldFileObj, $jsonData.moreInfo );
+        fileSendOk( idForm, fieldName, formFileObj, $jsonData.moreInfo );
 
         var successActions = $jsonData.success;
         if( successActions.onFileUpload ) {
@@ -640,11 +646,11 @@ function uploadFile( fieldFileObj, idForm, fieldName, cgIntFrmId ) {
       }
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
-      console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
+      // console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
       $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .status' ).html( 'Upload Failed (' + $textStatus + ')' );
     }
   });
-} // function uploadFile( fieldFileObj, idForm, fieldName, cgIntFrmId )
+} // function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId )
 
 
 function deleteFormFileEvent( evnt ) {
@@ -695,7 +701,7 @@ function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
       console.log( 'deleteFormFile.done...ERROR', response );
       for(var i in response.jvErrors) {
         var errObj = response.jvErrors[i];
-        console.log( errObj );
+        // console.log( errObj );
 
         if( errObj.fieldName !== false ) {
 
@@ -703,7 +709,7 @@ function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
 
         }
         else {
-          console.log( errObj.JVshowErrors );
+          // console.log( errObj.JVshowErrors );
           showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
         }
 
@@ -713,50 +719,8 @@ function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
 } // function deleteFormFile( idForm, fieldName, cgIntFrmId )
 
 
-
-
-
-function fileSendOk( idForm, fieldName, fieldFileObj, moreInfo ) {
-  // console.log( 'fileSendOk: ',idForm,fieldName,fieldFileObj,moreInfo );
-  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-
-  if( $fileField.attr('multiple') ) {
-
-    var fileInfo = {
-      'id': false,
-      'fieldFileObj': fieldFileObj,
-      'tempId': moreInfo.tempId,
-      'name': moreInfo.fileName,
-      'type': moreInfo.fileType,
-      'size': moreInfo.fileSize,
-    };
-    fileInfo.fileSrcTn = moreInfo.hasOwnProperty('fileSrcTn') ? moreInfo.fileSrcTn : false;
-
-    fileFieldGroupAddElem( idForm, fieldName, fileInfo );
-  }
-  else {
-    fileFieldToOk( idForm, fieldName, moreInfo.fileName, false, false );
-  }
-}
-
-function fileDeleteOk( idForm, fieldName, fileId, fileTempId ) {
-  // console.log( 'fileDeleteOk: ', idForm, fieldName, fileId, fileTempId );
-  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-
-  if( $fileField.attr('multiple') ) {
-    fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId );
-  }
-  else {
-    fileFieldToInput( idForm, fieldName );
-  }
-}
-
-
-
-
-
 function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
-  // console.log( 'fileFieldGroupAddElem: ', idForm, fieldName, fileInfo );
+  console.log( 'fileFieldGroupAddElem: ', idForm, fieldName, fileInfo );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = [];
@@ -785,7 +749,7 @@ function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
 }
 
 function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
-  // console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileId, fileTempId );
+  console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileId, fileTempId );
   var $fileField = $( 'input[name="'+fieldName+'"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = cogumelo.formController.fileGroup[ groupId ];
@@ -802,8 +766,54 @@ function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
   fileFieldGroupWidget( idForm, fieldName );
 }
 
+
+
+
+
+function fileSendOk( idForm, fieldName, formFileObj, moreInfo ) {
+  // console.log( 'fileSendOk: ',idForm,fieldName,formFileObj,moreInfo );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+
+  var fileInfo = {
+    'id': false,
+    'formFileObj': formFileObj,
+    'tempId': moreInfo.tempId,
+    'name': moreInfo.fileName,
+    'type': moreInfo.fileType,
+    'size': moreInfo.fileSize,
+  };
+
+  var tnProfile = $fileField.attr('data-tnProfile');
+  if( tnProfile ) {
+    fileInfo.tnProfile = tnProfile;
+  }
+
+  fileInfo.fileSrcTn = moreInfo.hasOwnProperty('fileSrcTn') ? moreInfo.fileSrcTn : false;
+
+  if( $fileField.attr('multiple') ) {
+    fileFieldGroupAddElem( idForm, fieldName, fileInfo );
+  }
+  else {
+    fileFieldToOk( idForm, fieldName, fileInfo );
+  }
+}
+
+function fileDeleteOk( idForm, fieldName, fileId, fileTempId ) {
+  // console.log( 'fileDeleteOk: ', idForm, fieldName, fileId, fileTempId );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+
+  if( $fileField.attr('multiple') ) {
+    fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId );
+  }
+  else {
+    fileFieldToInput( idForm, fieldName );
+  }
+}
+
+
+
 function fileFieldGroupWidget( idForm, fieldName ) {
-  // console.log( 'fileFieldGroupWidget: ', idForm, fieldName );
+  console.log( 'fileFieldGroupWidget: ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = [];
@@ -845,8 +855,33 @@ function fileFieldGroupWidget( idForm, fieldName ) {
   } );
 }
 
+
+function fileFieldToOk( idForm, fieldName, fileInfo ) {
+  console.log( 'fileFieldToOk: ', idForm, fieldName, fileInfo );
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+
+  $fileField.attr( 'readonly', 'readonly' ).prop( 'disabled', true ).hide();
+
+  //$( '#'+fieldName+'-error[data-form_id="'+idForm+'"]' ).hide();
+  $( '#' + $fileField.attr('id') + '-error' ).remove();
+
+  // Show Title file field
+  // $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName ).show();
+  $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName ).removeAttr('display');
+
+  if( !fileInfo.hasOwnProperty('tnProfile') && $fileField.attr('data-tnProfile') ) {
+    fileInfo.tnProfile = $fileField.attr('data-tnProfile');
+  }
+
+  $fileFieldWrap.append( fileBox( idForm, fieldName, fileInfo, deleteFormFileEvent ) );
+
+  removeFileFieldDropZone( idForm, fieldName );
+}
+
+
 function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
-  // console.log( 'fileBox: ',fileInfo );
+  console.log( 'fileBox: ', idForm, fieldName, fileInfo );
 
   var $fileBoxElem = $( '<div>' ).addClass( 'cgmMForm-fileBoxElem fileFieldInfo fileUploadOK formFileDelete' )
     .attr( { 'data-form_id': idForm, 'data-fieldname': fieldName, 'data-file_id': fileInfo.id } );
@@ -878,7 +913,20 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
     tnSrc = fileInfo.fileSrcTn;
   }
   if( fileInfo.id !== false && fileInfo.type && fileInfo.type.indexOf( 'image' ) === 0 ) {
-    tnSrc = '/cgmlImg/'+fileInfo.id+'/wsdpi4/'+fileInfo.id+'.jpg';
+    var tnProfile = 'modFormTn';
+    if( fileInfo.hasOwnProperty('tnProfile') ) {
+      tnProfile = fileInfo.tnProfile;
+    }
+    else {
+      var inputTnProfile = $( 'input[name="'+fieldName+'"][form="'+idForm+'"]' ).attr('data-tnProfile');
+      if( typeof inputTnProfile !== 'undefined' ) {
+        tnProfile = inputTnProfile;
+      }
+    }
+
+    if( tnProfile ) {
+      tnSrc = '/cgmlImg/'+fileInfo.id+'/'+tnProfile+'/'+fileInfo.id+'.jpg';
+    }
   }
 
   var tnClass = 'tn-';
@@ -896,67 +944,47 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
 }
 
 
-function loadImageTn( idForm, fieldName, fileInfo, $fileBoxElem ) {
-  console.log( 'loadImageTn(): ', idForm, fieldName, fileInfo, $fileBoxElem );
+/*
+  function loadImageTn( idForm, fieldName, fileInfo, $fileBoxElem ) {
+    console.log( 'loadImageTn(): ', idForm, fieldName, fileInfo, $fileBoxElem );
 
-  var fileObj = fileInfo.hasOwnProperty('fieldFileObj') ? fileInfo.fieldFileObj : false;
+    var fileObj = fileInfo.hasOwnProperty('formFileObj') ? fileInfo.formFileObj : false;
 
-  if( fileObj && fileObj.type.match('image.*') && fileObj.size < 2000000 ) {
-    // console.log( 'loadImageTn: Preparo FileReader' );
-    var imageReader = new FileReader();
-    imageReader.onload = (
-      function cargado( fileLoaded ) {
-        // console.log( 'loadImageTn: cargado ', fileLoaded );
-        return(
-          function procesando( evnt ) {
-            $tnImage = false;
-            tnClass = $fileBoxElem.find('.tnImage').attr('data-tnClass');
-            // console.log( 'tnClass: ', tnClass );
+    if( fileObj && fileObj.type.match('image.*') && fileObj.size < 2000000 ) {
+      // console.log( 'loadImageTn: Preparo FileReader' );
+      var imageReader = new FileReader();
+      imageReader.onload = (
+        function cargado( fileLoaded ) {
+          // console.log( 'loadImageTn: cargado ', fileLoaded );
+          return(
+            function procesando( evnt ) {
+              $tnImage = false;
+              tnClass = $fileBoxElem.find('.tnImage').attr('data-tnClass');
+              // console.log( 'tnClass: ', tnClass );
 
-            if( tnClass ) {
-              $newFileBoxElem = $('.cgmMForm-fileBoxElem[data-form_id="'+idForm+'"][data-fieldname="'+fieldName+'"]');
-              // console.log( 'tnImage newFileBoxElem: ', $newFileBoxElem,idForm,fieldName );
-              if( $newFileBoxElem.length ) {
-                $tnImage = $newFileBoxElem.find( 'img.tnImage.'+tnClass );
-                // console.log( 'tnImage ANTES: ', $tnImage );
+              if( tnClass ) {
+                $newFileBoxElem = $('.cgmMForm-fileBoxElem[data-form_id="'+idForm+'"][data-fieldname="'+fieldName+'"]');
+                // console.log( 'tnImage newFileBoxElem: ', $newFileBoxElem,idForm,fieldName );
+                if( $newFileBoxElem.length ) {
+                  $tnImage = $newFileBoxElem.find( 'img.tnImage.'+tnClass );
+                  // console.log( 'tnImage ANTES: ', $tnImage );
+                }
+              }
+              if( $tnImage ) {
+                // console.log( 'tnImage CAMBIANDO SRC ', $tnImage.attr('src'), evnt.target.result );
+                $tnImage.attr( 'src', evnt.target.result );
               }
             }
-            if( $tnImage ) {
-              // console.log( 'tnImage CAMBIANDO SRC ', $tnImage.attr('src'), evnt.target.result );
-              $tnImage.attr( 'src', evnt.target.result );
-            }
-          }
-        );
-      }
-    )( fileObj );
+          );
+        }
+      )( fileObj );
 
-    // Read in the image file as a data URL.
-    console.log( 'loadImageTn: readAsDataURL ',fileObj );
-    imageReader.readAsDataURL( fileObj );
-  }
-} // function loadImageTn( fileObj, $fileBoxElem )
-
-
-
-function fileFieldToOk( idForm, fieldName, fileName, fileId, fileType ) {
-  // console.log( 'fileFieldToOk( '+idForm+', '+fieldName+', '+fileName+', '+fileId+', '+fileType+' )' );
-  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-  var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
-
-  $fileField.attr( 'readonly', 'readonly' ).prop( 'disabled', true ).hide();
-
-  //$( '#'+fieldName+'-error[data-form_id="'+idForm+'"]' ).hide();
-  $( '#' + $fileField.attr('id') + '-error' ).remove();
-
-  // Show Title file field
-  // $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName ).show();
-  $( '.cgmMForm-' + idForm+'.cgmMForm-titleFileField_'+fieldName ).removeAttr('display');
-
-  var fileInfo = { 'id': fileId, 'name': fileName, 'type': fileType };
-  $fileFieldWrap.append( fileBox( idForm, fieldName, fileInfo, deleteFormFileEvent ) );
-
-  removeFileFieldDropZone( idForm, fieldName );
-}
+      // Read in the image file as a data URL.
+      console.log( 'loadImageTn: readAsDataURL ',fileObj );
+      imageReader.readAsDataURL( fileObj );
+    }
+  } // function loadImageTn( fileObj, $fileBoxElem )
+*/
 
 
 function fileFieldToInput( idForm, fieldName ) {
