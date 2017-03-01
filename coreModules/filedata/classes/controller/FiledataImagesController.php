@@ -503,9 +503,6 @@ class FiledataImagesController {
     $im->setImagePage( 0, 0, 0, 0 ); // Reset del tamaño de lienzo
   }
 
-  private function getSrvEncode( $im, $fromRoute ) {
-
-  }
 
 
 
