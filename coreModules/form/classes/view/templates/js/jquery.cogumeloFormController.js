@@ -506,7 +506,10 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
 
 // Evento de fichero en campo input
 function inputFileFieldChange( evnt ) {
-  processFilesInputFileField( evnt.target.files, evnt.target.form.id, evnt.target.name );
+  // console.log('inputFileFieldChange:', evnt);
+  $fileField = $( evnt.target );
+  // processFilesInputFileField( evnt.target.files, evnt.target.form.id, evnt.target.name );
+  processFilesInputFileField( evnt.target.files, $fileField.attr('form'), evnt.target.name );
 } // function inputFileFieldChange( evnt )
 
 
