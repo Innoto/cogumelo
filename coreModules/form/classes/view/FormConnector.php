@@ -168,12 +168,13 @@ class FormConnector extends View {
 
           // Guardamos los datos previos del campo
           $fileFieldValuePrev = $form->getFieldValue( $fieldName );
-          error_log( 'LEEMOS File Field: '.print_r($fileFieldValuePrev,true) );
+          // error_log( 'LEEMOS File Field: '.print_r($fileFieldValuePrev,true) );
 
           // Creamos un objeto temporal para validarlo
           $tmpFileFieldValue = array(
             'status' => 'LOAD',
             'validate' => array(
+              'partial' => true,
               'name' => $fileName,
               'originalName' => $fileName,
               'absLocation' => $fileTmpLoc,
@@ -300,7 +301,6 @@ class FormConnector extends View {
       }
 
       if( !empty( $tnProfile ) /*&& strpos( $moreInfo['fileType'], 'image' ) === 0*/ ) {
-        error_log( 'image='.strpos( $moreInfo['fileType'], 'image' ) );
         error_log( 'VAMOS A CREAR fileSrcTn' );
 
         filedata::load('controller/FiledataImagesController.php');
@@ -354,6 +354,7 @@ class FormConnector extends View {
         $fieldPrev = $form->getFieldValue( $fieldName );
 
         $fileGroup = false;
+        $multipleIndex = false;
         if( $fieldPrev['status'] === 'GROUP' ) {
           // Necesitamos informacion extra porque es un grupo de ficheros
           $fileGroup = $fieldPrev['idGroup'];
@@ -375,7 +376,7 @@ class FormConnector extends View {
 
 
 
-        error_log( 'LEEMOS File Field para BORRAR: '.print_r( $fieldPrev, true ) );
+        error_log( 'LEEMOS File Field para BORRAR: '.json_encode( $fieldPrev ) );
 
 
 
@@ -424,12 +425,17 @@ class FormConnector extends View {
           if( $fileGroup ) {
             $fieldNew = $fieldPrev;
             $fieldPrev = $form->getFieldValue( $fieldName );
-            $fieldPrev['multiple'][ $multipleIndex ] = $fieldNew;
+            if( $fieldNew !== null ) {
+              $fieldPrev['multiple'][ $multipleIndex ] = $fieldNew;
+            }
+            else {
+              unset( $fieldPrev['multiple'][ $multipleIndex ] );
+            }
           }
 
 
 
-          error_log( 'GUARDAMOS File Field: '.print_r($fieldPrev,true) );
+          error_log( 'GUARDAMOS File Field: '.$fieldName );
 
           $form->setFieldValue( $fieldName, $fieldPrev );
           // Persistimos formObj para cuando se envíe el formulario completo

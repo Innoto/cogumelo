@@ -286,48 +286,105 @@ class FormValidators extends FormValidatorsExtender {
 
 
   public function val_maxfilesize( $value, $param ) {
+    error_log( ' * * * formValidators::-------------------------------------------------------------' );
+    // error_log( ' * * * formValidators::val_maxfilesize '. json_encode( $value ). '    PARAM:' .$param );
+    $result = true;
 
+    if( !isset( $value['multiple'] ) ) {
+      error_log( ' * * * formValidators::val_maxfilesize '.$value['validate']['size'].'<='.$param );
+      $result = ( isset( $value['validate']['size'] ) && $value['validate']['size'] <= $param );
+    }
+    else {
+      foreach( $value['multiple'] as $multiId => $fileInfo ) {
+        error_log( ' * * * formValidators::val_maxfilesize multi '.$multiId.' status: '.$fileInfo['status'] );
 
+        if( $fileInfo['status'] !== 'DELETE' ) {
+          error_log( ' * * * formValidators::val_maxfilesize multi '.$multiId.': '.$fileInfo['validate']['size'].'<='.$param );
+          if( !isset( $fileInfo['validate']['size'] ) || $fileInfo['validate']['size'] > $param ) {
+            $result = false;
+            break;
+          }
+        }
+      }
+    }
 
-
-
-
-
-    // return( $value['validate']['size'] <= $param );
-    return true;
+    return $result;
   }
+
 
   public function val_minfilesize( $value, $param ) {
-    return( $value['validate'][ 'size' ] >= $param );
+    error_log( ' * * * formValidators::-------------------------------------------------------------' );
+    // error_log( ' * * * formValidators::val_minfilesize '. json_encode( $value ). '    PARAM:' .$param );
+
+    $result = true;
+
+    if( !isset( $value['multiple'] ) ) {
+      error_log( ' * * * formValidators::val_minfilesize '.$value['validate']['size'].'<='.$param );
+      $result = ( isset( $value['validate']['size'] ) && $value['validate']['size'] <= $param );
+    }
+    else {
+      foreach( $value['multiple'] as $multiId => $fileInfo ) {
+        error_log( ' * * * formValidators::val_minfilesize multi '.$multiId.' status: '.$fileInfo['status'] );
+
+        if( $fileInfo['status'] !== 'DELETE' ) {
+          error_log( ' * * * formValidators::val_minfilesize multi '.$multiId.': '.$fileInfo['validate']['size'].'<='.$param );
+          if( !isset( $fileInfo['validate']['size'] ) || $fileInfo['validate']['size'] < $param ) {
+            $result = false;
+            break;
+          }
+        }
+      }
+    }
+
+    return $result;
   }
+
 
   public function val_multipleMax( $value, $param ) {
-    // return( $value['validate']['size'] >= $param );
-    return true;
+    error_log( ' * * * formValidators::-------------------------------------------------------------' );
+    // error_log( ' * * * formValidators::val_multipleMax '. json_encode( $value ). '    PARAM:' .$param );
+
+    $numFiles = 0;
+    if( isset( $value['multiple'] ) && is_array( $value['multiple'] ) && count( $value['multiple'] ) ) {
+      foreach( $value['multiple'] as $multiId => $fileInfo ) {
+        error_log( ' * * * formValidators::val_multipleMax multi '.$multiId.' status: '.$fileInfo['status'] );
+        $numFiles += ( $fileInfo['status'] !== 'DELETE' ) ? 1 : 0;
+      }
+    }
+
+    return( $numFiles <= $param );
   }
+
 
   public function val_multipleMin( $value, $param ) {
-    // return( $value['validate']['size'] >= $param );
-    return true;
+    error_log( ' * * * formValidators::-------------------------------------------------------------' );
+    error_log( ' * * * formValidators::val_multipleMin '. json_encode( $value ). '    PARAM:' .$param );
+
+    $result = false;
+
+    if( !empty( $value['multiple']['0']['validate']['partial'] ) ) {
+      // Contenido parcial. No puede aplicarse este validador
+      $result = true;
+    }
+    else {
+      $numFiles = 0;
+      if( isset( $value['multiple'] ) && is_array( $value['multiple'] ) && count( $value['multiple'] ) ) {
+        foreach( $value['multiple'] as $multiId => $fileInfo ) {
+          error_log( ' * * * formValidators::val_multipleMin multi '.$multiId.' status: '.$fileInfo['status'] );
+          $numFiles += ( $fileInfo['status'] !== 'DELETE' ) ? 1 : 0;
+        }
+      }
+      $result = ( $numFiles >= $param );
+    }
+
+    return $result;
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   // http://jqueryvalidation.org/accept-method
   public function val_accept( $value, $param ) {
-    $result = false;
+    error_log( ' * * * formValidators::val_accept -----------------------------------------------------' );
+    $result = true;
 
     if( !is_array( $param ) ) {
       // Split param on commas in case we have multiple types we can accept
@@ -335,19 +392,35 @@ class FormValidators extends FormValidatorsExtender {
       $param = explode( ',', $param );
     }
 
-    foreach( $param as $test ) {
-      if( $test === $value['validate'][ 'type' ] ) {
-        $result = true;
-        break;
-      }
-      else {
-        $test = str_replace( '*', '.*', $test );
-        if( preg_match( '#^'.$test.'$#', $value['validate'][ 'type' ] ) ) {
-          $result = true;
+
+    $filesInfo = isset( $value['multiple'] ) ? $value['multiple'] : [ $value ];
+    foreach( $filesInfo as $fileInfo ) {
+      $fileResult = false;
+
+      if( $fileInfo['status'] !== 'DELETE' ) {
+        error_log( ' * * * formValidators::val_accept '.json_encode($fileInfo['validate']).':'.json_encode($param) );
+
+        foreach( $param as $test ) {
+          if( $test === $fileInfo['validate']['type'] ) {
+            $fileResult = true;
+            break;
+          }
+          else {
+            $testRegex = '#^'.str_replace( '*', '.*', $test ).'$#';
+            if( preg_match( $testRegex, $fileInfo['validate']['type'] ) ) {
+              $fileResult = true;
+              break;
+            }
+          }
+        }
+
+        if( !$fileResult ) {
+          $result = false;
           break;
         }
-      }
+      } // if( $fileInfo['status'] !== 'DELETE' )
     }
+
 
     return $result;
   }
@@ -364,7 +437,7 @@ class FormValidators extends FormValidatorsExtender {
     $tmpExt = '';
     $tmpExtPos = strrpos( $value['validate'][ 'name' ], '.' );
     if( $tmpExtPos > 0 ) { // Not FALSE or 0
-      $tmpExt = substr( $value['validate'][ 'name' ], 1+$tmpExtPos );
+      $tmpExt = substr( $value['validate']['name'], 1+$tmpExtPos );
     }
 
     // TODO: Cambiar in_array por regex

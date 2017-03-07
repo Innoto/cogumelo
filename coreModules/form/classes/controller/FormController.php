@@ -657,7 +657,7 @@ class FormController implements Serializable {
 
       if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
         // Only one file
-        error_log( 'setFieldValue Basic: only one file' );
+        // error_log( 'setFieldValue Basic: only one file' );
         // error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
         if( !isset( $fieldValue[ 'status' ] ) ) {
           $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
@@ -680,7 +680,7 @@ class FormController implements Serializable {
       }
       else {
         // Multiple: add files
-        error_log( 'setFieldValue Multiple: add files' );
+        // error_log( 'setFieldValue Multiple: add files' );
         // error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
 
 
@@ -714,9 +714,9 @@ class FormController implements Serializable {
         $fieldValue = $groupValue;
       }
 
-      error_log( '----------------------------------------------------------' );
-      error_log( 'FILE fieldValue FINAL: '. json_encode( $fieldValue ) );
-      error_log( '----------------------------------------------------------' );
+      // error_log( '----------------------------------------------------------' );
+      // error_log( 'FILE fieldValue FINAL: '. json_encode( $fieldValue ) );
+      // error_log( '----------------------------------------------------------' );
       $newValue = $fieldValue;
     }
 
@@ -2687,34 +2687,29 @@ class FormController implements Serializable {
       if( $this->isRequiredField( $fieldName ) ) {
         // error_log( 'ERROR: evaluateRule( '.$fieldName.', VACIO, required, ...  )' );
         $this->addFieldRuleError( $fieldName, 'required' );
-        //$this->fieldErrors[ $fieldName ][ 'required' ] = false;
         $fieldValidated = false;
-      }
-      else {
-        //error_log( 'evaluateRule: VACIO e non required = ok' );
-        $fieldValidated = true;
       }
     } // if( $this->isEmptyFieldValue( $fieldName ) )
     else {
+      //error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
 
       $fieldRules = $this->getValidationRules( $fieldName );
       $fieldType = $this->getFieldType( $fieldName );
       $fieldValues = $this->getFieldValue( $fieldName );
 
       // Hay que tener cuidado con ciertos fieldValues con estructura de array pero que son un único elemento
-      if( !is_array( $fieldValues ) || ( $fieldType === 'file' && isset( $fieldValues['validate']['name'] ) ) ) {
+      if( $fieldType === 'file' && ( isset( $fieldValues['status'] ) || isset( $fieldValues['multiple'] ) ) ) {
+        $fieldValues = array( $fieldValues );
+      }
+
+      if( !is_array( $fieldValues ) ) {
         $fieldValues = array( $fieldValues );
       }
 
       foreach( $fieldValues as $value ) {
-        $fieldValidateValue = false;
-
-        //error_log( 'validando '.$fieldName.' = '.print_r( $value, true ) );
-
-        //error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
         $fieldValidateValue = true;
         foreach( $fieldRules as $ruleName => $ruleParams ) {
-          //error_log( 'evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
+          // error_log( 'evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
 
           if( $ruleName === 'equalTo' ) {
             $fieldRuleValidate = ( $value === $this->getFieldValue( str_replace('#', '', $ruleParams )) );

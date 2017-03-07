@@ -512,6 +512,7 @@ function inputFileFieldChange( evnt ) {
 
 function processFilesInputFileField( formFileObjs, idForm, fieldName ) {
   // console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
+
   var valid = checkInputFileField( formFileObjs, idForm, fieldName );
 
   if( valid ) {
@@ -520,29 +521,27 @@ function processFilesInputFileField( formFileObjs, idForm, fieldName ) {
       uploadFile( formFileObj, idForm, fieldName, cgIntFrmId );
     }
   }
+
+  // var $fileField = $( 'input[name="' + fieldName + '"][form="' + idForm + '"]' );
+  // $fileField.data( 'dropfiles', false );
 } // function processFilesInputFileField( evnt )
 
 
-function checkInputFileField( files, idForm, fieldName ) {
+function checkInputFileField( formFileObjs, idForm, fieldName ) {
   // console.log( 'checkInputFileField(): ' );
-  // console.log( files );
+  // console.log( formFileObjs );
   // console.log( fieldName );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
 
   var $fileField = $( 'input[name="' + fieldName + '"][form="' + idForm + '"]' );
   $( '#' + $fileField.attr('id') + '-error' ).remove();
 
+  $fileField.data( 'validateFiles', formFileObjs );
   var valRes = $validateForm.element( 'input[name="' + fieldName + '"][form="' + idForm + '"]' );
-
-  // Mostrando informacion obtenida del navegador
-  /*
-  for( var i = 0, f; (f = files[i]); i++ ) {
-    $( '#list' ).before( '<div>' + escape(f.name) + ' (' + f.type + ') ' + f.size + ' bytes</div>' );
-  }
-  */
+  $fileField.data( 'validateFiles', false );
 
   return valRes;
-} // function checkInputFileField( files, idForm, fieldName )
+} // function checkInputFileField( formFileObjs, idForm, fieldName )
 
 
 function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
@@ -881,7 +880,7 @@ function fileFieldToOk( idForm, fieldName, fileInfo ) {
 
 
 function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
-  console.log( 'fileBox: ', idForm, fieldName, fileInfo );
+  // console.log( 'fileBox: ', idForm, fieldName, fileInfo );
 
   var $fileBoxElem = $( '<div>' ).addClass( 'cgmMForm-fileBoxElem fileFieldInfo fileUploadOK formFileDelete' )
     .attr( { 'data-form_id': idForm, 'data-fieldname': fieldName, 'data-file_id': fileInfo.id } );
@@ -1009,7 +1008,8 @@ function fileFieldToInput( idForm, fieldName ) {
 
 
 function createFileFieldDropZone( idForm, fieldName ) {
-  // console.log( 'createFileFieldDropZone: ', idForm, fieldName );
+  console.log( 'createFileFieldDropZone: ', idForm, fieldName );
+
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
   var $fileDefLabel = $fileFieldWrap.find( 'label' );
@@ -1063,7 +1063,8 @@ function createFileFieldDropZone( idForm, fieldName ) {
 }
 
 function removeFileFieldDropZone( idForm, fieldName ) {
-  // console.log( 'removeFileFieldDropZone: ', idForm, fieldName );
+  console.log( 'removeFileFieldDropZone: ', idForm, fieldName );
+
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
@@ -1071,12 +1072,13 @@ function removeFileFieldDropZone( idForm, fieldName ) {
 }
 
 function fileFieldDropZoneDrop( evnt ) {
-  // console.log( 'fileFieldDropZoneDrop() ', evnt );
+  console.log( 'fileFieldDropZoneDrop() ', evnt );
+
   evnt.stopPropagation();
   evnt.preventDefault();
 
   var files = evnt.dataTransfer.files; // FileList object.
-  // console.log( 'fileFieldDropZoneDrop files: ', files );
+  console.log( 'fileFieldDropZoneDrop files: ', files );
 
   var $fileFieldDropZone = $( evnt.target ).closest( '.fileFieldDropZone' );
   var idForm = $fileFieldDropZone.data( 'form_id' );
@@ -1085,14 +1087,17 @@ function fileFieldDropZoneDrop( evnt ) {
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   // console.log( 'fileFieldDropZoneDrop fileField: ', $fileField );
 
+  // $fileField.data( 'dropfiles', false );
+
   if( files.length === 1 || $fileField.attr('multiple') ) {
-    $fileField.data( 'dropfiles', files );
+    // $fileField.data( 'dropfiles', files );
     processFilesInputFileField( files, idForm, fieldName );
   }
 }
 
 function fileFieldDropZoneDragOver( evnt ) {
-  // console.log( 'fileFieldDropZoneDragOver event: ', evnt );
+  console.log( 'fileFieldDropZoneDragOver event: ', evnt );
+
   evnt.stopPropagation();
   evnt.preventDefault();
   // evnt.originalEvent.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.

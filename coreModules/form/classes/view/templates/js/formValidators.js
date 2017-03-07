@@ -327,33 +327,99 @@ $.validator.addMethod(
 
 
 
+/**
+***  FICHEROS desde Cogumelo Form  ***
+**/
 
 
-
-// Accept a value from a file input based on size
+/**
+*** IMPORTANTE: Reemplazamos el metodo "oficial" declarado en "additional-methods.js"
+**/
+// Accept a value from a file input based on a required mimetype
 $.validator.addMethod(
-  "maxfilesize",
+  "accept",
   function(value, element, param) {
-
-    // Element is optional
-    var optionalValue = this.optional(element);
-    if( optionalValue ) {
-      return optionalValue;
-    }
+    console.log( ' * * * formValidators::accept ', value, $( element ), param );
 
     var valueResponse = true;
 
-    if( $(element).attr("type") === "file" && element.files && element.files.length > 0 ) {
-      for( i = 0; i < element.files.length; i++ ) {
-        if( element.files[i].size > param ) {
+    var validateFiles = $( element ).data('validateFiles');
+    if( validateFiles && validateFiles.length > 0 ) {
+      console.log( ' * * * formValidators::accept validateFiles=', validateFiles );
+
+      // Split mime on commas in case we have multiple types we can accept
+      var typeParam = ( typeof param === 'string' ) ? param.replace( /\s/g, '' ).replace( /,/g, '|' ) : 'image/*';
+      // If we are using a wildcard, make it regex friendly
+      typeParam = typeParam.replace(/\*/g, '.*');
+
+      var i;
+      for( i = 0; i < validateFiles.length; i++ ) {
+        if( !validateFiles[i].type.match( new RegExp( '\\.?(' + typeParam + ')$', 'i' ) ) ) {
           valueResponse = false;
           break;
         }
       }
     }
 
-    // Either return true because we've validated each file, or because the
-    // browser does not support element.files and the FileList feature
+    return valueResponse;
+  },
+  $.validator.format("Please enter a value with a valid mimetype.")
+);
+
+
+/**
+*** IMPORTANTE: Reemplazamos el metodo "oficial" declarado en "additional-methods.js"
+**/
+// Older "accept" file extension method. Old docs: http://docs.jquery.com/Plugins/Validation/Methods/accept
+$.validator.addMethod(
+  "extension",
+  function(value, element, param) {
+    console.log( ' * * * formValidators::extension ', $( element ), param );
+
+    var valueResponse = true;
+
+    var validateFiles = $( element ).data('validateFiles');
+    if( validateFiles && validateFiles.length > 0 ) {
+      console.log( ' * * * formValidators::extension validateFiles=', validateFiles );
+      param = ( typeof param === 'string' ) ? param.replace( /,/g, '|' ) : 'png|jpe?g|gif';
+      var i;
+      for( i = 0; i < validateFiles.length; i++ ) {
+        if( !validateFiles[i].name.match( new RegExp( '\\.(' + param + ')$', 'i' ) ) ) {
+          valueResponse = false;
+          break;
+        }
+      }
+    }
+
+    return valueResponse;
+  },
+  $.validator.format("Please enter a value with a valid extension.")
+);
+
+
+// Accept a value from a file input based on size
+$.validator.addMethod(
+  "maxfilesize",
+  function(value, element, param) {
+    console.log( ' * * * formValidators::maxfilesize ', $( element ), param );
+
+    var valueResponse = true;
+
+    // Element is optional
+    // if( this.optional(element) ) { return true; }
+
+    var validateFiles = $( element ).data('validateFiles');
+    if( validateFiles && validateFiles.length > 0 ) {
+      console.log( ' * * * formValidators::maxfilesize validateFiles=', validateFiles, validateFiles.length );
+      for( i = 0; i < validateFiles.length; i++ ) {
+        if( validateFiles[i].size > param ) {
+          valueResponse = false;
+          break;
+        }
+      }
+    }
+
+
     return valueResponse;
   },
   $.validator.format("Please enter a file with a valid size (<{0} Bytes).")
@@ -364,26 +430,27 @@ $.validator.addMethod(
 $.validator.addMethod(
   "minfilesize",
   function(value, element, param) {
-
-    // Element is optional
-    var optionalValue = this.optional(element);
-    if( optionalValue ) {
-      return optionalValue;
-    }
+    console.log( ' * * * formValidators::maxfilesize ', $( element ), param );
 
     var valueResponse = true;
 
-    if( $(element).attr("type") === "file" && element.files && element.files.length > 0 ) {
-      for( i = 0; i < element.files.length; i++ ) {
-        if( element.files[i].size < param ) {
+    // Element is optional
+    // if( this.optional(element) ) { return true; }
+
+    var validateFiles = $( element ).data('validateFiles');
+
+    // if( $(element).attr("type") === "file" && element.files && element.files.length > 0 ) {
+    if( validateFiles && validateFiles.length > 0 ) {
+      console.log( ' * * * formValidators::maxfilesize validateFiles=', validateFiles, validateFiles.length );
+      for( i = 0; i < validateFiles.length; i++ ) {
+        if( validateFiles[i].size < param ) {
           valueResponse = false;
           break;
         }
       }
     }
 
-    // Either return true because we've validated each file, or because the
-    // browser does not support element.files and the FileList feature
+
     return valueResponse;
   },
   $.validator.format("Please enter a file with a valid size (>{0} Bytes).")
@@ -394,7 +461,30 @@ $.validator.addMethod(
 $.validator.addMethod(
   "multipleMax",
   function(value, element, param) {
-    var valueResponse = true;
+    var valueResponse = false;
+
+    console.log( ' * * * formValidators::multipleMax ', $( element ), param );
+    var $fileField = $( element );
+    var groupFiles = false;
+    var groupId = $fileField.attr('data-fm_group_id');
+    if( groupId && typeof cogumelo.formController.fileGroup[ groupId ] !== 'undefined' ) {
+      groupFiles = cogumelo.formController.fileGroup[ groupId ];
+    }
+    // console.log( ' * * * formValidators::multipleMax IDs', groupId, groupFiles, groupFiles.length );
+
+    var validateFiles = $fileField.data('validateFiles');
+    // console.log( ' * * * formValidators::multipleMax validateFiles=', validateFiles, validateFiles.length );
+
+    var countFiles = ( validateFiles ) ? validateFiles.length : 0;
+    if( groupFiles ) {
+      countFiles += groupFiles.length;
+    }
+    // console.log( ' * * * formValidators::multipleMax countFiles=', countFiles );
+
+    if( countFiles <= param ) {
+      valueResponse = true;
+    }
+
 
     return valueResponse;
   },
@@ -406,7 +496,30 @@ $.validator.addMethod(
 $.validator.addMethod(
   "multipleMin",
   function(value, element, param) {
-    var valueResponse = true;
+    var valueResponse = false;
+
+    console.log( ' * * * formValidators::multipleMin ', $( element ), param );
+    var $fileField = $( element );
+    var groupFiles = false;
+    var groupId = $fileField.attr('data-fm_group_id');
+    if( groupId && typeof cogumelo.formController.fileGroup[ groupId ] !== 'undefined' ) {
+      groupFiles = cogumelo.formController.fileGroup[ groupId ];
+    }
+    // console.log( ' * * * formValidators::multipleMin IDs', groupId, groupFiles, groupFiles.length );
+
+    var validateFiles = $fileField.data('validateFiles');
+    // console.log( ' * * * formValidators::multipleMin validateFiles=', validateFiles, validateFiles.length );
+
+    var countFiles = ( validateFiles ) ? validateFiles.length : 0;
+    if( groupFiles ) {
+      countFiles += groupFiles.length;
+    }
+    // console.log( ' * * * formValidators::multipleMin countFiles=', countFiles );
+
+    if( countFiles >= param ) {
+      valueResponse = true;
+    }
+
 
     return valueResponse;
   },
