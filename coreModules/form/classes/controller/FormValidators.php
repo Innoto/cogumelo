@@ -286,7 +286,7 @@ class FormValidators extends FormValidatorsExtender {
 
 
   public function val_maxfilesize( $value, $param ) {
-    error_log( ' * * * formValidators::-------------------------------------------------------------' );
+    // error_log( ' * * * formValidators::-------------------------------------------------------------' );
     // error_log( ' * * * formValidators::val_maxfilesize '. json_encode( $value ). '    PARAM:' .$param );
     $result = true;
 
@@ -313,14 +313,14 @@ class FormValidators extends FormValidatorsExtender {
 
 
   public function val_minfilesize( $value, $param ) {
-    error_log( ' * * * formValidators::-------------------------------------------------------------' );
+    // error_log( ' * * * formValidators::-------------------------------------------------------------' );
     // error_log( ' * * * formValidators::val_minfilesize '. json_encode( $value ). '    PARAM:' .$param );
 
     $result = true;
 
     if( !isset( $value['multiple'] ) ) {
       error_log( ' * * * formValidators::val_minfilesize '.$value['validate']['size'].'<='.$param );
-      $result = ( isset( $value['validate']['size'] ) && $value['validate']['size'] <= $param );
+      $result = ( isset( $value['validate']['size'] ) && $value['validate']['size'] >= $param );
     }
     else {
       foreach( $value['multiple'] as $multiId => $fileInfo ) {
@@ -341,7 +341,7 @@ class FormValidators extends FormValidatorsExtender {
 
 
   public function val_multipleMax( $value, $param ) {
-    error_log( ' * * * formValidators::-------------------------------------------------------------' );
+    // error_log( ' * * * formValidators::-------------------------------------------------------------' );
     // error_log( ' * * * formValidators::val_multipleMax '. json_encode( $value ). '    PARAM:' .$param );
 
     $numFiles = 0;
@@ -357,8 +357,8 @@ class FormValidators extends FormValidatorsExtender {
 
 
   public function val_multipleMin( $value, $param ) {
-    error_log( ' * * * formValidators::-------------------------------------------------------------' );
-    error_log( ' * * * formValidators::val_multipleMin '. json_encode( $value ). '    PARAM:' .$param );
+    // error_log( ' * * * formValidators::-------------------------------------------------------------' );
+    // error_log( ' * * * formValidators::val_multipleMin '. json_encode( $value ). '    PARAM:' .$param );
 
     $result = false;
 
@@ -383,7 +383,7 @@ class FormValidators extends FormValidatorsExtender {
 
   // http://jqueryvalidation.org/accept-method
   public function val_accept( $value, $param ) {
-    error_log( ' * * * formValidators::val_accept -----------------------------------------------------' );
+    // error_log( ' * * * formValidators::val_accept -----------------------------------------------------' );
     $result = true;
 
     if( !is_array( $param ) ) {
