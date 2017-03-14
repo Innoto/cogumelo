@@ -909,7 +909,7 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
       '" target="_blank"><i class="fa fa-download"></i></a>' );
   }
 
-  var tnSrc = cogumelo.publicConf.media+'/module/form/img/loaded.jpg';
+  var tnSrc = cogumelo.publicConf.media+'/module/form/img/file.png';
 
   if( fileInfo.fileSrcTn ) {
     tnSrc = fileInfo.fileSrcTn;
