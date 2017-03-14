@@ -73,13 +73,7 @@ class UserModel extends Model
       'sql'=> '
         ALTER TABLE user_user
         MODIFY COLUMN name VARCHAR(255),
-        MODIFY COLUMN surname VARCHAR(255)
-      '
-    ),
-    array(
-      'version' => 'user#1.7',
-      'sql'=> '
-        ALTER TABLE user_user
+        MODIFY COLUMN surname VARCHAR(255),
         MODIFY COLUMN email VARCHAR(255),
         MODIFY COLUMN login VARCHAR(255)
       '
