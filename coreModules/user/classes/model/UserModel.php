@@ -15,24 +15,24 @@ class UserModel extends Model
       'autoincrement' => true
     ),
     'login' => array(
-      'type' => 'CHAR',
+      'type' => 'VARCHAR',
       'size' => '255',
       'unique' => true
     ),
     'password'=> array(
-      'type'=>'CHAR',
+      'type'=> 'VARCHAR',
       'size' => '200'
     ),
     'name'=> array(
-      'type' => 'CHAR',
+      'type' => 'VARCHAR',
       'size' => '255'
     ),
     'surname'=> array(
-      'type' => 'CHAR',
+      'type' => 'VARCHAR',
       'size' => '255'
     ),
     'email'=> array(
-      'type' => 'CHAR',
+      'type' => 'VARCHAR',
       'size' => '255',
       'unique' => true
     ),
@@ -75,7 +75,8 @@ class UserModel extends Model
         MODIFY COLUMN name VARCHAR(255),
         MODIFY COLUMN surname VARCHAR(255),
         MODIFY COLUMN email VARCHAR(255),
-        MODIFY COLUMN login VARCHAR(255)
+        MODIFY COLUMN login VARCHAR(255),
+        MODIFY COLUMN password VARCHAR(255)
       '
     ),
     array(
