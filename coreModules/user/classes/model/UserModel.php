@@ -21,7 +21,7 @@ class UserModel extends Model
     ),
     'password'=> array(
       'type'=> 'VARCHAR',
-      'size' => '200'
+      'size' => '255'
     ),
     'name'=> array(
       'type' => 'VARCHAR',
