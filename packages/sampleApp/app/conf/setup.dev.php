@@ -85,7 +85,7 @@ define( 'SMTP_USER', '' );
 define( 'SMTP_PASS', '' );
 
 define( 'SYS_MAIL_FROM_NAME', 'Cogumelo Sender' );
-define( 'SYS_MAIL_FROM_EMAIL', 'cogumelo@cogumelo.org' );
+define( 'SYS_MAIL_FROM_EMAIL', 'cogumelo@cogumelo.local' );
 
 
 //
