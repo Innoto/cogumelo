@@ -28,7 +28,8 @@ class detectMobile extends Module {
     require_once( Cogumelo::getSetupValue( 'dependences:composerPath').'/mobiledetect/mobiledetectlib/Mobile_Detect.php');
 
     $detect = new Mobile_Detect;
-    $isMobile = $detect->isMobile();
-    Cogumelo::setSetupValue( 'mod:detectMobile:isMobile', $isMobile );
+
+    Cogumelo::setSetupValue( 'mod:detectMobile:isMobile', $detect->isMobile() );
+    Cogumelo::setSetupValue( 'mod:detectMobile:isTablet', $detect->isTablet() );
   }
 }
