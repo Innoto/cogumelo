@@ -101,8 +101,12 @@ class FiledataWeb extends View {
 
   public function webFormPublic( $name ) {
     //var_dump($name[1]);
-    $n = urldecode(
-      urldecode($name[1]) // elfinder codifica doble
+    $n = str_replace(
+      '../',
+      '',
+      urldecode(
+        urldecode($name[1]) // elfinder codifica doble
+      )
     );
 
     $fileInfo = [
