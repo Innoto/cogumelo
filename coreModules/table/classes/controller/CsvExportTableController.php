@@ -63,6 +63,22 @@ class CsvExportTableController extends ExportTableController {
           // if have rules and matches with regexp
           if($colDef['rules'] != array() ) {
 
+
+            foreach($colDef['exportRules'] as $rule){
+              if( !isset( $rule['regexContent'] ) ) {
+                if(preg_match( $rule['regexp'], $row[$colDefKey])) {
+                  eval('$row[$colDefKey] = "'.$rule['finalContent'].'";');
+                  break;
+                }
+              }
+              else {
+                //$row[$colDefKey] = preg_replace( $rule['regexp'], $rule['regexContent'], $row[$colDefKey] );
+                if( $row[$colDefKey] = preg_replace( $rule['regexp'], $rule['regexContent'], $row[$colDefKey] ) ) {
+                  break;
+                }
+              }
+            }
+
             foreach($colDef['rules'] as $rule){
               if( !isset( $rule['regexContent'] ) ) {
                 if(preg_match( $rule['regexp'], $row[$colDefKey])) {
@@ -71,16 +87,22 @@ class CsvExportTableController extends ExportTableController {
                 }
               }
               else {
+                //$row[$colDefKey] = preg_replace( $rule['regexp'], $rule['regexContent'], $row[$colDefKey] );
                 if( $row[$colDefKey] = preg_replace( $rule['regexp'], $rule['regexContent'], $row[$colDefKey] ) ) {
                   break;
                 }
               }
             }
+
+
+
           }
         }
 
+        //var_dump( array_keys($row) );
+        unset($row['rowReferenceKey']);
 
-        echo utf8_encode("".implode(",", $row)."\n");
+        echo "".implode(",", $row)."\n";
 
       }
 

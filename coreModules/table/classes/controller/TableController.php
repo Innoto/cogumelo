@@ -104,7 +104,7 @@ class TableController{
   * @return void
   */
   function setCol($colId, $colName = false) {
-    $this->colsDef[$colId] = array('name' => $colName, 'rules' => array() );
+    $this->colsDef[$colId] = array('name' => $colName, 'rules' => array(), 'exportRules'=> array() );
   }
 
   /**
@@ -150,6 +150,31 @@ class TableController{
       }
       else {
         $this->colsDef[$colId]['rules'][] = array('regexp' => $regexp, 'regexContent' => $finalContent );
+      }
+    }
+    else {
+      Cogumelo::error('Col id "'.$colId.'" not found in table, can`t add col rule');
+    }
+  }
+
+
+  /**
+  * Set col export Rules
+  *
+  * @param string $colId id of col added with setCol method0
+  * @param mixed $regexp the regular expression to match col's row value
+  * @param string $finalContent is the result that we want to provide when
+  *  variable $value matches (Usually a text). Can be too an operation with other cols
+  * @param bool true -> $finalContent is preg_replace replace param
+  * @return void
+  */
+  function colExportRule($colId, $regexp, $finalContent, $regex = false ) {
+    if( array_key_exists($colId, $this->colsDef) ) {
+      if ( !$regex ) {
+        $this->colsDef[$colId]['exportRules'][] = array('regexp' => $regexp, 'finalContent' => $finalContent );
+      }
+      else {
+        $this->colsDef[$colId]['exportRules'][] = array('regexp' => $regexp, 'regexContent' => $finalContent );
       }
     }
     else {
