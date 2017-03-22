@@ -17,34 +17,75 @@ class CsvExportTableController extends ExportTableController {
 
 
     if($dataDAOResult != false) {
+
+
       while( $rowVO = $dataDAOResult->fetch() ) {
+
 
         // dump rowVO into row
         $row = array();
-            
-        $row['rowReferenceKey'] = $rowVO->getter( $rowVO->getFirstPrimarykeyId() ); 
+
+        $row['rowReferenceKey'] = $rowVO->getter( $rowVO->getFirstPrimarykeyId() );
+        $rowId = $row['rowReferenceKey'];
+
         foreach($tableControl->colsDef as $colDefKey => $colDef){
-          $row[$colDefKey] = $rowVO->getter($colDefKey);
+
+          if( preg_match('#^(.*)\.(.*)$#', $colDefKey, $m )) {
+
+            $depList = $rowVO->getterDependence('id', $m[1] );
+
+
+            if( is_array($depList) && count($depList)>0 ) {
+              //Cogumelo::console($depList);
+              if(isset($depList[0])) {
+                $row[$colDefKey] = $depList[0]->getter($m[2]);
+              }
+              else {
+                $row[$colDefKey] = array_pop($depList)->getter($m[2]);
+              }
+
+
+            }
+            else {
+
+              $row[$colDefKey] = '' ;
+
+            }
+          }
+          else {
+            $row[$colDefKey] = $rowVO->getter($colDefKey);
+          }
+
         }
 
-        
         // modify row value if have colRules
         foreach($tableControl->colsDef as $colDefKey => $colDef) {
           // if have rules and matches with regexp
           if($colDef['rules'] != array() ) {
 
             foreach($colDef['rules'] as $rule){
-              if(preg_match( $rule['regexp'], $row[$colDefKey])) {
-                eval('$row[$colDefKey] = "'.$rule['finalContent'].'";');
-                break;
+              if( !isset( $rule['regexContent'] ) ) {
+                if(preg_match( $rule['regexp'], $row[$colDefKey])) {
+                  eval('$row[$colDefKey] = "'.$rule['finalContent'].'";');
+                  break;
+                }
+              }
+              else {
+                if( $row[$colDefKey] = preg_replace( $rule['regexp'], $rule['regexContent'], $row[$colDefKey] ) ) {
+                  break;
+                }
               }
             }
           }
         }
 
-        echo utf8_encode("".implode(",", $row)."\n"); 
+
+        echo utf8_encode("".implode(",", $row)."\n");
 
       }
+
+
+
     }
 
 

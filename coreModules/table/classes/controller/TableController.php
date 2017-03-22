@@ -420,7 +420,9 @@ class TableController{
     $fileName = str_replace( ' ', '_', $this->tabs['tabs'][$this->currentTab] );
     $p = array(
         'filters' =>  $this->getFilters(),
-        'order' => $this->orderIntoArray()
+        'order' => $this->orderIntoArray(),
+        'affectsDependences' => $this->affectsDependences , //array('ResourceTopicModel'),
+        'joinType' => $this->joinType
     );
 
     eval('$lista = $this->model->'. $this->controllerMethodAlias['list'].'( $p );');
