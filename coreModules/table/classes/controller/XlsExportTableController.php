@@ -115,10 +115,6 @@ class XlsExportTableController extends ExportTableController {
       }
 
 
-
-
-
-
       echo "</tbody>\n";
       echo "</table>\n";
       echo "</body>\n";
