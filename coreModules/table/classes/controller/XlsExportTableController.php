@@ -22,6 +22,14 @@ class XlsExportTableController extends ExportTableController {
     echo "<table class='table table-striped'>\n";
     echo "<tbody>\n";
 
+
+    // excell HEADER
+    echo "<tr>\n";
+    echo "<th>\n";
+    echo utf8_decode(implode("</th>\n<th>", $tableControl->colsIntoArray() ));
+    echo "</th>\n";
+    echo "</tr>\n";
+
     if($dataDAOResult != false) {
 
 
