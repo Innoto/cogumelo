@@ -649,7 +649,7 @@ class FormController implements Serializable {
     @param mixed $fieldValue Valor del campo
    */
   private function prepareFieldFileValue( $fieldName, $fieldValue ) {
-    error_log( 'prepareFieldFileValue: ' . $fieldName );
+    // error_log( 'prepareFieldFileValue: ' . $fieldName );
     $newValue = null;
 
     if( !empty( $fieldValue ) && is_array( $fieldValue ) ) {
@@ -1422,9 +1422,9 @@ class FormController implements Serializable {
     @return boolean
    */
   public function processFileFields( $fieldNames = false ) {
-    error_log( '---------------' );
-    error_log( 'FormController: processFileFields(fieldNames): ' . json_encode( $fieldNames ) );
-    error_log( '---------------' );
+    // error_log( '---------------' );
+    // error_log( 'FormController: processFileFields(fieldNames): ' . json_encode( $fieldNames ) );
+    // error_log( '---------------' );
 
     $result = true;
 
@@ -1609,9 +1609,9 @@ class FormController implements Serializable {
       $this->revertFileFieldsLoaded();
     }
 
-    error_log( '---------------' );
-    error_log( 'FormController: processFileFields - FIN' );
-    error_log( '---------------' );
+    // error_log( '---------------' );
+    // error_log( 'FormController: processFileFields - FIN' );
+    // error_log( '---------------' );
     return $result;
   } // function processFileFields
 
@@ -1802,7 +1802,7 @@ class FormController implements Serializable {
       $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify?'.
         'secret='.$secret.'&response='.$response;
       $jsonResponse = file_get_contents( $verifyUrl );
-      error_log( '$jsonResponse: '.$jsonResponse );
+      // error_log( '$jsonResponse: '.$jsonResponse );
       $response = ( $jsonResponse ) ? json_decode( $jsonResponse ) : false;
       $validate = ( $response && $response->success ) ? true : false;
     }
