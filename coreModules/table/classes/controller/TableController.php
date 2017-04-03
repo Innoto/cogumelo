@@ -195,7 +195,7 @@ class TableController{
     if( $this->currentTab === null) {
       $this->currentTab = $defaultKey;
     }
-    $this->tabs = array('tabsKey' => $tabsKey, 'tabs' => $tabs, 'defaultKey' => $defaultKey);
+    $this->tabs = array('tabsKey' => $tabsKey, 'tabs' => $tabs, 'defaultKey' => $this->currentTab);
   }
 
 
