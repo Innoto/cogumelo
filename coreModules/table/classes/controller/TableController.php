@@ -16,6 +16,7 @@ class TableController{
   var $control = false;
   var $clientData = array();
   var $colsDef = array();
+  var $colsDefToExport = array();
   var $colsClasses = array();
 
   var $eachRowUrl = '';
@@ -106,6 +107,20 @@ class TableController{
   function setCol($colId, $colName = false) {
     $this->colsDef[$colId] = array('name' => $colName, 'rules' => array(), 'exportRules'=> array() );
   }
+
+
+    /**
+    * Set table col (additionally to export)
+    *
+    * @param string $colId id of col in VO
+    * @param string $colName. if false it gets the VO's col description.
+    * @return void
+    */
+    function setColToExport($colId, $colName = false) {
+      $this->colsDefToExport[$colId] = array('name' => $colName, 'rules' => array(), 'exportRules'=> array() );
+    }
+
+
 
   /**
   * Unset table col
@@ -421,6 +436,22 @@ class TableController{
 
     return $colsArray;
   }
+
+  /**
+  * Turn colsToExport into array
+  *
+  * @return array
+  */
+  function colsToExportIntoArray() {
+    $colsArray = array();
+
+    foreach(  $this->colsDefToExport as $colKey => $col ) {
+      $colsArray[ $colKey ] = $col['name'];
+    }
+
+    return $colsArray;
+  }
+
 
 
   /**

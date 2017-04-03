@@ -26,7 +26,7 @@ class XlsExportTableController extends ExportTableController {
     // excell HEADER
     echo "<tr>\n";
     echo "<th>\n";
-    echo utf8_decode(implode("</th>\n<th>", $tableControl->colsIntoArray() ));
+    echo utf8_decode(implode("</th>\n<th>", array_merge($tableControl->colsIntoArray(), $tableControl->colsToExportIntoArray()) ));
     echo "</th>\n";
     echo "</tr>\n";
 
@@ -42,7 +42,9 @@ class XlsExportTableController extends ExportTableController {
         $row['rowReferenceKey'] = $rowVO->getter( $rowVO->getFirstPrimarykeyId() );
         $rowId = $row['rowReferenceKey'];
 
-        foreach($tableControl->colsDef as $colDefKey => $colDef){
+        $colsDefFinal = array_merge( $tableControl->colsDef, $tableControl->colsDefToExport );
+
+        foreach( $colsDefFinal as $colDefKey => $colDef) {
 
           if( preg_match('#^(.*)\.(.*)$#', $colDefKey, $m )) {
 
