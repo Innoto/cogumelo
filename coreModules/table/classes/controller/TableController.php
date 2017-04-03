@@ -34,7 +34,7 @@ class TableController{
   var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
   var $tabs = false;
   var $searchId = 'tableSearch';
-  var $currentTab = '*';
+  var $currentTab = null;
   var $filters = array();
   var $defaultFilters = array();
   var $extraFilters = array();
