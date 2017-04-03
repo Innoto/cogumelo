@@ -192,9 +192,9 @@ class TableController{
   * @return void
   */
   function setTabs($tabsKey ,$tabs, $defaultKey) {
-
-    $this->currentTab = $defaultKey;
-
+    if( $this->currentTab === null) {
+      $this->currentTab = $defaultKey;
+    }
     $this->tabs = array('tabsKey' => $tabsKey, 'tabs' => $tabs, 'defaultKey' => $this->currentTab);
   }
 
