@@ -354,10 +354,15 @@ class FormConnector extends View {
         $fieldPrev = $form->getFieldValue( $fieldName );
 
         $fileGroup = false;
+        $multipleFileField = false;
         $multipleIndex = false;
         if( $fieldPrev['status'] === 'GROUP' ) {
           // Necesitamos informacion extra porque es un grupo de ficheros
-          $fileGroup = $fieldPrev['idGroup'];
+          $multipleFileField = true;
+
+          if( isset($fieldPrev['idGroup']) ) {
+            $fileGroup = $fieldPrev['idGroup'];
+          }
 
           if( isset( $_POST['fileTempId'] ) ) {
             $multipleIndex = $_POST['fileTempId'];
@@ -422,7 +427,7 @@ class FormConnector extends View {
 
 
 
-          if( $fileGroup ) {
+          if( $multipleFileField ) {
             $fieldNew = $fieldPrev;
             $fieldPrev = $form->getFieldValue( $fieldName );
             if( $fieldNew !== null ) {
