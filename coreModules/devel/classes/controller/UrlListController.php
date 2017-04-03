@@ -43,8 +43,10 @@ class UrlListController
     global $_C;
     $regex_array = array();
 
-    foreach( $_C->getUrlPatternsToArray() as $regex => $dest ) {
-      array_push($regex_array, array('regex'=>$regex, 'dest' => $dest) );
+    if( $_C->getUrlPatternsToArray() !== null ) {
+      foreach( $_C->getUrlPatternsToArray() as $regex => $dest ) {
+        array_push($regex_array, array('regex'=>$regex, 'dest' => $dest) );
+      }
     }
 
     return array('name' => 'app', 'regex_list' => $regex_array);
@@ -52,4 +54,3 @@ class UrlListController
 
 
 }
-
