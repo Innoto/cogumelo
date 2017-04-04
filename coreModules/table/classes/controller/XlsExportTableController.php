@@ -9,7 +9,7 @@ class XlsExportTableController extends ExportTableController {
 
   function headers($fileName) {
     header("Content-Type:   application/vnd.ms-excel; charset=utf-8");
-    header("Content-Disposition: attachment; filename=Export.xsl");
+    header("Content-Disposition: attachment; filename=Export.xls");
     header("Expires: 0");
     header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
     header("Cache-Control: private",false);
