@@ -34,13 +34,36 @@ class FiledataModel extends Model {
       'type' => 'VARCHAR',
       'size' => 150,
       'multilang' => true
-    )
+    ),
+    'user' => [
+      'type'=>'FOREIGN',
+      'vo' => 'UserModel',
+      'key'=> 'id'
+    ],
+    'privateMode' => [
+      'type' => 'TINYINT',
+      'default' => null
+    ]
   );
+
 
   static $extraFilters = array(
     'notInId' => ' filedata_filedata.id NOT IN (?) ',
     'idIn' => ' filedata_filedata.id IN (?) '
   );
+
+
+  var $deploySQL = array(
+    array(
+      'version' => 'filedata#1.1',
+      'sql'=> '
+        ALTER TABLE filedata_filedata
+        ADD COLUMN user INT DEFAULT NULL,
+        ADD COLUMN privateMode TINYINT DEFAULT NULL
+      '
+    )
+  );
+
 
   public function __construct( $datarray = array(), $otherRelObj = false ) {
     parent::__construct( $datarray, $otherRelObj );

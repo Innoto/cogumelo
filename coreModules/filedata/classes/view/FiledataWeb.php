@@ -33,8 +33,12 @@ class FiledataWeb extends View {
     Visualizamos un fichero de Form
   */
   public function webFormFileShow( $urlParams ) {
-    // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['1'] );
-    $this->fileSendCommon( $urlParams['1'], $this->filesAppPath, 'web' );
+    // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['fileId'] );
+    $fileName = false;
+    if( isset( $urlParams['fileName'] ) && mb_strlen( $urlParams['fileName'] ) > 1 ) {
+      $fileName = substr( strrchr( $urlParams['fileName'], '/' ), 1 );
+    }
+    $this->fileSendCommon( $urlParams['fileId'], $fileName, $this->filesAppPath, 'web' );
   } // function webFormFileShow()
 
 
@@ -43,8 +47,12 @@ class FiledataWeb extends View {
     Descargamos un fichero de Form
   */
   public function webFormFileDownload( $urlParams ) {
-    // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['1'] );
-    $this->fileSendCommon( $urlParams['1'], $this->filesAppPath, 'download' );
+    // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['fileId'] );
+    $fileName = false;
+    if( isset( $urlParams['fileName'] ) && mb_strlen( $urlParams['fileName'] ) > 1 ) {
+      $fileName = substr( strrchr( $urlParams['fileName'], '/' ), 1 );
+    }
+    $this->fileSendCommon( $urlParams['fileId'], $fileName, $this->filesAppPath, 'download' );
   } // function webFormFileShow()
 
 
@@ -52,47 +60,104 @@ class FiledataWeb extends View {
   /**
     Visualizamos el fichero
   */
-  public function fileSendCommon( $fileId, $basePath = false, $destination = 'web' ) {
+  private function fileSendCommon( $fileId, $fileName, $basePath = false, $destination = 'web' ) {
     // error_log( "FiledataWeb: fileSendCommon( $fileId, $basePath, $destination )" );
+    $fileInfo = false;
 
-    $fileInfo = $this->loadFileInfo( $fileId );
+    $error = false;
+
+    $disableRawUrl = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrl' );
+
+    if( $fileId && ( $fileName || !$disableRawUrl ) ) {
+      $fileInfo = $this->loadFileInfo( $fileId );
+    }
 
     if( $fileInfo ) {
-      switch( $destination ) {
-        case 'download':
-          if( !$this->webDownloadFile( $fileInfo, $basePath ) ) {
-            cogumelo::error( 'Imposible enviar el elemento solicitado.' );
+      if( !$disableRawUrl || $fileName === $fileInfo['name'] ) {
+        if( $fileInfo['validatedAccess'] ) {
+          switch( $destination ) {
+            case 'download':
+              if( !$this->webDownloadFile( $fileInfo, $basePath ) ) {
+                $error = 1;
+              }
+              break;
+            default:
+              if( !$this->webShowFile( $fileInfo, $basePath ) ) {
+                $error = 2;
+              }
+              break;
           }
-          break;
-        default:
-          if( !$this->webShowFile( $fileInfo, $basePath ) ) {
-            cogumelo::error( 'Imposible mostrar el elemento solicitado.' );
-          }
-          break;
+        }
+        else {
+          $error = 5;
+        }
+      }
+      else {
+        $error = 3;
       }
     }
     else {
-      cogumelo::error( 'Imposible cargar el elemento solicitado.' );
+      $error = 4;
+    }
+
+    if( $error ) {
+      header('HTTP/1.0 404 Not Found');
+      cogumelo::error( 'Imposible cargar el elemento solicitado. ('.$error.')' );
     }
   } // function fileSendCommon()
 
+
+  public function validateAccess( $fileInfo ) {
+    $validated = false;
+
+    if( isset( $fileInfo['privateMode'] ) && $fileInfo['privateMode'] > 0 ) {
+      if( isset( $fileInfo['user'] ) && $fileInfo['user'] !== null ) {
+        error_log( 'Verificando usuario logueado para acceder a fichero...' );
+
+        $useraccesscontrol = new UserAccessController();
+        $user = $useraccesscontrol->getSessiondata();
+        if( $user && $user['data']['active'] ) {
+          unset( $user['data']['password'] );
+          error_log( 'USER: '.json_encode( $user ) );
+          if( $user['data']['id'] === $fileInfo['user'] ) {
+            // El fichero es del usuario actual
+            error_log( 'Verificado por ID' );
+            $validated = true;
+          }
+          else {
+            $validRoles = [ 'filedata:privateAccess' ];
+            if( $useraccesscontrol->checkPermissions( $validRoles, 'admin:full' ) ) {
+              // Permiso de acceso a todos los ficheros
+              error_log( 'Verificado por Rol' );
+              $validated = true;
+            }
+          }
+        }
+      }
+    }
+    else {
+      $validated = true;
+    }
+
+    return $validated;
+  }
 
 
   /**
     Load File info
   */
   public function loadFileInfo( $fileId ) {
-    // error_log( 'FiledataWeb: loadFileInfo(): ' . $fileId );
+    error_log( 'FiledataWeb: loadFileInfo(): ' . $fileId );
 
     $fileInfo = false;
 
     $fileModel = new filedataModel();
     $fileList = $fileModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) );
-    $fileObj = $fileList->fetch();
+    $fileObj = ( gettype( $fileList ) === 'object' ) ? $fileList->fetch() : false;
+    $fileInfo = ( gettype( $fileObj ) === 'object' ) ? $fileObj->getAllData('onlydata') : false;
 
-    if( $fileObj ) {
-      $allData = $fileObj->getAllData();
-      $fileInfo = $allData['data'];
+    if( $fileInfo ) {
+      $fileInfo['validatedAccess'] = $this->validateAccess( $fileInfo );
     }
 
     return $fileInfo;
@@ -124,7 +189,7 @@ class FiledataWeb extends View {
   /**
     Visualizamos el fichero en la web
   */
-  public function webShowFile( $fileInfo, $basePath = '' ) {
+  private function webShowFile( $fileInfo, $basePath = '' ) {
     // error_log( 'FiledataWeb: webShowFile() ' . print_r( $fileInfo, true ) );
 
     $filePath = $basePath . $fileInfo['absLocation'];
@@ -154,7 +219,7 @@ class FiledataWeb extends View {
   /**
     Descargamos el fichero
   */
-  public function webDownloadFile( $fileInfo, $basePath = '' ) {
+  private function webDownloadFile( $fileInfo, $basePath = '' ) {
     // error_log( 'FiledataWeb: webDownloadFile() ' . print_r( $fileInfo, true ) );
 
     $filePath = $basePath . $fileInfo['absLocation'];

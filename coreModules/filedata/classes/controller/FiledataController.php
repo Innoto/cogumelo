@@ -251,6 +251,14 @@ class FiledataController {
       }
       $modelInfo['name'] = $this->secureFileName( $modelInfo['name'] );
 
+      if( !isset( $modelInfo['user'] ) ) {
+        $useraccesscontrol = new UserAccessController();
+        $user = $useraccesscontrol->getSessiondata();
+        if( $user && $user['data']['active'] ) {
+          $modelInfo['user'] = $user['data']['id'];
+        }
+      }
+
       $filedataObj = new FiledataModel( $modelInfo );
       $filedataObj->save();
 
