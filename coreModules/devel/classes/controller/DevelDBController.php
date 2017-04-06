@@ -214,7 +214,7 @@ class  DevelDBController
 
 
     // Multilang expression
-    preg_match_all( "#[\{]\s*multilang\s*\:\s*(.*?)\s*[\}]#", $sql, $matches);
+    preg_match_all( "#[\{]\s*multilang\s*\:\s*((.|\n)*?)\s*[\}]#", $sql, $matches);
 
     if( count($matches[0]) ) {
       for($mi=0; count($matches[0]) > $mi; $mi++ ) {
