@@ -905,8 +905,8 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
 
   // Element to download
   if( fileInfo.id !== false ) {
-    $fileBoxElem.append( '<a class="formFileDownload" href="/cgmlformfilewd/' + fileInfo.id +
-      '" target="_blank"><i class="fa fa-download"></i></a>' );
+    $fileBoxElem.append( '<a class="formFileDownload" href="/cgmlformfilewd/' +
+      fileInfo.id + '/' + fileInfo.name + '" target="_blank"><i class="fa fa-download"></i></a>' );
   }
 
   var tnSrc = cogumelo.publicConf.media+'/module/form/img/file.png';
