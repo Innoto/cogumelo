@@ -414,11 +414,26 @@ class TableController{
       $ordArray = array();
       foreach(  $this->clientData['order'] as $ordObj ) {
         if(!preg_match('#^(.*)\.(.*)$#', $ordObj['key'], $m ) ) {
-          $ordArray[ $ordObj['key'] ] = $ordObj['value'];
+
+
+          $modelClass = get_class( $this->model );
+          $modelCols = $modelClass::$cols;
+          if( isset($modelCols[$ordObj['key']]['multilang']) && $modelCols[$ordObj['key']]['multilang'] == true ) {
+            global $C_LANG;
+            $ordKey = $ordObj['key'].'_'.$C_LANG;
+          }
+          else {
+            $ordKey = $ordObj['key'];
+          }
+
+
+
+          $ordArray[ $ordKey ] = $ordObj['value'];
         }
       }
     }
-
+    //var_dump($ordArray);
+    //exit;
     return $ordArray;
   }
 
