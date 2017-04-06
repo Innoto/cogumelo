@@ -420,7 +420,7 @@ class TableController{
           $modelCols = $modelClass::$cols;
           if( isset($modelCols[$ordObj['key']]['multilang']) && $modelCols[$ordObj['key']]['multilang'] == true ) {
             global $C_LANG;
-            $ordKey = $ordObj['key'].'_es';
+            $ordKey = $ordObj['key'].'_'.$C_LANG;
           }
           else {
             $ordKey = $ordObj['key'];
