@@ -63,13 +63,15 @@ class FiledataWeb extends View {
   private function fileSendCommon( $fileId, $fileName, $basePath = false, $destination = 'web' ) {
     // error_log( "FiledataWeb: fileSendCommon( $fileId, $basePath, $destination )" );
     $fileInfo = false;
-
     $error = false;
 
     $disableRawUrl = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrl' );
 
+    filedata::load('controller/FiledataController.php');
+    $filedataCtrl = new FiledataController();
+
     if( $fileId && ( $fileName || !$disableRawUrl ) ) {
-      $fileInfo = $this->loadFileInfo( $fileId );
+      $fileInfo = $filedataCtrl->loadFileInfo( $fileId );
     }
 
     if( $fileInfo ) {
@@ -78,90 +80,34 @@ class FiledataWeb extends View {
           switch( $destination ) {
             case 'download':
               if( !$this->webDownloadFile( $fileInfo, $basePath ) ) {
-                $error = 1;
+                $error = 'ND';
               }
               break;
             default:
               if( !$this->webShowFile( $fileInfo, $basePath ) ) {
-                $error = 2;
+                $error = 'NS';
               }
               break;
           }
         }
         else {
-          $error = 5;
+          $error = 'NV';
         }
       }
       else {
-        $error = 3;
+        $error = 'NN';
       }
     }
     else {
-      $error = 4;
+      $error = 'NL';
     }
 
     if( $error ) {
       header('HTTP/1.0 404 Not Found');
-      cogumelo::error( 'Imposible cargar el elemento solicitado. ('.$error.')' );
+      cogumelo::error( 'fileSend: Imposible cargar el elemento solicitado. ('.$error.')' );
     }
   } // function fileSendCommon()
 
-
-  public function validateAccess( $fileInfo ) {
-    $validated = false;
-
-    if( isset( $fileInfo['privateMode'] ) && $fileInfo['privateMode'] > 0 ) {
-      if( isset( $fileInfo['user'] ) && $fileInfo['user'] !== null ) {
-        error_log( 'Verificando usuario logueado para acceder a fichero...' );
-
-        $useraccesscontrol = new UserAccessController();
-        $user = $useraccesscontrol->getSessiondata();
-        if( $user && $user['data']['active'] ) {
-          unset( $user['data']['password'] );
-          error_log( 'USER: '.json_encode( $user ) );
-          if( $user['data']['id'] === $fileInfo['user'] ) {
-            // El fichero es del usuario actual
-            error_log( 'Verificado por ID' );
-            $validated = true;
-          }
-          else {
-            $validRoles = [ 'filedata:privateAccess' ];
-            if( $useraccesscontrol->checkPermissions( $validRoles, 'admin:full' ) ) {
-              // Permiso de acceso a todos los ficheros
-              error_log( 'Verificado por Rol' );
-              $validated = true;
-            }
-          }
-        }
-      }
-    }
-    else {
-      $validated = true;
-    }
-
-    return $validated;
-  }
-
-
-  /**
-    Load File info
-  */
-  public function loadFileInfo( $fileId ) {
-    error_log( 'FiledataWeb: loadFileInfo(): ' . $fileId );
-
-    $fileInfo = false;
-
-    $fileModel = new filedataModel();
-    $fileList = $fileModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) );
-    $fileObj = ( gettype( $fileList ) === 'object' ) ? $fileList->fetch() : false;
-    $fileInfo = ( gettype( $fileObj ) === 'object' ) ? $fileObj->getAllData('onlydata') : false;
-
-    if( $fileInfo ) {
-      $fileInfo['validatedAccess'] = $this->validateAccess( $fileInfo );
-    }
-
-    return $fileInfo;
-  } // function loadFileInfo()
 
 
   public function webFormPublic( $name ) {

@@ -6,8 +6,8 @@ class FiledataController {
   // Ruta a partir de la que se crean los directorios y ficheros subidos
   var $filesAppPath = false;
 
-  var $fileId = false;
-  var $fileInfo = false;
+  // var $fileId = false;
+  // var $fileInfo = false;
 
   private $replaceAcents = array(
     'from' => array( 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï',
@@ -37,43 +37,67 @@ class FiledataController {
   );
 
 
-  public function __construct( $fileId = false ) {
-    // error_log( 'FiledataController __construct: ' . $fileId );
-
+  public function __construct() {
+    // error_log( 'FiledataController __construct' );
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
-
-    if( $fileId ) {
-      $this->fileInfo = $this->loadFileInfo( $fileId );
-      if( $this->fileInfo ) {
-        $this->fileId = $fileId;
-      }
-    }
   }
 
 
 
   /**
-    Load File info
-  */
+   * Load File info
+   */
   public function loadFileInfo( $fileId ) {
     // error_log( 'FiledataController: loadFileInfo(): ' . $fileId );
+    $fileInfo = false;
 
-    if( $this->fileId !== $fileId || $this->fileInfo === false ) {
-      $this->fileId = false;
-      $this->fileInfo = false;
+    $fileModel = new filedataModel();
+    $fileList = $fileModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) );
+    $fileObj = ( gettype( $fileList ) === 'object' ) ? $fileList->fetch() : false;
+    $fileInfo = ( gettype( $fileObj ) === 'object' ) ? $fileObj->getAllData('onlydata') : false;
 
-      $fileModel = new filedataModel();
-      if( $fileList = $fileModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) ) ) {
-        if( $fileObj = $fileList->fetch() ) {
-          $this->fileId = $fileId;
-          $this->fileInfo = $fileObj->getAllData( 'onlydata' );
+    if( $fileInfo ) {
+      $fileInfo['validatedAccess'] = $this->validateAccess( $fileInfo );
+    }
+
+    return $fileInfo;
+  } // function loadFileInfo()
+
+
+  public function validateAccess( $fileInfo ) {
+    $validated = false;
+
+    if( isset( $fileInfo['privateMode'] ) && $fileInfo['privateMode'] > 0 ) {
+      if( isset( $fileInfo['user'] ) && $fileInfo['user'] !== null ) {
+        error_log( 'Verificando usuario logueado para acceder a fichero...' );
+
+        $useraccesscontrol = new UserAccessController();
+        $user = $useraccesscontrol->getSessiondata();
+        if( $user && $user['data']['active'] ) {
+          unset( $user['data']['password'] );
+          error_log( 'USER: '.json_encode( $user ) );
+          if( $user['data']['id'] === $fileInfo['user'] ) {
+            // El fichero es del usuario actual
+            error_log( 'Verificado por ID' );
+            $validated = true;
+          }
+          else {
+            $validRoles = [ 'filedata:privateAccess' ];
+            if( $useraccesscontrol->checkPermissions( $validRoles, 'admin:full' ) ) {
+              // Permiso de acceso a todos los ficheros
+              error_log( 'Verificado por Rol' );
+              $validated = true;
+            }
+          }
         }
       }
     }
+    else {
+      $validated = true;
+    }
 
-    //error_log( print_r( $this->fileInfo, true ) );
-    return $this->fileInfo;
-  } // function loadFileInfo()
+    return $validated;
+  }
 
 
   /**
