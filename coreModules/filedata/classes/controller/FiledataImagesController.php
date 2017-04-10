@@ -24,27 +24,15 @@ class FiledataImagesController {
     //error_log( 'FiledataImagesController __construct: ' . $fileId );
 
     filedata::load('controller/FiledataController.php');
-    $filedataCtrl = new FiledataController( $fileId );
-    $this->fileId = $filedataCtrl->fileId;
-    $this->fileInfo = $filedataCtrl->fileInfo;
+    $this->filedataCtrl = new FiledataController();
+    $this->fileInfo = $this->filedataCtrl->loadFileInfo( $fileId );
+    $this->fileId = ( $this->fileInfo ) ? $this->fileInfo['id'] : false;
 
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
     $this->filesCachePath = Cogumelo::getSetupValue( 'mod:filedata:cachePath' );
+    $this->disableRawUrlProfile = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrlProfile' );
   }
 
-
-  public function loadFileInfo( $fileId ) {
-    //error_log( 'FiledataImagesController: loadFileInfo(): ' . $fileId );
-
-    if( $this->fileId !== $fileId || $this->fileInfo === false ) {
-      $filedataCtrl->loadFileInfo( $fileId );
-      $this->fileId = $filedataCtrl->fileId;
-      $this->fileInfo = $filedataCtrl->fileInfo;
-    }
-
-    //error_log( print_r( $this->fileInfo, true ) );
-    return $this->fileInfo;
-  }
 
   public function setProfile( $profile ) {
     //error_log( "FiledataImagesController: setProfile( $profile )" );
@@ -68,6 +56,10 @@ class FiledataImagesController {
       $this->profile['saveQuality'] = ( isset( $conf['saveQuality'] ) ) ? $conf['saveQuality'] : false;
 
       $this->profile['cache'] = ( isset( $conf['cache'] ) ) ? $conf['cache'] : true; // true by default
+
+      if( !empty( $this->fileInfo['privateMode'] ) ) {
+        $this->profile['cache'] = false;
+      }
 
       if( isset( $this->profile['padding'] ) && count( $this->profile['padding'] ) !== 4 ) {
         if( !is_array( $this->profile['padding'] ) ) {
@@ -181,12 +173,12 @@ class FiledataImagesController {
       $imgRoute = $imgRouteOriginal;
     }
     else {
-      $imgRouteInfo = pathinfo( $imgRoute );
-      $linkIdRoute = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['id'] .'.'. $imgRouteInfo['extension'];
-      if( $this->profile['cache'] && !file_exists( $linkIdRoute ) ) {
-        //error_log( "symlink( $imgRoute, $linkIdRoute )" );
-        // symlink( $imgRoute, $linkIdRoute );
-        symlink( $imgRouteInfo['basename'], $linkIdRoute );
+      if( $this->profile['cache'] && !$this->disableRawUrlProfile ) {
+        $imgRouteInfo = pathinfo( $imgRoute );
+        $linkIdRoute = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['id'] .'.'. $imgRouteInfo['extension'];
+        if( !file_exists( $linkIdRoute ) && file_exists( $imgRoute ) ) {
+          symlink( $imgRouteInfo['basename'], $linkIdRoute );
+        }
       }
     }
     //error_log( "FiledataImagesController: getRouteProfile = $imgRoute" );
