@@ -927,7 +927,7 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
     }
 
     if( tnProfile ) {
-      tnSrc = '/cgmlImg/'+fileInfo.id+'/'+tnProfile+'/'+fileInfo.id+'.jpg';
+      tnSrc = '/cgmlImg/'+fileInfo.id+'/'+tnProfile+'/'+fileInfo.name;
     }
   }
 
