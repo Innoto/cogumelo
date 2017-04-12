@@ -39,6 +39,7 @@ class FormController implements Serializable {
   private $captchaUse = false;
   private $captchaResponse = false;
   private $keepAlive = true;
+  private $formMarginTop = 0;
   private $fields = [];
   private $rules = [];
   private $groups = [];
@@ -220,6 +221,19 @@ class FormController implements Serializable {
    */
   public function setKeepAlive( $status = true ) {
     $this->keepAlive = ($status) ? true : false;
+  }
+
+  /**
+   * Establece un margen superior para el posicionamiento en caso de error
+   *
+   * @param integer $formMarginTop Desplazamiento en pixels
+   */
+  public function setMarginTop( $formMarginTop = 0 ) {
+    $this->formMarginTop = $formMarginTop;
+  }
+
+  public function getMarginTop() {
+    return $this->formMarginTop;
   }
 
   /**
@@ -2313,6 +2327,11 @@ class FormController implements Serializable {
     if( $this->htmlEditor ) {
       $html .= '  activateHtmlEditor( "'.$this->id.'" );'."\n";
     }
+
+    if( $this->getMarginTop() ) {
+      $html .= '  setFormInfo( "'.$this->id.'", "marginTop", '.$this->getMarginTop().' );'."\n";
+    }
+
 
 
     $html .= '});'."\n";

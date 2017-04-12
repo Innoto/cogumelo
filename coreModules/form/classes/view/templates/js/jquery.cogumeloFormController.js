@@ -225,7 +225,6 @@ function unsetSubmitElement( evnt ) {
 }
 
 function setValidateForm( idForm, rules, messages ) {
-
   $( '[form="'+idForm+'"][type="submit"]' ).on({
     // 'mouseenter' : setSubmitElement,
     'focusin' : setSubmitElement,
@@ -280,11 +279,25 @@ function setValidateForm( idForm, rules, messages ) {
           $(window).scrollTop( topErr );
         }
       */
+    },
+    invalidHandler: function( $elem, validator ) {
+      // console.log( 'JQV invalidHandler:', $elem );
+      if( validator.numberOfInvalids() ) {
+        $elem = $( validator.errorList[0].element );
+        var formMarginTop = getFormInfo( $elem.attr('form'), 'marginTop' );
+        var scrollTopValue = $elem.offset().top;
+
+        if( formMarginTop !== null ) {
+          scrollTopValue -= formMarginTop;
+        }
+        console.log( 'JQV invalidHandler:', formMarginTop, scrollTopValue );
+        $( 'html, body' ).animate( { scrollTop: scrollTopValue }, 1000 );
+      }
     }
   });
 
   // Cargamos el fichero del idioma del entorno
-  if(cogumelo.publicConf.C_LANG !== 'en'){
+  if( cogumelo.publicConf.C_LANG !== 'en' ) {
     basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
   }
 
