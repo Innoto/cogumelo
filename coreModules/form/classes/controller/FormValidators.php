@@ -117,6 +117,10 @@ class FormValidators extends FormValidatorsExtender {
     return false;
   }
 
+  public function val_dateUE( $value ) {
+    return preg_match( '/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4})$/', $value ) === 1;
+  }
+
   public function val_dateISO( $value ) {
     return preg_match( '/^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/', $value ) === 1;
   }

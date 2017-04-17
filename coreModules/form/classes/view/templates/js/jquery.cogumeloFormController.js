@@ -225,7 +225,6 @@ function unsetSubmitElement( evnt ) {
 }
 
 function setValidateForm( idForm, rules, messages ) {
-
   $( '[form="'+idForm+'"][type="submit"]' ).on({
     // 'mouseenter' : setSubmitElement,
     'focusin' : setSubmitElement,
@@ -280,11 +279,25 @@ function setValidateForm( idForm, rules, messages ) {
           $(window).scrollTop( topErr );
         }
       */
+    },
+    invalidHandler: function( evnt, validator ) {
+      console.log( 'JQV invalidHandler:', evnt );
+      if( validator.numberOfInvalids() ) {
+        $elem = $( validator.errorList[0].element );
+        var formMarginTop = getFormInfo( $elem.attr('form'), 'marginTop' );
+        var scrollTopValue = $elem.offset().top;
+
+        if( formMarginTop !== null && formMarginTop !== undefined ) {
+          scrollTopValue -= formMarginTop;
+        }
+        console.log( 'JQV invalidHandler:', formMarginTop, scrollTopValue );
+        $( 'html, body' ).animate( { scrollTop: scrollTopValue }, 1000 );
+      }
     }
   });
 
   // Cargamos el fichero del idioma del entorno
-  if(cogumelo.publicConf.C_LANG !== 'en'){
+  if( cogumelo.publicConf.C_LANG !== 'en' ) {
     basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
   }
 
@@ -368,6 +381,11 @@ function setValidateForm( idForm, rules, messages ) {
   // Si hay idiomas, buscamos campos multi-idioma en el form y los procesamos
   createSwitchFormLang( idForm );
 
+
+  // Default marginTop
+  setFormInfo( idForm, "marginTop", 150 );
+
+
   return $validateForm;
 } // function setValidateForm( idForm, rules, messages )
 
@@ -438,6 +456,7 @@ function formDoneError( form, response ) {
 
   var idForm = $( form ).attr( 'id' );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
+  var topErrScroll = 999999;
 
   var successActions = response.success;
   if ( successActions.onSubmitError ) {
@@ -458,6 +477,12 @@ function formDoneError( form, response ) {
     // console.log( errObj );
 
     if( errObj.fieldName !== false ) {
+      $inputElem = $( '[name="' + errObj.fieldName + '"][form="' + idForm + '"]' );
+      topElem = $inputElem.offset().top;
+      if( topElem && topErrScroll > topElem ) {
+        topErrScroll = topElem;
+      }
+
       if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
         var $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
         if( typeof $defMess !== 'string' ) {
@@ -473,6 +498,21 @@ function formDoneError( form, response ) {
       showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
     }
   } // for(var i in response.jvErrors)
+
+
+
+
+  if( topErrScroll != 999999 ) {
+    var formMarginTop = getFormInfo( idForm, 'marginTop' );
+    if( formMarginTop !== null && formMarginTop !== undefined ) {
+      topErrScroll -= formMarginTop;
+    }
+    console.log( 'JQV topErrScroll:', formMarginTop, topErrScroll );
+    $( 'html, body' ).animate( { scrollTop: topErrScroll }, 1000 );
+  }
+
+
+
 
   // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
   console.log( 'formDoneError (FIN)' );
@@ -905,8 +945,8 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
 
   // Element to download
   if( fileInfo.id !== false ) {
-    $fileBoxElem.append( '<a class="formFileDownload" href="/cgmlformfilewd/' + fileInfo.id +
-      '" target="_blank"><i class="fa fa-download"></i></a>' );
+    $fileBoxElem.append( '<a class="formFileDownload" href="/cgmlformfilewd/' +
+      fileInfo.id + '/' + fileInfo.name + '" target="_blank"><i class="fa fa-download"></i></a>' );
   }
 
   var tnSrc = cogumelo.publicConf.media+'/module/form/img/file.png';
@@ -927,7 +967,7 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
     }
 
     if( tnProfile ) {
-      tnSrc = '/cgmlImg/'+fileInfo.id+'/'+tnProfile+'/'+fileInfo.id+'.jpg';
+      tnSrc = '/cgmlImg/'+fileInfo.id+'/'+tnProfile+'/'+fileInfo.name;
     }
   }
 

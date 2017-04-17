@@ -33,8 +33,12 @@ class FiledataWeb extends View {
     Visualizamos un fichero de Form
   */
   public function webFormFileShow( $urlParams ) {
-    // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['1'] );
-    $this->fileSendCommon( $urlParams['1'], $this->filesAppPath, 'web' );
+    // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['fileId'] );
+    $fileName = false;
+    if( isset( $urlParams['fileName'] ) && mb_strlen( $urlParams['fileName'] ) > 1 ) {
+      $fileName = substr( strrchr( $urlParams['fileName'], '/' ), 1 );
+    }
+    $this->fileSendCommon( $urlParams['fileId'], $fileName, $this->filesAppPath, 'web' );
   } // function webFormFileShow()
 
 
@@ -43,8 +47,12 @@ class FiledataWeb extends View {
     Descargamos un fichero de Form
   */
   public function webFormFileDownload( $urlParams ) {
-    // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['1'] );
-    $this->fileSendCommon( $urlParams['1'], $this->filesAppPath, 'download' );
+    // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['fileId'] );
+    $fileName = false;
+    if( isset( $urlParams['fileName'] ) && mb_strlen( $urlParams['fileName'] ) > 1 ) {
+      $fileName = substr( strrchr( $urlParams['fileName'], '/' ), 1 );
+    }
+    $this->fileSendCommon( $urlParams['fileId'], $fileName, $this->filesAppPath, 'download' );
   } // function webFormFileShow()
 
 
@@ -52,51 +60,54 @@ class FiledataWeb extends View {
   /**
     Visualizamos el fichero
   */
-  public function fileSendCommon( $fileId, $basePath = false, $destination = 'web' ) {
+  private function fileSendCommon( $fileId, $fileName, $basePath = false, $destination = 'web' ) {
     // error_log( "FiledataWeb: fileSendCommon( $fileId, $basePath, $destination )" );
+    $fileInfo = false;
+    $error = false;
 
-    $fileInfo = $this->loadFileInfo( $fileId );
+    $disableRawUrl = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrl' );
+
+    filedata::load('controller/FiledataController.php');
+    $filedataCtrl = new FiledataController();
+
+    if( $fileId && ( $fileName || !$disableRawUrl ) ) {
+      $fileInfo = $filedataCtrl->loadFileInfo( $fileId );
+    }
 
     if( $fileInfo ) {
-      switch( $destination ) {
-        case 'download':
-          if( !$this->webDownloadFile( $fileInfo, $basePath ) ) {
-            cogumelo::error( 'Imposible enviar el elemento solicitado.' );
+      if( !$disableRawUrl || $fileName === $fileInfo['name'] ) {
+        if( $fileInfo['validatedAccess'] ) {
+          switch( $destination ) {
+            case 'download':
+              if( !$this->webDownloadFile( $fileInfo, $basePath ) ) {
+                $error = 'ND';
+              }
+              break;
+            default:
+              if( !$this->webShowFile( $fileInfo, $basePath ) ) {
+                $error = 'NS';
+              }
+              break;
           }
-          break;
-        default:
-          if( !$this->webShowFile( $fileInfo, $basePath ) ) {
-            cogumelo::error( 'Imposible mostrar el elemento solicitado.' );
-          }
-          break;
+        }
+        else {
+          $error = 'NV';
+        }
+      }
+      else {
+        $error = 'NN';
       }
     }
     else {
-      cogumelo::error( 'Imposible cargar el elemento solicitado.' );
+      $error = 'NL';
+    }
+
+    if( $error ) {
+      header('HTTP/1.0 404 Not Found');
+      cogumelo::error( 'fileSend: Imposible cargar el elemento solicitado. ('.$error.')' );
     }
   } // function fileSendCommon()
 
-
-
-  /**
-    Load File info
-  */
-  public function loadFileInfo( $fileId ) {
-    // error_log( 'FiledataWeb: loadFileInfo(): ' . $fileId );
-
-    $fileInfo = false;
-
-    $fileModel = new filedataModel();
-    $fileList = $fileModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) );
-    $fileObj = $fileList->fetch();
-
-    if( $fileObj ) {
-      $allData = $fileObj->getAllData();
-      $fileInfo = $allData['data'];
-    }
-
-    return $fileInfo;
-  } // function loadFileInfo()
 
 
   public function webFormPublic( $name ) {
@@ -124,7 +135,7 @@ class FiledataWeb extends View {
   /**
     Visualizamos el fichero en la web
   */
-  public function webShowFile( $fileInfo, $basePath = '' ) {
+  private function webShowFile( $fileInfo, $basePath = '' ) {
     // error_log( 'FiledataWeb: webShowFile() ' . print_r( $fileInfo, true ) );
 
     $filePath = $basePath . $fileInfo['absLocation'];
@@ -154,7 +165,7 @@ class FiledataWeb extends View {
   /**
     Descargamos el fichero
   */
-  public function webDownloadFile( $fileInfo, $basePath = '' ) {
+  private function webDownloadFile( $fileInfo, $basePath = '' ) {
     // error_log( 'FiledataWeb: webDownloadFile() ' . print_r( $fileInfo, true ) );
 
     $filePath = $basePath . $fileInfo['absLocation'];
