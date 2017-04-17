@@ -275,7 +275,7 @@ class FiledataController {
       }
       $modelInfo['name'] = $this->secureFileName( $modelInfo['name'] );
 
-      if( !isset( $modelInfo['user'] ) ) {
+      if( !isset( $modelInfo['user'] ) && class_exists('UserAccessController') ) {
         $useraccesscontrol = new UserAccessController();
         $user = $useraccesscontrol->getSessiondata();
         if( $user && $user['data']['active'] ) {
