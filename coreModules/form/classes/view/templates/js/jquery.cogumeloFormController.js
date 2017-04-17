@@ -554,7 +554,7 @@ function inputFileFieldChange( evnt ) {
 
 
 function processFilesInputFileField( formFileObjs, idForm, fieldName ) {
-  // console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
+  console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
 
   var valid = checkInputFileField( formFileObjs, idForm, fieldName );
 
@@ -1139,7 +1139,7 @@ function fileFieldDropZoneDrop( evnt ) {
 }
 
 function fileFieldDropZoneDragOver( evnt ) {
-  console.log( 'fileFieldDropZoneDragOver event: ', evnt );
+  // console.log( 'fileFieldDropZoneDragOver event: ', evnt );
 
   evnt.stopPropagation();
   evnt.preventDefault();
