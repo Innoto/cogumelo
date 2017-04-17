@@ -280,14 +280,14 @@ function setValidateForm( idForm, rules, messages ) {
         }
       */
     },
-    invalidHandler: function( $elem, validator ) {
-      // console.log( 'JQV invalidHandler:', $elem );
+    invalidHandler: function( evnt, validator ) {
+      console.log( 'JQV invalidHandler:', evnt );
       if( validator.numberOfInvalids() ) {
         $elem = $( validator.errorList[0].element );
         var formMarginTop = getFormInfo( $elem.attr('form'), 'marginTop' );
         var scrollTopValue = $elem.offset().top;
 
-        if( formMarginTop !== null ) {
+        if( formMarginTop !== null && formMarginTop !== undefined ) {
           scrollTopValue -= formMarginTop;
         }
         console.log( 'JQV invalidHandler:', formMarginTop, scrollTopValue );
@@ -381,6 +381,11 @@ function setValidateForm( idForm, rules, messages ) {
   // Si hay idiomas, buscamos campos multi-idioma en el form y los procesamos
   createSwitchFormLang( idForm );
 
+
+  // Default marginTop
+  setFormInfo( idForm, "marginTop", 150 );
+
+
   return $validateForm;
 } // function setValidateForm( idForm, rules, messages )
 
@@ -451,6 +456,7 @@ function formDoneError( form, response ) {
 
   var idForm = $( form ).attr( 'id' );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
+  var topErrScroll = 999999;
 
   var successActions = response.success;
   if ( successActions.onSubmitError ) {
@@ -471,6 +477,12 @@ function formDoneError( form, response ) {
     // console.log( errObj );
 
     if( errObj.fieldName !== false ) {
+      $inputElem = $( '[name="' + errObj.fieldName + '"][form="' + idForm + '"]' );
+      topElem = $inputElem.offset().top;
+      if( topElem && topErrScroll > topElem ) {
+        topErrScroll = topElem;
+      }
+
       if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
         var $defMess = $validateForm.defaultMessage( errObj.fieldName, errObj.ruleName );
         if( typeof $defMess !== 'string' ) {
@@ -486,6 +498,21 @@ function formDoneError( form, response ) {
       showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
     }
   } // for(var i in response.jvErrors)
+
+
+
+
+  if( topErrScroll != 999999 ) {
+    var formMarginTop = getFormInfo( idForm, 'marginTop' );
+    if( formMarginTop !== null && formMarginTop !== undefined ) {
+      topErrScroll -= formMarginTop;
+    }
+    console.log( 'JQV topErrScroll:', formMarginTop, topErrScroll );
+    $( 'html, body' ).animate( { scrollTop: topErrScroll }, 1000 );
+  }
+
+
+
 
   // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
   console.log( 'formDoneError (FIN)' );
