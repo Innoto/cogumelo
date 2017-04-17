@@ -1,6 +1,4 @@
 
-
-
 $.validator.addMethod(
   "numberEU",
   function( value, element ) {
@@ -534,3 +532,59 @@ $.validator.addMethod(
   },
   $.validator.format("Pocos ficheros. (Límite: {0} ficheros).")
 );
+
+
+// Accept a value from a file input based on size
+$.validator.addMethod(
+  "fileRequired",
+  function( value, element ) {
+    var valueResponse = false;
+
+    console.log( ' * * * formValidators::fileRequired ', $( element ) );
+    var $fileField = $( element );
+    var groupFiles = false;
+    var groupId = $fileField.attr('data-fm_group_id');
+    if( groupId && typeof cogumelo.formController.fileGroup[ groupId ] !== 'undefined' ) {
+      groupFiles = cogumelo.formController.fileGroup[ groupId ];
+    }
+    // console.log( ' * * * formValidators::multipleMin IDs', groupId, groupFiles, groupFiles.length );
+
+    var validateFiles = $fileField.data('validateFiles');
+    // console.log( ' * * * formValidators::multipleMin validateFiles=', validateFiles, validateFiles.length );
+
+    var countFiles = ( validateFiles ) ? validateFiles.length : 0;
+    if( groupFiles ) {
+      countFiles += groupFiles.length;
+    }
+    console.log( ' * * * formValidators::fileRequired countFiles=', countFiles );
+
+    if( countFiles > 0 ) {
+      valueResponse = true;
+    }
+
+
+    return valueResponse;
+  },
+  $.validator.format("Este campo es obligatorio.")
+);
+// // http://jqueryvalidation.org/required-method/
+// required: function( value, element, param ) {
+//   // check if dependency is met
+//   if ( !this.depend( param, element ) ) {
+//     return "dependency-mismatch";
+//   }
+//   if ( element.nodeName.toLowerCase() === "select" ) {
+//     // could be an array for select-multiple or a string, both are fine this way
+//     var val = $( element ).val();
+//     return val && val.length > 0;
+//   }
+//   if ( this.checkable( element ) ) {
+//     return this.getLength( value, element ) > 0;
+//   }
+//   return value.length > 0;
+// },
+
+
+
+
+
