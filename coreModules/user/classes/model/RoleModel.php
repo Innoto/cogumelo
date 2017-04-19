@@ -5,8 +5,7 @@ Cogumelo::load('coreModel/Model.php');
 define("ROLE_SUPERADMIN", "10");
 define("ROLE_USER", "11");
 
-class RoleModel extends Model
-{
+class RoleModel extends Model {
   static $tableName = 'user_role';
   static $cols = array(
     'id' => array(
@@ -24,8 +23,7 @@ class RoleModel extends Model
     )
   );
 
-  function __construct($datarray = array(),  $otherRelObj= false )
-  {
+  public function __construct( $datarray = array(), $otherRelObj = false ) {
     parent::__construct($datarray, $otherRelObj );
   }
 

@@ -709,6 +709,7 @@ class UserView extends View
    **/
   public function actionUserRolesForm() {
     $form = new FormController();
+    $valuesArray = false;
 
     if( $form->loadPostInput() ) {
       $form->validateForm();
@@ -717,18 +718,23 @@ class UserView extends View
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
 
-      if( !isset($valuesArray['user'])){
+      if( !isset($valuesArray['user']) ) {
         $form->addFieldRuleError('id', 'cogumelo', __('User Error unidentified'));
       }
+    }
 
+    if( !$form->existErrors() ) {
       $useraccesscontrol = new UserAccessController();
-      $onlySA = $useraccesscontrol->checkPermissions('only:SA');
+      $isSA = $useraccesscontrol->checkPermissions('only:SA');
+
       $roleModel = new RoleModel();
-      $role = $roleModel->listItems( array('filters' => array( 'name' => 'superAdmin' )) );
-      if(!$onlySA && in_array( $role->getter('id'), $valuesArray['checkroles'])){
+      $roleList = $roleModel->listItems( array('filters' => array( 'name' => 'superAdmin' ) ) );
+      $roleSaObj = ( gettype( $roleList ) === 'object' ) ? $roleList->fetch() : false;
+      $roleSaId = ( gettype( $roleSaObj ) === 'object' ) ? $roleSaObj->getter('id') : false;
+
+      if( !$isSA && $roleSaId !== false && in_array( $roleSaId, $valuesArray['checkroles'] ) ) {
         $form->addFieldRuleError('id', 'cogumelo', __(' Error unknown role'));
       }
-
     }
 
     return $form;
