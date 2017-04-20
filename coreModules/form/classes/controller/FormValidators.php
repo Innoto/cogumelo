@@ -385,6 +385,42 @@ class FormValidators extends FormValidatorsExtender {
   }
 
 
+  public function val_fileRequired( $value, $param ) {
+    error_log( ' * * * formValidators::-------------------------------------------------------------' );
+    error_log( ' * * * formValidators::val_fileRequired '. json_encode( $value ). '    PARAM:' .$param );
+
+    $result = false;
+
+    if( !isset( $value['multiple'] ) ) {
+      error_log( ' * * * formValidators::val_fileRequired (size) '.$value['validate']['size'] );
+      $result = isset( $value['validate']['size'] );
+    }
+    else {
+      if( !empty( $value['multiple']['0']['validate']['partial'] ) ) {
+        // Contenido parcial. No puede aplicarse este validador
+        error_log( ' * * * formValidators::val_fileRequired (Contenido parcial)' );
+        $result = true;
+      }
+      else {
+        $numFiles = 0;
+        if( isset( $value['multiple'] ) && is_array( $value['multiple'] ) && count( $value['multiple'] ) ) {
+          foreach( $value['multiple'] as $multiId => $fileInfo ) {
+            error_log( ' * * * formValidators::val_fileRequired multi '.$multiId.' status: '.$fileInfo['status'] );
+            $numFiles += ( $fileInfo['status'] !== 'DELETE' ) ? 1 : 0;
+          }
+        }
+        error_log( ' * * * formValidators::val_fileRequired (numFiles) '.numFiles );
+        $result = ( $numFiles > 0 );
+      }
+    }
+
+    return $result;
+  }
+
+
+
+
+
   // http://jqueryvalidation.org/accept-method
   public function val_accept( $value, $param ) {
     // error_log( ' * * * formValidators::val_accept -----------------------------------------------------' );

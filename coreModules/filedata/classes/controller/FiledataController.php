@@ -67,27 +67,26 @@ class FiledataController {
   public function validateAccess( $fileInfo ) {
     $validated = false;
 
-    if( isset( $fileInfo['privateMode'] ) && $fileInfo['privateMode'] > 0 ) {
-      if( isset( $fileInfo['user'] ) && $fileInfo['user'] !== null ) {
-        error_log( 'Verificando usuario logueado para acceder a fichero...' );
+    if( isset( $fileInfo['privateMode'] ) && $fileInfo['privateMode'] > 0 && class_exists('UserAccessController') ) {
+      error_log( 'Verificando usuario logueado para acceder a fichero...' );
+      $useraccesscontrol = new UserAccessController();
+      $user = $useraccesscontrol->getSessiondata();
 
-        $useraccesscontrol = new UserAccessController();
-        $user = $useraccesscontrol->getSessiondata();
-        if( $user && $user['data']['active'] ) {
-          unset( $user['data']['password'] );
-          error_log( 'USER: '.json_encode( $user ) );
-          if( $user['data']['id'] === $fileInfo['user'] ) {
-            // El fichero es del usuario actual
-            error_log( 'Verificado por ID' );
+      if( $user && $user['data']['active'] ) {
+        unset( $user['data']['password'] );
+        error_log( 'USER: '.json_encode( $user ) );
+
+        if( !empty( $fileInfo['user'] ) && $user['data']['id'] === $fileInfo['user'] ) {
+          // El fichero es del usuario actual
+          error_log( 'Verificado por ID' );
+          $validated = true;
+        }
+        else {
+          $validRoles = [ 'filedata:privateAccess' ];
+          if( $useraccesscontrol->checkPermissions( $validRoles, 'admin:full' ) ) {
+            // Permiso de acceso a todos los ficheros
+            error_log( 'Verificado por Rol' );
             $validated = true;
-          }
-          else {
-            $validRoles = [ 'filedata:privateAccess' ];
-            if( $useraccesscontrol->checkPermissions( $validRoles, 'admin:full' ) ) {
-              // Permiso de acceso a todos los ficheros
-              error_log( 'Verificado por Rol' );
-              $validated = true;
-            }
           }
         }
       }

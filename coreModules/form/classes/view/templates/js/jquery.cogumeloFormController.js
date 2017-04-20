@@ -554,7 +554,7 @@ function inputFileFieldChange( evnt ) {
 
 
 function processFilesInputFileField( formFileObjs, idForm, fieldName ) {
-  // console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
+  console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
 
   var valid = checkInputFileField( formFileObjs, idForm, fieldName );
 
@@ -1078,7 +1078,7 @@ function createFileFieldDropZone( idForm, fieldName ) {
     ' background-color: transparent; background-image: none; border: 2px solid #7fb1c7; border-radius: 2px;'+
     ' color: #7fb1c7; cursor: pointer; font-size: 14px; font-weight: normal; line-height: 1.42857;'+
     ' margin-bottom: 5px; padding: 5px 15px; text-align: center; text-transform: uppercase;'+
-    ' vertical-align: middle; white-space: nowrap;'+
+    ' vertical-align: middle;'+ //  white-space: nowrap;
     '}'+
     '.cgmMForm-button-js:hover {'+
     ' background-color: #528ba4; border: 2px solid #5497b4; color: #ffffff; text-decoration: none;'+
@@ -1139,7 +1139,7 @@ function fileFieldDropZoneDrop( evnt ) {
 }
 
 function fileFieldDropZoneDragOver( evnt ) {
-  console.log( 'fileFieldDropZoneDragOver event: ', evnt );
+  // console.log( 'fileFieldDropZoneDragOver event: ', evnt );
 
   evnt.stopPropagation();
   evnt.preventDefault();
