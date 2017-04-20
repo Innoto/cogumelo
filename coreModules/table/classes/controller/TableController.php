@@ -30,7 +30,7 @@ class TableController{
   var $exports = array(
       '0'=> array('name'=>'Export', 'controller'=>''),
       'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
-      'xls' => array('name'=>'Excell', 'controller'=>'XlsExportTableController')
+      'xls' => array('name'=>'Excel', 'controller'=>'XlsExportTableController')
       );
   var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
   var $tabs = false;
