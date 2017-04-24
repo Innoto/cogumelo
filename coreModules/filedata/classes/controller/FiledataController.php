@@ -285,6 +285,16 @@ class FiledataController {
         }
       }
 
+      if( empty( $modelInfo['aKey'] ) ) {
+
+
+        // TODO: Generar key
+
+        $modelInfo['aKey'] = 'poruto';
+
+
+      }
+
       $filedataObj = new FiledataModel( $modelInfo );
       $filedataObj->save();
 
