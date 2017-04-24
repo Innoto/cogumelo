@@ -150,8 +150,8 @@ class FiledataWeb extends View {
       //header( 'Cache-Control: must-revalidate');
       //header( 'Pragma: public');
       //header( 'Content-Length: ' . $fileInfo['size'] );
-      header( 'Content-Disposition: inline; filename="' . $fileInfo['originalName'] . '"' );
       //header( 'Content-Length: ' . filesize( $filePath ) );
+      header( 'Content-Disposition: inline; filename="' . $fileInfo['originalName'] . '"' );
       header( 'Content-Type: '. $fileInfo['type'] );
       readfile( $filePath );
       exit;

@@ -57,6 +57,9 @@ class FiledataController {
     $fileInfo = ( gettype( $fileObj ) === 'object' ) ? $fileObj->getAllData('onlydata') : false;
 
     if( $fileInfo ) {
+      geozzy::load('controller/ResourceController.php');
+      $resCtrl = new ResourceController();
+      $fileInfo = $resCtrl->getTranslatedData( $fileInfo );
       $fileInfo['validatedAccess'] = $this->validateAccess( $fileInfo );
     }
 
