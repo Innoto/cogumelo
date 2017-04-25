@@ -2319,7 +2319,7 @@ class FormController implements Serializable {
         if( $fileInfo[ 'status' ] === 'EXIST' ) {
           $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", { '.
             '"id": "'.$fileInfo['prev']['id'].'", "name": "'.$fileInfo['prev']['name'].'", '.
-            '"type": "'.$fileInfo['prev']['type'].'" } );'."\n";
+            '"akey": "'.$fileInfo['prev']['aKey'].'", "type": "'.$fileInfo['prev']['type'].'" } );'."\n";
         }
       }
     }
