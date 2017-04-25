@@ -30,6 +30,8 @@ class FiledataImagesController {
 
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
     $this->filesCachePath = Cogumelo::getSetupValue( 'mod:filedata:cachePath' );
+
+    $this->verifyAKeyUrl = Cogumelo::GetSetupValue( 'mod:filedata:verifyAKeyUrl' );
     $this->disableRawUrlProfile = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrlProfile' );
   }
 
@@ -134,12 +136,15 @@ class FiledataImagesController {
   public function getRouteProfile( $profile ) {
     // error_log( "FiledataImagesController: getRouteProfile( $profile )" );
     $imgRoute = false;
-    $imgRouteOriginal = $this->filesAppPath . $this->fileInfo['absLocation'];
+    $imgRouteOriginal = false;
 
     if( $this->fileInfo ) {
+
+      $imgRouteOriginal = $this->filesAppPath . $this->fileInfo['absLocation'];
+      $urlId = ( $this->verifyAKeyUrl ) ? $this->fileInfo['id'].'-a'.$this->fileInfo['aKey'] : $this->fileInfo['id'];
+
       if( $this->setProfile( $profile ) ) {
-        $imgRoute = $this->filesCachePath .'/'. $this->fileInfo['id'] .'/'.
-          $this->profile['idName'] .'/'. $this->fileInfo['name'];
+        $imgRoute = $this->filesCachePath .'/'. $urlId .'/'. $this->profile['idName'] .'/'. $this->fileInfo['name'];
         //error_log( "FiledataImagesController: getRouteProfile( $profile ): $imgRoute" );
 
         if( !$this->profile['cache'] || !file_exists( $imgRoute ) ) {
@@ -151,15 +156,17 @@ class FiledataImagesController {
       }
       else {
         // Original
-        $imgRoute = $this->filesCachePath .'/'. $this->fileInfo['id'] .'/'. $this->fileInfo['name'];
+
+        $imgRoute = $this->filesCachePath .'/'. $urlId .'/'. $this->fileInfo['name'];
         //error_log( "FiledataImagesController: getRouteProfile( NONE ): $imgRoute" );
+
         if( $this->profile['cache'] && !file_exists( $imgRoute ) ) {
           $toRouteDir = pathinfo( $imgRoute, PATHINFO_DIRNAME );
-          //error_log( "toRouteDir = $toRouteDir" );
+          // error_log( "toRouteDir = $toRouteDir" );
           if( !file_exists( $toRouteDir ) ) {
             // error_log( 'mkdir '.$toRouteDir );
             $maskPrev = umask( 0 );
-            mkdir ( $toRouteDir, 0775, true );
+            mkdir( $toRouteDir, 0775, true );
             umask( $maskPrev );
           }
           if( !copy( $imgRouteOriginal, $imgRoute ) ) {
@@ -364,7 +371,7 @@ class FiledataImagesController {
         // [dirname]/[basename]
         // [dirname]/[filename].[extension]
 
-        //error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
+        // error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
         if( !file_exists( $toRouteInfo['dirname'] ) ) {
           // error_log( 'mkdir '.$toRouteInfo['dirname'] );
           $maskPrev = umask( 0 );

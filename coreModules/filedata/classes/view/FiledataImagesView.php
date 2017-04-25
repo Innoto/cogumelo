@@ -20,10 +20,13 @@ class FiledataImagesView extends View {
 
     filedata::autoIncludes();
 
+    $this->webBasePath = Cogumelo::getSetupValue( 'setup:webBasePath' );
+
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
     $this->filesCachePath = Cogumelo::getSetupValue( 'mod:filedata:cachePath' );
+
+    $this->verifyAKeyUrl = Cogumelo::GetSetupValue( 'mod:filedata:verifyAKeyUrl' );
     $this->disableRawUrlProfile = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrlProfile' );
-    $this->webBasePath = Cogumelo::getSetupValue( 'setup:webBasePath' );
   }
 
   /**
@@ -43,20 +46,25 @@ class FiledataImagesView extends View {
   */
   public function showImg( $urlParams = false ) {
     // error_log( 'FiledataImagesView: showImg(): ' . print_r( $urlParams, true ) );
+    $fileInfo = false;
     $error = false;
 
-    $fileName = isset( $urlParams['fileName'] ) ? substr( strrchr( $urlParams['fileName'], '/' ), 1 ) : false;
+    $fileId = $urlParams['fileId'];
+    $aKey = empty( $urlParams['aKey'] ) ? false : $urlParams['aKey'];
+    $fileName = empty( $urlParams['fileName'] ) ? false : substr( strrchr( $urlParams['fileName'], '/' ), 1 );
 
-    if( isset( $urlParams['fileId'] ) && ( $fileName || !$this->disableRawUrlProfile ) ) {
-      $imageCtrl = new FiledataImagesController( $urlParams['fileId'] );
+    if( $fileId && ( $fileName || !$this->disableRawUrlProfile ) && ( $aKey || !$this->verifyAKeyUrl ) ) {
+      $imageCtrl = new FiledataImagesController( $fileId );
       $fileInfo = $imageCtrl->fileInfo;
+    }
 
-      if( $fileInfo ) {
-        if( !$this->disableRawUrlProfile || $fileName === $fileInfo['name'] ) {
+
+
+    if( $fileInfo ) {
+      if( !$this->disableRawUrlProfile || $fileName === $fileInfo['name'] ) {
+        if( !$this->verifyAKeyUrl || $aKey === $fileInfo['aKey'] ) {
           if( $fileInfo['validatedAccess'] ) {
-            $imgInfo = array(
-              'type' => $fileInfo['type']
-            );
+            $imgInfo = [ 'type' => $fileInfo['type'] ];
 
             if( isset( $urlParams['profile']  ) ) {
               $urlParams['profile'] = substr( strrchr( $urlParams['profile'], '/' ), 1 );
@@ -92,15 +100,15 @@ class FiledataImagesView extends View {
           }
         }
         else {
-          $error = 'NN';
+          $error = 'NK';
         }
       }
       else {
-        $error = 'NL';
+        $error = 'NN';
       }
     }
     else {
-      $error = 'NI';
+      $error = 'NL';
     }
 
     if( $error ) {

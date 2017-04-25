@@ -43,6 +43,11 @@ class FiledataModel extends Model {
     'privateMode' => [
       'type' => 'TINYINT',
       'default' => null
+    ],
+    'aKey' => [
+      'type' => 'VARCHAR',
+      'size' => 16,
+      'default' => 'z'
     ]
   );
 
@@ -55,7 +60,16 @@ class FiledataModel extends Model {
 
   var $deploySQL = array(
     array(
-      'version' => 'filedata#1.1',
+      'version' => 'filedata#1.11',
+      'sql'=> '
+        ALTER TABLE filedata_filedata
+        ADD COLUMN aKey VARCHAR(16) DEFAULT "z";
+        update filedata_filedata SET aKey = CONCAT(CHAR(FLOOR(97+(RAND()*25))),CHAR(FLOOR(97+(RAND()*25))),
+          CHAR(FLOOR(97+(RAND()*25))),CHAR(FLOOR(97+(RAND()*25))),CHAR(FLOOR(97+(RAND()*25))),CHAR(FLOOR(97+(RAND()*25))));
+      '
+    ),
+    array(
+      'version' => 'filedata#1.10',
       'sql'=> '
         ALTER TABLE filedata_filedata
         ADD COLUMN user INT DEFAULT NULL,

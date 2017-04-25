@@ -40,7 +40,8 @@ class devel extends Module {
    // COMPOSER
    array(
      "id" => "kint",
-     "params" => array("raveren/kint","1.0.*@dev"),
+     //"params" => array("raveren/kint","1.0.*@dev"),
+     "params" => array("kint-php/kint","1.0.*@dev"),
      "installer" => "composer",
      "includes" => array("Kint.class.php")
    ),
