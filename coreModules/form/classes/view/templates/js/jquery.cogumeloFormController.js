@@ -225,7 +225,8 @@ function unsetSubmitElement( evnt ) {
 }
 
 function setValidateForm( idForm, rules, messages ) {
-  $( '[form="'+idForm+'"][type="submit"]' ).on({
+  $formSubmitFields = $( '[form="'+idForm+'"][type="submit"]' );
+  $formSubmitFields.on({
     // 'mouseenter' : setSubmitElement,
     'focusin' : setSubmitElement,
     // 'mouseleave' : unsetSubmitElement,
@@ -258,27 +259,6 @@ function setValidateForm( idForm, rules, messages ) {
 
       // Lanzamos el metodo original
       this.defaultShowErrors();
-
-      /*
-        // Posicionamos en el elemento con error que aparece de primero
-        var topErrScroll = 999999;
-        var $topErrWrap = false;
-        $('.formError').each( function() {
-          $wrapElem = $( this ).parents('.cgmMForm-wrap');
-          if( $wrapElem ) {
-            topElem = $wrapElem.offset().top;
-            if( topElem && topErrScroll > topElem ) {
-              topErrScroll = topElem;
-              $topErrWrap = $wrapElem;
-            }
-          }
-        });
-        if( $topErrWrap ) {
-          console.log( 'topErrWrap: ', $topErrWrap.attr('class') );
-          var topErr = $topErrWrap.offset().top + ($topErrWrap.height()/2) - ($(window).height()/2);
-          $(window).scrollTop( topErr );
-        }
-      */
     },
     invalidHandler: function( evnt, validator ) {
       console.log( 'JQV invalidHandler:', evnt );
@@ -967,7 +947,7 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
     }
 
     if( tnProfile ) {
-      tnSrc = '/cgmlImg/'+fileInfo.id+'/'+tnProfile+'/'+fileInfo.name;
+      tnSrc = '/cgmlImg/'+fileInfo.id+'-a'+fileInfo.aKey+'/'+tnProfile+'/'+fileInfo.name;
     }
   }
 
