@@ -84,7 +84,8 @@ class FiledataController {
           error_log( 'Verificado por ID' );
           $validated = true;
         }
-        else {
+
+        if( !$validated ) {
           $validRoles = [ 'filedata:privateAccess' ];
           if( $useraccesscontrol->checkPermissions( $validRoles, 'admin:full' ) ) {
             // Permiso de acceso a todos los ficheros
