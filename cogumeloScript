@@ -38,7 +38,7 @@ if( $argc > 1 ) {
       // createDB();
       createTables();
       createRelSchemes();
-      unRegisterModules();
+      //unRegisterModules();
       registerModules();
       deployModels(true);
       initModules();
@@ -49,7 +49,7 @@ if( $argc > 1 ) {
     case 'deploy':
       deployModels();
       deployModules();
-      registerModules();
+      //registerModules();
       createRelSchemes();
       flushAll();
       break;
@@ -76,14 +76,15 @@ if( $argc > 1 ) {
       createTables();
       break;
 
+/*
     case 'unRegisterModules': // register
       unRegisterModules();
-      break;
+      break;*/
 
-    case 'registerModules': // register
+    /*case 'registerModules': // register
       registerModules();
       break;
-
+*/
 
     case 'initModules': // execute ::moduleRc() of all modules
       initModules();
@@ -225,8 +226,6 @@ function printOptions(){
     * generateModel           Execute all options below in the same order
       - createTables            Generate the tables
       - createRelSchemes        Generate relationship tmp files
-      - unRegisterModules       Clear all module version registers
-      - registerModules         Create module version registers
       - initModules             Execute '::moduleRc()' of all modules
       - deployModules           Execute Deploy of modules
     * deploy                  Deploy
@@ -336,7 +335,7 @@ function deployModels( $isFirstGenerateModel = false ) {
   echo "\nModules deploy SQL code executed\n";
 
 }
-
+/*
 function unRegisterModules() {
 
   global $C_ENABLED_MODULES;
@@ -353,6 +352,7 @@ function unRegisterModules() {
   echo "\nDeleted all module registers\n";
 
 }
+*/
 
 function registerModules() {
   global $C_ENABLED_MODULES;
