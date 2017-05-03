@@ -485,7 +485,7 @@ class Template extends Smarty {
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
-      $mainClientIncludes .= $this->getClientStylesHtml();
+    //  $mainClientIncludes .= $this->getClientStylesHtml();
 
 
       $lessController = new LessController();
@@ -495,15 +495,12 @@ class Template extends Smarty {
         $lessGlobalVarsJs .= ' '.$key.': "'.$value.'",';
       }
       $lessGlobalVarsJs = rtrim( $lessGlobalVarsJs, ', ' );
-      if( !$this->cgmMediaserverCompileLess ) {
-        $mainClientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
-          ' globalVars: { '.$lessGlobalVarsJs.' }, render: function(){alert(23)}, '.
-          ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
-          '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
-          '<script type="text/javascript"> less.pageLoadFinished.then( function() { $.holdReady( false );} ) </script>';
-      }
+
 
       $clientIncludes = "\n";
+
+
+
       $clientIncludes .= "\t<script>\n";
 
       // LOCALSTORAGE CLEAR AFTER X MINUTES
@@ -537,6 +534,24 @@ class Template extends Smarty {
         $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
       }
       $clientIncludes .= "\t</script>\n\n\n";
+
+
+
+      $clientIncludes .= $this->getClientStylesHtml();
+      if( !$this->cgmMediaserverCompileLess ) {
+        $clientIncludes .= '<script> less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
+          ' globalVars: { '.$lessGlobalVarsJs.' }, render: function(){}, '.
+          ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
+          '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
+          '<script type="text/javascript"> if(typeof less.pageLoadFinished != "undefined"){ less.pageLoadFinished.then( function() { $.holdReady( false );} )}  </script>';
+      }
+
+
+
+
+
+
+
       $this->assign( 'client_includes', $clientIncludes );
       $this->assign( 'main_client_includes', $mainClientIncludes );
       /*
