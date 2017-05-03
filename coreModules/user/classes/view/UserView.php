@@ -464,7 +464,7 @@ class UserView extends View
    **/
   public function sendUserForm() {
     $form = $this->actionUserForm();
-    $this->registerOk($form);
+    $this->userFormOk($form);
     $form->sendJsonResponse();
   }
 
@@ -524,9 +524,7 @@ class UserView extends View
 
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
-
       $password = false;
-
       if( array_key_exists('password', $valuesArray)){
         $password = $valuesArray['password'];
         unset($valuesArray['password']);
@@ -547,32 +545,10 @@ class UserView extends View
       if(isset($password) && $password){
         $user->setPassword( $password );
       }
-
       $user->save();
-
       //var_dump( $user->getAllData() );
 
       if( isset($userAvatar) && $userAvatar ) {
-        //var_dump( $userAvatar );
-        /*
-          if( $userAvatar['status'] === "DELETE"){
-            //IMG DELETE
-            //var_dump('delete');
-            $user->deleteDependence( 'avatar', true );
-          }
-          elseif( $userAvatar['status'] === "REPLACE"){
-            //IMG UPDATE
-            //var_dump('replace');
-            $user->deleteDependence( 'avatar', true);
-            $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
-          }else{
-            //var_dump('else');
-            //IMG CREATE
-            $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
-          }
-        */
-
-
         $filedataCtrl = new FiledataController();
         $newFiledataObj = false;
 
@@ -619,11 +595,7 @@ class UserView extends View
             // error_log( 'To Model: DEFAULT='.$userAvatar['status'] );
             break;
         } // switch( $userAvatar['status'] )
-
-
-
       } // if( $userAvatar )
-
       //echo "==========";
       //var_dump( $user->getAllData()  );
 
