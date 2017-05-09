@@ -84,7 +84,8 @@ class FiledataController {
           error_log( 'Verificado por ID' );
           $validated = true;
         }
-        else {
+
+        if( !$validated ) {
           $validRoles = [ 'filedata:privateAccess' ];
           if( $useraccesscontrol->checkPermissions( $validRoles, 'admin:full' ) ) {
             // Permiso de acceso a todos los ficheros
@@ -286,13 +287,8 @@ class FiledataController {
       }
 
       if( empty( $modelInfo['aKey'] ) ) {
-
-
-        // TODO: Generar key
-
-        $modelInfo['aKey'] = 'poruto';
-
-
+        $modelInfo['aKey'] = chr(97+rand(0,25)).chr(97+rand(0,25)).chr(97+rand(0,25)).
+          chr(97+rand(0,25)).chr(97+rand(0,25)).chr(97+rand(0,25));
       }
 
       $filedataObj = new FiledataModel( $modelInfo );
