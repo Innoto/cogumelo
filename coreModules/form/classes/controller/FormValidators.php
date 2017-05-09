@@ -163,6 +163,11 @@ class FormValidators extends FormValidatorsExtender {
       $value ) === 1;
   }
 
+  public function val_numberEUDec( $value, $param ) {
+    return preg_match( '/^-?\d+(,\d{0,'.$param.'})?$/',
+      $value ) === 1;
+  }
+
   public function val_digits( $value ) {
     return preg_match( '/^\d+$/',
       $value ) === 1;

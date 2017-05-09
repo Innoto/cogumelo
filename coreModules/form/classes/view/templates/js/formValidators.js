@@ -7,6 +7,15 @@ $.validator.addMethod(
   "A positive or negative decimal number please (Ej. 123,25)"
 );
 
+$.validator.addMethod(
+  "numberEUDec",
+  function( value, element, param ) {
+    return ( value==='' && this.optional( element ) ) || /^-?\d+(,\d{0,param})?$/.test( value );
+  },
+  "A positive or negative decimal number please (Ej. 123,25)"
+);
+
+
 
 
 $.validator.addMethod(
@@ -583,8 +592,3 @@ $.validator.addMethod(
 //   }
 //   return value.length > 0;
 // },
-
-
-
-
-
