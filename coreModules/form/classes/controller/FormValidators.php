@@ -185,9 +185,9 @@ class FormValidators extends FormValidatorsExtender {
 
     if( preg_match('/^([0-9]{8})([A-Z])$/i', $value, $match ) ) {
       $numero   = $match[1];
-      $letraDni = strtoupper( $match[2] );
+      $letraDni = mb_strtoupper( $match[2] );
 
-      if( $letraDni === substr( 'TRWAGMYFPDXBNJZSQVHLCKE', $numero%23, 1 ) ) {
+      if( $letraDni === mb_substr( 'TRWAGMYFPDXBNJZSQVHLCKE', $numero%23, 1 ) ) {
         $result = true;
       }
     }
@@ -199,14 +199,14 @@ class FormValidators extends FormValidatorsExtender {
     $result = false;
 
     if( preg_match('/^([XYZ]?)([0-9]{7})([A-Z])$/i', $value, $match ) ) {
-      $letraNie = strtoupper( $match[1] );
+      $letraNie = mb_strtoupper( $match[1] );
       $numero   = $match[2];
-      $letraDni = strtoupper( $match[3] );
+      $letraDni = mb_strtoupper( $match[3] );
 
       // Ajustes NIE
       $numero = strtr( $letraNie, 'XYZ', '012' ).$numero;
 
-      if( $letraDni === substr( 'TRWAGMYFPDXBNJZSQVHLCKE', $numero%23, 1 ) ) {
+      if( $letraDni === mb_substr( 'TRWAGMYFPDXBNJZSQVHLCKE', $numero%23, 1 ) ) {
         $result = true;
       }
     }
@@ -218,18 +218,18 @@ class FormValidators extends FormValidatorsExtender {
     $result = false;
 
     if( preg_match('/^([A-HJ-NP-SUVW])([0-9]{7})([A-J0-9])$/i', $value, $match ) ) {
-      $letraTipo = strtoupper( $match[1] );
+      $letraTipo = mb_strtoupper( $match[1] );
       $numero    = $match[2];
-      $letraCtrl = strtoupper( $match[3] );
+      $letraCtrl = mb_strtoupper( $match[3] );
 
       $sum = 0;
       // summ all even digits
       for( $i=1; $i<7; $i+=2 ) {
-        $sum += substr( $numero, $i, 1 );
+        $sum += mb_substr( $numero, $i, 1 );
       }
       // x2 all odd position digits and sum all of them
       for( $i=0; $i<7; $i+=2 ) {
-        $t = substr( $numero, $i, 1 ) * 2;
+        $t = mb_substr( $numero, $i, 1 ) * 2;
         $sum += ($t>9) ? 1 + ( $t%10 ) : $t;
       }
 
@@ -237,7 +237,7 @@ class FormValidators extends FormValidatorsExtender {
       $control = 10 - ( $sum%10 );
 
       //the control can be a numbber or letter
-      if( $letraCtrl == $control || $letraCtrl == substr( 'JABCDEFGHI', $control, 1 ) ) {
+      if( $letraCtrl == $control || $letraCtrl == mb_substr( 'JABCDEFGHI', $control, 1 ) ) {
         $result = true;
       }
     }
@@ -480,9 +480,9 @@ class FormValidators extends FormValidatorsExtender {
     }
 
     $tmpExt = '';
-    $tmpExtPos = strrpos( $value['validate'][ 'name' ], '.' );
+    $tmpExtPos = mb_strrpos( $value['validate'][ 'name' ], '.' );
     if( $tmpExtPos > 0 ) { // Not FALSE or 0
-      $tmpExt = substr( $value['validate']['name'], 1+$tmpExtPos );
+      $tmpExt = mb_substr( $value['validate']['name'], 1+$tmpExtPos );
     }
 
     // TODO: Cambiar in_array por regex

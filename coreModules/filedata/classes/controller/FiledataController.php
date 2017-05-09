@@ -424,16 +424,16 @@ class FiledataController {
       $sobran = 0;
     }
 
-    $tmpExtPos = strrpos( $fileName, '.' );
+    $tmpExtPos = mb_strrpos( $fileName, '.' );
     if( $tmpExtPos > 0 && ( $tmpExtPos - $sobran ) >= 8 ) {
       // Si hay extensión y al cortar el nombre quedan 8 o más letras, recorto solo el nombre
-      $tmpName = substr( $fileName, 0, $tmpExtPos - $sobran );
-      $tmpExt = substr( $fileName, 1 + $tmpExtPos );
+      $tmpName = mb_substr( $fileName, 0, $tmpExtPos - $sobran );
+      $tmpExt = mb_substr( $fileName, 1 + $tmpExtPos );
       $fileName = $tmpName . '.' . $tmpExt;
     }
     else {
       // Recote por el final
-      $fileName = substr( $fileName, 0, $maxLength );
+      $fileName = mb_substr( $fileName, 0, $maxLength );
     }
 
     // error_log( 'secureFileName RET: '.$fileName );

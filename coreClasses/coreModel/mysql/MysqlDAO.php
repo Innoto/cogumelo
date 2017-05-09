@@ -146,15 +146,21 @@ class MysqlDAO extends DAO {
 
     $return_str = "";
     foreach( $values_array as $value ) {
-      if(is_integer($value)) $return_str.= 'i';
-      else
-      if(is_string($value)) $return_str.= 's';
-      else
-      if(is_float($value)) $return_str.= 'd';
-      else
-      if(is_bool($value)) $return_str.= 'b';
-      else
-      if( $value === null )  $return_str.= 's';
+      if(is_integer($value)) {
+        $return_str.= 'i';
+      }
+      elseif(is_string($value)) {
+        $return_str.= 's';
+      }
+      elseif(is_float($value)) {
+        $return_str.= 'd';
+      }
+      elseif(is_bool($value)) {
+        $return_str.= 'b';
+      }
+      elseif( $value === null ) {
+        $return_str.= 's';
+      }
     }
 
     return $return_str;
@@ -185,7 +191,7 @@ class MysqlDAO extends DAO {
           $fstr = " AND ".$this->filters[$fkey];
 
 
-          $var_count = substr_count( $fstr , "?");
+          $var_count = mb_substr_count( $fstr , '?' );
           for( $c=0; $c < $var_count; $c++ ) {
 
             if( is_array( $filter_val ) ) { // Value array for one filter
@@ -309,8 +315,7 @@ class MysqlDAO extends DAO {
         }
       }
     }
-    else
-    {
+    else {
 
       //  Without cache!
       $res = $this->execSQL($connectionControl,$strSQL, $allWhereARraysValues );
@@ -332,14 +337,13 @@ class MysqlDAO extends DAO {
   /**
   * Ket keys as string and set function AsText() to geo
   *
-  *
   * @return string
   */
-  function getKeysToString($VO, $fields, $resolveDependences ) {
+  public function getKeysToString( $VO, $fields, $resolveDependences ) {
 
     $keys = explode(', ', $VO->getKeysToString($fields, $resolveDependences ));
     $procesedKeys = array();
-    foreach($keys as $key) {
+    foreach( $keys as $key ) {
 
       $k1 = explode('.',$key);
       if( is_array( $k1 ) ){
@@ -373,8 +377,7 @@ class MysqlDAO extends DAO {
   *
   * @return integer
   */
-  function listCount(&$connectionControl, $filters)
-  {
+  public function listCount( &$connectionControl, $filters ) {
     $retVal = null;
 
     // where string and vars
@@ -409,11 +412,10 @@ class MysqlDAO extends DAO {
   *
   * @return mixed
   */
-  function create(&$connectionControl, $VOobj)
-  {
+  public function create( &$connectionControl, $VOobj ) {
 
     $cols = array();
-    foreach( $VOobj->data as $colk => $col) {
+    foreach( $VOobj->data as $colk => $col ) {
       if( $VOobj->getter($colk) !== null) {
         $cols[$colk] = $col;
       }
@@ -437,7 +439,7 @@ class MysqlDAO extends DAO {
       }
     }
 
-    $strSQL = "INSERT INTO `".$VOobj::$tableName."` (".$campos.") VALUES(".substr($answrs,1).");";
+    $strSQL = "INSERT INTO `".$VOobj::$tableName."` (".$campos.") VALUES(".mb_substr($answrs,1).");";
 
     $res = $this->execSQL($connectionControl, $strSQL, $valArray);
     if($res != COGUMELO_ERROR) {
@@ -458,8 +460,7 @@ class MysqlDAO extends DAO {
   *
   * @return mixed
   */
-  function update(&$connectionControl, $VOobj)
-  {
+  public function update( &$connectionControl, $VOobj ) {
 
     // primary key value
     $pkValue = $VOobj->getter( $VOobj->getFirstPrimarykeyId() );
@@ -470,7 +471,7 @@ class MysqlDAO extends DAO {
 
 
     $valArray = array();
-    foreach( $VOobj->data as $colk => $col) {
+    foreach( $VOobj->data as $colk => $col ) {
 
       if( isset( $VOobj::$cols[$colk] ) && $VOobj::$cols[$colk]['type'] == 'GEOMETRY' ) {
         $setvalues .= ', '.$colk.'= GeomFromText( ? ) ';
@@ -488,7 +489,7 @@ class MysqlDAO extends DAO {
     // add primary key value to values array
     $valArray[] = $pkValue;
 
-    $strSQL = "UPDATE `".$VOobj::$tableName."` SET ".substr($setvalues, 1)." WHERE `".$VOobj->getFirstPrimarykeyId()."`= ?;";
+    $strSQL = "UPDATE `".$VOobj::$tableName."` SET ".mb_substr($setvalues, 1)." WHERE `".$VOobj->getFirstPrimarykeyId()."`= ?;";
 
     $res = $this->execSQL($connectionControl, $strSQL, $valArray);
     if( $res != COGUMELO_ERROR ) {
@@ -500,7 +501,7 @@ class MysqlDAO extends DAO {
   }
 
   /**
-  * delete from key
+  * Delete from key
   *
   * @param object $connectionControl mysqli connection object
   * @param string $key key to search
@@ -508,8 +509,7 @@ class MysqlDAO extends DAO {
   *
   * @return boolean
   */
-  function deleteFromKey(&$connectionControl, $key, $value)
-  {
+  public function deleteFromKey( &$connectionControl, $key, $value ) {
 
     $VO = new $this->VO();
     // SQL Query
@@ -525,13 +525,13 @@ class MysqlDAO extends DAO {
   }
 
   /**
-  * return list of question marks separated by comma
+  * Return list of question marks separated by comma
   *
   * @param array $elements
   *
   * @return string
   */
-  function getQuestionMarks( $elements ){
+  public function getQuestionMarks( $elements ) {
     $qm = str_repeat( '?, ', count($elements)-1 ) . '?';
     return $qm;
   }

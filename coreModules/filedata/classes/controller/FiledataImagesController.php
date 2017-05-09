@@ -205,7 +205,7 @@ class FiledataImagesController {
     $mimeTypeOrg = false;
     if( file_exists( $fromRoute ) ) {
       $mimeType = mime_content_type( $fromRoute );
-      if( strpos( $mimeType, 'image' ) === 0 ) {
+      if( mb_strpos( $mimeType, 'image' ) === 0 ) {
         $mimeTypeOrg = $mimeType;
       }
     }
@@ -217,7 +217,7 @@ class FiledataImagesController {
       $im->setBackgroundColor( new ImagickPixel( 'transparent' ) );
 
 
-      if( strpos( $mimeTypeOrg, 'image/svg' ) === 0 ) {
+      if( mb_strpos( $mimeTypeOrg, 'image/svg' ) === 0 ) {
         // Imagenes SVG
         $this->loadPreprocessedSvg( $im, $fromRoute );
       }
@@ -417,7 +417,7 @@ class FiledataImagesController {
         }
 
         $result = 'data:image/jpg;base64,'.base64_encode( $im->getImageBlob() );
-        error_log( 'jpg base64 SRC Encode strlen: '.strlen($result) );
+        error_log( 'jpg base64 SRC Encode strlen: '.mb_strlen($result) );
       }
 
 
@@ -434,7 +434,7 @@ class FiledataImagesController {
     $svg = file_get_contents( $fromRoute );
 
     // Machaco el tamaño de lienzo
-    if( strpos( $svg, 'viewBox' ) !== false ) {
+    if( mb_strpos( $svg, 'viewBox' ) !== false ) {
       $svg = preg_replace( '/(\s+)(width|height)="(.*?)"/', '${1}${2}="128px"', $svg );
       //$svg = preg_replace( '/viewBox="(.*?)"/', 'viewBox="0 0 128 128"', $svg );
     }
@@ -521,7 +521,7 @@ class FiledataImagesController {
       $imgInfo['type'] = mime_content_type( $imgInfo['route'] );
 
       if( !isset( $imgInfo['name'] ) ) {
-        $imgInfo['name'] = substr( strrchr( $imgInfo['route'], '/' ), 1 );
+        $imgInfo['name'] = mb_substr( mb_strrchr( $imgInfo['route'], '/' ), 1 );
       }
 
       // print headers

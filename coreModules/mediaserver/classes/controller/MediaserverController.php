@@ -22,9 +22,9 @@ class MediaserverController {
       }
     }
 
-    if( substr($this->urlPath, -4) == '.tpl' ||
-        substr($this->urlPath, -4) == '.php' ||
-        substr($this->urlPath, -4) == '.inc'
+    if( mb_substr($this->urlPath, -4) == '.tpl' ||
+        mb_substr($this->urlPath, -4) == '.php' ||
+        mb_substr($this->urlPath, -4) == '.inc'
       ) {
 
       Cogumelo::error('trying to load( '.$this->urlPath.' ), but not allowed to serve .tpl .php or .inc files ');
@@ -45,7 +45,7 @@ class MediaserverController {
     $this->realFilePath = ModuleController::getRealFilePath('classes/view/templates/'.$this->urlPath, $this->moduleName);
     $this->modulePath = ( $this->moduleName )? '/module/'.$this->moduleName.'/' : '' ;
 
-    if( substr($this->urlPath, -5) == '.less' ) {
+    if( mb_substr($this->urlPath, -5) == '.less' ) {
       $this->compileAndMoveLessFile();
     }
   }
@@ -58,7 +58,7 @@ class MediaserverController {
   public function serveContent( $path, $module = false ) {
 
     if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false ||
-      ( substr($path , -3) === '.js' &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) ) )
+      ( mb_substr($path , -3) === '.js' &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) ) )
     {
       $this->cacheContent( $path, $module );
     }
@@ -152,18 +152,18 @@ class MediaserverController {
 
     Cogumelo::debug("Mediaserver, serving file: ".$this->realFilePath);
 
-    if( !Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) || ( substr($this->urlPath , -3) == '.js' &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) ) )  {
+    if( !Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) || ( mb_substr($this->urlPath , -3) == '.js' &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) ) )  {
       // js file
-      if( substr($this->urlPath , -3) == '.js' ) {
+      if( mb_substr($this->urlPath , -3) == '.js' ) {
         header('Content-Type: text/javascript');
         readfile( WEB_BASE_PATH.'/' . Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath  );
       }
-      else if( substr($this->urlPath , -4) == '.css' ) {
+      else if( mb_substr($this->urlPath , -4) == '.css' ) {
         // css or
         header('Content-Type: text/css');
         readfile( WEB_BASE_PATH.'/'.  Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath  );
       }
-      else if( substr($this->urlPath , -5) == '.less' ) {
+      else if( mb_substr($this->urlPath , -5) == '.less' ) {
         // less file without compilation
         header('Content-Type: text');
         readfile( WEB_BASE_PATH.'/'.  Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath  );
@@ -196,10 +196,10 @@ class MediaserverController {
 
     $type = false;
 
-    if( substr($fromPath, -4) == '.css' ) {
+    if( mb_substr($fromPath, -4) == '.css' ) {
       $type = 'css';
     }
-    else if( substr($fromPath, -3) == '.js' ) {
+    else if( mb_substr($fromPath, -3) == '.js' ) {
       $type = 'js';
     }
 

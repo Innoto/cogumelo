@@ -65,8 +65,8 @@ class VOUtils {
       while (false !== ($file = readdir($handle))) {
         if ($file != "." && $file != "..") {
 
-          if(substr($file, -9) == 'Model.php' || substr($file, -6) == 'VO.php'){
-            $classVoName = substr($file, 0,-4);
+          if(mb_substr($file, -9) == 'Model.php' || mb_substr($file, -6) == 'VO.php'){
+            $classVoName = mb_substr($file, 0,-4);
 
             // prevent reload an existing vo in other place
             if (!array_key_exists( $classVoName, $voarray )) {
@@ -367,7 +367,7 @@ class VOUtils {
   */
   public static function getRelKeysByRelObj( $voRel, $tableAsKey = false ) {
     $relKeys = false;
-    
+
     if($voRel) {
       $relKeys = array();
 

@@ -36,7 +36,7 @@ class FiledataWeb extends View {
     // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['fileId'] );
 
     $aKey = empty( $urlParams['aKey'] ) ? false : $urlParams['aKey'];
-    $fileName = empty( $urlParams['fileName'] ) ? false : substr( strrchr( $urlParams['fileName'], '/' ), 1 );
+    $fileName = empty( $urlParams['fileName'] ) ? false : mb_substr( mb_strrchr( $urlParams['fileName'], '/' ), 1 );
 
     $this->fileSendCommon( $urlParams['fileId'], $fileName, $aKey, $this->filesAppPath, 'web' );
   } // function webFormFileShow()
@@ -50,7 +50,7 @@ class FiledataWeb extends View {
     // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['fileId'] );
 
     $aKey = empty( $urlParams['aKey'] ) ? false : $urlParams['aKey'];
-    $fileName = empty( $urlParams['fileName'] ) ? false : substr( strrchr( $urlParams['fileName'], '/' ), 1 );
+    $fileName = empty( $urlParams['fileName'] ) ? false : mb_substr( mb_strrchr( $urlParams['fileName'], '/' ), 1 );
 
     $this->fileSendCommon( $urlParams['fileId'], $fileName, $aKey, $this->filesAppPath, 'download' );
   } // function webFormFileShow()

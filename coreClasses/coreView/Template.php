@@ -176,7 +176,7 @@ class Template extends Smarty {
   public function addClientScript( $file_path, $module = false, $is_autoinclude = false ) {
 
 
-    if( substr( $file_path, -3) === '.js'  && Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) === true ){
+    if( mb_substr( $file_path, -3 ) === '.js'  && Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) === true ){
       $mediaPath = $this->cgmMediaserverHost . $this->cgmMediaUrlDir;
     }
     else {
@@ -244,7 +244,7 @@ class Template extends Smarty {
         break;
     }
 
-    if( !$this->cgmMediaserverCompileLess && substr($file_path, -5) == '.less' ) {
+    if( !$this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.less' ) {
       $file_rel = "stylesheet/less";
     }
     else {
@@ -252,7 +252,7 @@ class Template extends Smarty {
     }
 
 
-    if( $this->cgmMediaserverCompileLess && substr($file_path, -5) == '.less' ) {
+    if( $this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.less' ) {
       $lessCompiledExtension = '.css';
     }
     else {
@@ -408,7 +408,7 @@ class Template extends Smarty {
     // $this->fileBacktrace = $debugBacktrace['0']['file'];
 
     if( $tplData ) {
-      if( strpos( $tplData, 'string:' ) === 0 || strpos( $tplData, 'eval:' ) === 0 ) {
+      if( mb_strpos( $tplData, 'string:' ) === 0 || mb_strpos( $tplData, 'eval:' ) === 0 ) {
         $this->tpl = $tplData;
       }
       else {

@@ -3,13 +3,12 @@
 Cogumelo::load('coreView/View.php');
 mediaserver::autoIncludes();
 
-class MediaserverView extends View
-{
+class MediaserverView extends View {
 
   private $mediaserverControl;
 
-  function __construct($base_dir){
-    parent::__construct($base_dir);
+  public function __construct( $base_dir ) {
+    parent::__construct( $base_dir );
 
     $this->mediaserverControl = new MediaserverController();
   }
@@ -18,13 +17,13 @@ class MediaserverView extends View
   * Evaluate the access conditions and report if can continue
   * @return bool : true -> Access allowed
   */
-  function accessCheck() {
+  public function accessCheck() {
     return true;
   }
 
   // load media from app
-  function application($url_path=''){
-    if($url_path == ''){
+  public function application( $url_path = '' ) {
+    if($url_path == '' ) {
       Cogumelo::error('Mediaserver receives empty request');
       RequestController::redirect(SITE_URL_CURRENT.'/404');
     }
@@ -33,7 +32,7 @@ class MediaserverView extends View
   }
 
   //load media from a module
-  function module($url_path=''){
+  public function module( $url_path = '' ) {
 
     //preg_match('#/(.*?)/(.*)#', $url_path[1], $result);
     preg_match('#/(.*?)/(.*)#', $url_path[1], $result);
@@ -53,12 +52,12 @@ class MediaserverView extends View
   }
 
   // for less client includes
-  function onClientLess($request){
-    if( $request[1] == false){
+  public function onClientLess( $request ) {
+    if( $request[1] == false ) {
       $this->mediaserverControl->serveContent($request[2].'.less');
     }
     else {
-      $moduleName = substr($request[1], 0, strlen($request[1])-1);
+      $moduleName = mb_substr( $request[1], 0, mb_strlen( $request[1] )-1 );
 
       $this->mediaserverControl->serveContent($request[2].'.less', $moduleName);
     }
