@@ -88,7 +88,7 @@ class FormValidators extends FormValidatorsExtender {
 
   public function val_email( $value ) {
     $regex = '/^[a-zA-Z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-zA-Z0-9]'.
-      '(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/';
+      '(?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/u';
     return( preg_match( $regex, $value ) === 1 );
   }
 
@@ -154,23 +154,19 @@ class FormValidators extends FormValidatorsExtender {
   }
 
   public function val_number( $value ) {
-    return preg_match( '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/',
-      $value ) === 1;
+    return preg_match( '/^-?(?:\d+|\d{1,3}(?:,\d{3})+)?(?:\.\d+)?$/', $value ) === 1;
   }
 
   public function val_numberEU( $value ) {
-    return preg_match( '/^-?\d+(,\d+)?$/',
-      $value ) === 1;
+    return preg_match( '/^-?\d+(,\d+)?$/', $value ) === 1;
   }
 
   public function val_numberEUDec( $value, $param ) {
-    return preg_match( '/^-?\d+(,\d{0,'.$param.'})?$/',
-      $value ) === 1;
+    return preg_match( '/^-?\d+(,\d{0,'.$param.'})?$/', $value ) === 1;
   }
 
   public function val_digits( $value ) {
-    return preg_match( '/^\d+$/',
-      $value ) === 1;
+    return preg_match( '/^\d+$/', $value ) === 1;
   }
 
 

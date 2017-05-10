@@ -415,9 +415,13 @@ class FiledataController {
     // error_log( 'secureFileName: '.$fileName );
     $maxLength = 200;
 
-
+    // "Aplanamos" caracteres no ASCII7
     $fileName = str_replace( $this->replaceAcents[ 'from' ], $this->replaceAcents[ 'to' ], $fileName );
-    $fileName = preg_replace( '/[^0-9a-z_\.-]/i', '_', $fileName );
+    // Solo admintimos a-z A-Z 0-9 - / El resto pasan a ser -
+    $fileName = preg_replace( '/[^a-z0-9_\-\.]/iu', '_', $fileName );
+    // Eliminamos - sobrantes
+    $fileName = preg_replace( '/__+/u', '_', $fileName );
+    $fileName = trim( $fileName, '_' );
 
     $sobran = mb_strlen( $fileName, 'UTF-8' ) - $maxLength;
     if( $sobran < 0 ) {

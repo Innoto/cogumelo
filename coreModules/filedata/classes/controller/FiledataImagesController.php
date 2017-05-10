@@ -91,7 +91,7 @@ class FiledataImagesController {
             $this->profile['backgroundImg'] = WEB_BASE_PATH . $this->profile['backgroundImg'];
           }
           else {
-            if( preg_match( '#^/module/(?P<module>.*?)(?P<tplPath>/.*)$#', $this->profile['backgroundImg'], $matches ) ) {
+            if( preg_match( '#^/module/(?P<module>.*?)(?P<tplPath>/.*)$#u', $this->profile['backgroundImg'], $matches ) ) {
               // Contenido dentro de un modulo
               $tplFile = ModuleController::getRealFilePath( 'classes/view/templates'.$matches['tplPath'], $matches['module'] );
               if( $tplFile ) {
@@ -104,7 +104,7 @@ class FiledataImagesController {
               }
             }
             else {
-              if( preg_match( '#^/app(?P<imgPath>/.*)$#', $this->profile['backgroundImg'], $matches ) ) {
+              if( preg_match( '#^/app(?P<imgPath>/.*)$#u', $this->profile['backgroundImg'], $matches ) ) {
                 // Contenido dentro de APP
                 if( file_exists( APP_BASE_PATH . $matches['imgPath'] ) ) {
                   // error_log( 'Ficheiro '.$matches['imgPath'].' en APP' );
