@@ -329,9 +329,9 @@ class VOUtils {
   * @return void
   */
   public static function createModelRelTreeFiles() {
-    Cogumelo::load('coreModel/'.cogumeloGetSetupValue( 'db:engine' ).'/'.ucfirst( cogumeloGetSetupValue( 'db:engine' ) ).'DAORelationship.php');
+    Cogumelo::load('coreModel/'.Cogumelo::getSetupValue( 'db:engine' ).'/'.ucfirst( Cogumelo::getSetupValue( 'db:engine' ) ).'DAORelationship.php');
 
-    eval( '$mrel = new '.ucfirst( cogumeloGetSetupValue( 'db:engine' ) ).'DAORelationship();' );
+    eval( '$mrel = new '.ucfirst( Cogumelo::getSetupValue( 'db:engine' ) ).'DAORelationship();' );
 
     foreach( self::listVOs() as $voName => $vo ) {
 

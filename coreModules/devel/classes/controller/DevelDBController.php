@@ -6,8 +6,8 @@ Cogumelo::load('coreModel/Facade.php');
 //
 // DevelUtilsDB Controller Class
 //
-class  DevelDBController
-{
+class  DevelDBController {
+
   var $data;
   var $voUtilControl;
 
@@ -48,14 +48,14 @@ class  DevelDBController
     }
 
     // add all rc custom SQL at bottom
-    if( $aditionalRcSQL !== '' ) {
-      //$returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
-    }
+    // if( $aditionalRcSQL !== '' ) {
+    //   $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
+    // }
 
     return $returnStrArray;
   }
 
-  public function deployModels(  $getOnlyGenerateModelSQL = false ) {
+  public function deployModels( $getOnlyGenerateModelSQL = false ) {
     $returnStrArray = array();
     //$aditionalRcSQL = '';
 
@@ -72,9 +72,9 @@ class  DevelDBController
     }
 
     // add all rc custom SQL at bottom
-    if( $aditionalRcSQL !== '' ) {
-      //$returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
-    }
+    // if( $aditionalRcSQL !== '' ) {
+    //   $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
+    // }
 /*
     foreach(explode( "\n", $aditionalRcSQL ) as $dLine ) {
       Cogumelo::log( $dLine ,'cogumelo_deploy');
@@ -91,11 +91,11 @@ class  DevelDBController
 
 
 
-    if( sizeof( $model->deploySQL ) > 0 ){
+    if( count( $model->deploySQL ) > 0 ){
       $retSQL .= "\n## Deploy SQL for ".$modelName.".php\n";
 
 
-      foreach( $model->deploySQL as $d) {
+      foreach( $model->deploySQL as $d ) {
 
         $sqlToExecute = $this->renderRichSql( $d['sql'] );
 
@@ -217,10 +217,10 @@ class  DevelDBController
     preg_match_all( "#[\{]\s*multilang\s*\:\s*((.|\n)*?)\s*[\}]#", $sql, $matches);
 
     if( count($matches[0]) ) {
-      for($mi=0; count($matches[0]) > $mi; $mi++ ) {
+      for( $mi=0; count($matches[0]) > $mi; $mi++ ) {
         $multilangLines = '';
 
-        foreach( array_keys( cogumeloGetSetupValue( 'lang:available')) as $lang  ){
+        foreach( array_keys( Cogumelo::getSetupValue( 'lang:available')) as $lang ) {
           $multilangLines .= str_replace('$lang', $lang, $matches[1][$mi]);
         }
 

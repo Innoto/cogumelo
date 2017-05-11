@@ -31,8 +31,8 @@ class FiledataImagesController {
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
     $this->filesCachePath = Cogumelo::getSetupValue( 'mod:filedata:cachePath' );
 
-    $this->verifyAKeyUrl = Cogumelo::GetSetupValue( 'mod:filedata:verifyAKeyUrl' );
-    $this->disableRawUrlProfile = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrlProfile' );
+    $this->verifyAKeyUrl = Cogumelo::getSetupValue( 'mod:filedata:verifyAKeyUrl' );
+    $this->disableRawUrlProfile = Cogumelo::getSetupValue( 'mod:filedata:disableRawUrlProfile' );
   }
 
 
