@@ -406,12 +406,24 @@ class CogumeloClass extends Singleton {
   public static function setSetupValue( $path, $value ) {
     return self::getSetupMethods()->setSetupValue( $path, $value );
   }
-
-  public static function getSetupValue( $path = '' ) {
+  public static function getSetupValue( $path ) {
     return self::getSetupMethods()->getSetupValue( $path );
   }
-
-
+  public static function issetSetupValue( $path ) {
+    return self::getSetupMethods()->issetSetupValue( $path );
+  }
+  public static function createSetupValue( $path, $value ) {
+    return self::getSetupMethods()->createSetupValue( $path, $value );
+  }
+  public static function updateSetupValue( $path, $value ) {
+    return self::getSetupMethods()->updateSetupValue( $path, $value );
+  }
+  public static function addSetupValue( $path, $value ) {
+    return self::getSetupMethods()->addSetupValue( $path, $value );
+  }
+  public static function mergeSetupValue( $path, $addArray ) {
+    return self::getSetupMethods()->mergeSetupValue( $path, $addArray );
+  }
   /*
    * END - Setup methods. Shared with the setup files
    */
