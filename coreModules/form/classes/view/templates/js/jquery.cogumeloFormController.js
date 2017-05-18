@@ -181,7 +181,7 @@ function bindForm( idForm ) {
   if( $inputFileFields.length ) {
     if( !window.File ) {
       // File - provides readonly information such as name, file size, mimetype
-      alert( __('Tu navegador aún no tiene soporte HTML5 para el envío de ficheros. Actualiza a versiones recientes...') );
+      alert( __('Your browser does not have HTML5 support for send files. Upgrade to recent versions...') );
     }
     $inputFileFields.on( 'change', inputFileFieldChange );
     $inputFileFields.each(
@@ -671,7 +671,7 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
       }
       else {
         // console.log( 'uploadFile ERROR' );
-        $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( __('Error cargando el fichero.') );
+        $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( __('Error loading file') );
 
         var $validateForm = getFormInfo( idForm, 'validateForm' );
         // console.log( 'uploadFile ERROR', $validateForm );
