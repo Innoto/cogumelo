@@ -10,9 +10,11 @@ $.validator.addMethod(
 $.validator.addMethod(
   "numberEUDec",
   function( value, element, param ) {
-    return ( value==='' && this.optional( element ) ) || /^-?\d+(,\d{0,param})?$/.test( value );
+    regexPatt=new RegExp('^-?\\d+(,\\d{0,'+param+'})?$');
+    return ( value==='' && this.optional( element ) ) || regexPatt.test( value );
   },
-  "A positive or negative decimal number please (Ej. 123,25)"
+
+  $.validator.format("A positive or negative number with {0} decimal")
 );
 
 
