@@ -65,8 +65,8 @@ class FiledataWeb extends View {
     $fileInfo = false;
     $error = false;
 
-    $verifyAKeyUrl = Cogumelo::GetSetupValue( 'mod:filedata:verifyAKeyUrl' );
-    $disableRawUrl = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrl' );
+    $verifyAKeyUrl = Cogumelo::getSetupValue( 'mod:filedata:verifyAKeyUrl' );
+    $disableRawUrl = Cogumelo::getSetupValue( 'mod:filedata:disableRawUrl' );
 
 
     if( $fileId && ( $fileName || !$disableRawUrl ) && ( $aKey || !$verifyAKeyUrl ) ) {
@@ -132,7 +132,7 @@ class FiledataWeb extends View {
       'absLocation' => $n
     ];
 
-    if( !$this->webShowFile( $fileInfo , cogumeloGetSetupValue( 'mod:filedata:filePathPublic').'/' ) ) {
+    if( !$this->webShowFile( $fileInfo , Cogumelo::getSetupValue( 'mod:filedata:filePathPublic').'/' ) ) {
       cogumelo::error( 'Imposible mostrar el elemento solicitado: '.$n );
     }
   }

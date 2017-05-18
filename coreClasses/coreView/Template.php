@@ -507,7 +507,7 @@ class Template extends Smarty {
       $clientIncludes .= "\t if(typeof Storage !== 'undefined') { \n";
       $clientIncludes .= "\t   var cogumeloLocalStorageLastUpdate = localStorage.getItem('cogumeloLocalStorageLastUpdate');\n";
       $clientIncludes .= "\t   var currentTimestamp = new Date().getTime();\n";
-      $clientIncludes .= "\t   var localStorageMaxTime = ".  1000 * 60 * cogumeloGetSetupValue( 'clientLocalStorage:lifetime' ) .";\n";
+      $clientIncludes .= "\t   var localStorageMaxTime = ".  1000 * 60 * Cogumelo::getSetupValue( 'clientLocalStorage:lifetime' ) .";\n";
 
       $clientIncludes .= "\t   if( cogumeloLocalStorageLastUpdate ) {  \n";
       $clientIncludes .= "\t      if( (currentTimestamp-cogumeloLocalStorageLastUpdate) > localStorageMaxTime ){ \n";
