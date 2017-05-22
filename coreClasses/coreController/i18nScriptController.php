@@ -123,6 +123,7 @@ class i18nScriptController {
         }
     }
 
+
     // get all the files into modules folder
     /* App modules (rTypes) */
     $filesAppModules = $this->getModuleFiles($cogumeloFilesModule, $this->dir_modules);
