@@ -115,22 +115,8 @@ if( $argc > 1 ) {
       Cogumelo::load('coreController/i18nScriptController.php');
       $i18nscriptController = new i18nScriptController();
       $i18nscriptController->setEnviroment();
-      $i18nscriptController->c_i18n_getSystemTranslations();
+      $i18nscriptController->c_i18n_gettext();
       echo "The files.po are ready to be edited!\n";
-    break;
-
-    case 'generateAppTranslations':
-      Cogumelo::load('coreController/i18nScriptController.php');
-      $i18nscriptController = new i18nScriptController();
-      $i18nscriptController->setEnviroment();
-      $i18nscriptController->c_i18n_getAppTranslations();
-      echo "The files.po are ready to be edited!\n";
-    break;
-
-    case 'removeAllTranslations':
-      Cogumelo::load('coreController/i18nScriptController.php');
-      $i18nscriptController = new i18nScriptController();
-      $i18nscriptController->c_i18n_removeTranslations();
     break;
 
     case 'compileTranslations':
@@ -535,7 +521,7 @@ function restoreDB( $db, $user, $passwd, $file ) {
 function ReadStdin( $prompt, $valid_inputs, $default = '' ) {
   while( !isset($input) || ( is_array($valid_inputs) && !in_array($input, $valid_inputs) ) || ( $valid_inputs === 'is_file' && !is_file($input) ) ) {
     echo $prompt;
-    $input = mb_strtolower(trim(fgets(STDIN)));
+    $input = strtolower(trim(fgets(STDIN)));
     if( empty($input) && !empty($default) ) {
       $input = $default;
     }
@@ -571,9 +557,9 @@ function getPassword( $stars = false ) {
         break;
       }
       elseif( ord($char) === 127 ) {
-        if( mb_strlen($password) > 0 ) {
+        if( strlen($password) > 0 ) {
           fwrite( STDOUT, "\x08 \x08" );
-          $password = mb_substr( $password, 0, -1 );
+          $password = substr( $password, 0, -1 );
         }
       }
       else {
