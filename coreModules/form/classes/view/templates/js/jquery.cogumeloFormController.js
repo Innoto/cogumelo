@@ -181,7 +181,7 @@ function bindForm( idForm ) {
   if( $inputFileFields.length ) {
     if( !window.File ) {
       // File - provides readonly information such as name, file size, mimetype
-      alert('Tu navegador aún no tiene soporte HTML5 para el envío de ficheros. Actualiza a versiones recientes...');
+      alert( __('Your browser does not have HTML5 support for send files. Upgrade to recent versions...') );
     }
     $inputFileFields.on( 'change', inputFileFieldChange );
     $inputFileFields.each(
@@ -433,8 +433,8 @@ function formDoneError( form, response ) {
   if( response.result === 'errorSession' ) {
     // No se ha podido recuperar el form en el servidor porque ha caducado
     // console.log( 'formDoneError: errorSession' );
-    showErrorsValidateForm( $( form ), 'Form session expired. Reload', 'formError' );
-    if( confirm( 'Reload to get valid From?' ) ) {
+    showErrorsValidateForm( $( form ), __('Form session expired. Reload'), 'formError' );
+    if( confirm( __('Reload to get valid From?') ) ) {
       window.location.reload();
     }
   }
@@ -520,7 +520,10 @@ function reprocessFormErrors( idForm, failFields ) {
 
 function notifyFormErrors( idForm, numErrors ) {
   if( typeof geozzy !== 'undefined' && typeof geozzy.clientMsg !== 'undefined' && typeof geozzy.clientMsg.notify !== 'undefined' ) {
-    geozzy.clientMsg.notify( 'Hay '+numErrors+' errores en el formulario.', { notifyType: 'warning', size: 'normal' } );
+    geozzy.clientMsg.notify(
+      __('There are errors in the form') + ' ('+numErrors+')',
+      { notifyType: 'warning', size: 'normal', 'title': __('Warning') }
+    );
   }
 }
 
@@ -668,7 +671,7 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
       }
       else {
         // console.log( 'uploadFile ERROR' );
-        $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( 'Error cargando el fichero.' );
+        $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( __('Error loading file') );
 
         var $validateForm = getFormInfo( idForm, 'validateForm' );
         // console.log( 'uploadFile ERROR', $validateForm );

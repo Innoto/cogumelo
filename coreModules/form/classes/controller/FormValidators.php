@@ -410,7 +410,7 @@ class FormValidators extends FormValidatorsExtender {
             $numFiles += ( $fileInfo['status'] !== 'DELETE' ) ? 1 : 0;
           }
         }
-        error_log( ' * * * formValidators::val_fileRequired (numFiles) '.numFiles );
+        error_log( ' * * * formValidators::val_fileRequired (numFiles) '.$numFiles );
         $result = ( $numFiles > 0 );
       }
     }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Class i18nScriptController
+ * i18nScriptController Class
  */
 require_once( Cogumelo::getSetupValue( 'dependences:manualPath' ).'/Gettext/src/autoloader.php' );
 require_once( Cogumelo::getSetupValue( 'dependences:manualPath' ).'/Gettext/src/Translator.php' );
@@ -27,6 +27,7 @@ class i18nScriptController {
     $this->dir_main = APP_BASE_PATH.'/classes/view/';
     $this->dir_modules_dist = COGUMELO_DIST_LOCATION.'/distModules/';
     $this->textdomain = 'messages';
+    $this->modules = $C_ENABLED_MODULES;
     $this->lang = Cogumelo::getSetupValue( 'lang:available' );
 
     foreach( $this->lang as $l => $lang ) {
@@ -55,451 +56,38 @@ class i18nScriptController {
       textdomain($this->textdomain);
   }
 
-  /**
-    * Get all the text in the system (cogumelo + geozzy) to be translated and update
-    */
-  public function c_i18n_getSystemTranslations(){
-    error_reporting(E_ALL ^ E_NOTICE);
-    // cogumelo modules
-    if ($dh = opendir($this->dir_modules_c)) {
-      while (($module = readdir($dh)) !== false) {
-        if (is_dir($this->dir_modules_c . $module) && $module!="." && $module!=".."){
-          $this->getModulePo($this->dir_modules_c.$module);
-        }
-      }
-      $this->getSystemPo('cogumelo');
-    }
-    //geozzy distModules
-    if( $dh = opendir($this->dir_modules_dist) ) {
-      while (($module = readdir($dh)) !== false) {
-        if (is_dir($this->dir_modules_dist . $module) && $module!="." && $module!=".."){
-          $this->getModulePo($this->dir_modules_dist.$module);
-        }
-      }
-      $this->getSystemPo('geozzy');
-    }
-    error_reporting(E_ALL);
-  }
-
-  /**
-    * Get all the app translations and generate an only PO with system plus app translations
-    */
-  public function c_i18n_getAppTranslations(){
-
-    $appFilesModule = CacheUtilsController::listFolderFiles($this->dir_modules, array('php','js','tpl'), false);
-    $appFilesMain = CacheUtilsController::listFolderFiles($this->dir_main, array('php','js','tpl'), false);
-    $appFiles = array_merge_recursive($appFilesModule, $appFilesMain);
-
-    // get all the files unless files into app folder, excluding tmp and vendor folders
-    if ($appFiles){
-      foreach( $appFiles as $i => $dir ) {
-        if (mb_strpos($dir,'/coreModules/')===false && mb_strpos($dir,'/vendor/')===false && mb_strpos($dir,'/vendorPackages/')===false
-          && mb_strpos($dir,'/vendorServer/')===false && mb_strpos($dir,'/tmp/')===false)
-        {
-          $parts = explode('.',$dir->getRealPath());
-          switch($parts[1]){
-            case 'php':
-              $filesAll['php'][$i] = $dir->getRealPath();
-              break;
-            case 'js':
-              $filesAll['js'][$i] = $dir->getRealPath();
-              break;
-            case 'tpl':
-              $filesAll['tpl'][$i] = $dir->getRealPath();
-              break;
-          }
-        }
-      }
-    }
-
-    /************************** PHP *******************************/
-    if (array_key_exists('php', $filesAll)){
-      $this->generateAppPo($filesAll['php'], 'php');
-    }
-
-    /************************** JS *******************************/
-    if (array_key_exists('js', $filesAll)){
-      $this->generateAppPo($filesAll['js'], 'js');
-    }
-
-    /**************************** TPL ********************************/
-    if (array_key_exists('tpl', $filesAll)){
-      $this->generateAppTplPo($filesAll['tpl']);
-    }
-
-    $this->updateAppPo();
-
-  }
-
-  /*
-  * Check if already exists a translation file PO in system modules
-  **/
-  public function checkModuleTranslations( $module, $l, $type ) {
+  public function checkTranslations( $l ) {
     $exist = false;
-    $transFile = $this->textdomain.'_'.$l.'.po';
-    switch($type){
-      case 'js':
-        $transFile = $this->textdomain.'_'.$l.'_js.po';
-        break;
-      case 'tpl':
-        $transFile = $this->textdomain.'_'.$l.'_tpl.po';
-        break;
-    }
-    if (is_dir($module)){
-      $handle = opendir($module);
-      while ($file = readdir($handle)) {
-        if ($file==$transFile){
-          $exist = true;
-        }
-      }
-    }
-    return $exist;
-  }
-
-  /*
-  * Check if already exists a translation file PO in App
-  **/
-  public function checkAppTranslations( $l, $type ) {
-    $exist = false;
-    $transFile = $this->textdomain.'.po';
-    switch($type){
-      case 'js':
-        $transFile = $this->textdomain.'_js.po';
-        break;
-      case 'tpl':
-        $transFile = $this->textdomain.'_tpl.po';
-        break;
-    }
     if (is_dir($l)){
       $handle = opendir($l);
       while ($file = readdir($handle)) {
-        if ($file==$transFile){
+        if ($file==$this->textdomain.'.po'){
           $exist = true;
         }
       }
     }
+
     return $exist;
   }
 
-  /*
-  * Generate translations file PO for a given module
-  **/
-  public function getModulePo( $module ) {
-    $path = $module;
-    $files = CacheUtilsController::listFolderFiles($module, array('php','js','tpl'), false);
-    $filesModule = array();
-    foreach( $files as $file ) {
-      $parts = explode('.',$file);
-      switch($parts[1]){
-        case 'php':
-          $filesModule['php'][] = $file->getRealPath();
-          break;
-        case 'js':
-          $filesModule['js'][] = $file->getRealPath();
-          break;
-        case 'tpl':
-          $filesModule['tpl'][] = $file->getRealPath();
-          break;
-      }
-    }
-
-    /************************** PHP *******************************/
-    if (array_key_exists('php', $filesModule)){
-      $this->generateModulePo($module, $filesModule['php'], 'php');
-    }
-
-    /************************** JS *******************************/
-    if (array_key_exists('js', $filesModule)){
-      $this->generateModulePo($module, $filesModule['js'], 'js');
-    }
-
-    /**************************** TPL ********************************/
-    if (array_key_exists('tpl', $filesModule)){
-      $this->generateModuleTplPo($module, $filesModule['tpl']);
-    }
-    // Now we have to combine each type PO's in one for each language
-    $this->updateModulePo($module);
-  }
-
-  /*
-  * Merge POs generated form each type of file in one and clean temp
-  **/
-  public function updateModulePo( $module ) {
-    foreach( $this->lang as $l => $lang ) {
-      if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_prev.po') && file_exists($module.'/'.$this->textdomain.'_'.$l.'_tpl.po')){
-        exec ('msgcat '.$module.'/'.$this->textdomain.'_'.$l.'_prev.po '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po > '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po');
-      }
-      else{
-        if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_prev.po')){
-          exec ('msgcat '.$module.'/'.$this->textdomain.'_'.$l.'_prev.po > '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po');
-        }
-        else{
-          if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_tpl.po')){
-            exec ('msgcat '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po > '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po');
-          }
+  public function checkJsTranslations( $l ) {
+    $exist = false;
+    if (is_dir($l)){
+      $handle = opendir($l);
+      while ($file = readdir($handle)) {
+        if ($file==$this->textdomain.'_js.po'){
+          $exist = true;
         }
       }
-      if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_js.po')){
-        exec ('msgcat '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_js.po > '.$module.'/'.$this->textdomain.'_'.$l.'.po');
-      }
-      else{
-        exec ('msgcat '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po > '.$module.'/'.$this->textdomain.'_'.$l.'.po');
-      }
-
-      // Delete all the tmp files created
-      if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_tpl.po')){
-        exec ('rm '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po');
-      }
-      if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_prev.po')){
-        exec ('rm '.$module.'/'.$this->textdomain.'_'.$l.'_prev.po');
-      }
-      if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_js.po')){
-        exec ('rm '.$module.'/'.$this->textdomain.'_'.$l.'_js.po');
-      }
-      if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_tmp.po')){
-        exec ('rm '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po');
-      }
-      if(count(scandir(Cogumelo::getSetupValue( 'smarty:tmpPath' ))) > 2){
-        exec ('rm '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/*.tpl');
-      }
     }
+
+    return $exist;
   }
-
-  /*
-  * Merge POs generated form each type of file in one and clean temp
-  **/
-  public function updateAppPo(){
-    // Now we have to combine the po's we got in one for each language
-    foreach( $this->dir_lc as $l ) {
-      if(file_exists($l.'/'.$this->textdomain.'_prev.po') && file_exists($l.'/'.$this->textdomain.'_tpl.po')){
-        exec ('msgcat '.$l.'/'.$this->textdomain.'_prev.po '.$l.'/'.$this->textdomain.'_tpl.po > '.$l.'/'.$this->textdomain.'_tmp.po');
-      }
-      else{
-        if(file_exists($l.'/'.$this->textdomain.'_prev.po')){
-          exec ('msgcat '.$l.'/'.$this->textdomain.'_prev.po > '.$l.'/'.$this->textdomain.'_tmp.po');
-        }
-        else{
-          if(file_exists($l.'/'.$this->textdomain.'_tpl.po')){
-            exec ('msgcat '.$l.'/'.$this->textdomain.'_tpl.po > '.$l.'/'.$this->textdomain.'_tmp.po');
-          }
-        }
-      }
-      if(file_exists($l.'/'.$this->textdomain.'_js.po')){
-        exec ('msgcat '.$l.'/'.$this->textdomain.'_tmp.po '.$l.'/'.$this->textdomain.'_js.po > '.$l.'/'.$this->textdomain.'_app.po');
-      }
-      else{
-        exec ('msgcat '.$l.'/'.$this->textdomain.'_tmp.po > '.$l.'/'.$this->textdomain.'_app.po');
-      }
-
-      //Delete all the tmp files created
-      if(file_exists($l.'/'.$this->textdomain.'_tpl.po')){
-        exec ('rm '.$l.'/'.$this->textdomain.'_tpl.po');
-      }
-      if(file_exists($l.'/'.$this->textdomain.'_prev.po')){
-        exec ('rm '.$l.'/'.$this->textdomain.'_prev.po');
-      }
-      if(file_exists($l.'/'.$this->textdomain.'_js.po')){
-        exec ('rm '.$l.'/'.$this->textdomain.'_js.po');
-      }
-      if(file_exists($l.'/'.$this->textdomain.'_tmp.po')){
-        exec ('rm '.$l.'/'.$this->textdomain.'_tmp.po');
-      }
-      if(count(scandir(Cogumelo::getSetupValue( 'smarty:tmpPath' ))) > 2){
-        exec ('rm '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/*.tpl');
-      }
-
-      // We merge cogumelo geozzy and app po to have only one final PO
-      exec('msgcat '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$l.'/'.$this->textdomain.'_geozzy.po | grep -E -v \'^".+"$\' > '.$l.'/'.$this->textdomain.'.po');
-    }
-  }
-
-  /*
-  * Combine all modules PO's in only one for each system folder
-  **/
-  public function getSystemPo( $system ) {
-    if($system == 'cogumelo'){
-      $path = $this->dir_modules_c;
-    }
-    if($system == 'geozzy'){
-      $path = $this->dir_modules_dist;
-    }
-    if ($dh = opendir($path)) {
-      $all = array();
-      foreach( $this->dir_lc as $l => $lang ) {
-        $all[$l] = '';
-      }
-      while (($module = readdir($dh)) !== false) {
-        if (is_dir($path.$module)){
-          if ($mod = opendir($path.$module)) {
-            while ($file = readdir($mod) ){
-              foreach( $this->dir_lc as $l => $lang ) {
-                if ($file==$this->textdomain.'_'.$l.'.po' && filesize($path.$module.'/'.$file)!=0){
-                  $all[$l] = $all[$l].' '.$path.$module.'/'.$file;
-                }
-              }
-            }
-          }
-        }
-      }
-      foreach( $this->dir_lc as $l=>$lang ) {
-        exec('msgcat '.$all[$l].' > '.$path.$this->textdomain.'_'.$system.'_'.$l.'.po' );
-        exec('cp '.$path.'/'.$this->textdomain.'_'.$system.'_'.$l.'.po '.$lang.'/'.$this->textdomain.'_'.$system.'.po');
-      }
-    }
-  }
-
-  /*
-  * Extract strings from system to translate of a type (PHP, JS)and put them into an specific translations file PO
-  **/
-  public function generateModulePo( $module, $files, $type ) {
-    foreach( $this->lang as $l => $lang ) {
-      switch($type){
-        case 'php':
-          $extractor = 'Gettext\Extractors\PhpCode';
-          $oldFile = $module.'/'.$this->textdomain.'_'.$l.'.po';
-          $newFile = $module.'/'.$this->textdomain.'_'.$l.'_prev.po';
-          break;
-        case 'js':
-          $extractor = 'Gettext\Extractors\JsCode';
-          $oldFile = $module.'/'.$this->textdomain.'_'.$l.'_js.po';
-          $newFile = $module.'/'.$this->textdomain.'_'.$l.'_js.po';
-      }
-      if ($this->checkModuleTranslations($module, $l, $type)){ //merge
-        //Scan the php code to find the latest gettext entries
-        $entries = $extractor::fromFile($files);
-        //Get the translations of the code that are stored in a po file
-        $oldEntries = Gettext\Extractors\Po::fromFile($oldFile);
-        //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-        $entries->mergeWith($oldEntries); //now $entries has all the values
-      }
-      else{ //create
-        $entries = $extractor::fromFile($files);
-        $entries->mergeWith($entries);
-      }
-      Gettext\Generators\Po::toFile($entries, $newFile);
-    }
-  }
-
-  /*
-  * Extract strings to translate of TPL filesand put them into an specific translations file PO
-  **/
-  public function generateModuleTplPo( $module, $filesTpl ) {
-    $smartygettext = Cogumelo::getSetupValue( 'dependences:composerPath' ).'/smarty-gettext/smarty-gettext/tsmarty2c.php';
-    exec( 'chmod 700 '.$smartygettext );
-    // copiamos os ficheiros nun dir temporal
-    foreach( $filesTpl as $a ) {
-      $a_parts = explode('/home/proxectos/',$a);
-      $name = str_replace('/','_',$a_parts[1]);
-      exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$name);
-    }
-    foreach( $this->lang as $l => $lang ) {
-      exec($smartygettext.' -o '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po '.Cogumelo::getSetupValue( 'smarty:tmpPath' ));
-    }
-  }
-
-  /*
-  * Extract strings from App to translate of a type (PHP, JS)and put them into an specific translations file PO
-  **/
-  public function generateAppPo( $files, $type ) {
-    foreach( $this->dir_lc as $l => $path ) {
-      switch($type){
-        case 'php':
-          $extractor = 'Gettext\Extractors\PhpCode';
-          $oldFile = $path.'/'.$this->textdomain.'.po';
-          $newFile = $path.'/'.$this->textdomain.'_prev.po';
-          break;
-        case 'js':
-          $extractor = 'Gettext\Extractors\JsCode';
-          $oldFile = $path.'/'.$this->textdomain.'_js.po';
-          $newFile = $path.'/'.$this->textdomain.'_js.po';
-      }
-      if ($this->checkAppTranslations($path, $type)){ //merge
-        //Scan the php code to find the latest gettext entries
-        $entries = $extractor::fromFile($files);
-        //Get the translations of the code that are stored in a po file
-        $oldEntries = Gettext\Extractors\Po::fromFile($oldFile);
-        //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
-        $entries->mergeWith($oldEntries); //now $entries has all the values
-      }
-      else{ //create
-        $entries = $extractor::fromFile($files);
-        $entries->mergeWith($entries);
-      }
-      Gettext\Generators\Po::toFile($entries, $newFile);
-    }
-  }
-
-  /*
-  * Extract strings from App to translate of TPL type and put them into an specific translations file PO
-  **/
-  public function generateAppTplPo( $filesTpl ) {
-    $smartygettext = Cogumelo::getSetupValue( 'dependences:composerPath' ).'/smarty-gettext/smarty-gettext/tsmarty2c.php';
-    exec( 'chmod 700 '.$smartygettext );
-    // copiamos os ficheiros nun dir temporal
-    foreach( $filesTpl as $a ) {
-      $a_parts = explode('/home/proxectos/',$a);
-      $name = str_replace('/','_',$a_parts[1]);
-      exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$name);
-    }
-
-    foreach( $this->dir_lc as $l ) {
-      exec($smartygettext.' -o '.$l.'/'.$this->textdomain.'_tpl.po '.Cogumelo::getSetupValue( 'smarty:tmpPath' ));
-    }
-  }
-
-  /**
-    * Compile files.po to get the translations ready to be used
-    */
-  public function c_i18n_compile() {
-    foreach( $this->dir_lc as $l ) {
-      echo exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
-    }
-  }
-
-  /**
-    * Translate files.po into .json to be used in client
-    */
-  public function c_i18n_json() {
-    foreach( $this->dir_lc as $l ) {
-      exec('php '.$this->dir_modules_c.'/i18nServer/classes/po2json.php -i '.$l.'/'.$this->textdomain.'_js.po -o '.$l.'/translation.json');
-      //exec('i18next-conv -l '.$this->textdomain.' -s '.$l.'/'.$this->textdomain.'_js.po -t '.$l.'/translation.json');
-    }
-  }
-
-  // Remove cogumelo and geozzy po's (for testing)
-  public function c_i18n_removeTranslations(){
-    if ($dh = opendir($this->dir_modules_c)) {
-      while (($module = readdir($dh)) !== false) {
-        exec('rm '.$this->dir_modules_c.$module.'/*.po');
-      }
-    }
-    if ($dh = opendir($this->dir_modules_dist)) {
-      while (($module = readdir($dh)) !== false) {
-        exec('rm '.$this->dir_modules_dist.$module.'/*.po');
-      }
-    }
-  }
-
-  /* Non se está usando */
-  /*public function c_i18n_update() {
-    if( Cogumelo::getSetupValue( 'i18n:gettextUpdate' ) !== true ) {
-      return;
-    }
-    else if($_SERVER["REMOTE_ADDR"] == "127.0.0.1") {
-      shell_exec('find '.COGUMELO_LOCATION.'/. ../app/. -iname "*.php" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code utf-8 -d c_project -o ../app/i18n/c_project.pot -L PHP');
-
-      foreach( Cogumelo::getSetupValue( 'lang:available' ) as $lngKey => $values ) {
-        shell_exec('msgmerge -U ../app/i18n/c_project_'.$lngKey.'.po ../app/i18n/c_project.pot');
-      }
-
-    }
-  }*/
 
   /**
     * Get all the text to be translated and update or create a file.po if not exists
     */
-/*
-  public function c_i18n_gettext_old(){
+  public function c_i18n_gettext(){
 
     error_reporting(E_ALL ^ E_NOTICE);
 
@@ -516,9 +104,9 @@ class i18nScriptController {
     // get all the files unless files into modules folder, excluding tmp and vendor folders
     if ($appFiles){
         foreach($appFiles as $i => $dir){
-            if (mb_strpos($dir,'/coreModules/')===false && mb_strpos($dir,'/modules/')===false
-            && mb_strpos($dir,'/vendor/')===false && mb_strpos($dir,'/vendorPackages/')===false
-            && mb_strpos($dir,'/vendorServer/')===false && mb_strpos($dir,'/tmp/')===false){
+            if (strpos($dir,'/coreModules/')===false && strpos($dir,'/modules/')===false
+            && strpos($dir,'/vendor/')===false && strpos($dir,'/vendorPackages/')===false
+            && strpos($dir,'/vendorServer/')===false && strpos($dir,'/tmp/')===false){
               $parts = explode('.',$dir->getRealPath());
               switch($parts[1]){
                 case 'php':
@@ -535,12 +123,13 @@ class i18nScriptController {
         }
     }
 
+
     // get all the files into modules folder
-    // App modules (rTypes)
+    /* App modules (rTypes) */
     $filesAppModules = $this->getModuleFiles($cogumeloFilesModule, $this->dir_modules);
-    // Cogumelo core modules
+    /* Cogumelo core modules */
     $filesCoreModules = $this->getModuleFiles($cogumeloFilesModuleC, $this->dir_modules_c);
-    // Distribution modules
+    /* Distribution modules */
     $filesDistModules = $this->getModuleFiles($appFiles, $this->dir_modules_dist);
 
     // We combine all the arrays that we've got in an only array
@@ -580,7 +169,7 @@ class i18nScriptController {
     $filesArray = array_merge_recursive($filesAll, $filesModules);
 
 
-    // JS //
+    /************************** JS *******************************/
 
     //Now save the php.po file with the result
     foreach ($this->dir_lc as $l){
@@ -599,7 +188,7 @@ class i18nScriptController {
     }
 
 
-      // PHP e JS //
+      /************************** PHP e JS *******************************/
 
       //Now save the php.po file with the result
       foreach ($this->dir_lc as $l){
@@ -621,7 +210,7 @@ class i18nScriptController {
         Gettext\Generators\Po::toFile($entriesPhp, $l.'/'.$this->textdomain.'_prev.po');
       }
 
-      // TPL //
+      /**************************** TPL ********************************/
 
       $smartygettext = Cogumelo::getSetupValue( 'dependences:composerPath' ).'/smarty-gettext/smarty-gettext/tsmarty2c.php';
       exec( 'chmod 700 '.$smartygettext );
@@ -648,8 +237,43 @@ class i18nScriptController {
     error_reporting(E_ALL);
   }
 
-  // Old function
+  /**
+    * Compile files.po to get the translations ready to be used
+    */
+  public function c_i18n_compile() {
+
+    foreach ($this->dir_lc as $l){
+      echo exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
+    }
+  }
+
+  /**
+    * Translate files.po into .json to be used in client
+    */
+  public function c_i18n_json() {
+    foreach ($this->dir_lc as $l){
+      exec('php '.$this->dir_modules_c.'/i18nServer/classes/po2json.php -i '.$l.'/'.$this->textdomain.'_js.po -o '.$l.'/translation.json');
+      //exec('i18next-conv -l '.$this->textdomain.' -s '.$l.'/'.$this->textdomain.'_js.po -t '.$l.'/translation.json');
+    }
+  }
+
+  /* Non se está usando */
+  public function c_i18n_update() {
+    if( Cogumelo::getSetupValue( 'i18n:gettextUpdate' ) !== true ) {
+      return;
+    }
+    else if($_SERVER["REMOTE_ADDR"] == "127.0.0.1") {
+      shell_exec('find '.COGUMELO_LOCATION.'/. ../app/. -iname "*.php" -o -iname "*.php" | xargs xgettext -kT_gettext -kT_ --from-code utf-8 -d c_project -o ../app/i18n/c_project.pot -L PHP');
+
+      foreach( Cogumelo::getSetupValue( 'lang:available' ) as $lngKey => $values ) {
+        shell_exec('msgmerge -U ../app/i18n/c_project_'.$lngKey.'.po ../app/i18n/c_project.pot');
+      }
+
+    }
+  }
+
   public function getModuleFiles($modFiles, $relPath){
+
 
     $filesModule = array();
     if ($modFiles && $this->modules){
@@ -680,7 +304,6 @@ class i18nScriptController {
     }
     return $filesModule;
   }
-*/
 
 
 }
