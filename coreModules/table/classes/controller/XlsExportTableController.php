@@ -42,7 +42,12 @@ class XlsExportTableController extends ExportTableController {
         $row['rowReferenceKey'] = $rowVO->getter( $rowVO->getFirstPrimarykeyId() );
         $rowId = $row['rowReferenceKey'];
 
-        $colsDefFinal = array_merge( $tableControl->colsDef, $tableControl->colsDefToExport );
+        $colsDefFinal = $tableControl->colsDef;
+        foreach( $tableControl->colsDefToExport as $cdefK => $cdef ) {
+
+            $colsDefFinal[$cdefK] = $cdef;
+
+        }
 
         foreach( $colsDefFinal as $colDefKey => $colDef) {
 
@@ -75,30 +80,21 @@ class XlsExportTableController extends ExportTableController {
         }
 
         // modify row value if have colRules
-        foreach($tableControl->colsDef as $colDefKey => $colDef) {
+        foreach($colsDefFinal as $colDefKey => $colDef) {
           // if have rules and matches with regexp
-          if($colDef['rules'] != array() ) {
+
+          //var_dump($colDef);
+          if( isset($colDef['rules']) >0) {
 
 
-            foreach($colDef['exportRules'] as $rule){
-              if( !isset( $rule['regexContent'] ) ) {
-                if(preg_match( $rule['regexp'], $row[$colDefKey])) {
-                  eval('$row[$colDefKey] = "'.$rule['finalContent'].'";');
-                  break;
-                }
-              }
-              else {
-                //$row[$colDefKey] = preg_replace( $rule['regexp'], $rule['regexContent'], $row[$colDefKey] );
-                if( $row[$colDefKey] = preg_replace( $rule['regexp'], $rule['regexContent'], $row[$colDefKey] ) ) {
-                  break;
-                }
-              }
-            }
+
 
             foreach($colDef['rules'] as $rule){
               if( !isset( $rule['regexContent'] ) ) {
+                //var_dump([$colDefKey, $rule['finalContent'] ]);
                 if(preg_match( $rule['regexp'], $row[$colDefKey])) {
                   eval('$row[$colDefKey] = "'.$rule['finalContent'].'";');
+                  //var_dump([$colDefKey, $rule['finalContent'] ]);
                   break;
                 }
               }
