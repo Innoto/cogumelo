@@ -2032,6 +2032,9 @@ class FormController implements Serializable {
       if( isset( $htmlFieldArray['label'] ) ) {
         $html .= $htmlFieldArray['label']."\n";
       }
+      if( isset( $htmlFieldArray['htmlBefore'] ) ) {
+        $html .= $htmlFieldArray['htmlBefore']."\n";
+      }
       switch( $htmlFieldArray['fieldType'] ) {
         case 'select':
           $html .= $htmlFieldArray['inputOpen']."\n";
@@ -2058,6 +2061,9 @@ class FormController implements Serializable {
         default:
           $html .= $htmlFieldArray['input'];
           break;
+      }
+      if( isset( $htmlFieldArray['htmlAfter'] ) ) {
+        $html .= $htmlFieldArray['htmlAfter']."\n";
       }
     }
 
@@ -2095,6 +2101,13 @@ class FormController implements Serializable {
         $html['label'] .= ' class="'.$this->cssPrefix.( isset( $field['class'] ) ? ' '.$field['class'] : '' ).'"';
         $html['label'] .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
         $html['label'] .= '>'.$field['label'].'</label>';
+      }
+
+      if( isset( $field['htmlBefore'] ) ) {
+        $html['htmlBefore'] = '<div class="'.$this->cssPrefix.'before">'.$field['htmlBefore'].'</div>';
+      }
+      if( isset( $field['htmlAfter'] ) ) {
+        $html['htmlAfter'] = '<div class="'.$this->cssPrefix.'after">'.$field['htmlAfter'].'</div>';
       }
 
       $attribs = ' form="'.$this->id.'"';
