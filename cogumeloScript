@@ -157,6 +157,44 @@ else{
 }
 
 
+function printOptions(){
+  echo "\n
+ + Permissions and dependences
+    * flush                   Remove temporary files
+    * generateClientCaches    Cache all js, css, compiled less and other client files
+    * setPermissions          Set the files/folders permission
+    * setPermissionsDevel     Set the files/folders permission
+    * installDependences      Install all modules dependencies
+
+ + Database
+    * createDB                Create a database
+
+
+    * generateModel           Execute all options below in the same order
+      - createTables            Generate the tables
+      - createRelSchemes        Generate relationship tmp files
+      - initModules             Execute '::moduleRc()' of all modules
+      - deployModules           Execute Deploy of modules
+
+    * resetModules
+      - resetModuleVersions
+
+    * deploy                  Deploy
+      - deployModels            Execute deploy SQL acording current module versions
+      - registerModules         Register models or update if registered
+      - deployModules           Execute Deploy of modules
+
+    * bckDB                   Do a DB backup (optional arg: filename)
+    * restoreDB               Restore a database
+
+ + Internationalization
+    * generateTranslations    Get all the web text into a file.po
+    * compileTranslations     Compile file.po and get the translations ready
+  \n\n";
+}
+
+
+
 function actionCompileTranslations() {
   Cogumelo::load('coreController/i18nScriptController.php');
   $i18nscriptController = new i18nScriptController();
@@ -211,35 +249,6 @@ function actionGenerateClientCaches() {
   echo "\nClient caches generated\n\n";
 }
 
-
-function printOptions(){
-  echo "\n
- + Permissions and dependences
-    * flush                   Remove temporary files
-    * generateClientCaches    Cache all js, css, compiled less and other client files
-    * setPermissions          Set the files/folders permission
-    * setPermissionsDevel     Set the files/folders permission
-    * installDependences      Install all modules dependencies
-
- + Database
-    * createDB                Create a database
-    * generateModel           Execute all options below in the same order
-      - createTables            Generate the tables
-      - createRelSchemes        Generate relationship tmp files
-      - initModules             Execute '::moduleRc()' of all modules
-      - deployModules           Execute Deploy of modules
-    * deploy                  Deploy
-      - deployModels            Execute deploy SQL acording current module versions
-      - registerModules         Register models or update if registered
-      - deployModules           Execute Deploy of modules
-    * bckDB                   Do a DB backup (optional arg: filename)
-    * restoreDB               Restore a database
-
- + Internationalization
-    * generateTranslations    Get all the web text into a file.po
-    * compileTranslations     Compile file.po and get the translations ready
-  \n\n";
-}
 
 function createDB(){
 
