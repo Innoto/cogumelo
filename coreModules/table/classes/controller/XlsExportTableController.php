@@ -91,10 +91,8 @@ class XlsExportTableController extends ExportTableController {
 
             foreach($colDef['rules'] as $rule){
               if( !isset( $rule['regexContent'] ) ) {
-                //var_dump([$colDefKey, $rule['finalContent'] ]);
                 if(preg_match( $rule['regexp'], $row[$colDefKey])) {
                   eval('$row[$colDefKey] = "'.$rule['finalContent'].'";');
-                  //var_dump([$colDefKey, $rule['finalContent'] ]);
                   break;
                 }
               }
