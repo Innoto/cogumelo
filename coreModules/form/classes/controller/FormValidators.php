@@ -165,6 +165,24 @@ class FormValidators extends FormValidatorsExtender {
     return preg_match( '/^-?\d+(,\d{0,'.$param.'})?$/', $value ) === 1;
   }
 
+  public function val_minEU( $value, $param ) {
+    $locInfo = localeconv();
+    $value = strtr( $value, '.,', $locInfo['decimal_point'] );
+    $param = strtr( $param, '.,', $locInfo['decimal_point'] );
+    return $value >= $param;
+  }
+
+  public function val_maxEU( $value, $param ) {
+    $locInfo = localeconv();
+    $value = strtr( $value, '.,', $locInfo['decimal_point'] );
+    $param = strtr( $param, '.,', $locInfo['decimal_point'] );
+    return $value <= $param;
+  }
+
+
+
+
+
   public function val_digits( $value ) {
     return preg_match( '/^\d+$/', $value ) === 1;
   }

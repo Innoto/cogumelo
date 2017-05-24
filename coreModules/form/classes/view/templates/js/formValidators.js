@@ -17,6 +17,27 @@ $.validator.addMethod(
   $.validator.format("A positive or negative number with {0} decimal")
 );
 
+$.validator.addMethod(
+  "minEU",
+  function( value, element, param ) {
+    var val = parseFloat( value.replace(',','.') );
+    var par = parseFloat( ( typeof param === 'string' ) ? param.replace(',','.') : param );
+    return ( ( value==='' && this.optional( element ) ) || ( val >= par ) );
+  },
+  "Please enter a value greater than or equal to {0}."
+);
+
+$.validator.addMethod(
+  "maxEU",
+  function( value, element, param ) {
+    var val = parseFloat( value.replace(',','.') );
+    var par = parseFloat( ( typeof param === 'string' ) ? param.replace(',','.') : param );
+    return ( ( value==='' && this.optional( element ) ) || ( val <= par ) );
+  },
+  "Please enter a value less than or equal to {0}."
+);
+
+
 
 
 
