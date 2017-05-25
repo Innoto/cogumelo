@@ -36,7 +36,7 @@ class FiledataWeb extends View {
     // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['fileId'] );
 
     $aKey = empty( $urlParams['aKey'] ) ? false : $urlParams['aKey'];
-    $fileName = empty( $urlParams['fileName'] ) ? false : substr( strrchr( $urlParams['fileName'], '/' ), 1 );
+    $fileName = empty( $urlParams['fileName'] ) ? false : mb_substr( mb_strrchr( $urlParams['fileName'], '/' ), 1 );
 
     $this->fileSendCommon( $urlParams['fileId'], $fileName, $aKey, $this->filesAppPath, 'web' );
   } // function webFormFileShow()
@@ -50,7 +50,7 @@ class FiledataWeb extends View {
     // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['fileId'] );
 
     $aKey = empty( $urlParams['aKey'] ) ? false : $urlParams['aKey'];
-    $fileName = empty( $urlParams['fileName'] ) ? false : substr( strrchr( $urlParams['fileName'], '/' ), 1 );
+    $fileName = empty( $urlParams['fileName'] ) ? false : mb_substr( mb_strrchr( $urlParams['fileName'], '/' ), 1 );
 
     $this->fileSendCommon( $urlParams['fileId'], $fileName, $aKey, $this->filesAppPath, 'download' );
   } // function webFormFileShow()
@@ -65,8 +65,8 @@ class FiledataWeb extends View {
     $fileInfo = false;
     $error = false;
 
-    $verifyAKeyUrl = Cogumelo::GetSetupValue( 'mod:filedata:verifyAKeyUrl' );
-    $disableRawUrl = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrl' );
+    $verifyAKeyUrl = Cogumelo::getSetupValue( 'mod:filedata:verifyAKeyUrl' );
+    $disableRawUrl = Cogumelo::getSetupValue( 'mod:filedata:disableRawUrl' );
 
 
     if( $fileId && ( $fileName || !$disableRawUrl ) && ( $aKey || !$verifyAKeyUrl ) ) {
@@ -132,7 +132,7 @@ class FiledataWeb extends View {
       'absLocation' => $n
     ];
 
-    if( !$this->webShowFile( $fileInfo , cogumeloGetSetupValue( 'mod:filedata:filePathPublic').'/' ) ) {
+    if( !$this->webShowFile( $fileInfo , Cogumelo::getSetupValue( 'mod:filedata:filePathPublic').'/' ) ) {
       cogumelo::error( 'Imposible mostrar el elemento solicitado: '.$n );
     }
   }

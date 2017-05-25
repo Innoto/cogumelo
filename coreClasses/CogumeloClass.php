@@ -4,6 +4,7 @@ require_once( COGUMELO_LOCATION.'/coreClasses/coreController/Singleton.php' );
 require_once( COGUMELO_LOCATION.'/coreClasses/coreController/ModuleController.php' );
 require_once( COGUMELO_LOCATION.'/coreClasses/coreController/DependencesController.php' );
 require_once( COGUMELO_LOCATION.'/coreClasses/coreController/I18n.php' );
+require_once( COGUMELO_LOCATION.'/coreClasses/coreController/SetupMethods.php' );
 require_once( COGUMELO_LOCATION.'/coreModules/cogumeloSession/classes/controller/CogumeloSessionController.php' );
 
 class CogumeloClass extends Singleton {
@@ -15,6 +16,7 @@ class CogumeloClass extends Singleton {
 
   protected $userinfoString = '';
 
+  private static $setupMethods = null;
 
   public $dependences = array();
   public $includesCommon = array();
@@ -387,59 +389,46 @@ class CogumeloClass extends Singleton {
 
 
 
+
+
+  /*
+   * INI - Setup methods. Shared with the setup files
+   */
+
+  // require_once( COGUMELO_LOCATION.'/coreClasses/coreController/SetupMethods.php' );
+  public static function getSetupMethods() {
+    if( empty( self::$setupMethods ) ) {
+      self::$setupMethods = new SetupMethods();
+    }
+    return self::$setupMethods;
+  }
+
   public static function setSetupValue( $path, $value ) {
-    // error_log( 'COGUMELO::setSetupValue: '.$path );
-    global $CGMLCONF;
-
-    if( !isset( $CGMLCONF ) || !is_array( $CGMLCONF ) ) {
-      $CGMLCONF = array(
-        'cogumelo' => array()
-      );
-    }
-
-    $parts = explode( ':', $path );
-    $stack = '';
-    foreach( $parts as $key ) {
-      $valid = false;
-      $stackPrev = $stack;
-      $stack .= '[\''.$key.'\']';
-      $fai = '$valid = isset( $CGMLCONF'. $stack .');';
-      eval( $fai );
-      if( !$valid ) {
-        $fai = '$isArray = is_array( $CGMLCONF'. $stackPrev .');';
-        eval( $fai );
-        if( $isArray ) {
-          $fai = '$CGMLCONF'. $stack .' = null;';
-          eval( $fai );
-        }
-        else {
-          $fai = '$CGMLCONF'. $stackPrev .' = array( $key => null );';
-          eval( $fai );
-        }
-      }
-    }
-    $fai = '$CGMLCONF'. $stack .' = $value;';
-    eval( $fai );
-
-    return $CGMLCONF;
+    return self::getSetupMethods()->setSetupValue( $path, $value );
   }
-
-  public static function getSetupValue( $path = '' ) {
-    // error_log( 'Cogumelo::getSetupValue: '.$path );
-    global $CGMLCONF;
-    $value = null;
-
-    $parts = explode( ':', $path );
-    $stack = ( $parts[0] === '' ) ? '' : '[\'' . implode( '\'][\'', $parts ) . '\']';
-    $fai = '$valid = isset( $CGMLCONF'. $stack .' );';
-    eval( $fai );
-    if( $valid ) {
-      $fai = '$value = $CGMLCONF'. $stack .';';
-      eval( $fai );
-    }
-
-    return $value;
+  public static function getSetupValue( $path ) {
+    return self::getSetupMethods()->getSetupValue( $path );
   }
+  public static function issetSetupValue( $path ) {
+    return self::getSetupMethods()->issetSetupValue( $path );
+  }
+  public static function createSetupValue( $path, $value ) {
+    return self::getSetupMethods()->createSetupValue( $path, $value );
+  }
+  public static function updateSetupValue( $path, $value ) {
+    return self::getSetupMethods()->updateSetupValue( $path, $value );
+  }
+  public static function addSetupValue( $path, $value ) {
+    return self::getSetupMethods()->addSetupValue( $path, $value );
+  }
+  public static function mergeSetupValue( $path, $addArray ) {
+    return self::getSetupMethods()->mergeSetupValue( $path, $addArray );
+  }
+  /*
+   * END - Setup methods. Shared with the setup files
+   */
+
+
 
 
   /**

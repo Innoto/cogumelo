@@ -1,0 +1,54 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"#-#-#-#-#  messages_gl_tmp.po  #-#-#-#-#\n"
+"#-#-#-#-#  messages_gl_prev.po  #-#-#-#-#\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2017-04-17T10:46:22+02:00\n"
+"PO-Revision-Date: 2017-04-17T10:46:22+02:00\n"
+"Language: \n"
+": #-#-#-#-#  messages_gl_tmp.po  #-#-#-#-##-#-#-#-#  messages_gl_prev.po  #-"
+"#-#-#-#\n"
+"#-#-#-#-#  messages_gl_tpl.po  #-#-#-#-#\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"#-#-#-#-#  messages_gl_js.po  #-#-#-#-#\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2017-04-17T10:46:22+02:00\n"
+"PO-Revision-Date: 2017-04-17T10:46:22+02:00\n"
+"Language: \n"
+
+#: /home/proxectos/cogumelo/coreModules/testmodule/testmodule.php:32
+msgid "traduceme esto se tes valor"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/testmodule/classes/controller/CousaController.php:17
+msgid "no php"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/testmodule/classes/controller/CousaController.php:18
+msgid "nova traducción"
+msgstr ""
+
+#: /home/proxectos/galiciaagochada/app/tmp/tpl/cogumelo_coreModules_testmodule_classes_view_templates_test.tpl:6
+msgid "proba traducción no tpl"
+msgstr ""
+
+#: /home/proxectos/galiciaagochada/app/tmp/tpl/cogumelo_coreModules_testmodule_classes_view_templates_test.tpl:8
+msgid "blibliblibli"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/testmodule/classes/view/templates/js/test.js:1
+msgid "no js"
+msgstr ""

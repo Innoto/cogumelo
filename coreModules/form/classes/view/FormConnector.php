@@ -300,7 +300,7 @@ class FormConnector extends View {
         $moreInfo['tempId'] = false;
       }
 
-      if( !empty( $tnProfile ) /*&& strpos( $moreInfo['fileType'], 'image' ) === 0*/ ) {
+      if( !empty( $tnProfile ) /*&& mb_strpos( $moreInfo['fileType'], 'image' ) === 0*/ ) {
         error_log( 'VAMOS A CREAR fileSrcTn' );
 
         filedata::load('controller/FiledataImagesController.php');

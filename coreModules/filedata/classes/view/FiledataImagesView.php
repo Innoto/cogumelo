@@ -25,8 +25,8 @@ class FiledataImagesView extends View {
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
     $this->filesCachePath = Cogumelo::getSetupValue( 'mod:filedata:cachePath' );
 
-    $this->verifyAKeyUrl = Cogumelo::GetSetupValue( 'mod:filedata:verifyAKeyUrl' );
-    $this->disableRawUrlProfile = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrlProfile' );
+    $this->verifyAKeyUrl = Cogumelo::getSetupValue( 'mod:filedata:verifyAKeyUrl' );
+    $this->disableRawUrlProfile = Cogumelo::getSetupValue( 'mod:filedata:disableRawUrlProfile' );
   }
 
   /**
@@ -51,7 +51,7 @@ class FiledataImagesView extends View {
 
     $fileId = $urlParams['fileId'];
     $aKey = empty( $urlParams['aKey'] ) ? false : $urlParams['aKey'];
-    $fileName = empty( $urlParams['fileName'] ) ? false : substr( strrchr( $urlParams['fileName'], '/' ), 1 );
+    $fileName = empty( $urlParams['fileName'] ) ? false : mb_substr( mb_strrchr( $urlParams['fileName'], '/' ), 1 );
 
     if( $fileId && ( $fileName || !$this->disableRawUrlProfile ) && ( $aKey || !$this->verifyAKeyUrl ) ) {
       $imageCtrl = new FiledataImagesController( $fileId );
@@ -67,7 +67,7 @@ class FiledataImagesView extends View {
             $imgInfo = [ 'type' => $fileInfo['type'] ];
 
             if( isset( $urlParams['profile']  ) ) {
-              $urlParams['profile'] = substr( strrchr( $urlParams['profile'], '/' ), 1 );
+              $urlParams['profile'] = mb_substr( mb_strrchr( $urlParams['profile'], '/' ), 1 );
             }
             else {
               $urlParams['profile'] = '';
@@ -79,8 +79,8 @@ class FiledataImagesView extends View {
               $imageCtrl->profile['cache'] = false;
             }
 
-            if( $imageCtrl->profile['cache'] && file_exists( $imgInfo['route'] ) && strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
-              $urlRedirect = substr( $imgInfo['route'], strlen( $this->webBasePath ) );
+            if( $imageCtrl->profile['cache'] && file_exists( $imgInfo['route'] ) && mb_strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
+              $urlRedirect = mb_substr( $imgInfo['route'], mb_strlen( $this->webBasePath ) );
               // error_log( "FiledataImagesView: showImg(): urlRedirect = $urlRedirect" );
               Cogumelo::redirect( SITE_HOST . $urlRedirect );
               // YA NO SE PUEDE ENVIAR NADA AL NAVEGADOR

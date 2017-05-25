@@ -393,7 +393,7 @@ class FormController implements Serializable {
 
     $postDataJson = file_get_contents( 'php://input' );
     // error_log( $postDataJson );
-    if( $postDataJson !== false && strpos( $postDataJson, '{' )===0 ) {
+    if( $postDataJson !== false && mb_strpos( $postDataJson, '{' )===0 ) {
       $postData = json_decode( $postDataJson, true );
       // error_log( '$postDataJson: '.print_r( $postData, true ) );
 
@@ -1755,24 +1755,29 @@ class FormController implements Serializable {
     // error_log( 'secureFileName: '.$fileName );
     $maxLength = 200;
 
+    // "Aplanamos" caracteres no ASCII7
     $fileName = str_replace( $this->replaceAcents[ 'from' ], $this->replaceAcents[ 'to' ], $fileName );
-    $fileName = preg_replace( '/[^0-9a-z_\.-]/i', '_', $fileName );
+    // Solo admintimos a-z A-Z 0-9 - / El resto pasan a ser -
+    $fileName = preg_replace( '/[^a-z0-9_\-\.]/iu', '_', $fileName );
+    // Eliminamos - sobrantes
+    $fileName = preg_replace( '/__+/u', '_', $fileName );
+    $fileName = trim( $fileName, '_' );
 
     $sobran = mb_strlen( $fileName, 'UTF-8' ) - $maxLength;
     if( $sobran < 0 ) {
       $sobran = 0;
     }
 
-    $tmpExtPos = strrpos( $fileName, '.' );
+    $tmpExtPos = mb_strrpos( $fileName, '.' );
     if( $tmpExtPos > 0 && ( $tmpExtPos - $sobran ) >= 8 ) {
       // Si hay extensión y al cortar el nombre quedan 8 o más letras, recorto solo el nombre
-      $tmpName = substr( $fileName, 0, $tmpExtPos - $sobran );
-      $tmpExt = substr( $fileName, 1 + $tmpExtPos );
+      $tmpName = mb_substr( $fileName, 0, $tmpExtPos - $sobran );
+      $tmpExt = mb_substr( $fileName, 1 + $tmpExtPos );
       $fileName = $tmpName . '.' . $tmpExt;
     }
     else {
       // Recote por el final
-      $fileName = substr( $fileName, 0, $maxLength );
+      $fileName = mb_substr( $fileName, 0, $maxLength );
     }
 
     // error_log( 'secureFileName RET: '.$fileName );
@@ -2027,6 +2032,9 @@ class FormController implements Serializable {
       if( isset( $htmlFieldArray['label'] ) ) {
         $html .= $htmlFieldArray['label']."\n";
       }
+      if( isset( $htmlFieldArray['htmlBefore'] ) ) {
+        $html .= $htmlFieldArray['htmlBefore']."\n";
+      }
       switch( $htmlFieldArray['fieldType'] ) {
         case 'select':
           $html .= $htmlFieldArray['inputOpen']."\n";
@@ -2053,6 +2061,9 @@ class FormController implements Serializable {
         default:
           $html .= $htmlFieldArray['input'];
           break;
+      }
+      if( isset( $htmlFieldArray['htmlAfter'] ) ) {
+        $html .= $htmlFieldArray['htmlAfter']."\n";
       }
     }
 
@@ -2092,6 +2103,13 @@ class FormController implements Serializable {
         $html['label'] .= '>'.$field['label'].'</label>';
       }
 
+      if( isset( $field['htmlBefore'] ) ) {
+        $html['htmlBefore'] = '<div class="'.$this->cssPrefix.'before">'.$field['htmlBefore'].'</div>';
+      }
+      if( isset( $field['htmlAfter'] ) ) {
+        $html['htmlAfter'] = '<div class="'.$this->cssPrefix.'after">'.$field['htmlAfter'].'</div>';
+      }
+
       $attribs = ' form="'.$this->id.'"';
       $attribs .= ( $myFielId ? ' id="'.$myFielId.'"' : '' );
       $attribs .= ' class="'.$this->cssPrefix.'-field '.$this->cssPrefix.'-field-'.$fieldName.
@@ -2118,7 +2136,7 @@ class FormController implements Serializable {
       $attribs .= isset( $r['maxlength'] ) ? ' maxlength="'.$r['maxlength'].'"' : '';
 
       foreach( $field as $dataKey => $dataValue ) {
-        if( strpos( $dataKey, 'data-' ) === 0 ) {
+        if( mb_strpos( $dataKey, 'data-' ) === 0 ) {
           $attribs .= ' '.$dataKey.'="'.$dataValue.'"';
         }
       }
@@ -2137,7 +2155,7 @@ class FormController implements Serializable {
                   $optInput .= ' disabled';
                 }
                 foreach( $optInfo as $dataKey => $dataValue ) {
-                  if( strpos( $dataKey, 'data-' ) === 0 ) {
+                  if( mb_strpos( $dataKey, 'data-' ) === 0 ) {
                     $optInput .= ' '.$dataKey.'="'.$dataValue.'"';
                   }
                 }

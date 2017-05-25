@@ -176,7 +176,7 @@ class Template extends Smarty {
   public function addClientScript( $file_path, $module = false, $is_autoinclude = false ) {
 
 
-    if( substr( $file_path, -3) === '.js'  && Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) === true ){
+    if( mb_substr( $file_path, -3 ) === '.js'  && Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) === true ){
       $mediaPath = $this->cgmMediaserverHost . $this->cgmMediaUrlDir;
     }
     else {
@@ -244,7 +244,7 @@ class Template extends Smarty {
         break;
     }
 
-    if( !$this->cgmMediaserverCompileLess && substr($file_path, -5) == '.less' ) {
+    if( !$this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.less' ) {
       $file_rel = "stylesheet/less";
     }
     else {
@@ -252,7 +252,7 @@ class Template extends Smarty {
     }
 
 
-    if( $this->cgmMediaserverCompileLess && substr($file_path, -5) == '.less' ) {
+    if( $this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.less' ) {
       $lessCompiledExtension = '.css';
     }
     else {
@@ -408,7 +408,7 @@ class Template extends Smarty {
     // $this->fileBacktrace = $debugBacktrace['0']['file'];
 
     if( $tplData ) {
-      if( strpos( $tplData, 'string:' ) === 0 || strpos( $tplData, 'eval:' ) === 0 ) {
+      if( mb_strpos( $tplData, 'string:' ) === 0 || mb_strpos( $tplData, 'eval:' ) === 0 ) {
         $this->tpl = $tplData;
       }
       else {
@@ -485,7 +485,7 @@ class Template extends Smarty {
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
-      $mainClientIncludes .= $this->getClientStylesHtml();
+    //  $mainClientIncludes .= $this->getClientStylesHtml();
 
 
       $lessController = new LessController();
@@ -495,22 +495,19 @@ class Template extends Smarty {
         $lessGlobalVarsJs .= ' '.$key.': "'.$value.'",';
       }
       $lessGlobalVarsJs = rtrim( $lessGlobalVarsJs, ', ' );
-      if( !$this->cgmMediaserverCompileLess ) {
-        $mainClientIncludes .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
-          ' globalVars: { '.$lessGlobalVarsJs.' }, render: function(){alert(23)}, '.
-          ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
-          '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
-          '<script type="text/javascript"> less.pageLoadFinished.then( function() { $.holdReady( false );} ) </script>';
-      }
+
 
       $clientIncludes = "\n";
+
+
+
       $clientIncludes .= "\t<script>\n";
 
       // LOCALSTORAGE CLEAR AFTER X MINUTES
       $clientIncludes .= "\t if(typeof Storage !== 'undefined') { \n";
       $clientIncludes .= "\t   var cogumeloLocalStorageLastUpdate = localStorage.getItem('cogumeloLocalStorageLastUpdate');\n";
       $clientIncludes .= "\t   var currentTimestamp = new Date().getTime();\n";
-      $clientIncludes .= "\t   var localStorageMaxTime = ".  1000 * 60 * cogumeloGetSetupValue( 'clientLocalStorage:lifetime' ) .";\n";
+      $clientIncludes .= "\t   var localStorageMaxTime = ".  1000 * 60 * Cogumelo::getSetupValue( 'clientLocalStorage:lifetime' ) .";\n";
 
       $clientIncludes .= "\t   if( cogumeloLocalStorageLastUpdate ) {  \n";
       $clientIncludes .= "\t      if( (currentTimestamp-cogumeloLocalStorageLastUpdate) > localStorageMaxTime ){ \n";
@@ -537,6 +534,24 @@ class Template extends Smarty {
         $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
       }
       $clientIncludes .= "\t</script>\n\n\n";
+
+
+
+      $clientIncludes .= $this->getClientStylesHtml();
+      if( !$this->cgmMediaserverCompileLess ) {
+        $clientIncludes .= '<script> less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
+          ' globalVars: { '.$lessGlobalVarsJs.' }, render: function(){}, '.
+          ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
+          '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
+          '<script type="text/javascript"> if(typeof less.pageLoadFinished != "undefined"){ less.pageLoadFinished.then( function() { $.holdReady( false );} )}  </script>';
+      }
+
+
+
+
+
+
+
       $this->assign( 'client_includes', $clientIncludes );
       $this->assign( 'main_client_includes', $mainClientIncludes );
       /*

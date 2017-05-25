@@ -112,6 +112,8 @@ class FiledataModel extends Model {
     // Eliminamos el objeto con el delete original
     Cogumelo::debug( 'Called custom delete on '.get_called_class().' with "'.
       $this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
-    $this->dataFacade->deleteFromKey( $this->getFirstPrimarykeyId(), $this->getter( $this->getFirstPrimarykeyId() ) );
+    $result = $this->dataFacade->deleteFromKey( $this->getFirstPrimarykeyId(), $this->getter( $this->getFirstPrimarykeyId() ) );
+
+    return( $result === true );
   }
 }
