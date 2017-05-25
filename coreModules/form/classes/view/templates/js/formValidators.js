@@ -4,7 +4,7 @@ $.validator.addMethod(
   function( value, element ) {
     return ( value==='' && this.optional( element ) ) || /^-?\d+(,\d+)?$/.test( value );
   },
-  "A positive or negative decimal number please (Ej. 123,25)"
+  __("A positive or negative decimal number please (Ej. 123,25)")
 );
 
 $.validator.addMethod(
@@ -14,7 +14,7 @@ $.validator.addMethod(
     return ( value==='' && this.optional( element ) ) || regexPatt.test( value );
   },
 
-  $.validator.format("A positive or negative number with {0} decimal")
+  $.validator.format(__("A positive or negative number with {0} decimal"))
 );
 
 $.validator.addMethod(
@@ -24,7 +24,7 @@ $.validator.addMethod(
     var par = parseFloat( ( typeof param === 'string' ) ? param.replace(',','.') : param );
     return ( ( value==='' && this.optional( element ) ) || ( val >= par ) );
   },
-  "Please enter a value greater than or equal to {0}."
+  __("Please enter a value greater than or equal to {0}.")
 );
 
 $.validator.addMethod(
@@ -34,7 +34,7 @@ $.validator.addMethod(
     var par = parseFloat( ( typeof param === 'string' ) ? param.replace(',','.') : param );
     return ( ( value==='' && this.optional( element ) ) || ( val <= par ) );
   },
-  "Please enter a value less than or equal to {0}."
+  __("Please enter a value less than or equal to {0}.")
 );
 
 
@@ -59,7 +59,7 @@ $.validator.addMethod(
 
     return result;
   },
-  $.validator.format( 'The DNI format is not NNNNNNNNC' )
+  $.validator.format( __('The DNI format is not NNNNNNNNC') )
 );
 
 $.validator.addMethod(
@@ -94,7 +94,7 @@ $.validator.addMethod(
 
     return result;
   },
-  $.validator.format( 'The NIE format is not CNNNNNNNC' )
+  $.validator.format( __('The NIE format is not CNNNNNNNC' ))
 );
 
 $.validator.addMethod(
@@ -132,7 +132,7 @@ $.validator.addMethod(
 
     return result;
   },
-  $.validator.format( 'The NIF format is not CNNNNNNNC' )
+  $.validator.format( __('The NIF format is not CNNNNNNNC' ))
 );
 
 
@@ -142,7 +142,7 @@ $.validator.addMethod(
   function( value, element, param ) {
     return ( value==='' && this.optional( element ) ) || value.search( param ) !== -1;
   },
-  $.validator.format("Please enter a valid value")
+  $.validator.format(__("Please enter a valid value"))
 );
 
 
@@ -164,7 +164,7 @@ $.validator.addMethod(
     }
     return ( (value===undefined || value===false || value===null) && this.optional( element ) );
   },
-  $.validator.format("Please enter a valid value")
+  $.validator.format(__("Please enter a valid value"))
 );
 
 
@@ -188,7 +188,7 @@ $.validator.addMethod(
 
     return ( valueResponse || ((value===undefined || value===false || value===null) && this.optional( element )) );
   },
-  $.validator.format("Please enter a valid value")
+  $.validator.format(__("Please enter a valid value"))
 );
 
 
@@ -198,7 +198,7 @@ $.validator.addMethod(
     valid = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4}$)/.exec(value);
     return valid;
   },
-  $.validator.format("The date format is not DD-MM-YYYY")
+  $.validator.format(__("The date format is not DD-MM-YYYY"))
 );
 
 
@@ -209,7 +209,7 @@ $.validator.addMethod(
     valid = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(value);
     return ( value==='' && this.optional( element ) ) || valid;
   },
-  $.validator.format("The date format is not YYYY-MM-DD hh:mm:ss")
+  $.validator.format(__("The date format is not YYYY-MM-DD hh:mm:ss"))
 );
 
 
@@ -230,7 +230,7 @@ $.validator.addMethod(
     return (valueDateTime.getTime() > paramDateTime.getTime());
 
   },
-  $.validator.format("The date entered is too old (> {0})")
+  $.validator.format(__("The date entered is too old (> {0})"))
 );
 
 
@@ -249,7 +249,7 @@ $.validator.addMethod(
 
     return (valueDateTime.getTime() < paramDateTime.getTime());
   },
-  $.validator.format("The date entered must be oldest (> {0})")
+  $.validator.format(__("The date entered must be oldest (> {0})"))
 );
 
 
@@ -271,7 +271,7 @@ $.validator.addMethod(
     return (valueDate.getTime() > paramDate.getTime());
 
   },
-  $.validator.format("The date entered is too old (> {0})")
+  $.validator.format(__("The date entered is too old (> {0})"))
 );
 
 
@@ -290,7 +290,7 @@ $.validator.addMethod(
 
     return (valueDate.getTime() < paramDate.getTime());
   },
-  $.validator.format("The date entered must be oldest (> {0})")
+  $.validator.format(__("The date entered must be oldest (> {0})"))
 );
 
 
@@ -312,7 +312,7 @@ $.validator.addMethod(
 
     return (valueTimeSeconds > paramTimeSeconds);
   },
-  $.validator.format("The time entered is too old (> {0})")
+  $.validator.format(__("The time entered is too old (> {0})"))
 );
 
 
@@ -333,7 +333,7 @@ $.validator.addMethod(
 
     return (valueTimeSeconds < paramTimeSeconds);
   },
-  $.validator.format("The time entered must be oldest (> {0})")
+  $.validator.format(__("The time entered must be oldest (> {0})"))
 );
 
 
@@ -345,7 +345,7 @@ $.validator.addMethod(
 
     return ( value==='' && this.optional( element ) ) || valueUrlYoutube;
   },
-  $.validator.format("The url is not a Youtube url.")
+  $.validator.format(__("The url is not a Youtube url."))
 );
 
 
