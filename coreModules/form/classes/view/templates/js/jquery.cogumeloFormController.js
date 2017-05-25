@@ -213,13 +213,13 @@ function unbindForm( idForm ) {
 */
 
 function setSubmitElement( evnt ) {
-  //console.log( 'setSubmitElement: ', evnt );
+  console.log( 'setSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).attr('data-submit-element-name', $elem.attr('name') );
 }
 
 function unsetSubmitElement( evnt ) {
-  //console.log( 'unsetSubmitElement: ', evnt );
+  console.log( 'unsetSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).removeAttr('data-submit-element-name');
 }
@@ -227,9 +227,9 @@ function unsetSubmitElement( evnt ) {
 function setValidateForm( idForm, rules, messages ) {
   $formSubmitFields = $( '[form="'+idForm+'"][type="submit"]' );
   $formSubmitFields.on({
-    // 'mouseenter' : setSubmitElement,
+     'mouseenter' : setSubmitElement,
     'focusin' : setSubmitElement,
-    // 'mouseleave' : unsetSubmitElement,
+     'mouseleave' : unsetSubmitElement,
     'focusout' : unsetSubmitElement
   });
 
