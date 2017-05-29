@@ -2613,7 +2613,7 @@ class FormController implements Serializable {
    */
   public function isRequiredField( $fieldName ) {
 
-    return isset( $this->rules[ $fieldName ][ 'required' ] );
+    return !empty( $this->rules[ $fieldName ]['required'] ) || !empty( $this->rules[ $fieldName ]['fileRequired'] );
   }
 
   /**
