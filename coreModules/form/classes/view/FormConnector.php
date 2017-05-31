@@ -40,18 +40,18 @@ class FormConnector extends View {
           $this->getGroupElement();
           break;
         default:
-          error_log( 'ERROR - FormConnector::execCommand - Comando no soportado: '.$_POST['execute'] );
+          error_log('FormConnector: ERROR - FormConnector::execCommand - Comando no soportado: '.$_POST['execute'] );
           break;
       }
     }
     else {
-      error_log( 'ERROR - FormConnector::execCommand - Datos erroneos' );
+      error_log('FormConnector: ERROR - FormConnector::execCommand - Datos erroneos' );
     }
   }
 
 
   public function keepAlive() {
-    error_log( '(Notice) FormConnector::keepAlive' );
+    cogumelo::debug('FormConnector: (Notice) FormConnector::keepAlive' );
 
     $form = new FormController();
     $error = false;
@@ -94,18 +94,16 @@ class FormConnector extends View {
 
 
   private function uploadFormFile() {
-    error_log( '--------------------------------' );
-    error_log( ' FormConnector - uploadFormFile ' );
-    error_log( '--------------------------------' );
+    cogumelo::debug('FormConnector: uploadFormFile ' );
 
     $form = new FormController();
     $error = false;
 
     $idForm = isset( $_POST['idForm'] ) ? $_POST['idForm'] : false;
 
-    error_log( 'FILES:'.$_FILES['ajaxFileUpload']['name'] );
-    // error_log( 'FILES:' ); error_log( print_r( $_FILES, true ) );
-    // error_log( 'POST:' ); error_log( print_r( $_POST, true ) );
+    cogumelo::debug('FormConnector: FILES:'.$_FILES['ajaxFileUpload']['name'] );
+    // error_log('FormConnector: FILES:' ); error_log( print_r( $_FILES, true ) );
+    // error_log('FormConnector: POST:' ); error_log( print_r( $_POST, true ) );
 
     if( isset( $_POST['cgIntFrmId'], $_POST['fieldName'], $_FILES['ajaxFileUpload'] ) ) {
 
@@ -148,14 +146,14 @@ class FormConnector extends View {
         $fileTypePhp = finfo_file( $finfo, $fileTmpLoc );
         if( $fileTypePhp !== false ) {
           if( $fileType !== $fileTypePhp ) {
-            error_log( 'ALERTA: Los MIME_TYPE reportados por el navegador y PHP difieren: '.
+            error_log('FormConnector: ALERTA: Los MIME_TYPE reportados por el navegador y PHP difieren: '.
               $fileType.' != '.$fileTypePhp );
-            error_log( 'ALERTA: Damos preferencia a PHP. Puede variar la validación JS/PHP' );
+            error_log('FormConnector: ALERTA: Damos preferencia a PHP. Puede variar la validación JS/PHP' );
             $fileType = $fileTypePhp;
           }
         }
         else {
-          error_log( 'ALERTA: Imposible obtener el MIME_TYPE del fichero. Nos fiamos del navegador: '.$fileType );
+          error_log('FormConnector: ALERTA: Imposible obtener el MIME_TYPE del fichero. Nos fiamos del navegador: '.$fileType );
         }
       }
 
@@ -168,7 +166,7 @@ class FormConnector extends View {
 
           // Guardamos los datos previos del campo
           $fileFieldValuePrev = $form->getFieldValue( $fieldName );
-          // error_log( 'LEEMOS File Field: '.print_r($fileFieldValuePrev,true) );
+          // error_log('FormConnector: LEEMOS File Field: '.print_r($fileFieldValuePrev,true) );
 
           // Creamos un objeto temporal para validarlo
           $tmpFileFieldValue = array(
@@ -190,19 +188,19 @@ class FormConnector extends View {
 
           if( !$form->existErrors() ) {
             // El fichero ha superado las validaciones. Ajustamos sus valores finales y los almacenamos.
-            error_log( 'FU: Validado. Vamos a moverlo...' );
+            cogumelo::debug('FormConnector: FU: Validado. Vamos a moverlo...' );
 
 
             $tmpCgmlFileLocation = $form->tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName, $fieldName );
 
             if( $tmpCgmlFileLocation === false ) {
-              error_log( 'FU: Fallo de move_uploaded_file movendo '.$fieldName.': ('.$fileTmpLoc.')' );
+              cogumelo::debug('FormConnector: FU: Fallo de move_uploaded_file movendo '.$fieldName.': ('.$fileTmpLoc.')' );
               $form->addFieldRuleError( $fieldName, 'cogumelo',
                 'La subida del fichero ha fallado. (MU)' );
             }
             else {
               // El fichero subido ha pasado todos los controles. Vamos a registrarlo según proceda
-              error_log( 'FU: Validado y movido. Paso final...' );
+              cogumelo::debug('FormConnector: FU: Validado y movido. Paso final...' );
 
               $newFileFieldValue = [
                 'status' => 'LOAD',
@@ -219,26 +217,26 @@ class FormConnector extends View {
                 // Basic: only one file
                 if( isset( $fileFieldValuePrev['status'] ) && $fileFieldValuePrev['status'] !== false ) {
                   if( $fileFieldValuePrev['status'] === 'DELETE' ) {
-                    error_log( 'FU: Todo OK. Estado REPLACE...' );
+                    cogumelo::debug('FormConnector: FU: Todo OK. Estado REPLACE...' );
 
                     $newFileFieldValue['status'] = 'REPLACE';
                     $fileFieldValuePrev = $newFileFieldValue;
                   }
                   else {
-                    error_log( 'FU: Validado pero status erroneo: ' . $fileFieldValuePrev['status'] );
+                    cogumelo::debug('FormConnector: FU: Validado pero status erroneo: ' . $fileFieldValuePrev['status'] );
                     $form->addFieldRuleError( $fieldName, 'cogumelo',
                       'La subida del fichero ha fallado. (FE)' );
                   }
                 }
                 else {
-                  error_log( 'FU: Todo OK. Estado LOAD...' );
+                  cogumelo::debug('FormConnector: FU: Todo OK. Estado LOAD...' );
 
                   $fileFieldValuePrev = $newFileFieldValue;
                 }
               }
               else {
                 // Multiple: add files
-                error_log( 'FU: Todo OK. Multifile LOAD...' );
+                cogumelo::debug('FormConnector: FU: Todo OK. Multifile LOAD...' );
                 if( !isset( $fileFieldValuePrev['multiple'] ) ) {
                   $fileFieldValuePrev['multiple'] = [];
                   if( isset( $fileFieldValuePrev['status'] ) ) {
@@ -254,14 +252,14 @@ class FormConnector extends View {
               }
 
               if( !$form->existErrors() ) {
-                error_log( 'FU: OK con el ficheiro subido... Se persiste...' );
-                // error_log( 'GUARDAMOS File Field: '.print_r($fileFieldValuePrev,true) );
+                cogumelo::debug('FormConnector: FU: OK con el ficheiro subido... Se persiste...' );
+                // error_log('FormConnector: GUARDAMOS File Field: '.print_r($fileFieldValuePrev,true) );
                 $form->setFieldValue( $fieldName, $fileFieldValuePrev );
                 // Persistimos formObj para cuando se envíe el formulario completo
                 $form->saveToSession();
               }
               else {
-                error_log( 'FU: Como ha fallado, eliminamos: ' . $tmpCgmlFileLocation );
+                cogumelo::debug('FormConnector: FU: Como ha fallado, eliminamos: ' . $tmpCgmlFileLocation );
                 unlink( $tmpCgmlFileLocation );
               }
             } // else - if( !$tmpCgmlFileLocation )
@@ -269,7 +267,7 @@ class FormConnector extends View {
           else {
             // El fichero NO ha superado las validaciones.
             // Los errores ya estan cargados en FORM
-            error_log( 'FU: NON Valida o ficheiro subido...' );
+            cogumelo::debug('FormConnector: FU: NON Valida o ficheiro subido...' );
           }
 
         } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
@@ -301,7 +299,7 @@ class FormConnector extends View {
       }
 
       if( !empty( $tnProfile ) /*&& mb_strpos( $moreInfo['fileType'], 'image' ) === 0*/ ) {
-        error_log( 'VAMOS A CREAR fileSrcTn' );
+        cogumelo::debug('FormConnector: VAMOS A CREAR fileSrcTn' );
 
         filedata::load('controller/FiledataImagesController.php');
         $filedataImagesCtrl = new FiledataImagesController();
@@ -327,15 +325,13 @@ class FormConnector extends View {
 
 
   private function deleteFormFile() {
-    error_log( '--------------------------------' );
-    error_log( ' FormConnector - deleteFormFile ' );
-    error_log( '--------------------------------' );
+    cogumelo::debug('FormConnector: deleteFormFile ' );
 
     $form = new FormController();
     $error = false;
 
-    // error_log( 'POST:' );
-    // error_log( print_r( $_POST, true ) );
+    // error_log('FormConnector: POST:' );
+    // error_log('FormConnector: '. print_r( $_POST, true ) );
 
     $idForm = isset( $_POST['idForm'] ) ? $_POST['idForm'] : false;
 
@@ -381,26 +377,26 @@ class FormConnector extends View {
 
 
 
-        error_log( 'LEEMOS File Field para BORRAR: '.json_encode( $fieldPrev ) );
+        cogumelo::debug('FormConnector: LEEMOS File Field para BORRAR: '.json_encode( $fieldPrev ) );
 
 
 
         if( isset( $fieldPrev['status'] ) && $fieldPrev['status'] !== false ) {
           switch( $fieldPrev['status'] ) {
             case 'LOAD':
-              // error_log( 'FDelete: LOAD - Borramos: '.$fieldPrev['temp']['absLocation'] );
+              // error_log('FormConnector: FDelete: LOAD - Borramos: '.$fieldPrev['temp']['absLocation'] );
 
               // Garbage collector
               // unlink( $fieldPrev['temp']['absLocation'] );
               $fieldPrev = null;
               break;
             case 'EXIST':
-              // error_log( 'FDelete: EXIST - Marcamos para borrar: '.$fieldPrev['prev']['absLocation'] );
+              // error_log('FormConnector: FDelete: EXIST - Marcamos para borrar: '.$fieldPrev['prev']['absLocation'] );
 
               $fieldPrev['status'] = 'DELETE';
               break;
             case 'REPLACE':
-              // error_log( 'FDelete: REPLACE - Borramos: '.$fieldPrev['temp']['absLocation'] );
+              // error_log('FormConnector: FDelete: REPLACE - Borramos: '.$fieldPrev['temp']['absLocation'] );
 
               $fieldPrev['status'] = 'DELETE';
               // Garbage collector
@@ -408,7 +404,7 @@ class FormConnector extends View {
               $fieldPrev['temp'] = null;
               break;
             default:
-              // error_log( 'FDelete: Intentando borrar con status erroneo: ' . $fieldPrev['status'] );
+              // error_log('FormConnector: FDelete: Intentando borrar con status erroneo: ' . $fieldPrev['status'] );
 
               $form->addFieldRuleError( $fieldName, 'cogumelo',
                 'Intento de sobreescribir un fichero existente' );
@@ -416,14 +412,14 @@ class FormConnector extends View {
           }
         }
         else {
-          error_log( 'FDelete: Error intentando eliminar un fichero sin estado.' );
+          error_log('FormConnector: FDelete: Error intentando eliminar un fichero sin estado.' );
 
           $form->addFieldRuleError( $fieldName, 'cogumelo',
             'Intento de borrar un fichero inexistente' );
         }
 
         if( !$form->existErrors() ) {
-          // error_log( 'FDelete: OK. Guardando el nuevo estado... Se persiste...' . $fieldPrev['status'] );
+          // error_log('FormConnector: FDelete: OK. Guardando el nuevo estado... Se persiste...' . $fieldPrev['status'] );
 
 
 
@@ -440,14 +436,14 @@ class FormConnector extends View {
 
 
 
-          error_log( 'GUARDAMOS File Field: '.$fieldName );
+          cogumelo::debug('FormConnector: GUARDAMOS File Field: '.$fieldName );
 
           $form->setFieldValue( $fieldName, $fieldPrev );
           // Persistimos formObj para cuando se envíe el formulario completo
           $form->saveToSession();
         }
         else {
-          error_log( 'FDelete: El borrado ha fallado. Se mantiene el estado.' );
+          error_log('FormConnector: FDelete: El borrado ha fallado. Se mantiene el estado.' );
         }
 
       } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
@@ -522,9 +518,7 @@ class FormConnector extends View {
    */
 
   private function getGroupElement() {
-    // error_log( '---------------------------------' );
-    // error_log( ' FormConnector - getGroupElement ' );
-    // error_log( '---------------------------------' );
+    // error_log('FormConnector: getGroupElement ' );
 
     $groupIdElem = false; // Id de la nueva instancia del grupo
     $htmlGroupElement = false; // HTML de la nueva instancia del grupo
@@ -587,9 +581,7 @@ class FormConnector extends View {
 
 
   private function removeGroupElement() {
-    // error_log( '------------------------------------' );
-    // error_log( ' FormConnector - removeGroupElement ' );
-    // error_log( '------------------------------------' );
+    // error_log('FormConnector: removeGroupElement ' );
 
     $form = new FormController();
 
