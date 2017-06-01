@@ -61,13 +61,33 @@ class MysqlDevelDBDAO extends MysqlDAO {
 
 
 
-  public function dropTable( $connection, $vo_name ) {
-    $this->execSQL( $connection, $this->getDropSQL( $connection, $vo_name ) , array() );
+  public function dropTable( $connection, $vo_name, $exec = true ) {
+    $ret = false;
+
+    if( $exec ) {
+      $this->execSQL( $connection, $this->getDropSQL( $connection, $vo_name ) , array() );
+    }
+    else {
+      $ret = $this->getDropSQL( $connection, $vo_name );
+    }
+
+    return $ret;
   }
 
-  public function createTable( $connection, $vo_name ) {
-    $this->execSQL( $connection, $this->getTableSQL( $connection, $vo_name ), array() );
+
+  public function createTable( $connection, $vo_name, $exec = true ) {
+    $ret = false;
+
+    if( $exec ) {
+      $this->execSQL( $connection, $this->getTableSQL( $connection, $vo_name ), array() );
+    }
+    else {
+      $ret = $this->getTableSQL( $connection, $vo_name );
+    }
+
+    return $ret;
   }
+
 
   public function insertTableValues( $connection, $vo_name ){
     $res = $this->getInsertTableSQL( $connection, $vo_name );

@@ -10,6 +10,7 @@ class  DevelDBController {
 
   var $data;
   var $voUtilControl;
+  var $noExecute = false;
 
   public function __construct( $usuario = false, $password = false, $DB = false ) {
     $this->data = new Facade(false, "DevelDB", "devel");
@@ -23,214 +24,169 @@ class  DevelDBController {
   }
 
 
-  public function createTables() {
-
-    $returnStrArray = array();
-    $aditionalRcSQL = '';
-
-    foreach( VOUtils::listVOs() as $voKey => $vo ) {
-
-      $evo = new $voKey();
-
-      // rc custom SQL
-/*      if( $evo->rcSQL ){
-        $aditionalRcSQL .= "\n# Aditional rcSQL for ".$voKey.".php\n";
-        $aditionalRcSQL .= $evo->rcSQL;
-      }*/
-//      $aditionalRcSQL .= $this->getModelDeploySQL($voKey, $evo, true); // get deploys that specify model
-
-
-      if( !$evo->notCreateDBTable ) {
-        $returnStrArray[] = $this->data->dropTable($voKey);
-        $returnStrArray[] = $this->data->createTable($voKey);
-        $returnStrArray[] = $this->data->insertTableValues($voKey);
-      }
-    }
-
-    // add all rc custom SQL at bottom
-    // if( $aditionalRcSQL !== '' ) {
-    //   $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
-    // }
-
-    return $returnStrArray;
+  public generateModel() {
+    
   }
 
-  public function deployModels( $getOnlyGenerateModelSQL = false ) {
-    $returnStrArray = array();
-    //$aditionalRcSQL = '';
+  public deploy() {
 
-    foreach( VOUtils::listVOs() as $voKey => $vo ) {
-
-      $evo = new $voKey();
-
-      $aditionalRcSQL = $this->getModelDeploySQL($voKey, $evo, $getOnlyGenerateModelSQL);
-      if( $aditionalRcSQL !== '' ) {
-        echo "\nDeploy model for " . $evo->name. "\n";
-        $this->data->aditionalExec( $aditionalRcSQL );
-        Cogumelo::log( $aditionalRcSQL ,'cogumelo_deploy');
-      }
-    }
-
-    // add all rc custom SQL at bottom
-    // if( $aditionalRcSQL !== '' ) {
-    //   $returnStrArray[] = $this->data->aditionalExec( $aditionalRcSQL );
-    // }
-/*
-    foreach(explode( "\n", $aditionalRcSQL ) as $dLine ) {
-      Cogumelo::log( $dLine ,'cogumelo_deploy');
-    }
-*/
-
-
-    return $returnStrArray;
   }
 
 
-  private function getModelDeploySQL( $modelName, $model, $getOnlyGenerateModelSQL = false ) {
-    $retSQL = '';
+  private function setNoExecutionMode() {
+    $this->noExecute = true;
+  }
+
+  public function VOTableExist( $vo ) {
+
+    return true ou false;
+  }
+
+  public function VOcreateTable( $voKey ) {
+    $this->data->createTable( $voKey, $this->noExecute );
+  }
+
+  private function VOdropTable( $voKey ) {
+    $this->data->dropTable( $voKey, $this->noExecute );
+  }
+
+  public function VORCDeploys( $voKey ) {
+
+  }
 
 
+  public function VOgetDeploys( $voKey, $paramFilters = [] ) {
 
-    if( count( $model->deploySQL ) > 0 ){
-      $retSQL .= "\n## Deploy SQL for ".$modelName.".php\n";
+    $deploys = [];
+
+    $f =  [
+      'onlyRC' => false,
+      'from' => false, // get from version
+      'to' => false // get To version
+    ]
+
+    $filters = array_merge( $f, $paramFilters);
+
+    $vo = new $voKey();
+
+    if( count( $vo->deploySQL ) > 0 ){
+
+      foreach( $vo->deploySQL as $d ) {
+
+        $deployElement = $d;
 
 
-      foreach( $model->deploySQL as $d ) {
-
-        $sqlToExecute = $this->renderRichSql( $d['sql'] );
-
-        if($getOnlyGenerateModelSQL === true ) {
-          if( isset($d['executeOnGenerateModelToo']) && $d['executeOnGenerateModelToo'] === true ) {
-            // GENERATEMODEL
-            $retSQL .= $sqlToExecute;
-          }
+        // exclude when are looking for onlyRC and is not RC deploy
+        if(
+          $filters['onlyRC'] == true &&
+          (
+            !isset($deployElement['executeOnGenerateModelToo']) ||
+            ( isset($deployElement['executeOnGenerateModelToo']) && $deployElement['executeOnGenerateModelToo'] === false )
+          )
+        ) {
+          $deployElement = false; //exclude
         }
-        else {
-          // DEPLOY
-          if( preg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $d['version'], $matches ) ) {
-            $deployModuleName = $matches[1];
 
-            eval( '$currentModuleVersion = (float) '.$deployModuleName.'::checkCurrentVersion();' );
-            eval( '$registeredModuleVersion = (float) '.$deployModuleName.'::checkRegisteredVersion();' );
 
-//var_dump(array($currentModuleVersion ,$registeredModuleVersion ))
-
-            $deployModuleVersion = (float) $matches[2];
-
-            if( class_exists( $deployModuleName ) ) {
-
-              //echo( '$registeredVersion = (float) '.$moduleName.'::checkRegisteredVersion();' );
-              //eval( '$currentModuleVersion = (float) '.$deployModuleName.'::v();' );
-              //echo "VERSION:".$deployModuleVersion." - ".$registeredVersion;
-
-              if(
-                $deployModuleVersion > $registeredModuleVersion  &&
-                $deployModuleVersion <= $currentModuleVersion &&
-                isset($d['sql'])
-              ) {
-                //var_dump( $deployModuleVersion );
-                //var_dump( $currentModuleVersion );
-
-                $retSQL .= "# Module $deployModuleName deploy code from versions: ( $registeredModuleVersion ) to ( $currentModuleVersion ) \n";
-                $retSQL .= $sqlToExecute;
-
-              }
-            }
-
-          }
+        if(
+          $deployElement !== false &&
+          $filters['from'] !== false &&
+          $this->compareDeployVersions( $d['version'], $deployElement['from'] ) > 0 // -1: $v1 < $v2 0:Equal 1: $v1 > $v2
+        ) {
+          $deployElement = false; //exclude
         }
+
+        if(
+          $deployElement !== false &&
+          $filters['to'] !== false &&
+          $this->compareDeployVersions( $d['version'], $deployElement['from'] ) < 0 )  // -1: $v1 < $v2 0:Equal 1: $v1 > $v2
+        ) {
+          $deployElement = false; //exclude
+        }
+
       }
     }
 
-    return $retSQL;
+
+    // return
+    return $this->orderByVersion( $deploysArray );
   }
 
 
-  public function getDeploysSQL() {
-    $sqlStr = '';
 
-    global $C_ENABLED_MODULES;
+  public function getModules() {
 
-    foreach( $C_ENABLED_MODULES as $moduleName ) {
-      require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-    }
-
-    foreach( VOUtils::listVOs() as $voKey => $vo ) {
-
-      $evo = new $voKey();
-
-      $sqlStr .= $this->getModelDeploySQL($voKey, $evo);
-
-    }
-
-
-    return $sqlStr;
   }
 
-  public function getTablesSQL() {
-    $returnStrArray = array();
-    $aditionalRcSQL = '';
+  public function getModelsInModule( $module ) {
 
-    foreach( VOUtils::listVOs() as $voKey => $vo ) {
+  }
 
-      $evo = new $voKey();
+  public function dropAllTables() {
 
-      // rc custom SQL
-/*      if( $evo->rcSQL ){
-        $aditionalRcSQL .= "\n# Aditional rcSQL for ".$voKey.".php\n";
-        $aditionalRcSQL .= $evo->rcSQL;
-      }*/
-      $aditionalRcSQL .= $this->getModelDeploySQL($voKey, $evo, true); // get deploys that specify model
+  }
 
-      // tables Creation
-      if( !$evo->notCreateDBTable ) {
-        $returnStrArray[] = "#VO File: ".$vo['path'].$voKey.".php";
-        $returnStrArray[] = $this->data->getDropSQL( $voKey, $vo['path'].$voKey.".php" );
-        $returnStrArray[] = $this->data->getTableSQL( $voKey, $vo['path'].$voKey.".php");
 
-        $resInsert = $this->data->getInsertTableSQL( $voKey, $vo['path'].$voKey.".php");
+  private function orderByVersion( $deploys ) {
+    $retDeploys = [];
 
-        if(!empty($resInsert)) {
-          foreach( $resInsert as $resInsertKey => $resInsertValue ) {
-            $returnStrArray[] = $resInsertValue['infoSQL'];
-          }
+    while( sizeof($deploys) > 0 ) {
+      //firt element
+      foreach ($deploys as $lowerKey => $lowerVal) break;
+      ////
+      foreach( $deploys as $dK=>$d ) {
+
+        // $lowerVal['version'] lower than $d['version']
+        if( $this->compareDeployVersions( $lowerVal['version'], $d['version'] ) < 0 ) {
+          $lowerKey = $dK;
+          $lowerVal = $d;
         }
       }
 
+      array_push( $retDeploys, $lowerVal );
+      unset( $deploys[$lowerKey] );
     }
 
-    // add all rc custom SQL at bottom
-    $returnStrArray[] = $aditionalRcSQL;
-
-    return $returnStrArray;
-  }
-
-  public function createSchemaDB() {
-    return $this->data->createSchemaDB();
+    return $retDeploys;
   }
 
 
-  public function renderRichSql( $sql ) {
+  private function compareDeployVersions( $v1, $v2 ) {
 
+    reg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $v1, $v1Matches );
+    reg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $v2, $v2Matches );
 
-    // Multilang expression
-    preg_match_all( "#[\{]\s*multilang\s*\:\s*((.|\n)*?)\s*[\}]#", $sql, $matches);
+    $v1Matches[2] = ( isset($v1Matches[2]) )? $v1Matches[2] : 0 ;
+    $v2Matches[2] = ( isset($v2Matches[2]) )? $v2Matches[2] : 0 ;
 
-    if( count($matches[0]) ) {
-      for( $mi=0; count($matches[0]) > $mi; $mi++ ) {
-        $multilangLines = '';
-
-        foreach( array_keys( Cogumelo::getSetupValue( 'lang:available')) as $lang ) {
-          $multilangLines .= str_replace('$lang', $lang, $matches[1][$mi]);
-        }
-
-        $sql = str_replace($matches[0][$mi], $multilangLines, $sql);
-      }
+    if( int $v1Matches[1] === int $v2Matches[1] && int $v1Matches[2] === int $v2Matches[2] ) {
+      $ret = 0;
+    }
+    else
+    if(
+      int $v1Matches[1] > int $v2Matches[1] ||
+      (
+        int $v1Matches[1] === int $v2Matches[1] &&
+        int $v1Matches[2] > int $v2Matches[2] &&
+      )
+    ) {
+      $ret = 1;
+    }
+    else
+    if(
+      int $v1Matches[1] < int $v2Matches[1] ||
+      (
+        int $v1Matches[1] === int $v2Matches[1] &&
+        int $v1Matches[2] < int $v2Matches[2] &&
+      )
+    ) {
+      $ret = -1;
     }
 
-    //$debug = var_export($matches, true);
 
-    return $sql;
+    return $ret; // -1: $v1 < $v2 0:Equal 1: $v1 > $v2
   }
+
+
 
 }

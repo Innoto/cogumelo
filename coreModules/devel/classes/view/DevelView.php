@@ -112,7 +112,7 @@ class DevelView extends View
   }
 
   public function get_sql_deploy() {
-    $fvotdbcontrol = new DevelDBController();
+    $fvotdbcontrol = new DevelDBController(); 
     return ($fvotdbcontrol->getDeploysSQL() );
   }
 
