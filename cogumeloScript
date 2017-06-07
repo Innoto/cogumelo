@@ -115,22 +115,8 @@ if( $argc > 1 ) {
       Cogumelo::load('coreController/i18nScriptController.php');
       $i18nscriptController = new i18nScriptController();
       $i18nscriptController->setEnviroment();
-      $i18nscriptController->c_i18n_getSystemTranslations();
+      $i18nscriptController->c_i18n_gettext();
       echo "The files.po are ready to be edited!\n";
-    break;
-
-    case 'generateAppTranslations':
-      Cogumelo::load('coreController/i18nScriptController.php');
-      $i18nscriptController = new i18nScriptController();
-      $i18nscriptController->setEnviroment();
-      $i18nscriptController->c_i18n_getAppTranslations();
-      echo "The files.po are ready to be edited!\n";
-    break;
-
-    case 'removeAllTranslations':
-      Cogumelo::load('coreController/i18nScriptController.php');
-      $i18nscriptController = new i18nScriptController();
-      $i18nscriptController->c_i18n_removeTranslations();
     break;
 
     case 'compileTranslations':

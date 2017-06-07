@@ -57,6 +57,9 @@ class FiledataController {
     $fileInfo = ( gettype( $fileObj ) === 'object' ) ? $fileObj->getAllData('onlydata') : false;
 
     if( $fileInfo ) {
+      geozzy::load('controller/ResourceController.php');
+      $resCtrl = new ResourceController();
+      $fileInfo = $resCtrl->getTranslatedData( $fileInfo );
       $fileInfo['validatedAccess'] = $this->validateAccess( $fileInfo );
     }
 
@@ -67,27 +70,27 @@ class FiledataController {
   public function validateAccess( $fileInfo ) {
     $validated = false;
 
-    if( isset( $fileInfo['privateMode'] ) && $fileInfo['privateMode'] > 0 ) {
-      if( isset( $fileInfo['user'] ) && $fileInfo['user'] !== null ) {
-        error_log( 'Verificando usuario logueado para acceder a fichero...' );
+    if( isset( $fileInfo['privateMode'] ) && $fileInfo['privateMode'] > 0 && class_exists('UserAccessController') ) {
+      error_log( 'Verificando usuario logueado para acceder a fichero...' );
+      $useraccesscontrol = new UserAccessController();
+      $user = $useraccesscontrol->getSessiondata();
 
-        $useraccesscontrol = new UserAccessController();
-        $user = $useraccesscontrol->getSessiondata();
-        if( $user && $user['data']['active'] ) {
-          unset( $user['data']['password'] );
-          error_log( 'USER: '.json_encode( $user ) );
-          if( $user['data']['id'] === $fileInfo['user'] ) {
-            // El fichero es del usuario actual
-            error_log( 'Verificado por ID' );
+      if( $user && $user['data']['active'] ) {
+        unset( $user['data']['password'] );
+        error_log( 'USER: '.json_encode( $user ) );
+
+        if( !empty( $fileInfo['user'] ) && $user['data']['id'] === $fileInfo['user'] ) {
+          // El fichero es del usuario actual
+          error_log( 'Verificado por ID' );
+          $validated = true;
+        }
+
+        if( !$validated ) {
+          $validRoles = [ 'filedata:privateAccess' ];
+          if( $useraccesscontrol->checkPermissions( $validRoles, 'admin:full' ) ) {
+            // Permiso de acceso a todos los ficheros
+            error_log( 'Verificado por Rol' );
             $validated = true;
-          }
-          else {
-            $validRoles = [ 'filedata:privateAccess' ];
-            if( $useraccesscontrol->checkPermissions( $validRoles, 'admin:full' ) ) {
-              // Permiso de acceso a todos los ficheros
-              error_log( 'Verificado por Rol' );
-              $validated = true;
-            }
           }
         }
       }
@@ -275,12 +278,17 @@ class FiledataController {
       }
       $modelInfo['name'] = $this->secureFileName( $modelInfo['name'] );
 
-      if( !isset( $modelInfo['user'] ) ) {
+      if( !isset( $modelInfo['user'] ) && class_exists('UserAccessController') ) {
         $useraccesscontrol = new UserAccessController();
         $user = $useraccesscontrol->getSessiondata();
         if( $user && $user['data']['active'] ) {
           $modelInfo['user'] = $user['data']['id'];
         }
+      }
+
+      if( empty( $modelInfo['aKey'] ) ) {
+        $modelInfo['aKey'] = chr(97+rand(0,25)).chr(97+rand(0,25)).chr(97+rand(0,25)).
+          chr(97+rand(0,25)).chr(97+rand(0,25)).chr(97+rand(0,25));
       }
 
       $filedataObj = new FiledataModel( $modelInfo );
@@ -407,25 +415,29 @@ class FiledataController {
     // error_log( 'secureFileName: '.$fileName );
     $maxLength = 200;
 
-
+    // "Aplanamos" caracteres no ASCII7
     $fileName = str_replace( $this->replaceAcents[ 'from' ], $this->replaceAcents[ 'to' ], $fileName );
-    $fileName = preg_replace( '/[^0-9a-z_\.-]/i', '_', $fileName );
+    // Solo admintimos a-z A-Z 0-9 - / El resto pasan a ser -
+    $fileName = preg_replace( '/[^a-z0-9_\-\.]/iu', '_', $fileName );
+    // Eliminamos - sobrantes
+    $fileName = preg_replace( '/__+/u', '_', $fileName );
+    $fileName = trim( $fileName, '_' );
 
     $sobran = mb_strlen( $fileName, 'UTF-8' ) - $maxLength;
     if( $sobran < 0 ) {
       $sobran = 0;
     }
 
-    $tmpExtPos = strrpos( $fileName, '.' );
+    $tmpExtPos = mb_strrpos( $fileName, '.' );
     if( $tmpExtPos > 0 && ( $tmpExtPos - $sobran ) >= 8 ) {
       // Si hay extensión y al cortar el nombre quedan 8 o más letras, recorto solo el nombre
-      $tmpName = substr( $fileName, 0, $tmpExtPos - $sobran );
-      $tmpExt = substr( $fileName, 1 + $tmpExtPos );
+      $tmpName = mb_substr( $fileName, 0, $tmpExtPos - $sobran );
+      $tmpExt = mb_substr( $fileName, 1 + $tmpExtPos );
       $fileName = $tmpName . '.' . $tmpExt;
     }
     else {
       // Recote por el final
-      $fileName = substr( $fileName, 0, $maxLength );
+      $fileName = mb_substr( $fileName, 0, $maxLength );
     }
 
     // error_log( 'secureFileName RET: '.$fileName );

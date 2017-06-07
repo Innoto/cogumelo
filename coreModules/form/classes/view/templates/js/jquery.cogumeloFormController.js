@@ -10,7 +10,7 @@ cogumelo.publicConf.session_lifetime = cogumelo.publicConf.session_lifetime || 9
 // Lanzamos formKeepAlive cuando pasa el 90% del tiempo session_lifetime
 cogumelo.formController.keepAliveTimer = cogumelo.formController.keepAliveTimer || setInterval( formKeepAlive, 900*cogumelo.publicConf.session_lifetime );
 
-var langForm = false;
+cogumelo.formController.langForm = cogumelo.formController.langForm || false;
 
 
 
@@ -181,7 +181,7 @@ function bindForm( idForm ) {
   if( $inputFileFields.length ) {
     if( !window.File ) {
       // File - provides readonly information such as name, file size, mimetype
-      alert('Tu navegador aún no tiene soporte HTML5 para el envío de ficheros. Actualiza a versiones recientes...');
+      alert( __('Your browser does not have HTML5 support for send files. Upgrade to recent versions...') );
     }
     $inputFileFields.on( 'change', inputFileFieldChange );
     $inputFileFields.each(
@@ -213,85 +213,53 @@ function unbindForm( idForm ) {
 */
 
 function setSubmitElement( evnt ) {
-  //console.log( 'setSubmitElement: ', evnt );
+  console.log( 'setSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).attr('data-submit-element-name', $elem.attr('name') );
 }
 
 function unsetSubmitElement( evnt ) {
-  //console.log( 'unsetSubmitElement: ', evnt );
+  console.log( 'unsetSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).removeAttr('data-submit-element-name');
 }
 
 function setValidateForm( idForm, rules, messages ) {
-  $( '[form="'+idForm+'"][type="submit"]' ).on({
-    // 'mouseenter' : setSubmitElement,
+  $formSubmitFields = $( '[form="'+idForm+'"][type="submit"]' );
+  $formSubmitFields.on({
+     'mouseenter' : setSubmitElement,
     'focusin' : setSubmitElement,
-    // 'mouseleave' : unsetSubmitElement,
+     'mouseleave' : unsetSubmitElement,
     'focusout' : unsetSubmitElement
   });
 
   $.validator.setDefaults({
     errorPlacement: function( error, element ) {
-      // console.log( 'JQV errorPlacement:' );
-      // console.log( 'error', error );
-      // console.log( 'this', this );
-      // console.log( 'Busco #JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
+      console.log( 'JQV errorPlacement:', error, element );
       var $msgContainer = $( '#JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       if( $msgContainer.length > 0 ) {
-        // console.log( 'JQV errorPlacement msgContainer', $msgContainer );
         $msgContainer.append( error );
       }
       else {
-        // console.log( 'JQV errorPlacement element', element );
         error.insertAfter( element );
       }
-      // console.log( 'JQV errorPlacement FIN' );
     },
     showErrors: function( errorMap, errorList ) {
-      // console.log( 'JQV showErrors:' );
-      // console.log( 'errorMap', errorMap );
-      // console.log( 'errorList', errorList );
-      // console.log( 'this', this );
-      // $("#summary").html("Your form contains "+ this.numberOfInvalids()+ " errors, see details below.");
+      // console.log( 'JQV showErrors:', errorMap, errorList );
 
       // Lanzamos el metodo original
       this.defaultShowErrors();
-
-      /*
-        // Posicionamos en el elemento con error que aparece de primero
-        var topErrScroll = 999999;
-        var $topErrWrap = false;
-        $('.formError').each( function() {
-          $wrapElem = $( this ).parents('.cgmMForm-wrap');
-          if( $wrapElem ) {
-            topElem = $wrapElem.offset().top;
-            if( topElem && topErrScroll > topElem ) {
-              topErrScroll = topElem;
-              $topErrWrap = $wrapElem;
-            }
-          }
-        });
-        if( $topErrWrap ) {
-          console.log( 'topErrWrap: ', $topErrWrap.attr('class') );
-          var topErr = $topErrWrap.offset().top + ($topErrWrap.height()/2) - ($(window).height()/2);
-          $(window).scrollTop( topErr );
-        }
-      */
     },
-    invalidHandler: function( $elem, validator ) {
-      // console.log( 'JQV invalidHandler:', $elem );
+    invalidHandler: function( evnt, validator ) {
+      console.log( 'JQV invalidHandler:', evnt, validator );
       if( validator.numberOfInvalids() ) {
-        $elem = $( validator.errorList[0].element );
-        var formMarginTop = getFormInfo( $elem.attr('form'), 'marginTop' );
-        var scrollTopValue = $elem.offset().top;
+        failFields = new Object({});
+        jQuery.each( validator.errorList, function( index, value ) {
+          failFields[index] = value.element;
+        });
 
-        if( formMarginTop !== null ) {
-          scrollTopValue -= formMarginTop;
-        }
-        console.log( 'JQV invalidHandler:', formMarginTop, scrollTopValue );
-        $( 'html, body' ).animate( { scrollTop: scrollTopValue }, 1000 );
+        var idForm = $( failFields[0] ).attr('form');
+        reprocessFormErrors( idForm, failFields );
       }
     }
   });
@@ -356,13 +324,13 @@ function setValidateForm( idForm, rules, messages ) {
     // console.log( 'JQV cgmlHACK idOrName ret: ', resp );
     return resp;
   };
-  $validateForm.hideTheseReal = $validateForm.hideThese;
-  $validateForm.hideThese = function( errors ) {
-    // console.log( 'JQV cgmlHACK hideThese: ', errors );
-    // errors.not( this.containers ).text( "" );
-    // this.addWrapper( errors ).hide();
-    $validateForm.hideTheseReal( errors );
-  };
+  // $validateForm.hideTheseReal = $validateForm.hideThese;
+  // $validateForm.hideThese = function( errors ) {
+  //   // console.log( 'JQV cgmlHACK hideThese: ', errors );
+  //   // errors.not( this.containers ).text( "" );
+  //   // this.addWrapper( errors ).hide();
+  //   $validateForm.hideTheseReal( errors );
+  // };
   //
   // JQUERY VALIDATE HACK !!! (End)
   //
@@ -380,6 +348,11 @@ function setValidateForm( idForm, rules, messages ) {
 
   // Si hay idiomas, buscamos campos multi-idioma en el form y los procesamos
   createSwitchFormLang( idForm );
+
+
+  // Default marginTop
+  setFormInfo( idForm, "marginTop", 150 );
+
 
   return $validateForm;
 } // function setValidateForm( idForm, rules, messages )
@@ -460,8 +433,8 @@ function formDoneError( form, response ) {
   if( response.result === 'errorSession' ) {
     // No se ha podido recuperar el form en el servidor porque ha caducado
     // console.log( 'formDoneError: errorSession' );
-    showErrorsValidateForm( $( form ), 'Form session expired. Reload', 'formError' );
-    if( confirm( 'Reload to get valid From?' ) ) {
+    showErrorsValidateForm( $( form ), __('Form session expired. Reload'), 'formError' );
+    if( confirm( __('Reload to get valid From?') ) ) {
       window.location.reload();
     }
   }
@@ -487,9 +460,75 @@ function formDoneError( form, response ) {
     }
   } // for(var i in response.jvErrors)
 
+
+
+  reprocessFormErrors( idForm );
+
+
   // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
   console.log( 'formDoneError (FIN)' );
 }
+
+
+
+
+
+
+
+function reprocessFormErrors( idForm, failFields ) {
+  console.log( 'reprocessFormErrors', idForm );
+  var topErrScroll = 999999;
+  var numErrors = 0;
+  var formMarginTop = getFormInfo( idForm, 'marginTop' );
+
+  if( typeof failFields === 'undefined' ) {
+    failFields = $( '.formError[form="' + idForm + '"]' );
+  }
+  console.log( 'reprocessFormErrors failFields', failFields );
+
+  // $( '.formError[form="' + idForm + '"]' ).each( function() {
+  jQuery.each( failFields, function( index, value ) {
+    numErrors++;
+    $field = $( value );
+    $wrap = $( '.cgmMForm-wrap.cgmMForm-field-'+$field.attr('name') );
+    if( $wrap.length > 0 ) {
+      topElem = $wrap.offset().top;
+      console.log( 'reprocessFormErrors WRAP ', topElem, $field.attr('name') );
+    }
+    else {
+      topElem = $field.offset().top;
+      console.log( 'reprocessFormErrors FIELD ', topElem, $field.attr('name') );
+    }
+
+    if( topElem && topErrScroll > topElem ) {
+      topErrScroll = topElem;
+    }
+  });
+
+
+  if( topErrScroll != 999999 ) {
+    if( formMarginTop !== null && formMarginTop !== undefined ) {
+      topErrScroll -= formMarginTop;
+    }
+    console.log( 'JQV topErrScroll:', formMarginTop, topErrScroll );
+    $( 'html, body' ).animate( { scrollTop: topErrScroll }, 500 );
+  }
+
+  notifyFormErrors( idForm, numErrors );
+}
+
+
+function notifyFormErrors( idForm, numErrors ) {
+  if( typeof geozzy !== 'undefined' && typeof geozzy.clientMsg !== 'undefined' && typeof geozzy.clientMsg.notify !== 'undefined' ) {
+    geozzy.clientMsg.notify(
+      __('There are errors in the form'), // + ' ('+numErrors+')',
+      { notifyType: 'warning', size: 'normal', 'title': __('Warning') }
+    );
+  }
+}
+
+
+
 
 
 function showErrorsValidateForm( $form, msgText, msgClass ) {
@@ -498,7 +537,7 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
   // Replantear!!!
 
   console.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
-  var msgLabel = '<label class="formError">'+msgText+'</label>';
+  var msgLabel = '<label class="formError" form="'+$form.attr( 'id' )+'">'+msgText+'</label>';
   var $msgContainer = false;
   if( msgClass !== false ) {
     $msgContainer = $( '.JQVMC-'+msgClass );
@@ -527,7 +566,7 @@ function inputFileFieldChange( evnt ) {
 
 
 function processFilesInputFileField( formFileObjs, idForm, fieldName ) {
-  // console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
+  console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
 
   var valid = checkInputFileField( formFileObjs, idForm, fieldName );
 
@@ -632,7 +671,7 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
       }
       else {
         // console.log( 'uploadFile ERROR' );
-        $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( 'Error cargando el fichero.' );
+        $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( __('Error loading file') );
 
         var $validateForm = getFormInfo( idForm, 'validateForm' );
         // console.log( 'uploadFile ERROR', $validateForm );
@@ -918,8 +957,8 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
 
   // Element to download
   if( fileInfo.id !== false ) {
-    $fileBoxElem.append( '<a class="formFileDownload" href="/cgmlformfilewd/' +
-      fileInfo.id + '/' + fileInfo.name + '" target="_blank"><i class="fa fa-download"></i></a>' );
+    $fileBoxElem.append( '<a class="formFileDownload" href="/cgmlformfilewd/'+fileInfo.id+'-a'+fileInfo.aKey+
+      '/'+fileInfo.name+'" target="_blank"><i class="fa fa-download"></i></a>' );
   }
 
   var tnSrc = cogumelo.publicConf.media+'/module/form/img/file.png';
@@ -940,7 +979,7 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
     }
 
     if( tnProfile ) {
-      tnSrc = '/cgmlImg/'+fileInfo.id+'/'+tnProfile+'/'+fileInfo.name;
+      tnSrc = '/cgmlImg/'+fileInfo.id+'-a'+fileInfo.aKey+'/'+tnProfile+'/'+fileInfo.name;
     }
   }
 
@@ -1051,7 +1090,7 @@ function createFileFieldDropZone( idForm, fieldName ) {
     ' background-color: transparent; background-image: none; border: 2px solid #7fb1c7; border-radius: 2px;'+
     ' color: #7fb1c7; cursor: pointer; font-size: 14px; font-weight: normal; line-height: 1.42857;'+
     ' margin-bottom: 5px; padding: 5px 15px; text-align: center; text-transform: uppercase;'+
-    ' vertical-align: middle; white-space: nowrap;'+
+    ' vertical-align: middle;'+ //  white-space: nowrap;
     '}'+
     '.cgmMForm-button-js:hover {'+
     ' background-color: #528ba4; border: 2px solid #5497b4; color: #ffffff; text-decoration: none;'+
@@ -1112,7 +1151,7 @@ function fileFieldDropZoneDrop( evnt ) {
 }
 
 function fileFieldDropZoneDragOver( evnt ) {
-  console.log( 'fileFieldDropZoneDragOver event: ', evnt );
+  // console.log( 'fileFieldDropZoneDragOver event: ', evnt );
 
   evnt.stopPropagation();
   evnt.preventDefault();
@@ -1300,7 +1339,7 @@ function activateHtmlEditor( idForm ) {
 
 function switchFormLang( idForm, lang ) {
   // console.log( 'switchFormLang: '+lang );
-  langForm = lang;
+  cogumelo.formController.langForm = lang;
   $( '[form="'+idForm+'"].js-tr, [data-form_id="'+idForm+'"].js-tr, '+
     ' .cgmMForm-fileFields-'+idForm+' input.js-tr' )
     .parent().hide();
@@ -1337,7 +1376,7 @@ function createSwitchFormLang( idForm ) {
 
     $( 'ul[data-form_id="'+idForm+'"].langSwitch li' ).on( 'click', function() {
       var newLang = $( this ).data( 'lang' );
-      if( newLang !== langForm ) {
+      if( newLang !== cogumelo.formController.langForm ) {
         switchFormLang( idForm, newLang );
       }
     });

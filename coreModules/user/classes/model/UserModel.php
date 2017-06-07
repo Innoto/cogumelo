@@ -62,12 +62,26 @@ class UserModel extends Model
     ),
     'timeLastUpdate' => array(
       'type' => 'DATETIME'
+    ),
+    'hashUnknownPass'=> array(
+      'type' => 'VARCHAR',
+      'size' => '255'
+    ),
+    'hashVerifyUser'=> array(
+      'type' => 'VARCHAR',
+      'size' => '255'
     )
-
-
   );
 
   var $deploySQL = array(
+    array(
+      'version' => 'user#1.9',
+      'sql'=> '
+        ALTER TABLE user_user
+        ADD COLUMN hashUnknownPass VARCHAR(255),
+        ADD COLUMN hashVerifyUser VARCHAR(255);
+      '
+    ),
     array(
       'version' => 'user#1.8',
       'sql'=> '
@@ -76,7 +90,7 @@ class UserModel extends Model
         MODIFY COLUMN surname VARCHAR(255),
         MODIFY COLUMN email VARCHAR(255),
         MODIFY COLUMN login VARCHAR(255),
-        MODIFY COLUMN password VARCHAR(255)
+        MODIFY COLUMN password VARCHAR(255);
       '
     ),
     array(

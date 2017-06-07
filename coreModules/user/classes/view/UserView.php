@@ -45,7 +45,6 @@ class UserView extends View
     $this->template->exec();
   } // function loadForm()
 
-
   /**
    * Example login form
    */
@@ -61,7 +60,6 @@ class UserView extends View
 
     return $template;
   } // function loadFormBlock()
-
 
   /**
    * Create form fields and validations
@@ -80,8 +78,6 @@ class UserView extends View
 
     return $form;
   } // function loginFormDefine()
-
-
 
   /**
    * Returns necessary html form
@@ -105,9 +101,8 @@ class UserView extends View
     return $loginHtml;
   } // function loginFormGet()
 
-
   /**
-   * Example of an external action login
+   * Default action login
    *
    * @return void
    **/
@@ -143,7 +138,6 @@ class UserView extends View
     return $form;
   }
 
-
   /**
    * Update user form
    *
@@ -176,8 +170,6 @@ class UserView extends View
     $form = $this->userFormDefine( $dataArray );
     return $form;
   }
-
-
 
   /**
    * Create form fields and validations
@@ -268,14 +260,14 @@ class UserView extends View
    *
    * @return Form Html
    **/
-  public function userChangePasswordFormDefine( $id ){
+  public function userChangePasswordFormDefine( $id , $modeRecovery = false ){
 
     $user = new UserModel();
     $dataVO = $user->listItems( array('filters' => array('id' => $id )))->fetch();
 
 
     if(!$dataVO){
-      Cogumelo::redirect( SITE_URL.'404' );
+      RequestController::httpError404();
     }
 
     $form = new FormController( 'changePasswordForm', '/user/sendchangepasswordform' ); //actionform
@@ -284,7 +276,6 @@ class UserView extends View
     $form->setSuccess( 'redirect', '/' );
 
     $form->setField( 'id', array( 'type' => 'reserved', 'value' => $dataVO->getter('id') ));
-
     $form->setField( 'passwordOld', array( 'id' => 'passwordOld', 'type' => 'password', 'placeholder' => __('Old password') ) );
     $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => __('New password') ) );
     $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => __('Repeat password') ) );
@@ -294,7 +285,12 @@ class UserView extends View
     /******************************************************************************************** VALIDATIONS */
 
     //Esto es para verificar si es un create
-    $form->setValidationRule( 'passwordOld', 'required' );
+    if(!$modeRecovery){
+      $form->setValidationRule( 'passwordOld', 'required' );
+    }
+    else{
+      $form->setFieldParam( 'passwordOld', 'type', 'reserved' );
+    }
     $form->setValidationRule( 'password', 'required' );
     $form->setValidationRule( 'password2', 'required' );
 
@@ -388,7 +384,6 @@ class UserView extends View
     return $template;
   }
 
-
   /**
    * Returns necessary html form
    *
@@ -421,7 +416,6 @@ class UserView extends View
 
     return $template;
   }
-
 
   /**
    * Returns necessary html form
@@ -456,7 +450,6 @@ class UserView extends View
     return $template;
   }
 
-
   /**
    * Example of an external action register
    *
@@ -464,10 +457,9 @@ class UserView extends View
    **/
   public function sendUserForm() {
     $form = $this->actionUserForm();
-    $this->registerOk($form);
+    $this->userFormOk($form);
     $form->sendJsonResponse();
   }
-
 
   /**
    * Assigns the forms validations
@@ -508,7 +500,6 @@ class UserView extends View
     return $form;
   }
 
-
   /**
    * Edit/Create User
    *
@@ -524,9 +515,7 @@ class UserView extends View
 
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
-
       $password = false;
-
       if( array_key_exists('password', $valuesArray)){
         $password = $valuesArray['password'];
         unset($valuesArray['password']);
@@ -547,32 +536,10 @@ class UserView extends View
       if(isset($password) && $password){
         $user->setPassword( $password );
       }
-
       $user->save();
-
       //var_dump( $user->getAllData() );
 
       if( isset($userAvatar) && $userAvatar ) {
-        //var_dump( $userAvatar );
-        /*
-          if( $userAvatar['status'] === "DELETE"){
-            //IMG DELETE
-            //var_dump('delete');
-            $user->deleteDependence( 'avatar', true );
-          }
-          elseif( $userAvatar['status'] === "REPLACE"){
-            //IMG UPDATE
-            //var_dump('replace');
-            $user->deleteDependence( 'avatar', true);
-            $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
-          }else{
-            //var_dump('else');
-            //IMG CREATE
-            $user->setterDependence( 'avatar', new FiledataModel( $userAvatar['values'] ) );
-          }
-        */
-
-
         $filedataCtrl = new FiledataController();
         $newFiledataObj = false;
 
@@ -619,11 +586,7 @@ class UserView extends View
             // error_log( 'To Model: DEFAULT='.$userAvatar['status'] );
             break;
         } // switch( $userAvatar['status'] )
-
-
-
       } // if( $userAvatar )
-
       //echo "==========";
       //var_dump( $user->getAllData()  );
 
@@ -646,6 +609,20 @@ class UserView extends View
     return $user;
   }
 
+  /**
+   * Default/action change password
+   *
+   **/
+  public function sendChangeUserPassword(){
+    $form = $this->actionChangeUserPasswordForm();
+    if( $form->existErrors() ) {
+      echo $form->getJsonError();
+    }
+    else {
+      $this->changeUserPasswordFormOk( $form );
+      echo $form->getJsonOk();
+    }
+  }
 
   /**
    * Assigns the forms validations
@@ -678,7 +655,6 @@ class UserView extends View
     return $form;
   }
 
-
   /**
    * Change Password
    *
@@ -701,7 +677,6 @@ class UserView extends View
     return $user;
   }
 
-
   /**
    * Assigns the forms validations
    *
@@ -709,6 +684,7 @@ class UserView extends View
    **/
   public function actionUserRolesForm() {
     $form = new FormController();
+    $valuesArray = false;
 
     if( $form->loadPostInput() ) {
       $form->validateForm();
@@ -717,18 +693,23 @@ class UserView extends View
     if( !$form->existErrors() ){
       $valuesArray = $form->getValuesArray();
 
-      if( !isset($valuesArray['user'])){
+      if( !isset($valuesArray['user']) ) {
         $form->addFieldRuleError('id', 'cogumelo', __('User Error unidentified'));
       }
+    }
 
+    if( !$form->existErrors() ) {
       $useraccesscontrol = new UserAccessController();
-      $onlySA = $useraccesscontrol->checkPermissions('only:SA');
+      $isSA = $useraccesscontrol->checkPermissions('only:SA');
+
       $roleModel = new RoleModel();
-      $role = $roleModel->listItems( array('filters' => array( 'name' => 'superAdmin' )) );
-      if(!$onlySA && in_array( $role->getter('id'), $valuesArray['checkroles'])){
+      $roleList = $roleModel->listItems( array('filters' => array( 'name' => 'superAdmin' ) ) );
+      $roleSaObj = ( gettype( $roleList ) === 'object' ) ? $roleList->fetch() : false;
+      $roleSaId = ( gettype( $roleSaObj ) === 'object' ) ? $roleSaObj->getter('id') : false;
+
+      if( !$isSA && $roleSaId !== false && in_array( $roleSaId, $valuesArray['checkroles'] ) ) {
         $form->addFieldRuleError('id', 'cogumelo', __(' Error unknown role'));
       }
-
     }
 
     return $form;
@@ -751,7 +732,6 @@ class UserView extends View
           $userRole->delete();
         }
       }
-
       if( is_array($valuesArray['checkroles']) && count($valuesArray['checkroles']) > 0) {
         foreach( $valuesArray['checkroles'] as $key => $checkrol ) {
           # code...

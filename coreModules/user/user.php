@@ -8,7 +8,7 @@ define('MOD_USER_URL_DIR', 'user');
 class user extends Module {
 
   public $name = "user";
-  public $version = 1.8;
+  public $version = 1.9;
   public $dependences = array(
 
   );
@@ -28,6 +28,7 @@ class user extends Module {
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/sendloginform$#', 'view:UserView::sendLoginForm' );
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/registerform$#', 'view:UserView::userForm' );
     $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/senduserform$#', 'view:UserView::sendUserForm' );
+    $this->addUrlPatterns( '#^'.MOD_USER_URL_DIR.'/sendchangepasswordform#', 'view:UserView::sendChangeUserPassword' );
     //$this->addUrlPatterns( '#^()(.*)$#', 'noendview:UserView::setUserSetup' );
   }
 

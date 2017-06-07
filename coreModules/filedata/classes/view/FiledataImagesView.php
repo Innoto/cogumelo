@@ -20,10 +20,13 @@ class FiledataImagesView extends View {
 
     filedata::autoIncludes();
 
+    $this->webBasePath = Cogumelo::getSetupValue( 'setup:webBasePath' );
+
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
     $this->filesCachePath = Cogumelo::getSetupValue( 'mod:filedata:cachePath' );
-    $this->disableRawUrlProfile = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrlProfile' );
-    $this->webBasePath = Cogumelo::getSetupValue( 'setup:webBasePath' );
+
+    $this->verifyAKeyUrl = Cogumelo::getSetupValue( 'mod:filedata:verifyAKeyUrl' );
+    $this->disableRawUrlProfile = Cogumelo::getSetupValue( 'mod:filedata:disableRawUrlProfile' );
   }
 
   /**
@@ -43,23 +46,28 @@ class FiledataImagesView extends View {
   */
   public function showImg( $urlParams = false ) {
     // error_log( 'FiledataImagesView: showImg(): ' . print_r( $urlParams, true ) );
+    $fileInfo = false;
     $error = false;
 
-    $fileName = isset( $urlParams['fileName'] ) ? substr( strrchr( $urlParams['fileName'], '/' ), 1 ) : false;
+    $fileId = $urlParams['fileId'];
+    $aKey = empty( $urlParams['aKey'] ) ? false : $urlParams['aKey'];
+    $fileName = empty( $urlParams['fileName'] ) ? false : mb_substr( mb_strrchr( $urlParams['fileName'], '/' ), 1 );
 
-    if( isset( $urlParams['fileId'] ) && ( $fileName || !$this->disableRawUrlProfile ) ) {
-      $imageCtrl = new FiledataImagesController( $urlParams['fileId'] );
+    if( $fileId && ( $fileName || !$this->disableRawUrlProfile ) && ( $aKey || !$this->verifyAKeyUrl ) ) {
+      $imageCtrl = new FiledataImagesController( $fileId );
       $fileInfo = $imageCtrl->fileInfo;
+    }
 
-      if( $fileInfo ) {
-        if( !$this->disableRawUrlProfile || $fileName === $fileInfo['name'] ) {
+
+
+    if( $fileInfo ) {
+      if( !$this->disableRawUrlProfile || $fileName === $fileInfo['name'] ) {
+        if( !$this->verifyAKeyUrl || $aKey === $fileInfo['aKey'] ) {
           if( $fileInfo['validatedAccess'] ) {
-            $imgInfo = array(
-              'type' => $fileInfo['type']
-            );
+            $imgInfo = [ 'type' => $fileInfo['type'] ];
 
             if( isset( $urlParams['profile']  ) ) {
-              $urlParams['profile'] = substr( strrchr( $urlParams['profile'], '/' ), 1 );
+              $urlParams['profile'] = mb_substr( mb_strrchr( $urlParams['profile'], '/' ), 1 );
             }
             else {
               $urlParams['profile'] = '';
@@ -71,8 +79,8 @@ class FiledataImagesView extends View {
               $imageCtrl->profile['cache'] = false;
             }
 
-            if( $imageCtrl->profile['cache'] && file_exists( $imgInfo['route'] ) && strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
-              $urlRedirect = substr( $imgInfo['route'], strlen( $this->webBasePath ) );
+            if( $imageCtrl->profile['cache'] && file_exists( $imgInfo['route'] ) && mb_strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
+              $urlRedirect = mb_substr( $imgInfo['route'], mb_strlen( $this->webBasePath ) );
               // error_log( "FiledataImagesView: showImg(): urlRedirect = $urlRedirect" );
               Cogumelo::redirect( SITE_HOST . $urlRedirect );
               // YA NO SE PUEDE ENVIAR NADA AL NAVEGADOR
@@ -92,15 +100,15 @@ class FiledataImagesView extends View {
           }
         }
         else {
-          $error = 'NN';
+          $error = 'NK';
         }
       }
       else {
-        $error = 'NL';
+        $error = 'NN';
       }
     }
     else {
-      $error = 'NI';
+      $error = 'NL';
     }
 
     if( $error ) {

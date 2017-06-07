@@ -30,7 +30,7 @@ class TableController{
   var $exports = array(
       '0'=> array('name'=>'Export', 'controller'=>''),
       'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
-      'xls' => array('name'=>'Excell', 'controller'=>'XlsExportTableController')
+      'xls' => array('name'=>'Excel', 'controller'=>'XlsExportTableController')
       );
   var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
   var $tabs = false;
@@ -105,7 +105,7 @@ class TableController{
   * @return void
   */
   function setCol($colId, $colName = false) {
-    $this->colsDef[$colId] = array('name' => $colName, 'rules' => array(), 'exportRules'=> array() );
+    $this->colsDef[$colId] = array('name' => $colName, 'rules' => array() );
   }
 
 
@@ -117,7 +117,7 @@ class TableController{
     * @return void
     */
     function setColToExport($colId, $colName = false) {
-      $this->colsDefToExport[$colId] = array('name' => $colName, 'rules' => array(), 'exportRules'=> array() );
+      $this->colsDefToExport[$colId] = array('name' => $colName, 'rules' => array() );
     }
 
 
@@ -184,17 +184,26 @@ class TableController{
   * @return void
   */
   function colExportRule($colId, $regexp, $finalContent, $regex = false ) {
+
+
     if( array_key_exists($colId, $this->colsDef) ) {
       if ( !$regex ) {
-        $this->colsDef[$colId]['exportRules'][] = array('regexp' => $regexp, 'finalContent' => $finalContent );
+        $this->colsDef[$colId]['rules'][] = array('regexp' => $regexp, 'finalContent' => $finalContent );
       }
       else {
-        $this->colsDef[$colId]['exportRules'][] = array('regexp' => $regexp, 'regexContent' => $finalContent );
+        $this->colsDef[$colId]['rules'][] = array('regexp' => $regexp, 'regexContent' => $finalContent );
       }
     }
-    else {
-      Cogumelo::error('Col id "'.$colId.'" not found in table, can`t add col rule');
+
+    if( array_key_exists($colId, $this->colsDefToExport) ) {
+      if ( !$regex ) {
+        $this->colsDefToExport[$colId]['rules'][] = array('regexp' => $regexp, 'finalContent' => $finalContent );
+      }
+      else {
+        $this->colsDefToExport[$colId]['rules'][] = array('regexp' => $regexp, 'regexContent' => $finalContent );
+      }
     }
+
   }
 
 

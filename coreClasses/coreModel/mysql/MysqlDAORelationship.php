@@ -6,15 +6,14 @@
  *
  * @package Cogumelo Model
  */
-class MysqlDAORelationship
-{
+class MysqlDAORelationship {
 
 
   var $filters = array();
   var $whereData = array();
   var $joinType = 'LEFT';
 
-  function __construct() {
+  public function __construct() {
 
   }
 
@@ -23,7 +22,7 @@ class MysqlDAORelationship
    *
    * @return string
    */
-  function getVOJoins( $VOClass, $joinType, $resolveDependences, $filters = array() ) {
+  public function getVOJoins( $VOClass, $joinType, $resolveDependences, $filters = array() ) {
 
     $this->filters = $filters;
     $this->joinType = $joinType;
@@ -45,12 +44,12 @@ class MysqlDAORelationship
    *
    * @return string
    */
-  function joins($vo) {
+  public function joins($vo) {
     $joinList = '';
 
     foreach( $vo->relationship as $voRel) {
 
-      if( sizeof($voRel->relationship) == 0  ) {
+      if( count($voRel->relationship) == 0  ) {
         // FINAL
         $joinList .= $this->leftJoin( $this->selectConcat($voRel), $voRel );
       }
@@ -73,7 +72,7 @@ class MysqlDAORelationship
    *
    * @return string
    */
-  function leftJoin($select, $sonVo ) {
+  public function leftJoin($select, $sonVo ) {
     return " ".$this->joinType." JOIN ( ".$select." ) as " . $sonVo->parentId."_".$sonVo->table."_serialized  ON ".$sonVo->parentId."_".$sonVo->table."_serialized.".$sonVo->relatedWithId." = ".$sonVo->parentTable.".".$sonVo->parentId;
   }
 
@@ -85,7 +84,7 @@ class MysqlDAORelationship
    *
    * @return string
    */
-  function selectConcat( $vo ) {
+  public function selectConcat( $vo ) {
 
     $where = $this->setWheres( $vo->vo );
     return " SELECT " . $this->cols($vo) . ", group_concat('{', " . $this->jsonCols($vo) . "'}' ) as ".$vo->table." from ".$vo->table. $where. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
@@ -100,7 +99,7 @@ class MysqlDAORelationship
    *
    * @return string
    */
-  function selectGroupConcat( $vo, $joins ) {
+  public function selectGroupConcat( $vo, $joins ) {
     $where = $this->setWheres( $vo->vo );
     return " SELECT " .$this->cols($vo). " , concat('{', ". $this->jsonCols($vo) ." ". $this->getGroupConcats( $vo ) ."'}') as ".$vo->table." from ".$vo->table." ". $joins .$where. " GROUP BY " . $vo->table . "." . $vo->relatedWithId;
   }
@@ -113,7 +112,7 @@ class MysqlDAORelationship
    *
    * @return string
    */
-  function jsonCols($vo) {
+  public function jsonCols($vo) {
 
     $returnCols = '';
     $coma = '';
@@ -133,7 +132,7 @@ class MysqlDAORelationship
    *
    * @return string
    */
-  function cols($vo) {
+  public function cols($vo) {
     $returnCols = '';
     $coma = '';
 
@@ -145,7 +144,7 @@ class MysqlDAORelationship
     return $returnCols;
   }
 
-  function colToString( $colKey, $vo ) {
+  public function colToString( $colKey, $vo ) {
     //$retStr = "COALESCE(".$vo->table.".".$colKey.", '".COGUMELO_NULL."')";
 
     $col = false;
@@ -189,13 +188,13 @@ class MysqlDAORelationship
   }
 
   /**
-   * group Concat function
+   * Group Concat function
    *
    * @param object $vo VO or Model relationship object (From tmp files)
    *
    * @return string
    */
-  function getGroupConcats ($vo) {
+  public function getGroupConcats($vo) {
     $groupConcats = '';
 
     foreach( $vo->relationship as $voRel) {
@@ -206,15 +205,15 @@ class MysqlDAORelationship
   }
 
 
-  function searchVOInFilters($voName) {
+  public function searchVOInFilters($voName) {
     $found = array();
 
 
-    if( sizeof($this->filters)>0 && $this->filters !== false ) {
+    if( count($this->filters)>0 && $this->filters !== false ) {
       //var_dump($this->filters);
       foreach ($this->filters as $fK => $fD) {
         preg_match('#'.$voName.'\.(.*)#', $fK, $matches);
-        if( sizeof($matches)>0 ) {
+        if( count($matches)>0 ) {
           $found[ $matches[1] ] = $fD;
         }
 
@@ -224,7 +223,7 @@ class MysqlDAORelationship
     return $found;
   }
 
-  function setWheres($voName) {
+  public function setWheres( $voName ) {
 
     $where_str = "";
     $val_array = array();
@@ -260,8 +259,8 @@ class MysqlDAORelationship
           }
         }
         else {
-          $var_count = substr_count( $fstr , "?");
-          for($c=0; $c < $var_count; $c++) {
+          $var_count = mb_substr_count( $fstr , "?");
+          for( $c=0; $c < $var_count; $c++ ) {
             $val_array[] = $filter_val;
           }
         }
@@ -279,11 +278,10 @@ class MysqlDAORelationship
     $this->whereData[] = $fArray;
 
     return $fArray['string'];
-
-
   }
 
-  function getFilterArrays() {
+  public function getFilterArrays() {
+
     return $this->whereData;
   }
 

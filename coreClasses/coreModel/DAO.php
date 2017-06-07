@@ -22,13 +22,13 @@ class DAO
   {
 
     if($voObj != false) {
-      Cogumelo::load('coreModel/'.cogumeloGetSetupValue( 'db:engine' ).'/'.ucfirst(cogumeloGetSetupValue( 'db:engine' )).'AutogeneratorDAO.php');
+      Cogumelo::load('coreModel/'.Cogumelo::getSetupValue( 'db:engine' ).'/'.ucfirst(Cogumelo::getSetupValue( 'db:engine' )).'AutogeneratorDAO.php');
 
-      eval('$daoObjReturn = new '.ucfirst(cogumeloGetSetupValue( 'db:engine' )).'AutogeneratorDAO( $voObj );');
+      eval('$daoObjReturn = new '.ucfirst(Cogumelo::getSetupValue( 'db:engine' )).'AutogeneratorDAO( $voObj );');
     }
     else {
 
-      $classPath = 'model/'. cogumeloGetSetupValue( 'db:engine' ) . '/'. ucfirst(cogumeloGetSetupValue( 'db:engine' )) .$entity.'DAO';
+      $classPath = 'model/'. Cogumelo::getSetupValue( 'db:engine' ) . '/'. ucfirst(Cogumelo::getSetupValue( 'db:engine' )) .$entity.'DAO';
 
       // check if entity is in module or is in main project
       if($module) {
@@ -39,7 +39,7 @@ class DAO
         Cogumelo::load($classPath.'.php');
       }
 
-      eval('$daoObjReturn = new '.ucfirst(cogumeloGetSetupValue( 'db:engine' )).$entity.'DAO( );');
+      eval('$daoObjReturn = new '.ucfirst(Cogumelo::getSetupValue( 'db:engine' )).$entity.'DAO( );');
     }
 
     return $daoObjReturn;

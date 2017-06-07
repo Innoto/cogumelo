@@ -348,15 +348,15 @@ Class DependencesController {
 
     if( $includeFile != '' ) {
       // css or less file
-      if( substr($includeFile, -4) == '.css' || substr($includeFile, -5) == '.less') {
+      if( mb_substr($includeFile, -4) == '.css' || mb_substr($includeFile, -5) == '.less') {
         $type = 'styles';
       }
       // javascript file
-      else if( substr($includeFile, -3) == '.js' ) {
+      else if( mb_substr($includeFile, -3) == '.js' ) {
         $type = 'clientScript';
       }
       // php include
-      else if( substr($includeFile, -4) == '.php' || substr($includeFile, -4) == '.inc')  {
+      else if( mb_substr($includeFile, -4) == '.php' || mb_substr($includeFile, -4) == '.inc')  {
         $type = 'serverScript';
       }
     }

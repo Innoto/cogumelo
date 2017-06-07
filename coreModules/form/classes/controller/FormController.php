@@ -116,7 +116,7 @@ class FormController implements Serializable {
   }
 
   public function reset( $name = false, $action = false ) {
-    error_log( 'NOTICE: form->reset()' );
+    error_log('FormController: NOTICE: form->reset()' );
     $formSessionId = 'CGFSI_'.$this->getTokenId();
     unset( $_SESSION[ $formSessionId ] );
 
@@ -377,8 +377,8 @@ class FormController implements Serializable {
       $result = ( $this->getTokenId() === $tokenId );
     }
     else {
-      error_log( 'ERROR. El FORM no esta en sesion: '.$formSessionId );
-      // error_log( print_r( $_SESSION, true ) );
+      error_log('FormController: ERROR. El FORM no esta en sesion: '.$formSessionId );
+      // error_log('FormController: '. print_r( $_SESSION, true ) );
     }
 
     return $result;
@@ -392,10 +392,10 @@ class FormController implements Serializable {
     $result = false;
 
     $postDataJson = file_get_contents( 'php://input' );
-    // error_log( $postDataJson );
-    if( $postDataJson !== false && strpos( $postDataJson, '{' )===0 ) {
+    // error_log('FormController: '. $postDataJson );
+    if( $postDataJson !== false && mb_strpos( $postDataJson, '{' )===0 ) {
       $postData = json_decode( $postDataJson, true );
-      // error_log( '$postDataJson: '.print_r( $postData, true ) );
+      // error_log('FormController: $postDataJson: '.print_r( $postData, true ) );
 
       // recuperamos FORM de sesion y añadimos los datos enviados
       if( isset( $postData[ 'cgIntFrmId' ][ 'value' ] ) && $this->loadPostSession( $postData[ 'cgIntFrmId' ][ 'value' ] ) ) {
@@ -442,14 +442,14 @@ class FormController implements Serializable {
 
     // Importando los datos del form e integrando los datos de ficheros subidos
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
-      // error_log( 'Load field '.$fieldName.' value '.print_r( $formPost[ $fieldName ][ 'value' ], true ) );
+      // error_log('FormController: Load field '.$fieldName.' value '.print_r( $formPost[ $fieldName ][ 'value' ], true ) );
 
       if( isset( $formPost[ $fieldName ][ 'dataInfo' ] ) ) {
-        // error_log( 'DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
+        // error_log('FormController: DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
         // $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
         $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
         foreach( $formPost[ $fieldName ][ 'dataInfo' ] as $key => $value ) {
-          // error_log( "setFieldParam: $fieldName, data-$key, $value )" );
+          // error_log('FormController: '. "setFieldParam: $fieldName, data-$key, $value )" );
           // $this->setFieldParam( $fieldName, 'data-'.$key, $value );
           $this->setFieldParam( $fieldName, $key, $value );
         }
@@ -504,7 +504,7 @@ class FormController implements Serializable {
                       $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
                       break;
                   }
-                  error_log( 'FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
+                  cogumelo::debug('FormController: FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
                 }
               }
               break;
@@ -536,7 +536,7 @@ class FormController implements Serializable {
    * @param array $dataArray Datos preparados para añadir al formulario
    */
   public function loadArrayValues( $dataArray ) {
-    // error_log( 'loadArrayValues: ' . print_r( $dataArray, true ) );
+    // error_log('FormController: loadArrayValues: ' . print_r( $dataArray, true ) );
 
     if( isset( $dataArray ) && is_array( $dataArray ) && count( $dataArray ) > 0  ) {
       foreach( $dataArray as $fieldName => $value ) {
@@ -636,7 +636,7 @@ class FormController implements Serializable {
     @param mixed $value Valor del parametro
    */
   public function setFieldParam( $fieldName, $paramName, $value ) {
-    // error_log( 'setFieldParam: ' . $paramName . ': ' . print_r( $value, true ) );
+    // error_log('FormController: setFieldParam: ' . $paramName . ': ' . print_r( $value, true ) );
 
     if( array_key_exists( $fieldName, $this->fields) ) {
       $done = false;
@@ -653,7 +653,7 @@ class FormController implements Serializable {
       }
     }
     else {
-      error_log( 'Error intentando almacenar un parámetro ('.$paramName.') en un campo inexistente: '.$fieldName );
+      error_log('FormController: Error intentando almacenar un parámetro ('.$paramName.') en un campo inexistente: '.$fieldName );
     }
   }
 
@@ -663,7 +663,7 @@ class FormController implements Serializable {
     @param mixed $fieldValue Valor del campo
    */
   private function prepareFieldFileValue( $fieldName, $fieldValue ) {
-    // error_log( 'prepareFieldFileValue: ' . $fieldName );
+    // error_log('FormController: prepareFieldFileValue: ' . $fieldName );
     $newValue = null;
 
     if( !empty( $fieldValue ) && is_array( $fieldValue ) ) {
@@ -671,8 +671,8 @@ class FormController implements Serializable {
 
       if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
         // Only one file
-        // error_log( 'setFieldValue Basic: only one file' );
-        // error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
+        // error_log('FormController: setFieldValue Basic: only one file' );
+        // error_log('FormController: FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
         if( !isset( $fieldValue[ 'status' ] ) ) {
           $this->setFieldParam( $fieldName, 'data-fm_id', isset( $fieldValue['id'] ) ? $fieldValue['id'] : '' );
 
@@ -694,8 +694,8 @@ class FormController implements Serializable {
       }
       else {
         // Multiple: add files
-        // error_log( 'setFieldValue Multiple: add files' );
-        // error_log( 'FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
+        // error_log('FormController: setFieldValue Multiple: add files' );
+        // error_log('FormController: FILE fieldValue inicial: '. print_r( $fieldValue, true ) );
 
 
 
@@ -728,9 +728,9 @@ class FormController implements Serializable {
         $fieldValue = $groupValue;
       }
 
-      // error_log( '----------------------------------------------------------' );
-      // error_log( 'FILE fieldValue FINAL: '. json_encode( $fieldValue ) );
-      // error_log( '----------------------------------------------------------' );
+      // error_log('FormController: ----------------------------------------------------------' );
+      // error_log('FormController: FILE fieldValue FINAL: '. json_encode( $fieldValue ) );
+      // error_log('FormController: ----------------------------------------------------------' );
       $newValue = $fieldValue;
     }
 
@@ -771,7 +771,7 @@ class FormController implements Serializable {
       $this->fields[ $fieldName ][ 'cgIntFrmFieldInfo' ][ $paramName ] = $value;
     }
     else {
-      error_log( 'Error intentando almacenar un parámetro ('.$paramName.') en un campo inexistente: '.$fieldName );
+      error_log('FormController: Error intentando almacenar un parámetro ('.$paramName.') en un campo inexistente: '.$fieldName );
     }
   }
 
@@ -989,10 +989,10 @@ class FormController implements Serializable {
         // Procesamos los campos que no son raiz de campos agrupados
         $fieldsValuesArray[ $fieldName ] = $this->getFieldValue( $fieldName );
 
-        // error_log( $fieldName .' === '. print_r( $fieldsValuesArray[ $fieldName ], true ) );
+        // error_log('FormController: '. $fieldName .' === '. print_r( $fieldsValuesArray[ $fieldName ], true ) );
       }
       else {
-        error_log( 'getValuesArray: '.$fieldName .' IGNORADO!!! ' );
+        error_log('FormController: getValuesArray: '.$fieldName .' IGNORADO!!! ' );
       }
     }
 
@@ -1020,7 +1020,7 @@ class FormController implements Serializable {
       }
       else {
         $valuesArray[ 'fields' ][ $fieldName ] = $this->getFieldValue( $fieldName );
-        // error_log( $fieldName .' === '. print_r( $valuesArray[ 'fields' ][ $fieldName ], true ) );
+        // error_log('FormController: '. $fieldName .' === '. print_r( $valuesArray[ 'fields' ][ $fieldName ], true ) );
       }
     }
 
@@ -1042,10 +1042,10 @@ class FormController implements Serializable {
 
         if( $this->getFieldInternal( $fieldName, 'groupElemRemoved' ) !== true ) {
           $fieldsValuesArray[ $idElem ][ $fieldName ] = $this->getFieldValue( $fieldName );
-          // error_log( $groupName.'/'.$idElem.'/'.$fieldName .' === '.print_r( $fieldsValuesArray[ $idElem ][ $fieldName ], true ) );
+          // error_log('FormController: '. $groupName.'/'.$idElem.'/'.$fieldName .' === '.print_r( $fieldsValuesArray[ $idElem ][ $fieldName ], true ) );
         }
         else {
-          error_log( 'getValuesGroupArray: '.$groupName.'/'.$idElem.'/'.$fieldName .' IGNORADO!!! ' );
+          error_log('FormController: getValuesGroupArray: '.$groupName.'/'.$idElem.'/'.$fieldName .' IGNORADO!!! ' );
         }
 
       }
@@ -1436,9 +1436,9 @@ class FormController implements Serializable {
     @return boolean
    */
   public function processFileFields( $fieldNames = false ) {
-    // error_log( '---------------' );
-    // error_log( 'FormController: processFileFields(fieldNames): ' . json_encode( $fieldNames ) );
-    // error_log( '---------------' );
+    // error_log('FormController: ---------------' );
+    // error_log('FormController: processFileFields(fieldNames): ' . json_encode( $fieldNames ) );
+    // error_log('FormController: ---------------' );
 
     $result = true;
 
@@ -1448,26 +1448,26 @@ class FormController implements Serializable {
 
     foreach( $fieldNames as $fieldName ) {
       if( $result && $this->getFieldType( $fieldName ) === 'file' ) {
-        error_log( 'processFileFields: Almacenando fileField: '.$fieldName );
+        cogumelo::debug('FormController: processFileFields: Almacenando fileField: '.$fieldName );
 
         $fileFieldValue = $this->getFieldValue( $fieldName );
-        // error_log( print_r( $fileFieldValue, true ) );
+        // error_log('FormController: '. print_r( $fileFieldValue, true ) );
 
         if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
           // Basic: only one file
-          error_log( 'processFileFields Basic: only one file' );
-          // error_log( 'FILE fileFieldValue inicial: '. print_r( $fileFieldValue, true ) );
+          cogumelo::debug('FormController: processFileFields Basic: only one file' );
+          // error_log('FormController: FILE fileFieldValue inicial: '. print_r( $fileFieldValue, true ) );
 
           if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false ) {
             switch( $fileFieldValue['status'] ) {
               case 'LOAD':
-                error_log( 'processFileFields: LOAD' );
+                cogumelo::debug('FormController: processFileFields: LOAD' );
                 $fileFieldValue['status'] = 'LOADED';
                 $fileFieldValue['values'] = $fileFieldValue['validate'];
                 $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
+                cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 /*
                   $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
                   $destDir = $this->getFieldParam( $fieldName, 'destDir' );
@@ -1479,18 +1479,18 @@ class FormController implements Serializable {
                       $result = false;
                       $this->addFieldRuleError( $fieldName, 'cogumelo',
                         'La subida del fichero ha fallado. (MD)' );
-                      error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
+                      error_log('FormController: Imposible crear el directorio necesario. ' . $fullDestPath );
                     }
                   }
 
                   if( !$this->existErrors() ) {
                     // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-                    error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                    cogumelo::debug('FormController: Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
                     if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
                       $result = false;
                       $this->addFieldRuleError( $fieldName, 'cogumelo',
                         'La subida del fichero ha fallado. (MF)' );
-                      error_log( 'Imposible mover el fichero al directorio adecuado.' .
+                      error_log('FormController: Imposible mover el fichero al directorio adecuado.' .
                         $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
                     }
                   }
@@ -1501,17 +1501,17 @@ class FormController implements Serializable {
                     $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
                     $this->setFieldValue( $fieldName, $fileFieldValue );
                     $this->updateFieldToSession( $fieldName );
-                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
                   }
                 */
                 break;
               case 'REPLACE':
-                error_log( 'processFileFields: REPLACE' );
+                cogumelo::debug('FormController: processFileFields: REPLACE' );
                 $fileFieldValue['values'] = $fileFieldValue['validate'];
                 $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
+                cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 /*
                   $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
                   $destDir = $this->getFieldParam( $fieldName, 'destDir' );
@@ -1523,18 +1523,18 @@ class FormController implements Serializable {
                       $result = false;
                       $this->addFieldRuleError( $fieldName, 'cogumelo',
                         'La subida del fichero ha fallado. (MD)' );
-                      error_log( 'Imposible crear el directorio necesario. ' . $fullDestPath );
+                      error_log('FormController: Imposible crear el directorio necesario. ' . $fullDestPath );
                     }
                   }
 
                   if( !$this->existErrors() ) {
                     // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-                    error_log( 'Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                    cogumelo::debug('FormController: Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
                     if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
                       $result = false;
                       $this->addFieldRuleError( $fieldName, 'cogumelo',
                         'La subida del fichero ha fallado. (MF)' );
-                      error_log( 'Imposible mover el fichero al directorio adecuado.' .
+                      error_log('FormController: Imposible mover el fichero al directorio adecuado.' .
                         $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
                     }
                   }
@@ -1545,32 +1545,32 @@ class FormController implements Serializable {
                     $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
                     $this->setFieldValue( $fieldName, $fileFieldValue );
                     $this->updateFieldToSession( $fieldName );
-                    error_log( 'Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
                   }
                 */
                 break;
               case 'DELETE':
-                error_log( 'processFileFields: DELETE' );
+                cogumelo::debug('FormController: processFileFields: DELETE' );
                 // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
                 $fileFieldValue['values'] = $fileFieldValue['prev'];
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
+                cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 break;
               case 'EXIST':
-                error_log( 'processFileFields OK: EXIST - NADA QUE HACER' );
+                cogumelo::debug('FormController: processFileFields OK: EXIST - NADA QUE HACER' );
                 $fileFieldValue['values'] = $fileFieldValue['prev'];
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
+                cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 break;
             }
           } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false )
         }// Basic: only one file
         else {
           // Multiple: add files
-          error_log( 'processFileFields Multiple: add files' );
-          error_log( 'FILE fileFieldValue inicial: '. json_encode( $fileFieldValue ) );
+          cogumelo::debug('FormController: processFileFields Multiple: add files' );
+          cogumelo::debug('FormController: FILE fileFieldValue inicial: '. json_encode( $fileFieldValue ) );
 
           if( !empty( $fileFieldValue['multiple'] ) ) {
             foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
@@ -1578,28 +1578,28 @@ class FormController implements Serializable {
               if( isset( $fileData['status'] ) && $fileData['status'] !== false ) {
                 switch( $fileData['status'] ) {
                   case 'LOAD':
-                    error_log( 'processFileFields: LOAD' );
+                    cogumelo::debug('FormController: processFileFields: LOAD' );
                     $fileData['status'] = 'LOADED';
                     $fileData['values'] = $fileData['validate'];
                     $fileData['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
-                    error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileData ) );
+                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                   case 'REPLACE':
-                    error_log( 'processFileFields: REPLACE' );
+                    cogumelo::debug('FormController: processFileFields: REPLACE' );
                     $fileData['values'] = $fileData['validate'];
                     $fileData['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
-                    error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileData ) );
+                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                   case 'DELETE':
-                    error_log( 'processFileFields: DELETE' );
+                    cogumelo::debug('FormController: processFileFields: DELETE' );
                     // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
                     $fileData['values'] = $fileData['prev'];
-                    error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileData ) );
+                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                   case 'EXIST':
-                    error_log( 'processFileFields OK: EXIST - NADA QUE HACER' );
+                    cogumelo::debug('FormController: processFileFields OK: EXIST - NADA QUE HACER' );
                     $fileData['values'] = $fileData['prev'];
-                    error_log( 'Info: processFileFields OK. values: ' . json_encode( $fileData ) );
+                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                 }
               } // if( isset( $fileData['status'] ) && $fileData['status'] !== false )
@@ -1623,9 +1623,9 @@ class FormController implements Serializable {
       $this->revertFileFieldsLoaded();
     }
 
-    // error_log( '---------------' );
-    // error_log( 'FormController: processFileFields - FIN' );
-    // error_log( '---------------' );
+    // error_log('FormController: ---------------' );
+    // error_log('FormController: processFileFields - FIN' );
+    // error_log('FormController: ---------------' );
     return $result;
   } // function processFileFields
 
@@ -1638,34 +1638,34 @@ class FormController implements Serializable {
 
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
       if( $this->getFieldType( $fieldName ) === 'file' ) {
-        // error_log( 'FILE: Revertindo LOADED fileField: '.$fieldName );
+        // error_log('FormController: FILE: Revertindo LOADED fileField: '.$fieldName );
 
         $fileFieldValue = $this->getFieldValue( $fieldName );
-        // error_log( print_r( $fileFieldValue, true ) );
+        // error_log('FormController: '. print_r( $fileFieldValue, true ) );
 
         if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] === 'LOADED' ) {
           $fileFieldValue['status'] = 'LOAD';
           unset( $fileFieldValue['values'] );
           $this->setFieldValue( $fieldName, $fileFieldValue );
           $this->updateFieldToSession( $fieldName );
-          // error_log( 'Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
+          // error_log('FormController: Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
           /*
             // QUITAR FILES_APP_PATH
             $absLocationActual = self::FILES_APP_PATH . $fileFieldValue['values']['absLocation'];
             $absLocationAnterior = $fileFieldValue['validate']['absLocation'];
-            error_log( 'Devolvendo ' . $absLocationActual .' a '. $absLocationAnterior );
+            cogumelo::debug('FormController: Devolvendo ' . $absLocationActual .' a '. $absLocationAnterior );
             if( !rename( $absLocationActual, $absLocationAnterior ) ) {
               $result = false;
               $this->addFieldRuleError( $fieldName, 'cogumelo',
                 'La subida del fichero ha fallado. (MR)' );
-              error_log( 'Imposible devolver el fichero al directorio adecuado.' . $absLocationActual .' a '. $absLocationAnterior );
+              error_log('FormController: Imposible devolver el fichero al directorio adecuado.' . $absLocationActual .' a '. $absLocationAnterior );
             }
             else {
               $fileFieldValue['status'] = 'LOAD';
               unset( $fileFieldValue['values'] );
               $this->setFieldValue( $fieldName, $fileFieldValue );
               $this->updateFieldToSession( $fieldName );
-              error_log( 'Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
+              cogumelo::debug('FormController: Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
             }
           */
         } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] === 'LOADED' )
@@ -1707,7 +1707,7 @@ class FormController implements Serializable {
     @return string Fichero temporal de la App. En caso de error: false
    */
   public function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName, $fieldName ) {
-    // error_log( 'tmpPhpFile2tmpFormFile: '.$fileTmpLoc.' --- '.$fileName.' --- '.$fieldName);
+    // error_log('FormController: tmpPhpFile2tmpFormFile: '.$fileTmpLoc.' --- '.$fileName.' --- '.$fieldName);
     $result = false;
     $error = false;
 
@@ -1720,7 +1720,7 @@ class FormController implements Serializable {
        */
       if( !mkdir( $tmpCgmlFormPath, 0777, true ) ) {
         $error = 'tmpPhpFile2tmpFormFile: Imposible crear el dir. necesario: '.$tmpCgmlFormPath;
-        error_log($error);
+        error_log('FormController: '.$error);
       }
     }
 
@@ -1733,15 +1733,15 @@ class FormController implements Serializable {
        */
       if( !move_uploaded_file( $fileTmpLoc, $tmpLocationCgml ) ) {
         $error = 'tmpPhpFile2tmpFormFile: Fallo de move_uploaded_file pasando ('.$fileTmpLoc.') a ('.$tmpLocationCgml.')';
-        error_log($error);
+        error_log('FormController: '.$error);
       }
       else {
         $result = $tmpLocationCgml;
       }
     }
 
-    // error_log( 'tmpPhpFile2tmpFormFile ERROR: '.$error );
-    // error_log( 'tmpPhpFile2tmpFormFile RET: '.$result );
+    // error_log('FormController: tmpPhpFile2tmpFormFile ERROR: '.$error );
+    // error_log('FormController: tmpPhpFile2tmpFormFile RET: '.$result );
 
     return $result;
   } // function tmpPhpFile2tmpFormFile( $fileTmpLoc, $fileName )
@@ -1752,30 +1752,35 @@ class FormController implements Serializable {
     @return string
    */
   public function secureFileName( $fileName ) {
-    // error_log( 'secureFileName: '.$fileName );
+    // error_log('FormController: secureFileName: '.$fileName );
     $maxLength = 200;
 
+    // "Aplanamos" caracteres no ASCII7
     $fileName = str_replace( $this->replaceAcents[ 'from' ], $this->replaceAcents[ 'to' ], $fileName );
-    $fileName = preg_replace( '/[^0-9a-z_\.-]/i', '_', $fileName );
+    // Solo admintimos a-z A-Z 0-9 - / El resto pasan a ser -
+    $fileName = preg_replace( '/[^a-z0-9_\-\.]/iu', '_', $fileName );
+    // Eliminamos - sobrantes
+    $fileName = preg_replace( '/__+/u', '_', $fileName );
+    $fileName = trim( $fileName, '_' );
 
     $sobran = mb_strlen( $fileName, 'UTF-8' ) - $maxLength;
     if( $sobran < 0 ) {
       $sobran = 0;
     }
 
-    $tmpExtPos = strrpos( $fileName, '.' );
+    $tmpExtPos = mb_strrpos( $fileName, '.' );
     if( $tmpExtPos > 0 && ( $tmpExtPos - $sobran ) >= 8 ) {
       // Si hay extensión y al cortar el nombre quedan 8 o más letras, recorto solo el nombre
-      $tmpName = substr( $fileName, 0, $tmpExtPos - $sobran );
-      $tmpExt = substr( $fileName, 1 + $tmpExtPos );
+      $tmpName = mb_substr( $fileName, 0, $tmpExtPos - $sobran );
+      $tmpExt = mb_substr( $fileName, 1 + $tmpExtPos );
       $fileName = $tmpName . '.' . $tmpExt;
     }
     else {
       // Recote por el final
-      $fileName = substr( $fileName, 0, $maxLength );
+      $fileName = mb_substr( $fileName, 0, $maxLength );
     }
 
-    // error_log( 'secureFileName RET: '.$fileName );
+    // error_log('FormController: secureFileName RET: '.$fileName );
 
     return $fileName;
   }
@@ -1816,7 +1821,7 @@ class FormController implements Serializable {
       $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify?'.
         'secret='.$secret.'&response='.$response;
       $jsonResponse = file_get_contents( $verifyUrl );
-      // error_log( '$jsonResponse: '.$jsonResponse );
+      // error_log('FormController: $jsonResponse: '.$jsonResponse );
       $response = ( $jsonResponse ) ? json_decode( $jsonResponse ) : false;
       $validate = ( $response && $response->success ) ? true : false;
     }
@@ -2027,6 +2032,9 @@ class FormController implements Serializable {
       if( isset( $htmlFieldArray['label'] ) ) {
         $html .= $htmlFieldArray['label']."\n";
       }
+      if( isset( $htmlFieldArray['htmlBefore'] ) ) {
+        $html .= $htmlFieldArray['htmlBefore']."\n";
+      }
       switch( $htmlFieldArray['fieldType'] ) {
         case 'select':
           $html .= $htmlFieldArray['inputOpen']."\n";
@@ -2053,6 +2061,9 @@ class FormController implements Serializable {
         default:
           $html .= $htmlFieldArray['input'];
           break;
+      }
+      if( isset( $htmlFieldArray['htmlAfter'] ) ) {
+        $html .= $htmlFieldArray['htmlAfter']."\n";
       }
     }
 
@@ -2092,6 +2103,13 @@ class FormController implements Serializable {
         $html['label'] .= '>'.$field['label'].'</label>';
       }
 
+      if( isset( $field['htmlBefore'] ) ) {
+        $html['htmlBefore'] = '<div class="'.$this->cssPrefix.'before">'.$field['htmlBefore'].'</div>';
+      }
+      if( isset( $field['htmlAfter'] ) ) {
+        $html['htmlAfter'] = '<div class="'.$this->cssPrefix.'after">'.$field['htmlAfter'].'</div>';
+      }
+
       $attribs = ' form="'.$this->id.'"';
       $attribs .= ( $myFielId ? ' id="'.$myFielId.'"' : '' );
       $attribs .= ' class="'.$this->cssPrefix.'-field '.$this->cssPrefix.'-field-'.$fieldName.
@@ -2118,7 +2136,7 @@ class FormController implements Serializable {
       $attribs .= isset( $r['maxlength'] ) ? ' maxlength="'.$r['maxlength'].'"' : '';
 
       foreach( $field as $dataKey => $dataValue ) {
-        if( strpos( $dataKey, 'data-' ) === 0 ) {
+        if( mb_strpos( $dataKey, 'data-' ) === 0 ) {
           $attribs .= ' '.$dataKey.'="'.$dataValue.'"';
         }
       }
@@ -2137,7 +2155,7 @@ class FormController implements Serializable {
                   $optInput .= ' disabled';
                 }
                 foreach( $optInfo as $dataKey => $dataValue ) {
-                  if( strpos( $dataKey, 'data-' ) === 0 ) {
+                  if( mb_strpos( $dataKey, 'data-' ) === 0 ) {
                     $optInput .= ' '.$dataKey.'="'.$dataValue.'"';
                   }
                 }
@@ -2214,7 +2232,7 @@ class FormController implements Serializable {
           $html['input'] = '<input name="'.$fieldName.'"';
           // $html['input'] .= isset( $field['value'] ) ? ' value="'.$field['value'].'"' : '';
           $html['input'] .= ' type="'.$field['type'].'"'.$attribs.'>';
-          // error_log( 'FILE --- '.print_r( $field, true ) );
+          // error_log('FormController: FILE --- '.print_r( $field, true ) );
           break;
 
         case 'reserved':
@@ -2319,7 +2337,7 @@ class FormController implements Serializable {
         if( $fileInfo[ 'status' ] === 'EXIST' ) {
           $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", { '.
             '"id": "'.$fileInfo['prev']['id'].'", "name": "'.$fileInfo['prev']['name'].'", '.
-            '"type": "'.$fileInfo['prev']['type'].'" } );'."\n";
+            '"aKey": "'.$fileInfo['prev']['aKey'].'", "type": "'.$fileInfo['prev']['type'].'" } );'."\n";
         }
       }
     }
@@ -2360,7 +2378,7 @@ class FormController implements Serializable {
    * @param mixed $successParam Contenido del evento: Msg, url, ...
    */
   public function setSuccess( $successName, $successParam = true ) {
-    // error_log( 'setSuccess: name='. $successName . ' param=' .  $successParam );
+    // error_log('FormController: setSuccess: name='. $successName . ' param=' .  $successParam );
     // 'onSubmitOk' : JS function
     // 'onSubmitError' : JS function
     // 'onFileUpload' : JS function
@@ -2382,7 +2400,7 @@ class FormController implements Serializable {
    * @param string $successName Nombre clave del suceso: accept, redirect, ... De no indicarse, serán TODOS
    */
   public function removeSuccess( $successName = false ) {
-    // error_log( 'removeSuccess: ' . print_r( $this->success, true ) );
+    // error_log('FormController: removeSuccess: ' . print_r( $this->success, true ) );
 
     if( $successName ) {
       if( isset( $this->success[ $successName ] ) ) {
@@ -2402,7 +2420,7 @@ class FormController implements Serializable {
    * @return array
    */
   public function getSuccess() {
-    // error_log( 'getSuccess: ' . print_r( $this->success, true ) );
+    // error_log('FormController: getSuccess: ' . print_r( $this->success, true ) );
 
     return $this->success;
   }
@@ -2545,11 +2563,11 @@ class FormController implements Serializable {
     @param string $fieldNameTo Nombre del campo
    */
   public function cloneValidationRules( $fieldNameFrom, $fieldNameTo ) {
-    // error_log( 'cloneValidationRules: '.$fieldNameFrom.', '.$fieldNameTo );
+    // error_log('FormController: cloneValidationRules: '.$fieldNameFrom.', '.$fieldNameTo );
     $fieldRules = $this->getValidationRules( $fieldNameFrom );
     if( is_array( $fieldRules ) ) {
       foreach( $fieldRules as $ruleName => $ruleParams ) {
-        // error_log( 'cloneValidationRules: '.$ruleName );
+        // error_log('FormController: '. 'cloneValidationRules: '.$ruleName );
         $this->setValidationRule( $fieldNameTo, $ruleName, $ruleParams );
       }
       $this->updateFieldRulesToSession( $fieldNameTo );
@@ -2595,7 +2613,7 @@ class FormController implements Serializable {
    */
   public function isRequiredField( $fieldName ) {
 
-    return isset( $this->rules[ $fieldName ][ 'required' ] );
+    return !empty( $this->rules[ $fieldName ]['required'] ) || !empty( $this->rules[ $fieldName ]['fileRequired'] );
   }
 
   /**
@@ -2635,7 +2653,7 @@ class FormController implements Serializable {
       $validate = $this->validationObj->evaluateRule( $fieldName, $fieldValue, $ruleName, $ruleParams );
     }
     else {
-      error_log( 'FALTA CARGAR LOS VALIDADORES' );
+      error_log('FormController: FALTA CARGAR LOS VALIDADORES' );
     }
 
     return $validate;
@@ -2655,7 +2673,7 @@ class FormController implements Serializable {
     @return boolean
    */
   public function validateForm() {
-    // error_log( 'validateForm:' );
+    // error_log('FormController: validateForm:' );
 
     $formValidated = true;
 
@@ -2664,13 +2682,13 @@ class FormController implements Serializable {
 
       if( $this->captchaEnable() && !$this->captchaValidate() ) {
         $this->addFormError( 'Captcha no válido' ); // , $msgClass );
-        error_log( 'Captcha no válido' );
+        error_log('FormController: Captcha no válido' );
       }
 
       foreach( $this->rules as $fieldName => $fieldRules ) {
         if( $this->getFieldInternal( $fieldName, 'groupCloneRoot' ) !== true ) {
           // Procesamos los campos que no son raiz de campos agrupados
-          // error_log( 'validateForm: campo: '.$fieldName );
+          // error_log('FormController: validateForm: campo: '.$fieldName );
           $fieldValidated = $this->validateField( $fieldName );
           $formValidated = $formValidated && $fieldValidated;
         }
@@ -2678,7 +2696,7 @@ class FormController implements Serializable {
     } // if( $this->issetValidationObj() )
     else {
       $formValidated = false;
-      error_log( 'FALTA CARGAR LOS VALIDADORES' );
+      error_log('FormController: FALTA CARGAR LOS VALIDADORES' );
     }
 
     return $formValidated;
@@ -2699,18 +2717,18 @@ class FormController implements Serializable {
     @return boolean
    */
   public function validateField( $fieldName ) {
-    // error_log( 'validateField: '.$fieldName );
+    // error_log('FormController: validateField: '.$fieldName );
     $fieldValidated = true;
 
     if( $this->isEmptyFieldValue( $fieldName ) ) {
       if( $this->isRequiredField( $fieldName ) ) {
-        // error_log( 'ERROR: evaluateRule( '.$fieldName.', VACIO, required, ...  )' );
+        // error_log('FormController: ERROR: evaluateRule( '.$fieldName.', VACIO, required, ...  )' );
         $this->addFieldRuleError( $fieldName, 'required' );
         $fieldValidated = false;
       }
     } // if( $this->isEmptyFieldValue( $fieldName ) )
     else {
-      //error_log( 'evaluateRule: non VACIO - Evaluar contido coas reglas...' );
+      //error_log('FormController: evaluateRule: non VACIO - Evaluar contido coas reglas...' );
 
       $fieldRules = $this->getValidationRules( $fieldName );
       $fieldType = $this->getFieldType( $fieldName );
@@ -2728,7 +2746,7 @@ class FormController implements Serializable {
       foreach( $fieldValues as $value ) {
         $fieldValidateValue = true;
         foreach( $fieldRules as $ruleName => $ruleParams ) {
-          // error_log( 'evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
+          // error_log('FormController: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
 
           if( $ruleName === 'equalTo' ) {
             $fieldRuleValidate = ( $value === $this->getFieldValue( str_replace('#', '', $ruleParams )) );
@@ -2736,10 +2754,10 @@ class FormController implements Serializable {
           else {
             $fieldRuleValidate = $this->evaluateRule( $fieldName, $value, $ruleName, $ruleParams );
           }
-          //error_log( 'evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
+          //error_log('FormController: evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
 
           if( !$fieldRuleValidate ) {
-            error_log( 'ERROR: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.
+            error_log('FormController: ERROR: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.
                 $ruleName.', '.print_r( $ruleParams, true ) .' )' );
             $this->addFieldRuleError( $fieldName, $ruleName );
             //$this->fieldErrors[ $fieldName ][ $ruleName ] = $fieldRuleValidate;
@@ -2763,7 +2781,7 @@ class FormController implements Serializable {
    * @param string $msgClass
    */
   public function addFormError( $msgError, $msgClass = false ) {
-    // error_log( "addFormError: $msgError, $msgClass" );
+    // error_log('FormController: '. "addFormError: $msgError, $msgClass" );
     $this->formErrors[] = array( 'msgText' => $msgError, 'msgClass' => $msgClass );
   }
 
@@ -2785,7 +2803,7 @@ class FormController implements Serializable {
    * @param string $msgError Mensaje de error
    */
   public function addFieldRuleError( $fieldName, $ruleName, $msgError = false ) {
-    // error_log( "addFieldRuleError: $fieldName, $ruleName, $msgError " );
+    // error_log('FormController: '. "addFieldRuleError: $fieldName, $ruleName, $msgError " );
     $this->fieldErrors[ $fieldName ][ $ruleName ] = $msgError;
   }
 
@@ -2797,7 +2815,7 @@ class FormController implements Serializable {
    * @param string $msgError Mensaje de error
    */
   public function addGroupRuleError( $groupName, $ruleName, $msgError = false ) {
-    // error_log( "addGroupRuleError: $groupName, $ruleName, $msgError " );
+    // error_log('FormController: '. "addGroupRuleError: $groupName, $ruleName, $msgError " );
     $this->fieldErrors[ $groupName ][ $ruleName ] = $msgError;
   }
 

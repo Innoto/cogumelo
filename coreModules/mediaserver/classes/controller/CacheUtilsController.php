@@ -22,7 +22,7 @@ class CacheUtilsController {
 
         $path = str_replace($tmpLessDir, '' , $lessFilePath );
 
-        if( substr( $path , 0,7) == 'classes') {
+        if( mb_substr( $path , 0,7) == 'classes' ) {
           $moduleName = false;
           $relativeFilePath = str_replace('classes/view/templates/', '', $path);
         }
@@ -105,7 +105,7 @@ class CacheUtilsController {
     $fileList = self::listFolderFiles( $origDir.$filePath , $includeFiles, false );
 
     foreach ( $fileList as $filePath ) {
-      $relativeFilePath = substr( $filePath, strlen($origDir) );
+      $relativeFilePath = mb_substr( $filePath, mb_strlen($origDir) );
       if(!file_exists( dirname($destDir.$relativeFilePath) )){
         mkdir( dirname($destDir.$relativeFilePath ), 0744, true );
       }
@@ -135,7 +135,7 @@ class CacheUtilsController {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
     $randomString = '';
     for( $i = 0; $i < $length; $i++ ) {
-      $randomString .= $characters[rand(0, strlen($characters) - 1)];
+      $randomString .= $characters[rand(0, mb_strlen($characters) - 1)];
     }
 
     if( file_exists( $randomString ) ){
@@ -238,7 +238,7 @@ class CacheUtilsController {
     $found = false;
 
     foreach ( $extArray as $ext ) {
-      if( substr( $filePath, -(strlen($ext)+1) ) == '.'.$ext ) {
+      if( mb_substr( $filePath, -(mb_strlen($ext)+1) ) == '.'.$ext ) {
         $found = true;
       }
     }
@@ -255,7 +255,7 @@ class CacheUtilsController {
     $ret = false;
 
     foreach ( $extArray as $ext ) {
-      if( substr( $filePath, -(strlen($ext)+1) ) == '.'.$ext ) {
+      if( mb_substr( $filePath, -(mb_strlen($ext)+1) ) == '.'.$ext ) {
         $ret = true;
       }
     }

@@ -30,7 +30,9 @@ class FiledataImagesController {
 
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
     $this->filesCachePath = Cogumelo::getSetupValue( 'mod:filedata:cachePath' );
-    $this->disableRawUrlProfile = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrlProfile' );
+
+    $this->verifyAKeyUrl = Cogumelo::getSetupValue( 'mod:filedata:verifyAKeyUrl' );
+    $this->disableRawUrlProfile = Cogumelo::getSetupValue( 'mod:filedata:disableRawUrlProfile' );
   }
 
 
@@ -89,7 +91,7 @@ class FiledataImagesController {
             $this->profile['backgroundImg'] = WEB_BASE_PATH . $this->profile['backgroundImg'];
           }
           else {
-            if( preg_match( '#^/module/(?P<module>.*?)(?P<tplPath>/.*)$#', $this->profile['backgroundImg'], $matches ) ) {
+            if( preg_match( '#^/module/(?P<module>.*?)(?P<tplPath>/.*)$#u', $this->profile['backgroundImg'], $matches ) ) {
               // Contenido dentro de un modulo
               $tplFile = ModuleController::getRealFilePath( 'classes/view/templates'.$matches['tplPath'], $matches['module'] );
               if( $tplFile ) {
@@ -102,7 +104,7 @@ class FiledataImagesController {
               }
             }
             else {
-              if( preg_match( '#^/app(?P<imgPath>/.*)$#', $this->profile['backgroundImg'], $matches ) ) {
+              if( preg_match( '#^/app(?P<imgPath>/.*)$#u', $this->profile['backgroundImg'], $matches ) ) {
                 // Contenido dentro de APP
                 if( file_exists( APP_BASE_PATH . $matches['imgPath'] ) ) {
                   // error_log( 'Ficheiro '.$matches['imgPath'].' en APP' );
@@ -134,12 +136,15 @@ class FiledataImagesController {
   public function getRouteProfile( $profile ) {
     // error_log( "FiledataImagesController: getRouteProfile( $profile )" );
     $imgRoute = false;
-    $imgRouteOriginal = $this->filesAppPath . $this->fileInfo['absLocation'];
+    $imgRouteOriginal = false;
 
     if( $this->fileInfo ) {
+
+      $imgRouteOriginal = $this->filesAppPath . $this->fileInfo['absLocation'];
+      $urlId = ( $this->verifyAKeyUrl ) ? $this->fileInfo['id'].'-a'.$this->fileInfo['aKey'] : $this->fileInfo['id'];
+
       if( $this->setProfile( $profile ) ) {
-        $imgRoute = $this->filesCachePath .'/'. $this->fileInfo['id'] .'/'.
-          $this->profile['idName'] .'/'. $this->fileInfo['name'];
+        $imgRoute = $this->filesCachePath .'/'. $urlId .'/'. $this->profile['idName'] .'/'. $this->fileInfo['name'];
         //error_log( "FiledataImagesController: getRouteProfile( $profile ): $imgRoute" );
 
         if( !$this->profile['cache'] || !file_exists( $imgRoute ) ) {
@@ -151,15 +156,17 @@ class FiledataImagesController {
       }
       else {
         // Original
-        $imgRoute = $this->filesCachePath .'/'. $this->fileInfo['id'] .'/'. $this->fileInfo['name'];
+
+        $imgRoute = $this->filesCachePath .'/'. $urlId .'/'. $this->fileInfo['name'];
         //error_log( "FiledataImagesController: getRouteProfile( NONE ): $imgRoute" );
+
         if( $this->profile['cache'] && !file_exists( $imgRoute ) ) {
           $toRouteDir = pathinfo( $imgRoute, PATHINFO_DIRNAME );
-          //error_log( "toRouteDir = $toRouteDir" );
+          // error_log( "toRouteDir = $toRouteDir" );
           if( !file_exists( $toRouteDir ) ) {
             // error_log( 'mkdir '.$toRouteDir );
             $maskPrev = umask( 0 );
-            mkdir ( $toRouteDir, 0775, true );
+            mkdir( $toRouteDir, 0775, true );
             umask( $maskPrev );
           }
           if( !copy( $imgRouteOriginal, $imgRoute ) ) {
@@ -198,7 +205,7 @@ class FiledataImagesController {
     $mimeTypeOrg = false;
     if( file_exists( $fromRoute ) ) {
       $mimeType = mime_content_type( $fromRoute );
-      if( strpos( $mimeType, 'image' ) === 0 ) {
+      if( mb_strpos( $mimeType, 'image' ) === 0 ) {
         $mimeTypeOrg = $mimeType;
       }
     }
@@ -210,7 +217,7 @@ class FiledataImagesController {
       $im->setBackgroundColor( new ImagickPixel( 'transparent' ) );
 
 
-      if( strpos( $mimeTypeOrg, 'image/svg' ) === 0 ) {
+      if( mb_strpos( $mimeTypeOrg, 'image/svg' ) === 0 ) {
         // Imagenes SVG
         $this->loadPreprocessedSvg( $im, $fromRoute );
       }
@@ -364,7 +371,7 @@ class FiledataImagesController {
         // [dirname]/[basename]
         // [dirname]/[filename].[extension]
 
-        //error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
+        // error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
         if( !file_exists( $toRouteInfo['dirname'] ) ) {
           // error_log( 'mkdir '.$toRouteInfo['dirname'] );
           $maskPrev = umask( 0 );
@@ -410,7 +417,7 @@ class FiledataImagesController {
         }
 
         $result = 'data:image/jpg;base64,'.base64_encode( $im->getImageBlob() );
-        error_log( 'jpg base64 SRC Encode strlen: '.strlen($result) );
+        error_log( 'jpg base64 SRC Encode strlen: '.mb_strlen($result) );
       }
 
 
@@ -427,7 +434,7 @@ class FiledataImagesController {
     $svg = file_get_contents( $fromRoute );
 
     // Machaco el tamaño de lienzo
-    if( strpos( $svg, 'viewBox' ) !== false ) {
+    if( mb_strpos( $svg, 'viewBox' ) !== false ) {
       $svg = preg_replace( '/(\s+)(width|height)="(.*?)"/', '${1}${2}="128px"', $svg );
       //$svg = preg_replace( '/viewBox="(.*?)"/', 'viewBox="0 0 128 128"', $svg );
     }
@@ -514,7 +521,7 @@ class FiledataImagesController {
       $imgInfo['type'] = mime_content_type( $imgInfo['route'] );
 
       if( !isset( $imgInfo['name'] ) ) {
-        $imgInfo['name'] = substr( strrchr( $imgInfo['route'], '/' ), 1 );
+        $imgInfo['name'] = mb_substr( mb_strrchr( $imgInfo['route'], '/' ), 1 );
       }
 
       // print headers

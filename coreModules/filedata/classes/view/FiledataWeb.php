@@ -34,11 +34,11 @@ class FiledataWeb extends View {
   */
   public function webFormFileShow( $urlParams ) {
     // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['fileId'] );
-    $fileName = false;
-    if( isset( $urlParams['fileName'] ) && mb_strlen( $urlParams['fileName'] ) > 1 ) {
-      $fileName = substr( strrchr( $urlParams['fileName'], '/' ), 1 );
-    }
-    $this->fileSendCommon( $urlParams['fileId'], $fileName, $this->filesAppPath, 'web' );
+
+    $aKey = empty( $urlParams['aKey'] ) ? false : $urlParams['aKey'];
+    $fileName = empty( $urlParams['fileName'] ) ? false : mb_substr( mb_strrchr( $urlParams['fileName'], '/' ), 1 );
+
+    $this->fileSendCommon( $urlParams['fileId'], $fileName, $aKey, $this->filesAppPath, 'web' );
   } // function webFormFileShow()
 
 
@@ -48,11 +48,11 @@ class FiledataWeb extends View {
   */
   public function webFormFileDownload( $urlParams ) {
     // error_log( 'FiledataWeb: webFormFileShow()' . $urlParams['fileId'] );
-    $fileName = false;
-    if( isset( $urlParams['fileName'] ) && mb_strlen( $urlParams['fileName'] ) > 1 ) {
-      $fileName = substr( strrchr( $urlParams['fileName'], '/' ), 1 );
-    }
-    $this->fileSendCommon( $urlParams['fileId'], $fileName, $this->filesAppPath, 'download' );
+
+    $aKey = empty( $urlParams['aKey'] ) ? false : $urlParams['aKey'];
+    $fileName = empty( $urlParams['fileName'] ) ? false : mb_substr( mb_strrchr( $urlParams['fileName'], '/' ), 1 );
+
+    $this->fileSendCommon( $urlParams['fileId'], $fileName, $aKey, $this->filesAppPath, 'download' );
   } // function webFormFileShow()
 
 
@@ -60,38 +60,44 @@ class FiledataWeb extends View {
   /**
     Visualizamos el fichero
   */
-  private function fileSendCommon( $fileId, $fileName, $basePath = false, $destination = 'web' ) {
+  private function fileSendCommon( $fileId, $fileName, $aKey, $basePath, $destination = 'web' ) {
     // error_log( "FiledataWeb: fileSendCommon( $fileId, $basePath, $destination )" );
     $fileInfo = false;
     $error = false;
 
-    $disableRawUrl = Cogumelo::GetSetupValue( 'mod:filedata:disableRawUrl' );
+    $verifyAKeyUrl = Cogumelo::getSetupValue( 'mod:filedata:verifyAKeyUrl' );
+    $disableRawUrl = Cogumelo::getSetupValue( 'mod:filedata:disableRawUrl' );
 
-    filedata::load('controller/FiledataController.php');
-    $filedataCtrl = new FiledataController();
 
-    if( $fileId && ( $fileName || !$disableRawUrl ) ) {
+    if( $fileId && ( $fileName || !$disableRawUrl ) && ( $aKey || !$verifyAKeyUrl ) ) {
+      filedata::load('controller/FiledataController.php');
+      $filedataCtrl = new FiledataController();
       $fileInfo = $filedataCtrl->loadFileInfo( $fileId );
     }
 
     if( $fileInfo ) {
       if( !$disableRawUrl || $fileName === $fileInfo['name'] ) {
-        if( $fileInfo['validatedAccess'] ) {
-          switch( $destination ) {
-            case 'download':
-              if( !$this->webDownloadFile( $fileInfo, $basePath ) ) {
-                $error = 'ND';
-              }
-              break;
-            default:
-              if( !$this->webShowFile( $fileInfo, $basePath ) ) {
-                $error = 'NS';
-              }
-              break;
+        if( !$verifyAKeyUrl || $aKey === $fileInfo['aKey'] ) {
+          if( $fileInfo['validatedAccess'] ) {
+            switch( $destination ) {
+              case 'download':
+                if( !$this->webDownloadFile( $fileInfo, $basePath ) ) {
+                  $error = 'ND';
+                }
+                break;
+              default:
+                if( !$this->webShowFile( $fileInfo, $basePath ) ) {
+                  $error = 'NS';
+                }
+                break;
+            }
+          }
+          else {
+            $error = 'NV';
           }
         }
         else {
-          $error = 'NV';
+          $error = 'NK';
         }
       }
       else {
@@ -126,7 +132,7 @@ class FiledataWeb extends View {
       'absLocation' => $n
     ];
 
-    if( !$this->webShowFile( $fileInfo , cogumeloGetSetupValue( 'mod:filedata:filePathPublic').'/' ) ) {
+    if( !$this->webShowFile( $fileInfo , Cogumelo::getSetupValue( 'mod:filedata:filePathPublic').'/' ) ) {
       cogumelo::error( 'Imposible mostrar el elemento solicitado: '.$n );
     }
   }
@@ -150,8 +156,8 @@ class FiledataWeb extends View {
       //header( 'Cache-Control: must-revalidate');
       //header( 'Pragma: public');
       //header( 'Content-Length: ' . $fileInfo['size'] );
-      header( 'Content-Disposition: inline; filename="' . $fileInfo['originalName'] . '"' );
       //header( 'Content-Length: ' . filesize( $filePath ) );
+      header( 'Content-Disposition: inline; filename="' . $fileInfo['originalName'] . '"' );
       header( 'Content-Type: '. $fileInfo['type'] );
       readfile( $filePath );
       exit;

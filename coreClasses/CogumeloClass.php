@@ -4,6 +4,7 @@ require_once( COGUMELO_LOCATION.'/coreClasses/coreController/Singleton.php' );
 require_once( COGUMELO_LOCATION.'/coreClasses/coreController/ModuleController.php' );
 require_once( COGUMELO_LOCATION.'/coreClasses/coreController/DependencesController.php' );
 require_once( COGUMELO_LOCATION.'/coreClasses/coreController/I18n.php' );
+require_once( COGUMELO_LOCATION.'/coreClasses/coreController/SetupMethods.php' );
 require_once( COGUMELO_LOCATION.'/coreModules/cogumeloSession/classes/controller/CogumeloSessionController.php' );
 
 class CogumeloClass extends Singleton {
@@ -15,6 +16,9 @@ class CogumeloClass extends Singleton {
 
   protected $userinfoString = '';
 
+  private $enviromentTimezones = null;
+
+  private static $setupMethods = null;
 
   public $dependences = array();
   public $includesCommon = array();
@@ -87,6 +91,19 @@ class CogumeloClass extends Singleton {
      */
   );
 
+  public function __construct() {
+    $this->setTimezones();
+
+    $sessionCtrl = new CogumeloSessionController();
+    $sessionCtrl->prepareTokenSessionEnvironment();
+
+    /*
+    session_start();
+    global $C_SESSION_ID;
+    $C_SESSION_ID = session_id();
+    */
+  }
+
   // Set autoincludes
   public static function autoIncludes() {
     $dependencesControl = new DependencesController();
@@ -96,17 +113,6 @@ class CogumeloClass extends Singleton {
 
   public static function get(){
     return parent::getInstance('Cogumelo');
-  }
-
-  public function __construct() {
-    $sessionCtrl = new CogumeloSessionController();
-    $sessionCtrl->prepareTokenSessionEnvironment();
-
-    /*
-    session_start();
-    global $C_SESSION_ID;
-    $C_SESSION_ID = session_id();
-    */
   }
 
   public function exec() {
@@ -125,6 +131,78 @@ class CogumeloClass extends Singleton {
     self::load('coreController/RequestController.php');
     $this->request = new RequestController($this->urlPatterns, $url_path_after_modules );
   }
+
+
+
+
+
+
+
+  public function setTimezones() {
+    $cgmlTZ = [
+      'system' => false,
+      'database' => false,
+      'project' => false
+    ];
+
+    $tzOptions = DateTimeZone::listIdentifiers();
+
+
+    // System Timezone
+    $tzName = Cogumelo::getSetupValue('date:timezone:system');
+    if( empty( $tzName ) || !in_array( $tzName, $tzOptions ) ) {
+      $tzName = 'UTC';
+    }
+    $cgmlTZ['system'] = new DateTimeZone( $tzName );
+
+
+    // Database Timezone
+    $tzName = Cogumelo::getSetupValue('date:timezone:database');
+    if( empty( $tzName ) || !in_array( $tzName, $tzOptions ) ) {
+      $tzName = 'UTC';
+    }
+    $cgmlTZ['database'] = new DateTimeZone( $tzName );
+
+
+    // Project Timezone
+    if( Cogumelo::getSetupValue('date:timezone:project') ) {
+      $tzName = Cogumelo::getSetupValue('date:timezone:project');
+    }
+    else {
+      $tzName = Cogumelo::getSetupValue('date:timezone');
+    }
+    if( empty( $tzName ) || gettype( $tzName ) !== 'string' || !in_array( $tzName, $tzOptions ) ) {
+      $tzName = 'UTC';
+    }
+    $cgmlTZ['project'] = new DateTimeZone( $tzName );
+
+
+    // PHP data Timezone = System
+    date_default_timezone_set( $cgmlTZ['system']->getName() );
+
+
+    $this->enviromentTimezones = $cgmlTZ;
+    return $cgmlTZ;
+  }
+
+
+  public static function getTimezoneSystem() {
+    $cgmlObj = self::get();
+    return $cgmlObj->enviromentTimezones['system'];
+  }
+
+  public static function getTimezoneDatabase() {
+    $cgmlObj = self::get();
+    return $cgmlObj->enviromentTimezones['database'];
+  }
+
+  public static function getTimezoneProject() {
+    $cgmlObj = self::get();
+    return $cgmlObj->enviromentTimezones['project'];
+  }
+
+
+
 
 
   public function viewUrl( $url ) {
@@ -387,59 +465,46 @@ class CogumeloClass extends Singleton {
 
 
 
+
+
+  /*
+   * INI - Setup methods. Shared with the setup files
+   */
+
+  // require_once( COGUMELO_LOCATION.'/coreClasses/coreController/SetupMethods.php' );
+  public static function getSetupMethods() {
+    if( empty( self::$setupMethods ) ) {
+      self::$setupMethods = new SetupMethods();
+    }
+    return self::$setupMethods;
+  }
+
   public static function setSetupValue( $path, $value ) {
-    // error_log( 'COGUMELO::setSetupValue: '.$path );
-    global $CGMLCONF;
-
-    if( !isset( $CGMLCONF ) || !is_array( $CGMLCONF ) ) {
-      $CGMLCONF = array(
-        'cogumelo' => array()
-      );
-    }
-
-    $parts = explode( ':', $path );
-    $stack = '';
-    foreach( $parts as $key ) {
-      $valid = false;
-      $stackPrev = $stack;
-      $stack .= '[\''.$key.'\']';
-      $fai = '$valid = isset( $CGMLCONF'. $stack .');';
-      eval( $fai );
-      if( !$valid ) {
-        $fai = '$isArray = is_array( $CGMLCONF'. $stackPrev .');';
-        eval( $fai );
-        if( $isArray ) {
-          $fai = '$CGMLCONF'. $stack .' = null;';
-          eval( $fai );
-        }
-        else {
-          $fai = '$CGMLCONF'. $stackPrev .' = array( $key => null );';
-          eval( $fai );
-        }
-      }
-    }
-    $fai = '$CGMLCONF'. $stack .' = $value;';
-    eval( $fai );
-
-    return $CGMLCONF;
+    return self::getSetupMethods()->setSetupValue( $path, $value );
   }
-
-  public static function getSetupValue( $path = '' ) {
-    // error_log( 'Cogumelo::getSetupValue: '.$path );
-    global $CGMLCONF;
-    $value = null;
-
-    $parts = explode( ':', $path );
-    $stack = ( $parts[0] === '' ) ? '' : '[\'' . implode( '\'][\'', $parts ) . '\']';
-    $fai = '$valid = isset( $CGMLCONF'. $stack .' );';
-    eval( $fai );
-    if( $valid ) {
-      $fai = '$value = $CGMLCONF'. $stack .';';
-      eval( $fai );
-    }
-
-    return $value;
+  public static function getSetupValue( $path ) {
+    return self::getSetupMethods()->getSetupValue( $path );
   }
+  public static function issetSetupValue( $path ) {
+    return self::getSetupMethods()->issetSetupValue( $path );
+  }
+  public static function createSetupValue( $path, $value ) {
+    return self::getSetupMethods()->createSetupValue( $path, $value );
+  }
+  public static function updateSetupValue( $path, $value ) {
+    return self::getSetupMethods()->updateSetupValue( $path, $value );
+  }
+  public static function addSetupValue( $path, $value ) {
+    return self::getSetupMethods()->addSetupValue( $path, $value );
+  }
+  public static function mergeSetupValue( $path, $addArray ) {
+    return self::getSetupMethods()->mergeSetupValue( $path, $addArray );
+  }
+  /*
+   * END - Setup methods. Shared with the setup files
+   */
+
+
 
 
   /**
