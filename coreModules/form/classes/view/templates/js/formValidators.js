@@ -14,7 +14,7 @@ $.validator.addMethod(
     return ( value==='' && this.optional( element ) ) || regexPatt.test( value );
   },
 
-  $.validator.format(__("A positive or negative number with {0} decimal"))
+  $.validator.format(__("A positive or negative number with {0} decimal, separated with comma"))
 );
 
 $.validator.addMethod(

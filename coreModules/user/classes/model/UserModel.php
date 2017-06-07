@@ -79,7 +79,7 @@ class UserModel extends Model
       'sql'=> '
         ALTER TABLE user_user
         ADD COLUMN hashUnknownPass VARCHAR(255),
-        ADD COLUMN hashVerifyUser VARCHAR(255)
+        ADD COLUMN hashVerifyUser VARCHAR(255);
       '
     ),
     array(
@@ -90,7 +90,7 @@ class UserModel extends Model
         MODIFY COLUMN surname VARCHAR(255),
         MODIFY COLUMN email VARCHAR(255),
         MODIFY COLUMN login VARCHAR(255),
-        MODIFY COLUMN password VARCHAR(255)
+        MODIFY COLUMN password VARCHAR(255);
       '
     ),
     array(
