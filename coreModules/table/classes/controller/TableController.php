@@ -97,6 +97,10 @@ class TableController{
   }
 
 
+  function setRowsEachPage( $rowsEachPage ) {
+    $this->clientData['range'] = array(0, $rowsEachPage );
+  }
+
   /**
   * Set table col
   *
