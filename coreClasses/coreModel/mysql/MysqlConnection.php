@@ -55,6 +55,7 @@ class MysqlConnection extends Connection
       }
       else {
           Cogumelo::debug("MYSQLI: Connection Stablished to ".Cogumelo::getSetupValue( 'db:hostname' ));
+          $this->db->set_charset("utf8");
       }
     }
   }
