@@ -560,7 +560,19 @@ function cogumeloTable( tableId, tableUrl ) {
       act = that.actionSelect.val();
 
     if( act != '0' && selectedRows.length > 0 ){
-      that.load( {action: act, keys: selectedRows}, resExt );
+
+      cogumelo.clientMsg.confirm(
+        __('Apply action "') + that.actionSelect.find('option:selected').html() + __('" on ') + selectedRows.length+ ' elements',
+        function( accion ) {
+          if( accion === true) {
+            that.load( {action: act, keys: selectedRows}, resExt );
+          }
+          else {
+            that.load();
+          }
+        }
+      );
+
     }
     else {
       that.load();
