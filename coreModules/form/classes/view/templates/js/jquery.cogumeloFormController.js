@@ -519,8 +519,8 @@ function reprocessFormErrors( idForm, failFields ) {
 
 
 function notifyFormErrors( idForm, numErrors ) {
-  if( typeof geozzy !== 'undefined' && typeof geozzy.clientMsg !== 'undefined' && typeof geozzy.clientMsg.notify !== 'undefined' ) {
-    geozzy.clientMsg.notify(
+  if( typeof geozzy !== 'undefined' && typeof cogumelo.clientMsg !== 'undefined' && typeof cogumelo.clientMsg.notify !== 'undefined' ) {
+    cogumelo.clientMsg.notify(
       __('There are errors in the form'), // + ' ('+numErrors+')',
       { notifyType: 'warning', size: 'normal', 'title': __('Warning') }
     );
