@@ -1,32 +1,32 @@
 <?php
 
 
-Cogumelo::load("coreController/Module.php");
+Cogumelo::load('coreController/Module.php');
 
-class mediaserver extends Module
-{
-  public $name = "mediaserver";
+class mediaserver extends Module {
+
+  public $name = 'mediaserver';
   public $version = 1.0;
 
   public $dependences = array(
     // COMPOSER
     array(
-      "id" => "jsmin",
-      "params" => array("linkorb/jsmin-php", "1.0.0"),
-      "installer" => "composer",
-      "includes" => array("src/jsmin-1.1.1.php")
+      'id' => 'jsmin',
+      'params' => array('linkorb/jsmin-php', '1.0.0'),
+      'installer' => 'composer',
+      'includes' => array('src/jsmin-1.1.1.php')
     ),
     array(
-      "id" => "cssmin",
-      "params" => array("natxet/CssMin", "3.0.2"),
-      "installer" => "composer",
-      "includes" => array("")
+      'id' => 'cssmin',
+      'params' => array('natxet/CssMin', '3.0.2'),
+      'installer' => 'composer',
+      'includes' => array('')
     ),
     array(
-      "id" => "cssmin",
-      "params" => array("oyejorge/less.php", "1.7.0.2"),
-      "installer" => "composer",
-      "includes" => array("lessc.inc.php")
+      'id' => 'lessmin',
+      'params' => array('oyejorge/less.php', '1.7.0.13'),
+      'installer' => 'composer',
+      'includes' => array('lessc.inc.php')
     )
   );
 
