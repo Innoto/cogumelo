@@ -1087,7 +1087,8 @@ function fileFieldToInput( idForm, fieldName ) {
 
   // console.log( $fileField );
 
-  $fileFieldWrap.find( '.fileUploadOK' ).remove();
+  // $fileFieldWrap.find( '.fileUploadOK' ).remove();
+  $fileFieldWrap.find( '.cgmMForm-fileBoxWrap' ).remove();
 
   $fileField.removeAttr( 'readonly' );
   $fileField.prop( 'disabled', false ); //$fileField.removeProp( 'disabled' );
