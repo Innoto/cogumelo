@@ -20,7 +20,7 @@ class mediaserver extends Module {
       'id' => 'cssmin',
       'params' => array('natxet/CssMin', '3.0.2'),
       'installer' => 'composer',
-      'includes' => array('')
+      'includes' => array('src/CssMin.php')
     ),
     array(
       'id' => 'lessmin',
