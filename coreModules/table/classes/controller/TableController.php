@@ -98,7 +98,18 @@ class TableController{
 
 
   function setRowsEachPage( $rowsEachPage ) {
-    $this->clientData['range'] = array(0, $rowsEachPage );
+
+    $clientdata = $_POST;
+
+    $this->rowsEachPage = $rowsEachPage;
+
+    // set ranges
+    if( $clientdata['range'] === false || $clientdata['range']==='' ){
+      $this->clientData['range'] = array(0, $rowsEachPage);
+    }
+
+
+
   }
 
   /**
@@ -558,7 +569,7 @@ class TableController{
     // doing a query to the controller
     $p = array(
         'filters' =>  $this->getFilters(),
-        'range' => $this->clientData["range"],
+        'range' => $this->clientData['range'],
         'order' => $this->orderIntoArray(),
         'affectsDependences' => $this->affectsDependences , //array('ResourceTopicModel'),
         'joinType' => $this->joinType
