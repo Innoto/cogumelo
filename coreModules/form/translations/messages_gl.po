@@ -1,0 +1,76 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2017-06-08T10:16:47+00:00\n"
+"PO-Revision-Date: 2017-06-08T10:16:47+00:00\n"
+"Language: \n"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:7
+msgid "A positive or negative decimal number please (Ej. 123,25)"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:17
+msgid "A positive or negative number with {0} decimal, separated with comma"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:27
+msgid "Please enter a value greater than or equal to {0}."
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:37
+msgid "Please enter a value less than or equal to {0}."
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:62
+msgid "The DNI format is not NNNNNNNNC"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:97
+msgid "The NIE format is not CNNNNNNNC'"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:135
+msgid "The NIF format is not CNNNNNNNC'"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:145
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:167
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:191
+msgid "Please enter a valid value"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:201
+msgid "The date format is not DD-MM-YYYY"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:212
+msgid "The date format is not YYYY-MM-DD hh:mm:ss"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:233
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:274
+msgid "The date entered is too old (> {0})"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:252
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:293
+msgid "The date entered must be oldest (> {0})"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:315
+msgid "The time entered is too old (> {0})"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:336
+msgid "The time entered must be oldest (> {0})"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:348
+msgid "The url is not a Youtube url."
+msgstr ""
