@@ -36,7 +36,10 @@ class MysqlDevelDBDAO extends MysqlDAO {
     $resultado =  array();
 
     $strSQL0 = "DROP DATABASE IF EXISTS ". Cogumelo::getSetupValue( 'db:name' ) ;
-    $strSQL1 = "CREATE DATABASE ". Cogumelo::getSetupValue( 'db:name' ) ;
+
+    $strSQL1 = "CREATE DATABASE ". Cogumelo::getSetupValue( 'db:name' ).
+      ' DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci';
+
     $strSQL2 = "GRANT ".
         "SELECT, ".
         "INSERT, ".
@@ -52,9 +55,9 @@ class MysqlDevelDBDAO extends MysqlDAO {
       "ON ". Cogumelo::getSetupValue( 'db:name' ) .".* ".
       "TO '". Cogumelo::getSetupValue( 'db:user' ) ."'@'localhost' IDENTIFIED BY '". Cogumelo::getSetupValue( 'db:password' ) ."' ";
 
-    $resultado[] = $this->execSQL($connection, $strSQL0, array() );
-    $resultado[] = $this->execSQL($connection, $strSQL1, array() );
-    $resultado[] = $this->execSQL($connection, $strSQL2, array() );
+    $resultado[] = $this->execSQL( $connection, $strSQL0, array() );
+    $resultado[] = $this->execSQL( $connection, $strSQL1, array() );
+    $resultado[] = $this->execSQL( $connection, $strSQL2, array() );
 
     return $resultado;
   }

@@ -213,13 +213,13 @@ function unbindForm( idForm ) {
 */
 
 function setSubmitElement( evnt ) {
-  console.log( 'setSubmitElement: ', evnt );
+  // console.log( 'setSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).attr('data-submit-element-name', $elem.attr('name') );
 }
 
 function unsetSubmitElement( evnt ) {
-  console.log( 'unsetSubmitElement: ', evnt );
+  // console.log( 'unsetSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).removeAttr('data-submit-element-name');
 }
@@ -358,7 +358,7 @@ function setValidateForm( idForm, rules, messages ) {
 } // function setValidateForm( idForm, rules, messages )
 
 function sendValidatedForm( form ) {
-  console.log( 'Executando sendValidatedForm...' );
+  // console.log( 'Executando sendValidatedForm...' );
 
   $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
   $( form ).find( '.submitRun' ).show();
@@ -419,8 +419,8 @@ function formDoneOk( form, response ) {
 
 
 function formDoneError( form, response ) {
-  console.log( 'formDoneError' );
-  console.log( response );
+  // console.log( 'formDoneError' );
+  // console.log( response );
 
   var idForm = $( form ).attr( 'id' );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
@@ -451,11 +451,11 @@ function formDoneError( form, response ) {
         }
         errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
       }
-      console.log( 'showErrors: ', errObj.JVshowErrors );
+      console.log( 'showErrors ('+ errObj.fieldName +'): ', errObj.JVshowErrors );
       $validateForm.showErrors( errObj.JVshowErrors );
     }
     else {
-      console.log( errObj.JVshowErrors );
+      console.log( 'showErrors: ', errObj.JVshowErrors );
       showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
     }
   } // for(var i in response.jvErrors)
@@ -466,7 +466,7 @@ function formDoneError( form, response ) {
 
 
   // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
-  console.log( 'formDoneError (FIN)' );
+  // console.log( 'formDoneError (FIN)' );
 }
 
 
@@ -476,7 +476,7 @@ function formDoneError( form, response ) {
 
 
 function reprocessFormErrors( idForm, failFields ) {
-  console.log( 'reprocessFormErrors', idForm );
+  // console.log( 'reprocessFormErrors', idForm );
   var topErrScroll = 999999;
   var numErrors = 0;
   var formMarginTop = getFormInfo( idForm, 'marginTop' );
@@ -484,7 +484,7 @@ function reprocessFormErrors( idForm, failFields ) {
   if( typeof failFields === 'undefined' ) {
     failFields = $( '.formError[form="' + idForm + '"]' );
   }
-  console.log( 'reprocessFormErrors failFields', failFields );
+  // console.log( 'reprocessFormErrors failFields', failFields );
 
   // $( '.formError[form="' + idForm + '"]' ).each( function() {
   jQuery.each( failFields, function( index, value ) {
@@ -493,11 +493,11 @@ function reprocessFormErrors( idForm, failFields ) {
     $wrap = $( '.cgmMForm-wrap.cgmMForm-field-'+$field.attr('name') );
     if( $wrap.length > 0 ) {
       topElem = $wrap.offset().top;
-      console.log( 'reprocessFormErrors WRAP ', topElem, $field.attr('name') );
+      // console.log( 'reprocessFormErrors WRAP ', topElem, $field.attr('name') );
     }
     else {
       topElem = $field.offset().top;
-      console.log( 'reprocessFormErrors FIELD ', topElem, $field.attr('name') );
+      // console.log( 'reprocessFormErrors FIELD ', topElem, $field.attr('name') );
     }
 
     if( topElem && topErrScroll > topElem ) {
@@ -510,7 +510,7 @@ function reprocessFormErrors( idForm, failFields ) {
     if( formMarginTop !== null && formMarginTop !== undefined ) {
       topErrScroll -= formMarginTop;
     }
-    console.log( 'JQV topErrScroll:', formMarginTop, topErrScroll );
+    // console.log( 'JQV topErrScroll:', formMarginTop, topErrScroll );
     $( 'html, body' ).animate( { scrollTop: topErrScroll }, 500 );
   }
 
@@ -519,8 +519,8 @@ function reprocessFormErrors( idForm, failFields ) {
 
 
 function notifyFormErrors( idForm, numErrors ) {
-  if( typeof geozzy !== 'undefined' && typeof geozzy.clientMsg !== 'undefined' && typeof geozzy.clientMsg.notify !== 'undefined' ) {
-    geozzy.clientMsg.notify(
+  if( typeof geozzy !== 'undefined' && typeof cogumelo.clientMsg !== 'undefined' && typeof cogumelo.clientMsg.notify !== 'undefined' ) {
+    cogumelo.clientMsg.notify(
       __('There are errors in the form'), // + ' ('+numErrors+')',
       { notifyType: 'warning', size: 'normal', 'title': __('Warning') }
     );
@@ -536,7 +536,7 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
 
   // Replantear!!!
 
-  console.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
+  // console.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
   var msgLabel = '<label class="formError" form="'+$form.attr( 'id' )+'">'+msgText+'</label>';
   var $msgContainer = false;
   if( msgClass !== false ) {
@@ -566,7 +566,7 @@ function inputFileFieldChange( evnt ) {
 
 
 function processFilesInputFileField( formFileObjs, idForm, fieldName ) {
-  console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
+  // console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
 
   var valid = checkInputFileField( formFileObjs, idForm, fieldName );
 
@@ -600,16 +600,19 @@ function checkInputFileField( formFileObjs, idForm, fieldName ) {
 
 
 function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
-  console.log( 'uploadFile(): ', formFileObj );
+  // console.log( 'uploadFile(): ', formFileObj );
 
   var formData = new FormData();
   formData.append( 'idForm', idForm );
   formData.append( 'fieldName', fieldName );
   formData.append( 'cgIntFrmId', cgIntFrmId );
 
-  var tnProfile = $( 'input[name="'+fieldName+'"][form="'+idForm+'"]' ).attr('data-tnProfile');
+  var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+  var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+
+  var tnProfile = $fileField.attr('data-tnProfile');
   if( typeof tnProfile === 'undefined' ) {
-    formData.append( 'tnProfile', 'modFormTn' );
+    tnProfile = 'modFormTn';
   }
   if( tnProfile ) {
     formData.append( 'tnProfile', tnProfile );
@@ -618,6 +621,8 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
   formData.append( 'ajaxFileUpload', formFileObj );
 
   $( '.'+fieldName+'-info[data-form_id="'+idForm+'"]' ).show();
+
+  $fileFieldWrap.find('.fileFieldDropZone .upload, .fileFieldDropZone .spinner').toggle();
 
   $.ajax({
     url: '/cgml-form-file-upload', type: 'POST',
@@ -662,6 +667,10 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
 
       if( $jsonData.result === 'ok' ) {
 
+        var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
+        var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+        $fileFieldWrap.find('.fileFieldDropZone .upload, .fileFieldDropZone .spinner').toggle();
+
         fileSendOk( idForm, fieldName, formFileObj, $jsonData.moreInfo );
 
         var successActions = $jsonData.success;
@@ -700,7 +709,7 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
       }
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
-      // console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
+      console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
       $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .status' ).html( 'Upload Failed (' + $textStatus + ')' );
     }
   });
@@ -774,7 +783,7 @@ function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
 
 
 function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
-  console.log( 'fileFieldGroupAddElem: ', idForm, fieldName, fileInfo );
+  // console.log( 'fileFieldGroupAddElem: ', idForm, fieldName, fileInfo );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = [];
@@ -803,7 +812,7 @@ function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
 }
 
 function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
-  console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileId, fileTempId );
+  // console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileId, fileTempId );
   var $fileField = $( 'input[name="'+fieldName+'"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = cogumelo.formController.fileGroup[ groupId ];
@@ -867,7 +876,7 @@ function fileDeleteOk( idForm, fieldName, fileId, fileTempId ) {
 
 
 function fileFieldGroupWidget( idForm, fieldName ) {
-  console.log( 'fileFieldGroupWidget: ', idForm, fieldName );
+  // console.log( 'fileFieldGroupWidget: ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = [];
@@ -888,18 +897,13 @@ function fileFieldGroupWidget( idForm, fieldName ) {
   var $fileFieldDropZone = $fileFieldWrap.find( '.fileFieldDropZone' );
   var $filesWrap = $fileFieldWrap.find('.cgmMForm-fileBoxWrap');
 
-  // TODO: temporal
-  // $fileFieldDropZone.css('background-color','yellow');
-
   if( $filesWrap.length == 1 ) {
     $filesWrap = $( $filesWrap[0] );
     $filesWrap.find('*').remove();
-    // console.log('Xa hai un filesWrap');
   }
   else {
     $filesWrap = $( '<div>' ).addClass( 'cgmMForm-fileBoxWrap clearfix' );
     $fileFieldDropZone.after( $filesWrap );
-    // console.log('Creo un filesWrap');
   }
 
   $.each( groupFiles, function(){
@@ -911,9 +915,11 @@ function fileFieldGroupWidget( idForm, fieldName ) {
 
 
 function fileFieldToOk( idForm, fieldName, fileInfo ) {
-  console.log( 'fileFieldToOk: ', idForm, fieldName, fileInfo );
+  // console.log( 'fileFieldToOk: ', idForm, fieldName, fileInfo );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+
+  var $filesWrap = $( '<div>' ).addClass( 'cgmMForm-fileBoxWrap clearfix' );
 
   $fileField.attr( 'readonly', 'readonly' ).prop( 'disabled', true ).hide();
 
@@ -928,7 +934,8 @@ function fileFieldToOk( idForm, fieldName, fileInfo ) {
     fileInfo.tnProfile = $fileField.attr('data-tnProfile');
   }
 
-  $fileFieldWrap.append( fileBox( idForm, fieldName, fileInfo, deleteFormFileEvent ) );
+  $filesWrap.append( fileBox( idForm, fieldName, fileInfo, deleteFormFileEvent ) );
+  $fileFieldWrap.append( $filesWrap );
 
   removeFileFieldDropZone( idForm, fieldName );
 }
@@ -943,9 +950,14 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
     $fileBoxElem.attr( 'data-file_tempId', fileInfo.tempId );
   }
 
+
+
+  var $fileBoxMenu = $( '<div>' ).addClass( 'fileFieldMenu' )
+    .attr( { 'data-form_id': idForm, 'data-fieldname': fieldName, 'data-file_id': fileInfo.id } );
+
   // Element to send delete order
-  $deleteButton = $( '<i>' ).addClass( 'formFileDelete fa fa-trash' )
-    .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm } )
+  var $deleteButton = $( '<i>' ).addClass( 'formFileDelete fa fa-times-circle' )
+    .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm, 'title': __('Discard')+' '+ fileInfo.name } )
     .on( 'click', deleteFunc );
   if( fileInfo.id !== false ) {
     $deleteButton.attr( 'data-file_id', fileInfo.id );
@@ -953,13 +965,36 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
   else {
     $deleteButton.attr( 'data-file_temp_id', fileInfo.tempId );
   }
-  $fileBoxElem.append( $deleteButton );
+  $fileBoxMenu.append(
+    $('<div>').addClass('icons delete').append(
+      $deleteButton
+    )
+  );
 
   // Element to download
+  var $downloadButton = null;
   if( fileInfo.id !== false ) {
-    $fileBoxElem.append( '<a class="formFileDownload" href="/cgmlformfilewd/'+fileInfo.id+'-a'+fileInfo.aKey+
-      '/'+fileInfo.name+'" target="_blank"><i class="fa fa-download"></i></a>' );
+    $downloadButton = $( '<a class="formFileDownload" href="/cgmlformfilewd/'+fileInfo.id+'-a'+fileInfo.aKey+
+      '/'+fileInfo.name+'" target="_blank"><i class="fa fa-arrow-circle-down" title="'+__('Download')+' '+fileInfo.name+'"></i></a>' );
   }
+  else {
+    $downloadButton = $( '<i class="formFileDownload disabled fa fa-arrow-circle-down"></i>' );
+  }
+  $fileBoxMenu.append(
+    $('<div>').addClass('icons download').append(
+      $downloadButton
+    )
+  );
+
+
+  var fileTextInfo = fileInfo.name;
+
+  $fileBoxMenu.append( '<div class="fileTextInfo" title="'+fileInfo.name+'">'+fileTextInfo+'</div>' );
+
+
+
+
+
 
   var tnSrc = cogumelo.publicConf.media+'/module/form/img/file.png';
 
@@ -991,6 +1026,10 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
 
   $fileBoxElem.append( '<img class="tnImage '+tnClass+'" data-tnClass="'+tnClass+'" '+
     'src="'+tnSrc+'" alt="'+fileInfo.name+'" title="'+fileInfo.name+'"></img>' );
+
+
+  $fileBoxElem.append( $fileBoxMenu );
+
 
   // loadImageTn( idForm, fieldName, fileInfo, $fileBoxElem );
 
@@ -1048,7 +1087,8 @@ function fileFieldToInput( idForm, fieldName ) {
 
   // console.log( $fileField );
 
-  $fileFieldWrap.find( '.fileUploadOK' ).remove();
+  // $fileFieldWrap.find( '.fileUploadOK' ).remove();
+  $fileFieldWrap.find( '.cgmMForm-fileBoxWrap' ).remove();
 
   $fileField.removeAttr( 'readonly' );
   $fileField.prop( 'disabled', false ); //$fileField.removeProp( 'disabled' );
@@ -1063,7 +1103,7 @@ function fileFieldToInput( idForm, fieldName ) {
 
 
 function createFileFieldDropZone( idForm, fieldName ) {
-  console.log( 'createFileFieldDropZone: ', idForm, fieldName );
+  // console.log( 'createFileFieldDropZone: ', idForm, fieldName );
 
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
@@ -1081,21 +1121,24 @@ function createFileFieldDropZone( idForm, fieldName ) {
     });
 
   $fileFieldDropZone.append(
-    '<i class="fa fa-cloud-upload" style="font-size:100px; color:#7fb1c7;"></i>'+
+    '<div class="internal">'+
+    '<i class="upload fa fa-cloud-upload" style="font-size:100px; color:#7fb1c7;"></i>'+
+    '<i class="spinner fa fa-spinner fa-pulse fa-fw" style="font-size:80px; color:#7fb1c7; margin-bottom: 20px; display:none"></i>'+
     '<br><span class="cgmMForm-button-js">' + $buttonText + '</span>'+
     // '<br><div id="list"><p>Avisos:</p></div>'+
     // '<br><input type="button" class="cgmMForm-field" value="' + $buttonText + '">'+
-    '<style>'+
-    '.cgmMForm-button-js { display: inline-block; '+
-    ' background-color: transparent; background-image: none; border: 2px solid #7fb1c7; border-radius: 2px;'+
-    ' color: #7fb1c7; cursor: pointer; font-size: 14px; font-weight: normal; line-height: 1.42857;'+
-    ' margin-bottom: 5px; padding: 5px 15px; text-align: center; text-transform: uppercase;'+
-    ' vertical-align: middle;'+ //  white-space: nowrap;
-    '}'+
-    '.cgmMForm-button-js:hover {'+
-    ' background-color: #528ba4; border: 2px solid #5497b4; color: #ffffff; text-decoration: none;'+
-    '}'+
-    '</style>'
+    // '<style>'+
+    // '.cgmMForm-button-js { display: inline-block; '+
+    // ' background-color: transparent; background-image: none; border: 2px solid #7fb1c7; border-radius: 2px;'+
+    // ' color: #7fb1c7; cursor: pointer; font-size: 14px; font-weight: normal; line-height: 1.42857;'+
+    // ' margin-bottom: 5px; padding: 5px 15px; text-align: center; text-transform: uppercase;'+
+    // ' vertical-align: middle;'+ //  white-space: nowrap;
+    // '}'+
+    // '.cgmMForm-button-js:hover {'+
+    // ' background-color: #528ba4; border: 2px solid #5497b4; color: #ffffff; text-decoration: none;'+
+    // '}'+
+    // '</style>'+
+    '</div>'
   );
 
   $fileFieldWrap.append( $fileFieldDropZone );
@@ -1118,7 +1161,7 @@ function createFileFieldDropZone( idForm, fieldName ) {
 }
 
 function removeFileFieldDropZone( idForm, fieldName ) {
-  console.log( 'removeFileFieldDropZone: ', idForm, fieldName );
+  // console.log( 'removeFileFieldDropZone: ', idForm, fieldName );
 
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
@@ -1127,13 +1170,13 @@ function removeFileFieldDropZone( idForm, fieldName ) {
 }
 
 function fileFieldDropZoneDrop( evnt ) {
-  console.log( 'fileFieldDropZoneDrop() ', evnt );
+  // console.log( 'fileFieldDropZoneDrop() ', evnt );
 
   evnt.stopPropagation();
   evnt.preventDefault();
 
   var files = evnt.dataTransfer.files; // FileList object.
-  console.log( 'fileFieldDropZoneDrop files: ', files );
+  // console.log( 'fileFieldDropZoneDrop files: ', files );
 
   var $fileFieldDropZone = $( evnt.target ).closest( '.fileFieldDropZone' );
   var idForm = $fileFieldDropZone.data( 'form_id' );

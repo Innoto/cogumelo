@@ -22,7 +22,7 @@ class CacheUtilsController {
 
         $path = str_replace($tmpLessDir, '' , $lessFilePath );
 
-        if( mb_substr( $path , 0,7) == 'classes' ) {
+        if( mb_substr( $path , 0,7) === 'classes' ) {
           $moduleName = false;
           $relativeFilePath = str_replace('classes/view/templates/', '', $path);
         }
@@ -33,7 +33,7 @@ class CacheUtilsController {
           $relativeFilePath = str_replace($moduleName.'/classes/view/templates/', '', $path);
         }
 
-        $mediaserverControl->compileAndCacheLes( $relativeFilePath  , $moduleName);
+        $mediaserverControl->compileAndCacheLess( $relativeFilePath  , $moduleName);
 
       }
     }

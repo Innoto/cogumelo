@@ -15,7 +15,7 @@ class devel extends Module {
      "id" => "jquery",
      "params" => array("jQuery#2.2"),
      "installer" => "bower",
-     "includes" => array("dist/jquery.js")
+     "includes" => array("dist/jquery.min.js")
    ),
 
    array(
@@ -28,7 +28,7 @@ class devel extends Module {
      "id" =>"d3",
      "params" => array("d3#v3.0.6"),
      "installer" => "bower",
-     "includes" => array("d3.js")
+     "includes" => array("d3.min.js")
    ),
    array(
      "id" =>"webcola",

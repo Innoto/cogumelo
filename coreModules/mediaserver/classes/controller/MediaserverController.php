@@ -7,6 +7,14 @@ class MediaserverController {
   var $urlPath = false;
   var $moduleName = false;
   var $modulePath = '';
+  private $minimify = false;
+
+  public function __construct() {
+    $productionMode = Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' );
+    $minimifyFiles = Cogumelo::getSetupValue( 'mod:mediaserver:minimifyFiles' );
+    $this->minimify = ( $productionMode === true ) && ( $minimifyFiles === true );
+  }
+
 
 
   public function cacheContent( $path, $module, $doNotRedirect = false ) {
@@ -18,35 +26,37 @@ class MediaserverController {
 
     if( !file_exists( $this->realFilePath ) && !$doNotRedirect ) {
       if(!$doNotRedirect) {
-        RequestController::redirect(SITE_URL_CURRENT.'/404');
+        // RequestController::redirect(SITE_URL_CURRENT.'/404');
+        RequestController::httpError404();
       }
     }
 
-    if( mb_substr($this->urlPath, -4) == '.tpl' ||
-        mb_substr($this->urlPath, -4) == '.php' ||
-        mb_substr($this->urlPath, -4) == '.inc'
+    if( mb_substr($this->urlPath, -4) === '.tpl' ||
+        mb_substr($this->urlPath, -4) === '.php' ||
+        mb_substr($this->urlPath, -4) === '.inc'
       ) {
 
       Cogumelo::error('trying to load( '.$this->urlPath.' ), but not allowed to serve .tpl .php or .inc files ');
       if(!$doNotRedirect) {
-        RequestController::redirect(SITE_URL_CURRENT.'/404');
+        // RequestController::redirect(SITE_URL_CURRENT.'/404');
+        RequestController::httpError404();
       }
     }
     else {
-      $this->copyAndMoveFile();
+      $this->copyAndMoveFile( $this->minimify );
     }
   }
 
 
-  public function compileAndCacheLes( $path, $module ) {
+  public function compileAndCacheLess( $path, $module ) {
     $parsedUrl = parse_url($path);
     $this->urlPath = $parsedUrl['path'];
     $this->moduleName = $module;
     $this->realFilePath = ModuleController::getRealFilePath('classes/view/templates/'.$this->urlPath, $this->moduleName);
     $this->modulePath = ( $this->moduleName )? '/module/'.$this->moduleName.'/' : '' ;
 
-    if( mb_substr($this->urlPath, -5) == '.less' ) {
-      $this->compileAndMoveLessFile();
+    if( mb_substr($this->urlPath, -5) === '.less' ) {
+      $this->compileAndMoveLessFile( $this->minimify );
     }
   }
 
@@ -72,10 +82,9 @@ class MediaserverController {
 
   /*
   * Copy files to tmp path and move it to final path
-  * @var boolean $minify: if we want to minify result
+  * @var boolean $minimify: if we want to minimify result
   */
-  public function copyAndMoveFile( $minify = false ) {
-
+  public function copyAndMoveFile( $minimify = false ) {
     $tmp_cache = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ) .'/'. $this->modulePath . $this->urlPath;
     $final_cache = WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) .'/'. $this->modulePath . $this->urlPath;
 
@@ -83,12 +92,12 @@ class MediaserverController {
       // create tmp folder
       $this->createDirPath( $tmp_cache );
 
-      if( !$minify ) {
+      if( !$minimify ) {
         // copy to tmp path
         copy( $this->realFilePath, $tmp_cache );
       }
       else {
-        $this->minifyCopy( $this->realFilePath, $tmp_cache );
+        $this->minimifyCopy( $this->realFilePath, $tmp_cache );
       }
 
       // create final folder
@@ -107,9 +116,9 @@ class MediaserverController {
 
   /*
   * Compile and move compiled less to final path
-  * @var boolean $minify: if we want to minify result
+  * @var boolean $minimify: if we want to minimify result
   */
-  public function compileAndMoveLessFile( $minify = false ) {
+  public function compileAndMoveLessFile( $minimify = false ) {
 
     $lessControl = new LessController();
     $tmp_cache = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ) .'/'. $this->modulePath . $this->urlPath.'.css';
@@ -117,6 +126,10 @@ class MediaserverController {
 
     // create tmp folder
     $this->createDirPath( $tmp_cache );
+
+    if( $minimify ) {
+      $lessControl->setMinimify( true );
+    }
 
     if( $lessControl->compile( $this->urlPath, $tmp_cache, $this->moduleName ) ) {
       // create final folder
@@ -185,10 +198,10 @@ class MediaserverController {
   /*
   * Copy with Minimify css or js files using lib https://github.com/nitra/PhpMin/tree/master
   * @return void
-  * @var string $fromPath: the path of file to minify
-  * @var string $toPath: the path to copy minify file
+  * @var string $fromPath: the path of file to minimify
+  * @var string $toPath: the path to copy minimify file
   */
-  public function minifyCopy( $fromPath, $toPath ) {
+  public function minimifyCopy( $fromPath, $toPath ) {
 
     $filters = array(
       "RemoveComments" => true
@@ -196,21 +209,21 @@ class MediaserverController {
 
     $type = false;
 
-    if( mb_substr($fromPath, -4) == '.css' ) {
+    if( mb_substr($fromPath, -4) === '.css' ) {
       $type = 'css';
     }
-    else if( mb_substr($fromPath, -3) == '.js' ) {
+    else if( mb_substr($fromPath, -3) === '.js' ) {
       $type = 'js';
     }
 
-    if($type == 'js'){
+    if($type === 'js'){
       file_put_contents(
         $toPath,
         JSMin::minify( file_get_contents( $fromPath ), $filters ),
         LOCK_EX
       );
     }
-    else if($type == 'css') {
+    elseif($type === 'css') {
       file_put_contents(
         $toPath,
         CssMin::minify( file_get_contents( $fromPath ), $filters ),
