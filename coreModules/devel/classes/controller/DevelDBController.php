@@ -25,7 +25,7 @@ class  DevelDBController {
 
 
   public generateModel() {
-    
+
   }
 
   public deploy() {
@@ -115,10 +115,20 @@ class  DevelDBController {
 
 
   public function getModules() {
+    global $C_ENABLED_MODULES;
+    $retModules = [];
+    foreach( $C_ENABLED_MODULES as $moduleName ) {
+      if( $moduleName != 'devel' ) {
+        require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+        eval('$retModules[] = ' . $moduleName .';';
+      }
+    }
 
+    return $retModules;
   }
 
   public function getModelsInModule( $module ) {
+    VOUtils::listVOsByModule( $module );
 
   }
 

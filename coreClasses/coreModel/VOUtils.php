@@ -17,15 +17,26 @@ class VOUtils {
   * @return array
   */
   public static function listVOs() {
-    $voarray = array();
 
     // VOs into APP
-    $voarray = self::mergeVOs($voarray, APP_BASE_PATH.'/classes/model/' ); // scan app model dir
+    $voarray = self::listVOsByModule('app');
 
     global $C_ENABLED_MODULES;
     foreach( $C_ENABLED_MODULES as $modulename ) {
       // modules into APP
+      $voarray = array_merge( $voarray, self::listVOsByModule($modulename) );
+    }
 
+    return $voarray;
+  }
+
+  public static function listVOsByModule( $modulename ) {
+    $voarray = [];
+
+    if( $modulename === 'app') {
+      $voarray = self::mergeVOs( [], APP_BASE_PATH.'/classes/model/' ); // scan app model dir
+    }
+    else {
       $voarray = self::mergeVOs($voarray, APP_BASE_PATH.'/modules/'.$modulename.'/classes/model/', $modulename );
       // modules into DIST
       $voarray = self::mergeVOs($voarray, COGUMELO_DIST_LOCATION.'/distModules/'.$modulename.'/classes/model/', $modulename );
