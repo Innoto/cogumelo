@@ -127,13 +127,27 @@ class  DevelDBController {
     return $retModules;
   }
 
-  public function getModelsInModule( $module ) {
-    VOUtils::listVOsByModule( $module );
 
+
+  public function getModelsInModule( $module ) {
+
+    $retArray = []
+    if( $module !== 'devel') {
+
+      $retArray = VOUtils::listVOsByModule( $module );
+    }
+
+    return $retArray;
   }
 
-  public function dropAllTables() {
 
+
+  public function dropAllTables() {
+    $modulos = $this->getModules();
+
+    foreach( $modulos as $modulo ) {
+
+    }
   }
 
 
