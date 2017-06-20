@@ -9,10 +9,6 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
-#: /home/proxectos/cogumelo/coreModules/testmodule/classes/view/templates/js/test.js:1
-msgid "no js"
-msgstr ""
-
-#: /home/proxectos/cogumelo/coreModules/testmodule/testmodule.php:32
-msgid "traduceme esto se tes valor"
-msgstr ""
+#: /home/proxectos/geozzy/distModules/rextUserProfile/classes/controller/RExtUserProfileController.php:49
+msgid "User"
+msgstr "Usuario"
