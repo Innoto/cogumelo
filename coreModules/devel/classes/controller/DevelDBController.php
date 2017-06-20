@@ -146,6 +146,13 @@ class  DevelDBController {
     $modulos = $this->getModules();
 
     foreach( $modulos as $modulo ) {
+      $models = $this->getModelsInModule($modulo);
+       if( sizeof($models)>0 ) {
+         foreach($models as $voKey=>$vo) {
+           $this->VOdropTable( get_class(new $voKey()) );
+         }
+
+       }
 
     }
   }
