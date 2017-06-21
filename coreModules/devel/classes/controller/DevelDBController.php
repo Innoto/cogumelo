@@ -24,14 +24,45 @@ class  DevelDBController {
   }
 
 
-  public generateModel() {
-
+  public scriptGenerateModel() {
+    // Borrar todas as táboas
+    // Forzar creación de ModelRegister e ModuleRegister
+    $this->deploy();
   }
 
-  public deploy() {
-
+  public scriptDeploy() {
+    // first time deploy
+    if( modelRegister non existe ) {
+      //crear modelRegister
+      //actualiza todas as versións
+    }
+    else {
+      $this->deploy();
+    }
   }
 
+
+  private function deploy() {
+    $modules = $this->getModules();
+    foreach( $modules as $module ) {
+
+      if( modulo rexistrado ) {
+        // rc de módulo
+      }
+      else {
+        // deploy de módulo
+      }
+
+      foreach( $this->getModelsInModule() as $model ) {
+         if( modelo rexistrado ) {
+           // rc modelo
+         }
+         else {
+           // deploy modelo
+         }
+      }
+    }
+  }
 
   private function setNoExecutionMode() {
     $this->noExecute = true;
@@ -50,11 +81,6 @@ class  DevelDBController {
     $this->data->dropTable( $voKey, $this->noExecute );
   }
 
-  public function VORCDeploys( $voKey ) {
-
-  }
-
-
   public function VOgetDeploys( $voKey, $paramFilters = [] ) {
 
     $deploys = [];
@@ -63,7 +89,7 @@ class  DevelDBController {
       'onlyRC' => false,
       'from' => false, // get from version
       'to' => false // get To version
-    ]
+    ];
 
     $filters = array_merge( $f, $paramFilters);
 
