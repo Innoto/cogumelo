@@ -23,18 +23,22 @@ class  DevelDBController {
     }
   }
 
+  private function setNoExecutionMode() {
+    $this->noExecute = true;
+  }
 
   public scriptGenerateModel() {
-    // Borrar todas as táboas
-    // Forzar creación de ModelRegister e ModuleRegister
+    $this->dropAllTables();
+    $this->VOcreateTable( ModelRegister );
+    $this->VOcreateTable( ModelRegisterModel );
     $this->deploy();
   }
 
   public scriptDeploy() {
     // first time deploy
-    if( modelRegister non existe ) {
-      //crear modelRegister
-      //actualiza todas as versións
+    if( $this->VOTableExist( ModelRegisterModel ) ) {
+      $this->VOcreateTable( ModelRegisterModel );
+      //forzar actualizar todas as versións
     }
     else {
       $this->deploy();
@@ -64,17 +68,12 @@ class  DevelDBController {
     }
   }
 
-  private function setNoExecutionMode() {
-    $this->noExecute = true;
+  public function VOTableExist( $voClass ) {
+    $this->data->checkTableExist( $voClass );
   }
 
-  public function VOTableExist( $vo ) {
-
-    return true ou false;
-  }
-
-  public function VOcreateTable( $voKey ) {
-    $this->data->createTable( $voKey, $this->noExecute );
+  public function VOcreateTable( $voClass ) {
+    $this->data->createTable( $voClass, $this->noExecute );
   }
 
   private function VOdropTable( $voKey ) {
