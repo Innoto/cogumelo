@@ -38,6 +38,7 @@ class  DevelDBController {
     // first time deploy
     if( $this->VOTableExist( ModelRegisterModel ) ) {
       $this->VOcreateTable( ModelRegisterModel );
+      ModuleRegisterModel::$NewDeploysSQLChangeColumns;
       //forzar actualizar todas as versións
     }
     else {
@@ -59,10 +60,12 @@ class  DevelDBController {
 
       foreach( $this->getModelsInModule() as $model ) {
          if( modelo rexistrado ) {
-           // rc modelo
+           // rc model
+           $this->VOgetDeploys( $model, ['onlyRC'=>true] );
          }
          else {
            // deploy modelo
+
          }
       }
     }

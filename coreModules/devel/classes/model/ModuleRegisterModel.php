@@ -19,10 +19,10 @@ class ModuleRegisterModel extends Model {
       'size' => 100
     ),
     'firstVersion' => array(
-      'type' => 'FLOAT'
+      'type' => 'VARCHAR'
     ),
     'deployVersion' => array(
-      'type' => 'FLOAT'
+      'type' => 'VARCHAR'
     )
   );
 
@@ -32,4 +32,6 @@ class ModuleRegisterModel extends Model {
   public function __construct( $datarray = array(), $otherRelObj = false ) {
     parent::__construct( $datarray, $otherRelObj );
   }
+
+
 }

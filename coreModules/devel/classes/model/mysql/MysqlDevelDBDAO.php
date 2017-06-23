@@ -63,11 +63,22 @@ class MysqlDevelDBDAO extends MysqlDAO {
   }
 
 
+  public function safeExecSQL(  $connection, $strSQL, $noExecute = false ) {
+    $retSQL = false;
+    if( $noExecute === false) {
+      $this->execSQL( $connection, $strSQL0, array() );
+    }
+    else {
+      echo $retSQL;
+    }
 
-  public function dropTable( $connection, $vo_name, $exec = true ) {
+  }
+
+
+  public function dropTable( $connection, $vo_name, $noExecute = false  ) {
     $ret = false;
 
-    if( $exec ) {
+    if( $noExecute === false ) {
       $this->execSQL( $connection, $this->getDropSQL( $connection, $vo_name ) , array() );
     }
     else {
@@ -78,10 +89,10 @@ class MysqlDevelDBDAO extends MysqlDAO {
   }
 
 
-  public function createTable( $connection, $vo_name, $exec = true ) {
+  public function createTable( $connection, $vo_name, $noExecute = false ) {
     $ret = false;
 
-    if( $exec ) {
+    if( $noExecute === false ) {
       $this->execSQL( $connection, $this->getTableSQL( $connection, $vo_name ), array() );
     }
     else {
@@ -101,9 +112,6 @@ class MysqlDevelDBDAO extends MysqlDAO {
     }
   }
 
-  public function aditionalExec( $connection, $strSQL ) {
-    return $this->rawExecSQL( $connection, $strSQL, array() );
-  }
 
 
   // Sql generation methods

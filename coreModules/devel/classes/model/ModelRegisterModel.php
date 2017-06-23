@@ -19,12 +19,14 @@ class ModelRegisterModel extends Model {
       'size' => 100
     ),
     'firstVersion' => array(
-      'type' => 'FLOAT'
+      'type' => 'VARCHAR'
     ),
     'deployVersion' => array(
-      'type' => 'FLOAT'
+      'type' => 'VARCHAR'
     )
   );
+
+  static $NewDeploysSQLChangeColumns = "ALTER TABLE model_registers ALTER COLUMN firstVersion VARCHAR;ALTER TABLE model_registers ALTER COLUMN deployVersion VARCHAR;";
 
   static $extraFilters = array();
 
