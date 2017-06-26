@@ -280,7 +280,7 @@ class UserView extends View
     $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => __('New password') ) );
     $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => __('Repeat password') ) );
 
-    $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
+    $form->setField( 'submit', array( 'type' => 'submit', 'value' => __('Save') ) );
 
     /******************************************************************************************** VALIDATIONS */
 
@@ -345,7 +345,7 @@ class UserView extends View
       'options'=> $rolesCheck
     ));
     $form->setValidationRule( 'checkroles', 'required' );
-    $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
+    $form->setField( 'submit', array( 'type' => 'submit', 'value' => __('Save') ) );
 
     return $form;
   }
