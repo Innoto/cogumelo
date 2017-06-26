@@ -27,14 +27,14 @@ class  DevelDBController {
     $this->noExecute = true;
   }
 
-  public scriptGenerateModel() {
+  public function scriptGenerateModel() {
     $this->dropAllTables();
     $this->VOcreateTable( ModelRegister );
     $this->VOcreateTable( ModelRegisterModel );
     $this->deploy();
   }
 
-  public scriptDeploy() {
+  public function scriptDeploy() {
     // first time deploy
     if( $this->VOTableExist( ModelRegisterModel ) ) {
       $this->VOcreateTable( ModelRegisterModel );
@@ -50,23 +50,23 @@ class  DevelDBController {
   private function deploy() {
     $modules = $this->getModules();
     foreach( $modules as $module ) {
-
+/*
       if( modulo rexistrado ) {
         // rc de módulo
       }
       else {
         // deploy de módulo
-      }
+      }*/
 
       foreach( $this->getModelsInModule() as $model ) {
-         if( modelo rexistrado ) {
+         /*if( modelo rexistrado ) {
            // rc model
            $this->VOgetDeploys( $model, ['onlyRC'=>true] );
          }
          else {
            // deploy modelo
 
-         }
+         }*/
       }
     }
   }
@@ -119,7 +119,7 @@ class  DevelDBController {
         if(
           $deployElement !== false &&
           $filters['from'] !== false &&
-          $this->compareDeployVersions( $d['version'], $deployElement['from'] ) > 0 // -1: $v1 < $v2 0:Equal 1: $v1 > $v2
+          $d['version'] < $deployElement['from']
         ) {
           $deployElement = false; //exclude
         }
@@ -127,7 +127,7 @@ class  DevelDBController {
         if(
           $deployElement !== false &&
           $filters['to'] !== false &&
-          $this->compareDeployVersions( $d['version'], $deployElement['from'] ) < 0 )  // -1: $v1 < $v2 0:Equal 1: $v1 > $v2
+          $d['version'] < $deployElement['from']
         ) {
           $deployElement = false; //exclude
         }
@@ -148,7 +148,7 @@ class  DevelDBController {
     foreach( $C_ENABLED_MODULES as $moduleName ) {
       if( $moduleName != 'devel' ) {
         require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-        eval('$retModules[] = ' . $moduleName .';';
+        eval('$retModules[] = ' . $moduleName .';');
       }
     }
 
@@ -159,9 +159,8 @@ class  DevelDBController {
 
   public function getModelsInModule( $module ) {
 
-    $retArray = []
+    $retArray = [];
     if( $module !== 'devel') {
-
       $retArray = VOUtils::listVOsByModule( $module );
     }
 
@@ -196,7 +195,7 @@ class  DevelDBController {
       foreach( $deploys as $dK=>$d ) {
 
         // $lowerVal['version'] lower than $d['version']
-        if( $this->compareDeployVersions( $lowerVal['version'], $d['version'] ) < 0 ) {
+        if( $lowerVal['version'] < $d['version'] ) {
           $lowerKey = $dK;
           $lowerVal = $d;
         }
@@ -209,7 +208,7 @@ class  DevelDBController {
     return $retDeploys;
   }
 
-
+/*
   private function compareDeployVersions( $v1, $v2 ) {
 
     reg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $v1, $v1Matches );
@@ -246,6 +245,6 @@ class  DevelDBController {
     return $ret; // -1: $v1 < $v2 0:Equal 1: $v1 > $v2
   }
 
-
+*/
 
 }
