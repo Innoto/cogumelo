@@ -4,6 +4,7 @@
 class LessController {
 
   var $less = false;
+  private $minimify = false;
 
   public function __construct() {
     // $this->less = new lessc();
@@ -32,6 +33,9 @@ class LessController {
     // set less variables (Defined in setup)
     $this->less->setVariables( $this->getLessVarsFromSetup() ) ;
 
+    if( $this->minimify ) {
+      $this->less->setFormatter('compressed');
+    }
 
     try {
       $this->less->checkedCompile( $lessTmpDir.$moduleName.'/classes/view/templates/'.$lessFilePath, $resultFilePath );
@@ -43,6 +47,9 @@ class LessController {
     return $ret;
   }
 
+  public function setMinimify( $status = true ) {
+    $this->minimify = !empty( $status );
+  }
 
   public function getLessVarsFromSetup() {
     $lessVars = array();

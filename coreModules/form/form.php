@@ -5,7 +5,6 @@ Cogumelo::load( 'coreController/Module.php' );
 
 class form extends Module {
 
-
   public $name = 'form';
   public $version = 1.0;
   public $dependences = array(
@@ -13,7 +12,7 @@ class form extends Module {
       'id' => 'jquery-validation',
       'params' => array( 'jquery-validate#1.14' ),
       'installer' => 'bower',
-      'includes' => array( 'dist/jquery.validate.js', 'dist/additional-methods.js' )
+      'includes' => [ 'dist/jquery.validate.min.js', 'dist/additional-methods.min.js' ]
     ),
     array(
       'id' =>'ckEditorFix',

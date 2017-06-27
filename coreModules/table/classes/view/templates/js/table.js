@@ -32,6 +32,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.resumeFilters = $('.'+tableId+'.tableContainer .tableResumeFilters');
   that.tableContent = $('.'+tableId+'.tableContainer .tableClass');
   that.tabsContent = $('.'+tableId+'.tableContainer .tableFilters select');
+  that.totalRows = $('.'+tableId+'.tableContainer .tablePaginator  .totalRows');
   that.pagersTotal = $('.'+tableId+'.tableContainer .tablePaginator .tablePage .totalPages');
   that.pagersCurrent = $('.'+tableId+'.tableContainer .tablePaginator .tablePage input');
   that.headTableCheckBoxQstr = '.'+tableId+'.tableContainer .tableClass .headCheckBox';
@@ -408,6 +409,10 @@ function cogumeloTable( tableId, tableUrl ) {
     var mustReload = false;
     var maxPage = 1;
 
+
+
+
+
     if( that.tableData.totalRows > that.tableData.rowsEachPage ){
       maxPage = Math.ceil( that.tableData.totalRows / that.tableData.rowsEachPage );
     }
@@ -420,6 +425,9 @@ function cogumeloTable( tableId, tableUrl ) {
         that.currentPage = page;
       }
     }
+
+
+    that.totalRows.html( that.tableData.totalRows );
 
     that.pagersTotal.html( maxPage );
     that.pagersCurrent.val( that.currentPage );
@@ -552,7 +560,19 @@ function cogumeloTable( tableId, tableUrl ) {
       act = that.actionSelect.val();
 
     if( act != '0' && selectedRows.length > 0 ){
-      that.load( {action: act, keys: selectedRows}, resExt );
+
+      cogumelo.clientMsg.confirm(
+        __('Apply action "') + that.actionSelect.find('option:selected').html() + __('" on ') + selectedRows.length+ ' elements',
+        function( accion ) {
+          if( accion === true) {
+            that.load( {action: act, keys: selectedRows}, resExt );
+          }
+          else {
+            that.load();
+          }
+        }
+      );
+
     }
     else {
       that.load();

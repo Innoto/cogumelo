@@ -293,7 +293,7 @@ class Template extends Smarty {
     // generate the javascript include call
     $coma = '';
     foreach( $itemsToInclude as $include ) {
-      $html .= "\t".$coma.str_replace('\\/', '/', json_encode( $include ) ) . " \n";
+      $html .= '  '.$coma.str_replace('\\/', '/', json_encode( $include ) ) . "\n";
       $coma=',';
     }
 
@@ -478,13 +478,14 @@ class Template extends Smarty {
 
       $mainClientIncludes = "\n";
       // Basic includes and includers
-      $mainClientIncludes .= '<script type="text/javascript" src="'.$this->cgmMediaserverHost.'vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
-      $mainClientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
+      $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://rsvpjs-builds.s3.amazonaws.com/rsvp-latest.min.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
-      $mainClientIncludes .= '<script type="text/javascript" src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
+
+      $mainClientIncludes .= '<script src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
+      $mainClientIncludes .= '<script src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
     //  $mainClientIncludes .= $this->getClientStylesHtml();
 
 
@@ -498,28 +499,25 @@ class Template extends Smarty {
 
 
       $clientIncludes = "\n";
-
-
-
-      $clientIncludes .= "\t<script>\n";
+      $clientIncludes .= "<script>\n";
 
       // LOCALSTORAGE CLEAR AFTER X MINUTES
-      $clientIncludes .= "\t if(typeof Storage !== 'undefined') { \n";
-      $clientIncludes .= "\t   var cogumeloLocalStorageLastUpdate = localStorage.getItem('cogumeloLocalStorageLastUpdate');\n";
-      $clientIncludes .= "\t   var currentTimestamp = new Date().getTime();\n";
-      $clientIncludes .= "\t   var localStorageMaxTime = ".  1000 * 60 * Cogumelo::getSetupValue( 'clientLocalStorage:lifetime' ) .";\n";
+      $clientIncludes .= "if(typeof Storage !== 'undefined') {\n";
+      $clientIncludes .= "  var cogumeloLocalStorageLastUpdate = localStorage.getItem('cogumeloLocalStorageLastUpdate');\n";
+      $clientIncludes .= "  var currentTimestamp = new Date().getTime();\n";
+      $clientIncludes .= "  var localStorageMaxTime = ".  1000 * 60 * Cogumelo::getSetupValue( 'clientLocalStorage:lifetime' ) .";\n";
 
-      $clientIncludes .= "\t   if( cogumeloLocalStorageLastUpdate ) {  \n";
-      $clientIncludes .= "\t      if( (currentTimestamp-cogumeloLocalStorageLastUpdate) > localStorageMaxTime ){ \n";
-      $clientIncludes .= "\t         localStorage.clear(); console.log('Cogumelo: Cleaning Localstorage data') \n";
-      $clientIncludes .= "\t         localStorage.setItem('cogumeloLocalStorageLastUpdate', currentTimestamp );  \n";
-      $clientIncludes .= "\t      }  \n";
-      $clientIncludes .= "\t   }  \n";
-      $clientIncludes .= "\t   else { localStorage.setItem('cogumeloLocalStorageLastUpdate', currentTimestamp ); }  \n";
-      $clientIncludes .= "\t } \n";
+      $clientIncludes .= "  if( cogumeloLocalStorageLastUpdate ) {\n";
+      $clientIncludes .= "    if( (currentTimestamp-cogumeloLocalStorageLastUpdate) > localStorageMaxTime ){\n";
+      $clientIncludes .= "      localStorage.clear(); console.log('Cogumelo: Cleaning Localstorage data')\n";
+      $clientIncludes .= "      localStorage.setItem('cogumeloLocalStorageLastUpdate', currentTimestamp );\n";
+      $clientIncludes .= "    }\n";
+      $clientIncludes .= "  }\n";
+      $clientIncludes .= "  else { localStorage.setItem('cogumeloLocalStorageLastUpdate', currentTimestamp ); }\n";
+      $clientIncludes .= "}\n";
 
       // AJAX PRESET
-      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
+      $clientIncludes .= "".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
       $clientIncludes .= '$.holdReady( true );'."\n";
       //if( !$this->cgmMediaserverCompileLess ) {
       if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false || (Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === true &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) == true ) ) {
@@ -533,23 +531,31 @@ class Template extends Smarty {
       else {
         $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
       }
-      $clientIncludes .= "\t</script>\n\n\n";
+      $clientIncludes .= "</script>\n\n\n";
 
 
+      // Hasta ahora era Script
+      $clientIncludesScript = $clientIncludes;
 
-      $clientIncludes .= $this->getClientStylesHtml();
+
+      // Ahora vamos con Styles
+      $clientIncludesStyles = "\n" . $this->getClientStylesHtml();
       if( !$this->cgmMediaserverCompileLess ) {
-        $clientIncludes .= '<script> less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
+        $clientIncludesStyles .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
           ' globalVars: { '.$lessGlobalVarsJs.' }, render: function(){}, '.
           ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
           '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
-          '<script type="text/javascript"> if(typeof less.pageLoadFinished != "undefined"){ less.pageLoadFinished.then( function() { $.holdReady( false );} )}  </script>';
+          '<script type="text/javascript"> if(typeof less.pageLoadFinished != "undefined"){ '.
+            ' less.pageLoadFinished.then( function() { $.holdReady( false );} ) }</script>'."\n";
       }
 
 
+      // Mezclamos Script y Styles
+      $clientIncludes .= $clientIncludesStyles;
 
 
-
+      $this->assign( 'client_includes_only_scripts', $clientIncludesScript );
+      $this->assign( 'client_includes_only_styles', $clientIncludesStyles );
 
 
       $this->assign( 'client_includes', $clientIncludes );
@@ -600,9 +606,9 @@ class Template extends Smarty {
       // assign
       $clientIncludes = "\n";
 
-      $clientIncludes .= "\t<script>\n";
+      $clientIncludes .= "<script>\n";
 
-      $clientIncludes .= "\t".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
+      $clientIncludes .= "".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
 
 
       $clientIncludes .= '$.holdReady( true );'."\n";
@@ -613,7 +619,22 @@ class Template extends Smarty {
       $clientIncludes .= 'basket.require('. "\n";
       $clientIncludes .= $this->getClientScriptHtml() ;
       $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
-      $clientIncludes .= "\t</script>\n\n\n";
+      $clientIncludes .= "</script>\n\n\n";
+
+
+
+
+      // Hasta ahora era Script
+      $clientIncludesScript = $clientIncludes;
+
+
+      // Ahora vamos con Styles
+      $clientIncludesStyles =  '';
+
+
+      $this->assign( 'client_includes_only_scripts', $clientIncludesScript );
+      $this->assign( 'client_includes_only_styles', $clientIncludesStyles );
+
 
 
       $this->assign( 'client_includes',  $clientIncludes );

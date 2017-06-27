@@ -67,7 +67,12 @@ class TableView {
         </select>
         <!-- Paginador -->
         <div class="tablePaginator">
-          <div class="tablePage"><input type="text" value="1"> de <span class="totalPages">1</span></div>
+          <div class="totalElements">
+            <span class="totalRows">0</span> elements
+          </div>
+          <div class="tablePage">
+            <span>Page: <input type="text" value="1"> of <span class="totalPages">1</span></span>
+          </div>
           <div class="tablePreviousPage"><img src="'.Cogumelo::getSetupValue('publicConf:vars:media').'/module/table/img/a-left.png" alt="previous page"></div>
           <div class="tableNextPage"><img src="'.Cogumelo::getSetupValue('publicConf:vars:media').'/module/table/img/a-right.png" alt="next page"></div>
         </div>
@@ -80,7 +85,12 @@ class TableView {
     </table>
     <!-- Paginador -->
     <div class="tablePaginator ">
-      <div class="tablePage"><input type="text" value="1"> de <span class="totalPages">1</span></div>
+      <div class="totalElements">
+        <span class="totalRows">0</span> elements
+      </div>
+      <div class="tablePage">
+        <span>Page: <input type="text" value="1"> of <span class="totalPages">1</span></span>
+      </div>
       <div class="tablePreviousPage"><img src="'.Cogumelo::getSetupValue('publicConf:vars:media').'/module/table/img/a-left.png" alt="previous page"></div>
       <div class="tableNextPage"><img src="'.Cogumelo::getSetupValue('publicConf:vars:media').'/module/table/img/a-right.png" alt="next page"></div>
     </div>

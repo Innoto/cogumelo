@@ -28,7 +28,7 @@ class GetTranslations extends View
     $json_path = Cogumelo::getSetupValue( 'i18n:localePath' ).'/'.$lang.'/LC_MESSAGES/translation.json';
 
     if (file_exists($json_path)){
-      header( 'application/javascript' );
+      header('Content-Type: application/javascript');
       $json = file_get_contents($json_path);
       $res = 'var jsonTraduccions='.$json.';
         function __(cadea){

@@ -2,10 +2,11 @@
 
 Cogumelo::load("coreController/Module.php");
 
-class common extends Module
-{
+class common extends Module {
+
   public $name = "common";
   public $version = 1.0;
+  public $autoIncludeAlways = true;
 
   public $dependences = array(
    array(
@@ -13,15 +14,23 @@ class common extends Module
      "params" => array("less"),
      "installer" => "bower",
      "includes" => array()
+   ),
+   array(
+     'id' =>'lobibox',
+     'params' => [ 'lobibox' ],
+     'installer' => 'bower',
+     'includes' => [ 'dist/css/lobibox.min.css', 'dist/js/lobibox.min.js' ]
    )
+
   );
 
   public $includesCommon = array(
-    'styles/common.less'
+    'styles/common.less',
+    'js/clientMsg.js'
   );
 
 
-  function __construct() {
+  public function __construct() {
     //$this->addUrlPatterns( regex, destination );
   }
 
