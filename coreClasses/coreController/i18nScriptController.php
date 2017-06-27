@@ -482,7 +482,7 @@ class i18nScriptController {
       // We compile the resultant PO and generate a json for client side
       echo exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
       exec('php '.$this->dir_modules_c.'/i18nServer/classes/po2json.php -i '.$l.'/'.$this->textdomain.'.po -o '.$l.'/translation.json');
-      exec('rm '.$l.'/'.$this->textdomain.'.po');
+      //exec('rm '.$l.'/'.$this->textdomain.'.po');
     }
   }
 
