@@ -149,6 +149,7 @@ class FiledataImagesController {
 
         if( !$this->profile['cache'] || !file_exists( $imgRoute ) ) {
           if( file_exists( $imgRoute ) ) {
+            cogumelo::debug('FiledataImagesController: getRouteProfile: unlink '.$imgRoute );
             unlink( $imgRoute );
           }
           $imgRoute = $this->createImageProfile( $imgRouteOriginal, $imgRoute );
@@ -184,6 +185,7 @@ class FiledataImagesController {
         $imgRouteInfo = pathinfo( $imgRoute );
         $linkIdRoute = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['id'] .'.'. $imgRouteInfo['extension'];
         if( !file_exists( $linkIdRoute ) && file_exists( $imgRoute ) ) {
+          cogumelo::debug('FiledataImagesController: getRouteProfile: symlink '.$imgRouteInfo['basename'].' , '.$linkIdRoute );
           symlink( $imgRouteInfo['basename'], $linkIdRoute );
         }
       }
@@ -211,6 +213,16 @@ class FiledataImagesController {
     }
 
     if( $this->profile && $mimeTypeOrg && ( !file_exists( $toRoute ) || $toEncode ) ) {
+
+
+
+      $tmpFlag = ( file_exists( $toRoute ) ) ? 'SI' : 'NON';
+      cogumelo::debug('FiledataImagesController: createImageProfile: file_exists '. $tmpFlag );
+      $tmpFlag = ( $toEncode ) ? 'SI' : 'NON';
+      cogumelo::debug('FiledataImagesController: createImageProfile: toEncode '.$tmpFlag );
+
+
+
       $im = new Imagick();
 
       //$im->setBackgroundColor( new ImagickPixel( $this->profile['backgroundColor'] ) );
@@ -400,6 +412,7 @@ class FiledataImagesController {
           }
           //$im->setImageCompressionQuality(90);
           //error_log( 'FiledataImagesController: createImageProfile: writeImage '.$toRoute );
+          cogumelo::debug('FiledataImagesController: createImageProfile: writeImage '.$toRoute );
           $im->writeImage( $toRoute );
         }
         else {
@@ -541,6 +554,7 @@ class FiledataImagesController {
 
       // TODO: Revisar
       if( isset( $this->profile['cache'] ) && !$this->profile['cache'] ) {
+        cogumelo::debug('FiledataImagesController: sendImage: unlink '.$imgInfo['route'] );
         unlink( $imgInfo['route'] );
       }
 
@@ -565,6 +579,7 @@ class FiledataImagesController {
 
   public function rmdirRec( $dir ) {
     // error_log( 'FiledataImagesController: rmdirRec(): '. $dir );
+    cogumelo::debug('FiledataImagesController: rmdirRec '. $dir );
     if( is_dir( $dir ) ) {
       $dirElements = scandir( $dir );
       if( is_array( $dirElements ) && count( $dirElements ) > 0 ) {
