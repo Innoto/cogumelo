@@ -213,6 +213,12 @@ class FiledataImagesController {
     }
 
     if( $this->profile && $mimeTypeOrg && ( !file_exists( $toRoute ) || $toEncode ) ) {
+
+      cogumelo::debug('FiledataImagesController: createImageProfile: file_exists '. ( file_exists( $toRoute ) ) ? 'SI' : 'NON' );
+      cogumelo::debug('FiledataImagesController: createImageProfile: toEncode '. ( $toEncode ) ? 'SI' : 'NON' );
+
+
+
       $im = new Imagick();
 
       //$im->setBackgroundColor( new ImagickPixel( $this->profile['backgroundColor'] ) );
