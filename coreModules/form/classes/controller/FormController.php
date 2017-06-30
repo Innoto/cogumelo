@@ -2745,27 +2745,28 @@ class FormController implements Serializable {
 
       foreach( $fieldValues as $value ) {
         $fieldValidateValue = true;
-        foreach( $fieldRules as $ruleName => $ruleParams ) {
-          // error_log('FormController: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
+        if( !empty( $fieldRules ) ) {
+          foreach( $fieldRules as $ruleName => $ruleParams ) {
+            // error_log('FormController: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
 
-          if( $ruleName === 'equalTo' ) {
-            $fieldRuleValidate = ( $value === $this->getFieldValue( str_replace('#', '', $ruleParams )) );
-          }
-          else {
-            $fieldRuleValidate = $this->evaluateRule( $fieldName, $value, $ruleName, $ruleParams );
-          }
-          //error_log('FormController: evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
+            if( $ruleName === 'equalTo' ) {
+              $fieldRuleValidate = ( $value === $this->getFieldValue( str_replace('#', '', $ruleParams )) );
+            }
+            else {
+              $fieldRuleValidate = $this->evaluateRule( $fieldName, $value, $ruleName, $ruleParams );
+            }
+            //error_log('FormController: evaluateRule RET: '.print_r( $fieldRuleValidate, true ) );
 
-          if( !$fieldRuleValidate ) {
-            error_log('FormController: ERROR: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.
-                $ruleName.', '.print_r( $ruleParams, true ) .' )' );
-            $this->addFieldRuleError( $fieldName, $ruleName );
-            //$this->fieldErrors[ $fieldName ][ $ruleName ] = $fieldRuleValidate;
-          }
+            if( !$fieldRuleValidate ) {
+              error_log('FormController: ERROR: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.
+                  $ruleName.', '.print_r( $ruleParams, true ) .' )' );
+              $this->addFieldRuleError( $fieldName, $ruleName );
+              //$this->fieldErrors[ $fieldName ][ $ruleName ] = $fieldRuleValidate;
+            }
 
-          $fieldValidateValue = $fieldValidateValue && $fieldRuleValidate;
-        } // foreach( $fieldRules as $ruleName => $ruleParams )
-
+            $fieldValidateValue = $fieldValidateValue && $fieldRuleValidate;
+          } // foreach( $fieldRules as $ruleName => $ruleParams )
+        }
         $fieldValidated = $fieldValidated && $fieldValidateValue;
       } // foreach( $fieldValues as $value )
 
