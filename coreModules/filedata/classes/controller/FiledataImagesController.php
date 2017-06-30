@@ -214,8 +214,12 @@ class FiledataImagesController {
 
     if( $this->profile && $mimeTypeOrg && ( !file_exists( $toRoute ) || $toEncode ) ) {
 
-      cogumelo::debug('FiledataImagesController: createImageProfile: file_exists '. ( file_exists( $toRoute ) ) ? 'SI' : 'NON' );
-      cogumelo::debug('FiledataImagesController: createImageProfile: toEncode '. ( $toEncode ) ? 'SI' : 'NON' );
+
+
+      $tmpFlag = ( file_exists( $toRoute ) ) ? 'SI' : 'NON';
+      cogumelo::debug('FiledataImagesController: createImageProfile: file_exists '. $tmpFlag );
+      $tmpFlag = ( $toEncode ) ? 'SI' : 'NON';
+      cogumelo::debug('FiledataImagesController: createImageProfile: toEncode '.$tmpFlag );
 
 
 
