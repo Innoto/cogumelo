@@ -45,6 +45,7 @@ class FiledataImagesView extends View {
     Mostramos una imagen de Form
   */
   public function showImg( $urlParams = false ) {
+    Cogumelo::debug('FiledataImagesView: showImg: fileId '.$urlParams['fileId'] );
     // error_log( 'FiledataImagesView: showImg(): ' . print_r( $urlParams, true ) );
     $fileInfo = false;
     $error = false;
@@ -80,12 +81,14 @@ class FiledataImagesView extends View {
             }
 
             if( $imageCtrl->profile['cache'] && file_exists( $imgInfo['route'] ) && mb_strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
+              Cogumelo::debug('FiledataImagesView: showImg: IF' );
               $urlRedirect = mb_substr( $imgInfo['route'], mb_strlen( $this->webBasePath ) );
               // error_log( "FiledataImagesView: showImg(): urlRedirect = $urlRedirect" );
               Cogumelo::redirect( SITE_HOST . $urlRedirect );
               // YA NO SE PUEDE ENVIAR NADA AL NAVEGADOR
             }
             else {
+              Cogumelo::debug('FiledataImagesView: showImg: ELSE' );
               $imgInfo['name'] = !empty( $fileName ) ? $fileName : $fileInfo['name'];
               // $imgInfo['name'] = !empty( $fileName ) ? $fileName : $fileInfo['originalName'];
               if( !$imageCtrl->sendImage( $imgInfo ) ) {
