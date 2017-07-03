@@ -35,60 +35,21 @@ if( $argc > 1 ) {
       break;
 
     case 'generateModel':
-      // createDB();
-      createTables();
-      createRelSchemes();
-      //unRegisterModules();
-      registerModules();
-      deployModels(true);
-      initModules();
-      deployModules(true);
+      generateModel();
       flushAll();
       break;
 
     case 'deploy':
-      deployModels();
-      deployModules();
-      //registerModules();
-      createRelSchemes();
+      deploy();
       flushAll();
       break;
 
-    case 'deployModels':
-      deployModels();
-      break;
-
-    case 'deployModules':
-      deployModules();
-      break;
 
     case 'createDB': // create database
       doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), false);
       createDB();
       break;
 
-    case 'createRelSchemes':
-      createRelSchemes();
-      break;
-
-    case 'createTables': // create database tables
-      doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), false);
-      createTables();
-      break;
-
-/*
-    case 'unRegisterModules': // register
-      unRegisterModules();
-      break;*/
-
-    /*case 'registerModules': // register
-      registerModules();
-      break;
-*/
-
-    case 'initModules': // execute ::moduleRc() of all modules
-      initModules();
-      break;
 
     case 'bckDB': // do the backup of the db
       $file = ( $argc > 2 ) ? $argv[2].'.sql' : false;
@@ -169,20 +130,12 @@ function printOptions(){
  + Database
     * createDB                Create a database
 
+    * generateModel           Initialize database
 
-    * generateModel           Execute all options below in the same order
-      - createTables            Generate the tables
-      - createRelSchemes        Generate relationship tmp files
-      - initModules             Execute '::moduleRc()' of all modules
-      - deployModules           Execute Deploy of modules
+    * deploy                  Deploy
 
     * resetModules
       - resetModuleVersions
-
-    * deploy                  Deploy
-      - deployModels            Execute deploy SQL acording current module versions
-      - registerModules         Register models or update if registered
-      - deployModules           Execute Deploy of modules
 
     * bckDB                   Do a DB backup (optional arg: filename)
     * restoreDB               Restore a database
@@ -205,6 +158,13 @@ function actionCompileTranslations() {
   echo "\nThe files.mo are ready to be used!\n\n";
 }
 
+function generateModel() {
+  $develdbcontrol = new DevelDBController();
+}
+
+function deploy() {
+  
+}
 
 function flushAll() {
   echo "\n --- setPermissionsDevel:\n";
@@ -279,144 +239,6 @@ function createDB(){
 }
 
 
-function createRelSchemes() {
-
-  echo "\nCreating relationship schemes\n";
-
-  global $C_ENABLED_MODULES;
-
-  foreach( $C_ENABLED_MODULES as $moduleName ) {
-    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-  }
-
-  Cogumelo::load('coreModel/VOUtils.php');
-
-  $dir = APP_TMP_PATH.'/modelRelationship';
-
-  if( !is_dir( $dir ) ) {
-    if( !mkdir( $dir, 0777, true ) ) {
-      echo 'ERROR: Imposible crear el directorio: '.$dir."\n";
-    }
-  }
-
-  VOUtils::createModelRelTreeFiles();
-}
-
-
-function createTables(){
-  echo "\nCreating DDBB tables, deleting old if exist\n";
-
-  global $C_ENABLED_MODULES;
-
-  foreach( $C_ENABLED_MODULES as $moduleName ) {
-    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-  }
-
-  /*
-  $user =  ReadStdin("Enter an user with privileges:\n", '');
-  // Get the password
-  fwrite(STDOUT, "Enter the password:\n");
-  $passwd = getPassword(true);
-  fwrite(STDOUT, "\n--\n");
-
-  $develdbcontrol = new DevelDBController($user, $passwd, DB_NAME);
-  */
-
-  $develdbcontrol = new DevelDBController();
-
-  $develdbcontrol->createTables();
-  echo "\nGenerated db tables\n";
-}
-
-
-function deployModels( $isFirstGenerateModel = false ) {
-
-  global $C_ENABLED_MODULES;
-
-  foreach( $C_ENABLED_MODULES as $moduleName ) {
-    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-  }
-
-
-  $develdbcontrol = new DevelDBController();
-
-  $develdbcontrol->deployModels( $isFirstGenerateModel );
-  echo "\nModules deploy SQL code executed\n";
-
-}
-/*
-function unRegisterModules() {
-
-  global $C_ENABLED_MODULES;
-
-
-  foreach( $C_ENABLED_MODULES as $moduleName ) {
-    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-
-    eval( $moduleName.'::unRegister();' );
-  }
-  // Register the app version
-  Cogumelo::unRegister();
-
-  echo "\nDeleted all module registers\n";
-
-}
-*/
-
-function registerModules() {
-  global $C_ENABLED_MODULES;
-
-
-  // Register modules
-  foreach( $C_ENABLED_MODULES as $moduleName ) {
-    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-    eval( $moduleName.'::register();' );
-  }
-
-  // Register the app version
-  Cogumelo::register();
-
-  echo "\nModules registered\n";
-
-}
-
-function initModules() {
-  global $C_ENABLED_MODULES;
-
-  setPermissionsDevel();
-  exec('rm -R '.Cogumelo::getSetupValue( 'mod:filedata:filePath' ) );
-  exec('rm -R '.Cogumelo::getSetupValue( 'mod:filedata:cachePath' ) );
-  setPermissionsDevel();
-
-  foreach( $C_ENABLED_MODULES as $moduleName ) {
-    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-
-    if( method_exists( $moduleName, 'moduleRc' ) ) {
-      echo( "\nINIT: ".$moduleName."::moduleRc( )\n" );
-      eval( $moduleName.'::moduleRc( );' );
-    }
-  }
-
-  echo "\nModules initialized\n";
-}
-
-
-function deployModules( $isFirstGenerateModel = false ) {
-  global $C_ENABLED_MODULES;
-
-  setPermissionsDevel();
-
-  foreach( $C_ENABLED_MODULES as $moduleName ) {
-    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-
-    if( method_exists( $moduleName, 'moduleRc' ) ) {
-      echo( "\nDEPLOY: ".$moduleName."::moduleDeploy( $isFirstGenerateModel )\n" );
-      eval( '(new '.$moduleName.')->moduleDeploy($isFirstGenerateModel);' );
-    }
-  }
-
-  echo "\nModules deployed\n";
-}
 
 function makeAppPaths() {
   global $lc;
