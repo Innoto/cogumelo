@@ -63,7 +63,7 @@ class MysqlDevelDBDAO extends MysqlDAO {
   }
 
 
-  public function safeExecSQL(  $connection, $strSQL, $noExecute = false ) {
+  public function safeExecSQL(  $connection, $strSQL, $noExecute = true ) {
     $retSQL = false;
     if( $noExecute === false) {
       $this->execSQL( $connection, $strSQL0, array() );
@@ -75,21 +75,23 @@ class MysqlDevelDBDAO extends MysqlDAO {
   }
 
 
-  public function dropTable( $connection, $vo_name, $noExecute = false  ) {
+  public function dropTable( $connection, $vo_name, $noExecute = true  ) {
     $ret = false;
 
     if( $noExecute === false ) {
       $this->execSQL( $connection, $this->getDropSQL( $connection, $vo_name ) , array() );
+
     }
     else {
       $ret = $this->getDropSQL( $connection, $vo_name );
+
     }
 
     return $ret;
   }
 
 
-  public function createTable( $connection, $vo_name, $noExecute = false ) {
+  public function createTable( $connection, $vo_name, $noExecute = true ) {
     $ret = false;
 
     if( $noExecute === false ) {

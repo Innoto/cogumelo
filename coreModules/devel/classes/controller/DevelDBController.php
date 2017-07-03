@@ -23,18 +23,23 @@ class  DevelDBController {
     }
   }
 
-  private function setNoExecutionMode() {
-    $this->noExecute = true;
+  private function setNoExecutionMode($noExecute = true) {
+    $this->noExecute = $noExecute;
   }
 
   public function scriptGenerateModel() {
+    echo "GENERTE";
+    $this->setNoExecutionMode(false);
     $this->dropAllTables();
+    exit;
     $this->VOcreateTable( ModelRegister );
     $this->VOcreateTable( ModelRegisterModel );
     $this->deploy();
   }
 
   public function scriptDeploy() {
+    echo "DEPLOY";
+    exit;
     // first time deploy
     if( $this->VOTableExist( ModelRegisterModel ) ) {
       $this->VOcreateTable( ModelRegisterModel );
@@ -143,12 +148,13 @@ class  DevelDBController {
 
 
   public function getModules() {
+
     global $C_ENABLED_MODULES;
     $retModules = [];
     foreach( $C_ENABLED_MODULES as $moduleName ) {
       if( $moduleName != 'devel' ) {
         require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
-        eval('$retModules[] = ' . $moduleName .';');
+        eval('$retModules[] = "' . $moduleName .'";');
       }
     }
 

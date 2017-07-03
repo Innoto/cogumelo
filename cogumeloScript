@@ -160,10 +160,12 @@ function actionCompileTranslations() {
 
 function generateModel() {
   $develdbcontrol = new DevelDBController();
+  $develdbcontrol->scriptGenerateModel();
 }
 
 function deploy() {
-  
+  $develdbcontrol = new DevelDBController();
+  $develdbcontrol->scriptDeploy();
 }
 
 function flushAll() {
