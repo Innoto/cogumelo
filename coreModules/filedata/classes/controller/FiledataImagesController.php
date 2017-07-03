@@ -237,7 +237,8 @@ class FiledataImagesController {
 
       if( $toRouteReal !== $toRoute && file_exists( $toRouteReal ) ) {
         Cogumelo::debug('FiledataImagesController: createImageProfile: toRouteReal' );
-        $result = $toRouteReal;
+        $toRoute = $toRouteReal;
+        $result = $toRoute;
       }
     }
     else {
@@ -249,7 +250,7 @@ class FiledataImagesController {
 
 
 
-    if( $this->profile && $mimeTypeOrg && ( !file_exists( $toRoute ) || $toEncode ) ) {
+    if( $this->profile && $mimeTypeOrg && ( $result !== $toRoute || $toEncode ) ) {
 
       $tmpFlag = ( file_exists( $toRoute ) ) ? 'SI' : 'NON';
       Cogumelo::debug('FiledataImagesController: createImageProfile: file_exists '. $tmpFlag );
