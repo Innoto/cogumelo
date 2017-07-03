@@ -196,7 +196,7 @@ class FiledataImagesController {
 
 
   public function createImageProfile( $fromRoute, $toRoute, $toEncode = false ) {
-    Cogumelo::debug('FiledataImagesController: createImageProfile: fromRoute '.$fromRoute );
+    Cogumelo::debug('FiledataImagesController: createImageProfile: REQUEST_URI '. $_SERVER["REQUEST_URI"]  );
     // error_log( '---' );error_log( '---' );error_log( '---' );
     // error_log( 'FiledataImagesController: createImageProfile(): ' );
     // error_log( $fromRoute );
