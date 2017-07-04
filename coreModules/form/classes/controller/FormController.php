@@ -2197,13 +2197,33 @@ class FormController implements Serializable {
         case 'checkbox':
         case 'radio':
           $html['options'] = array();
-          foreach( $field['options'] as $val => $text ) {
-            $html['options'][$val] = array();
-            $html['options'][$val]['input'] = '<input name="'.$fieldName.'"'.
-              ' value="'.htmlspecialchars( $val ).'"'.
-              ' type="'.$field['type'].'"'.$attribs.'>';
-            $html['options'][$val]['text'] = $text;
-            $html['options'][$val]['label'] = $text!='' ? '<label>'.$text.'</label>' : '';
+          if( isset($field['options']) && is_array($field['options']) && count($field['options'])>0 ) {
+            foreach( $field['options'] as $val => $text ) {
+              if( is_array( $text ) && isset( $text['value'] ) ) {
+                $infoArray = $text; // Cambio de nombre para no confundir
+                $html['options'][$val] = array();
+                $html['options'][$val]['text'] = $infoArray['text'];
+                $html['options'][$val]['label'] = empty( $infoArray['label'] ) ? '' : '<label>'.$infoArray['label'].'</label>';
+
+                $html['options'][$val]['input'] = '<input name="'.$fieldName.'"'.
+                  ' value="'.htmlspecialchars( $infoArray['value'] ).'"'.
+                  ' type="'.$field['type'].'"'.$attribs;
+                foreach( $infoArray as $dataKey => $dataValue ) {
+                  if( mb_strpos( $dataKey, 'data-' ) === 0 ) {
+                    $html['options'][$val]['input'] .= ' '.$dataKey.'="'.$dataValue.'"';
+                  }
+                }
+                $html['options'][$val]['input'] .= '>';
+              }
+              else {
+                $html['options'][$val] = array();
+                $html['options'][$val]['input'] = '<input name="'.$fieldName.'"'.
+                  ' value="'.htmlspecialchars( $val ).'"'.
+                  ' type="'.$field['type'].'"'.$attribs.'>';
+                $html['options'][$val]['text'] = $text;
+                $html['options'][$val]['label'] = $text!='' ? '<label>'.$text.'</label>' : '';
+              }
+            }
           }
           // Colocamos los checked
           if( isset( $field['value'] ) ) {
