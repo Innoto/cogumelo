@@ -149,6 +149,7 @@ class FiledataImagesController {
 
         if( !$this->profile['cache'] || !file_exists( $imgRoute ) ) {
           if( file_exists( $imgRoute ) ) {
+            Cogumelo::debug('FiledataImagesController: getRouteProfile: unlink '.$imgRoute );
             unlink( $imgRoute );
           }
           $imgRoute = $this->createImageProfile( $imgRouteOriginal, $imgRoute );
@@ -184,6 +185,7 @@ class FiledataImagesController {
         $imgRouteInfo = pathinfo( $imgRoute );
         $linkIdRoute = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['id'] .'.'. $imgRouteInfo['extension'];
         if( !file_exists( $linkIdRoute ) && file_exists( $imgRoute ) ) {
+          Cogumelo::debug('FiledataImagesController: getRouteProfile: symlink '.$imgRouteInfo['basename'].' , '.$linkIdRoute );
           symlink( $imgRouteInfo['basename'], $linkIdRoute );
         }
       }
@@ -194,6 +196,7 @@ class FiledataImagesController {
 
 
   public function createImageProfile( $fromRoute, $toRoute, $toEncode = false ) {
+    Cogumelo::debug('FiledataImagesController: createImageProfile: REQUEST_URI '. $_SERVER["REQUEST_URI"]  );
     // error_log( '---' );error_log( '---' );error_log( '---' );
     // error_log( 'FiledataImagesController: createImageProfile(): ' );
     // error_log( $fromRoute );
@@ -210,7 +213,52 @@ class FiledataImagesController {
       }
     }
 
-    if( $this->profile && $mimeTypeOrg && ( !file_exists( $toRoute ) || $toEncode ) ) {
+    $toRouteInfo = pathinfo( $toRoute );
+
+    $saveFormatExt = false;
+    switch( $this->profile['saveFormat'] ) {
+      case 'JPEG':
+        $saveFormatExt = 'jpg';
+        break;
+      case 'PNG':
+        $saveFormatExt = 'png';
+        break;
+    }
+
+
+    if( !file_exists( $toRoute ) ) {
+      $toRouteReal = $toRoute;
+      if( $saveFormatExt ) {
+        $toRouteReal = $toRouteInfo['dirname'] .'/'. $toRouteInfo['filename'] .'.'. $saveFormatExt;
+      }
+      if( $this->profile['saveName'] ) {
+        $toRouteReal = $toRouteInfo['dirname'] .'/'. $this->profile['saveName'];
+      }
+
+      if( $toRouteReal !== $toRoute && file_exists( $toRouteReal ) ) {
+        Cogumelo::debug('FiledataImagesController: createImageProfile: toRouteReal' );
+        $toRoute = $toRouteReal;
+        $result = $toRoute;
+      }
+    }
+    else {
+      Cogumelo::debug('FiledataImagesController: createImageProfile: toRoute' );
+      $result = $toRoute;
+    }
+
+
+
+
+
+    if( $this->profile && $mimeTypeOrg && ( $result !== $toRoute || $toEncode ) ) {
+
+      $tmpFlag = ( file_exists( $toRoute ) ) ? 'SI' : 'NON';
+      Cogumelo::debug('FiledataImagesController: createImageProfile: file_exists '. $tmpFlag );
+      $tmpFlag = ( $toEncode ) ? 'SI' : 'NON';
+      Cogumelo::debug('FiledataImagesController: createImageProfile: toEncode '.$tmpFlag );
+
+
+
       $im = new Imagick();
 
       //$im->setBackgroundColor( new ImagickPixel( $this->profile['backgroundColor'] ) );
@@ -367,10 +415,6 @@ class FiledataImagesController {
       if( !$toEncode ) {
         // Save and get URL
 
-        $toRouteInfo = pathinfo( $toRoute );
-        // [dirname]/[basename]
-        // [dirname]/[filename].[extension]
-
         // error_log( "toRouteInfo = " . print_r( $toRouteInfo, true ) );
         if( !file_exists( $toRouteInfo['dirname'] ) ) {
           // error_log( 'mkdir '.$toRouteInfo['dirname'] );
@@ -381,15 +425,6 @@ class FiledataImagesController {
 
         if( is_writable( $toRouteInfo['dirname'] ) ) {
           if( $this->profile['saveFormat'] ) {
-            $saveFormatExt = false;
-            switch( $this->profile['saveFormat'] ) {
-              case 'JPEG':
-                $saveFormatExt = 'jpg';
-                break;
-              case 'PNG':
-                $saveFormatExt = 'png';
-                break;
-            }
             if( $saveFormatExt ) {
               $toRoute = $toRouteInfo['dirname'] .'/'. $toRouteInfo['filename'] .'.'. $saveFormatExt;
             }
@@ -400,11 +435,12 @@ class FiledataImagesController {
           }
           //$im->setImageCompressionQuality(90);
           //error_log( 'FiledataImagesController: createImageProfile: writeImage '.$toRoute );
+          Cogumelo::debug('FiledataImagesController: createImageProfile: writeImage '.$toRoute );
           $im->writeImage( $toRoute );
         }
         else {
           $toRoute = false;
-          cogumelo::error( "Imposible guardar la imagen en $toRoute" );
+          Cogumelo::error( "Imposible guardar la imagen en $toRoute" );
         }
         $result = $toRoute;
       }
@@ -541,13 +577,14 @@ class FiledataImagesController {
 
       // TODO: Revisar
       if( isset( $this->profile['cache'] ) && !$this->profile['cache'] ) {
+        Cogumelo::debug('FiledataImagesController: sendImage: unlink '.$imgInfo['route'] );
         unlink( $imgInfo['route'] );
       }
 
       $result = true;
     }
     else {
-      cogumelo::error( 'Fichero no encontrado: ' . $imgInfo['route'] );
+      Cogumelo::error( 'Fichero no encontrado: ' . $imgInfo['route'] );
     }
 
     return $result;
@@ -565,6 +602,7 @@ class FiledataImagesController {
 
   public function rmdirRec( $dir ) {
     // error_log( 'FiledataImagesController: rmdirRec(): '. $dir );
+    Cogumelo::debug('FiledataImagesController: rmdirRec '. $dir );
     if( is_dir( $dir ) ) {
       $dirElements = scandir( $dir );
       if( is_array( $dirElements ) && count( $dirElements ) > 0 ) {

@@ -441,6 +441,41 @@ class Template extends Smarty {
   }
 
   /**
+   Crea el resultado Minimizado a partir de los datos y plantillas indicados
+   *
+   * @param bool $toString
+   *
+   * @return bool / string HTML generado
+   **/
+  public function execMinimify( $toString = false ) {
+    $result = false;
+
+    $htmlCode = $this->exec( true );
+
+    $regexFrom = [
+      '/\s+$/m',
+      '/^\s+/m',
+      '/(<\/?\w+>)\s+(<\/?\w+>)/',
+      '/>\s+</',
+    ];
+    $regexTo = [
+      ' ',
+      ' ',
+      '$1 $2',
+      '> <',
+    ];
+
+    $result = preg_replace( $regexFrom, $regexTo, $htmlCode );
+
+    if( !$toString ) {
+      echo $result;
+      $result = true;
+    }
+
+    return( $result );
+  }
+
+  /**
    Crea el HTML a partir de los datos y plantillas indicados
    *
    * @param bool $toString
@@ -520,7 +555,7 @@ class Template extends Smarty {
       $clientIncludes .= "".'$.ajaxPrefilter(function( options, originalOptions, jqXHR ) { options.async = true; });' . "\n";
       $clientIncludes .= '$.holdReady( true );'."\n";
       //if( !$this->cgmMediaserverCompileLess ) {
-      if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false || (Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === true &&  Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) == true ) ) {
+      if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false || ( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === true && Cogumelo::getSetupValue( 'mod:mediaserver:notCacheJs' ) === true ) ) {
         $clientIncludes .= 'basket.clear();'."\n";
       }
       $clientIncludes .= 'basket.require('. "\n";
@@ -572,6 +607,10 @@ class Template extends Smarty {
         }
         $this->assign( $fragmentName, $htmlFragment );
       }
+
+
+      // $this->loadFilter( 'output', 'trimwhitespace' );
+
 
       if( $toString ) {
         $htmlCode = $this->fetch( $this->tpl );
