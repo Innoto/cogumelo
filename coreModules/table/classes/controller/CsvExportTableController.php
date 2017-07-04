@@ -28,7 +28,14 @@ class CsvExportTableController extends ExportTableController {
         $row['rowReferenceKey'] = $rowVO->getter( $rowVO->getFirstPrimarykeyId() );
         $rowId = $row['rowReferenceKey'];
 
-        foreach($tableControl->colsDef as $colDefKey => $colDef){
+        $colsDefFinal = $tableControl->colsDef;
+        foreach( $tableControl->colsDefToExport as $cdefK => $cdef ) {
+
+            $colsDefFinal[$cdefK] = $cdef;
+
+        }
+
+        foreach( $colsDefFinal as $colDefKey => $colDef) {
 
           if( preg_match('#^(.*)\.(.*)$#', $colDefKey, $m )) {
 
@@ -56,28 +63,19 @@ class CsvExportTableController extends ExportTableController {
             $row[$colDefKey] = $rowVO->getter($colDefKey);
           }
 
+          $row[$colDefKey] = '"'.$row[$colDefKey].'"';
+
         }
 
         // modify row value if have colRules
-        foreach($tableControl->colsDef as $colDefKey => $colDef) {
+        foreach($colsDefFinal as $colDefKey => $colDef) {
           // if have rules and matches with regexp
-          if($colDef['rules'] != array() ) {
+
+          //var_dump($colDef);
+          if( isset($colDef['rules']) >0) {
 
 
-            foreach($colDef['exportRules'] as $rule){
-              if( !isset( $rule['regexContent'] ) ) {
-                if(preg_match( $rule['regexp'], $row[$colDefKey])) {
-                  eval('$row[$colDefKey] = "'.$rule['finalContent'].'";');
-                  break;
-                }
-              }
-              else {
-                //$row[$colDefKey] = preg_replace( $rule['regexp'], $rule['regexContent'], $row[$colDefKey] );
-                if( $row[$colDefKey] = preg_replace( $rule['regexp'], $rule['regexContent'], $row[$colDefKey] ) ) {
-                  break;
-                }
-              }
-            }
+
 
             foreach($colDef['rules'] as $rule){
               if( !isset( $rule['regexContent'] ) ) {
@@ -97,19 +95,19 @@ class CsvExportTableController extends ExportTableController {
 
 
           }
+
         }
 
         //var_dump( array_keys($row) );
         unset($row['rowReferenceKey']);
 
-        echo "".implode(",", $row)."\n";
+
+
+        echo  implode(",", $row)."\n";
+
 
       }
-
-
-
     }
-
 
   }
 
