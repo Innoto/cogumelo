@@ -59,15 +59,20 @@ class  DevelDBController {
 
 
       if( $this->moduleIsRegistered( $module ) === true ){
-        $isModuleFirstTime = false;
+        if( $this->moduleIsUpdated() === false ) {
+          $this->execModuleDeploy($moduleName, false);
+          $this->registerModuleVersion();
+        }
+
       }
       else {
         $this->execModuleRC( $moduleName );
-        $isModuleFirstTime = true;
+        $this->execModuleDeploy($moduleName, true);
+        $this->registerModuleVersion();
       }
 
-      $this->execModuleDeploy($moduleName, $isModuleFirstTime);
-      $this->updateModuleVersion();
+
+
 
 /*
       if( modulo rexistrado ) {
@@ -236,9 +241,18 @@ class  DevelDBController {
     return $retDeploys;
   }
 
-  private function updateModuleVersion() {
-    
+
+  private function registerModuleVersion( $moduleName ) {
+    if( $this->noExecute === true) {
+      echo( $moduleName."::register();\n" );
+    }
+    else {
+      eval( $moduleName.'::register();' );
+    }
+
   }
+
+
 
   private function moduleIsRegistered() {
 
