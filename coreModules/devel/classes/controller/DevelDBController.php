@@ -266,7 +266,7 @@ class  DevelDBController {
     if( method_exists( $moduleName, 'moduleRc' ) ) {
       echo( "\nINIT: ".$moduleName."::moduleRc( )\n" );
       if( $this->noExecute === true) {
-        echo $moduleName."::moduleRc( );\n"
+        echo $moduleName."::moduleRc( );\n";
       }
       else {
         eval( $moduleName.'::moduleRc( );' );
@@ -280,7 +280,7 @@ class  DevelDBController {
       echo( "\nDEPLOY: ".$moduleName."::moduleDeploy( $whenGenerateModel )\n" );
 
       if( $this->noExecute === true) {
-        echo $moduleName."::moduleRc( );\n"
+        echo $moduleName."::moduleRc( );\n";
         echo( "(new ".$moduleName.")->moduleDeploy($whenGenerateModel);\n" );
       }
       else {
