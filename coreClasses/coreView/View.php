@@ -19,8 +19,8 @@ abstract class View {
       $this->template = new Template( $baseDir );
 
       if( !$this->accessCheck() ){
-        Cogumelo::debug( 'Acess error on view '. get_called_class() );
-        error_log( 'Acess error on view '. get_called_class() );
+        Cogumelo::debug( 'Access error on view '. get_called_class() );
+        // error_log( 'Access error on view '. get_called_class() );
         RequestController::httpError403();
         exit;
       }
