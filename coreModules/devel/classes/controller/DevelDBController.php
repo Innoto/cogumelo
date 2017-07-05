@@ -28,12 +28,12 @@ class  DevelDBController {
   }
 
   public function scriptGenerateModel() {
-    echo "GENERTE";
     $this->setNoExecutionMode(false);
     $this->dropAllTables();
-    exit;
-    $this->VOcreateTable( ModelRegister );
-    $this->VOcreateTable( ModelRegisterModel );
+
+    $this->VOcreateTable( get_class(new ModelRegisterModel()) );
+    $this->VOcreateTable( get_class(new ModuleRegisterModel()) );
+
     $this->deploy();
   }
 
@@ -41,8 +41,8 @@ class  DevelDBController {
     echo "DEPLOY";
     exit;
     // first time deploy
-    if( $this->VOTableExist( ModelRegisterModel ) ) {
-      $this->VOcreateTable( ModelRegisterModel );
+    if( $this->VOTableExist( get_class(new ModelRegisterModel()) ) ) {
+      $this->VOcreateTable( get_class(new ModelRegisterModel()) );
       ModuleRegisterModel::$NewDeploysSQLChangeColumns;
       //forzar actualizar todas as versións
     }
@@ -54,7 +54,17 @@ class  DevelDBController {
 
   private function deploy() {
     $modules = $this->getModules();
+
     foreach( $modules as $module ) {
+      echo $module;
+      echo "\n";
+
+      if( $this->moduleIsRegistered($module) ){
+        
+      }
+      else {
+
+      }
 /*
       if( modulo rexistrado ) {
         // rc de módulo
@@ -62,8 +72,10 @@ class  DevelDBController {
       else {
         // deploy de módulo
       }*/
+      //var_dump($module);
 
-      foreach( $this->getModelsInModule() as $model ) {
+
+      //foreach( $this->getModelsInModule() as $model ) {
          /*if( modelo rexistrado ) {
            // rc model
            $this->VOgetDeploys( $model, ['onlyRC'=>true] );
@@ -72,8 +84,11 @@ class  DevelDBController {
            // deploy modelo
 
          }*/
-      }
+      //}
+
+
     }
+    exit;
   }
 
   public function VOTableExist( $voClass ) {
@@ -147,7 +162,7 @@ class  DevelDBController {
 
 
 
-  public function getModules() {
+  public function getModules( ) {
 
     global $C_ENABLED_MODULES;
     $retModules = [];
@@ -163,7 +178,7 @@ class  DevelDBController {
 
 
 
-  public function getModelsInModule( $module ) {
+  public function getModelsInModule( $module) {
 
     $retArray = [];
     if( $module !== 'devel') {
@@ -184,10 +199,13 @@ class  DevelDBController {
          foreach($models as $voKey=>$vo) {
            $this->VOdropTable( get_class(new $voKey()) );
          }
-
        }
 
     }
+
+    $this->VOdropTable( get_class(new ModelRegisterModel()) );
+    $this->VOdropTable( get_class(new ModuleRegisterModel()) );
+
   }
 
 
@@ -212,6 +230,14 @@ class  DevelDBController {
     }
 
     return $retDeploys;
+  }
+
+  private function moduleIsRegistered() {
+
+  }
+
+  private function modelIsRegistered() {
+
   }
 
 /*

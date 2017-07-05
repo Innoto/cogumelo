@@ -19,10 +19,12 @@ class ModelRegisterModel extends Model {
       'size' => 100
     ),
     'firstVersion' => array(
-      'type' => 'VARCHAR'
+      'type' => 'VARCHAR',
+      'size' => 100
     ),
     'deployVersion' => array(
-      'type' => 'VARCHAR'
+      'type' => 'VARCHAR',
+      'size' => 100
     )
   );
 
