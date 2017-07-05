@@ -56,15 +56,19 @@ class  DevelDBController {
     $modules = $this->getModules();
 
     foreach( $modules as $module ) {
-      echo $module;
-      echo "\n";
 
-      if( $this->moduleIsRegistered($module) ){
-        
+
+      if( $this->moduleIsRegistered( $module ) === true ){
+        $isModuleFirstTime = false;
       }
       else {
-
+        $this->execModuleRC( $moduleName );
+        $isModuleFirstTime = true;
       }
+
+      $this->execModuleDeploy($moduleName, $isModuleFirstTime);
+      $this->updateModuleVersion();
+
 /*
       if( modulo rexistrado ) {
         // rc de módulo
@@ -232,12 +236,44 @@ class  DevelDBController {
     return $retDeploys;
   }
 
+  private function updateModuleVersion() {
+    
+  }
+
   private function moduleIsRegistered() {
 
   }
 
   private function modelIsRegistered() {
 
+  }
+
+  private function execModuleRC( $moduleName ) {
+    if( method_exists( $moduleName, 'moduleRc' ) ) {
+      echo( "\nINIT: ".$moduleName."::moduleRc( )\n" );
+      if( $this->noExecute === true) {
+        echo $moduleName."::moduleRc( );\n"
+      }
+      else {
+        eval( $moduleName.'::moduleRc( );' );
+      }
+
+    }
+  }
+
+  private function execModuleDeploy( $moduleName, $whenGenerateModel ) {
+    if( method_exists( $moduleName, 'moduleDeploy' ) ) {
+      echo( "\nDEPLOY: ".$moduleName."::moduleDeploy( $whenGenerateModel )\n" );
+
+      if( $this->noExecute === true) {
+        echo $moduleName."::moduleRc( );\n"
+        echo( "(new ".$moduleName.")->moduleDeploy($whenGenerateModel);\n" );
+      }
+      else {
+        eval( "(new ".$moduleName.")->moduleDeploy($whenGenerateModel);" );
+      }
+
+    }
   }
 
 /*
