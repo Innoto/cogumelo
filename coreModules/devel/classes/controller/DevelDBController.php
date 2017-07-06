@@ -88,7 +88,9 @@ class  DevelDBController {
 
       }
 
-      $this->executeAllModuleDeploys( $moduleDeploys )
+      $this->executeAllModuleDeploys(
+        $this->orderDeploysByVersion( $moduleDeploys )
+      );
 
 
       // deploy de módulo
@@ -130,10 +132,7 @@ class  DevelDBController {
   }
 
   public function VOgetCreateTableAsdeploy( $voKey ) {
-    return array(
-      'version' => 0,
-      'sql'=> $this->data->getTableSQL($voKey)
-    );
+    return [[ 'version' => 0, 'sql'=> $this->data->getTableSQL($voKey) ]];
   }
 
 
@@ -199,7 +198,7 @@ class  DevelDBController {
 
 
     // return
-    return $this->orderByVersion( $deploysArray );
+    return $deploysArray;
   }
 
 
@@ -251,7 +250,7 @@ class  DevelDBController {
   }
 
 
-  private function orderByVersion( $deploys ) {
+  private function orderDeploysByVersion( $deploys ) {
     $retDeploys = [];
 
     while( sizeof($deploys) > 0 ) {
