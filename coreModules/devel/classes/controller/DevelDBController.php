@@ -55,26 +55,38 @@ class  DevelDBController {
   private function deploy() {
     $modules = $this->getModules();
 
+
+
     foreach( $modules as $module ) {
+
+
+      $moduleDeploys = [];
 
       //deploy de modelos
       foreach( $this->getModelsInModule() as $model ) {
-        if( modelo rexistrado ) {
+        if( $this->VOIsRegistered( $model ) ) {
           // rc model
-          $this->VOcreateTable
-          $this->VOgetDeploys( $model, ['onlyRC'=>true] );
+          $moduleDeploys = array_merge($moduleDeploys, $this->VOgetCreateTableAsdeploy($model) );
+          $moduleDeploys = array_merge($moduleDeploys, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
         }
         else {
-           // deploy modelo
-          $this->VOgetDeploys(
-            $model,
-            [
-              'from'=> última versión rexistrada do modulo,
-              'to'=>
-            ]
+          // deploy modelo
+          $moduleDeploys = array_merge(
+            $moduleDeploys,
+            $this->VOgetDeploys(
+              $model,
+              [
+                'from'=> //última versión rexistrada do modulo,
+                'to'=> //versión actual do módulo en código
+              ]
+            )
           );
+
         }
+
       }
+
+      $this->executeAllModuleDeploys()
 
 
       // deploy de módulo
@@ -101,6 +113,22 @@ class  DevelDBController {
   public function VOTableExist( $voClass ) {
     $this->data->checkTableExist( $voClass );
   }
+
+  public function VOIsRegistered( $voClass ) {
+    $ret = false;
+
+
+
+    return $ret;
+  }
+
+  public function VOgetCreateTableAsdeploy( $voKey ) {
+    return array(
+      'version' => 0,
+      'sql'=> $this->data->getTableSQL($voKey)
+    );
+  }
+
 
   public function VOcreateTable( $voClass ) {
     $this->data->createTable( $voClass, $this->noExecute );
