@@ -64,29 +64,31 @@ class  DevelDBController {
 
       //deploy de modelos
       foreach( $this->getModelsInModule() as $model ) {
-        if( $this->VOIsRegistered( $model ) ) {
-          // rc model
-          $moduleDeploys = array_merge($moduleDeploys, $this->VOgetCreateTableAsdeploy($model) );
-          $moduleDeploys = array_merge($moduleDeploys, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
-        }
-        else {
+
+        $modelCurrentVersion = $this->VOIsRegistered( $model );
+        if( $modelCurrentVersion !== false ) {
           // deploy modelo
           $moduleDeploys = array_merge(
             $moduleDeploys,
             $this->VOgetDeploys(
               $model,
               [
-                'from'=> //última versión rexistrada do modulo,
-                'to'=> //versión actual do módulo en código
+                'from'=> $modelCurrentVersion ,//última versión rexistrada do modulo,
+                'to'=> $model::$version //versión actual do módulo en código
               ]
             )
           );
 
         }
+        else {
+          // rc model
+          $moduleDeploys = array_merge($moduleDeploys, $this->VOgetCreateTableAsdeploy($model) );
+          $moduleDeploys = array_merge($moduleDeploys, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
+        }
 
       }
 
-      $this->executeAllModuleDeploys()
+      $this->executeAllModuleDeploys( $moduleDeploys )
 
 
       // deploy de módulo
@@ -117,7 +119,12 @@ class  DevelDBController {
   public function VOIsRegistered( $voClass ) {
     $ret = false;
 
+    $modelReg = new ModelRegisterModel();
 
+    $v = $modelReg->listIttems( ['filters'=>['name'=> $voClass ] ]);
+    if( $regInfo=$v->fetch() ) {
+      $ret = $regInfo->get('deployVersion');
+    }
 
     return $ret;
   }
