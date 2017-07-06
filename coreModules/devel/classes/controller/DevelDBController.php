@@ -82,7 +82,9 @@ class  DevelDBController {
         }
         else {
           // rc model
-          $moduleDeploys = array_merge($moduleDeploys, $this->VOgetCreateTableAsdeploy($model) );
+          if( (new $model())::$notCreateDBTable !== true ) {
+            $moduleDeploys = array_merge($moduleDeploys, $this->VOgetCreateTableAsdeploy($model) );
+          }
           $moduleDeploys = array_merge($moduleDeploys, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
         }
 
