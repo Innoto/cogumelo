@@ -57,7 +57,27 @@ class  DevelDBController {
 
     foreach( $modules as $module ) {
 
+      //deploy de modelos
+      foreach( $this->getModelsInModule() as $model ) {
+        if( modelo rexistrado ) {
+          // rc model
+          $this->VOcreateTable
+          $this->VOgetDeploys( $model, ['onlyRC'=>true] );
+        }
+        else {
+           // deploy modelo
+          $this->VOgetDeploys(
+            $model,
+            [
+              'from'=> última versión rexistrada do modulo,
+              'to'=>
+            ]
+          );
+        }
+      }
 
+
+      // deploy de módulo
       if( $this->moduleIsRegistered( $module ) === true ){
         if( $this->moduleIsUpdated() === false ) {
           $this->execModuleDeploy($moduleName, false);
@@ -72,28 +92,6 @@ class  DevelDBController {
       }
 
 
-
-
-/*
-      if( modulo rexistrado ) {
-        // rc de módulo
-      }
-      else {
-        // deploy de módulo
-      }*/
-      //var_dump($module);
-
-
-      //foreach( $this->getModelsInModule() as $model ) {
-         /*if( modelo rexistrado ) {
-           // rc model
-           $this->VOgetDeploys( $model, ['onlyRC'=>true] );
-         }
-         else {
-           // deploy modelo
-
-         }*/
-      //}
 
 
     }
