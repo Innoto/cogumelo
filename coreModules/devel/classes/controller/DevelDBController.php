@@ -337,11 +337,7 @@ class  DevelDBController {
     if( method_exists( $moduleName, 'moduleDeploy' ) ) {
       echo( "\nDEPLOY: ".$moduleName."::moduleDeploy( $whenGenerateModel )\n" );
 
-      if( $this->noExecute === true) {
-        echo $moduleName."::moduleRc( );\n";
-        echo( "(new ".$moduleName.")->moduleDeploy($whenGenerateModel);\n" );
-      }
-      else {
+      if( $this->noExecute !== true) {
         eval( "(new ".$moduleName.")->moduleDeploy($whenGenerateModel);" );
       }
 
