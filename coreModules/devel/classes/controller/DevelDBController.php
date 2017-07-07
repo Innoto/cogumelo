@@ -63,7 +63,7 @@ class  DevelDBController {
       $moduleDeploys = [];
 
       //deploy de modelos
-      foreach( $this->getModelsInModule($module) as $model ) {
+      foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
 
         $modelCurrentVersion = $this->VOIsRegistered( $model );
         if( $modelCurrentVersion !== false ) {
@@ -82,7 +82,10 @@ class  DevelDBController {
         }
         else {
           // rc model
-          if( $model::$notCreateDBTable !== true ) {
+
+          eval('$nct = (isset('.$model.'::$notCreateDBTable))?'.$model.'::$notCreateDBTle : false;' );
+
+          if( $nct !== true ) {
             $moduleDeploys = array_merge($moduleDeploys, $this->VOgetCreateTableAsdeploy($model) );
           }
           $moduleDeploys = array_merge($moduleDeploys, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
@@ -93,32 +96,32 @@ class  DevelDBController {
       //
       // deploy dos modelos do módulo, en orden de versión
       $deployWorks = $this->executeDeployList(
-        $this->orderDeploysByVersion( $moduleDeploys )
+        $this->orderDeploysByVersion( $moduleDeploys ), $module
       );
 
-
+/*
       //
       // deploy do módulo
       if( $deployWorks === true ) {
 
         if( $this->moduleIsRegistered( $module ) !== false ){
           if( $this->moduleIsUpdated() === false ) {
-            $this->execModuleDeploy($moduleName, false);
+            $this->execModuleDeploy($module, false);
             $this->registerModuleVersion();
           }
 
         }
         else {
-          $this->execModuleRC( $moduleName );
-          $this->execModuleDeploy($moduleName, true);
-          $this->registerModuleVersion();
+          $this->execModuleRC( $module );
+          $this->execModuleDeploy($module, true);
+          $this->registerModuleVersion($module);
         }
 
       }
       else {
         echo "\nStoping deploy: Please, check your code before next execution\n";
         break;
-      }
+      }*/
 
 
     }
@@ -137,7 +140,7 @@ class  DevelDBController {
 
     $modelReg = new ModelRegisterModel();
 
-    $v = $modelReg->listIttems( ['filters'=>['name'=> $voClass ] ]);
+    $v = $modelReg->listItems( ['filters'=>['name'=> $voClass ] ]);
     if( $regInfo=$v->fetch() ) {
       $ret = $regInfo->get('deployVersion');
     }
@@ -207,12 +210,19 @@ class  DevelDBController {
           $deployElement = false; //exclude
         }
 
+        if( $deployElement !== false ) {
+
+
+          $deployElement['voName'] = $voKey;
+          array_push( $deploys, $deployElement );
+        }
+
       }
     }
 
 
     // return
-    return $deploysArray;
+    return $deploys;
   }
 
 
@@ -264,16 +274,36 @@ class  DevelDBController {
   }
 
 
-  private function executeDeployList( $deployArrays ) {
+  private function executeDeployList( $deployArrays, $module ) {
     $ret  = true;
     if( sizeof($deployArrays)>0 ) {
       foreach ( $deployArrays as $deploy ) {
 
-        if( fallaExecución) {
-          echo "\n ---- Deploy FAIL ---- \n";
+
+        if( $this->data->execSQL( $connection, $deploy['sql'] , array() ) ) {
+          //  update model version
+          if(
+            (
+              isset($deploy['executeOnGenerateModelToo']) &&
+              $deploy['executeOnGenerateModelToo'] === true
+            ) ||
+            $deploy['version'] === 0
+          ) {
+            // register last version
+            eval('$moduleVersion = '. $module. '::$version');
+            $this->registerModelVersion( $deploy['voName'] ,$moduleVersion );
+          }
+          else {
+            // register current deploy version
+            $this->registerModelVersion( $deploy['voName'] ,$deploy['version'] );
+          }
+        }
+        else {
+          echo "\n ---- Deploy FAIL in ".$deploy['voName']." - ".$deploy['version']." ---- \n";
           $ret = false;
           break;
         }
+
 
 
       }
@@ -304,6 +334,12 @@ class  DevelDBController {
     }
 
     return $retDeploys;
+  }
+
+
+
+  private function registerModelVersion( $voKey, $version ) {
+
   }
 
 
