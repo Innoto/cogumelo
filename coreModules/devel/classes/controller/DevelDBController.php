@@ -90,31 +90,43 @@ class  DevelDBController {
 
       }
 
-      $this->executeAllModuleDeploys(
+      //
+      // deploy dos modelos do módulo, en orden de versión
+      $deployWorks = $this->executeDeployList(
         $this->orderDeploysByVersion( $moduleDeploys )
       );
 
 
-      // deploy de módulo
-      if( $this->moduleIsRegistered( $module ) === true ){
-        if( $this->moduleIsUpdated() === false ) {
-          $this->execModuleDeploy($moduleName, false);
+      //
+      // deploy do módulo
+      if( $deployWorks === true ) {
+
+        if( $this->moduleIsRegistered( $module ) === true ){
+          if( $this->moduleIsUpdated() === false ) {
+            $this->execModuleDeploy($moduleName, false);
+            $this->registerModuleVersion();
+          }
+
+        }
+        else {
+          $this->execModuleRC( $moduleName );
+          $this->execModuleDeploy($moduleName, true);
           $this->registerModuleVersion();
         }
 
       }
       else {
-        $this->execModuleRC( $moduleName );
-        $this->execModuleDeploy($moduleName, true);
-        $this->registerModuleVersion();
+        echo "\nStoping deploy: Please, check your code before next execution\n";
+        break;
       }
-
-
 
 
     }
     exit;
   }
+
+
+
 
   public function VOTableExist( $voClass ) {
     $this->data->checkTableExist( $voClass );
@@ -252,6 +264,25 @@ class  DevelDBController {
   }
 
 
+  private function executeDeployList( $deployArrays ) {
+    $ret  = true;
+    if( sizeof($deployArrays)>0 ) {
+      foreach ( $deployArrays as $deploy ) {
+
+        if( fallaExecución) {
+          echo "\n ---- Deploy FAIL ---- \n";
+          $ret = false;
+          break;
+        }
+
+
+      }
+    }
+
+    return $ret;
+  }
+
+
   private function orderDeploysByVersion( $deploys ) {
     $retDeploys = [];
 
@@ -277,10 +308,8 @@ class  DevelDBController {
 
 
   private function registerModuleVersion( $moduleName ) {
-    if( $this->noExecute === true) {
-      echo( $moduleName."::register();\n" );
-    }
-    else {
+    echo( $moduleName."::register();\n" );
+    if( $this->noExecute !== true) {
       eval( $moduleName.'::register();' );
     }
 
@@ -292,17 +321,12 @@ class  DevelDBController {
 
   }
 
-  private function modelIsRegistered() {
-
-  }
 
   private function execModuleRC( $moduleName ) {
     if( method_exists( $moduleName, 'moduleRc' ) ) {
       echo( "\nINIT: ".$moduleName."::moduleRc( )\n" );
-      if( $this->noExecute === true) {
-        echo $moduleName."::moduleRc( );\n";
-      }
-      else {
+
+      if( $this->noExecute !== true) {
         eval( $moduleName.'::moduleRc( );' );
       }
 
