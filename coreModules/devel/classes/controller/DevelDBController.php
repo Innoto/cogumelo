@@ -63,7 +63,7 @@ class  DevelDBController {
       $moduleDeploys = [];
 
       //deploy de modelos
-      foreach( $this->getModelsInModule() as $model ) {
+      foreach( $this->getModelsInModule($module) as $model ) {
 
         $modelCurrentVersion = $this->VOIsRegistered( $model );
         if( $modelCurrentVersion !== false ) {
@@ -82,7 +82,7 @@ class  DevelDBController {
         }
         else {
           // rc model
-          if( (new $model())::$notCreateDBTable !== true ) {
+          if( $model::$notCreateDBTable !== true ) {
             $moduleDeploys = array_merge($moduleDeploys, $this->VOgetCreateTableAsdeploy($model) );
           }
           $moduleDeploys = array_merge($moduleDeploys, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
@@ -101,7 +101,7 @@ class  DevelDBController {
       // deploy do módulo
       if( $deployWorks === true ) {
 
-        if( $this->moduleIsRegistered( $module ) === true ){
+        if( $this->moduleIsRegistered( $module ) !== false ){
           if( $this->moduleIsUpdated() === false ) {
             $this->execModuleDeploy($moduleName, false);
             $this->registerModuleVersion();
@@ -233,7 +233,7 @@ class  DevelDBController {
 
 
 
-  public function getModelsInModule( $module) {
+  public function getModelsInModule( $module ) {
 
     $retArray = [];
     if( $module !== 'devel') {
@@ -317,8 +317,17 @@ class  DevelDBController {
 
 
 
-  private function moduleIsRegistered() {
+  private function moduleIsRegistered( $moduleName ) {
+    $ret = false;
 
+    $modelReg = new ModuleRegisterModel();
+
+    $v = $modelReg->listItems( ['filters'=>['name'=> $moduleName ] ]);
+    if( $regInfo=$v->fetch() ) {
+      $ret = $regInfo->get('deployVersion');
+    }
+
+    return $ret;
   }
 
 
