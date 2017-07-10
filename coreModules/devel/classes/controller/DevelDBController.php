@@ -83,7 +83,7 @@ class  DevelDBController {
         else {
           // rc model
 
-          eval('$nct = (isset('.$model.'::$notCreateDBTable))?'.$model.'::$notCreateDBTle : false;' );
+          $nct = ( (new $model() )->notCreateDBTable !== null )?(new $model())->notCreateDBTable : false;
 
           if( $nct !== true ) {
             $moduleDeploys = array_merge($moduleDeploys, $this->VOgetCreateTableAsdeploy($model) );
@@ -135,6 +135,8 @@ class  DevelDBController {
     $this->data->checkTableExist( $voClass );
   }
 
+
+
   public function VOIsRegistered( $voClass ) {
     $ret = false;
 
@@ -147,6 +149,8 @@ class  DevelDBController {
 
     return $ret;
   }
+
+
 
   public function VOgetCreateTableAsdeploy( $voKey ) {
     return [[ 'version' => 0, 'sql'=> $this->data->getTableSQL($voKey) ]];
@@ -280,7 +284,10 @@ class  DevelDBController {
       foreach ( $deployArrays as $deploy ) {
 
 
-        if( $this->data->execSQL( $connection, $deploy['sql'] , array() ) ) {
+        $exec = $this->data->execSQL( $connection, $deploy['sql'] , array() );
+
+
+        if( $exec !== COGUMELO_ERROR ) {
           //  update model version
           if(
             (
@@ -339,7 +346,11 @@ class  DevelDBController {
 
 
   private function registerModelVersion( $voKey, $version ) {
-
+    $modelReg = new ModelRegisterModel();
+    $v = $modelReg->listItems( ['filters'=>['name'=> $voKey ] ]);
+    if( $regInfo=$v->fetch() ) {
+      $ret = $regInfo->set( 'deployVersion', $version );
+    }
   }
 
 
@@ -356,9 +367,9 @@ class  DevelDBController {
   private function moduleIsRegistered( $moduleName ) {
     $ret = false;
 
-    $modelReg = new ModuleRegisterModel();
+    $moduleReg = new ModuleRegisterModel();
 
-    $v = $modelReg->listItems( ['filters'=>['name'=> $moduleName ] ]);
+    $v = $moduleReg->listItems( ['filters'=>['name'=> $moduleName ] ]);
     if( $regInfo=$v->fetch() ) {
       $ret = $regInfo->get('deployVersion');
     }
