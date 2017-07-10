@@ -65,7 +65,18 @@ class MysqlDAO extends DAO {
     Cogumelo::debugSQL($sql);
     // obtaining debug data
     $d = debug_backtrace();
-    $caller_method = $d[1]['class'].'.'.$d[1]['function'].'()';
+
+    if(
+      isset( $d[1]['class'] ) &&
+      isset( $d[1]['function'] )
+    ){
+      $caller_method = $d[1]['class'].'.'.$d[1]['function'].'()';
+    }
+    else {
+      $caller_method = 'unknown';
+    }
+
+
 
     //set prepare sql
     /*

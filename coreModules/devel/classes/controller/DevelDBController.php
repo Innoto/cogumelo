@@ -56,10 +56,27 @@ class  DevelDBController {
     $modules = $this->getModules();
 
 
-
+    // create tables
     foreach( $modules as $module ) {
+      $moduleDeploysCreateTable = [];
+      foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
+        $modelCurrentVersion = $this->VOIsRegistered( $model );
+        if( $modelCurrentVersion === false ) {
+          $nct = ( (new $model() )->notCreateDBTable !== null )?(new $model())->notCreateDBTable : false;
+          if( $nct !== true ) {
+            $moduleDeploysCreateTable = array_merge($moduleDeploysCreateTable, $this->VOgetCreateTableAsdeploy($model) );
+          }
+        }
+      }
+      if(sizeof($moduleDeploysCreateTable)>0) {
+        echo "\n Creating tables in module '".$module."'";
+        $this->executeDeployList( $moduleDeploysCreateTable , $module );
+      }
+    }
 
 
+    // deploys
+    foreach( $modules as $module ) {
       $moduleDeploys = [];
 
       //deploy de modelos
@@ -81,13 +98,7 @@ class  DevelDBController {
 
         }
         else {
-          // rc model
-
-          $nct = ( (new $model() )->notCreateDBTable !== null )?(new $model())->notCreateDBTable : false;
-
-          if( $nct !== true ) {
-            $moduleDeploys = array_merge($moduleDeploys, $this->VOgetCreateTableAsdeploy($model) );
-          }
+          echo "\n Getting RC deploys for'".$model."'";
           $moduleDeploys = array_merge($moduleDeploys, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
         }
 
@@ -153,7 +164,7 @@ class  DevelDBController {
 
 
   public function VOgetCreateTableAsdeploy( $voKey ) {
-    return [[ 'version' => 0, 'sql'=> $this->data->getTableSQL($voKey) ]];
+    return [[ 'version' => 0, 'sql'=> $this->data->getTableSQL($voKey),  'voName'=>$voKey]];
   }
 
 
@@ -283,8 +294,9 @@ class  DevelDBController {
     if( sizeof($deployArrays)>0 ) {
       foreach ( $deployArrays as $deploy ) {
 
+//echo "------------------". $deploy['sql']."\n\n";
 
-        $exec = $this->data->execSQL( $connection, $deploy['sql'] , array() );
+        $exec = $this->data->execSQL( $deploy['sql'] , array() );
 
 
         if( $exec !== COGUMELO_ERROR ) {
@@ -297,7 +309,9 @@ class  DevelDBController {
             $deploy['version'] === 0
           ) {
             // register last version
-            eval('$moduleVersion = '. $module. '::$version');
+
+            $moduleVersion = (new $module())->version;
+
             $this->registerModelVersion( $deploy['voName'] ,$moduleVersion );
           }
           else {
@@ -308,6 +322,7 @@ class  DevelDBController {
         else {
           echo "\n ---- Deploy FAIL in ".$deploy['voName']." - ".$deploy['version']." ---- \n";
           $ret = false;
+          exit;
           break;
         }
 
@@ -399,6 +414,11 @@ class  DevelDBController {
 
     }
   }
+
+  public function createSchemaDB() {
+    return $this->data->createSchemaDB();
+  }
+
 
 /*
   private function compareDeployVersions( $v1, $v2 ) {
