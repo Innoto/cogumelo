@@ -173,7 +173,12 @@ class  DevelDBController {
   }
 
   private function VOdropTable( $voKey ) {
-    $this->data->dropTable( $voKey, $this->noExecute );
+
+    $voObj = new $voKey();
+    if( !isset($voObj->notCreateDBTable) || $voObj->notCreateDBTable !== true){
+      echo "\n Drop table ".$voKey. "";
+      $this->data->dropTable( $voKey, $this->noExecute );
+    }
   }
 
   public function VOgetDeploys( $voKey, $paramFilters = [] ) {
@@ -296,7 +301,7 @@ class  DevelDBController {
 
 //echo "------------------". $deploy['sql']."\n\n";
 
-        $exec = $this->data->execSQL( $deploy['sql'] , array() );
+        $exec = $this->data->execSQL( $deploy['sql']  );
 
 
         if( $exec !== COGUMELO_ERROR ) {
@@ -361,11 +366,20 @@ class  DevelDBController {
 
 
   private function registerModelVersion( $voKey, $version ) {
+
+
+
     $modelReg = new ModelRegisterModel();
     $v = $modelReg->listItems( ['filters'=>['name'=> $voKey ] ]);
     if( $regInfo=$v->fetch() ) {
-      $ret = $regInfo->set( 'deployVersion', $version );
+
+      echo "\nUpdating ".$voKey." from version " . $regInfo->set( 'deployVersion'). "to version " .$version."\n";
+      if( $this->noExecute !== true) {
+        $ret = $regInfo->set( 'deployVersion', $version );
+      }
     }
+
+
   }
 
 
