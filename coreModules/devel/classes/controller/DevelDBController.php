@@ -38,13 +38,15 @@ class  DevelDBController {
   }
 
   public function scriptDeploy() {
-    echo "DEPLOY";
-    exit;
-    // first time deploy
+
+    // first time deploy (migrating from old system)
     if( $this->VOTableExist( get_class(new ModelRegisterModel()) ) ) {
       $this->VOcreateTable( get_class(new ModelRegisterModel()) );
       ModuleRegisterModel::$NewDeploysSQLChangeColumns;
       //forzar actualizar todas as versións
+      foreach( $modules as $module ) {
+        
+      }
     }
     else {
       $this->deploy();
