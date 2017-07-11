@@ -30,7 +30,9 @@ class ModelRegisterModel extends Model {
 
   static $NewDeploysSQLChangeColumns = "ALTER TABLE model_registers ALTER COLUMN firstVersion VARCHAR;ALTER TABLE model_registers ALTER COLUMN deployVersion VARCHAR;";
 
-  static $extraFilters = array();
+  static $extraFilters = array(
+    'searchByName'=> ' name = ? '
+  );
 
 
   public function __construct( $datarray = array(), $otherRelObj = false ) {

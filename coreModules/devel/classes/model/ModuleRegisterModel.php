@@ -28,7 +28,9 @@ class ModuleRegisterModel extends Model {
     )
   );
 
-  static $extraFilters = array();
+  static $extraFilters = array(
+    'searchByName'=> ' name = ? '
+  );
 
 
   public function __construct( $datarray = array(), $otherRelObj = false ) {

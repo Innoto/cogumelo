@@ -75,6 +75,9 @@ class  DevelDBController {
     }
 
 
+
+
+
     // deploys
     foreach( $modules as $module ) {
       $moduleDeploys = [];
@@ -83,34 +86,43 @@ class  DevelDBController {
       foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
 
         $modelCurrentVersion = $this->VOIsRegistered( $model );
+        $moduleObj = new $module();
+        $toVersion = ( isset( $moduleObj->version ) )? $moduleObj->version : false;
         if( $modelCurrentVersion !== false ) {
           // deploy modelo
+          echo "\nGetting deploys for'".$model."'";
           $moduleDeploys = array_merge(
             $moduleDeploys,
             $this->VOgetDeploys(
               $model,
               [
                 'from'=> $modelCurrentVersion ,//última versión rexistrada do modulo,
-                'to'=> $model::$version //versión actual do módulo en código
+                'to'=> $toVersion //versión actual do módulo en código
               ]
             )
           );
 
         }
         else {
-          echo "\n Getting RC deploys for'".$model."'";
+          echo "\nGetting RC deploys for'".$model."'";
           $moduleDeploys = array_merge($moduleDeploys, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
         }
 
       }
 
+
+
+
       //
       // deploy dos modelos do módulo, en orden de versión
+      echo "\nEXEC DEPLOY CODES in module $module ";
       $deployWorks = $this->executeDeployList(
         $this->orderDeploysByVersion( $moduleDeploys ), $module
       );
 
-/*
+
+
+
       //
       // deploy do módulo
       if( $deployWorks === true ) {
@@ -130,13 +142,16 @@ class  DevelDBController {
 
       }
       else {
-        echo "\nStoping deploy: Please, check your code before next execution\n";
+        echo "\n!!!! FAILURE: Please, check your deploys in module '$module' before next execution\n\n";
+        if($this->noExecute !== true) {
+          exit;
+        }
         break;
-      }*/
+      }
 
 
     }
-    exit;
+
   }
 
 
@@ -153,9 +168,11 @@ class  DevelDBController {
 
     $modelReg = new ModelRegisterModel();
 
-    $v = $modelReg->listItems( ['filters'=>['name'=> $voClass ] ]);
+    $v = $modelReg->listItems( ['filters'=>['searchByName'=> $voClass ] ]);
     if( $regInfo=$v->fetch() ) {
-      $ret = $regInfo->get('deployVersion');
+
+        $ret = $regInfo->getter('deployVersion');
+
     }
 
     return $ret;
@@ -217,7 +234,7 @@ class  DevelDBController {
         if(
           $deployElement !== false &&
           $filters['from'] !== false &&
-          $d['version'] < $deployElement['from']
+          $d['version'] > $f['from']
         ) {
           $deployElement = false; //exclude
         }
@@ -225,14 +242,13 @@ class  DevelDBController {
         if(
           $deployElement !== false &&
           $filters['to'] !== false &&
-          $d['version'] < $deployElement['from']
+          $d['version'] < $f ['to']
         ) {
           $deployElement = false; //exclude
         }
 
         if( $deployElement !== false ) {
-
-
+          $deployElement['sql'] = $this->renderRichSql( $deployElement['sql'] );
           $deployElement['voName'] = $voKey;
           array_push( $deploys, $deployElement );
         }
@@ -299,11 +315,7 @@ class  DevelDBController {
     if( sizeof($deployArrays)>0 ) {
       foreach ( $deployArrays as $deploy ) {
 
-//echo "------------------". $deploy['sql']."\n\n";
-
-        $exec = $this->data->execSQL( $deploy['sql']  );
-
-
+        $exec = $this->data->aditionalExec( $deploy['sql'], $this->noExecute  );
         if( $exec !== COGUMELO_ERROR ) {
           //  update model version
           if(
@@ -327,7 +339,6 @@ class  DevelDBController {
         else {
           echo "\n ---- Deploy FAIL in ".$deploy['voName']." - ".$deploy['version']." ---- \n";
           $ret = false;
-          exit;
           break;
         }
 
@@ -373,10 +384,12 @@ class  DevelDBController {
     $v = $modelReg->listItems( ['filters'=>['name'=> $voKey ] ]);
     if( $regInfo=$v->fetch() ) {
 
-      echo "\nUpdating ".$voKey." from version " . $regInfo->set( 'deployVersion'). "to version " .$version."\n";
       if( $this->noExecute !== true) {
-        $ret = $regInfo->set( 'deployVersion', $version );
+        $ret = $regInfo->setter( 'deployVersion', $version );
       }
+    }
+    else {
+      (new ModelRegisterModel(['name'=>$voKey, 'firstVersion'=>$version, 'deployVersion'=>$version]) )->save();
     }
 
 
@@ -412,7 +425,7 @@ class  DevelDBController {
       echo( "\nINIT: ".$moduleName."::moduleRc( )\n" );
 
       if( $this->noExecute !== true) {
-        eval( $moduleName.'::moduleRc( );' );
+        (new $moduleName)->moduleRc( );
       }
 
     }
@@ -423,7 +436,7 @@ class  DevelDBController {
       echo( "\nDEPLOY: ".$moduleName."::moduleDeploy( $whenGenerateModel )\n" );
 
       if( $this->noExecute !== true) {
-        eval( "(new ".$moduleName.")->moduleDeploy($whenGenerateModel);" );
+        (new $moduleName)->moduleDeploy($whenGenerateModel);
       }
 
     }
@@ -433,6 +446,29 @@ class  DevelDBController {
     return $this->data->createSchemaDB();
   }
 
+
+  public function renderRichSql( $sql ) {
+
+
+    // Multilang expression
+    preg_match_all( "#[\{]\s*multilang\s*\:\s*((.|\n)*?)\s*[\}]#", $sql, $matches);
+
+    if( count($matches[0]) ) {
+      for( $mi=0; count($matches[0]) > $mi; $mi++ ) {
+        $multilangLines = '';
+
+        foreach( array_keys( Cogumelo::getSetupValue( 'lang:available')) as $lang ) {
+          $multilangLines .= str_replace('$lang', $lang, $matches[1][$mi]);
+        }
+
+        $sql = str_replace($matches[0][$mi], $multilangLines, $sql);
+      }
+    }
+
+    //$debug = var_export($matches, true);
+
+    return $sql;
+  }
 
 /*
   private function compareDeployVersions( $v1, $v2 ) {
