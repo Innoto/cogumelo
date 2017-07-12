@@ -38,18 +38,26 @@ class  DevelDBController {
   }
 
   public function scriptDeploy() {
+    $this->setNoExecutionMode(false);
 
-    // first time deploy (migrating from old system)
-    if( $this->VOTableExist( get_class(new ModelRegisterModel()) ) ) {
+    // first time deploy (MIGRATE from old system)
+    devel::load('model/ModelRegisterModel.php');
+    if( $this->VOTableExist( new ModelRegisterModel() ) ) {
+      echo "\n\nMIGRATING FROM OLD DEPLOYING SYS...";
       $this->VOcreateTable( get_class(new ModelRegisterModel()) );
-      ModuleRegisterModel::$NewDeploysSQLChangeColumns;
-      //forzar actualizar todas as versións
+      exit;
+      $this->data->aditionalExec( ModuleRegisterModel::$MigrateSQLChangeColumns, $this->noExecute  );
+      //forzar actualizar todas as versións de model
       foreach( $modules as $module ) {
-        
+        foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
+          $this->registerModelVersion( $model , (new $module)->version );
+        }
       }
+      echo "\nNow you can enjoy new deploy system\n";
     }
     else {
-      $this->deploy();
+      //
+      //$this->deploy();
     }
   }
 
@@ -159,10 +167,14 @@ class  DevelDBController {
 
 
 
-  public function VOTableExist( $voClass ) {
-    $this->data->checkTableExist( $voClass );
-  }
+  public function VOTableExist( $voObj ) {
+    $ret = true;
+    if( $this->data->checkTableExist( $voObj ) === COGUMELO_ERROR ) {
+      $ret = false;
+    }
 
+    return $ret;
+  }
 
 
   public function VOIsRegistered( $voClass ) {
@@ -415,7 +427,7 @@ class  DevelDBController {
 
     $v = $moduleReg->listItems( ['filters'=>['name'=> $moduleName ] ]);
     if( $regInfo=$v->fetch() ) {
-      $ret = $regInfo->get('deployVersion');
+      $ret = $regInfo->getter('deployVersion');
     }
 
     return $ret;

@@ -28,11 +28,13 @@ class ModelRegisterModel extends Model {
     )
   );
 
-  static $NewDeploysSQLChangeColumns = "ALTER TABLE model_registers ALTER COLUMN firstVersion VARCHAR;ALTER TABLE model_registers ALTER COLUMN deployVersion VARCHAR;";
+
 
   static $extraFilters = array(
     'searchByName'=> ' name = ? '
   );
+
+  static $MigrateSQLChangeColumns = "ALTER TABLE model_registers MODIFY COLUMN firstVersion VARCHAR(100);ALTER TABLE model_registers MODIFY COLUMN deployVersion VARCHAR(100); ";
 
 
   public function __construct( $datarray = array(), $otherRelObj = false ) {
