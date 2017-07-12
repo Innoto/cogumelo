@@ -40,7 +40,7 @@ class TableController{
   var $filters = array();
   var $defaultFilters = array();
   var $extraFilters = array();
-  var $rowsEachPage = 40;
+  var $rowsEachPage = 10;
   var $affectsDependences = false;
   var $joinType = 'LEFT';
 
@@ -53,50 +53,57 @@ class TableController{
   {
 
 
-    $clientdata = $_POST;
+    $this->RAWClientData = $_POST;
     $this->model = $model;
 
 
-    if( $clientdata['exportType'] != 'false' ) {
-      $this->export = $clientdata['exportType'];
+    if( $this->RAWClientData['exportType'] != 'false' ) {
+      $this->export = $this->RAWClientData['exportType'];
     }
 
     else
     if(
-      $clientdata['action']['action'] === 'list'
+      $this->RAWClientData['action']['action'] === 'list'
     ){
 
-      if( $clientdata['firstTime'] === 'true' ) {
+      if( $this->RAWClientData['firstTime'] === 'true' ) {
         $this->isFirstTime = true;
 
         $sesRecovered = $this->recoverSession();
-        if( $sesRecovered !== true ) {
-          $clientdata = $sesRecovered;
+        if( $sesRecovered !== false ) {
+          $this->RAWClientData = array_merge( $_POST, $sesRecovered );
+          if( isset( $sesRecovered['previousPostData'] )) {
+            $this->RAWClientData['previousPostData'] = $sesRecovered['previousPostData'];
+          }
+          //$this->sesRecovered;
+          //$this->RAWClientData = $sesRecovered;
         }
-        //var_dump($sesRecovered);
-        //var_dump($clientData);
-        //exit;
-      }else {
-        $this->saveToSession($clientdata);
+        else {
+          $this->saveToSession($this->RAWClientData);
+        }
+      }
+      else {
+        $this->saveToSession($this->RAWClientData);
       }
     }
 
 
 
+    $this->clientData['order'] = $this->RAWClientData['order'];
 
-
-
-    // set orders
-    $this->clientData['order'] = $clientdata['order'];
 
     // set tabs
-    if( $clientdata['tab'] !== "" ) {
-      $this->currentTab = $clientdata['tab'];
+    if( $this->RAWClientData['tab'] !== "" ) {
+      $this->currentTab = $this->RAWClientData['tab'];
     }
 
     // set ranges
-    if( $clientdata['range'] != false ){
-      $this->clientData['range'] = $clientdata['range'];
+    if(
+      $this->RAWClientData['range'] != false &&
+      is_numeric($this->RAWClientData['range'][0]) && 
+      is_numeric($this->RAWClientData['range'][1])
+    ){
+      $this->clientData['range'] = $this->RAWClientData['range'];
     }
     else {
       $this->clientData['range'] = array(0, $this->rowsEachPage );
@@ -104,22 +111,22 @@ class TableController{
 
 
     // filters
-    if( $clientdata['filters'] != 'false' ) {
-      $this->clientData['filters'] = $clientdata['filters'];
+    if( $this->RAWClientData['filters'] != 'false' ) {
+      $this->clientData['filters'] = $this->RAWClientData['filters'];
     }
     else {
       $this->clientData['filters'] = false;
     }
 
     // search box
-    if(  $clientdata['search'] != 'false') {
-      $this->clientData['search'] = $clientdata['search'];
+    if(  $this->RAWClientData['search'] != 'false') {
+      $this->clientData['search'] = $this->RAWClientData['search'];
     }
     else {
       $this->clientData['search'] = false;
     }
 
-    $this->clientData['action'] = $clientdata['action'];
+    $this->clientData['action'] = $this->RAWClientData['action'];
   }
 
 
@@ -138,12 +145,12 @@ class TableController{
 
   function setRowsEachPage( $rowsEachPage ) {
 
-    $clientdata = $_POST;
+    //$this->RAWClientData = $_POST;
 
     $this->rowsEachPage = $rowsEachPage;
 
     // set ranges
-    if( $clientdata['range'] === false || $clientdata['range']==='' ){
+    if( $this->RAWClientData['range'] === false || $this->RAWClientData['range']==='' ){
       $this->clientData['range'] = array(0, $rowsEachPage);
     }
 
@@ -616,6 +623,8 @@ class TableController{
         'joinType' => $this->joinType
     );
 
+    //var_dump($p);
+
     //Cogumelo::console($this->getFilters() );
 
     eval('$lista = $this->model->'. $this->controllerMethodAlias['list'].'( $p );');
@@ -631,12 +640,14 @@ class TableController{
     echo '"colsDef":'.json_encode($this->colsIntoArray() ).',';
     echo '"colsClasses":'.json_encode($this->colsClasses ).',';
     echo '"tabs":'.json_encode($this->tabs).',';
+    echo '"search":'. json_encode($this->clientData['search']).',';
     echo '"filters":'.json_encode($this->filters).',';
     echo '"extraFilters":'.json_encode($this->extraFilters).',';
     echo '"exports":'.json_encode($this->getExportsForClient()) . ',';
     echo '"actions":'.json_encode($this->getActionsForClient()) . ',';
     echo '"rowsEachPage":'. $this->rowsEachPage .',';
     echo '"totalRows":'. $totalRows.',';
+    echo '"previousPostData":'. json_encode($this->RAWClientData) .',';
     $coma = '';
     echo '"table" : [';
     if($lista != false) {

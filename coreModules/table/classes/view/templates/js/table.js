@@ -130,7 +130,8 @@ function cogumeloTable( tableId, tableUrl ) {
         order: that.order,
         range: currentRange,
         action: action,
-        search: that.search
+        search: that.search,
+        clientCurrentPage: that.currentPage,
 
       },
       success: function(tableData) {
@@ -138,6 +139,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
         that.clearData();
         that.initTabValues();
+        that.setSearchValue();
         if( that.extraFilters == false ){
           that.setExtraFilters();
         }
@@ -146,6 +148,11 @@ function cogumeloTable( tableId, tableUrl ) {
         that.initOrderValues();
         that.setHeaders();
         that.setRows();
+
+        if( typeof that.tableData.previousPostData != 'undefined' && typeof that.tableData.previousPostData.clientCurrentPage != 'undefined' ) {
+          that.rememberPage( that.tableData.previousPostData.clientCurrentPage );
+        }
+
         that.setPager();
         if (res) res();
         that.firstTime = false;
@@ -162,10 +169,10 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.initTabValues = function() {
 
-    if( !that.currentTab ) {
+    if( !that.currentTab && typeof that.tableData.tabs != 'undefined' ) {
       that.currentTab = { key: that.tableData.tabs.tabsKey, default:that.tableData.tabs.defaultKey};
 
-      if( that.tableData.tabs != false){
+      if( that.tableData.tabs != false ){
         $.each( that.tableData.tabs.tabs , function(i,e)  {
           if(i == that.currentTab.default){
             var sel = ' SELECTED ';
@@ -406,15 +413,24 @@ function cogumeloTable( tableId, tableUrl ) {
 
   }
 
+  that.setSearchValue = function(  ) {
+    var searchString = this.tableData.search;
+    if( searchString != "false" && searchString != null  && searchString != '' && typeof searchString == 'string' ) {
+      that.interfaceAction('search');
+      $(that.searchInput.val(searchString)) ;
+    }
+  }
+
+  that.rememberPage = function(page) {
+    that.pagersCurrent.val( page );
+    that.currentPage= parseInt(page);
+  }
+
 
   that.setPager = function( page ) {
 
     var mustReload = false;
     var maxPage = 1;
-
-
-
-
 
     if( that.tableData.totalRows > that.tableData.rowsEachPage ){
       maxPage = Math.ceil( that.tableData.totalRows / that.tableData.rowsEachPage );
@@ -433,7 +449,11 @@ function cogumeloTable( tableId, tableUrl ) {
     that.totalRows.html( that.tableData.totalRows );
 
     that.pagersTotal.html( maxPage );
-    that.pagersCurrent.val( that.currentPage );
+
+    if( that.pagersCurrent.val() == '') {
+      that.pagersCurrent.val( that.currentPage );
+    }
+
 
 
     if( that.currentPage == maxPage ){
@@ -453,6 +473,8 @@ function cogumeloTable( tableId, tableUrl ) {
     if( mustReload ) {
       that.load();
     }
+
+
   }
 
 
@@ -588,6 +610,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.actionSearch = function( searchText ) {
     if( searchText != '' ) {
       that.search = searchText;
+      that.currentPage = 1;
       that.load();
       that.interfaceAction('search');
     }
@@ -597,6 +620,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.searchClear = function() {
     that.searchInput.val('');
     that.search = false;
+    that.currentPage = 1;
     that.load();
     that.interfaceAction('unsearch');
   }
