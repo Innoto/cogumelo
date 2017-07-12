@@ -327,6 +327,7 @@ class TableController{
   function setListMethodAlias($listMethod) {
     $this->controllerMethodAlias['list'] = $listMethod;
   }
+  
 
   /**
   * set exoport controller
