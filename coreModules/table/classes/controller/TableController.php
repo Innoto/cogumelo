@@ -40,7 +40,7 @@ class TableController{
   var $filters = array();
   var $defaultFilters = array();
   var $extraFilters = array();
-  var $rowsEachPage = 10;
+  var $rowsEachPage = 40;
   var $affectsDependences = false;
   var $joinType = 'LEFT';
 
@@ -100,7 +100,7 @@ class TableController{
     // set ranges
     if(
       $this->RAWClientData['range'] != false &&
-      is_numeric($this->RAWClientData['range'][0]) && 
+      is_numeric($this->RAWClientData['range'][0]) &&
       is_numeric($this->RAWClientData['range'][1])
     ){
       $this->clientData['range'] = $this->RAWClientData['range'];
