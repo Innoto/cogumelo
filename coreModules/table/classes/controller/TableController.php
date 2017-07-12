@@ -40,7 +40,7 @@ class TableController{
   var $filters = array();
   var $defaultFilters = array();
   var $extraFilters = array();
-  var $rowsEachPage = 40;
+  var $rowsEachPage = 30;
   var $affectsDependences = false;
   var $joinType = 'LEFT';
 
