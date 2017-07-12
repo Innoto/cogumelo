@@ -13,6 +13,7 @@
 
 class TableController{
 
+  var $isFirstTime = false;
   var $control = false;
   var $clientData = array();
   var $colsDef = array();
@@ -60,6 +61,31 @@ class TableController{
       $this->export = $clientdata['exportType'];
     }
 
+    else
+    if(
+      $clientdata['action']['action'] === 'list'
+    ){
+
+      if( $clientdata['firstTime'] === 'true' ) {
+        $this->isFirstTime = true;
+
+        $sesRecovered = $this->recoverSession();
+        if( $sesRecovered !== true ) {
+          $clientdata = $sesRecovered;
+        }
+        //var_dump($sesRecovered);
+        //var_dump($clientData);
+        //exit;
+      }else {
+        $this->saveToSession($clientdata);
+      }
+    }
+
+
+
+
+
+
     // set orders
     $this->clientData['order'] = $clientdata['order'];
 
@@ -96,6 +122,19 @@ class TableController{
     $this->clientData['action'] = $clientdata['action'];
   }
 
+
+  function recoverSession() {
+    $ret = false;
+    if( isset($_SESSION[ 'cogumelo_table_'.$_SERVER['REQUEST_URI'] ])) {
+      $ret = $_SESSION[ 'cogumelo_table_'.$_SERVER['REQUEST_URI'] ];
+    }
+
+    return $ret;
+  }
+
+  function saveToSession( $sessionData ) {
+    $_SESSION[ 'cogumelo_table_'.$_SERVER['REQUEST_URI'] ] = $_POST;
+  }
 
   function setRowsEachPage( $rowsEachPage ) {
 
@@ -327,7 +366,7 @@ class TableController{
   function setListMethodAlias($listMethod) {
     $this->controllerMethodAlias['list'] = $listMethod;
   }
-  
+
 
   /**
   * set exoport controller
@@ -552,6 +591,7 @@ class TableController{
   */
   function execJsonTable() {
     // if is executing a action ( like delete or update) and have permissions to do it
+
     if(
       $this->clientData['action']['action'] != 'list' &&
       $this->clientData['action']['action'] != 'count'  &&

@@ -15,6 +15,7 @@ $(function() {
 
 function cogumeloTable( tableId, tableUrl ) {
   var that = this;
+  that.firstTime = true;
   that.range = [];
   that.order = false;
   that.currentTab = false;
@@ -122,6 +123,7 @@ function cogumeloTable( tableId, tableUrl ) {
       url: tableUrl ,
       type: 'POST',
       data: {
+        firstTime : that.firstTime,
         exportType: false,
         tab : that.tabsContent.val(),
         filters: that.extraFilters,
@@ -146,6 +148,7 @@ function cogumeloTable( tableId, tableUrl ) {
         that.setRows();
         that.setPager();
         if (res) res();
+        that.firstTime = false;
       }
     });
 
