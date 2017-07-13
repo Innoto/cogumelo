@@ -71,7 +71,7 @@ function cogumeloTable( tableId, tableUrl ) {
         break;
       case "closeFilters":
         that.filters.hide();
-        if(that.extraFilters != false){
+        if(that.extraFilters != false ){
           that.showFiltersResume();
         }
         that.openFiltersButton.show();
@@ -87,6 +87,7 @@ function cogumeloTable( tableId, tableUrl ) {
         that.extraFilters = false;
         that.setExtraFilters();
         that.resumeFilters.hide();
+        that.setPager(1);
         break;
       case "default":
       default:
@@ -142,9 +143,19 @@ function cogumeloTable( tableId, tableUrl ) {
         that.setSearchValue();
 
         if( typeof that.tableData.previousPostData != 'undefined' && typeof that.tableData.previousPostData.filters != 'undefined' ) {
-          that.extraFilters = that.tableData.previousPostData.filters;
+
+          if(  that.tableData.previousPostData.filters === 'false' ) {
+            that.extraFilters = false;
+          }
+          else {
+            that.extraFilters = that.tableData.previousPostData.filters;
+          }
+
         }
         that.setExtraFilters();
+        that.interfaceAction('openFilters');
+        that.interfaceAction('closeFilters');
+
 
         that.setActionValues();
         that.setExportValues();
@@ -207,7 +218,7 @@ function cogumeloTable( tableId, tableUrl ) {
       $.each( e.options , function(i2,e2) {
         var isSelected = ' ';
 
-        if( (that.extraFilters == 'false'|| that.extraFilters == false ) && e.default == i2 ) {
+        if(  that.extraFilters == false  && e.default == i2 ) {
           isSelected = ' SELECTED ';
         }
         else
@@ -248,6 +259,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
     var resumeString = '';
     var coma = '';
+
 
     $.each(that.extraFilters, function(i,e){
       eval('var filter = that.tableData.extraFilters.'+i)
