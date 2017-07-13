@@ -19,6 +19,8 @@ class TableController{
   var $colsDef = array();
   var $colsDefToExport = array();
   var $colsClasses = array();
+  var $sessionMaxLife = 1800;
+
 
   var $eachRowUrl = '';
   var $newItemUrl = '';
@@ -49,7 +51,7 @@ class TableController{
   * @param object $model: is the data model
   * @param array $data  generally is htme full $_POST data variable
   */
-  function __construct($model)
+  function __construct($model, $useSessions = false)
   {
 
 
@@ -63,7 +65,9 @@ class TableController{
 
     else
     if(
-      $this->RAWClientData['action']['action'] === 'list'
+      $this->RAWClientData['action']['action'] === 'list' &&
+      $useSessions === true
+
     ){
 
       if( $this->RAWClientData['firstTime'] === 'true' ) {
@@ -132,15 +136,23 @@ class TableController{
 
   function recoverSession() {
     $ret = false;
-    if( isset($_SESSION[ 'cogumelo_table_'.$_SERVER['REQUEST_URI'] ])) {
-      $ret = $_SESSION[ 'cogumelo_table_'.$_SERVER['REQUEST_URI'] ];
+    if(
+      isset($_SESSION[ 'cogumelo_table_object' ]) &&
+      isset($_SESSION['cogumelo_table_lastupdate']) &&
+      ( time() - $_SESSION['cogumelo_table_lastupdate'] < $this->sessionMaxLife ) &&
+      isset($_SESSION['cogumelo_table_url']) &&
+      $_SESSION[ 'cogumelo_table_url'] === $_SERVER['REQUEST_URI']
+    ) {
+      $ret = $_SESSION[ 'cogumelo_table_object' ];
     }
 
     return $ret;
   }
 
   function saveToSession( $sessionData ) {
-    $_SESSION[ 'cogumelo_table_'.$_SERVER['REQUEST_URI'] ] = $_POST;
+    $_SESSION[ 'cogumelo_table_object'] = $sessionData;
+    $_SESSION[ 'cogumelo_table_url'] = $_SERVER['REQUEST_URI'];
+    $_SESSION[ 'cogumelo_table_lastupdate'] = time();
   }
 
   function setRowsEachPage( $rowsEachPage ) {
