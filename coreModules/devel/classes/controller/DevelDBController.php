@@ -85,7 +85,8 @@ class  DevelDBController {
     }
 
 
-
+ ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 
     // deploys
@@ -120,7 +121,8 @@ class  DevelDBController {
 
       }
 
-
+ ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 
       //
@@ -137,7 +139,7 @@ class  DevelDBController {
       // deploy do módulo
       if( $deployWorks === true ) {
 
-        if( $this->moduleIsRegistered( $module ) !== false ){
+        if( $this->moduleIsRegistered( $module ) !== false ) {
           if( $this->moduleIsUpdated() === false ) {
             $this->execModuleDeploy($module, false);
             $this->registerModuleVersion();
@@ -228,10 +230,7 @@ class  DevelDBController {
 
     if( count( $vo->deploySQL ) > 0 ){
 
-      foreach( $vo->deploySQL as $d ) {
-
-        $deployElement = $d;
-
+      foreach( $vo->deploySQL as $deployElement ) {
 
         // exclude when are looking for onlyRC and is not RC deploy
         if(
@@ -248,7 +247,7 @@ class  DevelDBController {
         if(
           $deployElement !== false &&
           $filters['from'] !== false &&
-          $d['version'] > $f['from']
+          $deployElement['version'] > $f['from']
         ) {
           $deployElement = false; //exclude
         }
@@ -256,7 +255,7 @@ class  DevelDBController {
         if(
           $deployElement !== false &&
           $filters['to'] !== false &&
-          $d['version'] < $f ['to']
+          $deployElement['version'] < $f ['to']
         ) {
           $deployElement = false; //exclude
         }
