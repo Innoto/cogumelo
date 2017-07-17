@@ -65,6 +65,47 @@ class  DevelDBController {
   }
 
 
+
+  public function simulationCreateTablesOnView( ) {
+    $ctA = [];
+    $moduleDeploysCreateTable = [];
+
+    $modules = $this->getModules();
+
+
+    foreach( $modules as $module ) {
+
+      foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
+
+        $nct = ( (new $model() )->notCreateDBTable !== null )?(new $model())->notCreateDBTable : false;
+        if( $nct !== true ) {
+          $moduleDeploysCreateTable = array_merge($moduleDeploysCreateTable, $this->VOgetCreateTableAsdeploy($model) );
+        }
+
+      }
+
+    }
+
+    foreach( $modules as $module ) {
+      //deploy de modelos
+      foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
+        $moduleDeploysCreateTable = array_merge($moduleDeploysCreateTable, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
+      }
+    }
+
+
+    if(sizeof($moduleDeploysCreateTable)>0) {
+      foreach($moduleDeploysCreateTable as $d) {
+        $ctA[] = "/*MODEL ".$d['voName']."  */\n".$d['sql'];
+      }
+    }
+
+
+    return $ctA;
+  }
+
+
+
   public function deploy() {
     $modules = $this->getModules();
 
@@ -495,7 +536,7 @@ class  DevelDBController {
       $ret = floatval( $versionString);
     }
     else {
-      reg_match( '#((.*)\#)?(\d{1,10}(.\d{1,10})?)#', $versionString, $vMatches );
+      preg_match( '#((.*)\#)?(\d{1,10}(.\d{1,10})?)#', $versionString, $vMatches );
       $ret = $vMatches[2];
     }
 
