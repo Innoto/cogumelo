@@ -88,7 +88,7 @@ class MysqlDevelDBDAO extends MysqlDAO {
   }
 
   public function checkTableExist( $connection, $vo_obj ) {
-    return $this->aditionalExec($connection, 'DESCRIBE `23'.$vo_obj::$tableName.'`;', false);
+    return $this->aditionalExec($connection, 'DESCRIBE `'.$vo_obj::$tableName.'`;', false);
   }
 
   public function dropTable( $connection, $vo_name, $noExecute = true  ) {

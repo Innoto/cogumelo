@@ -42,12 +42,15 @@ class  DevelDBController {
 
     // first time deploy (MIGRATE from old system)
     devel::load('model/ModelRegisterModel.php');
-    if( $this->VOTableExist( new ModelRegisterModel() ) ) {
-      echo "\n\nMIGRATING FROM OLD DEPLOYING SYS...";
+
+
+    if( $this->VOTableExist( new ModelRegisterModel() ) === false ) {
+
+      echo "\n\nMIGRATING FROM OLD DEPLOYING SYS...\n";
+
       $this->VOcreateTable( get_class(new ModelRegisterModel()) );
-      exit;
-      $this->data->aditionalExec( ModuleRegisterModel::$MigrateSQLChangeColumns, $this->noExecute  );
       //forzar actualizar todas as versións de model
+      $modules = $this->getModules();
       foreach( $modules as $module ) {
         foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
           $this->registerModelVersion( $model , (new $module)->version );
@@ -85,9 +88,6 @@ class  DevelDBController {
     }
 
 
- ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
-
 
     // deploys
     foreach( $modules as $module ) {
@@ -121,8 +121,7 @@ class  DevelDBController {
 
       }
 
- ///////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
+
 
 
       //
@@ -171,7 +170,9 @@ class  DevelDBController {
 
   public function VOTableExist( $voObj ) {
     $ret = true;
-    if( $this->data->checkTableExist( $voObj ) === COGUMELO_ERROR ) {
+    $tER = $this->data->checkTableExist( $voObj );
+
+    if( $tER  === COGUMELO_ERROR ) {
       $ret = false;
     }
 
@@ -231,6 +232,11 @@ class  DevelDBController {
     if( count( $vo->deploySQL ) > 0 ){
 
       foreach( $vo->deploySQL as $deployElement ) {
+
+
+        if( isset($deployElement['version'])) {
+          $deployElement['version'] = $this->getOnlyVersionFromVersionString($deployElement['version']);
+        }
 
         // exclude when are looking for onlyRC and is not RC deploy
         if(
@@ -483,8 +489,21 @@ class  DevelDBController {
     return $sql;
   }
 
+  function getOnlyVersionFromVersionString( $versionString ) {
+    $ret = false;
+    if( is_numeric($versionString)  ) {
+      $ret = floatval( $versionString);
+    }
+    else {
+      reg_match( '#((.*)\#)?(\d{1,10}(.\d{1,10})?)#', $versionString, $vMatches );
+      $ret = $vMatches[2];
+    }
+
+    return $ret;
+  }
+
 /*
-  private function compareDeployVersions( $v1, $v2 ) {
+  static function compareDeployVersions( $v1, $v2 ) {
 
     reg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $v1, $v1Matches );
     reg_match( '#^(.*)\#(\d{1,10}(.\d{1,10})?)#', $v2, $v2Matches );

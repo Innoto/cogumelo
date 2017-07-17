@@ -19,12 +19,10 @@ class ModuleRegisterModel extends Model {
       'size' => 100
     ),
     'firstVersion' => array(
-      'type' => 'VARCHAR',
-      'size' => 100
+      'type' => 'FLOAT'
     ),
     'deployVersion' => array(
-      'type' => 'VARCHAR',
-      'size' => 100
+      'type' => 'FLOAT'
     )
   );
 
