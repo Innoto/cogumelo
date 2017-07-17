@@ -65,7 +65,7 @@ class  DevelDBController {
   }
 
 
-  private function deploy() {
+  public function deploy() {
     $modules = $this->getModules();
 
 
