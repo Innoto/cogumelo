@@ -116,7 +116,7 @@ class DevelView extends View
   }
 
   public function get_sql_deploy() {
-return "LO";
+
     $ret = false;
 
     ob_start(); // Start output buffering

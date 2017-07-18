@@ -142,6 +142,7 @@ class MysqlDAO extends DAO {
         $connectionControl->db->next_result();
         $connectionControl->db->use_result();
       }
+      $connectionControl->db->store_result();
     }
 
     return $ret;
