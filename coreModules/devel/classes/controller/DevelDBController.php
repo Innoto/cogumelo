@@ -135,7 +135,7 @@ class  DevelDBController {
       //deploy de modelos
       foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
 
-        $modelCurrentVersion = //$this->VOIsRegistered( $model );
+        $modelCurrentVersion = $this->VOIsRegistered( $model );
         $moduleObj = new $module();
         $toVersion = ( isset( $moduleObj->version ) )? $moduleObj->version : false;
 
@@ -282,8 +282,15 @@ class  DevelDBController {
         if( isset($deployElement['version'])) {
           $deployElement['version'] = $this->getOnlyVersionFromVersionString( $deployElement['version'] );
         }
+        if( isset($filters['from'])) {
+          $filters['from'] =  (float) $filters['from'];
+        }
+        if( isset($filters['to'])) {
+          $filters['to'] = (float) $filters['to'];
+        }
 
-        //echo $voKey.'='.$filters['from'].' - '.$deployElement['version'].'- '.$filters['to']."\n";
+
+        echo $voKey.'='.$filters['from'].' - '.$deployElement['version'].'- '.$filters['to']."\n";
 
         // exclude when are looking for onlyRC and is not RC deploy
         if(
@@ -545,7 +552,7 @@ class  DevelDBController {
       $ret = $vMatches[3];
     }
 
-    return (float) $ret;
+    return  (float) $ret;
   }
 
 /*
