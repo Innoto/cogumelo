@@ -23,6 +23,9 @@ class ModelRegisterModel extends Model {
     ),
     'deployVersion' => array(
       'type' => 'FLOAT'
+    ),
+    'executedRcDeploy' => array(
+      'type' => 'BOOLEAN'
     )
   );
 
