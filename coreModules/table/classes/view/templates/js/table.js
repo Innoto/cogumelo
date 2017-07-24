@@ -249,7 +249,9 @@ function cogumeloTable( tableId, tableUrl ) {
     that.extraFilters  = {};
     that.filtersContent.find('select, input').each( function(i,e) {
       //console.log( $(e).attr('data-filter-id'), $(e).val() )
-      eval('that.extraFilters.' + $(e).attr('data-filter-id') + ' = "' + $(e).val() + '"' );
+//      eval('that.extraFilters.' + $(e).attr('data-filter-id') + ' = "' + $(e).val() + '"' );
+
+      eval( "that.extraFilters['" + $(e).attr('data-filter-id') + "'] = '" + $(e).val() + "'");
     });
 
     that.setPager(1);
@@ -262,7 +264,10 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
     $.each(that.extraFilters, function(i,e){
-      eval('var filter = that.tableData.extraFilters.'+i)
+
+      eval('var filter = that.tableData.extraFilters["'+ i +'"]');
+
+
 
       //console.log( i, title , e );
       var valueString = e;
@@ -275,7 +280,7 @@ function cogumeloTable( tableId, tableUrl ) {
         }
       });
 
-      if(e != '*') {
+      if(e != '*') {console.log('filtro',filter)
         resumeString += coma + ' (<b>' + filter.title + '</b>: '+valueString+')';
       }
       coma = ',';
