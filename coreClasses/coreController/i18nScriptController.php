@@ -95,7 +95,8 @@ class i18nScriptController {
         }
       }
     }
-
+    
+    $filesAll = array();
     // Project po
     if ($appFilesMain){
       foreach($appFilesMain as $i => $dir){
