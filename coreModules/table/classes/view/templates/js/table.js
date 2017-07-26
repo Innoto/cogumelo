@@ -613,7 +613,7 @@ function cogumeloTable( tableId, tableUrl ) {
     if( act != '0' && selectedRows.length > 0 ){
 
       cogumelo.clientMsg.confirm(
-        __('Apply action "') + that.actionSelect.find('option:selected').html() + __('" on ') + selectedRows.length+ ' elements',
+        __('Apply action "') + that.actionSelect.find('option:selected').html() + __('" on ') + selectedRows.length+ ' '.__('elements'),
         function( accion ) {
           if( accion === true) {
             that.load( {action: act, keys: selectedRows}, resExt );

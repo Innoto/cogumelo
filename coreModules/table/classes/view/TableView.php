@@ -68,7 +68,7 @@ class TableView {
         <!-- Paginador -->
         <div class="tablePaginator">
           <div class="totalElements">
-            <span class="totalRows">0</span> elements
+            <span class="totalRows">0</span> '.__("elements").'
           </div>
           <div class="tablePage">
             <span>Page: <input type="text" value="1"> of <span class="totalPages">1</span></span>
@@ -86,7 +86,7 @@ class TableView {
     <!-- Paginador -->
     <div class="tablePaginator ">
       <div class="totalElements">
-        <span class="totalRows">0</span> elements
+        <span class="totalRows">0</span> '.__("elements").'
       </div>
       <div class="tablePage">
         <span>Page: <input type="text" value="1"> of <span class="totalPages">1</span></span>

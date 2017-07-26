@@ -115,8 +115,22 @@ if( $argc > 1 ) {
       Cogumelo::load('coreController/i18nScriptController.php');
       $i18nscriptController = new i18nScriptController();
       $i18nscriptController->setEnviroment();
-      $i18nscriptController->c_i18n_gettext();
+      $i18nscriptController->c_i18n_getSystemTranslations();
       echo "The files.po are ready to be edited!\n";
+    break;
+
+    case 'generateAppTranslations':
+      Cogumelo::load('coreController/i18nScriptController.php');
+      $i18nscriptController = new i18nScriptController();
+      $i18nscriptController->setEnviroment();
+      $i18nscriptController->c_i18n_getAppTranslations();
+      echo "The files.po are ready to be edited!\n";
+    break;
+
+    case 'removeAllTranslations':
+      Cogumelo::load('coreController/i18nScriptController.php');
+      $i18nscriptController = new i18nScriptController();
+      $i18nscriptController->c_i18n_removeTranslations();
     break;
 
     case 'compileTranslations':
@@ -237,8 +251,9 @@ function printOptions(){
     * restoreDB               Restore a database
 
  + Internationalization
-    * generateTranslations    Get all the web text into a file.po
-    * compileTranslations     Compile file.po and get the translations ready
+    * generateTranslations    Get a file.po for each system module (cogumelo and geozzy)
+    * generateAppTranslations Get a file.po for the project
+    * compileTranslations     Mix all files.po in one and compile it: now translations are ready
   \n\n";
 }
 
