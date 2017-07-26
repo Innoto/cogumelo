@@ -56,7 +56,7 @@ class i18nScriptController {
   }
 
   /**
-    * Get all the text in the system (cogumelo + geozzy) to be translated and update
+    * Get all the text in the system (cogumelo + geozzy) to be translated and generate a file.po in each module
     */
   public function c_i18n_getSystemTranslations(){
     error_reporting(E_ALL ^ E_NOTICE);
@@ -80,14 +80,14 @@ class i18nScriptController {
   }
 
   /**
-    * Get all the app translations and generate an only PO with system plus app translations
+    * Get all the app translations and generate a file PO into the project
     */
   public function c_i18n_getAppTranslations(){
 
     //$appFilesModule = CacheUtilsController::listFolderFiles($this->dir_modules, array('php','js','tpl'), false);
     $appFilesMain = CacheUtilsController::listFolderFiles($this->dir_main, array('php','js','tpl'), false);
 
-    // Generamos los .po de cada módulos
+    // App modules po
     if ($dh = opendir($this->dir_modules)) {
       while (($module = readdir($dh)) !== false) {
         if (is_dir($this->dir_modules . $module) && $module!="." && $module!=".."){
@@ -96,7 +96,7 @@ class i18nScriptController {
       }
     }
 
-    // Generamos los .po de la parte principal
+    // Project po
     if ($appFilesMain){
       foreach($appFilesMain as $i => $dir){
         $parts = explode('.',$dir->getRealPath());
@@ -470,8 +470,7 @@ class i18nScriptController {
   }
 
   /**
-    * Compile files.po to get the translations ready to be used
-    */
+    * Mix system and app POS in one and compile it: translations will be ready for use now    */
   public function c_i18n_compile() {
     exec('chmod 700 '.$this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh');
     foreach ($this->dir_lc as $l){
@@ -487,7 +486,7 @@ class i18nScriptController {
   }
 
   /**
-    * Translate files.po into .json to be used in client
+    * Translate files.po into .json to be used in client: not in use today
     */
   public function c_i18n_json() {
     foreach ($this->dir_lc as $l){

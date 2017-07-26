@@ -11,31 +11,31 @@ msgstr ""
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:7
 msgid "A positive or negative decimal number please (Ej. 123,25)"
-msgstr "Un número decimal positivo o negativo, por favor (Ej. 123,25)"
+msgstr "Un número decimal positivo ou negativo, por favor (Ej. 123,25)"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:17
 msgid "A positive or negative number with {0} decimal, separated with comma"
-msgstr "Un número positivo o negativo con {0} decimales, separados por comas"
+msgstr "Un número positivo ou negativo con {0} decimales, separados por comas"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:27
 msgid "Please enter a value greater than or equal to {0}."
-msgstr "Por favor, introduce un valor mayor o igual a {0}"
+msgstr "Por favor, introduce un valor maior ou igual a {0}"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:37
 msgid "Please enter a value less than or equal to {0}."
-msgstr "Por favor, introduce un valor menor o igual a {0}"
+msgstr "Por favor, introduce un valor menor ou igual a {0}"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:62
 msgid "The DNI format is not NNNNNNNNC"
-msgstr "El formato del DNI debe ser NNNNNNNNC"
+msgstr "O formato do DNI debe ser NNNNNNNNC"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:97
 msgid "The NIE format is not CNNNNNNNC'"
-msgstr "El formato del NIE debe ser CNNNNNNNN"
+msgstr "O formato do NIE debe ser CNNNNNNNN"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:135
 msgid "The NIF format is not CNNNNNNNC'"
-msgstr "El formato del NIF debe ser CNNNNNNNC"
+msgstr "O formato do NIF debe ser CNNNNNNNC"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:145
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:167
@@ -45,30 +45,30 @@ msgstr "Por favor, introduce un valor válido"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:201
 msgid "The date format is not DD-MM-YYYY"
-msgstr "El formato de la fecha debe ser DD-MM-YYYY"
+msgstr "El formato da data debe ser DD-MM-YYYY"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:212
 msgid "The date format is not YYYY-MM-DD hh:mm:ss"
-msgstr "El formato de la fecha es YYYY-MM-DD hh:mm:ss"
+msgstr "El formato da data é YYYY-MM-DD hh:mm:ss"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:233
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:274
 msgid "The date entered is too old (> {0})"
-msgstr "La fecha introducida es muy antigua (>{0})"
+msgstr "A data introducida é moi antiga (>{0})"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:252
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:293
 msgid "The date entered must be oldest (> {0})"
-msgstr "La fecha introducida debe ser más antigua (>{0})"
+msgstr "A data introducida debe ser máis antiga (>{0})"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:315
 msgid "The time entered is too old (> {0})"
-msgstr "La fecha introducida es demasiado antigua (> {0})"
+msgstr "A data introducida é demasiado antiga (> {0})"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:336
 msgid "The time entered must be oldest (> {0})"
-msgstr "La fecha introducida debe ser más antigua (> {0})"
+msgstr "A data introducida debe ser máis antiga (> {0})"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:348
 msgid "The url is not a Youtube url."
-msgstr "No es una url de Youtube"
+msgstr "Non é unha url de Youtube"

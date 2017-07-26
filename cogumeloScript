@@ -251,8 +251,9 @@ function printOptions(){
     * restoreDB               Restore a database
 
  + Internationalization
-    * generateTranslations    Get all the web text into a file.po
-    * compileTranslations     Compile file.po and get the translations ready
+    * generateTranslations    Get a file.po for each system module (cogumelo and geozzy)
+    * generateAppTranslations Get a file.po for the project
+    * compileTranslations     Mix all files.po in one and compile it: now translations are ready
   \n\n";
 }
 
