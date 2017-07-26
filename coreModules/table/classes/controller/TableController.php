@@ -66,9 +66,9 @@ class TableController{
     else
     if(
       $this->RAWClientData['action']['action'] === 'list' &&
-      $useSessions === true
-
-    ){
+      $useSessions === true &&
+      isset($this->RAWClientData['firstTime'])
+    ) {
 
       if( $this->RAWClientData['firstTime'] === 'true' ) {
         $this->isFirstTime = true;
