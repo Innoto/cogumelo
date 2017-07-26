@@ -95,7 +95,7 @@ class i18nScriptController {
         }
       }
     }
-    
+
     $filesAll = array();
     // Project po
     if ($appFilesMain){
@@ -479,10 +479,17 @@ class i18nScriptController {
       $this->getSystemPo('geozzy');
       // We merge cogumelo geozzy and app po to have only one final PO
       exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$l.'/'.$this->textdomain.'_geozzy.po');
+
       // We compile the resultant PO and generate a json for client side
       echo exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
       exec('php '.$this->dir_modules_c.'/i18nServer/classes/po2json.php -i '.$l.'/'.$this->textdomain.'.po -o '.$l.'/translation.json');
-      //exec('rm '.$l.'/'.$this->textdomain.'.po');
+    }
+    /* Borramos os ficheiros temporales para evitar confusións;
+    poderían deixarse para ver os PO de sistema xenerados e o da APP e modificar algunha cadea aí directamente en caso de ser necesario */
+    foreach ($this->dir_lc as $l){
+      exec('rm '.$l.'/'.$this->textdomain.'.po');
+      exec('rm '.$l.'/'.$this->textdomain.'_cogumelo.po');
+      exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
     }
   }
 
