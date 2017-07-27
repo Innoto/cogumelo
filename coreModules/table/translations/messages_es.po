@@ -44,6 +44,7 @@ msgstr "Estás filtrando por"
 msgid "(Resource type, Routes)."
 msgstr "(Tipo de recurso, rutas)"
 
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:74
 #: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:92
 msgid "Page"
 msgstr "Página"
