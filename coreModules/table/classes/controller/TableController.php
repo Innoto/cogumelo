@@ -30,12 +30,8 @@ class TableController{
       'count' => 'listCount'
       );
   var $export = false;
-  var $exports = array(
-      '0'=> array('name'=>'Export', 'controller'=>''),
-      'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
-      'xls' => array('name'=>'Excel', 'controller'=>'XlsExportTableController')
-      );
-  var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
+  var $exports = false;
+  var $actions = false;
   var $tabs = false;
   var $searchId = 'tableSearch';
   var $currentTab = null;
@@ -53,7 +49,12 @@ class TableController{
   */
   function __construct($model, $useSessions = false)
   {
-
+    $this->exports = array(
+        '0'=> array('name'=>__('Export'), 'controller'=>''),
+        'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
+        'xls' => array('name'=>'Excel', 'controller'=>'XlsExportTableController')
+        );
+    $this->actions = array( '0'=> array('name'=>__('Actions'), 'actionMethod' => '' ) );    
 
     $this->RAWClientData = $_POST;
     $this->model = $model;
