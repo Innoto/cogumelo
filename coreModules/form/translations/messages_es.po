@@ -72,3 +72,7 @@ msgstr "La fecha introducida debe ser más antigua (> {0})"
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:348
 msgid "The url is not a Youtube url."
 msgstr "No es una url de Youtube"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:359
+msgid "Can not be a url"
+msgstr ""

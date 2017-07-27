@@ -31,11 +31,11 @@ class TableController{
       );
   var $export = false;
   var $exports = array(
-      '0'=> array('name'=>'Export', 'controller'=>''),
+      '0'=> array('name'=>__('Export'), 'controller'=>''),
       'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
       'xls' => array('name'=>'Excel', 'controller'=>'XlsExportTableController')
       );
-  var $actions = array( '0'=> array('name'=>'Actions', 'actionMethod' => '' ) );
+  var $actions = array( '0'=> array('name'=>__('Actions'), 'actionMethod' => '' ) );
   var $tabs = false;
   var $searchId = 'tableSearch';
   var $currentTab = null;
