@@ -1,0 +1,65 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:71
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:89
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/templates/js/table.js:565
+msgid "elements"
+msgstr "elementos"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:28
+msgid "Filters"
+msgstr "Filtros"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:31
+msgid "Search"
+msgstr "Buscar"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:40
+msgid "Error loading filters"
+msgstr "Eroor al cargar los filtros"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:47
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:55
+msgid "Clear filters"
+msgstr "Limpiar los filtros"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:48
+msgid "Close"
+msgstr "Cerrar"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:53
+msgid "You are filtering by"
+msgstr "Estás filtrando por"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:54
+msgid "(Resource type, Routes)."
+msgstr "(Tipo de recurso, rutas)"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:74
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:92
+msgid "Page"
+msgstr "Página"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:74
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:92
+msgid "of"
+msgstr "de"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:53
+#: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:34
+msgid "Export"
+msgstr "Exportar"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:57
+#: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:38
+msgid "Actions"
+msgstr "Acciones"

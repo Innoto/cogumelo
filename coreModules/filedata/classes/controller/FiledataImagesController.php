@@ -213,7 +213,6 @@ class FiledataImagesController {
       }
     }
 
-    $toRouteInfo = pathinfo( $toRoute );
 
     $saveFormatExt = false;
     switch( $this->profile['saveFormat'] ) {
@@ -226,7 +225,12 @@ class FiledataImagesController {
     }
 
 
-    if( !file_exists( $toRoute ) ) {
+    $toRouteInfo = pathinfo( $toRoute );
+    if( file_exists( $toRoute ) ) {
+      Cogumelo::debug('FiledataImagesController: createImageProfile: toRoute' );
+      $result = $toRoute;
+    }
+    elseif( !empty($toRoute) ) {
       $toRouteReal = $toRoute;
       if( $saveFormatExt ) {
         $toRouteReal = $toRouteInfo['dirname'] .'/'. $toRouteInfo['filename'] .'.'. $saveFormatExt;
@@ -241,14 +245,6 @@ class FiledataImagesController {
         $result = $toRoute;
       }
     }
-    else {
-      Cogumelo::debug('FiledataImagesController: createImageProfile: toRoute' );
-      $result = $toRoute;
-    }
-
-
-
-
 
     if( $this->profile && $mimeTypeOrg && ( $result !== $toRoute || $toEncode ) ) {
 

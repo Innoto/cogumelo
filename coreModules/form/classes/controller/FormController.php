@@ -116,7 +116,7 @@ class FormController implements Serializable {
   }
 
   public function reset( $name = false, $action = false ) {
-    error_log('FormController: NOTICE: form->reset()' );
+    Cogumelo::debug('FormController: NOTICE: form->reset()' );
     $formSessionId = 'CGFSI_'.$this->getTokenId();
     unset( $_SESSION[ $formSessionId ] );
 
@@ -504,7 +504,7 @@ class FormController implements Serializable {
                       $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
                       break;
                   }
-                  cogumelo::debug('FormController: FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
+                  Cogumelo::debug('FormController: FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
                 }
               }
               break;
@@ -1448,26 +1448,26 @@ class FormController implements Serializable {
 
     foreach( $fieldNames as $fieldName ) {
       if( $result && $this->getFieldType( $fieldName ) === 'file' ) {
-        cogumelo::debug('FormController: processFileFields: Almacenando fileField: '.$fieldName );
+        Cogumelo::debug('FormController: processFileFields: Almacenando fileField: '.$fieldName );
 
         $fileFieldValue = $this->getFieldValue( $fieldName );
         // error_log('FormController: '. print_r( $fileFieldValue, true ) );
 
         if( !$this->getFieldParam( $fieldName, 'multiple' ) ) {
           // Basic: only one file
-          cogumelo::debug('FormController: processFileFields Basic: only one file' );
+          Cogumelo::debug('FormController: processFileFields Basic: only one file' );
           // error_log('FormController: FILE fileFieldValue inicial: '. print_r( $fileFieldValue, true ) );
 
           if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false ) {
             switch( $fileFieldValue['status'] ) {
               case 'LOAD':
-                cogumelo::debug('FormController: processFileFields: LOAD' );
+                Cogumelo::debug('FormController: processFileFields: LOAD' );
                 $fileFieldValue['status'] = 'LOADED';
                 $fileFieldValue['values'] = $fileFieldValue['validate'];
                 $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
+                Cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 /*
                   $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
                   $destDir = $this->getFieldParam( $fieldName, 'destDir' );
@@ -1485,7 +1485,7 @@ class FormController implements Serializable {
 
                   if( !$this->existErrors() ) {
                     // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-                    cogumelo::debug('FormController: Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                    Cogumelo::debug('FormController: Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
                     if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
                       $result = false;
                       $this->addFieldRuleError( $fieldName, 'cogumelo',
@@ -1501,17 +1501,17 @@ class FormController implements Serializable {
                     $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
                     $this->setFieldValue( $fieldName, $fileFieldValue );
                     $this->updateFieldToSession( $fieldName );
-                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                    Cogumelo::debug('FormController: Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
                   }
                 */
                 break;
               case 'REPLACE':
-                cogumelo::debug('FormController: processFileFields: REPLACE' );
+                Cogumelo::debug('FormController: processFileFields: REPLACE' );
                 $fileFieldValue['values'] = $fileFieldValue['validate'];
                 $fileFieldValue['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
+                Cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 /*
                   $fileName = $this->secureFileName( $fileFieldValue['validate']['originalName'] );
                   $destDir = $this->getFieldParam( $fieldName, 'destDir' );
@@ -1529,7 +1529,7 @@ class FormController implements Serializable {
 
                   if( !$this->existErrors() ) {
                     // TODO: DETECTAR Y SOLUCIONAR COLISIONES!!!
-                    cogumelo::debug('FormController: Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
+                    Cogumelo::debug('FormController: Movendo ' . $fileFieldValue['validate']['absLocation'] . ' a ' . $fullDestPath.'/'.$fileName );
                     if( !rename( $fileFieldValue['validate']['absLocation'], $fullDestPath.'/'.$fileName ) ) {
                       $result = false;
                       $this->addFieldRuleError( $fieldName, 'cogumelo',
@@ -1545,32 +1545,32 @@ class FormController implements Serializable {
                     $fileFieldValue['values']['absLocation'] = $destDir.'/'.$fileName;
                     $this->setFieldValue( $fieldName, $fileFieldValue );
                     $this->updateFieldToSession( $fieldName );
-                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
+                    Cogumelo::debug('FormController: Info: processFileFields OK. values: ' . print_r( $fileFieldValue, true ) );
                   }
                 */
                 break;
               case 'DELETE':
-                cogumelo::debug('FormController: processFileFields: DELETE' );
+                Cogumelo::debug('FormController: processFileFields: DELETE' );
                 // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
                 $fileFieldValue['values'] = $fileFieldValue['prev'];
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
+                Cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 break;
               case 'EXIST':
-                cogumelo::debug('FormController: processFileFields OK: EXIST - NADA QUE HACER' );
+                Cogumelo::debug('FormController: processFileFields OK: EXIST - NADA QUE HACER' );
                 $fileFieldValue['values'] = $fileFieldValue['prev'];
                 $this->setFieldValue( $fieldName, $fileFieldValue );
                 $this->updateFieldToSession( $fieldName );
-                cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
+                Cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileFieldValue ) );
                 break;
             }
           } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] !== false )
         }// Basic: only one file
         else {
           // Multiple: add files
-          cogumelo::debug('FormController: processFileFields Multiple: add files' );
-          cogumelo::debug('FormController: FILE fileFieldValue inicial: '. json_encode( $fileFieldValue ) );
+          Cogumelo::debug('FormController: processFileFields Multiple: add files' );
+          Cogumelo::debug('FormController: FILE fileFieldValue inicial: '. json_encode( $fileFieldValue ) );
 
           if( !empty( $fileFieldValue['multiple'] ) ) {
             foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
@@ -1578,28 +1578,28 @@ class FormController implements Serializable {
               if( isset( $fileData['status'] ) && $fileData['status'] !== false ) {
                 switch( $fileData['status'] ) {
                   case 'LOAD':
-                    cogumelo::debug('FormController: processFileFields: LOAD' );
+                    Cogumelo::debug('FormController: processFileFields: LOAD' );
                     $fileData['status'] = 'LOADED';
                     $fileData['values'] = $fileData['validate'];
                     $fileData['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
-                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
+                    Cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                   case 'REPLACE':
-                    cogumelo::debug('FormController: processFileFields: REPLACE' );
+                    Cogumelo::debug('FormController: processFileFields: REPLACE' );
                     $fileData['values'] = $fileData['validate'];
                     $fileData['values']['destDir'] = $this->getFieldParam( $fieldName, 'destDir' );
-                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
+                    Cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                   case 'DELETE':
-                    cogumelo::debug('FormController: processFileFields: DELETE' );
+                    Cogumelo::debug('FormController: processFileFields: DELETE' );
                     // TODO: EJECUTAR LOS PASOS PARA EL ESTADO DELETE!!!
                     $fileData['values'] = $fileData['prev'];
-                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
+                    Cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                   case 'EXIST':
-                    cogumelo::debug('FormController: processFileFields OK: EXIST - NADA QUE HACER' );
+                    Cogumelo::debug('FormController: processFileFields OK: EXIST - NADA QUE HACER' );
                     $fileData['values'] = $fileData['prev'];
-                    cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
+                    Cogumelo::debug('FormController: Info: processFileFields OK. values: ' . json_encode( $fileData ) );
                     break;
                 }
               } // if( isset( $fileData['status'] ) && $fileData['status'] !== false )
@@ -1653,7 +1653,7 @@ class FormController implements Serializable {
             // QUITAR FILES_APP_PATH
             $absLocationActual = self::FILES_APP_PATH . $fileFieldValue['values']['absLocation'];
             $absLocationAnterior = $fileFieldValue['validate']['absLocation'];
-            cogumelo::debug('FormController: Devolvendo ' . $absLocationActual .' a '. $absLocationAnterior );
+            Cogumelo::debug('FormController: Devolvendo ' . $absLocationActual .' a '. $absLocationAnterior );
             if( !rename( $absLocationActual, $absLocationAnterior ) ) {
               $result = false;
               $this->addFieldRuleError( $fieldName, 'cogumelo',
@@ -1665,7 +1665,7 @@ class FormController implements Serializable {
               unset( $fileFieldValue['values'] );
               $this->setFieldValue( $fieldName, $fileFieldValue );
               $this->updateFieldToSession( $fieldName );
-              cogumelo::debug('FormController: Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
+              Cogumelo::debug('FormController: Info: revertFileFieldsLoaded OK. values: ' . print_r( $fileFieldValue, true ) );
             }
           */
         } // if( isset( $fileFieldValue['status'] ) && $fileFieldValue['status'] === 'LOADED' )
@@ -2197,13 +2197,33 @@ class FormController implements Serializable {
         case 'checkbox':
         case 'radio':
           $html['options'] = array();
-          foreach( $field['options'] as $val => $text ) {
-            $html['options'][$val] = array();
-            $html['options'][$val]['input'] = '<input name="'.$fieldName.'"'.
-              ' value="'.htmlspecialchars( $val ).'"'.
-              ' type="'.$field['type'].'"'.$attribs.'>';
-            $html['options'][$val]['text'] = $text;
-            $html['options'][$val]['label'] = $text!='' ? '<label>'.$text.'</label>' : '';
+          if( isset($field['options']) && is_array($field['options']) && count($field['options'])>0 ) {
+            foreach( $field['options'] as $val => $text ) {
+              if( is_array( $text ) && isset( $text['value'] ) ) {
+                $infoArray = $text; // Cambio de nombre para no confundir
+                $html['options'][$val] = array();
+                $html['options'][$val]['text'] = $infoArray['text'];
+                $html['options'][$val]['label'] = empty( $infoArray['label'] ) ? '' : '<label>'.$infoArray['label'].'</label>';
+
+                $html['options'][$val]['input'] = '<input name="'.$fieldName.'"'.
+                  ' value="'.htmlspecialchars( $infoArray['value'] ).'"'.
+                  ' type="'.$field['type'].'"'.$attribs;
+                foreach( $infoArray as $dataKey => $dataValue ) {
+                  if( mb_strpos( $dataKey, 'data-' ) === 0 ) {
+                    $html['options'][$val]['input'] .= ' '.$dataKey.'="'.$dataValue.'"';
+                  }
+                }
+                $html['options'][$val]['input'] .= '>';
+              }
+              else {
+                $html['options'][$val] = array();
+                $html['options'][$val]['input'] = '<input name="'.$fieldName.'"'.
+                  ' value="'.htmlspecialchars( $val ).'"'.
+                  ' type="'.$field['type'].'"'.$attribs.'>';
+                $html['options'][$val]['text'] = $text;
+                $html['options'][$val]['label'] = $text!='' ? '<label>'.$text.'</label>' : '';
+              }
+            }
           }
           // Colocamos los checked
           if( isset( $field['value'] ) ) {
