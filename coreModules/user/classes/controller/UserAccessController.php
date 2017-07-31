@@ -12,7 +12,7 @@ class UserAccessController {
   //
   // Constructor
   //
-  public function UserAccesscontroller() {
+  public function __construct() {
     $this->setSessioncontrol( new UserSessionController() );
     $this->setSessiondata($this->sessioncontrol->getUser());
   }
