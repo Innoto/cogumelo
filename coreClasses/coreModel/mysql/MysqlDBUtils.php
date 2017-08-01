@@ -57,8 +57,14 @@ class MysqlDBUtils
       $spatialChain = '';
 
       if( $rg['type'] == 'POINT' ) {
-        $spatialChain = $rg['data'][0].' '.$rg['data'][1];
-        $ret = $rg['type'].'(('.$spatialChain.'))';
+        $spatialChain = $rg['data'][0].' '. $rg['data'][1];
+        if(ctype_space($spatialChain)) {
+          $ret = false;
+        }
+        else {
+          $ret = $rg['type'].'(('.$spatialChain.'))';
+        }
+
       }
       else if( $rg['type'] == 'POLYGON') {
         $comma = '';
