@@ -273,6 +273,45 @@ Class VO
   }
 
 
+  private function transformSetterValue( $setterkey, $val ) {
+
+    if( isset($type[$setterkey]) && isset($type[$setterkey]['type']) ) {
+      $dataType = $type[$setterkey]['type'];
+    }
+    else {
+      $dataType = false;
+    }
+
+
+
+    switch ( $setterkey ) {
+      case 'BIT':
+      case 'TINYINT':
+      case 'SMALLINT':
+      case 'INT':
+      case 'BIGINT':
+        $value = (int) $val;
+        break;
+      case 'FLOAT':
+        $value = (float) $val;
+        break;
+      case 'CHAR':
+      case 'VARCHAR':
+      case 'TEXT':
+      case 'LONGTEXT':
+        $value = (string) $val;
+        break;
+      default:
+        $value = $val;
+        break;
+
+    }
+
+
+    return $value;
+  }
+
+
   /**
    * set any data attribute by key
    *
@@ -283,16 +322,9 @@ Class VO
    */
   function &setter( $setterkey, $val = null, $lang = false ) {
 
-    if( $val === true ) {
-      $value = 1;
-    }
-    else
-    if( $val === false ){
-      $value = 0;
-    }
-    else {
-      $value = $val;
-    }
+
+    $value = $this->transformSetterValue($setterkey,$val);
+
 
     $cols = $this->getCols();
 
