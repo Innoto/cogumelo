@@ -57,7 +57,7 @@ class MysqlDBUtils
       $spatialChain = '';
 
       if( $rg['type'] == 'POINT' ) {
-        $spatialChain = $rg['data'][0].' '. $rg['data'][1];
+        $spatialChain = (float) $rg['data'][0].' '. (float) $rg['data'][1];
         if(ctype_space($spatialChain)) {
           $ret = false;
         }
