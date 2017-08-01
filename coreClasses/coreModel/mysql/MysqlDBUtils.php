@@ -31,7 +31,7 @@ class MysqlDBUtils
         $ret['data'] = explode( ',', $matches[2] );
         foreach ($ret['data'] as $k => $val) {
 
-          $ret['data'][$k] = '('.explode(' ', $val).')';
+          $ret['data'][$k] = '(('.explode(' ', $val).'))';
         }
       }
       else {

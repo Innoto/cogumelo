@@ -335,7 +335,7 @@ class MysqlDAO extends DAO {
 
 
   /**
-  * Ket keys as string and set function ST_AsText() to geo
+  * Ket keys as string and set function AsText() to geo
   *
   * @return string
   */
@@ -355,7 +355,7 @@ class MysqlDAO extends DAO {
 
 
       if( isset($VO::$cols[$k]) && $VO::$cols[$k]['type'] == 'GEOMETRY' ) {
-        $procesedKeys[] = ' ST_AsText('.$key.') as "'.$key.'" ';
+        $procesedKeys[] = ' AsText('.$key.') as "'.$key.'" ';
       }
       else {
         $procesedKeys[] = $key;
@@ -432,7 +432,7 @@ class MysqlDAO extends DAO {
       $valArray[] = $val;
 
       if( isset( $VOobj::$cols[$colName] ) && $VOobj::$cols[$colName]['type'] == 'GEOMETRY' ) {
-        $answrs .= ', ST_GeomFromText( ? )';
+        $answrs .= ', GeomFromText( ? )';
       }
       else {
         $answrs .= ', ?';
@@ -474,7 +474,7 @@ class MysqlDAO extends DAO {
     foreach( $VOobj->data as $colk => $col ) {
 
       if( isset( $VOobj::$cols[$colk] ) && $VOobj::$cols[$colk]['type'] == 'GEOMETRY' ) {
-        $setvalues .= ', '.$colk.'= ST_GeomFromText( ? ) ';
+        $setvalues .= ', '.$colk.'= GeomFromText( ? ) ';
       }
       else {
         $setvalues .= ', '.$colk.'= ? ';
