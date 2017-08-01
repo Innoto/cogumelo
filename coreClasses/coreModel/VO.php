@@ -275,8 +275,9 @@ Class VO
 
   private function transformSetterValue( $setterkey, $val ) {
 
-    if( isset($type[$setterkey]) && isset($type[$setterkey]['type']) ) {
-      $dataType = $type[$setterkey]['type'];
+    if( isset($this::$cols[$setterkey]) && isset($this::$cols[$setterkey]['type']) ) {
+      $dataType = $this::$cols[$setterkey]['type'];
+
     }
     else {
       $dataType = false;
