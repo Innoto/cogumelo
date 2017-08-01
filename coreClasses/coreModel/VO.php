@@ -285,7 +285,7 @@ Class VO
 
 
     switch ( $setterkey ) {
-      case 'BIT':
+      case 'BOOLEAN':
       case 'TINYINT':
       case 'SMALLINT':
       case 'INT':
