@@ -284,7 +284,7 @@ Class VO
 
 
 
-    switch ( $setterkey ) {
+    switch ( $dataType ) {
       case 'BOOLEAN':
       case 'TINYINT':
       case 'SMALLINT':
