@@ -7,26 +7,3 @@ REMEMBER! code is under alpha version. Please read the [DOC WIKI](https://github
 
 We recomend to look carefully the [Framework dependences](https://github.com/pablinhob/cogumelo/wiki/Overview#wiki-dependences)
 
-
-
-### Current status of work:
-![Current status of framework](https://cloud.githubusercontent.com/assets/4938295/4391631/0086f7aa-4407-11e4-8414-a8080f0e6339.png)
-
-### Framework features:
-* [OK] Modular system 
-* [OK] Model View Controller
-* [OK] DB Query caché with <http://memcached.org/> 
-* [OK] Autoresolve client and server vendor lib dependences ( bower and composer)
-* [OK] Devel utilities module
-* [OK] Sys manager script 
- - Create database schems
- - set permissions 
- - flush caches
- - resolve 3rd party dependences
-* [OK] Ajax Tables
-* [OK] Forms
- - Validation 
- - Auto Form generating
- - Easy file uploads without page reloads
-
-
