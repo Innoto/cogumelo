@@ -60,7 +60,7 @@ class MysqlDBUtils
         $spatialChain = $rg['data'][0].' '.$rg['data'][1];
 
         if( ctype_space($spatialChain) ) {
-          $ret = 0;
+          $ret = null;
         }
         else {
           $ret = $rg['type'].'('.$spatialChain.')';
