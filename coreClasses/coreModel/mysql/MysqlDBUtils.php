@@ -24,14 +24,14 @@ class MysqlDBUtils
       if( $ret['type'] == 'POINT') {
         //$ret['data'] = array_map( 'floatval', explode(' ', $matches[2]));
         foreach( explode(' ', $matches[2]) as $val ) {
-          $ret[ 'data' ][] = $val;
+          $ret[ 'data' ][] = ''.$val.'';
         }
       }
       else if( $ret['type'] == 'POLYGON' ) {
         $ret['data'] = explode( ',', $matches[2] );
         foreach ($ret['data'] as $k => $val) {
 
-          $ret['data'][$k] = '('.explode(' ', $val).')';
+          $ret['data'][$k] = '(('.explode(' ', $val).'))';
         }
       }
       else {
@@ -58,7 +58,14 @@ class MysqlDBUtils
 
       if( $rg['type'] == 'POINT' ) {
         $spatialChain = $rg['data'][0].' '.$rg['data'][1];
-        $ret = $rg['type'].'('.$spatialChain.')';
+
+        if( ctype_space($spatialChain) ) {
+          $ret = null;
+        }
+        else {
+          $ret = $rg['type'].'('.$spatialChain.')';
+        }
+
       }
       else if( $rg['type'] == 'POLYGON') {
         $comma = '';
@@ -77,7 +84,7 @@ class MysqlDBUtils
           $comma = ',';
         }
 
-        $ret = $rg['type'].'('.$spatialChain.')';
+        $ret = $rg['type'].'(('.$spatialChain.'))';
       }
 
     }
