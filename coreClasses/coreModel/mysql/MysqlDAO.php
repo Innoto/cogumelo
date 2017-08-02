@@ -137,11 +137,11 @@ class MysqlDAO extends DAO {
       $ret = true;
       // Consumo los resultados sin guardarlos
       while( $connectionControl->db->more_results() ) {
-        var_dump($connectionControl->db->get_result());
-        exit;
+
         $connectionControl->db->next_result();
         $connectionControl->db->use_result();
       }
+      $connectionControl->db->store_result();
     }
 
     return $ret;

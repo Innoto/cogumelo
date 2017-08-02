@@ -80,7 +80,7 @@ class DevelView extends View
       $data_sql[$k] = SqlFormatter::format($v);
     }
     $this->template->assign("data_sql" ,
-    $this->get_sql_tables()
+      $data_sql
     );
   }
 
@@ -91,7 +91,7 @@ class DevelView extends View
     $this->template->assign('erData', json_encode(VOUtils::getAllRelScheme()) );
 
 
-    //$this->template->assign("deploy_sql" ,  str_replace( "\n", '<br>',  $this->get_sql_deploy() ));
+    $this->template->assign("deploy_sql" ,  str_replace( "\n", '<br>',  $this->get_sql_deploy() ));
 
   }
 
@@ -110,15 +110,9 @@ class DevelView extends View
   //
   public function get_sql_tables() {
 
-    $ret = false;
-
-    ob_start(); // Start output buffering
     $fvotdbcontrol = new DevelDBController();
-    $fvotdbcontrol->deploy();
-    $ret= ob_get_contents(); // Store buffer in variable
-    ob_end_clean(); // End buffering and clean up
+    return $fvotdbcontrol->simulationCreateTablesOnView();
 
-    return [$ret];
   }
 
   public function get_sql_deploy() {

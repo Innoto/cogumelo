@@ -63,12 +63,14 @@ class MysqlDevelDBDAO extends MysqlDAO {
   }
 
   public function aditionalExec( $connection, $strSQL, $noExecute = true   ) {
+    $ret = false;
+
 
     if( $noExecute === false) {
       $ret = $this->rawExecSQL( $connection, $strSQL, array() );
     }
     else {
-      echo $retSQL;
+      echo $strSQL;
       $ret = true;
     }
 

@@ -10,7 +10,7 @@ class  DevelDBController {
 
   var $data;
   var $voUtilControl;
-  var $noExecute = false;
+  var $noExecute = true;
 
   public function __construct( $usuario = false, $password = false, $DB = false ) {
     $this->data = new Facade(false, "DevelDB", "devel");
@@ -38,14 +38,12 @@ class  DevelDBController {
   }
 
   public function scriptDeploy() {
+
     $this->setNoExecutionMode(false);
 
-    // first time deploy (MIGRATE from old system)
     devel::load('model/ModelRegisterModel.php');
 
-
     if( $this->VOTableExist( new ModelRegisterModel() ) === false ) {
-
       echo "\n\nMIGRATING FROM OLD DEPLOYING SYS...\n";
 
       $this->VOcreateTable( get_class(new ModelRegisterModel()) );
@@ -59,13 +57,54 @@ class  DevelDBController {
       echo "\nNow you can enjoy new deploy system\n";
     }
     else {
-      //
-      //$this->deploy();
+
+      $this->deploy();
     }
   }
 
 
-  public function deploy() {
+
+  public function simulationCreateTablesOnView( ) {
+    $ctA = [];
+    $moduleDeploysCreateTable = [];
+
+    $modules = $this->getModules();
+
+
+    foreach( $modules as $module ) {
+
+      foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
+
+        $nct = ( (new $model() )->notCreateDBTable !== null )?(new $model())->notCreateDBTable : false;
+        if( $nct !== true ) {
+          $moduleDeploysCreateTable = array_merge($moduleDeploysCreateTable, $this->VOgetCreateTableAsdeploy($model, $module) );
+        }
+
+      }
+
+    }
+
+    foreach( $modules as $module ) {
+      //deploy de modelos
+      foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
+        $moduleDeploysCreateTable = array_merge($moduleDeploysCreateTable, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
+      }
+    }
+
+
+    if(sizeof($moduleDeploysCreateTable)>0) {
+      foreach($moduleDeploysCreateTable as $d) {
+        $ctA[] = "/*MODEL ".$d['voName']."  */\n".$d['sql'];
+      }
+    }
+
+
+    return $ctA;
+  }
+
+
+
+  public function deploy( ) {
     $modules = $this->getModules();
 
 
@@ -73,16 +112,17 @@ class  DevelDBController {
     foreach( $modules as $module ) {
       $moduleDeploysCreateTable = [];
       foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
+
         $modelCurrentVersion = $this->VOIsRegistered( $model );
         if( $modelCurrentVersion === false ) {
           $nct = ( (new $model() )->notCreateDBTable !== null )?(new $model())->notCreateDBTable : false;
           if( $nct !== true ) {
-            $moduleDeploysCreateTable = array_merge($moduleDeploysCreateTable, $this->VOgetCreateTableAsdeploy($model) );
+            $moduleDeploysCreateTable = array_merge($moduleDeploysCreateTable, $this->VOgetCreateTableAsdeploy($model, $module) );
           }
         }
       }
       if(sizeof($moduleDeploysCreateTable)>0) {
-        echo "\n Creating tables in module '".$module."'";
+        echo "\n /*Creating tables in module '".$module."'*/\n";
         $this->executeDeployList( $moduleDeploysCreateTable , $module );
       }
     }
@@ -99,25 +139,36 @@ class  DevelDBController {
         $modelCurrentVersion = $this->VOIsRegistered( $model );
         $moduleObj = new $module();
         $toVersion = ( isset( $moduleObj->version ) )? $moduleObj->version : false;
-        if( $modelCurrentVersion !== false ) {
+
+        //echo $model.' = '.$modelCurrentVersion."\n";
+
+        if( $modelCurrentVersion ) {
           // deploy modelo
-          echo "\nGetting deploys for'".$model."'";
-          $moduleDeploys = array_merge(
-            $moduleDeploys,
-            $this->VOgetDeploys(
-              $model,
-              [
-                'from'=> $modelCurrentVersion ,//última versión rexistrada do modulo,
-                'to'=> $toVersion //versión actual do módulo en código
-              ]
-            )
+          $voDeploys = $this->VOgetDeploys(
+            $model,
+            [
+              'from'=> $modelCurrentVersion ,//última versión rexistrada do modulo,
+              'to'=> $toVersion //versión actual do módulo en código
+            ]
           );
 
+
+          if( sizeof($voDeploys) > 0 ) {
+            echo "\n/*Getting ".sizeof($voDeploys)." deploys in'".$model."'*/";
+            $moduleDeploys = array_merge( $moduleDeploys, $voDeploys);
+          }
+
+
+
         }
-        else {
-          echo "\nGetting RC deploys for'".$model."'";
+
+        if( $this->VoIsExecutedRC( $model ) === false ) {
+          echo "\n/*Getting RC deploys for'".$model."'*/";
           $moduleDeploys = array_merge($moduleDeploys, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
+
+
         }
+
 
       }
 
@@ -126,40 +177,32 @@ class  DevelDBController {
 
       //
       // deploy dos modelos do módulo, en orden de versión
-      echo "\nEXEC DEPLOY CODES in module $module ";
+      //echo "\nEXEC DEPLOY CODES in module $module ";
       $deployWorks = $this->executeDeployList(
         $this->orderDeploysByVersion( $moduleDeploys ), $module
       );
 
 
 
+      if($this->noExecute === false) {
+        //
+        // deploy do módulo
+        if( $deployWorks === true ) {
 
-      //
-      // deploy do módulo
-      if( $deployWorks === true ) {
-
-        if( $this->moduleIsRegistered( $module ) !== false ) {
-          if( $this->moduleIsUpdated() === false ) {
-            $this->execModuleDeploy($module, false);
-            $this->registerModuleVersion();
+          if( $this->moduleIsRegistered( $module ) === false ) {
+            $this->execModuleRC( $module );
           }
 
-        }
-        else {
-          $this->execModuleRC( $module );
           $this->execModuleDeploy($module, true);
           $this->registerModuleVersion($module);
         }
-
-      }
-      else {
-        echo "\n!!!! FAILURE: Please, check your deploys in module '$module' before next execution\n\n";
-        if($this->noExecute !== true) {
+        else {
+          echo "\n!!!! FAILURE: Please, check your deploys in module '$module' before next execution\n\n";
           exit;
-        }
-        break;
-      }
 
+        }
+
+      }
 
     }
 
@@ -195,10 +238,25 @@ class  DevelDBController {
     return $ret;
   }
 
+  function VoIsExecutedRC($voClass) {
+    $ret = false;
+
+    $modelReg = new ModelRegisterModel();
+
+    $v = $modelReg->listItems( ['filters'=>['searchByName'=> $voClass ] ]);
+    if( $regInfo=$v->fetch() ) {
+
+        $ret = $regInfo->getter('executedRcDeploy');
+
+    }
+
+    return $ret;
+  }
 
 
-  public function VOgetCreateTableAsdeploy( $voKey ) {
-    return [[ 'version' => 0, 'sql'=> $this->data->getTableSQL($voKey),  'voName'=>$voKey]];
+
+  public function VOgetCreateTableAsdeploy( $voKey, $module ) {
+    return [[ 'version' => (new $module())->version, 'sql'=> $this->data->getTableSQL($voKey),  'voName'=>$voKey]];
   }
 
 
@@ -231,48 +289,60 @@ class  DevelDBController {
 
     if( count( $vo->deploySQL ) > 0 ){
 
-      foreach( $vo->deploySQL as $deployElement ) {
 
 
-        if( isset($deployElement['version'])) {
-          $deployElement['version'] = $this->getOnlyVersionFromVersionString($deployElement['version']);
+      if( $filters['onlyRC'] == true  ){
+        foreach( $vo->deploySQL as $deployElement) {
+
+          // RC
+          if( isset($deployElement['executeOnGenerateModelToo']) && $deployElement['executeOnGenerateModelToo']=== true ) {
+
+            if( isset($deployElement['version'])) {
+              $deployElement['version'] = $this->getOnlyVersionFromVersionString( $deployElement['version'] );
+            }
+
+            $deployElement['sql'] = $this->renderRichSql( $deployElement['sql'] );
+            $deployElement['voName'] = $voKey;
+            array_push( $deploys, $deployElement );
+          }
         }
+      }
+      else {
+        foreach( $vo->deploySQL as $deployElement ) {
+          if( isset($deployElement['version'])) {
+            $deployElement['version'] = $this->getOnlyVersionFromVersionString( $deployElement['version'] );
+          }
+          if( isset($filters['from'])) {
+            $filters['from'] =  round((float) $filters['from'],2);
+          }
+          if( isset($filters['to'])) {
+            $filters['to'] = (float) $filters['to'];
+          }
 
-        // exclude when are looking for onlyRC and is not RC deploy
-        if(
-          $filters['onlyRC'] == true &&
-          (
-            !isset($deployElement['executeOnGenerateModelToo']) ||
-            ( isset($deployElement['executeOnGenerateModelToo']) && $deployElement['executeOnGenerateModelToo'] === false )
-          )
-        ) {
-          $deployElement = false; //exclude
-        }
 
 
-        if(
-          $deployElement !== false &&
-          $filters['from'] !== false &&
-          $deployElement['version'] > $f['from']
-        ) {
-          $deployElement = false; //exclude
-        }
+          if(
 
-        if(
-          $deployElement !== false &&
-          $filters['to'] !== false &&
-          $deployElement['version'] < $f ['to']
-        ) {
-          $deployElement = false; //exclude
-        }
 
-        if( $deployElement !== false ) {
-          $deployElement['sql'] = $this->renderRichSql( $deployElement['sql'] );
-          $deployElement['voName'] = $voKey;
-          array_push( $deploys, $deployElement );
+            ($filters['from'] < $deployElement['version']) && ($deployElement['version'] <= $filters['to'])
+
+          ) {
+
+
+
+            $deployElement['sql'] = $this->renderRichSql( $deployElement['sql'] );
+            $deployElement['voName'] = $voKey;
+            array_push( $deploys, $deployElement );
+          }
+
+
+
+
         }
 
       }
+
+
     }
 
 
@@ -335,25 +405,21 @@ class  DevelDBController {
       foreach ( $deployArrays as $deploy ) {
 
         $exec = $this->data->aditionalExec( $deploy['sql'], $this->noExecute  );
+
+
+
         if( $exec !== COGUMELO_ERROR ) {
           //  update model version
-          if(
-            (
-              isset($deploy['executeOnGenerateModelToo']) &&
-              $deploy['executeOnGenerateModelToo'] === true
-            ) ||
-            $deploy['version'] === 0
-          ) {
-            // register last version
 
-            $moduleVersion = (new $module())->version;
-
-            $this->registerModelVersion( $deploy['voName'] ,$moduleVersion );
+          if( isset($deploy['executeOnGenerateModelToo']) && $deploy['executeOnGenerateModelToo']=== true ) {
+            $isRCDeploy = true;
           }
           else {
-            // register current deploy version
-            $this->registerModelVersion( $deploy['voName'] ,$deploy['version'] );
+            $isRCDeploy = false;
           }
+          // register current deploy version
+          $this->registerModelVersion( $deploy['voName'] ,$deploy['version'], $isRCDeploy );
+
         }
         else {
           echo "\n ---- Deploy FAIL in ".$deploy['voName']." - ".$deploy['version']." ---- \n";
@@ -395,22 +461,29 @@ class  DevelDBController {
 
 
 
-  private function registerModelVersion( $voKey, $version ) {
+  private function registerModelVersion( $voKey, $version, $isRCDeploy= false ) {
 
 
 
     $modelReg = new ModelRegisterModel();
     $v = $modelReg->listItems( ['filters'=>['name'=> $voKey ] ]);
-    if( $regInfo=$v->fetch() ) {
 
-      if( $this->noExecute !== true) {
-        $ret = $regInfo->setter( 'deployVersion', $version );
+    if( $this->noExecute !== true) {
+      if( $regInfo=$v->fetch() ) {
+
+        $regInfo->setter( 'executedRcDeploy', $isRCDeploy );
+        $regInfo->setter( 'deployVersion', $version );
+        $regInfo->save();
+      }
+      else {
+        $regInfo = new ModelRegisterModel();
+        $regInfo->setter('name', $voKey);
+        $regInfo->setter( 'executedRcDeploy', $isRCDeploy );
+        $regInfo->setter('firstVersion', $version);
+        $regInfo->setter( 'deployVersion', $version );
+        $regInfo->save();
       }
     }
-    else {
-      (new ModelRegisterModel(['name'=>$voKey, 'firstVersion'=>$version, 'deployVersion'=>$version]) )->save();
-    }
-
 
   }
 
@@ -418,7 +491,9 @@ class  DevelDBController {
   private function registerModuleVersion( $moduleName ) {
     echo( $moduleName."::register();\n" );
     if( $this->noExecute !== true) {
-      eval( $moduleName.'::register();' );
+
+      $n=new $moduleName();
+      $n::register();
     }
 
   }
@@ -495,11 +570,11 @@ class  DevelDBController {
       $ret = floatval( $versionString);
     }
     else {
-      reg_match( '#((.*)\#)?(\d{1,10}(.\d{1,10})?)#', $versionString, $vMatches );
-      $ret = $vMatches[2];
+      preg_match( '#((.*)\#)?(.*)#', $versionString, $vMatches );
+      $ret = $vMatches[3];
     }
 
-    return $ret;
+    return  (float) $ret;
   }
 
 /*
