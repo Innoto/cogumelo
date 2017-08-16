@@ -228,9 +228,9 @@ function setValidateForm( idForm, rules, messages ) {
   $formSubmitFields = $( '[form="'+idForm+'"][type="submit"]' );
   $formSubmitFields.on({
     'mouseenter' : setSubmitElement,
-    'focusin' : setSubmitElement,
+    'focusin'    : setSubmitElement,
     'mouseleave' : unsetSubmitElement,
-    'focusout' : unsetSubmitElement
+    'focusout'   : unsetSubmitElement
   });
 
   $.validator.setDefaults({
@@ -1421,12 +1421,16 @@ function createSwitchFormLang( idForm ) {
     htmlLangSwitch += '</div>';
 
     $langSwitch = $( htmlLangSwitch );
-    $( '[form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault + ':not("input:file")' ).parent().before( $langSwitch );
-    $( '.cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault + ':not("input:file")' ).parent().before( $langSwitch );
+    $( '[form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault + ':not("input:file")' )
+      .parent().before( $langSwitch.clone() );
+    $( '.cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault + ':not("input:file")' )
+      .parent().before( $langSwitch.clone() );
 
-    $langSwitch = $( htmlLangSwitch ).addClass('langSwitch-file');
-    $( '[type=file][form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault ).parent().before( $langSwitch );
-    $( '[type=file].cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault ).parent().before( $langSwitch );
+    $langSwitchFile = $( htmlLangSwitch ).addClass('langSwitch-file');
+    $( '[type=file][form="'+idForm+'"].cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault )
+      .parent().before( $langSwitchFile.clone() );
+    $( '[type=file].cgmMForm-fileFields-'+idForm+' .cgmMForm-field.js-tr.js-tr-' + cogumelo.publicConf.langDefault )
+      .parent().before( $langSwitchFile.clone() );
 
     switchFormLang( idForm, cogumelo.publicConf.langDefault );
 
