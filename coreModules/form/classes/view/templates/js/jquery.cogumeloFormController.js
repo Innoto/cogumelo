@@ -227,9 +227,9 @@ function unsetSubmitElement( evnt ) {
 function setValidateForm( idForm, rules, messages ) {
   $formSubmitFields = $( '[form="'+idForm+'"][type="submit"]' );
   $formSubmitFields.on({
-     'mouseenter' : setSubmitElement,
+    'mouseenter' : setSubmitElement,
     'focusin' : setSubmitElement,
-     'mouseleave' : unsetSubmitElement,
+    'mouseleave' : unsetSubmitElement,
     'focusout' : unsetSubmitElement
   });
 
@@ -394,23 +394,34 @@ function formDoneOk( form, response ) {
   var idForm = $( form ).attr( 'id' );
 
   var successActions = response.success;
-  if ( successActions.onSubmitOk ) {
+  if( successActions.onSubmitOk ) {
     eval( successActions.onSubmitOk+'( idForm );' );
   }
-  if ( successActions.jsEval ) {
+  if( successActions.jsEval ) {
     eval( successActions.jsEval );
   }
-  if ( successActions.accept ) {
+  if( successActions.notify ) {
+    if( typeof cogumelo !== 'undefined' && typeof cogumelo.clientMsg !== 'undefined' && typeof cogumelo.clientMsg.notify !== 'undefined' ) {
+      cogumelo.clientMsg.notify(
+        successActions.notify,
+        { notifyType: 'success', size: 'normal', 'title': __('Success') }
+      );
+    }
+    else {
+      alert( successActions.notify );
+    }
+  }
+  if( successActions.accept ) {
     alert( successActions.accept );
   }
-  if ( successActions.redirect ) {
+  if( successActions.redirect ) {
     // Usando replace no permite volver a la pagina del form
     window.location.replace( successActions.redirect );
   }
-  if ( successActions.reload ) {
+  if( successActions.reload ) {
     window.location.reload();
   }
-  if ( successActions.resetForm ) {
+  if( successActions.resetForm ) {
     $( form )[0].reset();
     console.log( 'IMPORTANTE: En resetForm falta borrar los campos FILE porque no lo hace el reset!!!' );
   }
@@ -519,7 +530,9 @@ function reprocessFormErrors( idForm, failFields ) {
 
 
 function notifyFormErrors( idForm, numErrors ) {
-  if( typeof geozzy !== 'undefined' && typeof cogumelo.clientMsg !== 'undefined' && typeof cogumelo.clientMsg.notify !== 'undefined' ) {
+  console.log( 'There are errors in the form', numErrors );
+
+  if( typeof cogumelo !== 'undefined' && typeof cogumelo.clientMsg !== 'undefined' && typeof cogumelo.clientMsg.notify !== 'undefined' ) {
     cogumelo.clientMsg.notify(
       __('There are errors in the form'), // + ' ('+numErrors+')',
       { notifyType: 'warning', size: 'normal', 'title': __('Warning') }
