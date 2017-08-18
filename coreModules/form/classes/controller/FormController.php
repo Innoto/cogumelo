@@ -38,7 +38,7 @@ class FormController implements Serializable {
   private $enctype = 'multipart/form-data';
   private $captchaUse = false;
   private $captchaResponse = false;
-  private $keepAlive = true;
+  private $keepAlive = false;
   private $formMarginTop = 0;
   private $fields = [];
   private $rules = [];
@@ -128,7 +128,7 @@ class FormController implements Serializable {
     $this->method = 'post';
     $this->enctype = 'multipart/form-data';
     $this->captchaUse = false;
-    $this->keepAlive = true;
+    $this->keepAlive = false;
     $this->fields = [];
     $this->rules = [];
     $this->groups = [];
@@ -215,12 +215,24 @@ class FormController implements Serializable {
   }
 
   /**
-   * Establece el uso o no del proceso de keep alive
+   * Establece el uso o no del proceso de keep alive y el tiempo en minutos
    *
    * @param bool $status Action del formulario
    */
   public function setKeepAlive( $status = true ) {
-    $this->keepAlive = ($status) ? true : false;
+    if( is_int( $status ) ) {
+      $this->keepAlive = ( $status > 0 ) ? $status : false;
+    }
+    else {
+      $this->keepAlive = ( $status === true ) ? true : false;
+    }
+  }
+
+  /**
+   * Obtiene el uso o no del proceso de keep alive y el tiempo en minutos
+   */
+  public function getKeepAlive() {
+    return $this->keepAlive;
   }
 
   /**
@@ -2309,17 +2321,24 @@ class FormController implements Serializable {
   public function getScriptCode() {
     $html = '';
 
-    $separador = '';
-
-    $html .= '<!-- Cogumelo module form ' . $this->getName() . ' -->' . "\n";
-
-
-    if( $this->htmlEditor ) {
-      form::loadDependence( 'ckeditor' );
-    }
+    // js controler V2
 
     $scRules = ( count( $this->rules ) > 0 ) ? json_encode( $this->rules ) : 'false';
     $scMsgs = ( count( $this->messages ) > 0 ) ? json_encode( $this->messages ) : 'false';
+
+    $opt = [];
+    if( $this->getKeepAlive() ) {
+      $opt['keepAliveTime'] = $this->getKeepAlive();
+    }
+    if( $this->getMarginTop() ) {
+      $opt['marginTop'] = $this->getMarginTop();
+    }
+    if( $this->htmlEditor ) {
+      form::loadDependence( 'ckeditor' );
+      $opt['htmlEditor'] = true;
+    }
+    $formOptions = json_encode( $opt );
+
 
     $jsFileGroups = [];
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
@@ -2335,60 +2354,133 @@ class FormController implements Serializable {
     }
 
 
-    $html .= '<'.'script>'."\n".
-      'var cogumelo = cogumelo || {};'."\n".
-      'cogumelo.formController = cogumelo.formController || {};'."\n\n";
+    $html .= '<!-- Cogumelo module form ' . $this->getName() . ' -->' . "\n";
+    $html .= '<'.'script>'."\n\n";
+    $html .= '$( document ).ready( function() {'."\n\n";
+    $html .= '  console.log( "* PREPARANDO validateForm de '.$this->id.'" );'."\n\n";
+
+    $html .= '  var $formCtrl = new cogumelo.formControllerClass( "'.$this->id.'", '.$formOptions.' );'."\n\n";
 
     if( count( $jsFileGroups ) ) {
-      $html .= 'cogumelo.formController.fileGroup = cogumelo.formController.fileGroup || [];'."\n";
       foreach( $jsFileGroups as $fileGroupId => $fileGroupInfo ) {
-        $html .= 'cogumelo.formController.fileGroup['.$fileGroupId.'] = '.json_encode( $fileGroupInfo ).';'."\n";
+        $html .= '  $formCtrl.fileGroup['.$fileGroupId.'] = '.json_encode( $fileGroupInfo ).';'."\n";
       }
-      $html .= "\n";
+      $html .= "\n\n";
     }
 
-    $html .= '$( document ).ready( function() {'."\n".
-      '  $validateForm_'.$this->id.' = setValidateForm( "'.$this->id.'", '.$scRules.', '.$scMsgs.' );'."\n".
-      '  console.log( $validateForm_'.$this->id.' );'."\n";
+    $html .= '  var $validateForm = $formCtrl.setValidateForm( '.$scRules.', '.$scMsgs.' );'."\n\n";
+    $html .= '  console.log( "* NEW validateForm: ", $formCtrl, $validateForm );'."\n\n";
 
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
       if( $this->getFieldType( $fieldName ) === 'file' ) {
         $fileInfo = $this->getFieldValue( $fieldName );
         if( $fileInfo[ 'status' ] === 'EXIST' ) {
-          $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", { '.
+          $html .= '  $formCtrl.fileFieldToOk( "'.$fieldName.'", { '.
             '"id": "'.$fileInfo['prev']['id'].'", "name": "'.$fileInfo['prev']['name'].'", '.
-            '"aKey": "'.$fileInfo['prev']['aKey'].'", "type": "'.$fileInfo['prev']['type'].'" } );'."\n";
+            '"aKey": "'.$fileInfo['prev']['aKey'].'", "type": "'.$fileInfo['prev']['type'].'" } );'."\n\n";
         }
       }
     }
 
-    if( $this->htmlEditor ) {
-      $html .= '  activateHtmlEditor( "'.$this->id.'" );'."\n";
-    }
 
-    if( $this->getMarginTop() ) {
-      $html .= '  setFormInfo( "'.$this->id.'", "marginTop", '.$this->getMarginTop().' );'."\n";
-    }
-
-
-
-    $html .= '});'."\n";
-    $html .= '</script>'."\n";
+    $html .= '});'."\n\n"; // document ready END
+    $html .= '</script>'."\n\n";
 
     if( $this->captchaEnable() ) {
-      $html .= '<'.'script src="https://www.google.com/recaptcha/api.js" async defer></script>'."\n";
-      /*
-      $html .= '<'.'script src="https://www.google.com/recaptcha/api.js?'.
-        'onload=onloadCallback&render=explicit" async defer>'."\n";
-      */
+      $html .= '<'.'script src="https://www.google.com/recaptcha/api.js" async defer></script>'."\n\n";
     }
 
-    $html .= '<!-- Cogumelo module form '.$this->getName().' - END -->'."\n";
+    $html .= '<!-- Cogumelo module form '.$this->getName().' - END -->'."\n\n";
 
     //$html .= '<pre>'. print_r( $this->fields, true ) .'</pre>';
 
     return $html;
   } // function getScriptCode
+
+
+  // js controler V1
+
+  // public function getScriptCode() {
+  //   $html = '';
+
+  //   // js controler V1
+
+  //   $separador = '';
+
+  //   $html .= '<!-- Cogumelo module form ' . $this->getName() . ' -->' . "\n";
+
+
+  //   if( $this->htmlEditor ) {
+  //     form::loadDependence( 'ckeditor' );
+  //   }
+
+  //   $scRules = ( count( $this->rules ) > 0 ) ? json_encode( $this->rules ) : 'false';
+  //   $scMsgs = ( count( $this->messages ) > 0 ) ? json_encode( $this->messages ) : 'false';
+
+  //   $jsFileGroups = [];
+  //   foreach( $this->getFieldsNamesArray() as $fieldName ) {
+  //     if( $this->getFieldParam( $fieldName, 'type' ) === 'file' && $this->getFieldParam( $fieldName, 'multiple' ) ) {
+  //       $value = $this->getFieldValue( $fieldName );
+  //       if( isset( $value['multiple'] ) ) {
+  //         $jsFileGroups[ $value['idGroup'] ] = [];
+  //         foreach( $value['multiple'] as $fileInfo ) {
+  //           $jsFileGroups[ $value['idGroup'] ][] = $fileInfo['prev'];
+  //         }
+  //       }
+  //     }
+  //   }
+
+
+  //   $html .= '<'.'script>'."\n".
+  //     'var cogumelo = cogumelo || {};'."\n".
+  //     'cogumelo.formController = cogumelo.formController || {};'."\n\n";
+
+  //   if( count( $jsFileGroups ) ) {
+  //     $html .= 'cogumelo.formController.fileGroup = cogumelo.formController.fileGroup || [];'."\n";
+  //     foreach( $jsFileGroups as $fileGroupId => $fileGroupInfo ) {
+  //       $html .= 'cogumelo.formController.fileGroup['.$fileGroupId.'] = '.json_encode( $fileGroupInfo ).';'."\n";
+  //     }
+  //     $html .= "\n";
+  //   }
+
+  //   $html .= '$( document ).ready( function() {'."\n".
+  //     '  $validateForm_'.$this->id.' = setValidateForm( "'.$this->id.'", '.$scRules.', '.$scMsgs.' );'."\n".
+  //     '  console.log( $validateForm_'.$this->id.' );'."\n";
+
+  //   foreach( $this->getFieldsNamesArray() as $fieldName ) {
+  //     if( $this->getFieldType( $fieldName ) === 'file' ) {
+  //       $fileInfo = $this->getFieldValue( $fieldName );
+  //       if( $fileInfo[ 'status' ] === 'EXIST' ) {
+  //         $html .= '  fileFieldToOk( "'.$this->id.'", "'.$fieldName.'", { '.
+  //           '"id": "'.$fileInfo['prev']['id'].'", "name": "'.$fileInfo['prev']['name'].'", '.
+  //           '"aKey": "'.$fileInfo['prev']['aKey'].'", "type": "'.$fileInfo['prev']['type'].'" } );'."\n";
+  //       }
+  //     }
+  //   }
+
+  //   if( $this->htmlEditor ) {
+  //     $html .= '  activateHtmlEditor( "'.$this->id.'" );'."\n";
+  //   }
+
+  //   if( $this->getMarginTop() ) {
+  //     $html .= '  setFormInfo( "'.$this->id.'", "marginTop", '.$this->getMarginTop().' );'."\n";
+  //   }
+
+
+
+  //   $html .= '});'."\n";
+  //   $html .= '</script>'."\n";
+
+  //   if( $this->captchaEnable() ) {
+  //     $html .= '<'.'script src="https://www.google.com/recaptcha/api.js" async defer></script>'."\n";
+  //   }
+
+  //   $html .= '<!-- Cogumelo module form '.$this->getName().' - END -->'."\n";
+
+  //   //$html .= '<pre>'. print_r( $this->fields, true ) .'</pre>';
+
+  //   return $html;
+  // } // function getScriptCode
 
 
   /**
