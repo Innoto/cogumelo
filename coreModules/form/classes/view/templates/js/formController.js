@@ -20,7 +20,7 @@ cogumelo.formControllerInfo = cogumelo.formControllerInfo || new Object({
   },
 
   getFormInfo: function getFormInfo( idForm, key ) {
-    console.log( '* getFormInfo( ',idForm, key, value );
+    console.log( '* getFormInfo( ',idForm, key );
     var result = null;
 
     // var index = getFormInfoIndex( idForm );
@@ -831,7 +831,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     // console.log( 'groupFiles despois: ',groupFiles );
     that.fileGroup[ groupId ] = groupFiles;
 
-    fileFieldGroupWidget( fieldName );
+    that.fileFieldGroupWidget( fieldName );
   }; // that.fileFieldGroupAddElem
 
   that.fileFieldGroupRemoveElem = function fileFieldGroupRemoveElem( fieldName, fileId, fileTempId ) {
@@ -895,7 +895,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   }; // that.fileDeleteOk
 
   that.fileFieldGroupWidget = function fileFieldGroupWidget( fieldName ) {
-    console.log( 'fileFieldGroupWidget: ', that.idForm, fieldName );
+    console.log( '* fileFieldGroupWidget: ', that.idForm, fieldName );
 
     var $fileField = $( 'input[name="' + fieldName + '"][form="'+that.idForm+'"]' );
     var groupId = $fileField.attr('data-fm_group_id');
@@ -928,7 +928,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     $.each( groupFiles, function(){
       // console.log('Añadimos esto a fileBoxWrap;', this, $filesWrap);
-      $filesWrap.append( that.fileBox( fieldName, this, deleteFormFileEvent )
+      $filesWrap.append( that.fileBox( fieldName, this, that.deleteFormFileEvent )
        .css( {'float': 'left', 'width': '23%', 'margin': '1%' } ) );
     } );
   }; // that.fileFieldGroupWidget
@@ -1124,7 +1124,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   }; // that.removeFileFieldDropZone
 
   that.fileFieldDropZoneDrop = function fileFieldDropZoneDrop( evnt ) {
-    console.log( 'fileFieldDropZoneDrop() ', that.idForm, evnt );
+    console.log( '* fileFieldDropZoneDrop() ', that.idForm, evnt );
 
     evnt.stopPropagation();
     evnt.preventDefault();
