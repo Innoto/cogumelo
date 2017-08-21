@@ -1,5 +1,5 @@
 /**
- *  Gestión de informacion en cliente
+ *  Gestión de formularios en cliente
  */
 var cogumelo = cogumelo || {};
 
@@ -71,7 +71,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   that.formOpts = $.extend( true, {}, that.formDefOpts, options );
 
 
-
+  // Save this controller instance
   cogumelo.formControllerInfo.setFormInfo( that.idForm, 'controller', that );
 
 
@@ -128,10 +128,21 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           // Se ha pulsado en alguno de los elementos de submit
           $submitElement = $( '[form="'+that.idForm+'"][name="'+submitElementName+'"]' );
           if( $submitElement.attr('data-confirm-text') ) {
+
             // Se ha indicado que hay que solicitar confirmacion antes del envio.
-            if( confirm( $submitElement.attr('data-confirm-text') ) ) {
-              that.sendValidatedForm( form );
-            }
+            cogumelo.clientMsg.confirm(
+              $submitElement.attr('data-confirm-text'),
+              function( resp ) {
+                if( resp ) {
+                  that.sendValidatedForm( form );
+                }
+              },
+              { 'title': __('Confirm') }
+            );
+
+            // if( confirm( $submitElement.attr('data-confirm-text') ) ) {
+            //   that.sendValidatedForm( form );
+            // }
           }
           else {
             that.sendValidatedForm( form );
@@ -235,7 +246,8 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       );
     }
     if( successActions.accept ) {
-      alert( successActions.accept );
+      cogumelo.clientMsg.alert( successActions.accept );
+      // alert( successActions.accept );
     }
     if( successActions.redirect ) {
       // Usando replace no permite volver a la pagina del form
@@ -263,9 +275,20 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       // No se ha podido recuperar el form en el servidor porque ha caducado
       // console.log( 'formDoneError: errorSession' );
       that.showErrorsValidateForm( __('Form session expired. Reload'), 'formError' );
-      if( confirm( __('Reload to get valid From?') ) ) {
-        window.location.reload();
-      }
+
+      // Ofrecemos la opcion de recargar para qe funcione
+      cogumelo.clientMsg.confirm(
+        __('Reload to get valid From?'),
+        function( resp ) {
+          if( resp ) {
+            window.location.reload();
+          }
+        },
+        { 'title': __('Confirm') }
+      );
+      // if( confirm( __('Reload to get valid From?') ) ) {
+      //   window.location.reload();
+      // }
     }
 
     for( var i in response.jvErrors ) {
@@ -328,7 +351,9 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     if( $inputFileFields.length ) {
       if( !window.File ) {
         // File - provides readonly information such as name, file size, mimetype
-        alert( __('Your browser does not have HTML5 support for send files. Upgrade to recent versions...') );
+
+        cogumelo.clientMsg.alert( __('Your browser does not have HTML5 support for send files. Upgrade to recent versions...') );
+        // alert( __('Your browser does not have HTML5 support for send files. Upgrade to recent versions...') );
       }
       $inputFileFields.on( 'change', that.inputFileFieldChange );
       $inputFileFields.each(
