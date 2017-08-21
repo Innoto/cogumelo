@@ -39,6 +39,7 @@ class FormController implements Serializable {
   private $captchaUse = false;
   private $captchaResponse = false;
   private $keepAlive = false;
+  private $enterSubmit = null;
   private $formMarginTop = 0;
   private $fields = [];
   private $rules = [];
@@ -249,6 +250,19 @@ class FormController implements Serializable {
   }
 
   /**
+   * Establece un margen superior para el posicionamiento en caso de error
+   *
+   * @param integer $formMarginTop Desplazamiento en pixels
+   */
+  public function setEnterSubmit( $enterSubmit = true ) {
+    $this->enterSubmit = $enterSubmit;
+  }
+
+  public function getEnterSubmit() {
+    return $this->enterSubmit;
+  }
+
+  /**
     Recupera todos los datos importantes en un array serializado
     @return string
    */
@@ -264,6 +278,8 @@ class FormController implements Serializable {
     $data[ 'enctype' ] = $this->enctype;
     $data[ 'captchaUse' ] = $this->captchaUse;
     $data[ 'keepAlive' ] = $this->keepAlive;
+    $data[ 'enterSubmit' ] = $this->enterSubmit;
+    $data[ 'formMarginTop' ] = $this->formMarginTop;
     $data[ 'fields' ] = $this->fields;
     $data[ 'rules' ] = $this->rules;
     $data[ 'groups' ] = $this->groups;
@@ -289,6 +305,8 @@ class FormController implements Serializable {
     $this->enctype = $data[ 'enctype' ];
     $this->captchaUse = $data[ 'captchaUse' ];
     $this->keepAlive = $data[ 'keepAlive' ];
+    $this->enterSubmit = $data[ 'enterSubmit' ];
+    $this->formMarginTop = $data[ 'formMarginTop' ];
     $this->fields = $data[ 'fields' ];
     $this->rules = $data[ 'rules' ];
     $this->groups = $data[ 'groups' ];
@@ -2337,6 +2355,10 @@ class FormController implements Serializable {
       form::loadDependence( 'ckeditor' );
       $opt['htmlEditor'] = true;
     }
+    if( $this->getEnterSubmit() !== null ) {
+      $opt['enterSubmit'] = $this->getEnterSubmit();
+    }
+
     $formOptions = json_encode( $opt );
 
 

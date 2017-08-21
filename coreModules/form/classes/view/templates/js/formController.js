@@ -41,12 +41,14 @@ cogumelo.formControllerInfo = cogumelo.formControllerInfo || new Object({
 
 
 cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormParam, options ) {
+  console.log( '* formControllerClass: ', idFormParam, options );
 
   var that = this;
 
   that.idForm = idFormParam;
   that.jqForm = $( '#'+that.idForm );
   that.cgIntFrmId = that.jqForm.attr('data-token_id');
+
 
   that.submitElementName = false;
 
@@ -66,6 +68,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     keepAliveTime: 0, // minutos
     marginTop: 150, // Default marginTop (scroll functions)
     htmlEditor: false,
+    enterSubmit: false, // Submit on Enter
   });
 
   that.formOpts = $.extend( true, {}, that.formDefOpts, options );
@@ -117,18 +120,28 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       submitHandler: function ( form, evnt ) {
         // Controlamos que el submit se realice desde un elemento de submit
         $form = $( form );
+        $submitElement = false;
 
-        // var submitElementName = $form.attr('data-submit-element-name');
-        // $form.removeAttr('data-submit-element-name');
-        var submitElementName = that.submitElementName;
-        that.submitElementName = false;
-        console.log( '* submitElementName: '+submitElementName );
-
-        if( submitElementName ) {
+        if( that.submitElementName ) {
           // Se ha pulsado en alguno de los elementos de submit
-          $submitElement = $( '[form="'+that.idForm+'"][name="'+submitElementName+'"]' );
-          if( $submitElement.attr('data-confirm-text') ) {
+          console.log( '* submitElementName: '+that.submitElementName );
+          $submitElement = $( '[form="'+that.idForm+'"][name="'+that.submitElementName+'"]' );
+          that.submitElementName = false;
+        }
+        else {
+          if( that.formOpts.enterSubmit ) {
+            $submitElement = $( '[form="'+that.idForm+'"][type="submit"]' );
+            console.log( '* submitElement Enter: ', $submitElement );
+            // Tiene que ser 1 elemento
+            if( $submitElement.length !== 1 ) {
+              $submitElement = false;
+            }
+          }
+        }
 
+
+        if( $submitElement ) {
+          if( $submitElement.attr('data-confirm-text') ) {
             // Se ha indicado que hay que solicitar confirmacion antes del envio.
             cogumelo.clientMsg.confirm(
               $submitElement.attr('data-confirm-text'),
