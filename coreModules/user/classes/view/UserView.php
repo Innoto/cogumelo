@@ -124,6 +124,9 @@ class UserView extends View {
     if( $form->loadPostInput() ) {
       $form->validateForm();
     }
+    else {
+      error_log('Cogumelo user module: ERROR LOGIN ACTION');
+    }
 
     //Si tod0 esta OK!
     if( !$form->existErrors() ){

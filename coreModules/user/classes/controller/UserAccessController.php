@@ -23,32 +23,42 @@ class UserAccessController {
   // Login an Admin User
   //
   public function userLogin( $login, $password ) {
-    $usermodel= new UserModel();
-    if($logeduser = $usermodel->authenticateUser( $login, $password )) {
+    $result = false;
+
+    $usermodel = new UserModel();
+
+    if( $logeduser = $usermodel->authenticateUser( $login, $password ) ) {
       $this->sessioncontrol->setUser($logeduser);
-      Cogumelo::log("Accepted User authentication: user ".$login." is logged", 'UserLog');
-      return true;
+      Cogumelo::log( 'userLogin: Accepted User authentication: user '.$login.' is logged', 'UserLog' );
+      $result = true;
     }
     else {
-      //Cogumelo::log("Failed User authentication: user ".$login, 'UserLog');
-      return false;
+      Cogumelo::log( 'userLogin: Failed User authentication: user '.$login, 'UserLog' );
+      error_log( 'Cogumelo user module: ERROR LOGIN USER ('.$login.') - userLogin' );
     }
+
+    return $result;
   }
 
   //
   // Login an Admin User
   //
   public function userAutoLogin( $login ) {
+    $result = false;
+
     $usermodel= new UserModel();
-    if($logeduser = $usermodel->authenticateUserOnlyLogin( $login )) {
-      $this->sessioncontrol->setUser($logeduser);
-      Cogumelo::log("Accepted User authentication: user ".$login." is logged", 'UserLog');
-      return true;
+
+    if( $logeduser = $usermodel->authenticateUserOnlyLogin( $login ) ) {
+      $this->sessioncontrol->setUser( $logeduser );
+      Cogumelo::log( 'userAutoLogin: Accepted User authentication: user '.$login.' is logged', 'UserLog' );
+      $result = true;
     }
     else {
-      //Cogumelo::log("Failed User authentication: user ".$login, 'UserLog');
-      return false;
+      Cogumelo::log( 'userAutoLogin: Failed User authentication: user '.$login, 'UserLog');
+      error_log( 'Cogumelo user module: ERROR LOGIN USER ('.$login.') - userLogin' );
     }
+
+    return $result;
   }
 
   //
