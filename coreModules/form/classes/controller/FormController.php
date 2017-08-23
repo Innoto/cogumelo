@@ -130,6 +130,8 @@ class FormController implements Serializable {
     $this->enctype = 'multipart/form-data';
     $this->captchaUse = false;
     $this->keepAlive = false;
+    $this->enterSubmit = null;
+    $this->formMarginTop = 0;
     $this->fields = [];
     $this->rules = [];
     $this->groups = [];
@@ -2672,6 +2674,9 @@ class FormController implements Serializable {
    */
   public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
     if( isset( $this->fields[ $fieldName ] ) ) {
+      if( $ruleName === 'required' && $this->getFieldType( $fieldName ) === 'file' ) {
+        $ruleName === 'fileRequired';
+      }
       $this->rules[ $fieldName ][ $ruleName ] = $ruleParams;
       $this->updateFieldRulesToSession( $fieldName );
     }
@@ -2714,6 +2719,9 @@ class FormController implements Serializable {
     @param string $ruleName Nombre de la regla
    */
   public function removeValidationRule( $fieldName, $ruleName ) {
+    if( $ruleName === 'required' && $this->getFieldType( $fieldName ) === 'file' ) {
+      $ruleName === 'fileRequired';
+    }
     if( isset( $this->rules[ $fieldName ][ $ruleName ] ) ) {
       unset( $this->rules[ $fieldName ][ $ruleName ] );
       $this->updateFieldRulesToSession( $fieldName );
