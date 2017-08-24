@@ -118,7 +118,8 @@ class FiledataImagesView extends View {
 
     if( $error ) {
       header('HTTP/1.0 404 Not Found');
-      cogumelo::error( 'showImg ('.$error.')' );
+      Cogumelo::debug( __METHOD__.' - ERROR ('.$error.')' );
+      Cogumelo::error( 'showImg ('.$error.')' );
     }
   } // function showImg()
 
