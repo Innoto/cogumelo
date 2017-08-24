@@ -226,41 +226,8 @@ function actionGenerateClientCaches() {
 }
 
 
-<<<<<<< HEAD
-=======
-function printOptions(){
-  echo "\n
- + Permissions and dependences
-    * flush                   Remove temporary files
-    * generateClientCaches    Cache all js, css, compiled less and other client files
-    * setPermissions          Set the files/folders permission
-    * setPermissionsDevel     Set the files/folders permission
-    * installDependences      Install all modules dependencies
 
- + Database
-    * createDB                Create a database
-    * generateModel           Execute all options below in the same order
-      - createTables            Generate the tables
-      - createRelSchemes        Generate relationship tmp files
-      - unRegisterModules       Clear all module version registers
-      - registerModules         Create module version registers
-      - initModules             Execute '::moduleRc()' of all modules
-      - deployModules           Execute Deploy of modules
-    * deploy                  Deploy
-      - deployModels            Execute deploy SQL acording current module versions
-      - registerModules         Register models or update if registered
-      - deployModules           Execute Deploy of modules
-    * bckDB                   Do a DB backup (optional arg: filename)
-    * restoreDB               Restore a database
 
- + Internationalization
-    * generateTranslations    Get a file.po for each system module (cogumelo and geozzy)
-    * generateAppTranslations Get a file.po for the project
-    * compileTranslations     Mix all files.po in one and compile it: now translations are ready
-  \n\n";
-}
-
->>>>>>> master
 function createDB(){
 
   echo "\nDatabase configuration\n";
