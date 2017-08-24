@@ -191,9 +191,13 @@ class  DevelDBController {
 
           if( $this->moduleIsRegistered( $module ) === false ) {
             $this->execModuleRC( $module );
+            $this->execModuleDeploy($module, true);
+          }
+          else {
+            $this->execModuleDeploy($module, false);
           }
 
-          $this->execModuleDeploy($module, true);
+
           $this->registerModuleVersion($module);
         }
         else {
