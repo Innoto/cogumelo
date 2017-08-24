@@ -91,7 +91,7 @@ class FiledataImagesView extends View {
               error_log( 'FiledataImagesView: showImg(): urlRedirect = '.$urlRedirect );
 
               $time_end = microtime(true);
-              error_log( 'FiledataImagesView: showImg() TIME: ' . $time_end - $time_start );
+              error_log( 'FiledataImagesView: showImg() TIME: ' . ($time_end - $time_start) );
 
               Cogumelo::redirect( SITE_HOST . $urlRedirect );
               // AQUI NO SE LLEGA: redirect() HACE EXIT
@@ -126,7 +126,7 @@ class FiledataImagesView extends View {
 
 
     $time_end = microtime(true);
-    error_log( 'FiledataImagesView: showImg() TIME: ' . $time_end - $time_start );
+    error_log( 'FiledataImagesView: showImg() TIME: ' . ($time_end - $time_start) );
 
 
     if( $error ) {
