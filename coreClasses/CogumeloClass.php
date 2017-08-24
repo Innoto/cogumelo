@@ -266,9 +266,9 @@ class CogumeloClass extends Singleton {
 
     $error_msg = 'Warning: '.$errstr.' on file "'.$errfile.'" line:'.$errline;
 
-    if(Cogumelo::getSetupValue( 'logs:debug' )){
-      //self::console(debug_backtrace(), $error_msg );
-    }
+    // if(Cogumelo::getSetupValue( 'logs:debug' )){
+    //   self::console(debug_backtrace(), $error_msg );
+    // }
 
     self::error($error_msg);
   }
@@ -279,9 +279,11 @@ class CogumeloClass extends Singleton {
 
     if($last_error!=null) {
       $error_msg = 'Fatal error: '.$last_error['message'].' on file "'.$last_error['file'].'" line: '.$last_error['line'];
-      if( Cogumelo::getSetupValue( 'logs:debug' ) ) {
-        //self::console($last_error, $error_msg);
-      }
+
+      // if( Cogumelo::getSetupValue( 'logs:debug' ) ) {
+      //   self::console($last_error, $error_msg);
+      // }
+
       self::error($error_msg);
     }
   }
@@ -311,22 +313,8 @@ class CogumeloClass extends Singleton {
 
   public static function log( $texto, $fich_log = 'cogumelo' ) {
     global $COGUMELO_DISABLE_LOGS;
-    $ignore = false;
-
 
     if( !$COGUMELO_DISABLE_LOGS ) {
-
-      // // Rodeo para evitar "PHP Notice:  Use of undefined constant MOD_DEVEL_URL_DIR"
-      // $arrayDefines = get_defined_constants();
-      // if(
-      //   $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/read_logs' &&
-      //   $_SERVER['REQUEST_URI'] != '/'.$arrayDefines['MOD_DEVEL_URL_DIR'].'/get_debugger'
-      // ) {
-      //   $ignore = true;
-      // }
-
-      // if( $ignore ) {
-
       $develUrl = Cogumelo::getSetupValue( 'mod:devel:url' );
       if( $develUrl &&
         $_SERVER['REQUEST_URI'] != '/'.$develUrl.'/read_logs' &&

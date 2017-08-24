@@ -46,7 +46,12 @@ class FiledataImagesView extends View {
   */
   public function showImg( $urlParams = false ) {
     Cogumelo::debug('FiledataImagesView: showImg: fileId '.$urlParams['fileId'] );
-    // error_log( 'FiledataImagesView: showImg(): ' . print_r( $urlParams, true ) );
+    error_log( 'FiledataImagesView: showImg(): ' . print_r( $urlParams, true ) );
+
+
+    $time_start = microtime(true);
+
+
     $fileInfo = false;
     $error = false;
 
@@ -83,14 +88,19 @@ class FiledataImagesView extends View {
             if( $imageCtrl->profile['cache'] && file_exists( $imgInfo['route'] ) && mb_strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
               Cogumelo::debug('FiledataImagesView: showImg: IF' );
               $urlRedirect = mb_substr( $imgInfo['route'], mb_strlen( $this->webBasePath ) );
-              // error_log( "FiledataImagesView: showImg(): urlRedirect = $urlRedirect" );
+              error_log( 'FiledataImagesView: showImg(): urlRedirect = '.$urlRedirect );
+
+              $time_end = microtime(true);
+              error_log( 'FiledataImagesView: showImg() TIME: ' . $time_end - $time_start );
+
               Cogumelo::redirect( SITE_HOST . $urlRedirect );
-              // YA NO SE PUEDE ENVIAR NADA AL NAVEGADOR
+              // AQUI NO SE LLEGA: redirect() HACE EXIT
             }
             else {
               Cogumelo::debug('FiledataImagesView: showImg: ELSE' );
               $imgInfo['name'] = !empty( $fileName ) ? $fileName : $fileInfo['name'];
               // $imgInfo['name'] = !empty( $fileName ) ? $fileName : $fileInfo['originalName'];
+              error_log('FiledataImagesView: imageCtrl->sendImage');
               if( !$imageCtrl->sendImage( $imgInfo ) ) {
                 $error = 'NS';
               }
@@ -113,6 +123,11 @@ class FiledataImagesView extends View {
     else {
       $error = 'NL';
     }
+
+
+    $time_end = microtime(true);
+    error_log( 'FiledataImagesView: showImg() TIME: ' . $time_end - $time_start );
+
 
     if( $error ) {
       header('HTTP/1.0 404 Not Found');
