@@ -77,8 +77,8 @@ class CogumeloSessionController {
         }
       }
       else {
-        error_log( ' ## Invalid TokenSessionID' );
-        error_log( ' ## $_SESSION = '.json_encode($_SESSION) );
+        Cogumelo::debug( 'CogumeloSessionController: ## Invalid TokenSessionID' );
+        Cogumelo::debug( 'CogumeloSessionController: ## $_SESSION = '.json_encode($_SESSION) );
         session_unset();
         session_destroy();
         $tkSID = false;

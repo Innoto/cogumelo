@@ -7,8 +7,7 @@ filedata::autoIncludes();
 user::autoIncludes();
 
 
-class UserView extends View
-{
+class UserView extends View {
 
   public function __construct( $baseDir = false ){
     parent::__construct( $baseDir );
@@ -76,6 +75,8 @@ class UserView extends View
     $form->setValidationRule( 'userLogin', 'required' );
     $form->setValidationRule( 'userPassword', 'required' );
 
+    $form->setEnterSubmit( true );
+
     return $form;
   } // function loginFormDefine()
 
@@ -122,6 +123,9 @@ class UserView extends View
 
     if( $form->loadPostInput() ) {
       $form->validateForm();
+    }
+    else {
+      error_log('Cogumelo user module: ERROR LOGIN ACTION');
     }
 
     //Si tod0 esta OK!
@@ -260,7 +264,7 @@ class UserView extends View
    *
    * @return Form Html
    **/
-  public function userChangePasswordFormDefine( $id , $modeRecovery = false ){
+  public function userChangePasswordFormDefine( $id, $modeRecovery = false ){
 
     $user = new UserModel();
     $dataVO = $user->listItems( array('filters' => array('id' => $id )))->fetch();
@@ -293,8 +297,9 @@ class UserView extends View
     }
     $form->setValidationRule( 'password', 'required' );
     $form->setValidationRule( 'password2', 'required' );
+    $form->setValidationRule( 'password2', 'equalTo', '#password' );
 
-     $form->setValidationRule( 'password2', 'equalTo', '#password' );
+    $form->setEnterSubmit( true );
 
     return $form;
   }
