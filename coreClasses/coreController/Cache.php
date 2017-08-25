@@ -2,16 +2,15 @@
 
 
 /**
-* Cache Class
-*
-* This class encapsulates the memcached library
-*
-* @author: pablinhob
-*/
+ * Cache Class
+ *
+ * This class encapsulates the memcached library
+ *
+ * @author: pablinhob
+ */
 
 
 class Cache {
-
 
   var $mc = false;
 
@@ -27,25 +26,53 @@ class Cache {
   }
 
   /**
-   * @param string $query is the query string
-   * @param array $variables the variables for the query prepared statment
+   * Recupera un contenido
+   *
+   * @param string $key Identifies the requested data
    */
-  public function getCache( $query ) {
-    return $this->mc->get( $query);
+  public function getCache( $key ) {
+    // error_log( __METHOD__.' - key: '.$key );
+
+    $result = $this->mc->get( $key );
+    if( $this->mc->getResultCode() !== Memcached::RES_SUCCESS ) {
+      $result = null;
+      error_log( __METHOD__.' - key: '.$key.' FAIL!!!' );
+    }
+    else {
+      error_log( __METHOD__.' - key: '.$key.' Atopado :)' );
+    }
+
+    return $result;
   }
 
 
   /**
-   * @param string $query is the query string
-   * @param array $variables the variables for the query prepared statment
+   * Recupera un contenido
+   *
+   * @param string $key Identifies the data to be saved
+   * @param mixed $data Content to save
+   * @param mixed $expirationTime Expiration time. (default or fail: use setup value)
    */
-  public function setCache( $query, $data, $expirationTime = false ){
+  public function setCache( $key, $data, $expirationTime = false ){
 
-    if( !$expirationTime ) {
+    if( empty( $expirationTime ) || !is_numeric( $expirationTime ) ) {
       $expirationTime = Cogumelo::getSetupValue( 'memcached:expirationTime' );
     }
+    else {
+      $expirationTime = intval( $expirationTime );
+    }
 
-    return $this->mc->set( $query, $data, $expirationTime );
+    error_log( __METHOD__.' - key: '.$key.' exp: '.$expirationTime );
+
+    return $this->mc->set( $key, $data, $expirationTime );
   }
 
+
+  /**
+   * Borra todos los contenidos
+   */
+  public function flush() {
+    error_log( __METHOD__ );
+    return $this->mc->flush();
+  }
 }
