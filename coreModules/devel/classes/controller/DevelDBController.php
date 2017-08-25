@@ -106,7 +106,7 @@ class  DevelDBController {
 
   public function deploy( ) {
     $modules = $this->getModules();
-
+    $modules[] = 'Cogumelo';
 
     // create tables
     foreach( $modules as $module ) {
@@ -531,6 +531,7 @@ class  DevelDBController {
 
   private function execModuleDeploy( $moduleName, $whenGenerateModel ) {
     if( method_exists( $moduleName, 'moduleDeploy' ) ) {
+
       echo( "\nDEPLOY: ".$moduleName."::moduleDeploy( $whenGenerateModel )\n" );
 
       if( $this->noExecute !== true) {
