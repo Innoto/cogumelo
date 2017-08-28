@@ -39,12 +39,15 @@ class SetupMethods {
     return $result;
   }
 
-  public function getSetupValue( $path ) {
+  public function getSetupValue( $path = false ) {
     // error_log( 'Cogumelo::getSetupValue: '.$path );
     global $CGMLCONF;
     $value = null;
 
-    if( $this->issetSetupValue( $path ) ) {
+    if( $path === false ) {
+      $value = $CGMLCONF;
+    }
+    elseif( $this->issetSetupValue( $path ) ) {
       $parts = explode( ':', $path );
       $stack = ( $parts[0] === '' ) ? '' : '[\'' . implode( '\'][\'', $parts ) . '\']';
       $fai = '$value = $CGMLCONF'. $stack .';';

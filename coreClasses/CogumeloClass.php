@@ -470,7 +470,7 @@ class CogumeloClass extends Singleton {
   public static function setSetupValue( $path, $value ) {
     return self::getSetupMethods()->setSetupValue( $path, $value );
   }
-  public static function getSetupValue( $path ) {
+  public static function getSetupValue( $path = false ) {
     return self::getSetupMethods()->getSetupValue( $path );
   }
   public static function issetSetupValue( $path ) {
