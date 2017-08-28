@@ -21,7 +21,7 @@ class FiledataImagesController {
 
 
   public function __construct( $fileId = false ) {
-    //error_log( 'FiledataImagesController __construct: ' . $fileId );
+    // error_log( 'FiledataImagesController __construct: ' . $fileId );
 
     filedata::load('controller/FiledataController.php');
     $this->filedataCtrl = new FiledataController();
@@ -37,7 +37,7 @@ class FiledataImagesController {
 
 
   public function setProfile( $profile ) {
-    //error_log( "FiledataImagesController: setProfile( $profile )" );
+    // error_log( "FiledataImagesController: setProfile( $profile )" );
 
     $conf = Cogumelo::getSetupValue( 'mod:filedata:profile:'.$profile );
 
@@ -134,14 +134,17 @@ class FiledataImagesController {
   }
 
   public function getRouteProfile( $profile ) {
+    // error_log( __METHOD__ );
     // error_log( "FiledataImagesController: getRouteProfile( $profile )" );
     $imgRoute = false;
     $imgRouteOriginal = false;
+    $urlId = false;
 
     if( $this->fileInfo ) {
 
       $imgRouteOriginal = $this->filesAppPath . $this->fileInfo['absLocation'];
-      $urlId = ( $this->verifyAKeyUrl ) ? $this->fileInfo['id'].'-a'.$this->fileInfo['aKey'] : $this->fileInfo['id'];
+      // $urlId = ( $this->verifyAKeyUrl ) ? $this->fileInfo['id'].'-a'.$this->fileInfo['aKey'] : $this->fileInfo['id'];
+      $urlId = $this->fileInfo['id'].'-a'.$this->fileInfo['aKey'];
 
       if( $this->setProfile( $profile ) ) {
         $imgRoute = $this->filesCachePath .'/'. $urlId .'/'. $this->profile['idName'] .'/'. $this->fileInfo['name'];
@@ -159,9 +162,9 @@ class FiledataImagesController {
         // Original
 
         $imgRoute = $this->filesCachePath .'/'. $urlId .'/'. $this->fileInfo['name'];
-        //error_log( "FiledataImagesController: getRouteProfile( NONE ): $imgRoute" );
+        // error_log( "FiledataImagesController: getRouteProfile( NONE ): $imgRoute" );
 
-        if( $this->profile['cache'] && !file_exists( $imgRoute ) ) {
+        if( !file_exists( $imgRoute ) ) {
           $toRouteDir = pathinfo( $imgRoute, PATHINFO_DIRNAME );
           // error_log( "toRouteDir = $toRouteDir" );
           if( !file_exists( $toRouteDir ) ) {
@@ -170,6 +173,14 @@ class FiledataImagesController {
             mkdir( $toRouteDir, 0775, true );
             umask( $maskPrev );
           }
+
+          // Si se puede, aseguramos un acceso al directorio sin aKey
+          $linkDirId = $this->filesCachePath .'/'. $this->fileInfo['id'];
+          if( !$this->verifyAKeyUrl && !file_exists( $linkDirId ) ) {
+            Cogumelo::debug( __METHOD__.' - symlink '.$urlId.' , '.$linkDirId );
+            symlink( $urlId, $linkDirId );
+          }
+
           if( !copy( $imgRouteOriginal, $imgRoute ) ) {
             error_log( "FiledataImagesController: ERROR in copy( $imgRouteOriginal, $imgRoute )" );
           }
@@ -181,22 +192,41 @@ class FiledataImagesController {
       $imgRoute = $imgRouteOriginal;
     }
     else {
-      if( $this->profile['cache'] && !$this->disableRawUrlProfile ) {
+      if( false !== $this->profile['cache'] ) {
         $imgRouteInfo = pathinfo( $imgRoute );
-        $linkIdRoute = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['id'] .'.'. $imgRouteInfo['extension'];
-        if( !file_exists( $linkIdRoute ) && file_exists( $imgRoute ) ) {
-          Cogumelo::debug('FiledataImagesController: getRouteProfile: symlink '.$imgRouteInfo['basename'].' , '.$linkIdRoute );
-          symlink( $imgRouteInfo['basename'], $linkIdRoute );
+
+        // Si se puede, aseguramos un acceso al directorio sin aKey
+        $linkDirId = $this->filesCachePath .'/'. $this->fileInfo['id'];
+        if( !$this->verifyAKeyUrl && !file_exists( $linkDirId ) ) {
+          Cogumelo::debug( __METHOD__.' - symlink '.$urlId.' , '.$linkDirId );
+          symlink( $urlId, $linkDirId );
         }
+
+        // RealName link
+        $linkRealNameFile = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['name'];
+        if( !file_exists( $linkRealNameFile ) ) {
+          Cogumelo::debug( __METHOD__.' - symlink '.$imgRouteInfo['basename'].' , '.$linkRealNameFile );
+          symlink( $imgRouteInfo['basename'], $linkRealNameFile );
+        }
+
+        // Si se puede, aseguramos un acceso al fichero usando ID como nombre
+        $linkIdNameFile = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['id'] .'.'. $imgRouteInfo['extension'];
+        if( !$this->disableRawUrlProfile && !file_exists( $linkIdNameFile ) ) {
+          Cogumelo::debug( __METHOD__.' - symlink '.$imgRouteInfo['basename'].' , '.$linkIdNameFile );
+          symlink( $imgRouteInfo['basename'], $linkIdNameFile );
+        }
+
       }
     }
-    //error_log( "FiledataImagesController: getRouteProfile = $imgRoute" );
+
+    // error_log( "FiledataImagesController: getRouteProfile = $imgRoute" );
     return $imgRoute;
   }
 
 
   public function createImageProfile( $fromRoute, $toRoute, $toEncode = false ) {
     Cogumelo::debug('FiledataImagesController: createImageProfile: REQUEST_URI '. $_SERVER["REQUEST_URI"]  );
+    // error_log( __METHOD__.' '. debug_backtrace( DEBUG_BACKTRACE_PROVIDE_OBJECT, 1 )[0]['file'] );
     // error_log( '---' );error_log( '---' );error_log( '---' );
     // error_log( 'FiledataImagesController: createImageProfile(): ' );
     // error_log( $fromRoute );
@@ -438,6 +468,36 @@ class FiledataImagesController {
           $toRoute = false;
           Cogumelo::error( "Imposible guardar la imagen en $toRoute" );
         }
+
+
+        if( $toRoute && file_exists( $toRoute ) ) {
+          $imgRouteInfo = pathinfo( $toRoute );
+
+          // Si se puede, aseguramos un acceso al directorio sin aKey
+          $linkDirId = $this->filesCachePath .'/'. $this->fileInfo['id'];
+          $urlId = $this->fileInfo['id'].'-a'.$this->fileInfo['aKey'];
+          if( !$this->verifyAKeyUrl && !file_exists( $linkDirId ) ) {
+            // error_log( 'symlink de '.$urlId.' como '.$linkDirId );
+            Cogumelo::debug( __METHOD__.' - symlink '.$urlId.', '.$linkDirId );
+            symlink( $urlId, $linkDirId );
+          }
+
+          // RealName link
+          $linkRealNameFile = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['name'];
+          if( !file_exists( $linkRealNameFile ) ) {
+            Cogumelo::debug( __METHOD__.' - symlink '.$imgRouteInfo['basename'].', '.$linkRealNameFile );
+            symlink( $imgRouteInfo['basename'], $linkRealNameFile );
+          }
+
+          // Si se puede, aseguramos un acceso al fichero usando ID como nombre
+          $linkIdNameFile = $imgRouteInfo['dirname'] .'/'. $this->fileInfo['id'] .'.'. $imgRouteInfo['extension'];
+          if( !$this->disableRawUrlProfile && !file_exists( $linkIdNameFile ) ) {
+            Cogumelo::debug( __METHOD__.' - symlink '.$imgRouteInfo['basename'].', '.$linkIdNameFile );
+            symlink( $imgRouteInfo['basename'], $linkIdNameFile );
+          }
+        }
+
+
         $result = $toRoute;
       }
       else {
@@ -462,6 +522,7 @@ class FiledataImagesController {
   }
 
   private function loadPreprocessedSvg( $im, $fromRoute ) {
+    // error_log( __METHOD__.' '. debug_backtrace( DEBUG_BACKTRACE_PROVIDE_OBJECT, 1 )[0]['file'] );
     // Imagenes SVG
     $svg = file_get_contents( $fromRoute );
 
@@ -539,7 +600,7 @@ class FiledataImagesController {
 
 
   public function sendImage( $imgInfo ) {
-    // error_log( 'FiledataImagesController: sendImage '. print_r( $imgInfo, true ) );
+    error_log( 'FiledataImagesController: sendImage '. print_r( $imgInfo, true ) );
 
     $result = false;
 

@@ -45,12 +45,8 @@ class FiledataImagesView extends View {
     Mostramos una imagen de Form
   */
   public function showImg( $urlParams = false ) {
-    Cogumelo::debug('FiledataImagesView: showImg: fileId '.$urlParams['fileId'] );
-    error_log( 'FiledataImagesView: showImg(): ' . print_r( $urlParams, true ) );
-
-
-    $time_start = microtime(true);
-
+    Cogumelo::debug( __METHOD__.' - fileId '.$urlParams['fileId'] );
+    // error_log( 'FiledataImagesView: showImg(): ' . print_r( $urlParams, true ) );
 
     $fileInfo = false;
     $error = false;
@@ -85,22 +81,18 @@ class FiledataImagesView extends View {
               $imageCtrl->profile['cache'] = false;
             }
 
-            if( $imageCtrl->profile['cache'] && file_exists( $imgInfo['route'] ) && mb_strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
-              Cogumelo::debug('FiledataImagesView: showImg: IF' );
+            if( false !== $imageCtrl->profile['cache'] && file_exists( $imgInfo['route'] ) && mb_strpos( $imgInfo['route'], $this->filesCachePath ) === 0 ) {
               $urlRedirect = mb_substr( $imgInfo['route'], mb_strlen( $this->webBasePath ) );
-              error_log( 'FiledataImagesView: showImg(): urlRedirect = '.$urlRedirect );
-
-              $time_end = microtime(true);
-              error_log( 'FiledataImagesView: showImg() TIME: ' . ($time_end - $time_start) );
-
+              Cogumelo::debug( __METHOD__.' - redirect => '.$urlRedirect );
               Cogumelo::redirect( SITE_HOST . $urlRedirect );
-              // AQUI NO SE LLEGA: redirect() HACE EXIT
+              //
+              // IMPORTANTE - AQUI NO SE LLEGA: redirect() HACE EXIT CORTANDO EL FLUJO DE EJECUCION
+              //
             }
             else {
-              Cogumelo::debug('FiledataImagesView: showImg: ELSE' );
               $imgInfo['name'] = !empty( $fileName ) ? $fileName : $fileInfo['name'];
               // $imgInfo['name'] = !empty( $fileName ) ? $fileName : $fileInfo['originalName'];
-              error_log('FiledataImagesView: imageCtrl->sendImage');
+              Cogumelo::debug( __METHOD__.' - imageCtrl->sendImage()' );
               if( !$imageCtrl->sendImage( $imgInfo ) ) {
                 $error = 'NS';
               }
@@ -124,14 +116,10 @@ class FiledataImagesView extends View {
       $error = 'NL';
     }
 
-
-    $time_end = microtime(true);
-    error_log( 'FiledataImagesView: showImg() TIME: ' . ($time_end - $time_start) );
-
-
     if( $error ) {
       header('HTTP/1.0 404 Not Found');
-      cogumelo::error( 'showImg: Imposible mostrar el elemento solicitado. ('.$error.')' );
+      Cogumelo::debug( __METHOD__.' - ERROR ('.$error.')' );
+      Cogumelo::error( 'showImg ('.$error.')' );
     }
   } // function showImg()
 

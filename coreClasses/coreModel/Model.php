@@ -9,7 +9,7 @@ Cogumelo::load('coreModel/Facade.php');
  *
  * @package Cogumelo Model
  */
-Class Model extends VO {
+class Model extends VO {
 
   var $dataFacade;
 
@@ -22,7 +22,7 @@ Class Model extends VO {
   var $rcSQL = '';
   var $deploySQL = array();
 
-  function __construct( $datarray= array(), $otherRelObj = false ) {
+  public function __construct( $datarray = array(), $otherRelObj = false ) {
 
 
     $this->setData( $datarray, $otherRelObj );
@@ -48,33 +48,31 @@ Class Model extends VO {
   *
   * @return DAOResult
   */
-  function listItems( array $parameters = array() )
-  {
-
+  public function listItems( array $parameters = array() ) {
     $p = array(
-        'filters' => false,
-        'range' => false,
-        'order' => false,
-        'fields' => false,
-        'joinType' => 'LEFT',
-        'affectsDependences' => false,
-        'groupBy' => false,
-        'cache' => false
-      );
+      'filters' => false,
+      'range' => false,
+      'order' => false,
+      'fields' => false,
+      'joinType' => 'LEFT',
+      'affectsDependences' => false,
+      'groupBy' => false,
+      'cache' => false
+    );
     $parameters =  array_merge($p, $parameters );
 
 
     Cogumelo::debug( 'Called listItems on '.get_called_class() );
     $data = $this->dataFacade->listItems(
-                                          $parameters['filters'],
-                                          $parameters['range'],
-                                          $parameters['order'],
-                                          $parameters['fields'],
-                                          $parameters['joinType'],
-                                          $parameters['affectsDependences'],
-                                          $parameters['groupBy'],
-                                          $parameters['cache']
-                                        );
+      $parameters['filters'],
+      $parameters['range'],
+      $parameters['order'],
+      $parameters['fields'],
+      $parameters['joinType'],
+      $parameters['affectsDependences'],
+      $parameters['groupBy'],
+      $parameters['cache']
+    );
 
     return $data;
   }
@@ -87,24 +85,23 @@ Class Model extends VO {
   *
   * @return array VO array
   */
-  function listCount( array $parameters= array() )
-  {
+  public function listCount( array $parameters = array() ) {
 
     $p = array(
-        'filters' => false,
-        'joinType' => 'left',
-        'affectsDependences' => false,
-        'cache' => false
-      );
+      'filters' => false,
+      'joinType' => 'left',
+      'affectsDependences' => false,
+      'cache' => false
+    );
     $parameters =  array_merge($p, $parameters );
 
     Cogumelo::debug( 'Called listCount on '.get_called_class() );
-    $data = $this->dataFacade->listCount( $parameters['filters']);
+    $data = $this->dataFacade->listCount( $parameters['filters'] );
 
     return $data;
   }
 
-  static function getFilters(){
+  public static function getFilters() {
 
     $extraFilters = array();
     $filterCols = array();
@@ -114,11 +111,11 @@ Class Model extends VO {
     eval('if( isset( '.get_called_class().'::$extraFilters) ) {$extraFilters = '.get_called_class().'::$extraFilters;}');
 
 
-    foreach( $cols as $colK => $colD  ) {
+    foreach( $cols as $colK => $colD ) {
       $type = $colD['type'];
 
       if( $type == 'CHAR' || $type == 'VARCHAR' || $type == 'INT' || $type == 'BOOLEAN'  || $type == 'FOREIGN' ){
-          $filterCols[ $colK ] = $tableName.".".$colK." = ? ";
+        $filterCols[ $colK ] = $tableName.".".$colK." = ? ";
       }
 
     }
@@ -130,19 +127,20 @@ Class Model extends VO {
 
 
   /**
-  * save item
+  * Save item
   *
   * @param array $parameters array of filters
   *
   * @return object  VO
   */
-  function save( array $parameters= array() )
-  {
+  public function save( array $parameters = array() ) {
+
+    // TODO: Si hay dependencias no hace return del objeto
 
     $p = array(
-        'affectsDependences' => false
-      );
-    $parameters =  array_merge($p, $parameters );
+      'affectsDependences' => false
+    );
+    $parameters = array_merge($p, $parameters );
 
 
     // Save all dependences
@@ -151,7 +149,7 @@ Class Model extends VO {
 
       // save first time to create keys
       while( $selectDep = array_pop($depsInOrder) ) {
-          $selectDep['ref']->save( array('affectsDependences' => false) );
+        $selectDep['ref']->save( array('affectsDependences' => false) );
       }
 
 
@@ -160,9 +158,8 @@ Class Model extends VO {
 
       // save second time to update keys in related VOs
       while( $selectDep = array_pop($depsInOrder2) ) {
-          $selectDep['ref']->save( array('affectsDependences' => false) );
+        $selectDep['ref']->save( array('affectsDependences' => false) );
       }
-
 
     }
     // Save only this Model
@@ -188,13 +185,13 @@ Class Model extends VO {
   }
 
   /**
-  * save item
+  * Save item
   *
   * @param object $voObj voObject
   *
   * @return object  VO
   */
-  private function saveOrUpdate( $voObj = false ){
+  private function saveOrUpdate( $voObj = false ) {
     $retObj = false;
 
     if(!$voObj) {
@@ -217,13 +214,13 @@ Class Model extends VO {
   }
 
   /**
-  * if VO exist in DDBB
+  * Verify if VO exist in DDBB
   *
   * @param object $voObj voObject
   *
   * @return boolean
   */
-  function exist($voObj = false) {
+  public function exist( $voObj = false ) {
     $ret = false;
 
     if(!$voObj) {
@@ -244,18 +241,18 @@ Class Model extends VO {
 
 
   /**
-  * delete item
+  * Delete item
   *
   * @param array $parameters array of filters
   *
   * @return boolean
   */
-  function delete( array $parameters = array() ) {
+  public function delete( array $parameters = array() ) {
 
     $p = array(
-        'affectsDependences' => false
-      );
-    $parameters =  array_merge($p, $parameters );
+      'affectsDependences' => false
+    );
+    $parameters = array_merge($p, $parameters );
 
 
     // Delete all dependences
@@ -280,18 +277,18 @@ Class Model extends VO {
 
 
   /**
-  * update item key
+  * Update item key
   *
   * @param array $parameters array of filters
   *
   * @return object  VO
   */
-  function updateKey( array $parameters = array() ) {
+  public function updateKey( array $parameters = array() ) {
 
 
     $p = array(
-        'searchKey' => null,
-        'changeKey' => null
+      'searchKey' => null,
+      'changeKey' => null
     );
 
     $dataVO = false;
@@ -308,7 +305,7 @@ Class Model extends VO {
   }
 
 
-  public function getAllData( $style='raw' ) {
+  public function getAllData( $style = 'raw' ) {
     $retData = false;
 
     switch ( $style ) {
@@ -331,8 +328,7 @@ Class Model extends VO {
    *
    * @return void
    */
-  public function transactionStart()
-  {
+  public function transactionStart() {
     $this->dataFacade->transactionStart();
   }
 
@@ -341,8 +337,7 @@ Class Model extends VO {
    *
    * @return void
    */
-  public function transactionCommit()
-  {
+  public function transactionCommit() {
     $this->dataFacade->transactionCommit();
   }
 
@@ -351,8 +346,7 @@ Class Model extends VO {
    *
    * @return void
    */
-  public function transactionRollback()
-  {
+  public function transactionRollback() {
     $this->dataFacade->transactionRollback();
   }
 

@@ -17,12 +17,12 @@ class MysqlDAO extends DAO {
 
 
   /**
-  * Composes order mysql (ORDER BY) String
-  *
-  * @param array $ORDArray array('id1'=>-1, 'id2'=>1)
-  *
-  * @return string
-  */
+   * Composes order mysql (ORDER BY) String
+   *
+   * @param array $ORDArray array('id1'=>-1, 'id2'=>1)
+   *
+   * @return string
+   */
   public function orderByString( $ORDArray ) {
     // Direction (ASC, DESC) Array
     if( is_array( $ORDArray ) ) {
@@ -53,14 +53,14 @@ class MysqlDAO extends DAO {
   //
 
   /**
-  * Execute a SQL query command
-  *
-  * @param object $connectionControl mysqli connection object
-  * @param string $sql query
-  * @param string $val_array value array
-  *
-  * @return mixed
-  */
+   * Execute a SQL query command
+   *
+   * @param object $connectionControl mysqli connection object
+   * @param string $sql query
+   * @param string $val_array value array
+   *
+   * @return mixed
+   */
   public function execSQL( &$connectionControl, $sql, $val_array = array() ) {
     Cogumelo::debugSQL($sql);
     // obtaining debug data
@@ -149,12 +149,12 @@ class MysqlDAO extends DAO {
 
 
   /**
-  * Get string of chars according prepare type (ex. i:integer, d:double, s:string, b:boolean)
-  *
-  * @param array $values_array
-  *
-  * @return string
-  */
+   * Get string of chars according prepare type (ex. i:integer, d:double, s:string, b:boolean)
+   *
+   * @param array $values_array
+   *
+   * @return string
+   */
   public function getPrepareTypes( $values_array ) {
 
     $return_str = "";
@@ -181,12 +181,12 @@ class MysqlDAO extends DAO {
 
 
   /**
-  * Generates where clausule
-  *
-  * @param array $fiters
-  *
-  * @return string
-  */
+   * Generates where clausule
+   *
+   * @param array $fiters
+   *
+   * @return string
+   */
   public function getFilters( $filters ) {
 
     $where_str = "";
@@ -242,18 +242,18 @@ class MysqlDAO extends DAO {
 
 
   /**
-  * Generic List ittems
-  *
-  * @param object $connectionControl mysqli connection object
-  * @param array $filters filters array
-  * @param array $range query range
-  * @param array $order order array
-  * @param array
-  * @param boolean $resolveDependences if want to resolve relationship dependences
-  * @param boolean $cache save query result into cache
-  *
-  * @return object
-  */
+   * Generic List ittems
+   *
+   * @param object $connectionControl mysqli connection object
+   * @param array $filters filters array
+   * @param array $range query range
+   * @param array $order order array
+   * @param array
+   * @param boolean $resolveDependences if want to resolve relationship dependences
+   * @param boolean $cache save query result into cache
+   *
+   * @return object
+   */
   public function listItems( &$connectionControl, $filters, $range, $order, $fields, $joinType, $resolveDependences = false, $groupBy = false, $cache = false ) {
     // SQL Query
     $VO = new $this->VO();
@@ -301,27 +301,36 @@ class MysqlDAO extends DAO {
       $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
 
 
-//exit;
-//var_dump($joinWhereArrays);
-//exit;
-    if ( $cache && DB_ALLOW_CACHE  )
-    {
-      $queryId = md5($strSQL.serialize( $allWhereArrays ));
+    //exit;
+    //var_dump($joinWhereArrays);
+    //exit;
+
+    // if( $cache && DB_ALLOW_CACHE ) {
+
+    if( $cache && ( !isset( $GLOBALS['DB_ALLOW_CACHE'] ) || $GLOBALS['DB_ALLOW_CACHE'] ) ) {
+
+      // error_log( __METHOD__.' - filters: '.json_encode($filters) );
+      // error_log( __METHOD__.' - cache: '.json_encode($cache) );
+
       $cached =  new Cache();
 
-      if($cache_data = $cached->getCache($queryId)  ) {
+      $queryId = Cogumelo::getSetupValue('db:name') .':'.__METHOD__.':'. md5( $strSQL . serialize( $allWhereArrays ) );
+
+      if( $cache_data = $cached->getCache( $queryId ) ) {
         // With cache, serving cache ...
         Cogumelo::debug('Using cache: cache Get with ID: '.$queryId );
-        $queryID = $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
+        // $queryID = $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
+        $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true ); //is a cached result
       }
-      else{
+      else {
         // With cache, but not cached yet. Caching ...
-        $res = $this->execSQL($connectionControl,$strSQL, $allWhereARraysValues );
+        $res = $this->execSQL( $connectionControl, $strSQL, $allWhereARraysValues );
 
         if( $res != COGUMELO_ERROR ) {
           Cogumelo::debug('Using cache: cache Set with ID: '.$queryId );
-          $daoresult = new MysqlDAOResult( $this->VO , $res);
-          $cached->setCache($queryId, $daoresult->fetchAll_RAW() );
+          $daoresult = new MysqlDAOResult( $this->VO , $res );
+          // $cached->setCache( $queryId, $daoresult->fetchAll_RAW() );
+          $cached->setCache( $queryId, $daoresult->fetchAllRaw(), $cache );
         }
         else{
           $daoresult = COGUMELO_ERROR;
@@ -331,10 +340,10 @@ class MysqlDAO extends DAO {
     else {
 
       //  Without cache!
-      $res = $this->execSQL($connectionControl,$strSQL, $allWhereARraysValues );
+      $res = $this->execSQL( $connectionControl, $strSQL, $allWhereARraysValues );
 
       if( $res != COGUMELO_ERROR ){
-        $daoresult = new MysqlDAOResult( $this->VO , $res);
+        $daoresult = new MysqlDAOResult( $this->VO, $res);
       }
       else{
         $daoresult = COGUMELO_ERROR;
@@ -342,16 +351,14 @@ class MysqlDAO extends DAO {
     }
 
     return $daoresult;
-
-
   }
 
 
   /**
-  * Ket keys as string and set function AsText() to geo
-  *
-  * @return string
-  */
+   * Ket keys as string and set function AsText() to geo
+   *
+   * @return string
+   */
   public function getKeysToString( $VO, $fields, $resolveDependences ) {
 
     $keys = explode(', ', $VO->getKeysToString($fields, $resolveDependences ));
@@ -375,21 +382,21 @@ class MysqlDAO extends DAO {
       }
     }
 
-//echo implode(',', $procesedKeys);
-//exit;
+    //echo implode(',', $procesedKeys);
+    //exit;
 
     return implode(',', $procesedKeys);
   }
 
 
   /**
-  * Generic List Count
-  *
-  * @param object $connectionControl mysqli connection object
-  * @param array $filters filters array
-  *
-  * @return integer
-  */
+   * Generic List Count
+   *
+   * @param object $connectionControl mysqli connection object
+   * @param array $filters filters array
+   *
+   * @return integer
+   */
   public function listCount( &$connectionControl, $filters ) {
     $retVal = null;
 
@@ -401,11 +408,11 @@ class MysqlDAO extends DAO {
     $StrSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
 
     $res = $this->execSQL($connectionControl,$StrSQL, $whereArray['values']);
-    if( $res !== COGUMELO_ERROR )  {
+    if( $res !== COGUMELO_ERROR ) {
 
-        //$res->fetch_assoc();
-        $row = $res->fetch_assoc();
-        $retVal = $row['number_elements'];
+      //$res->fetch_assoc();
+      $row = $res->fetch_assoc();
+      $retVal = $row['number_elements'];
 
     }
     else {
@@ -418,13 +425,13 @@ class MysqlDAO extends DAO {
 
 
   /**
-  * Insert record
-  *
-  * @param object $connectionControl mysqli connection object
-  * @param object $voObj VO or Model object
-  *
-  * @return mixed
-  */
+   * Insert record
+   *
+   * @param object $connectionControl mysqli connection object
+   * @param object $voObj VO or Model object
+   *
+   * @return mixed
+   */
   public function create( &$connectionControl, $VOobj ) {
 
     $cols = array();
@@ -468,13 +475,13 @@ class MysqlDAO extends DAO {
   }
 
   /**
-  * Update record
-  *
-  * @param object $connectionControl mysqli connection object
-  * @param object $voObj VO or Model object
-  *
-  * @return mixed
-  */
+   * Update record
+   *
+   * @param object $connectionControl mysqli connection object
+   * @param object $voObj VO or Model object
+   *
+   * @return mixed
+   */
   public function update( &$connectionControl, $VOobj ) {
 
     // primary key value
@@ -498,8 +505,8 @@ class MysqlDAO extends DAO {
       $valArray[] = $col;//$VOobj->getter($colk);
     }
 
-//var_dump($setvalues);
-//var_dump($valArray);
+    //var_dump($setvalues);
+    //var_dump($valArray);
 
     // add primary key value to values array
     $valArray[] = $pkValue;
@@ -516,14 +523,14 @@ class MysqlDAO extends DAO {
   }
 
   /**
-  * Delete from key
-  *
-  * @param object $connectionControl mysqli connection object
-  * @param string $key key to search
-  * @param mixed $value value to search
-  *
-  * @return boolean
-  */
+   * Delete from key
+   *
+   * @param object $connectionControl mysqli connection object
+   * @param string $key key to search
+   * @param mixed $value value to search
+   *
+   * @return boolean
+   */
   public function deleteFromKey( &$connectionControl, $key, $value ) {
 
     $VO = new $this->VO();
@@ -540,12 +547,12 @@ class MysqlDAO extends DAO {
   }
 
   /**
-  * Return list of question marks separated by comma
-  *
-  * @param array $elements
-  *
-  * @return string
-  */
+   * Return list of question marks separated by comma
+   *
+   * @param array $elements
+   *
+   * @return string
+   */
   public function getQuestionMarks( $elements ) {
     $qm = str_repeat( '?, ', count($elements)-1 ) . '?';
     return $qm;
