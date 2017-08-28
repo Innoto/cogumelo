@@ -106,7 +106,7 @@ class  DevelDBController {
 
   public function deploy( ) {
     $modules = $this->getModules();
-
+    $modules[] = 'Cogumelo';
 
     // create tables
     foreach( $modules as $module ) {
@@ -191,9 +191,13 @@ class  DevelDBController {
 
           if( $this->moduleIsRegistered( $module ) === false ) {
             $this->execModuleRC( $module );
+            $this->execModuleDeploy($module, true);
+          }
+          else {
+            $this->execModuleDeploy($module, false);
           }
 
-          $this->execModuleDeploy($module, true);
+
           $this->registerModuleVersion($module);
         }
         else {
@@ -527,6 +531,7 @@ class  DevelDBController {
 
   private function execModuleDeploy( $moduleName, $whenGenerateModel ) {
     if( method_exists( $moduleName, 'moduleDeploy' ) ) {
+
       echo( "\nDEPLOY: ".$moduleName."::moduleDeploy( $whenGenerateModel )\n" );
 
       if( $this->noExecute !== true) {

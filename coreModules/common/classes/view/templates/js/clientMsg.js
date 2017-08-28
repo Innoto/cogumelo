@@ -12,7 +12,7 @@ cogumelo.clientMsgClass = function( options ) {
     alertType: 'info',  // Available types (info|success|warning|error)
     promptType: 'text', // Available types (text|number|color)
 
-    title: 'Geozzy',
+    title: __('Information'),
 
     horizontalOffset: 5,                //If the messagebox is larger (in width) than window's width. The messagebox's width is reduced to window width - 2 * horizontalOffset
     verticalOffset: 5,                  //If the messagebox is larger (in height) than window's height. The messagebox's height is reduced to window height - 2 * verticalOffset

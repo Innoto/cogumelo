@@ -444,7 +444,9 @@ class MysqlDAO extends DAO {
       $val = $VOobj->getter($colName);
       $valArray[] = $val;
 
-      if( isset( $VOobj::$cols[$colName] ) && $VOobj::$cols[$colName]['type'] == 'GEOMETRY' ) {
+
+      if( $VOobj->getter($colName) != false && isset( $VOobj::$cols[$colName] ) && $VOobj::$cols[$colName]['type'] == 'GEOMETRY' ) {
+
         $answrs .= ', GeomFromText( ? )';
       }
       else {
@@ -486,7 +488,7 @@ class MysqlDAO extends DAO {
     $valArray = array();
     foreach( $VOobj->data as $colk => $col ) {
 
-      if( isset( $VOobj::$cols[$colk] ) && $VOobj::$cols[$colk]['type'] == 'GEOMETRY' ) {
+      if( $VOobj->getter($colk) != false && isset( $VOobj::$cols[$colk] ) && $VOobj::$cols[$colk]['type'] == 'GEOMETRY' ) {
         $setvalues .= ', '.$colk.'= GeomFromText( ? ) ';
       }
       else {

@@ -231,7 +231,7 @@ class FiledataImagesController {
       $result = $toRoute;
     }
     elseif( !empty($toRoute) ) {
-      $toRouteReal = $toRoute;
+      $toRouteReal = false;
       if( $saveFormatExt ) {
         $toRouteReal = $toRouteInfo['dirname'] .'/'. $toRouteInfo['filename'] .'.'. $saveFormatExt;
       }
@@ -239,7 +239,7 @@ class FiledataImagesController {
         $toRouteReal = $toRouteInfo['dirname'] .'/'. $this->profile['saveName'];
       }
 
-      if( $toRouteReal !== $toRoute && file_exists( $toRouteReal ) ) {
+      if( $toRouteReal && file_exists( $toRouteReal ) ) {
         Cogumelo::debug('FiledataImagesController: createImageProfile: toRouteReal' );
         $toRoute = $toRouteReal;
         $result = $toRoute;
@@ -449,7 +449,7 @@ class FiledataImagesController {
         }
 
         $result = 'data:image/jpg;base64,'.base64_encode( $im->getImageBlob() );
-        error_log( 'jpg base64 SRC Encode strlen: '.mb_strlen($result) );
+        Cogumelo::debug('FiledataImagesController: jpg base64 SRC Encode strlen: '.mb_strlen($result) );
       }
 
 

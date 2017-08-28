@@ -517,8 +517,15 @@ $.validator.addMethod(
     var $fileField = $( element );
     var groupFiles = false;
     var groupId = $fileField.attr('data-fm_group_id');
-    if( groupId && typeof cogumelo.formController.fileGroup[ groupId ] !== 'undefined' ) {
-      groupFiles = cogumelo.formController.fileGroup[ groupId ];
+
+    if( groupId ) {
+      var idForm = $fileField.attr('form');
+      var formCtlr = cogumelo.formControllerInfo.getFormInfo( idForm, 'controller' );
+      // console.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
+
+      if( formCtlr && typeof formCtlr.fileGroup[ groupId ] !== 'undefined' ) {
+        groupFiles = formCtlr.fileGroup[ groupId ];
+      }
     }
     // console.log( ' * * * formValidators::multipleMax IDs', groupId, groupFiles, groupFiles.length );
 
@@ -552,8 +559,15 @@ $.validator.addMethod(
     var $fileField = $( element );
     var groupFiles = false;
     var groupId = $fileField.attr('data-fm_group_id');
-    if( groupId && typeof cogumelo.formController.fileGroup[ groupId ] !== 'undefined' ) {
-      groupFiles = cogumelo.formController.fileGroup[ groupId ];
+
+    if( groupId ) {
+      var idForm = $fileField.attr('form');
+      var formCtlr = cogumelo.formControllerInfo.getFormInfo( idForm, 'controller' );
+      // console.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
+
+      if( formCtlr && typeof formCtlr.fileGroup[ groupId ] !== 'undefined' ) {
+        groupFiles = formCtlr.fileGroup[ groupId ];
+      }
     }
     // console.log( ' * * * formValidators::multipleMin IDs', groupId, groupFiles, groupFiles.length );
 
@@ -587,8 +601,15 @@ $.validator.addMethod(
     var $fileField = $( element );
     var groupFiles = false;
     var groupId = $fileField.attr('data-fm_group_id');
-    if( groupId && typeof cogumelo.formController.fileGroup[ groupId ] !== 'undefined' ) {
-      groupFiles = cogumelo.formController.fileGroup[ groupId ];
+
+    if( groupId ) {
+      var idForm = $fileField.attr('form');
+      var formCtlr = cogumelo.formControllerInfo.getFormInfo( idForm, 'controller' );
+      // console.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
+
+      if( formCtlr && typeof formCtlr.fileGroup[ groupId ] !== 'undefined' ) {
+        groupFiles = formCtlr.fileGroup[ groupId ];
+      }
     }
     // console.log( ' * * * formValidators::multipleMin IDs', groupId, groupFiles, groupFiles.length );
 

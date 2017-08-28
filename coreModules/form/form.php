@@ -33,7 +33,8 @@ class form extends Module {
   public $includesCommon = array(
     'controller/FormController.php',
     'controller/FormValidators.php',
-    'js/jquery.cogumeloFormController.js',
+    // 'js/jquery.cogumeloFormController.js', // js controller V1
+    'js/formController.js', // js controller V2
     'js/jquery.serializeFormToObject.js',
     'js/formValidators.js',
     'js/formValidatorsExtender.js',
@@ -47,6 +48,4 @@ class form extends Module {
     $this->addUrlPatterns( '#^cgml-form-group-element$#', 'view:FormConnector::execCommand' );
     $this->addUrlPatterns( '#^cgml-form-command$#', 'view:FormConnector::execCommand' );
   }
-
-
 }
