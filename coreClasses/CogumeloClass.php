@@ -521,7 +521,7 @@ class CogumeloClass extends Singleton {
     devel::load('model/ModuleRegisterModel.php');
 
     $moduleRegisterControl = new ModuleRegisterModel();
-    $moduleRegisters = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=> static::class ) ));
+    $moduleRegisters = $moduleRegisterControl->listItems( array('filters'=>array( 'name'=> 'Cogumelo' ) ));
 
 
     if( $regModuleInfo = $moduleRegisters->fetch() ) {

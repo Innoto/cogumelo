@@ -496,8 +496,16 @@ class  DevelDBController {
     echo( $moduleName."::register();\n" );
     if( $this->noExecute !== true) {
 
-      $n=new $moduleName();
-      $n::register();
+
+      if($moduleName === 'Cogumelo') {
+        global $_C;
+        $_C::register();
+      }
+      else {
+        $n=new $moduleName();
+        $n::register();
+      }
+
     }
 
   }
