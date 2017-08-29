@@ -58,8 +58,8 @@ if( $_SERVER['REMOTE_ADDR'] !== 'local_shell' && isset( $_SERVER['REMOTE_ADDR'] 
       rmdirRec( $dir, false ); // false para que borre el contenido y no el contenedor
 
       if( function_exists('opcache_reset') ) {
-        opcache_reset();
-        echo 'opcache_reset() LISTO!!!'."\n";
+        $opcacheReset = opcache_reset();
+        echo 'opcache_reset() '.( ($opcacheReset) ? 'OK' : 'FAIL' )."\n";
       }
 
       break;
