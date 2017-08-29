@@ -59,6 +59,7 @@ if( $_SERVER['REMOTE_ADDR'] !== 'local_shell' && isset( $_SERVER['REMOTE_ADDR'] 
 
       if( function_exists('opcache_reset') ) {
         opcache_reset();
+        echo 'opcache_reset() LISTO!!!'."\n";
       }
 
       break;
