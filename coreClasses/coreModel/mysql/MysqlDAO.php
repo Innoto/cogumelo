@@ -314,11 +314,11 @@ class MysqlDAO extends DAO {
 
       $cached =  new Cache();
 
-      $queryId = Cogumelo::getSetupValue('db:name') .':'.__METHOD__.':'. md5( $strSQL . serialize( $allWhereArrays ) );
+      $cacheKey = 'Cogumelo:'.Cogumelo::getSetupValue('db:name') .':'.__METHOD__.':'. md5( $strSQL . serialize( $allWhereArrays ) );
 
-      if( $cache_data = $cached->getCache( $queryId ) ) {
+      if( $cache_data = $cached->getCache( $cacheKey ) ) {
         // With cache, serving cache ...
-        Cogumelo::debug('Using cache: cache Get with ID: '.$queryId );
+        Cogumelo::log( __METHOD__.': Using cache: Get with ID: '.$cacheKey, 'cache' );
         // $queryID = $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
         $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true ); //is a cached result
       }
@@ -326,23 +326,25 @@ class MysqlDAO extends DAO {
         // With cache, but not cached yet. Caching ...
         $res = $this->execSQL( $connectionControl, $strSQL, $allWhereARraysValues );
 
-        if( $res != COGUMELO_ERROR ) {
-          Cogumelo::debug('Using cache: cache Set with ID: '.$queryId );
+        if( $res !== COGUMELO_ERROR ) {
+          Cogumelo::log( __METHOD__.': Using cache: Set with ID: '.$cacheKey, 'cache' );
           $daoresult = new MysqlDAOResult( $this->VO , $res );
-          // $cached->setCache( $queryId, $daoresult->fetchAll_RAW() );
-          $cached->setCache( $queryId, $daoresult->fetchAllRaw(), $cache );
+          // $cached->setCache( $cacheKey, $daoresult->fetchAll_RAW() );
+          $cached->setCache( $cacheKey, $daoresult->fetchAllRaw(), $cache );
         }
         else{
+          Cogumelo::log( __METHOD__.': Using cache: Query fail - Not Set', 'cache' );
           $daoresult = COGUMELO_ERROR;
         }
       }
     }
     else {
+      Cogumelo::log( __METHOD__.': Not Using cache', 'cache' );
 
       //  Without cache!
       $res = $this->execSQL( $connectionControl, $strSQL, $allWhereARraysValues );
 
-      if( $res != COGUMELO_ERROR ){
+      if( $res !== COGUMELO_ERROR ) {
         $daoresult = new MysqlDAOResult( $this->VO, $res);
       }
       else{

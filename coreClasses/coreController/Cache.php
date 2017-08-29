@@ -36,10 +36,10 @@ class Cache {
     $result = $this->mc->get( $key );
     if( $this->mc->getResultCode() !== Memcached::RES_SUCCESS ) {
       $result = null;
-      error_log( __METHOD__.' - key: '.$key.' FAIL!!!' );
+      Cogumelo::log( __METHOD__.' - key: '.$key.' FAIL!!!', 'cache' );
     }
     else {
-      error_log( __METHOD__.' - key: '.$key.' Atopado :)' );
+      Cogumelo::log( __METHOD__.' - key: '.$key.' Atopado :)', 'cache' );
     }
 
     return $result;
@@ -62,7 +62,7 @@ class Cache {
       $expirationTime = intval( $expirationTime );
     }
 
-    error_log( __METHOD__.' - key: '.$key.' exp: '.$expirationTime );
+    Cogumelo::log( __METHOD__.' - key: '.$key.' exp: '.$expirationTime, 'cache' );
 
     return $this->mc->set( $key, $data, $expirationTime );
   }
@@ -72,7 +72,7 @@ class Cache {
    * Borra todos los contenidos
    */
   public function flush() {
-    error_log( __METHOD__ );
+    Cogumelo::log( __METHOD__, 'cache' );
     return $this->mc->flush();
   }
 }
