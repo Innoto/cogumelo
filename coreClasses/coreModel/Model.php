@@ -63,10 +63,14 @@ class Model extends VO {
 
 
     Cogumelo::log( 'Called listItems on '.get_called_class().' CACHE: '. ( ($parameters['cache']===false) ? 'NON' : $parameters['cache'] ), 'cache' );
-    if( $parameters['cache']===false ) {
-      $dt=debug_backtrace();
-      // Cogumelo::log( 'CACHE NON: '.$dt['1']['class'].' - '.$dt['2']['class'].' - '.$dt['3']['class'].' - '.$dt['4']['class'].' - '.$dt['5']['class'], 'cache' );
-    }
+    // if( $parameters['cache']===false ) {
+    //   $dt=debug_backtrace();
+    //   $dtl='CACHE: NON';
+    //   foreach( $dt as $l ) {
+    //     $dtl .= ' - '.$l['class'];
+    //   }
+    //   Cogumelo::log( $dtl, 'cache' );
+    // }
 
 
     $data = $this->dataFacade->listItems(
