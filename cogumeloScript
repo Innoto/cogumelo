@@ -35,11 +35,13 @@ if( $argc > 1 ) {
       break;
 
     case 'generateModel':
+      createRelSchemes();
       generateModel();
       flushAll();
       break;
 
     case 'deploy':
+      createRelSchemes();
       deploy();
       flushAll();
       break;
@@ -180,6 +182,29 @@ function generateModel() {
 function deploy() {
   $develdbcontrol = new DevelDBController();
   $develdbcontrol->scriptDeploy();
+}
+
+function createRelSchemes() {
+
+  echo "\nCreating relationship schemes\n";
+
+  global $C_ENABLED_MODULES;
+
+  foreach( $C_ENABLED_MODULES as $moduleName ) {
+    require_once( ModuleController::getRealFilePath( $moduleName.'.php' , $moduleName) );
+  }
+
+  Cogumelo::load('coreModel/VOUtils.php');
+
+  $dir = APP_TMP_PATH.'/modelRelationship';
+
+  if( !is_dir( $dir ) ) {
+    if( !mkdir( $dir, 0777, true ) ) {
+      echo 'ERROR: Imposible crear el directorio: '.$dir."\n";
+    }
+  }
+
+  VOUtils::createModelRelTreeFiles();
 }
 
 function flushAll() {
