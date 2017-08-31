@@ -42,7 +42,8 @@ class FiledataController {
     // error_log( 'FiledataController __construct' );
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
 
-    if( $cache = Cogumelo::GetSetupValue('cache:Filedata') ) {
+    $cache = Cogumelo::getSetupValue('cache:Filedata');
+    if( $cache !== null ) {
       Cogumelo::log( __METHOD__.' ---- ESTABLECEMOS CACHE A '.$cache, 'cache' );
       $this->cacheQuery = $cache;
     }
