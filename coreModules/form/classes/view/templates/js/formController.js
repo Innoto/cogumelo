@@ -456,11 +456,11 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     console.log( '* switchFormLang: ',that.idForm,lang );
 
     that.langSwitchActive = lang;
-    $( '[form="'+that.idForm+'"].js-tr, [data-form_id="'+that.idForm+'"].js-tr, '+
-      ' .cgmMForm-fileFields-'+that.idForm+' input.js-tr' )
+    $( '[form="'+that.idForm+'"].js-tr-sw, [data-form_id="'+that.idForm+'"].js-tr-sw, '+
+      ' .cgmMForm-fileFields-'+that.idForm+' input.js-tr-sw' )
       .parent().hide();
-    $( '[form="'+that.idForm+'"].js-tr.js-tr-'+lang+', [data-form_id="'+that.idForm+'"].js-tr.js-tr-'+lang+', '+
-      ' .cgmMForm-fileFields-'+that.idForm+' input.js-tr.js-tr-'+lang )
+    $( '[form="'+that.idForm+'"].js-tr-sw.js-tr-'+lang+', [data-form_id="'+that.idForm+'"].js-tr-sw.js-tr-'+lang+', '+
+      ' .cgmMForm-fileFields-'+that.idForm+' input.js-tr-sw.js-tr-'+lang )
       .parent().show(); //.removeAttr('display');
     $( 'ul[data-form_id="'+that.idForm+'"].langSwitch li' ).removeClass( 'langActive' );
     $( 'ul[data-form_id="'+that.idForm+'"].langSwitch li.langSwitch-'+lang ).addClass( 'langActive' );
@@ -480,15 +480,15 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     htmlLangSwitch += '</div>';
 
     $langSwitch = $( htmlLangSwitch );
-    $( '[form="'+that.idForm+'"].cgmMForm-field.js-tr.js-tr-' + that.langDefault + ':not("input:file")' )
+    $( '[form="'+that.idForm+'"].cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault + ':not("input:file")' )
       .parent().before( $langSwitch.clone() );
-    $( '.cgmMForm-fileFields-'+that.idForm+' .cgmMForm-field.js-tr.js-tr-' + that.langDefault + ':not("input:file")' )
+    $( '.cgmMForm-fileFields-'+that.idForm+' .cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault + ':not("input:file")' )
       .parent().before( $langSwitch.clone() );
 
     $langSwitchFile = $( htmlLangSwitch ).addClass('langSwitch-file');
-    $( '[type=file][form="'+that.idForm+'"].cgmMForm-field.js-tr.js-tr-' + that.langDefault )
+    $( '[type=file][form="'+that.idForm+'"].cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault )
       .parent().before( $langSwitchFile.clone() );
-    $( '[type=file].cgmMForm-fileFields-'+that.idForm+' .cgmMForm-field.js-tr.js-tr-' + that.langDefault )
+    $( '[type=file].cgmMForm-fileFields-'+that.idForm+' .cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault )
       .parent().before( $langSwitchFile.clone() );
 
     that.switchFormLang( that.langDefault );
@@ -516,7 +516,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       $.each( that.langAvailableIds, function( i, lang ) {
         var name = ( lang !== '' ) ? fileField.name+'_'+lang : fileField.name;
         var filefielddata = ( lang !== '' ) ? 'fm_title_'+lang : 'fm_title';
-        var classLang = ( lang !== '' ) ? ' js-tr js-tr-'+lang : '';
+        var classLang = ( lang !== '' ) ? ' js-tr-sw js-tr-'+lang : '';
         var titleValue = ( $( fileField ).data( filefielddata ) ) ? $( fileField ).data( filefielddata ) : '';
         html += '<div class="cgmMForm-wrap cgmMForm-field-titleFileField_'+name+'">'+"\n"+
           '<label class="cgmMForm'+classLang+'">Alt-Title</label>'+"\n"+
