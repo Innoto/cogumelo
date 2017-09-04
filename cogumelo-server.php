@@ -57,6 +57,11 @@ if( $_SERVER['REMOTE_ADDR'] !== 'local_shell' && isset( $_SERVER['REMOTE_ADDR'] 
       $dir = Cogumelo::getSetupValue('mod:mediaserver:tmpCachePath'); // Def: mediaCache
       rmdirRec( $dir, false ); // false para que borre el contenido y no el contenedor
 
+      if( function_exists('opcache_reset') ) {
+        $opcacheReset = opcache_reset();
+        echo 'opcache_reset() '.( ($opcacheReset) ? 'OK' : 'FAIL' )."\n";
+      }
+
       break;
     case 'client_caches':
       Cogumelo::load( 'coreController/ModuleController.php' );

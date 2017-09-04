@@ -59,14 +59,18 @@ class Model extends VO {
       'groupBy' => false,
       'cache' => false
     );
-    $parameters =  array_merge($p, $parameters );
+    $parameters = array_merge( $p, $parameters );
 
 
     Cogumelo::log( 'Called listItems on '.get_called_class().' CACHE: '. ( ($parameters['cache']===false) ? 'NON' : $parameters['cache'] ), 'cache' );
-    if( $parameters['cache']===false ) {
-      $dt=debug_backtrace();
-      // Cogumelo::log( 'CACHE NON: '.$dt['1']['class'].' - '.$dt['2']['class'].' - '.$dt['3']['class'].' - '.$dt['4']['class'].' - '.$dt['5']['class'], 'cache' );
-    }
+    // if( $parameters['cache']===false ) {
+    //   $dt=debug_backtrace();
+    //   $dtl='listItems CACHE: NON';
+    //   foreach( $dt as $l ) {
+    //     $dtl .= ' - '.( isset($l['class']) ? $l['class'] : '*');
+    //   }
+    //   Cogumelo::log( $dtl, 'cache' );
+    // }
 
 
     $data = $this->dataFacade->listItems(
@@ -95,14 +99,24 @@ class Model extends VO {
 
     $p = array(
       'filters' => false,
-      'joinType' => 'left',
-      'affectsDependences' => false,
+      // 'joinType' => 'left',
+      // 'affectsDependences' => false,
       'cache' => false
     );
-    $parameters =  array_merge($p, $parameters );
+    $parameters = array_merge( $p, $parameters );
 
-    Cogumelo::debug( 'Called listCount on '.get_called_class() );
-    $data = $this->dataFacade->listCount( $parameters['filters'] );
+    // Cogumelo::debug( 'Called listCount on '.get_called_class() );
+    Cogumelo::log( 'Called listCount on '.get_called_class().' CACHE: '. ( ($parameters['cache']===false) ? 'NON' : $parameters['cache'] ), 'cache' );
+    // if( $parameters['cache']===false ) {
+    //   $dt=debug_backtrace();
+    //   $dtl='listCount CACHE: NON';
+    //   foreach( $dt as $l ) {
+    //     $dtl .= ' - '.( isset($l['class']) ? $l['class'] : '*');
+    //   }
+    //   Cogumelo::log( $dtl, 'cache' );
+    // }
+
+    $data = $this->dataFacade->listCount( $parameters['filters'], $parameters['cache'] );
 
     return $data;
   }

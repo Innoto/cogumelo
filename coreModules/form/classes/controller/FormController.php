@@ -813,6 +813,7 @@ class FormController implements Serializable {
    * @param $definitions Array fields info
    */
   public function definitionsToForm( $definitions ) {
+    $numLangs = count( $this->langAvailable );
     foreach( $definitions as $fieldName => $definition ) {
       if( !isset( $definition['params'] ) ) {
         $definition['params'] = false;
@@ -823,7 +824,12 @@ class FormController implements Serializable {
           $baseClass = $definition['params']['class'];
         }
         foreach( $this->langAvailable as $lang ) {
-          $definition['params']['class'] = $baseClass . ' js-tr js-tr-'.$lang;
+          if( $numLangs > 1 ) {
+            $definition['params']['class'] = $baseClass . ' js-tr js-tr-sw js-tr-'.$lang;
+          }
+          else {
+            $definition['params']['class'] = $baseClass . ' js-tr js-tr-'.$lang;
+          }
           $this->setField( $fieldName.'_'.$lang, $definition['params'] );
           if( isset( $definition['rules'] ) ) {
             foreach( $definition['rules'] as $ruleName => $ruleParams ) {

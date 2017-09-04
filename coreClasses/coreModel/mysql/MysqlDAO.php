@@ -250,11 +250,11 @@ class MysqlDAO extends DAO {
    * @param array $order order array
    * @param array
    * @param boolean $resolveDependences if want to resolve relationship dependences
-   * @param boolean $cache save query result into cache
+   * @param boolean $cacheParam save query result into cache
    *
    * @return object
    */
-  public function listItems( &$connectionControl, $filters, $range, $order, $fields, $joinType, $resolveDependences = false, $groupBy = false, $cache = false ) {
+  public function listItems( &$connectionControl, $filters, $range, $order, $fields, $joinType, $resolveDependences = false, $groupBy = false, $cacheParam = false ) {
     // SQL Query
     $VO = new $this->VO();
 
@@ -305,22 +305,16 @@ class MysqlDAO extends DAO {
     //var_dump($joinWhereArrays);
     //exit;
 
-    // if( $cache && DB_ALLOW_CACHE ) {
+    // if( $cacheParam && DB_ALLOW_CACHE ) {
+    if( $cacheParam ) {
+      $cacheCtrl = new Cache();
+      $cacheKey = __METHOD__.':'. md5( $strSQL . serialize( $allWhereArrays ) );
 
-    if( $cache && ( !isset( $GLOBALS['DB_ALLOW_CACHE'] ) || $GLOBALS['DB_ALLOW_CACHE'] ) ) {
-
-      // error_log( __METHOD__.' - filters: '.json_encode($filters) );
-      // error_log( __METHOD__.' - cache: '.json_encode($cache) );
-
-      $cached =  new Cache();
-
-      $cacheKey = 'Cogumelo:'.Cogumelo::getSetupValue('db:name') .':'.__METHOD__.':'. md5( $strSQL . serialize( $allWhereArrays ) );
-
-      if( $cache_data = $cached->getCache( $cacheKey ) ) {
+      $cacheData = $cacheCtrl->getCache( $cacheKey );
+      if( $cacheData !== null ) {
         // With cache, serving cache ...
         Cogumelo::log( __METHOD__.': Using cache: Get with ID: '.$cacheKey, 'cache' );
-        // $queryID = $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true); //is a cached result
-        $daoresult = new MysqlDAOResult( $this->VO , $cache_data, true ); //is a cached result
+        $daoresult = new MysqlDAOResult( $this->VO , $cacheData, true ); //is a cached result
       }
       else {
         // With cache, but not cached yet. Caching ...
@@ -329,8 +323,8 @@ class MysqlDAO extends DAO {
         if( $res !== COGUMELO_ERROR ) {
           Cogumelo::log( __METHOD__.': Using cache: Set with ID: '.$cacheKey, 'cache' );
           $daoresult = new MysqlDAOResult( $this->VO , $res );
-          // $cached->setCache( $cacheKey, $daoresult->fetchAll_RAW() );
-          $cached->setCache( $cacheKey, $daoresult->fetchAllRaw(), $cache );
+          // $cacheCtrl->setCache( $cacheKey, $daoresult->fetchAll_RAW() );
+          $cacheCtrl->setCache( $cacheKey, $daoresult->fetchAllRaw(), $cacheParam );
         }
         else{
           Cogumelo::log( __METHOD__.': Using cache: Query fail - Not Set', 'cache' );
@@ -396,31 +390,57 @@ class MysqlDAO extends DAO {
    *
    * @param object $connectionControl mysqli connection object
    * @param array $filters filters array
+   * @param boolean $cacheParam save query result into cache
    *
    * @return integer
    */
-  public function listCount( &$connectionControl, $filters ) {
+  public function listCount( &$connectionControl, $filters, $cacheParam = false ) {
     $retVal = null;
 
+    $VO = new $this->VO();
     // where string and vars
     $whereArray = $this->getFilters($filters);
-
     // SQL Query
-    $VO = new $this->VO();
-    $StrSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
+    $strSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
 
-    $res = $this->execSQL($connectionControl,$StrSQL, $whereArray['values']);
-    if( $res !== COGUMELO_ERROR ) {
 
-      //$res->fetch_assoc();
-      $row = $res->fetch_assoc();
-      $retVal = $row['number_elements'];
+    if( $cacheParam ) {
+      $cacheCtrl = new Cache();
+      $cacheKey = __METHOD__.':'. md5( $strSQL . serialize( $whereArray ) );
 
+      $cacheData = $cacheCtrl->getCache( $cacheKey );
+      if( $cacheData !== null ) {
+        // With cache, serving cache ...
+        Cogumelo::log( __METHOD__.': Using cache: Get with ID: '.$cacheKey, 'cache' );
+        $retVal = $cacheData; //is a cached result
+      }
+      else {
+        // With cache, but not cached yet. Caching ...
+        $res = $this->execSQL( $connectionControl, $strSQL, $whereArray['values'] );
+
+        if( $res !== COGUMELO_ERROR ) {
+          Cogumelo::log( __METHOD__.': Using cache: Set with ID: '.$cacheKey, 'cache' );
+          $row = $res->fetch_assoc();
+          $retVal = $row['number_elements'];
+          $cacheCtrl->setCache( $cacheKey, $retVal, $cacheParam );
+        }
+        else{
+          Cogumelo::log( __METHOD__.': Using cache: Query fail - Not Set', 'cache' );
+          $retVal = COGUMELO_ERROR;
+        }
+      }
     }
     else {
-      $retVal = COGUMELO_ERROR;
+      Cogumelo::log( __METHOD__.': Not Using cache', 'cache' );
+      $res = $this->execSQL( $connectionControl, $strSQL, $whereArray['values'] );
+      if( $res !== COGUMELO_ERROR ) {
+        $row = $res->fetch_assoc();
+        $retVal = $row['number_elements'];
+      }
+      else {
+        $retVal = COGUMELO_ERROR;
+      }
     }
-
 
     return $retVal;
   }

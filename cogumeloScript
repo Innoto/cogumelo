@@ -324,11 +324,12 @@ function setPermissions( $devel = false ) {
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
     Cogumelo::getSetupValue( 'logs:path' ).' '.
-    Cogumelo::getSetupValue( 'session:savePath' ).' '.
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
     Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
   );
+
+  // exec( 'sudo chown -R www-data:www-data '.Cogumelo::getSetupValue( 'session:savePath' ) );
 
   exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH );
 

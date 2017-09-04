@@ -6,8 +6,9 @@ class FiledataController {
   // Ruta a partir de la que se crean los directorios y ficheros subidos
   var $filesAppPath = false;
 
-  // var $fileId = false;
-  // var $fileInfo = false;
+  public $cacheQuery = false; // false, true or time in seconds
+
+
 
   private $replaceAcents = array(
     'from' => array( 'À', 'Á', 'Â', 'Ã', 'Ä', 'Å', 'Æ', 'Ç', 'È', 'É', 'Ê', 'Ë', 'Ì', 'Í', 'Î', 'Ï',
@@ -40,6 +41,12 @@ class FiledataController {
   public function __construct() {
     // error_log( 'FiledataController __construct' );
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
+
+    $cache = Cogumelo::getSetupValue('cache:Filedata');
+    if( $cache !== null ) {
+      Cogumelo::log( __METHOD__.' ---- ESTABLECEMOS CACHE A '.$cache, 'cache' );
+      $this->cacheQuery = $cache;
+    }
   }
 
 
@@ -52,7 +59,7 @@ class FiledataController {
     $fileInfo = false;
 
     $fileModel = new filedataModel();
-    $fileList = $fileModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) );
+    $fileList = $fileModel->listItems([ 'filters' => [ 'id' => $fileId ], 'cache' => $this->cacheQuery ]);
     $fileObj = ( gettype( $fileList ) === 'object' ) ? $fileList->fetch() : false;
     $fileInfo = ( gettype( $fileObj ) === 'object' ) ? $fileObj->getAllData('onlydata') : false;
 
@@ -232,9 +239,12 @@ class FiledataController {
 
     if( $this->deleteFile( $deleteId ) ) {
       $objModel = new FilegroupModel();
-      $listModel = $objModel->listItems( ['filters' => [ 'idGroup' => $idGroup,
-        'filedataId' => $deleteId ] ] );
-      if( $listModel && $fileGroupObj = $listModel->fetch() ) {
+      $listModel = $objModel->listItems([
+        'filters' => [ 'idGroup' => $idGroup, 'filedataId' => $deleteId ],
+        'cache' => $this->cacheQuery
+      ]);
+      $fileGroupObj = ( gettype( $listModel ) === 'object' ) ? $listModel->fetch() : false;
+      if( gettype( $fileGroupObj ) === 'object' ) {
         $result = $fileGroupObj->delete();
       }
     }
@@ -347,11 +357,10 @@ class FiledataController {
     $filedataObj = false;
 
     $fileModel = new filedataModel();
-    if( $fileList = $fileModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) ) ) {
-      $filedataObj = $fileList->fetch();
-    }
+    $fileList = $fileModel->listItems([ 'filters' => [ 'id' => $fileId ], 'cache' => $this->cacheQuery ]);
+    $filedataObj = ( gettype( $fileList ) === 'object' ) ? $fileList->fetch() : false;
 
-    if( $filedataObj ) {
+    if( gettype( $filedataObj ) === 'object' ) {
       $ignore = array( 'id', 'name', 'originalName', 'absLocation', 'size' );
       foreach( array_keys( $filedataObj->getCols( true ) ) as $keyVO ) {
         if( isset( $filedataInfo[ $keyVO ] ) && !in_array( $keyVO, $ignore ) ) {
@@ -377,9 +386,10 @@ class FiledataController {
     $result = false;
 
     $objModel = new FiledataModel();
-    $listModel = $objModel->listItems( array( 'filters' => array( 'id' => $fileId ) ) );
+    $listModel = $objModel->listItems([ 'filters' => [ 'id' => $fileId ], 'cache' => $this->cacheQuery ]);
+    $filedataObj = ( gettype( $listModel ) === 'object' ) ? $listModel->fetch() : false;
 
-    if( $listModel && $filedataObj = $listModel->fetch() ) {
+    if( gettype( $filedataObj ) === 'object' ) {
       $result = $filedataObj->delete();
     }
 
