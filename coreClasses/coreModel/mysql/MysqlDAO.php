@@ -65,7 +65,18 @@ class MysqlDAO extends DAO {
     Cogumelo::debugSQL($sql);
     // obtaining debug data
     $d = debug_backtrace();
-    $caller_method = $d[1]['class'].'.'.$d[1]['function'].'()';
+
+    if(
+      isset( $d[1]['class'] ) &&
+      isset( $d[1]['function'] )
+    ){
+      $caller_method = $d[1]['class'].'.'.$d[1]['function'].'()';
+    }
+    else {
+      $caller_method = 'unknown';
+    }
+
+
 
     //set prepare sql
     /*
@@ -126,9 +137,11 @@ class MysqlDAO extends DAO {
       $ret = true;
       // Consumo los resultados sin guardarlos
       while( $connectionControl->db->more_results() ) {
+
         $connectionControl->db->next_result();
         $connectionControl->db->use_result();
       }
+      $connectionControl->db->store_result();
     }
 
     return $ret;

@@ -3,9 +3,9 @@ Cogumelo::load('coreModel/VO.php');
 Cogumelo::load('coreModel/Model.php');
 
 
-class ModuleRegisterModel extends Model {
+class ModelRegisterModel extends Model {
 
-  static $tableName = 'module_registers';
+  static $tableName = 'model_registers';
 
   static $cols = array(
     'id' => array(
@@ -23,19 +23,22 @@ class ModuleRegisterModel extends Model {
     ),
     'deployVersion' => array(
       'type' => 'FLOAT'
+    ),
+    'executedRcDeploy' => array(
+      'type' => 'BOOLEAN'
     )
   );
+
+
 
   static $extraFilters = array(
     'searchByName'=> ' name = ? '
   );
 
-  static $MigrateSQLChangeColumns = "ALTER TABLE model_registers MODIFY COLUMN firstVersion VARCHAR(100);ALTER TABLE model_registers MODIFY COLUMN deployVersion VARCHAR(100); ";
+
 
 
   public function __construct( $datarray = array(), $otherRelObj = false ) {
     parent::__construct( $datarray, $otherRelObj );
   }
-
-
 }

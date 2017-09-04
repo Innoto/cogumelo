@@ -79,7 +79,9 @@ class DevelView extends View
     foreach( $data_sql as $k => $v ) {
       $data_sql[$k] = SqlFormatter::format($v);
     }
-    $this->template->assign("data_sql" , $data_sql);
+    $this->template->assign("data_sql" ,
+      $data_sql
+    );
   }
 
   public function deploySQL() {
@@ -94,7 +96,7 @@ class DevelView extends View
   }
 
   public function infoSetup() {
-    $this->template->assign("infoConf" , @Kint::dump( Cogumelo::getSetupValue() ) );
+    //$this->template->assign("infoConf" , @Kint::dump( Cogumelo::getSetupValue() ) );
   }
 
   public function infoUrls() {
@@ -107,13 +109,23 @@ class DevelView extends View
   // Actions
   //
   public function get_sql_tables() {
+
     $fvotdbcontrol = new DevelDBController();
-    return ($fvotdbcontrol->getTablesSQL() );
+    return $fvotdbcontrol->simulationCreateTablesOnView();
+
   }
 
   public function get_sql_deploy() {
+
+    $ret = false;
+
+    ob_start(); // Start output buffering
     $fvotdbcontrol = new DevelDBController();
-    return ($fvotdbcontrol->getDeploysSQL() );
+    $fvotdbcontrol->deploy();
+    $ret= ob_get_contents(); // Store buffer in variable
+    ob_end_clean(); // End buffering and clean up
+
+    return [$ret];
   }
 
   public function get_debugger() {
