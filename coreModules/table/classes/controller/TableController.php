@@ -54,10 +54,10 @@ class TableController{
         'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
         'xls' => array('name'=>'Excel', 'controller'=>'XlsExportTableController')
         );
-    $this->actions = array( '0'=> array('name'=>__('Actions'), 'actionMethod' => '' ) );    
+    $this->actions = array( '0'=> array('name'=>__('Actions'), 'actionMethod' => '' ) );
 
     $this->RAWClientData = $_POST;
-    $this->model = $model;
+    $this->setModel( $model );
 
 
     if( $this->RAWClientData['exportType'] != 'false' ) {
@@ -154,6 +154,10 @@ class TableController{
     $_SESSION[ 'cogumelo_table_object'] = $sessionData;
     $_SESSION[ 'cogumelo_table_url'] = $_SERVER['REQUEST_URI'];
     $_SESSION[ 'cogumelo_table_lastupdate'] = time();
+  }
+
+  function setModel( $model ) {
+    $this->model = $model;
   }
 
   function setRowsEachPage( $rowsEachPage ) {
