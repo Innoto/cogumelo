@@ -48,6 +48,7 @@ class MysqlDevelDBDAO extends MysqlDAO {
         "INDEX, ".
         "LOCK TABLES, ".
         "ALTER,".
+        "ALTER ROUTINE,".
         "CREATE, ".
         "DROP, ".
         "SHOW VIEW, ".
