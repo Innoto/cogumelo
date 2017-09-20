@@ -79,7 +79,9 @@ class MysqlDAOResult extends DAOResult {
         }
     }
 
-    $this->resetFetch();
+    if( is_object( $this->result ) ) {
+      $this->resetFetch();
+    }
 
     return $list;
 
@@ -135,8 +137,10 @@ class MysqlDAOResult extends DAOResult {
     while( $row = $this->result->fetch_assoc() ) {
       $list[] = $row;
     }
+    if( is_object( $this->result ) ) {
+      $this->resetFetch();
+    }
 
-    $this->resetFetch();
 
     return $list;
   }

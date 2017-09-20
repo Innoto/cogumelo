@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Result interface from DAO 
+ * Result interface from DAO
  *
  * @package Cogumelo Model
  */
@@ -19,7 +19,7 @@ abstract class DAOResult {
 
   /**
   * Fetch when query is cached
-  * 
+  *
   * @return object
   */
   function cacheFetch() {
@@ -34,28 +34,28 @@ abstract class DAOResult {
     }
 
     return $retObj;
-  
+
   }
 
   /**
   *  Fetch all when query is cached
-  * 
+  *
   * @return array
   */
   function cacheFetchAll() {
     $list = array();
 
     foreach( $this->cache as $cached_row) {
-      $rowVO = $this->VOGenerator( $row);
+      $rowVO = $this->VOGenerator( $cached_row);
       $list[ $rowVO->getter($rowVO->getFirstPrimarykeyId()) ] = $rowVO;
     }
-    
+
     return $list;
   }
 
   /**
   * Count elements from caches
-  * 
+  *
   * @return int
   */
   function cache_count() {
