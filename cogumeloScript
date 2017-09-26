@@ -35,12 +35,14 @@ if( $argc > 1 ) {
       break;
 
     case 'generateModel':
+      setPermissionsDevel();
       createRelSchemes();
       generateModel();
       flushAll();
       break;
 
     case 'deploy':
+      setPermissionsDevel();
       createRelSchemes();
       deploy();
       flushAll();
@@ -54,6 +56,7 @@ if( $argc > 1 ) {
 
 
     case 'bckDB': // do the backup of the db
+    case 'backupDB': // do the backup of the db
       $file = ( $argc > 2 ) ? $argv[2].'.sql' : false;
 
       doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), $file);
@@ -81,7 +84,7 @@ if( $argc > 1 ) {
       $i18nscriptController->setEnviroment();
       $i18nscriptController->c_i18n_getSystemTranslations();
       echo "The files.po are ready to be edited!\n";
-    break;
+      break;
 
     case 'generateAppTranslations':
       Cogumelo::load('coreController/i18nScriptController.php');
@@ -89,13 +92,13 @@ if( $argc > 1 ) {
       $i18nscriptController->setEnviroment();
       $i18nscriptController->c_i18n_getAppTranslations();
       echo "The files.po are ready to be edited!\n";
-    break;
+      break;
 
     case 'removeAllTranslations':
       Cogumelo::load('coreController/i18nScriptController.php');
       $i18nscriptController = new i18nScriptController();
       $i18nscriptController->c_i18n_removeTranslations();
-    break;
+      break;
 
     case 'compileTranslations':
       actionCompileTranslations();
@@ -125,6 +128,7 @@ if( $argc > 1 ) {
     default:
       echo "Invalid parameter;try:";
       printOptions();
+      break;
 
   }//end switch
 }//end parameters handler
