@@ -9,6 +9,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:71
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:89
 #: /home/proxectos/cogumelo/coreModules/table/classes/view/templates/js/table.js:565
 msgid "elements"
 msgstr "elementos"
@@ -41,3 +43,21 @@ msgstr "Estás filtrando por"
 #: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:54
 msgid "(Resource type, Routes)."
 msgstr "(Tipo de recurso, rutas)"
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:74
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:92
+msgid "Page"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:74
+#: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:92
+msgid "of"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:53
+msgid "Export"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:57
+msgid "Actions"
+msgstr ""
