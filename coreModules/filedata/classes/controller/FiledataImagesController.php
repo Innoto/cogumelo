@@ -651,31 +651,50 @@ class FiledataImagesController {
   public function clearCache( $fileId ) {
     // error_log( 'FiledataImagesController: clearCache(): ' . $fileId );
 
-    $imgCacheRoute = $this->filesCachePath .'/'. $fileId .'/';
-    if( is_dir( $imgCacheRoute ) ) {
+    $imgCacheRoute = $this->filesCachePath .'/'. $fileId;
+    if( is_link( $imgCacheRoute ) ) {
+      $realDir = readlink( $imgCacheRoute );
+      if( strpos( $realDir, '/' ) !== 0 ) {
+        $realDir = pathinfo( $imgCacheRoute, PATHINFO_DIRNAME ).'/'.$realDir;
+      }
+      // Cogumelo::debug( __METHOD__.': unlinkDir '. $imgCacheRoute );
+      unlink( $imgCacheRoute );
+      // Cogumelo::debug( __METHOD__.': realDir '. $realDir );
+      $this->rmdirRec( $realDir );
+    }
+    else {
       $this->rmdirRec( $imgCacheRoute );
     }
   }
 
   public function rmdirRec( $dir ) {
     // error_log( 'FiledataImagesController: rmdirRec(): '. $dir );
-    Cogumelo::debug('FiledataImagesController: rmdirRec '. $dir );
+    // Cogumelo::debug( __METHOD__.': '. $dir );
+
+    $dir = rtrim( $dir, '/' );
     if( is_dir( $dir ) ) {
       $dirElements = scandir( $dir );
-      if( is_array( $dirElements ) && count( $dirElements ) > 0 ) {
+      if( !empty( $dirElements ) ) {
         foreach( $dirElements as $object ) {
-          if( $object != '.' && $object != '..' ) {
+          if( $object !== '.' && $object !== '..' ) {
             if( is_dir( $dir.'/'.$object ) ) {
+              // Cogumelo::debug( __METHOD__.': rmdirRec '. $dir.'/'.$object );
               $this->rmdirRec( $dir.'/'.$object );
             }
             else {
+              // Cogumelo::debug( __METHOD__.': unlink '. $dir.'/'.$object );
               unlink( $dir.'/'.$object );
             }
           }
         }
       }
       reset( $dirElements );
-      rmdir( $dir );
+      if( !is_link( $dir ) ) {
+        rmdir( $dir );
+      }
+      else {
+        unlink( $dir );
+      }
     }
   }
 
