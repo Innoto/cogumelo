@@ -316,9 +316,9 @@ class CogumeloClass extends Singleton {
 
     if( !$COGUMELO_DISABLE_LOGS ) {
       $develUrl = Cogumelo::getSetupValue( 'mod:devel:url' );
-      if( $develUrl &&
-        $_SERVER['REQUEST_URI'] != '/'.$develUrl.'/read_logs' &&
-        $_SERVER['REQUEST_URI'] != '/'.$develUrl.'/get_debugger'
+      if( empty( $develUrl ) ||
+        ( $_SERVER['REQUEST_URI'] != '/'.$develUrl.'/read_logs' &&
+        $_SERVER['REQUEST_URI'] != '/'.$develUrl.'/get_debugger' )
       ) {
         error_log(
           '['. date('y-m-d H:i:s',time()) .'] ' .
