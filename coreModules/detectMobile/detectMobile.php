@@ -20,12 +20,10 @@ class detectMobile extends Module {
   );
 
 
-  public $includesCommon = array(
-  );
+  public $includesCommon = [];
 
 
   public function __construct() {
-
     if( is_file( Cogumelo::getSetupValue( 'dependences:composerPath').'/mobiledetect/mobiledetectlib/Mobile_Detect.php' ) ) {
       require_once( Cogumelo::getSetupValue( 'dependences:composerPath').'/mobiledetect/mobiledetectlib/Mobile_Detect.php');
 
@@ -39,7 +37,6 @@ class detectMobile extends Module {
     else {
       Cogumelo::error('Mobile_detect.php dpendence not found. Execute ./cogumelo installDependences to install it.');
     }
-
-
   }
+
 }
