@@ -10,7 +10,7 @@ cogumeloSession::autoIncludes();
 class CogumeloAccessibilityController {
 
   public $tkName = 'cogumeloAccessibilityMode';
-  public $getParam = null; // Use tkName
+  public $getParam = 'wca'; // Use tkName
 
   private $sessionCtrl = false;
 
@@ -21,7 +21,9 @@ class CogumeloAccessibilityController {
     $this->sessionCtrl = new CogumeloSessionController();
 
     $setupGetParam = Cogumelo::getSetupValue('mod:cogumeloAccessibility:getParam');
-    $this->getParam = ( empty($setupGetParam) ) ? $this->tkName : $setupGetParam;
+    if( !empty($setupGetParam) ) {
+      $this->getParam = $setupGetParam;
+    }
   }
 
 
@@ -29,15 +31,15 @@ class CogumeloAccessibilityController {
   public function evalAccessibilityMode() {
     $accessibilityMode = 0;
 
-    if( isset( $_GET[ $this->getParam ] ) && trim( $_GET[ $this->getParam ] ) !== '' ) {
+    if( isset( $_GET[ $this->getParam ] ) ) {
       error_log( __METHOD__.' $_GET' );
       $accessibilityMode = $_GET[ $this->getParam ];
     }
-    elseif( isset( $_POST[ $this->tkName ] ) && trim( $_POST[ $this->tkName ] ) !== '' ) {
+    elseif( isset( $_POST[ $this->tkName ] ) ) {
       error_log( __METHOD__.' $_POST' );
       $accessibilityMode = $_POST[ $this->tkName ];
     }
-    elseif( isset( $_SERVER[ 'HTTP_X_'.$this->tkName ] ) && trim( $_SERVER[ 'HTTP_X_'.$this->tkName ] ) !== '' ) {
+    elseif( isset( $_SERVER[ 'HTTP_X_'.$this->tkName ] ) ) {
       error_log( __METHOD__.' HTTP_X' );
       $accessibilityMode = $_SERVER[ 'HTTP_X_'.$this->tkName ];
     }
@@ -53,6 +55,9 @@ class CogumeloAccessibilityController {
       error_log( __METHOD__.' getSetupValue' );
       $accessibilityMode = Cogumelo::getSetupValue('mod:cogumeloAccessibility:mode');
     }
+
+    // Limpieza
+    $accessibilityMode = ( $accessibilityMode === '1' || $accessibilityMode === 1 ) ? 1 : 0;
 
     $_SESSION[ $this->tkName ] = $accessibilityMode;
     Cogumelo::setSetupValue( 'mod:cogumeloAccessibility:mode', $accessibilityMode );
