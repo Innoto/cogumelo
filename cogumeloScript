@@ -232,7 +232,7 @@ function flushAll() {
 
 function actionFlush() {
   echo file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=flush' );
-  echo "\nTemporary files deleted!\n\n";
+  echo "\nCogumelo caches deleted!\n\n";
 }
 
 
