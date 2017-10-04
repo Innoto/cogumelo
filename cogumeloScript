@@ -333,8 +333,6 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
   );
 
-  // exec( 'sudo chown -R www-data:www-data '.Cogumelo::getSetupValue( 'session:savePath' ) );
-
   exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH );
 
   exec( 'chmod -R go-rwx,g+rX'.$extPerms.' '.APP_BASE_PATH );
@@ -353,6 +351,12 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '.
     Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
   );
+
+  // session:savePath tiene que mantener el usuario y grupo
+  $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
+  if( !empty($sessionSavePath) ) {
+    exec( 'sudo chown -R www-data:www-data '.Cogumelo::getSetupValue( 'session:savePath' ) );
+  }
 
   // Solo usuario administrador
   exec( 'sudo chown $USER:$USER '.Cogumelo::getSetupValue( 'script:backupPath' ) );
