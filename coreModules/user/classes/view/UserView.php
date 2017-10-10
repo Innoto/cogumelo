@@ -231,8 +231,8 @@ class UserView extends View {
 
     //Esto es para verificar si es un create
     if(!isset($data) || $data == ''){
-      $form->setField( 'password', array( 'id' => 'password', 'type' => 'password', 'placeholder' => __('New password') ) );
-      $form->setField( 'password2', array( 'id' => 'password2', 'type' => 'password', 'placeholder' => __('Repeat password') ) );
+      $form->setField( 'password', array( 'label' => __('New password'), 'id' => 'password', 'type' => 'password', 'placeholder' => __('New password') ) );
+      $form->setField( 'password2', array( 'label' => __('Repeat password'), 'id' => 'password2', 'type' => 'password', 'placeholder' => __('Repeat password') ) );
     }
 
     $form->setField( 'submit', array( 'type' => 'submit', 'value' => 'Save' ) );
