@@ -78,7 +78,7 @@ if( $argc > 1 ) {
       $dependencesControl->installDependences();
       break;
 
-    case 'generateTranslations':
+    case 'generateFrameworkTranslations':
       Cogumelo::load('coreController/i18nScriptController.php');
       $i18nscriptController = new i18nScriptController();
       $i18nscriptController->setEnviroment();
@@ -161,8 +161,9 @@ function printOptions(){
     * restoreDB               Restore a database
 
  + Internationalization
-    * generateTranslations    Get all the web text into a file.po
-    * compileTranslations     Compile file.po and get the translations ready
+    * generateFrameworkTranslations    Update text to translate in cogumelo and geozzy modules
+    * generateAppTranslations    Get text to translate in the app
+    * compileTranslations     Mix geozzy, cogumelo and app POS and compile it to get the translations ready
   \n\n";
 }
 
