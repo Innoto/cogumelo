@@ -400,6 +400,7 @@ class i18nScriptController {
   * Extract strings to translate of TPL filesand put them into an specific translations file PO
   **/
   function generateModuleTplPo($module,$filesTpl){
+
     if(is_dir($module.'/translations')){
       $module = $module.'/translations';
     }
@@ -411,9 +412,13 @@ class i18nScriptController {
     exec( 'chmod 700 '.$smartygettext );
     // copiamos os ficheiros nun dir temporal
     foreach ($filesTpl as $a){
-      $a_parts = explode(APP_BASE_PATH,$a);
-      $name = str_replace('/','_',$a_parts[1]);
-      exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$name);
+      $a_cogumelo_parts = explode($this->dir_modules_c,$a);
+      $cogumelo_name = str_replace('/','_',$a_cogumelo_parts[1]);
+      exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$cogumelo_name);
+
+      $a_geozzy = explode($this->dir_modules_dist,$a);
+      $geozzy_name = str_replace('/','_',$a_geozzy_parts[1]);
+      exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$geozzy_name);
     }
     foreach( $this->lang as $l => $lang ) {
       exec($smartygettext.' -o '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po '.Cogumelo::getSetupValue( 'smarty:tmpPath' ));
