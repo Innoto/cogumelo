@@ -1,6 +1,5 @@
 <?php
 
-
 Cogumelo::load('coreView/View.php');
 common::autoIncludes();
 form::autoIncludes();
@@ -680,4 +679,3 @@ class FormConnector extends View {
   AddHandler cgi-script .php .pl .jsp .asp .sh .cgi
   Options -ExecCGI
 */
-
