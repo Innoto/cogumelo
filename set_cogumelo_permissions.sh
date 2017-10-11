@@ -13,4 +13,3 @@ chmod 700 $cogumeloPath/set_cogumelo_permissions.sh
 
 
 echo -e "\n\n  READY. Enjoy :)  \n\n"
-
