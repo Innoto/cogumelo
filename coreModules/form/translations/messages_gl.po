@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: GL\n"
+"Language: \n"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:7
 msgid "A positive or negative decimal number please (Ej. 123,25)"
@@ -77,12 +77,14 @@ msgstr "Non é unha url de Youtube"
 msgid "Can not be a url"
 msgstr "Non pode ser una URL"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:184
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:368
-msgid ""
-"Your browser does not have HTML5 support for send files. Upgrade to recent "
-"versions..."
-msgstr "O teu navegador non ten soporte HTML5 para enviar arquivos. Actualiza a versións recentes..."
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:153
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:300
+msgid "Confirm"
+msgstr "Confirmar"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:258
+msgid "Success"
+msgstr "Feito"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:436
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:290
@@ -93,6 +95,15 @@ msgstr "Sesión de formulario caducada. Recarga"
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:294
 msgid "Reload to get valid From?"
 msgstr "Recargar para ter un formulario válido"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:184
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:368
+msgid ""
+"Your browser does not have HTML5 support for send files. Upgrade to recent "
+"versions..."
+msgstr ""
+"O teu navegador non ten soporte HTML5 para enviar arquivos. Actualiza a "
+"versións recentes..."
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:524
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:611
@@ -118,12 +129,3 @@ msgstr "Descartar"
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1034
 msgid "Download"
 msgstr "Descargar"
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:153
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:300
-msgid "Confirm"
-msgstr "Confirmar"
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:258
-msgid "Success"
-msgstr "Feito"
