@@ -191,10 +191,10 @@ class TableController{
   * Mode table col
   *
   * @param string $colId id of col in VO
-  * @param int $move number of columns to move (negative for left and positive for right) 
+  * @param int $move number of columns to move (negative for left and positive for right)
   * @return void
   */
-    function moveCol( $colId, $move ) {
+  function moveCol( $colId, $move ) {
     $pos = array_search( $colId, array_keys( $this->colsDef ) );
 
     if( $pos !== false ) {
