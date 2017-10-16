@@ -498,9 +498,9 @@ class i18nScriptController {
     /* Borramos os ficheiros temporales para evitar confusións;
     poderían deixarse para ver os PO de sistema xenerados e o da APP e modificar algunha cadea aí directamente en caso de ser necesario */
     foreach ($this->dir_lc as $l){
-      //exec('rm '.$l.'/'.$this->textdomain.'.po');
-      //exec('rm '.$l.'/'.$this->textdomain.'_cogumelo.po');
-      //exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
+      exec('rm '.$l.'/'.$this->textdomain.'.po');
+      exec('rm '.$l.'/'.$this->textdomain.'_cogumelo.po');
+      exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
     }
   }
 
