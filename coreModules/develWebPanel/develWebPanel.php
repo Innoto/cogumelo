@@ -12,14 +12,18 @@ class develWebPanel extends Module {
 
     global $COGUMELO_INSTANCED_MODULES;
 
-    if(  isset( $COGUMELO_INSTANCED_MODULES['devel'] )) {
-      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:devel:url' ).'$#', 'view:DevelView::main' );
-      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:devel:url' ).'/read_logs$#', 'view:DevelView::read_logs' );
-      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:devel:url' ).'/get_debugger#', 'view:DevelView::get_debugger' );
-      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:devel:url' ).'/get_sql_tables$#', 'view:DevelView::get_sql_tables' );
-      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:devel:url' ).'/phpinfo$#', 'view:DevelView::develPhpInfo' );
-      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:devel:url' ).'/phpinfo[/\#\?]+.*#', 'view:DevelView::develPhpInfo' );
+    if( isset( $COGUMELO_INSTANCED_MODULES['devel'] ) ) {
+      $develUrl = Cogumelo::getSetupValue( 'mod:devel:url' );
+      if( empty($develUrl) ) {
+        $develUrl = 'devel';
+      }
 
+      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'$#', 'view:DevelView::main' );
+      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'/read_logs$#', 'view:DevelView::read_logs' );
+      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'/get_debugger#', 'view:DevelView::get_debugger' );
+      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'/get_sql_tables$#', 'view:DevelView::get_sql_tables' );
+      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'/phpinfo$#', 'view:DevelView::develPhpInfo' );
+      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'/phpinfo[/\#\?]+.*#', 'view:DevelView::develPhpInfo' );
     }
   }
 
