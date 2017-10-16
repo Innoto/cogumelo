@@ -411,19 +411,25 @@ class i18nScriptController {
     $smartygettext = Cogumelo::getSetupValue( 'dependences:manualPath' ).'/smarty-gettext/tsmarty2c.php';
     exec( 'chmod 700 '.$smartygettext );
     // copiamos os ficheiros nun dir temporal
+
     foreach ($filesTpl as $a){
       $a_cogumelo_parts = explode($this->dir_modules_c,$a);
-      $cogumelo_name = str_replace('/','_',$a_cogumelo_parts[1]);
-      exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$cogumelo_name);
+      if(count($a_cogumelo_parts)>1){
+        $cogumelo_name = str_replace('/','_',$a_cogumelo_parts[1]);
+        exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$cogumelo_name);
+      }
 
-      $a_geozzy = explode($this->dir_modules_dist,$a);
-      $geozzy_name = str_replace('/','_',$a_geozzy_parts[1]);
-      exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$geozzy_name);
+      $a_geozzy_parts = explode($this->dir_modules_dist,$a);
+      if(count($a_geozzy_parts)>1){
+        $geozzy_name = str_replace('/','_',$a_geozzy_parts[1]);
+        exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$geozzy_name);
+      }
     }
     foreach( $this->lang as $l => $lang ) {
       exec($smartygettext.' -o '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po '.Cogumelo::getSetupValue( 'smarty:tmpPath' ));
     }
   }
+
 
   /*
   * Extract strings from App to translate of a type (PHP, JS)and put them into an specific translations file PO
@@ -492,9 +498,9 @@ class i18nScriptController {
     /* Borramos os ficheiros temporales para evitar confusións;
     poderían deixarse para ver os PO de sistema xenerados e o da APP e modificar algunha cadea aí directamente en caso de ser necesario */
     foreach ($this->dir_lc as $l){
-      exec('rm '.$l.'/'.$this->textdomain.'.po');
-      exec('rm '.$l.'/'.$this->textdomain.'_cogumelo.po');
-      exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
+      //exec('rm '.$l.'/'.$this->textdomain.'.po');
+      //exec('rm '.$l.'/'.$this->textdomain.'_cogumelo.po');
+      //exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
     }
   }
 
