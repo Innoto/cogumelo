@@ -33,27 +33,27 @@ class CogumeloAccessibilityController {
 
     if( isset( $_GET[ $this->getParam ] ) ) {
       $accessibilityMode = $_GET[ $this->getParam ];
-      Cogumelo::log( __METHOD__.' $_GET -> '.$accessibilityMode, 'AccessibilityMode' );
+      Cogumelo::log( ' $_GET -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_POST[ $this->tkName ] ) ) {
       $accessibilityMode = $_POST[ $this->tkName ];
-      Cogumelo::log( __METHOD__.' $_POST -> '.$accessibilityMode, 'AccessibilityMode' );
+      Cogumelo::log( ' $_POST -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_SERVER[ 'HTTP_X_'.$this->tkName ] ) ) {
       $accessibilityMode = $_SERVER[ 'HTTP_X_'.$this->tkName ];
-      Cogumelo::log( __METHOD__.' HTTP_X -> '.$accessibilityMode, 'AccessibilityMode' );
+      Cogumelo::log( ' HTTP_X -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_COOKIE[ $this->tkName ] ) ) {
       $accessibilityMode = $_COOKIE[ $this->tkName ];
-      Cogumelo::log( __METHOD__.' $_COOKIE -> '.$accessibilityMode, 'AccessibilityMode' );
+      Cogumelo::log( ' $_COOKIE -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_SESSION[ $this->tkName ] ) ) {
       $accessibilityMode = $_SESSION[ $this->tkName ];
-      // Cogumelo::log( __METHOD__.' $_SESSION -> '.$accessibilityMode, 'AccessibilityMode' );
+      // Cogumelo::log( ' $_SESSION -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( Cogumelo::issetSetupValue('mod:cogumeloAccessibility:mode') ) {
       $accessibilityMode = Cogumelo::getSetupValue('mod:cogumeloAccessibility:mode');
-      Cogumelo::log( __METHOD__.' getSetupValue -> '.$accessibilityMode, 'AccessibilityMode' );
+      Cogumelo::log( ' getSetupValue -> '.$accessibilityMode, 'AccessibilityMode' );
     }
 
     // Limpieza
@@ -63,7 +63,7 @@ class CogumeloAccessibilityController {
     Cogumelo::setSetupValue( 'mod:cogumeloAccessibility:mode', $accessibilityMode );
     Cogumelo::addSetupValue( 'mod:mediaserver:publicConf:javascript:setupFields', 'mod:cogumeloAccessibility:mode' );
 
-    // Cogumelo::log( __METHOD__.' -> '.$accessibilityMode, 'AccessibilityMode' );
+    // Cogumelo::log( ' $accessibilityMode -> '.$accessibilityMode, 'AccessibilityMode' );
 
     return $accessibilityMode;
   }
