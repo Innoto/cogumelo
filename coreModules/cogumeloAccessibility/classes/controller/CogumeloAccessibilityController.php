@@ -32,27 +32,27 @@ class CogumeloAccessibilityController {
     $accessibilityMode = 0;
 
     if( isset( $_GET[ $this->getParam ] ) ) {
-      error_log( __METHOD__.' $_GET' );
+      Cogumelo::log( __METHOD__.' $_GET', 'AccessibilityMode' );
       $accessibilityMode = $_GET[ $this->getParam ];
     }
     elseif( isset( $_POST[ $this->tkName ] ) ) {
-      error_log( __METHOD__.' $_POST' );
+      Cogumelo::log( __METHOD__.' $_POST', 'AccessibilityMode' );
       $accessibilityMode = $_POST[ $this->tkName ];
     }
     elseif( isset( $_SERVER[ 'HTTP_X_'.$this->tkName ] ) ) {
-      error_log( __METHOD__.' HTTP_X' );
+      Cogumelo::log( __METHOD__.' HTTP_X', 'AccessibilityMode' );
       $accessibilityMode = $_SERVER[ 'HTTP_X_'.$this->tkName ];
     }
     elseif( isset( $_COOKIE[ $this->tkName ] ) ) {
-      error_log( __METHOD__.' $_COOKIE' );
+      Cogumelo::log( __METHOD__.' $_COOKIE', 'AccessibilityMode' );
       $accessibilityMode = $_COOKIE[ $this->tkName ];
     }
     elseif( isset( $_SESSION[ $this->tkName ] ) ) {
-      error_log( __METHOD__.' $_SESSION' );
+      // Cogumelo::log( __METHOD__.' $_SESSION', 'AccessibilityMode' );
       $accessibilityMode = $_SESSION[ $this->tkName ];
     }
     elseif( Cogumelo::issetSetupValue('mod:cogumeloAccessibility:mode') ) {
-      error_log( __METHOD__.' getSetupValue' );
+      Cogumelo::log( __METHOD__.' getSetupValue', 'AccessibilityMode' );
       $accessibilityMode = Cogumelo::getSetupValue('mod:cogumeloAccessibility:mode');
     }
 
@@ -63,7 +63,7 @@ class CogumeloAccessibilityController {
     Cogumelo::setSetupValue( 'mod:cogumeloAccessibility:mode', $accessibilityMode );
     Cogumelo::addSetupValue( 'mod:mediaserver:publicConf:javascript:setupFields', 'mod:cogumeloAccessibility:mode' );
 
-    error_log( __METHOD__.' = '.$accessibilityMode );
+    // Cogumelo::log( __METHOD__.' = '.$accessibilityMode, 'AccessibilityMode' );
 
     return $accessibilityMode;
   }
