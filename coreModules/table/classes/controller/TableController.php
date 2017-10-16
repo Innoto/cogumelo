@@ -187,16 +187,52 @@ class TableController{
   }
 
 
-    /**
-    * Set table col (additionally to export)
-    *
-    * @param string $colId id of col in VO
-    * @param string $colName. if false it gets the VO's col description.
-    * @return void
-    */
-    function setColToExport($colId, $colName = false) {
-      $this->colsDefToExport[$colId] = array('name' => $colName, 'rules' => array() );
+  /**
+  * Mode table col
+  *
+  * @param string $colId id of col in VO
+  * @param int $move number of columns to move (negative for left and positive for right)
+  * @return void
+  */
+  function moveCol( $colId, $move ) {
+    $pos = array_search( $colId, array_keys( $this->colsDef ) );
+
+    if( $pos !== false ) {
+      $newPos = $pos + $move;
+
+      $newColsDef =[];
+      $c = 0;
+      $done = false;
+      foreach( $this->colsDef as $key => $value ) {
+        if( $key !== $colId ) {
+          if( $newPos === $c ) {
+            $done = true;
+            $newColsDef[$colId] = $this->colsDef[$colId];
+          }
+          $newColsDef[$key] = $value;
+          $c++;
+        }
+      }
+      if( !$done ) {
+        $newColsDef[$colId] = $this->colsDef[$colId];
+      }
+
+      unset($this->colsDef);
+      $this->colsDef = $newColsDef;
     }
+  }
+
+
+  /**
+  * Set table col (additionally to export)
+  *
+  * @param string $colId id of col in VO
+  * @param string $colName. if false it gets the VO's col description.
+  * @return void
+  */
+  function setColToExport($colId, $colName = false) {
+    $this->colsDefToExport[$colId] = array('name' => $colName, 'rules' => array() );
+  }
 
 
 

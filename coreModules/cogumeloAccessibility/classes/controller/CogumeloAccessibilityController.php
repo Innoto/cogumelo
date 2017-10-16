@@ -32,28 +32,28 @@ class CogumeloAccessibilityController {
     $accessibilityMode = 0;
 
     if( isset( $_GET[ $this->getParam ] ) ) {
-      error_log( __METHOD__.' $_GET' );
       $accessibilityMode = $_GET[ $this->getParam ];
+      Cogumelo::log( ' $_GET -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_POST[ $this->tkName ] ) ) {
-      error_log( __METHOD__.' $_POST' );
       $accessibilityMode = $_POST[ $this->tkName ];
+      Cogumelo::log( ' $_POST -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_SERVER[ 'HTTP_X_'.$this->tkName ] ) ) {
-      error_log( __METHOD__.' HTTP_X' );
       $accessibilityMode = $_SERVER[ 'HTTP_X_'.$this->tkName ];
+      Cogumelo::log( ' HTTP_X -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_COOKIE[ $this->tkName ] ) ) {
-      error_log( __METHOD__.' $_COOKIE' );
       $accessibilityMode = $_COOKIE[ $this->tkName ];
+      Cogumelo::log( ' $_COOKIE -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_SESSION[ $this->tkName ] ) ) {
-      error_log( __METHOD__.' $_SESSION' );
       $accessibilityMode = $_SESSION[ $this->tkName ];
+      // Cogumelo::log( ' $_SESSION -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( Cogumelo::issetSetupValue('mod:cogumeloAccessibility:mode') ) {
-      error_log( __METHOD__.' getSetupValue' );
       $accessibilityMode = Cogumelo::getSetupValue('mod:cogumeloAccessibility:mode');
+      Cogumelo::log( ' getSetupValue -> '.$accessibilityMode, 'AccessibilityMode' );
     }
 
     // Limpieza
@@ -63,7 +63,7 @@ class CogumeloAccessibilityController {
     Cogumelo::setSetupValue( 'mod:cogumeloAccessibility:mode', $accessibilityMode );
     Cogumelo::addSetupValue( 'mod:mediaserver:publicConf:javascript:setupFields', 'mod:cogumeloAccessibility:mode' );
 
-    error_log( __METHOD__.' = '.$accessibilityMode );
+    // Cogumelo::log( ' $accessibilityMode -> '.$accessibilityMode, 'AccessibilityMode' );
 
     return $accessibilityMode;
   }
