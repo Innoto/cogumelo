@@ -33,6 +33,8 @@ class detectMobile extends Module {
 
       Cogumelo::mergeSetupValue( 'mod:mediaserver:publicConf:javascript:setupFields',
         [ 'mod:detectMobile:isMobile', 'mod:detectMobile:isTablet' ] );
+        Cogumelo::mergeSetupValue( 'mod:mediaserver:publicConf:smarty:setupFields',
+          [ 'mod:detectMobile:isMobile', 'mod:detectMobile:isTablet' ] );
     }
     else {
       Cogumelo::error('Mobile_detect.php dpendence not found. Execute ./cogumelo installDependences to install it.');

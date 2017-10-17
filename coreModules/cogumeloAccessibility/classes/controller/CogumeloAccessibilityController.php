@@ -62,6 +62,7 @@ class CogumeloAccessibilityController {
     $_SESSION[ $this->tkName ] = $accessibilityMode;
     Cogumelo::setSetupValue( 'mod:cogumeloAccessibility:mode', $accessibilityMode );
     Cogumelo::addSetupValue( 'mod:mediaserver:publicConf:javascript:setupFields', 'mod:cogumeloAccessibility:mode' );
+    Cogumelo::addSetupValue( 'mod:mediaserver:publicConf:smarty:setupFields', 'mod:cogumeloAccessibility:mode' );
 
     // Cogumelo::log( ' $accessibilityMode -> '.$accessibilityMode, 'AccessibilityMode' );
 
