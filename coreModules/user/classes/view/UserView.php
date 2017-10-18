@@ -244,7 +244,7 @@ class UserView extends View {
       $form->setValidationRule( 'password', 'equalTo', '#password2' );
     }
     $form->setValidationRule( 'avatar', 'minfilesize', 1024 );
-    $form->setValidationRule( 'avatar', 'accept', 'image/jpeg' );
+    $form->setValidationRule( 'avatar', 'accept', 'image/jpeg,image/png' );
     //$form->setValidationRule( 'avatar', 'required' );
     $form->setValidationRule( 'email', 'email' );
     $form->setValidationRule( 'email', 'equalTo', '#repeatEmail' );
