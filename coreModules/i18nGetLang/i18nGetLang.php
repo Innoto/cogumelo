@@ -12,7 +12,7 @@ class i18nGetLang extends Module {
     $langsConf = Cogumelo::getSetupValue( 'lang:available' );
     $patron = is_array( $langsConf ) ? implode( '|', array_keys( $langsConf ) ) : Cogumelo::getSetupValue( 'lang:default' );
     $this->addUrlPatterns( '#^('.$patron.')\/(.*)$#', 'noendview:GetLangView::setlang' );
-    $this->addUrlPatterns( '#^('.$patron.')\/?(\?.*)$#', 'noendview:GetLangView::setlang' );
+    $this->addUrlPatterns( '#^('.$patron.')\/?((\?.*)?)$#', 'noendview:GetLangView::setlang' );
   }
 
 }
