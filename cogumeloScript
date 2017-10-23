@@ -378,7 +378,7 @@ function doBackup( $db, $user, $passwd, $file ) {
 
   $dir = Cogumelo::getSetupValue( 'script:backupPath' );
 
-  popen( 'mysqldump -u ' . $user . ' -p' . $passwd .' '. $db . '> ' . $dir . '/' . $file, 'r' );
+  popen( 'mysqldump --hex-blob --complete-insert --skip-extended-insert -u ' . $user . ' -p' . $passwd .' '. $db . '> ' . $dir . '/' . $file, 'r' );
   exec( 'gzip ' . $dir . '/' . $file );
   exec( 'chmod go-rwx ' . $dir . '/' . $file . '*' );
   echo "\nYour db was successfully saved!\n";
