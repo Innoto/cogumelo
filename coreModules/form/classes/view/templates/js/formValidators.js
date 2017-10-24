@@ -402,14 +402,20 @@ $.validator.addMethod(
       // If we are using a wildcard, make it regex friendly
       typeParam = typeParam.replace(/\*/g, '.*');
 
+      console.log( ' * * * formValidators::accept typeParam : '+typeParam );
+
       var i;
       for( i = 0; i < validateFiles.length; i++ ) {
+        console.log( ' * * * formValidators::accept test elem.'+i+' : '+validateFiles[i].type);
         if( !validateFiles[i].type.match( new RegExp( '\\.?(' + typeParam + ')$', 'i' ) ) ) {
           valueResponse = false;
+          console.log( ' * * * formValidators::accept FAIL elem.'+i+' : '+validateFiles[i].type+' !== '+typeParam);
           break;
         }
       }
     }
+
+    console.log( ' * * * formValidators::accept RESULTADO: ', valueResponse );
 
     return valueResponse;
   },
