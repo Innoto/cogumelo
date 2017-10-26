@@ -1,0 +1,106 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: \n"
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:71
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:208
+msgid "Email"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:72
+msgid "Password"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:73
+msgid "Sign in"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:198
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:199
+msgid "Upload a file"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:204
+msgid "Login"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:212
+msgid "Repeat email"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:216
+msgid "Name"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:219
+msgid "Surname"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:222
+msgid "Active"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:225
+msgid "Description"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:234
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:284
+msgid "New password"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:235
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:285
+msgid "Repeat password"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:279
+msgid "Password changed successfully."
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:283
+msgid "Old password"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:287
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:353
+msgid "Save"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:349
+msgid "Select the roles for this user"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:493
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:500
+msgid "The email specified field already in use"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:518
+msgid ""
+"It has happened a problem with attachments. It may be necessary to raise "
+"them again."
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:653
+msgid "Unknow user"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:656
+msgid "The old password does not match."
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:702
+msgid "User Error unidentified"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:716
+msgid " Error unknown role"
+msgstr ""
