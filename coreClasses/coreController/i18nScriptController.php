@@ -330,6 +330,9 @@ class i18nScriptController {
     if($system == 'geozzy'){
       $path = $this->dir_modules_dist;
     }
+    if($system == 'moduleApp'){
+      $path = $this->dir_modules;
+    }
     if ($dh = opendir($path)) {
       $all = array();
       foreach($this->dir_lc as $l => $lang){
@@ -494,8 +497,9 @@ class i18nScriptController {
     foreach ($this->dir_lc as $l){
       $this->getSystemPo('cogumelo');
       $this->getSystemPo('geozzy');
+      $this->getSystemPo('moduleApp');
       // We merge cogumelo geozzy and app po to have only one final PO
-      exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$l.'/'.$this->textdomain.'_geozzy.po');
+      exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$l.'/'.$this->textdomain.'_geozzy.po '.$l.'/'.$this->textdomain.'_moduleApp.po');
 
       // We compile the resultant PO and generate a json for client side
       echo exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
@@ -507,6 +511,7 @@ class i18nScriptController {
       exec('rm '.$l.'/'.$this->textdomain.'.po');
       exec('rm '.$l.'/'.$this->textdomain.'_cogumelo.po');
       exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
+      exec('rm '.$l.'/'.$this->textdomain.'_moduleApp.po');
     }
   }
 
