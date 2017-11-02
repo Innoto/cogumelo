@@ -7,11 +7,9 @@ define('MOD_USER_URL_DIR', 'user');
 
 class user extends Module {
 
-  public $name = "user";
-  public $version = 1.9;
-  public $dependences = array(
-
-  );
+  public $name = 'user';
+  public $version = 2;
+  public $dependences = [];
 
   public $includesCommon = array(
     /*'controller/UserController.php',*/
@@ -20,7 +18,6 @@ class user extends Module {
     'view/RoleView.php',
     'model/UserModel.php',
     'model/RoleModel.php'
-
   );
 
   public function __construct() {
