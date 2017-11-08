@@ -106,9 +106,7 @@ class MysqlDAO extends DAO {
         eval( '$connectionControl->stmt->bind_param("'. $bind_vars_type .'"'. $bind_vars_str .');' );
       }
 
-      $connectionControl->stmt->execute();
-
-      if( $connectionControl->stmt->error === '' ) {
+      if($connectionControl->stmt->execute() && $connectionControl->stmt->error === '' ) {
         $ret_data = $connectionControl->stmt->get_result();
       }
       else {
