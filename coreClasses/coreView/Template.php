@@ -293,6 +293,14 @@ class Template extends Smarty {
     // generate the javascript include call
     $coma = '';
     foreach( $itemsToInclude as $include ) {
+
+      $includeLog = $include;
+
+      if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false ){
+        $includeLog['url'] = '/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).'/jsLog.js?ref='. $includeLog['url'];
+        $html .= '  '.$coma.str_replace('\\/', '/', json_encode( $includeLog ) ) . "\n";
+        $coma = ',';
+      }
       $html .= '  '.$coma.str_replace('\\/', '/', json_encode( $include ) ) . "\n";
       $coma=',';
     }
