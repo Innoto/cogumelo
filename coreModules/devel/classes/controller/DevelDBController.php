@@ -137,7 +137,12 @@ class  DevelDBController {
       foreach( $this->getModelsInModule($module) as $model=>$modelRef ) {
 
         $modelCurrentVersion = $this->VOIsRegistered( $model );
-        $moduleObj = new $module();
+        if($module == 'app') {
+          $moduleObj = Cogumelo::get();
+        }
+        else {
+          $moduleObj = new $module();
+        }
         $toVersion = ( isset( $moduleObj->version ) )? $moduleObj->version : false;
 
         //echo $model.' = '.$modelCurrentVersion."\n";
@@ -367,6 +372,8 @@ class  DevelDBController {
       }
     }
 
+    array_push($retModules, 'app');
+
     return $retModules;
   }
 
@@ -497,7 +504,7 @@ class  DevelDBController {
     if( $this->noExecute !== true) {
 
 
-      if($moduleName === 'Cogumelo') {
+      if($moduleName === 'app') {
         global $_C;
         $_C::register();
       }
