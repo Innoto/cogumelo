@@ -180,53 +180,56 @@ class UserView extends View {
    *
    * @return object
    **/
-  public function userFormDefine( $data = '' ) {
+  public function userFormDefine( $data = '', $fields = false ) {
 
 
     $form = new FormController( 'userForm', '/user/senduserform' ); //actionform
     $form->setSuccess( 'redirect', '/' );
 
-
-    $fieldsInfo = array(
-      'id' => array(
-        'params' => array( 'type' => 'reserved', 'value' => null )
-      ),
-      'avatar' => array(
-        'params' => array(
-          'type' => 'file',
-          'id' => 'inputFicheiro',
-          'placeholder' => __('Upload a file'),
-          'label' => __('Upload a file'),
-          'destDir' => '/users'
+    if(empty($fields)){
+      $fieldsInfo = array(
+        'id' => array(
+          'params' => array( 'type' => 'reserved', 'value' => null )
+        ),
+        'avatar' => array(
+          'params' => array(
+            'type' => 'file',
+            'id' => 'inputFicheiro',
+            'placeholder' => __('Upload a file'),
+            'label' => __('Upload a file'),
+            'destDir' => '/users'
+          )
+        ),
+        'login' => array(
+          'params' => array( 'type' => 'reserved', 'placeholder' => __('Login') ),
+          'rules' => array( 'required' => true )
+        ),
+        'email' => array(
+          'params' => array( 'label' => __( 'Email' ), 'id' => 'email', 'placeholder' => __('Email') ),
+          'rules' => array( 'required' => true )
+        ),
+        'repeatEmail' => array(
+          'params' => array( 'label' => __( 'Repeat email' ), 'id' => 'repeatEmail', 'placeholder' => __('Repeat email') ),
+          'rules' => array( 'required' => true )
+        ),
+        'name' => array(
+          'params' => array( 'label' => __( 'Name' ), 'placeholder' => __('Name') ),
+        ),
+        'surname' => array(
+          'params' => array( 'label' => __( 'Surname' ), 'placeholder' => __('Surname') ),
+        ),
+        'active' => array(
+          'params' => array( 'type' => 'checkbox', 'class' => 'switchery', 'options'=> array( '1' => __('Active') ))
+        ),
+        'description' => array(
+          'params' => array( 'label' => __( 'Description' ), 'type' => 'textarea', 'placeholder' => __('Description')),
+          'translate' => true
         )
-      ),
-      'login' => array(
-        'params' => array( 'type' => 'reserved', 'placeholder' => __('Login') ),
-        'rules' => array( 'required' => true )
-      ),
-      'email' => array(
-        'params' => array( 'label' => __( 'Email' ), 'id' => 'email', 'placeholder' => __('Email') ),
-        'rules' => array( 'required' => true )
-      ),
-      'repeatEmail' => array(
-        'params' => array( 'label' => __( 'Repeat email' ), 'id' => 'repeatEmail', 'placeholder' => __('Repeat email') ),
-        'rules' => array( 'required' => true )
-      ),
-      'name' => array(
-        'params' => array( 'label' => __( 'Name' ), 'placeholder' => __('Name') ),
-      ),
-      'surname' => array(
-        'params' => array( 'label' => __( 'Surname' ), 'placeholder' => __('Surname') ),
-      ),
-      'active' => array(
-        'params' => array( 'type' => 'checkbox', 'class' => 'switchery', 'options'=> array( '1' => __('Active') ))
-      ),
-      'description' => array(
-        'params' => array( 'label' => __( 'Description' ), 'type' => 'textarea', 'placeholder' => __('Description')),
-        'translate' => true
-      )
-    );
-
+      );
+    }
+    else{
+      $fieldsInfo = $fields;
+    }
     $form->definitionsToForm( $fieldsInfo );
 
     //Esto es para verificar si es un create
@@ -252,6 +255,10 @@ class UserView extends View {
     if(!isset($data) || $data !== ''){
       $data['repeatEmail'] = $data['email'];
       $form->loadArrayValues( $data );
+    }
+    if(!empty($captcha)){
+      $form->captchaEnable( true );
+      $form->saveToSession();
     }
 
     return $form;
@@ -362,9 +369,9 @@ class UserView extends View {
    *
    * @return string
    **/
-  public function userFormGet( $form ) {
+  public function userFormGet( $form, $captcha = false ) {
 
-    return $this->userFormGetBlock($form)->execToString();
+    return $this->userFormGetBlock($form, $captcha)->execToString();
   }
 
   /**
@@ -374,7 +381,10 @@ class UserView extends View {
    *
    * @return template
    **/
-  public function userFormGetBlock( $form ) {
+  public function userFormGetBlock( $form, $captcha = false ) {
+    if(!empty($captcha)){
+      $form->captchaEnable( true );
+    }
     $form->saveToSession();
 
     $template = new Template( $this->baseDir );
@@ -382,6 +392,7 @@ class UserView extends View {
     $template->assign("userFormOpen", $form->getHtmpOpen());
     $template->assign("userFormFields", $form->getHtmlFieldsArray());
     $template->assign("userFormClose", $form->getHtmlClose());
+    $template->assign("formCaptcha" ,$form->getHtmlCaptcha());
     $template->assign("userFormValidations", $form->getScriptCode());
 
     $template->setTpl('userForm.tpl', 'user');
