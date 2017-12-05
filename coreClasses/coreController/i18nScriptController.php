@@ -248,6 +248,9 @@ class i18nScriptController {
         if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_tmp.po')){
           exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_js.po');
         }
+        else{
+          exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_js.po');
+        }
       }
       else{
         if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_tmp.po')){

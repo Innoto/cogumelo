@@ -150,4 +150,9 @@ class ConfConstantsView {
   private function isAssoc( $arr ) {
     return( array_keys($arr) !== range(0, count($arr) - 1) );
   }
+
+  function jslog(){
+    header('Content-Type: application/javascript');
+    echo "console.log('Loading:".$_GET['ref']."');";
+  }
 }

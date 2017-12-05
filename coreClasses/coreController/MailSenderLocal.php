@@ -85,13 +85,23 @@ class MailSenderLocal {
       $this->phpmailer->Body = $bodyPlain;
     }
 
-    $mailResult = $this->phpmailer->Send();
+    // $this->phpmailer->SMTPDebug = 2; // SOLO TEST - EL FORM NO FUNCIONA CON ESTO!!!
+
+    $mailResult = false;
+    try{
+      $mailResult = $this->phpmailer->Send();
+    } catch( Exception $e ) {
+      $mailResult = false;
+      Cogumelo::debug( 'Mail ERROR('.$this->phpmailer->MessageID.'): Exception: '.$e->getMessage(), 3 );
+    }
+
 
     if( $mailResult ) {
       Cogumelo::debug( 'Mail Sent id='.$this->phpmailer->MessageID.' '.var_export($adresses, true), 3 );
     }
     else {
       Cogumelo::debug( 'Mail ERROR('.$this->phpmailer->MessageID.'): Adresses: '.var_export($adresses, true), 3 );
+      Cogumelo::debug( 'Mail ERROR('.$this->phpmailer->MessageID.'): Subject: '.$subject, 3 );
       Cogumelo::debug( 'Mail ERROR('.$this->phpmailer->MessageID.'): ErrorInfo: '.$this->phpmailer->ErrorInfo, 3 );
       Cogumelo::error( 'Error sending mail' );
     }
