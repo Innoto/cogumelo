@@ -68,7 +68,12 @@ class UserView extends View {
   public function loginFormDefine() {
 
     $form = new FormController( 'loginForm', '/user/sendloginform' ); //actionform
-    $form->setField( 'userLogin', array( 'placeholder' => __('Email') ));
+    if(!empty(Cogumelo::getSetupValue('mod:user:nickname'))){
+      $userLoginPlaceHolder =  __('Nickname');
+    }else{
+      $userLoginPlaceHolder =  __('Email');
+    }
+    $form->setField( 'userLogin', array( 'placeholder' => $userLoginPlaceHolder ));
     $form->setField( 'userPassword', array( 'type' => 'password', 'placeholder' => __('Password') ) );
     $form->setField( 'loginSubmit', array( 'type' => 'submit', 'value' => __('Sign in' ) ) );
     /************************************************************** VALIDATIONS */
@@ -226,6 +231,11 @@ class UserView extends View {
           'translate' => true
         )
       );
+      if(!empty(Cogumelo::getSetupValue('mod:user:nickname'))){
+        $fieldsInfo['login'] = array(
+          'params' => array( 'placeholder' => __('Nickname'), 'label' => __('Nickname') ),
+        );
+      }
     }
     else{
       $fieldsInfo = $fields;
@@ -495,22 +505,41 @@ class UserView extends View {
       //Validaciones extra
       $userControl = new UserModel();
       // Donde diferenciamos si es un update o un create para validar el login
-      $loginExist = $userControl->listItems( array('filters' => array('email' => $form->getFieldValue('email'))) )->fetch();
-
+      $emailExist = $userControl->listItems( array('filters' => array('email' => $form->getFieldValue('email'))) )->fetch();
       if( isset($valuesArray['id']) && $valuesArray['id'] ){
         $user = $userControl->listItems( array('filters' => array('id' => $valuesArray['id'])) )->fetch();
         if($valuesArray['email'] !== $user->getter('email')){
-          if($loginExist){
+          if($emailExist){
             $form->addFieldRuleError('email', 'cogumelo', __('The email specified field already in use'));
           }
         }
       }
       else{
-        // Create: comprobamos si el login existe y si existe mostramos error.
-        if($loginExist){
+        // Create: comprobamos si el email existe y si existe mostramos error.
+        if($emailExist){
           $form->addFieldRuleError('email', 'cogumelo', __('The email specified field already in use'));
         }
       }
+      //Si nickname no es el email
+      if(!empty(Cogumelo::getSetupValue('mod:user:nickname'))){
+        $loginExist = $userControl->listItems( array('filters' => array('login' => $form->getFieldValue('login'))) )->fetch();
+        if( isset($valuesArray['id']) && $valuesArray['id'] ){
+          $user = $userControl->listItems( array('filters' => array('id' => $valuesArray['id'])) )->fetch();
+          if($valuesArray['login'] !== $user->getter('login')){
+            if($loginExist){
+              $form->addFieldRuleError('login', 'cogumelo', __('The login specified field already in use'));
+            }
+          }
+        }
+        else{
+          // Create: comprobamos si el login existe y si existe mostramos error.
+          if($loginExist){
+            $form->addFieldRuleError('login', 'cogumelo', __('The login specified field already in use'));
+          }
+        }
+      }
+
+
     }
 
     return $form;
@@ -542,7 +571,9 @@ class UserView extends View {
         $valuesArray['timeCreateUser'] = date("Y-m-d H:i:s", time());
         $asignRole = true;
       }
-      $valuesArray['login'] = $valuesArray['email'];
+      if(empty(Cogumelo::getSetupValue('mod:user:nickname'))){
+        $valuesArray['login'] = $valuesArray['email'];
+      }
       if( array_key_exists( 'avatar', $valuesArray) ){
         $userAvatar = $valuesArray['avatar'];
         unset($valuesArray['avatar']);
@@ -552,7 +583,7 @@ class UserView extends View {
       if(isset($password) && $password){
         $user->setPassword( $password );
       }
-      $user->save();
+      //$user->save();
       //var_dump( $user->getAllData() );
 
       if( isset($userAvatar) && $userAvatar ) {
