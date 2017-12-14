@@ -207,6 +207,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     if( that.formOpts.htmlEditor ) {
       that.activateHtmlEditor();
+      // that.activateHtmlEditorBig();
     }
 
     return that.validateObj;
@@ -443,6 +444,11 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     $( 'textarea.cgmMForm-htmlEditor[form="'+that.idForm+'"]' ).each(
       function( index ) {
         var textarea = this;
+
+        // if( textarea.name.indexOf( 'content_' ) === 0 ) {
+        //   return;
+        // }
+
         var CKcontent = CKEDITOR.replace( textarea, {
           customConfig: '/cgml-form-htmleditor-config.js'
         } );
@@ -450,6 +456,73 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       }
     );
   }; // that.activateHtmlEditor
+
+  that.activateHtmlEditorBig = function activateHtmlEditorBig() {
+    console.log( '* activateHtmlEditorBig: ', that.idForm );
+
+    $( 'textarea.cgmMForm-htmlEditor[form="'+that.idForm+'"]' ).each(
+      function( index ) {
+        var textarea = this;
+
+        if( textarea.name.indexOf( 'content_' ) !== 0 ) {
+          return;
+        }
+
+        $(this).closest('.cgmMForm-wrap').find('label').on( 'click',function() {
+          console.log( 'Abrir', this );
+
+          $el = $(this).closest('.cgmMForm-wrap').find('textarea');
+
+          htmlEditContent = '<div id="editorGrapesJSContent">' + $el.text() + '</div>';
+
+
+          $editorWrap = $('#editorGrapesJSWrapper');
+          if( !$editorWrap.length ) {
+            $('body').prepend('<div id="editorGrapesJSWrapper"></div>')
+            // $('#page-wrapper .contentSection').prepend('<div id="editorGrapesJSWrapper"></div>')
+            $editorWrap = $('#editorGrapesJSWrapper');
+          }
+
+          close = '<p class="editorGrapesJSClose" style="text-align: center;" '+
+            'data-form="'+$el.attr('form')+'" data-field="'+$el.attr('name')+'">Close</p>'
+
+          $('#wrapper').hide();
+          $editorWrap.html( close+"\n"+htmlEditContent );
+
+          $('#editorGrapesJSWrapper .editorGrapesJSClose').on( 'click', function() {
+            console.log( 'Cerrar', this );
+            $ev = $(this);
+            newContent = "<style>\n"+meuGrapesJS.getCss()+"</style>\n"+meuGrapesJS.getHtml();
+            meuGrapesJS = false;
+
+            $('#editorGrapesJSWrapper').html('');
+            $('#wrapper').show();
+            console.log('[form="'+$ev.data('form')+'"][name="'+$ev.data('field')+'"]');
+            $el = $('[form="'+$ev.data('form')+'"][name="'+$ev.data('field')+'"]');
+            console.log( $el );
+            $el.text( newContent );
+          });
+
+          // cogumelo.clientMsg.window( htmlEditContent );
+
+          // modalEditorGrapesJS = geozzy.generateModal( {
+          //   classCss: 'modalEditorGrapesJS',
+          //   // htmlBody: htmlEditContent,
+          //   size: 'md',
+          //   successCallback: function() {
+          //     console.log( 'successCallback', this, $el );
+          //     $el.text( meuGrapesJS.getHtml()+"\n<style>\n"+meuGrapesJS.getCss()+"</style>" );
+          //   }
+          // });
+          // $('.modalEditorGrapesJS .modal-dialog').css( 'width', '80%' ).html(htmlEditContent);
+
+          meuGrapesJS = grapesjs.init({ fromElement: true, container : '#editorGrapesJSContent' });
+          // console.log( "meuGrapesJS = grapesjs.init({ height: '"+(window.innerHeight*0.7)+"px', fromElement: true, container : '#editorGrapesJSContent' });");
+
+        });
+      }
+    );
+  }; // that.activateHtmlEditorBig
 
 
   that.switchFormLang = function switchFormLang( lang ) {
@@ -1335,3 +1408,28 @@ if( cogumelo.publicConf.C_LANG !== 'en' ) {
   basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
 }
 
+
+
+
+
+var meuGrapesJS = false;
+
+// function modalEditorGrapesJS() {
+//   htmlEditContent = '<div id="modalEditorGrapesJS">' + $('#content_gl').text() + '</div>';
+//   modalEditorGrapesJS = geozzy.generateModal( {
+//     classCss: 'modalEditorGrapesJS',
+//     htmlBody: htmlEditContent,
+//     size: 'md',
+//     successCallback: function() {
+//       console.log( 'successCallback', this );
+//       $('#content_gl').text( "<style>\n"+meuGrapesJS.getCss()+"</style>\n"+meuGrapesJS.getHtml() );
+//     }
+//   });
+//   $('.modalEditorGrapesJS .modal-dialog').css( 'width', '1111px' );
+//   meuGrapesJS = grapesjs.init({ height: '500px', fromElement: true, container : '#modalEditorGrapesJS' });
+//
+//   // $('.modalEditorGrapesJS .modal-footer .btn-primary').on( 'click',function() {
+//   //   console.log( 'aceptar', this );
+//   //   $('#content_gl').text( "<style>\n"+meuGrapesJS.getCss()+"</style>\n"+meuGrapesJS.getHtml() );
+//   // });
+// }
