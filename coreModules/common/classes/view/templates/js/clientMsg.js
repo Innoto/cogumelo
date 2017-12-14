@@ -159,9 +159,29 @@ cogumelo.clientMsgClass = function( options ) {
   };
 
 
-  that.window = function( msg, fnOptions ) {
+  that.window = function( msg, fnResult, fnOptions ) {
+    var result = false;
 
-    // that.msgDefOptions = $.extend( true, {}, that.msgDefOptions, options );
+    var msgOptions = $.extend( true, {}, that.msgDefOptions, fnOptions );
+
+    msgOptions.content = msg;
+
+    // cogumelo.clientMsg.confirm('OKI', function(val){ console.log('fnResult:', val); } );
+
+    if( typeof fnResult === 'function' ) {
+      msgOptions.beforeClose = function( $this, button, ev ) {
+        console.log( 'beforeClose:', $this, button, ev );
+
+        fnResult( button );
+      };
+    }
+
+    result = new Object({
+      status: true,
+      Lobibox: Lobibox.window( msgOptions )
+    });
+
+    return result;
   };
 
 };
