@@ -207,7 +207,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     if( that.formOpts.htmlEditor ) {
       that.activateHtmlEditor();
-      // that.activateHtmlEditorBig();
+      that.activateHtmlEditorBig();
     }
 
     return that.validateObj;
@@ -444,11 +444,6 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     $( 'textarea.cgmMForm-htmlEditor[form="'+that.idForm+'"]' ).each(
       function( index ) {
         var textarea = this;
-
-        // if( textarea.name.indexOf( 'content_' ) === 0 ) {
-        //   return;
-        // }
-
         var CKcontent = CKEDITOR.replace( textarea, {
           customConfig: '/cgml-form-htmleditor-config.js'
         } );
@@ -460,26 +455,27 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   that.activateHtmlEditorBig = function activateHtmlEditorBig() {
     console.log( '* activateHtmlEditorBig: ', that.idForm );
 
-    $( 'textarea.cgmMForm-htmlEditor[form="'+that.idForm+'"]' ).each(
+    $( 'textarea.cgmMForm-htmlEditorBig[form="'+that.idForm+'"]' ).each(
       function( index ) {
-        var textarea = this;
+        // var textarea = this;
+        $fieldWrap = $(this).closest('.cgmMForm-wrap');
+        $ta = $fieldWrap.find('textarea');
+        $fieldWrap.append(
+          '<div class="fieldGrapesJSContent" style="border: 1px solid #CECECE;padding: 5px;height: 200px;overflow: auto;">'+
+          $ta.text() + '</div>'
+        );
+        $ta.css({ height: 0, border: 0, padding: 0, margin: 0 });
 
-        if( textarea.name.indexOf( 'content_' ) !== 0 ) {
-          return;
-        }
-
-        $(this).closest('.cgmMForm-wrap').find('label').on( 'click',function() {
+        $fieldWrap.find('label').on( 'click',function() {
           console.log( 'Abrir', this );
 
           $el = $(this).closest('.cgmMForm-wrap').find('textarea');
 
           htmlEditContent = '<div id="editorGrapesJSContent">' + $el.text() + '</div>';
 
-
           $editorWrap = $('#editorGrapesJSWrapper');
           if( !$editorWrap.length ) {
             $('body').prepend('<div id="editorGrapesJSWrapper"></div>')
-            // $('#page-wrapper .contentSection').prepend('<div id="editorGrapesJSWrapper"></div>')
             $editorWrap = $('#editorGrapesJSWrapper');
           }
 
@@ -498,9 +494,10 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
             $('#editorGrapesJSWrapper').html('');
             $('#wrapper').show();
             console.log('[form="'+$ev.data('form')+'"][name="'+$ev.data('field')+'"]');
-            $el = $('[form="'+$ev.data('form')+'"][name="'+$ev.data('field')+'"]');
-            console.log( $el );
-            $el.text( newContent );
+            $ta = $('[form="'+$ev.data('form')+'"][name="'+$ev.data('field')+'"]');
+            console.log( $ta );
+            $ta.text( newContent );
+            $ta.closest('.cgmMForm-wrap').find('.fieldGrapesJSContent').html( newContent );
           });
 
           // cogumelo.clientMsg.window( htmlEditContent );
@@ -516,7 +513,28 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           // });
           // $('.modalEditorGrapesJS .modal-dialog').css( 'width', '80%' ).html(htmlEditContent);
 
-          meuGrapesJS = grapesjs.init({ fromElement: true, container : '#editorGrapesJSContent' });
+
+          // /vendor/bower/grapesjs-blocks-flexbox-master/dist/grapesjs-blocks-flexbox.min.js
+          meuGrapesJS = grapesjs.init({
+            fromElement: true,
+            container : '#editorGrapesJSContent',
+            
+            // plugins: ['gjs-blocks-flexbox'],
+            // pluginsOpts: {
+            //   'gjs-blocks-flexbox': {
+            //     // options
+            //   }
+            // }
+
+            // panels: {
+            //   defaults: [{
+            //     id: 'commands',
+            //   }],
+            // },
+          });
+
+
+
           // console.log( "meuGrapesJS = grapesjs.init({ height: '"+(window.innerHeight*0.7)+"px', fromElement: true, container : '#editorGrapesJSContent' });");
 
         });

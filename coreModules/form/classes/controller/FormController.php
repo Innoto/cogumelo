@@ -2155,6 +2155,7 @@ class FormController implements Serializable {
         ( $cloneOf ? ' '.$this->cssPrefix.'-cloneOf-'.$cloneOf : '' ).
         ( $groupName ? ' '.$this->cssPrefix.'-group-'.$groupName : '' ).
         ( !empty( $field['htmlEditor'] ) ? ' '.$this->cssPrefix.'-htmlEditor' : '' ).
+        ( !empty( $field['htmlEditorBig'] ) ? ' '.$this->cssPrefix.'-htmlEditorBig' : '' ).
         ( isset( $field['class'] ) ? ' '.$field['class'] : '' ).
         '"';
       $attribs .= isset( $field['style'] ) ? ' style="'.$field['style'].'"' : '';
