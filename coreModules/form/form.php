@@ -7,30 +7,37 @@ class form extends Module {
 
   public $name = 'form';
   public $version = 1.0;
-  public $dependences = array(
-    array(
+  public $dependences = [
+    [
       'id' => 'jquery-validation',
-      'params' => array( 'jquery-validate#1.14' ),
+      'params' => [ 'jquery-validate#1.14' ],
       'installer' => 'bower',
       'includes' => [ 'dist/jquery.validate.min.js', 'dist/additional-methods.min.js' ]
-    ),
-    array(
+    ],
+    [
       'id' =>'ckEditorFix',
-      'params' => array( 'ckEditorFix' ),
+      'params' => [ 'ckEditorFix' ],
       'installer' => 'manual',
-      'includes' => array( 'ckEditorFix.js' ),
-    ),
-    array(
+      'includes' => [ 'ckEditorFix.js' ],
+    ],
+    [
       'id' =>'ckeditor',
-      'params' => array( 'ckeditor#full/stable' ),
+      'params' => [ 'ckeditor#full/stable' ],
       'installer' => 'bower',
-      'includes' => array( 'ckeditor.js' ),
+      'includes' => [ 'ckeditor.js' ],
       'autoinclude' => false
-    )
-  );
+    ],
+    [
+      'id' =>'grapesjs',
+      'params' => [ 'grapesjs#v0.12.50' ],
+      'installer' => 'bower',
+      'includes' => [ 'dist/grapes.min.js', 'dist/css/grapes.min.css' ],
+      'autoinclude' => false
+    ],
+  ];
 
 
-  public $includesCommon = array(
+  public $includesCommon = [
     'controller/FormController.php',
     'controller/FormValidators.php',
     // 'js/jquery.cogumeloFormController.js', // js controller V1
@@ -39,7 +46,7 @@ class form extends Module {
     'js/formValidators.js',
     'js/formValidatorsExtender.js',
     'styles/form.less'
-  );
+  ];
 
 
   public function __construct() {
