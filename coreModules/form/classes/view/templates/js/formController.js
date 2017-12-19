@@ -51,6 +51,8 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
 
   that.submitElementName = false;
+  that.submitActionName = false;
+  that.submitActionValue = false;
 
   that.validateObj = null; // jQuery Validator instance
 
@@ -141,6 +143,10 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
 
         if( $submitElement ) {
+
+          that.submitActionName = $submitElement.attr('name')
+          that.submitActionValue = $submitElement.attr('value')
+
           if( $submitElement.attr('data-confirm-text') ) {
             // Se ha indicado que hay que solicitar confirmacion antes del envio.
             cogumelo.clientMsg.confirm(
@@ -217,12 +223,20 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   that.sendValidatedForm = function sendValidatedForm( form ) {
     console.log( '* Executando sendValidatedForm...', that.idForm );
 
+    serializeFormObj = $( form ).serializeFormToObject();
+    formProbas = serializeFormObj;
+
+    console.log( 'serializeFormObj', serializeFormObj );
+    console.log( 'submitAction', that.submitActionName, that.submitActionValue );
+    serializeFormObj[that.submitActionName]['value'] = that.submitActionValue;
+
+
     $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
     $( form ).find( '.submitRun' ).show();
 
     $.ajax( {
       contentType: 'application/json', processData: false,
-      data: JSON.stringify( $( form ).serializeFormToObject() ),
+      data: JSON.stringify( serializeFormObj ),
       type: 'POST', url: $( form ).attr( 'data-form-action' ),
       dataType : 'json'
     } )
@@ -240,6 +254,9 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       $( form ).find( '[type="submit"]' ).removeAttr('disabled');
       $( form ).find( '.submitRun' ).hide();
     } ); // /.done
+
+    that.submitActionName = false;
+    that.submitActionValue = false;
   }; // that.sendValidatedForm
 
 
@@ -395,14 +412,14 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
 
   that.setSubmitElement = function setSubmitElement( evnt ) {
-    console.log( '* setSubmitElement: ', that.idForm, evnt );
+    console.log( '* setSubmitElement: ', that.idForm, $( evnt.target ).attr('name') );
     $elem = $( evnt.target );
     // $( '#'+$elem.attr('form') ).attr('data-submit-element-name', $elem.attr('name') );
     that.submitElementName = $elem.attr('name');
   }; // that.setSubmitElement
 
   that.unsetSubmitElement = function unsetSubmitElement( evnt ) {
-    console.log( '* unsetSubmitElement: ', that.idForm, evnt );
+    console.log( '* unsetSubmitElement: ', that.idForm /*, evnt*/ );
     // $elem = $( evnt.target );
     // $( '#'+$elem.attr('form') ).removeAttr('data-submit-element-name');
     that.submitElementName = false;
@@ -488,8 +505,8 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           $('#editorGrapesJSWrapper .editorGrapesJSClose').on( 'click', function() {
             console.log( 'Cerrar', this );
             $ev = $(this);
-            newContent = "<style>\n"+meuGrapesJS.getCss()+"</style>\n"+meuGrapesJS.getHtml();
-            meuGrapesJS = false;
+            newContent = "<style>\n"+formGrapesJS.getCss()+"</style>\n"+formGrapesJS.getHtml();
+            formGrapesJS = false;
 
             $('#editorGrapesJSWrapper').html('');
             $('#wrapper').show();
@@ -508,17 +525,17 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           //   size: 'md',
           //   successCallback: function() {
           //     console.log( 'successCallback', this, $el );
-          //     $el.text( meuGrapesJS.getHtml()+"\n<style>\n"+meuGrapesJS.getCss()+"</style>" );
+          //     $el.text( formGrapesJS.getHtml()+"\n<style>\n"+formGrapesJS.getCss()+"</style>" );
           //   }
           // });
           // $('.modalEditorGrapesJS .modal-dialog').css( 'width', '80%' ).html(htmlEditContent);
 
 
           // /vendor/bower/grapesjs-blocks-flexbox-master/dist/grapesjs-blocks-flexbox.min.js
-          meuGrapesJS = grapesjs.init({
+          formGrapesJS = grapesjs.init({
             fromElement: true,
             container : '#editorGrapesJSContent',
-            
+
             // plugins: ['gjs-blocks-flexbox'],
             // pluginsOpts: {
             //   'gjs-blocks-flexbox': {
@@ -535,7 +552,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
 
 
-          // console.log( "meuGrapesJS = grapesjs.init({ height: '"+(window.innerHeight*0.7)+"px', fromElement: true, container : '#editorGrapesJSContent' });");
+          // console.log( "formGrapesJS = grapesjs.init({ height: '"+(window.innerHeight*0.7)+"px', fromElement: true, container : '#editorGrapesJSContent' });");
 
         });
       }
@@ -1430,24 +1447,5 @@ if( cogumelo.publicConf.C_LANG !== 'en' ) {
 
 
 
-var meuGrapesJS = false;
-
-// function modalEditorGrapesJS() {
-//   htmlEditContent = '<div id="modalEditorGrapesJS">' + $('#content_gl').text() + '</div>';
-//   modalEditorGrapesJS = geozzy.generateModal( {
-//     classCss: 'modalEditorGrapesJS',
-//     htmlBody: htmlEditContent,
-//     size: 'md',
-//     successCallback: function() {
-//       console.log( 'successCallback', this );
-//       $('#content_gl').text( "<style>\n"+meuGrapesJS.getCss()+"</style>\n"+meuGrapesJS.getHtml() );
-//     }
-//   });
-//   $('.modalEditorGrapesJS .modal-dialog').css( 'width', '1111px' );
-//   meuGrapesJS = grapesjs.init({ height: '500px', fromElement: true, container : '#modalEditorGrapesJS' });
-//
-//   // $('.modalEditorGrapesJS .modal-footer .btn-primary').on( 'click',function() {
-//   //   console.log( 'aceptar', this );
-//   //   $('#content_gl').text( "<style>\n"+meuGrapesJS.getCss()+"</style>\n"+meuGrapesJS.getHtml() );
-//   // });
-// }
+var formGrapesJS = false;
+var formProbas = false;
