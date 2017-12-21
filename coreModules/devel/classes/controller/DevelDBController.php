@@ -139,11 +139,13 @@ class  DevelDBController {
         $modelCurrentVersion = $this->VOIsRegistered( $model );
         if($module == 'app') {
           $moduleObj = Cogumelo::get();
+          $toVersion = ( isset( $moduleObj::$version ) )? $moduleObj::$version : false;
         }
         else {
           $moduleObj = new $module();
+          $toVersion = ( isset( $moduleObj->version ) )? $moduleObj->version : false;
         }
-        $toVersion = ( isset( $moduleObj->version ) )? $moduleObj->version : false;
+
 
         //echo $model.' = '.$modelCurrentVersion."\n";
 
@@ -157,6 +159,11 @@ class  DevelDBController {
             ]
           );
 
+          var_dump([
+            'model'=>$model,
+            'from'=> $modelCurrentVersion ,//última versión rexistrada do modulo,
+            'to'=> $toVersion //versión actual do módulo en código
+          ]);
 
           if( sizeof($voDeploys) > 0 ) {
             echo "\n/*Getting ".sizeof($voDeploys)." deploys in'".$model."'*/";
@@ -297,7 +304,6 @@ class  DevelDBController {
     $vo = new $voKey();
 
     if( count( $vo->deploySQL ) > 0 ){
-
 
 
       if( $filters['onlyRC'] == true  ){
