@@ -522,6 +522,7 @@ class Template extends Smarty {
       $mainClientIncludes = "\n";
       // Basic includes and includers
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
+      $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/bower/bootstrap/dist/js/bootstrap.min.js"></script>' . "\n";      
       //$clientIncludes .= '<script src="http://rsvpjs-builds.s3.amazonaws.com/rsvp-latest.min.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
