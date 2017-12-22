@@ -158,12 +158,12 @@ class  DevelDBController {
               'to'=> $toVersion //versión actual do módulo en código
             ]
           );
-
+/*
           var_dump([
             'model'=>$model,
             'from'=> $modelCurrentVersion ,//última versión rexistrada do modulo,
             'to'=> $toVersion //versión actual do módulo en código
-          ]);
+          ]);*/
 
           if( sizeof($voDeploys) > 0 ) {
             echo "\n/*Getting ".sizeof($voDeploys)." deploys in'".$model."'*/";
