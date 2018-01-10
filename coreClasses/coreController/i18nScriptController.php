@@ -137,17 +137,9 @@ class i18nScriptController {
   /*
   * Check if already exists a translation file PO in system modules
   **/
-  public function checkModuleTranslations( $module, $l, $type ) {
+  public function checkModuleTranslations( $module, $l ) {
     $exist = false;
     $transFile = $this->textdomain.'_'.$l.'.po';
-    switch($type){
-      case 'js':
-        $transFile = $this->textdomain.'_'.$l.'_js.po';
-        break;
-      case 'tpl':
-        $transFile = $this->textdomain.'_'.$l.'_tpl.po';
-        break;
-    }
     if (is_dir($module)){
       $handle = opendir($module);
       while ($file = readdir($handle)) {
@@ -162,17 +154,9 @@ class i18nScriptController {
   /*
   * Check if already exists a translation file PO in App
   **/
-  public function checkAppTranslations( $l, $type ) {
+  public function checkAppTranslations( $l ) {
     $exist = false;
     $transFile = $this->textdomain.'_app.po';
-    switch($type){
-      case 'js':
-        $transFile = $this->textdomain.'_js.po';
-        break;
-      case 'tpl':
-        $transFile = $this->textdomain.'_tpl.po';
-        break;
-    }
     if (is_dir($l)){
       $handle = opendir($l);
       while ($file = readdir($handle)) {
@@ -222,6 +206,7 @@ class i18nScriptController {
     }
     // Now we have to combine each type PO's in one for each language
     $this->updateModulePo($module);
+
   }
 
   /*
@@ -229,6 +214,7 @@ class i18nScriptController {
   **/
   function updateModulePo($module){
     $module = $module.'/translations';
+
     exec('chmod 700 '.$this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh');
     foreach( $this->lang as $l => $lang ) {
       if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_prev.po') && file_exists($module.'/'.$this->textdomain.'_'.$l.'_tpl.po')){
@@ -240,7 +226,12 @@ class i18nScriptController {
         }
         else{
            if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_tpl.po')){
-             exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po');
+             if($this->checkModuleTranslations($module, $l)){
+               exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po');
+             }
+             else{
+               exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po');
+             }
            }
          }
       }
@@ -376,24 +367,24 @@ class i18nScriptController {
       $module = $module.'/translations';
     }
     foreach( $this->lang as $l => $lang) {
+      $oldFile = $module.'/'.$this->textdomain.'_'.$l.'.po';
       switch($type){
         case 'php':
           $extractor = 'Gettext\Extractors\PhpCode';
-          $oldFile = $module.'/'.$this->textdomain.'_'.$l.'.po';
           $newFile = $module.'/'.$this->textdomain.'_'.$l.'_prev.po';
           break;
         case 'js':
           $extractor = 'Gettext\Extractors\JsCode';
-          $oldFile = $module.'/'.$this->textdomain.'_'.$l.'_js.po';
           $newFile = $module.'/'.$this->textdomain.'_'.$l.'_js.po';
       }
-      if ($this->checkModuleTranslations($module, $l, $type)){ //merge
+      if ($this->checkModuleTranslations($module, $l)){ //merge
         //Scan the php code to find the latest gettext entries
         $entries = $extractor::fromFile($files);
         //Get the translations of the code that are stored in a po file
         $oldEntries = Gettext\Extractors\Po::fromFile($oldFile);
         //Apply the translations from the po file to the entries, and merges header and comments but not references and without add or remove entries:
         $entries->mergeWith($oldEntries); //now $entries has all the values
+
       }
       else{ //create
         $entries = $extractor::fromFile($files);
@@ -447,19 +438,17 @@ class i18nScriptController {
   **/
   function generateAppPo($files, $type){
     foreach( $this->dir_lc as $l => $path ) {
+      $oldFile = $path.'/'.$this->textdomain.'_app.po';
       switch($type){
         case 'php':
           $extractor = 'Gettext\Extractors\PhpCode';
-          $oldFile = $path.'/'.$this->textdomain.'_app.po';
           $newFile = $path.'/'.$this->textdomain.'_prev.po';
           break;
         case 'js':
           $extractor = 'Gettext\Extractors\JsCode';
-          $oldFile = $path.'/'.$this->textdomain.'_js.po';
           $newFile = $path.'/'.$this->textdomain.'_js.po';
       }
-
-      if ($this->checkAppTranslations($path, $type)){ //merge
+      if ($this->checkAppTranslations($path)){ //merge
         //Scan the php code to find the latest gettext entries
         $entries = $extractor::fromFile($files);
         //Get the translations of the code that are stored in a po file
@@ -505,7 +494,7 @@ class i18nScriptController {
       exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$l.'/'.$this->textdomain.'_geozzy.po '.$l.'/'.$this->textdomain.'_moduleApp.po');
 
       // We compile the resultant PO and generate a json for client side
-      echo exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
+      //echo exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
       exec('php '.$this->dir_modules_c.'/i18nServer/classes/po2json.php -i '.$l.'/'.$this->textdomain.'.po -o '.$l.'/translation.json');
     }
     /* Borramos os ficheiros temporales para evitar confusións;
