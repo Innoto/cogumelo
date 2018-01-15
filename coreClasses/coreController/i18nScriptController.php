@@ -494,7 +494,7 @@ class i18nScriptController {
       exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$l.'/'.$this->textdomain.'_geozzy.po '.$l.'/'.$this->textdomain.'_moduleApp.po');
 
       // We compile the resultant PO and generate a json for client side
-      //echo exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
+      exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
       exec('php '.$this->dir_modules_c.'/i18nServer/classes/po2json.php -i '.$l.'/'.$this->textdomain.'.po -o '.$l.'/translation.json');
     }
     /* Borramos os ficheiros temporales para evitar confusións;
