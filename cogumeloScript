@@ -386,12 +386,15 @@ function doBackup( $db, $user, $passwd, $file ) {
 
 function restoreDB( $db, $user, $passwd, $file ) {
   $dir = Cogumelo::getSetupValue( 'script:backupPath' );
-  $file_parts = explode('.',$dir.$file);
 
-  if ($file_parts[2] == 'gz'){
+  // $file_parts = explode('.',$dir.$file);
+  $fileExt = pathinfo( $dir.$file, PATHINFO_EXTENSION );
+
+  // if ($file_parts[2] == 'gz'){
+  if( $fileExt === 'gz' ) {
     popen('gunzip -c '.$dir.$file.' | mysql -u '.$user.' -p'.$passwd.' '.$db, 'r');
   }
-  else{
+  else {
     popen('mysql -u '.$user.' -p'.$passwd.' '.$db.'<' .$dir.$file, 'r');
   }
   echo "\nYour db was successfully restored!\n";
