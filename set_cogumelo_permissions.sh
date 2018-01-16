@@ -17,7 +17,7 @@ then
   chmod -R u-x,g-wx,o-wx,u+rwX,go+rX $cogumeloPath/*
   chmod 700 $cogumeloPath/set_cogumelo_permissions.sh
 
-  echo -e "\n\n  Set Cogumelo permissions READY. Enjoy :)  \n\n"
+  echo -e "\nSet Cogumelo permissions READY. Enjoy :)\n\n"
 else
-  echo -e "\n\n  Set Cogumelo permissions ERROR!!!\n\n  NOT valid path: ${cogumeloPath}/  \n\n"
+  echo -e "\n\nERROR - Set Cogumelo permissions\n\nERROR - NOT valid path: ${cogumeloPath}/\n\n"
 fi
