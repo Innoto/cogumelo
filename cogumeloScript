@@ -215,10 +215,13 @@ function createRelSchemes() {
 function flushAll() {
   echo "\n --- setPermissionsDevel:\n";
   setPermissionsDevel();
+
   echo "\n --- actionFlush:\n";
   actionFlush();
-  echo "\n --- actionCompileTranslations:\n";
-  actionCompileTranslations();
+
+  // echo "\n --- actionCompileTranslations:\n";
+  // actionCompileTranslations();
+
   echo "\n --- actionGenerateClientCaches:\n";
   if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) ) {
     actionGenerateClientCaches();
@@ -226,6 +229,7 @@ function flushAll() {
   else {
     echo "\nPasamos porque no estamos en PRODUCTION MODE\n";
   }
+
   echo "\n --- setPermissionsDevel:\n";
   setPermissionsDevel();
 }
