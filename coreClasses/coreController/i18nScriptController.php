@@ -482,14 +482,17 @@ class i18nScriptController {
     }
   }
 
+  public function c_i18n_precompile() {
+    $this->getSystemPo('cogumelo');
+    $this->getSystemPo('geozzy');
+    $this->getSystemPo('moduleApp');
+  }
+
   /**
     * Mix system and app POS in one and compile it: translations will be ready for use now    */
   public function c_i18n_compile() {
     exec('chmod 700 '.$this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh');
     foreach ($this->dir_lc as $l){
-      $this->getSystemPo('cogumelo');
-      $this->getSystemPo('geozzy');
-      $this->getSystemPo('moduleApp');
       // We merge cogumelo geozzy and app po to have only one final PO
       exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$l.'/'.$this->textdomain.'_geozzy.po '.$l.'/'.$this->textdomain.'_moduleApp.po');
 
@@ -500,7 +503,7 @@ class i18nScriptController {
     /* Borramos os ficheiros temporales para evitar confusións;
     poderían deixarse para ver os PO de sistema xenerados e o da APP e modificar algunha cadea aí directamente en caso de ser necesario */
     foreach ($this->dir_lc as $l){
-      exec('rm '.$l.'/'.$this->textdomain.'.po');
+      //exec('rm '.$l.'/'.$this->textdomain.'.po');
       exec('rm '.$l.'/'.$this->textdomain.'_cogumelo.po');
       exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
       exec('rm '.$l.'/'.$this->textdomain.'_moduleApp.po');
