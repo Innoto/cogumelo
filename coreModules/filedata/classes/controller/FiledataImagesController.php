@@ -600,7 +600,7 @@ class FiledataImagesController {
 
 
   public function sendImage( $imgInfo ) {
-    error_log( 'FiledataImagesController: sendImage '. print_r( $imgInfo, true ) );
+    // error_log( 'FiledataImagesController: sendImage '. print_r( $imgInfo, true ) );
 
     $result = false;
 
