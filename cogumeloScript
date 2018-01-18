@@ -100,6 +100,10 @@ if( $argc > 1 ) {
       $i18nscriptController->c_i18n_removeTranslations();
       break;
 
+    case 'precompileTranslations':
+        actionPrecompileTranslations();
+        break;
+
     case 'compileTranslations':
       actionCompileTranslations();
       break;
@@ -163,11 +167,17 @@ function printOptions(){
  + Internationalization
     * generateFrameworkTranslations    Update text to translate in cogumelo and geozzy modules
     * generateAppTranslations    Get text to translate in the app
-    * compileTranslations     Mix geozzy, cogumelo and app POS and compile it to get the translations ready
+    * precompileTranslations     Generate the intermediate POs(geozzy, cogumelo and app)
+    * compileTranslations     Mix geozzy, cogumelo and app POS in one and compile it to get the translations ready
   \n\n";
 }
 
-
+function actionPrecompileTranslations() {
+  Cogumelo::load('coreController/i18nScriptController.php');
+  $i18nscriptController = new i18nScriptController();
+  $i18nscriptController->c_i18n_precompile();
+  echo "\nThe intermediate .po are ready\n\n";
+}
 
 function actionCompileTranslations() {
   Cogumelo::load('coreController/i18nScriptController.php');
