@@ -210,6 +210,9 @@ class MysqlDevelDBDAO extends MysqlDAO {
       }
 
     }
+    if( array_key_exists('customDefault', $col ) && $col['customDefault'] !== null ) {
+      $extrapkey = ' '.$col['customDefault'].' ';
+    }
     else {
       // is primary key
       if( array_key_exists('primarykey', $col ) ) {
