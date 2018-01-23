@@ -36,12 +36,8 @@ msgstr "Recargar para ter un formulario válido"
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:386
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:184
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:368
-msgid ""
-"Your browser does not have HTML5 support for send files. Upgrade to recent "
-"versions..."
-msgstr ""
-"O teu navegador non ten soporte HTML5 para enviar arquivos. Actualiza a "
-"versións recentes..."
+msgid "Your browser does not have HTML5 support for send files. Upgrade to recent versions..."
+msgstr "O teu navegador non ten soporte HTML5 para enviar arquivos. Actualiza a versións recentes..."
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:719
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:524

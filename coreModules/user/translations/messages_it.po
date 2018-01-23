@@ -84,8 +84,7 @@ msgid "The email specified field already in use"
 msgstr ""
 
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:518
-msgid ""
-"It has happened a problem with attachments. It may be necessary to raise "
+msgid "It has happened a problem with attachments. It may be necessary to raise "
 "them again."
 msgstr ""
 

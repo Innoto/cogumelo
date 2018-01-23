@@ -36,9 +36,7 @@ msgstr ""
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:386
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:368
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:184
-msgid ""
-"Your browser does not have HTML5 support for send files. Upgrade to recent "
-"versions..."
+msgid "Your browser does not have HTML5 support for send files. Upgrade to recent versions..."
 msgstr ""
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:719
