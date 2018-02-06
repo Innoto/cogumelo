@@ -13,12 +13,12 @@ Class DependencesController {
   var $allDependencesYarn= array();
 
 
-  public function generateDependences() {
+  public function prepareDependences() {
     Cogumelo::load('coreController/ModuleController.php');
     $this->loadDependences();
 
-    $this->generateDependencesYarn($this->allDependencesYarn);
-    $this->generateDependencesComposer($this->allDependencesComposer);
+    $this->prepareDependencesYarn($this->allDependencesYarn);
+    $this->prepareDependencesComposer($this->allDependencesComposer);
   }
 
   public function installDependences() {
@@ -135,7 +135,7 @@ Class DependencesController {
     }
   }
 
-  public function generateDependencesComposer( $dependences ) {
+  public function prepareDependencesComposer( $dependences ) {
 
     echo "\n === Composer dependences ===\n\n";
 
@@ -147,7 +147,7 @@ Class DependencesController {
       }
     }
 
-    $finalArrayDep = array( "require" => array(), "config" => array( "vendor-dir" => $composerPath ) );
+    $finalArrayDep = array( "require" => array(), "config" => array( "vendor-dir" => ltrim(str_replace( PRJ_BASE_PATH, '', $composerPath), '/')));
     foreach( $dependences as $depKey => $dep ){
       foreach( $dep as $params ){
         $finalArrayDep['require'][$params[0]] = $params[1];
@@ -162,8 +162,7 @@ Class DependencesController {
 
     echo "\n === Composer dependences: Done ===\n\n";
   }
-
-  public function generateDependencesYarn( $dependences ) {
+  public function prepareDependencesYarn( $dependences ) {
     if(!empty($dependences) && !empty(Cogumelo::getSetupValue( 'dependences:yarnPath' ))){
 
       echo "\n === Yarn dependences ===\n\n";
@@ -219,7 +218,7 @@ Class DependencesController {
       }
     }
 
-    $jsonBowerRC = '{ "directory": "'.str_replace( PRJ_BASE_PATH, '', $bowerPath ).'", '.
+    $jsonBowerRC = '{ "directory": "'.ltrim(str_replace( PRJ_BASE_PATH, '', $bowerPath), '/').'", '.
       ' "json": "'. PRJ_BASE_PATH . '/bower.json" }';
     $fh = fopen( PRJ_BASE_PATH . '/.bowerrc', 'w' );
       fwrite( $fh, $jsonBowerRC );
@@ -242,8 +241,8 @@ Class DependencesController {
         else {
           $allparam = $params[0];
         }
-        echo( "Exec... bower install ".$depKey."=".$allparam." --save\n" );
-        exec( 'cd '.PRJ_BASE_PATH.' ; bower install '.$depKey.'='.$allparam.' --save --allow-root' );
+        echo( "Exec... bower install ".$depKey."=".$allparam." --quiet\n" );
+        exec( 'cd '.PRJ_BASE_PATH.' ; bower install '.$depKey.'='.$allparam.' --quiet --allow-root' );
       } // end foreach
     } // end foreach
 
