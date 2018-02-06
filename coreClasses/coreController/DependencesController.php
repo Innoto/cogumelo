@@ -10,13 +10,23 @@ Class DependencesController {
   var $allDependencesComposer = array();
   var $allDependencesBower = array();
   var $allDependencesManual = array();
+  var $allDependencesYarn= array();
+
+
+  public function generateDependences() {
+    Cogumelo::load('coreController/ModuleController.php');
+    $this->loadDependences();
+
+    $this->generateDependencesYarn($this->allDependencesYarn);
+    $this->generateDependencesComposer($this->allDependencesComposer);
+  }
 
   public function installDependences() {
 
     Cogumelo::load('coreController/ModuleController.php');
-
     $this->loadDependences();
 
+    $this->installDependencesYarn($this->allDependencesYarn);
     $this->installDependencesBower($this->allDependencesBower);
     $this->installDependencesComposer($this->allDependencesComposer);
     $this->installDependencesManual($this->allDependencesManual);
@@ -25,8 +35,12 @@ Class DependencesController {
 
   public function loadDependences() {
 
-    $moduleControl = new ModuleController(false, true);
+    $this->allDependencesComposer = array();
+    $this->allDependencesBower = array();
+    $this->allDependencesManual = array();
+    $this->allDependencesYarn= array();
 
+    $moduleControl = new ModuleController(false, true);
     //Cargamos las dependencias de los modulos
     global $C_ENABLED_MODULES;
     foreach ( $C_ENABLED_MODULES as $mod ){
@@ -47,15 +61,16 @@ Class DependencesController {
     $this->pushDependences($_C->dependences);
   }
 
-
   public function pushDependences( $dependences ) {
     //Hacemos una lista de las dependecias de todos los modulos
     foreach ( $dependences as $dependence ){
-
       //Diferenciamos entre instaladores
       switch($dependence['installer']){
         case "composer":
           $this->pushDependencesComposer ($dependence);
+        break;
+        case "yarn":
+          $this->pushDependencesYarn ($dependence);
         break;
         case "bower":
           $this->pushDependencesBower ($dependence);
@@ -66,7 +81,6 @@ Class DependencesController {
       }
     }   // end foreach
   }
-
 
   public function pushDependencesComposer( $dependence ) {
 
@@ -82,7 +96,6 @@ Class DependencesController {
     }
   }
 
-
   public function pushDependencesBower( $dependence ) {
     if(!array_key_exists($dependence['id'], $this->allDependencesBower)){
       $this->allDependencesBower[$dependence['id']] = array($dependence['params']);
@@ -96,6 +109,18 @@ Class DependencesController {
     }
   }
 
+  public function pushDependencesYarn( $dependence ) {
+    if(!array_key_exists($dependence['id'], $this->allDependencesYarn)){
+      $this->allDependencesYarn[$dependence['id']] = array($dependence['params']);
+    }
+    else{
+      $diffAllDepend = array_diff($dependence['params'] , $this->allDependencesYarn[$dependence['id']][0]);
+
+      if(!empty($diffAllDepend)){
+        array_push($this->allDependencesYarn[$dependence['id']], array_diff($dependence['params'] , $this->allDependencesYarn[$dependence['id']][0])  );
+      }
+    }
+  }
 
   public function pushDependencesManual( $dependence ) {
     if(!array_key_exists($dependence['id'], $this->allDependencesManual)){
@@ -110,6 +135,78 @@ Class DependencesController {
     }
   }
 
+  public function generateDependencesComposer( $dependences ) {
+
+    echo "\n === Composer dependences ===\n\n";
+
+    $composerPath = Cogumelo::getSetupValue( 'dependences:composerPath' );
+
+    if( !is_dir( $composerPath ) ) {
+      if( !mkdir( $composerPath, 0755, true ) ) {
+        echo "The destination folder does not exist and have permission to create \n";
+      }
+    }
+
+    $finalArrayDep = array( "require" => array(), "config" => array( "vendor-dir" => $composerPath ) );
+    foreach( $dependences as $depKey => $dep ){
+      foreach( $dep as $params ){
+        $finalArrayDep['require'][$params[0]] = $params[1];
+        echo "\n === Composer add dependence: ".$params[0].$params[1]." \n\n";
+      }
+    }
+
+    $jsonencoded = json_encode( $finalArrayDep );
+    $fh = fopen( PRJ_BASE_PATH . '/composer.json', 'w' );
+      fwrite( $fh, $jsonencoded );
+    fclose( $fh );
+
+    echo "\n === Composer dependences: Done ===\n\n";
+  }
+
+  public function generateDependencesYarn( $dependences ) {
+    if(!empty($dependences) && !empty(Cogumelo::getSetupValue( 'dependences:yarnPath' ))){
+
+      echo "\n === Yarn dependences ===\n\n";
+      $yarnPath = Cogumelo::getSetupValue( 'dependences:yarnPath' );
+
+      if( !is_dir( $yarnPath ) ) {
+        if( !mkdir( $yarnPath, 0755, true ) ) {
+          echo "The destination folder does not exist and have permission to create \n";
+        }
+      }
+
+      $jsonYarnRC = "--production --no-lockfile --modules-folder httpdocs/vendor/yarn/ \n";
+      $fh = fopen( PRJ_BASE_PATH . '/.yarnrc', 'w' );
+        fwrite( $fh, $jsonYarnRC );
+      fclose( $fh );
+
+
+      $jsonYarn = '{ "name": "cogumelo", "version": "1.0.0", '.
+        ' "repository": "https://github.com/Innoto/cogumelo", "license": "Apache-2.0", "dependencies": {}, "author": "Innoto" }';
+      $fh = fopen( PRJ_BASE_PATH . '/package.json', 'w' );
+        fwrite( $fh, $jsonYarn );
+      fclose( $fh );
+
+      foreach( $dependences as $depKey => $dep ){
+        foreach( $dep as $params ) {
+          if( count($params) > 1 ) {
+            $allparam = "";
+            foreach( $params as $p ) {
+              $allparam = $allparam." ".$p;
+            }
+          }
+          else {
+            $allparam = $params[0];
+          }
+          echo( "Exec... yarn add ".$allparam."   \n" );
+          exec( 'cd '.PRJ_BASE_PATH.' ; yarn add '.$allparam.'' );
+        } // end foreach
+      } // end foreach
+
+      echo "\n === Yarn dependences: Done ===\n\n";
+
+    }
+  }
 
   public function installDependencesBower( $dependences ) {
     echo "\n === Bower dependences ===\n\n";
@@ -153,37 +250,23 @@ Class DependencesController {
     echo "\n === Bower dependences: Done ===\n\n";
   }
 
+  public function installDependencesYarn( $dependences ) {
+    if(!empty($dependences) && !empty(Cogumelo::getSetupValue( 'dependences:yarnPath' ))){
+      echo "\n === Yarn dependences ===\n\n";
+      echo("Exec... yarn install \n");
+      echo exec('cd '.PRJ_BASE_PATH.' ; yarn install');
+      echo "\n === Yarn dependences: Done ===\n\n";
+    }
+  }
 
   public function installDependencesComposer( $dependences ) {
     echo "\n === Composer dependences ===\n\n";
-
-    $composerPath = Cogumelo::getSetupValue( 'dependences:composerPath' );
-
-    if( !is_dir( $composerPath ) ) {
-      if( !mkdir( $composerPath, 0755, true ) ) {
-        echo "The destination folder does not exist and have permission to create \n";
-      }
-    }
-
-    $finalArrayDep = array( "require" => array(), "config" => array( "vendor-dir" => $composerPath ) );
-    foreach( $dependences as $depKey => $dep ){
-      foreach( $dep as $params ){
-        $finalArrayDep['require'][$params[0]] = $params[1];
-      }
-    }
-
-    $jsonencoded = json_encode( $finalArrayDep );
-    $fh = fopen( PRJ_BASE_PATH . '/composer.json', 'w' );
-      fwrite( $fh, $jsonencoded );
-    fclose( $fh );
-
     echo("Exec... php composer.phar update\n\n");
     exec('cd '.PRJ_BASE_PATH.' ; php composer.phar update');
     echo("If the folder does not appear vendorServer dependencies run 'php composer.phar update' or 'composer update' and resolves conflicts.\n");
 
     echo "\n === Composer dependences: Done ===\n\n";
   }
-
 
   public function installDependencesManual( $dependences ) {
     echo "\n === Manual dependences ===\n\n";
@@ -207,20 +290,14 @@ Class DependencesController {
     echo "\n === Manual dependences: Done ===\n\n";
   }
 
-
   //
   //  Includes
   //
-
-
   public function loadModuleIncludes( $moduleName ) {
     Cogumelo::load('coreController/ModuleController.php');
     ModuleController::getRealFilePath( $moduleName.'.php', $moduleName );
-
     //$this->loadCogumeloIncludes();
-
     $moduleInstance = new $moduleName();
-
     //$this->addVendorIncludeList( $moduleInstance->dependences );
     $dependences = array_filter( $moduleInstance->dependences,
       function( $dep ) {
@@ -232,7 +309,6 @@ Class DependencesController {
 
     $this->addIncludeList( $moduleInstance->includesCommon, $moduleName );
   }
-
 
   public function loadModuleDependence( $moduleName, $idDependence, $installer = false ) {
     Cogumelo::load('coreController/ModuleController.php');
@@ -249,22 +325,16 @@ Class DependencesController {
     $this->addVendorIncludeList( $dependences );
   }
 
-
   public function loadAppIncludes() {
     global $_C;
-
     //$this->loadCogumeloIncludes();
     $this->addVendorIncludeList( $_C->dependences );
     $this->addIncludeList( $_C->includesCommon );
   }
 
-
   public function loadCogumeloIncludes() {
-
     $this->addVendorIncludeList(CogumeloClass::$mainDependences);
   }
-
-
 
   public function addVendorIncludeList( $includes ) {
     if( count( $includes ) > 0) {
@@ -276,6 +346,11 @@ Class DependencesController {
         if( $includeElement['installer'] == 'bower' ) {
           $installer = 'bower';
           $include_folder = $includeElement['id'];
+        }
+        else if( $includeElement['installer'] == 'yarn' ) {
+          $installer = 'yarn';
+          $paramYarn = explode('@', $includeElement['params'][0]);
+          $include_folder = $paramYarn[0];
         }
         else if( $includeElement['installer'] == 'composer' ) {
           $installer = 'composer';
@@ -314,8 +389,6 @@ Class DependencesController {
     }
   }
 
-
-
   public function addIncludeList( $includes, $module = false ) {
 
     if( count( $includes ) > 0) {
@@ -341,7 +414,6 @@ Class DependencesController {
     }
   }
 
-
   public function typeIncludeFile( $includeFile ) {
 
     $type = false;
@@ -364,7 +436,6 @@ Class DependencesController {
     return $type;
   }
 
-
   public function addIncludeCSS( $includeFile, $module = false ) {
     global $cogumeloIncludesCSS;
 
@@ -376,7 +447,6 @@ Class DependencesController {
       array_push($cogumeloIncludesCSS, array('src'=>$includeFile, 'module'=>$module ) );
     }
   }
-
 
   public function addIncludeJS( $includeFile, $module = false ) {
     global $cogumeloIncludesJS;
@@ -390,10 +460,8 @@ Class DependencesController {
     }
   }
 
-
   public function isInIncludesArray( $file, $includesArray, $module ) {
     $ret = false;
-
     if( count( $includesArray ) > 0 ) {
       foreach( $includesArray as $includedFile ) {
         if($includedFile['src'] == $file  && $includedFile['module'] == $module  ) {
@@ -401,7 +469,6 @@ Class DependencesController {
         }
       }
     }
-
     return $ret;
   }
 

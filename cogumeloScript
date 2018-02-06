@@ -72,6 +72,12 @@ if( $argc > 1 ) {
       }
       break;
 
+    case 'generateDependences':
+      Cogumelo::load('coreController/DependencesController.php');
+      $dependencesControl = new DependencesController();
+      $dependencesControl->generateDependences();
+      break;
+
     case 'installDependences':
       Cogumelo::load('coreController/DependencesController.php');
       $dependencesControl = new DependencesController();
@@ -149,6 +155,7 @@ function printOptions(){
     * generateClientCaches    Cache all js, css, compiled less and other client files
     * setPermissions          Set the files/folders permission
     * setPermissionsDevel     Set the files/folders permission
+    * generateDependences     Generate JSON's dependences
     * installDependences      Install all modules dependencies
 
  + Database
