@@ -425,42 +425,49 @@ Class VO
   /**
    * get any data attribute by key
    *
+   * @param string $getterkey reference key
+   * @param string $lang language key or
+   *
    * @return mixed
    */
-  function getter($getterkey, $lang = false) {
+  function getter($getterkey, $lang = null ) {
 
-    $value = null;
+    $retValue = null;
     $cols = $this->getCols();
 
+    if($getterkey) {
+      if( array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] ) {
 
+        // If there's a current lang
+        global $C_LANG;
+        if($C_LANG) {
+          $autoLang = $C_LANG;
+        }
+        else {
+          $autoLang = Cogumelo::getSetupValue( 'lang:default' );
+        }
 
-    // If there's a current lang
-    global $C_LANG;
-    if($C_LANG) {
-      $autoLang = $C_LANG;
+        if( $lang === false || $lang === null ) {
+          $retValue = ( array_key_exists($getterkey .'_'.$autoLang, $this->data) )? $this->data[$getterkey .'_'.$autoLang] : null;
+        }
+        else
+        if( $lang ) {
+
+          $retValue = ( array_key_exists($getterkey .'_'.$lang, $this->data) )? $this->data[$getterkey .'_'.$lang] : null;
+        }
+
+        // if  lang is false and value is empty, try to get default lang value
+        $retValue = (
+          $lang === false && empty( $retValue ) && isset($this->data[$getterkey .'_'.Cogumelo::getSetupValue( 'lang:default' )])
+        )? $this->data[$getterkey .'_'.Cogumelo::getSetupValue( 'lang:default' )] : $retValue;
+
+      }
+      else {
+        $retValue = ( array_key_exists($getterkey, $this->data) )? $this->data[$getterkey] : null;
+      }
     }
-    else {
-      $autoLang = Cogumelo::getSetupValue( 'lang:default' );
-    }
 
-
-
-    if( (!$lang && array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] ) )
-    {
-      $getterkey .= '_'.$autoLang;
-    }
-    else
-    if( $lang && array_key_exists($getterkey,$cols) && array_key_exists('multilang',$cols[$getterkey]) && $cols[$getterkey]['multilang'] )
-    {
-      $getterkey .= '_'.$lang;
-    }
-
-    // get values
-    if( array_key_exists($getterkey, $this->data) ) {
-      $value = $this->data[$getterkey];
-    }
-
-    return $value;
+    return $retValue;
   }
 
   /**

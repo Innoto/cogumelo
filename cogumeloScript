@@ -165,9 +165,10 @@ function printOptions(){
     * generateClientCaches    Cache all js, css, compiled less and other client files
     * setPermissions          Set the files/folders permission
     * setPermissionsDevel     Set the files/folders permission
-    * prepareDependences      Generate JSON's dependences
-    * updateDependences       Install all modules dependencies
     * installDependences      Exec prepareDependences and then exec updateDependences
+      * prepareDependences      Generate JSON's dependences
+      * updateDependences       Install all modules dependencies
+
 
  + Database
     * createDB                Create a database
