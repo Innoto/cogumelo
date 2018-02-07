@@ -78,7 +78,17 @@ if( $argc > 1 ) {
       $dependencesControl->prepareDependences();
       break;
 
+    case 'updateDependences':
+      Cogumelo::load('coreController/DependencesController.php');
+      $dependencesControl = new DependencesController();
+      $dependencesControl->installDependences();
+      break;
+
     case 'installDependences':
+      Cogumelo::load('coreController/DependencesController.php');
+      $dependencesControl = new DependencesController();
+      $dependencesControl->prepareDependences();
+
       Cogumelo::load('coreController/DependencesController.php');
       $dependencesControl = new DependencesController();
       $dependencesControl->installDependences();
@@ -156,7 +166,8 @@ function printOptions(){
     * setPermissions          Set the files/folders permission
     * setPermissionsDevel     Set the files/folders permission
     * prepareDependences      Generate JSON's dependences
-    * installDependences      Install all modules dependencies
+    * updateDependences       Install all modules dependencies
+    * installDependences      Exec prepareDependences and then exec updateDependences
 
  + Database
     * createDB                Create a database

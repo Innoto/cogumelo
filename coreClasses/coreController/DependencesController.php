@@ -12,18 +12,17 @@ Class DependencesController {
   var $allDependencesManual = array();
   var $allDependencesYarn= array();
 
+  public function __construct() {
+    Cogumelo::load('coreController/ModuleController.php');
+  }
 
   public function prepareDependences() {
-    Cogumelo::load('coreController/ModuleController.php');
     $this->loadDependences();
-
     $this->prepareDependencesYarn($this->allDependencesYarn);
     $this->prepareDependencesComposer($this->allDependencesComposer);
   }
 
   public function installDependences() {
-
-    Cogumelo::load('coreController/ModuleController.php');
     $this->loadDependences();
 
     $this->installDependencesYarn($this->allDependencesYarn);
@@ -46,7 +45,9 @@ Class DependencesController {
     foreach ( $C_ENABLED_MODULES as $mod ){
       $modUrl = ModuleController::getRealFilePath( $mod.".php" , $mod );
       require_once($modUrl);
-      eval('class extClass'. $mod .' extends '.$mod. '{}');
+      if(! class_exists('extClass'. $mod)){
+        eval('class extClass'. $mod .' extends '.$mod. '{}');
+      }
       eval('$objMod'.$mod.' = new extClass'.$mod.'();');
       eval('$dependences = $objMod'.$mod.'->dependences;');
 
