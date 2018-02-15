@@ -588,16 +588,31 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     htmlLangSwitch += '</div>';
 
     $langSwitch = $( htmlLangSwitch );
-    $( '[form="'+that.idForm+'"].cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault + ':not("input:file")' )
-      .parent().before( $langSwitch.clone() );
-    $( '.cgmMForm-fileFields-'+that.idForm+' .cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault + ':not("input:file")' )
-      .parent().before( $langSwitch.clone() );
+    $( '[form="'+that.idForm+'"].cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault + ':not("input:file")' ).each(function(){
+      var field = $( this );
+      var fieldName = field.attr( 'name' );
+      field.parent().before( $langSwitch.clone().addClass("langSwitch-" + fieldName) );
+    });
+
+    $( '.cgmMForm-fileFields-'+that.idForm+' .cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault + ':not("input:file")' ).each(function(){
+      var field = $( this );
+      var fieldName = field.attr( 'name' );
+      field.parent().before( $langSwitch.clone().addClass("langSwitch-" + fieldName) );
+    });
 
     $langSwitchFile = $( htmlLangSwitch ).addClass('langSwitch-file');
-    $( '[type=file][form="'+that.idForm+'"].cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault )
-      .parent().before( $langSwitchFile.clone() );
-    $( '[type=file].cgmMForm-fileFields-'+that.idForm+' .cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault )
-      .parent().before( $langSwitchFile.clone() );
+    $( '[type=file][form="'+that.idForm+'"].cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault ).each(function(){
+      var field = $( this );
+      var fieldName = field.attr( 'name' );
+      field.parent().before( $langSwitchFile.clone().addClass("langSwitch-" + fieldName) );
+    });
+
+    $( '[type=file].cgmMForm-fileFields-'+that.idForm+' .cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault ).each(function(){
+      var field = $( this );
+      var fieldName = field.attr( 'name' );
+      field.parent().before( $langSwitchFile.clone().addClass("langSwitch-" + fieldName) );
+    });
+
 
     that.switchFormLang( that.langDefault );
 
