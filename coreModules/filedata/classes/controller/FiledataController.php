@@ -403,13 +403,13 @@ class FiledataController {
   public function removeServerFiles( $voFile ) {
     // error_log( 'FiledataController: removeServerFiles(): ' . $voFile->getter('id') );
 
-    // error_log( 'FiledataController: removeServerFiles(): clearCache '.$voFile->getter('id') );
+    error_log( 'FiledataController: removeServerFiles(): fileImageCtrl->clearCache '.$voFile->getter('id') );
     filedata::load('controller/FiledataImagesController.php');
     $fileImageCtrl = new FiledataImagesController();
     $fileImageCtrl->clearCache( $voFile->getter('id') );
 
     $serverFile = Cogumelo::getSetupValue( 'mod:filedata:filePath' ).$voFile->getter('absLocation');
-    // error_log( 'FiledataController: removeServerFiles(): unlink '.$serverFile );
+    error_log( 'FiledataController: removeServerFiles(): unlink '.$serverFile );
     if( file_exists( $serverFile ) ) {
       unlink( $serverFile );
     }
