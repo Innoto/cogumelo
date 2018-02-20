@@ -94,7 +94,7 @@ class FiledataImagesView extends View {
               // $imgInfo['name'] = !empty( $fileName ) ? $fileName : $fileInfo['originalName'];
               Cogumelo::debug( __METHOD__.' - imageCtrl->sendImage()' );
               if( !$imageCtrl->sendImage( $imgInfo ) ) {
-                $error = 'NS';
+                $error = 'NS'; // ERROR ejecutando imageCtrl->sendImage
               }
               // ELSE: YA NO SE PUEDE ENVIAR NADA AL NAVEGADOR
             }

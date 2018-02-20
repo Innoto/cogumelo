@@ -124,7 +124,7 @@ class FiledataImagesController {
         }
       }
 
-      //error_log( 'FiledataImagesController: this->profile = '.$this->profile['idName'] );
+      // Cogumelo::debug( __METHOD__.' - this->profile = '.$this->profile['idName'] );
     }
     else {
       $this->profile=false;
@@ -651,7 +651,7 @@ class FiledataImagesController {
 
 
   public function clearCache( $fileId ) {
-    // error_log( 'FiledataImagesController: clearCache(): ' . $fileId );
+    // Cogumelo::debug( __METHOD__.' - ' . $fileId );
 
     $imgCacheRoute = $this->filesCachePath .'/'. $fileId;
     if( is_link( $imgCacheRoute ) ) {
@@ -671,7 +671,6 @@ class FiledataImagesController {
   }
 
   public function rmdirRec( $dir ) {
-    // error_log( 'FiledataImagesController: rmdirRec(): '. $dir );
     // Cogumelo::debug( __METHOD__.' - '. $dir );
 
     $dir = rtrim( $dir, '/' );
