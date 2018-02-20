@@ -84,6 +84,8 @@ class FiledataModel extends Model {
   }
 
   public function garbageCollector() {
+    Cogumelo::debug( __METHOD__ );
+
     Cogumelo::load( 'coreModel/VOUtils.php' );
 
     $idsInUse = VOUtils::getIdsInUse( get_class($this) );
@@ -104,13 +106,15 @@ class FiledataModel extends Model {
    * @return boolean
    */
   public function delete( array $parameters = array() ) {
+    Cogumelo::debug( __METHOD__ );
+
     // Eliminamos ficheros en disco
     filedata::load('controller/FiledataController.php');
     $filedataCtrl = new FiledataController();
     $filedataCtrl->removeServerFiles( $this );
 
     // Eliminamos el objeto con el delete original
-    Cogumelo::debug( 'Called custom delete on '.get_called_class().' with "'.
+    Cogumelo::debug( __METHOD__.' - Called custom delete on '.get_called_class().' with "'.
       $this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
     $result = $this->dataFacade->deleteFromKey( $this->getFirstPrimarykeyId(), $this->getter( $this->getFirstPrimarykeyId() ) );
 

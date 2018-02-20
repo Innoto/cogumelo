@@ -39,7 +39,7 @@ class FiledataController {
 
 
   public function __construct() {
-    // error_log( 'FiledataController __construct' );
+    // Cogumelo::debug( __METHOD__ );
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
 
     $cache = Cogumelo::getSetupValue('cache:Filedata');
@@ -55,7 +55,7 @@ class FiledataController {
    * Load File info
    */
   public function loadFileInfo( $fileId ) {
-    // error_log( 'FiledataController: loadFileInfo(): ' . $fileId );
+    // Cogumelo::debug( __METHOD__.' - ' . $fileId );
     $fileInfo = false;
 
     $fileModel = new filedataModel();
@@ -78,17 +78,17 @@ class FiledataController {
     $validated = false;
 
     if( isset( $fileInfo['privateMode'] ) && $fileInfo['privateMode'] > 0 && class_exists('UserAccessController') ) {
-      Cogumelo::debug( 'FiledataController: Verificando usuario logueado para acceder a fichero...' );
+      Cogumelo::debug( __METHOD__.' - Verificando usuario logueado para acceder a fichero...' );
       $useraccesscontrol = new UserAccessController();
       $user = $useraccesscontrol->getSessiondata();
 
       if( $user && $user['data']['active'] ) {
         unset( $user['data']['password'] );
-        Cogumelo::debug( 'FiledataController: USER: '.json_encode( $user ) );
+        Cogumelo::debug( __METHOD__.' - USER: '.json_encode( $user ) );
 
         if( !empty( $fileInfo['user'] ) && $user['data']['id'] === $fileInfo['user'] ) {
           // El fichero es del usuario actual
-          Cogumelo::debug( 'FiledataController: Verificado por ID' );
+          Cogumelo::debug( __METHOD__.' - Verificado por ID' );
           $validated = true;
         }
 
@@ -96,7 +96,7 @@ class FiledataController {
           $validRoles = [ 'filedata:privateAccess' ];
           if( $useraccesscontrol->checkPermissions( $validRoles, 'admin:full' ) ) {
             // Permiso de acceso a todos los ficheros
-            Cogumelo::debug( 'FiledataController: Verificado por Rol' );
+            Cogumelo::debug( __METHOD__.' - Verificado por Rol' );
             $validated = true;
           }
         }
@@ -114,7 +114,7 @@ class FiledataController {
     Creates a database FiledataModel register and save
   */
   public function saveFile( $originFile, $relativeDestPath, $fileName, $fileInApp = true ) {
-    // error_log( 'FiledataController: saveFile(): ' . $originFile );
+    // Cogumelo::debug( __METHOD__.' - ' . $originFile );
 
     $absFrom = ( $fileInApp ) ? APP_BASE_PATH. $originFile : $originFile;
 
@@ -131,7 +131,7 @@ class FiledataController {
 
   /*
   public function saveFile( $originFile, $relativeDestPath, $fileName, $originFileIsRelative = true ) {
-    // error_log( 'FiledataController: saveFile(): ' . $originFile );
+    // Cogumelo::debug( __METHOD__.' - ' . $originFile );
 
     if( $originFileIsRelative ) {
       $absFrom = APP_BASE_PATH. $originFile;
@@ -182,13 +182,13 @@ class FiledataController {
         $fileDB->save();
       }
       else {
-        cogumelo::error( 'FiledataController cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$realDestName);
+        Cogumelo::error( __METHOD__.' - cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$realDestName);
         $fileDB->delete();
       }
 
     }
     else {
-      cogumelo::error( 'FiledataController cant find the file path to save: '.$absFrom);
+      Cogumelo::error( __METHOD__.' - cant find the file path to save: '.$absFrom);
     }
 
     if( $fileDB && $fileDB->getter('id') ) {
@@ -212,7 +212,7 @@ class FiledataController {
    * Creates FileModel and register FilegroupModel
    */
   public function saveToFileGroup( $filedataInfo, $idGroup = false ) {
-    error_log( 'FiledataController: saveToFileGroup(filedataInfo, idGroup): ' . print_r( $filedataInfo, true ).' - '.$idGroup );
+    Cogumelo::debug( __METHOD__.' - (filedataInfo, idGroup): ' . print_r( $filedataInfo, true ).' - '.$idGroup );
 
     $filedataObj = $this->createNewFile( $filedataInfo );
 
@@ -233,8 +233,7 @@ class FiledataController {
    * Remove a FileModel and unregister from FilegroupModel
    */
   public function deleteFromFileGroup( $deleteId, $idGroup ) {
-    error_log( 'FiledataController: deleteFromFileGroup(deleteId, idGroup): '.
-      $deleteId.' - '.$idGroup );
+    Cogumelo::debug( __METHOD__.' - (deleteId, idGroup): '.$deleteId.' - '.$idGroup );
     $result = false;
 
     if( $this->deleteFile( $deleteId ) ) {
@@ -264,7 +263,7 @@ class FiledataController {
     Creates a database FiledataModel register and copy file
   */
   public function createNewFile( $filedataInfo ) {
-    // error_log( 'FiledataController: createFile(): ' . print_r( $filedataInfo, true ) );
+    // Cogumelo::debug( __METHOD__.' - ' . print_r( $filedataInfo, true ) );
 
     $filedataObj = false;
 
@@ -308,7 +307,7 @@ class FiledataController {
       $relativeDestPath = ( isset( $filedataInfo['destDir'] ) ) ? $filedataInfo['destDir'] : '';
 
       if( file_exists( $this->filesAppPath.$relativeDestPath.'/'.$secureFileName ) ){
-        // error_log( 'FiledataController: (Notice) createFile - COLISION: '.$this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
+        Cogumelo::debug( __METHOD__.' - (Notice) createFile - COLISION: '.$this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
         $filePathInfo = pathinfo( $secureFileName );
         $secureFileName = $filePathInfo['filename'] .'_fdmi'. $filedataObj->getter('id') .'.'. $filePathInfo['extension'];
       }
@@ -326,16 +325,16 @@ class FiledataController {
         $filedataObj->save();
       }
       else {
-        cogumelo::error( 'FiledataController cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$secureFileName);
-        // error_log( 'FiledataController cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$secureFileName);
+        Cogumelo::error( __METHOD__.' - Cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
+        Cogumelo::debug( __METHOD__.' - Cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
         $filedataObj->delete();
         $filedataObj = false;
       }
 
     }
     else {
-      cogumelo::error( 'FiledataController cant find the file path to save. ');
-      // error_log( 'FiledataController cant find the file path to save: '.$absFrom);
+      Cogumelo::error( __METHOD__.' - Cant find the file path to save. '.$absFrom );
+      Cogumelo::debug( __METHOD__.' - Cant find the file path to save: '.$absFrom );
     }
 
     if( $filedataObj && $filedataObj->getter('id') ) {
@@ -352,7 +351,7 @@ class FiledataController {
     Update a database FiledataModel register
   */
   public function updateInfo( $fileId, $filedataInfo ) {
-    // error_log( 'FiledataController: updateInfo(): ' . print_r( $filedataInfo, true ) );
+    // Cogumelo::debug( __METHOD__.' - ' . print_r( $filedataInfo, true ) );
 
     $filedataObj = false;
 
@@ -370,8 +369,8 @@ class FiledataController {
       $filedataObj->save();
     }
     else {
-      cogumelo::error( 'FiledataController: updateInfo - No Filedata ID:'.$fileId );
-      // error_log( 'ERROR: FiledataController: updateInfo - No Filedata ID:'.$fileId );
+      Cogumelo::error( __METHOD__.' - No Filedata ID:'.$fileId );
+      Cogumelo::debug( __METHOD__.' - No Filedata ID:'.$fileId );
     }
 
     return $filedataObj;
@@ -382,7 +381,7 @@ class FiledataController {
     Delete a database FiledataModel register and files
   */
   public function deleteFile( $fileId ) {
-    Cogumelo::debug( 'FiledataController: deleteFile(): ' . $fileId );
+    Cogumelo::debug( __METHOD__.' - ' . $fileId );
     $result = false;
 
     $objModel = new FiledataModel();
@@ -401,15 +400,15 @@ class FiledataController {
     Remove server files
   */
   public function removeServerFiles( $voFile ) {
-    // error_log( 'FiledataController: removeServerFiles(): ' . $voFile->getter('id') );
+    // Cogumelo::debug( __METHOD__.' - ' . $voFile->getter('id') );
 
-    error_log( 'FiledataController: removeServerFiles(): fileImageCtrl->clearCache '.$voFile->getter('id') );
+    Cogumelo::debug( __METHOD__.' - fileImageCtrl->clearCache '.$voFile->getter('id') );
     filedata::load('controller/FiledataImagesController.php');
     $fileImageCtrl = new FiledataImagesController();
     $fileImageCtrl->clearCache( $voFile->getter('id') );
 
     $serverFile = Cogumelo::getSetupValue( 'mod:filedata:filePath' ).$voFile->getter('absLocation');
-    error_log( 'FiledataController: removeServerFiles(): unlink '.$serverFile );
+    Cogumelo::debug( __METHOD__.' - unlink '.$serverFile );
     if( file_exists( $serverFile ) ) {
       unlink( $serverFile );
     }
@@ -422,7 +421,7 @@ class FiledataController {
     @return string
    */
   public function secureFileName( $fileName ) {
-    // error_log( 'secureFileName: '.$fileName );
+    // Cogumelo::debug( __METHOD__.' - '.$fileName );
     $maxLength = 200;
 
     // "Aplanamos" caracteres no ASCII7
@@ -450,7 +449,7 @@ class FiledataController {
       $fileName = mb_substr( $fileName, 0, $maxLength );
     }
 
-    // error_log( 'secureFileName RET: '.$fileName );
+    // Cogumelo::debug( __METHOD__.' - RET: '.$fileName );
 
     return $fileName;
   } // function secureFileName()
