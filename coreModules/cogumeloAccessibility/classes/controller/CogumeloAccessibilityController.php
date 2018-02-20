@@ -33,19 +33,19 @@ class CogumeloAccessibilityController {
 
     if( isset( $_GET[ $this->getParam ] ) ) {
       $accessibilityMode = $_GET[ $this->getParam ];
-      Cogumelo::log( ' $_GET -> '.$accessibilityMode, 'AccessibilityMode' );
+      // Cogumelo::log( ' $_GET -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_POST[ $this->tkName ] ) ) {
       $accessibilityMode = $_POST[ $this->tkName ];
-      Cogumelo::log( ' $_POST -> '.$accessibilityMode, 'AccessibilityMode' );
+      // Cogumelo::log( ' $_POST -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_SERVER[ 'HTTP_X_'.$this->tkName ] ) ) {
       $accessibilityMode = $_SERVER[ 'HTTP_X_'.$this->tkName ];
-      Cogumelo::log( ' HTTP_X -> '.$accessibilityMode, 'AccessibilityMode' );
+      // Cogumelo::log( ' HTTP_X -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_COOKIE[ $this->tkName ] ) ) {
       $accessibilityMode = $_COOKIE[ $this->tkName ];
-      Cogumelo::log( ' $_COOKIE -> '.$accessibilityMode, 'AccessibilityMode' );
+      // Cogumelo::log( ' $_COOKIE -> '.$accessibilityMode, 'AccessibilityMode' );
     }
     elseif( isset( $_SESSION[ $this->tkName ] ) ) {
       $accessibilityMode = $_SESSION[ $this->tkName ];
@@ -53,7 +53,7 @@ class CogumeloAccessibilityController {
     }
     elseif( Cogumelo::issetSetupValue('mod:cogumeloAccessibility:mode') ) {
       $accessibilityMode = Cogumelo::getSetupValue('mod:cogumeloAccessibility:mode');
-      Cogumelo::log( ' getSetupValue -> '.$accessibilityMode, 'AccessibilityMode' );
+      // Cogumelo::log( ' getSetupValue -> '.$accessibilityMode, 'AccessibilityMode' );
     }
 
     // Limpieza
