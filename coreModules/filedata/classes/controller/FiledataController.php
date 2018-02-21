@@ -330,11 +330,10 @@ class FiledataController {
         $filedataObj->delete();
         $filedataObj = false;
       }
-
     }
     else {
-      Cogumelo::error( __METHOD__.' - Cant find the file path to save. '.$absFrom );
-      Cogumelo::debug( __METHOD__.' - Cant find the file path to save: '.$absFrom );
+      Cogumelo::error( __METHOD__.' - Cant find the file path to save. '.json_encode( $filedataInfo ) );
+      Cogumelo::debug( __METHOD__.' - Cant find the file path to save: '.json_encode( $filedataInfo ) );
     }
 
     if( $filedataObj && $filedataObj->getter('id') ) {
