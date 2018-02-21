@@ -651,7 +651,7 @@ class FiledataImagesController {
 
 
   public function clearCache( $fileId ) {
-    // Cogumelo::debug( __METHOD__.' - ' . $fileId );
+    Cogumelo::debug( __METHOD__.' - ' . $fileId );
 
     $imgCacheRoute = $this->filesCachePath .'/'. $fileId;
     if( is_link( $imgCacheRoute ) ) {
