@@ -304,7 +304,7 @@ class FiledataController {
       $filedataObj->save();
 
       $secureFileName = $modelInfo['name'];
-      $relativeDestPath = ( isset( $filedataInfo['destDir'] ) ) ? $filedataInfo['destDir'] : '';
+      $relativeDestPath = !empty( $filedataInfo['destDir'] ) ? $filedataInfo['destDir'] : '';
 
       if( file_exists( $this->filesAppPath.$relativeDestPath.'/'.$secureFileName ) ){
         Cogumelo::debug( __METHOD__.' - (Notice) createFile - COLISION: '.$this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
