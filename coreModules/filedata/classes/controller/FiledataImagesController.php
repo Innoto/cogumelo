@@ -661,11 +661,11 @@ class FiledataImagesController {
       }
       Cogumelo::debug( __METHOD__.' - unlink Dir '. $imgCacheRoute );
       unlink( $imgCacheRoute );
-      Cogumelo::debug( __METHOD__.' - realDir-1 '. $realDir );
+      Cogumelo::debug( __METHOD__.' - rmdirRec-1 '. $realDir );
       $this->rmdirRec( $realDir );
     }
     else {
-      Cogumelo::debug( __METHOD__.' - realDir-2 '. $realDir );
+      Cogumelo::debug( __METHOD__.' - rmdirRec-2 '. $imgCacheRoute );
       $this->rmdirRec( $imgCacheRoute );
     }
   }
