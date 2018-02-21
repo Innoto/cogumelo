@@ -58,16 +58,21 @@ class FiledataController {
     // Cogumelo::debug( __METHOD__.' - ' . $fileId );
     $fileInfo = false;
 
-    $fileModel = new filedataModel();
-    $fileList = $fileModel->listItems([ 'filters' => [ 'id' => $fileId ], 'cache' => $this->cacheQuery ]);
-    $fileObj = ( gettype( $fileList ) === 'object' ) ? $fileList->fetch() : false;
-    $fileInfo = ( gettype( $fileObj ) === 'object' ) ? $fileObj->getAllData('onlydata') : false;
+    if( !empty( $fileId ) ) {
+      $fileModel = new FiledataModel();
+      $fileList = $fileModel->listItems([ 'filters' => [ 'id' => $fileId ], 'cache' => $this->cacheQuery ]);
+      $fileObj = is_object( $fileList ) ? $fileList->fetch() : false;
+      $fileInfo = is_object( $fileObj ) ? $fileObj->getAllData('onlydata') : false;
+    }
 
-    if( $fileInfo ) {
+    if( !empty( $fileInfo ) ) {
       geozzy::load('controller/ResourceController.php');
       $resCtrl = new ResourceController();
       $fileInfo = $resCtrl->getTranslatedData( $fileInfo );
       $fileInfo['validatedAccess'] = $this->validateAccess( $fileInfo );
+    }
+    else {
+      $fileInfo = false;
     }
 
     return $fileInfo;
@@ -354,7 +359,7 @@ class FiledataController {
 
     $filedataObj = false;
 
-    $fileModel = new filedataModel();
+    $fileModel = new FiledataModel();
     $fileList = $fileModel->listItems([ 'filters' => [ 'id' => $fileId ], 'cache' => $this->cacheQuery ]);
     $filedataObj = ( gettype( $fileList ) === 'object' ) ? $fileList->fetch() : false;
 

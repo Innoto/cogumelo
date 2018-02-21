@@ -25,8 +25,8 @@ class FiledataImagesController {
 
     filedata::load('controller/FiledataController.php');
     $this->filedataCtrl = new FiledataController();
-    $this->fileInfo = $this->filedataCtrl->loadFileInfo( $fileId );
-    $this->fileId = ( $this->fileInfo ) ? $this->fileInfo['id'] : false;
+    $this->fileInfo = !empty( $fileId ) ? $this->filedataCtrl->loadFileInfo( $fileId ) : false;
+    $this->fileId = !empty( $this->fileInfo ) ? $this->fileInfo['id'] : false;
 
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
     $this->filesCachePath = Cogumelo::getSetupValue( 'mod:filedata:cachePath' );
