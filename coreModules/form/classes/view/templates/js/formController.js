@@ -1190,7 +1190,8 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       }
 
       if( tnProfile ) {
-        tnSrc = '/cgmlImg/'+fileInfo.id+'-a'+fileInfo.aKey+'/'+tnProfile+'/'+fileInfo.name;
+        // tnSrc = '/cgmlImg/'+fileInfo.id+'-a'+fileInfo.aKey+'/'+tnProfile+'/'+fileInfo.name;
+        tnSrc = '/cgmlImg/'+fileInfo.id+'-a'+fileInfo.aKey+'/'+tnProfile+'/'; // quito name porque puede no coincidir la extension
       }
     }
 
