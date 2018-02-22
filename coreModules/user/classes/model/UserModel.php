@@ -135,18 +135,18 @@ class UserModel extends Model
   }
 
   public function equalPassword( $password ) {
-    return ($this->getter('password') === sha1($password));
+    return password_verify($password, $this->getter('password') );
   }
 
   public function setPassword( $password ){
-    $this->setter('password', sha1($password));
+    $this->setter('password', password_hash($password, PASSWORD_BCRYPT));
   }
 
 
   public function authenticateUser( $login, $password ) {
     $userO = $this->listItems( array('filters' => array('login' => $login), 'affectsDependences' => array( 'UserPermissionModel') ))->fetch();
     if( $userO ){
-      $data = (($userO->getter('password') == sha1($password)) && ($userO->getter('active') == 1)) ? true : false;
+      $data = ( password_verify($password, $userO->getter('password') ) && ($userO->getter('active') == 1)) ? true : false;
     }
     else{
       $data = false;
@@ -186,6 +186,8 @@ class UserModel extends Model
     $userO->save();
     $data = array();
     $userAllData = $userO->getAllData();
+    unset($userAllData['data']['password']);
+
     $data['data'] = $userAllData['data'];
     $data['permissions'] = $uPermArray;
 
