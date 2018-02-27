@@ -255,6 +255,7 @@ class UserView extends View {
       $form->setValidationRule( 'password', 'required' );
       $form->setValidationRule( 'password2', 'required' );
       $form->setValidationRule( 'password', 'equalTo', '#password2' );
+      $form->setValidationRule( 'password', 'passwordStrength', true);
     }
     $form->setValidationRule( 'avatar', 'minfilesize', 1024 );
     $form->setValidationRule( 'avatar', 'accept', 'image/jpeg,image/png' );
@@ -315,6 +316,7 @@ class UserView extends View {
     $form->setValidationRule( 'password', 'required' );
     $form->setValidationRule( 'password2', 'required' );
     $form->setValidationRule( 'password2', 'equalTo', '#password' );
+    $form->setValidationRule( 'password', 'passwordStrength', true);
 
     $form->setEnterSubmit( true );
 

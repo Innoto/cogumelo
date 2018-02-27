@@ -92,6 +92,17 @@ class FormValidators extends FormValidatorsExtender {
     return( preg_match( $regex, $value ) === 1 );
   }
 
+  public function val_passwordStrength( $value ) {
+
+    $response = (preg_match('/[A-Z]/', $value) &&
+    preg_match('/[a-z]/', $value) &&
+    preg_match('/[0-9]/', $value) &&
+    preg_match('/\W/', $value) &&
+    preg_match('/^.{8,16}$/', $value));
+
+    return $response;
+  }
+
   public function val_url( $value ) {
     $azP = '[a-z]|[\x{00A0}-\x{D7FF}\x{F900}-\x{FDCF}\x{FDF0}-\x{FFEF}]';
     $azP2 = $azP.'|\d|-|\.|_|~';
