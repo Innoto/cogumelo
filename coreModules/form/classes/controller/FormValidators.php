@@ -298,7 +298,16 @@ class FormValidators extends FormValidatorsExtender {
     return !in_array( $value, $param );
   }
 
+  public function val_passwordStrength( $value ) {
 
+    $response = (preg_match('/[A-Z]/', $value) &&
+    preg_match('/[a-z]/', $value) &&
+    preg_match('/[0-9]/', $value) &&
+    preg_match('/\W/', $value) &&
+    preg_match('/^.{8,16}$/', $value));
+
+    return $response;
+  }
 
 
 
