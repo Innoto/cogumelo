@@ -171,7 +171,7 @@ class LessController {
     }
 
     if( $lessValue === null ) {
-      Cogumelo::debug( __METHOD__.' - Unsupported type '.gettype( $value ) );
+      Cogumelo::debug( __METHOD__.' - Unsupported type: '.gettype( $value ) );
     }
 
     return $lessValue;
