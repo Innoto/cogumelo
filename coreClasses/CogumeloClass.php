@@ -317,28 +317,88 @@ class CogumeloClass extends Singleton {
     }
   }
 
-  public static function log( $texto, $fich_log = 'cogumelo' ) {
+  public static function log( $texto, $logLabel = 'cogumelo' ) {
     global $COGUMELO_DISABLE_LOGS;
 
     if( !$COGUMELO_DISABLE_LOGS ) {
+      $develPanel = false;
       $develUrl = Cogumelo::getSetupValue( 'mod:devel:url' );
-      if( empty( $develUrl ) ||
-        ( $_SERVER['REQUEST_URI'] != '/'.$develUrl.'/read_logs' &&
-        $_SERVER['REQUEST_URI'] != '/'.$develUrl.'/get_debugger' )
-      ) {
-        error_log(
-          '['. date('y-m-d H:i:s',time()) .'] ' .
-          '['. $_SERVER['REMOTE_ADDR'] .'] ' .
-          '[Session '. self::getUserInfo().'] ' .
-          str_replace("\n", '\n', $texto)."\n", 3, Cogumelo::getSetupValue( 'logs:path' ).'/'.$fich_log.'.log'
-        );
+      if( !empty( $develUrl ) ) {
+        $develPanel = $_SERVER['REQUEST_URI'] === '/'.$develUrl.'/read_logs' ||
+          $_SERVER['REQUEST_URI'] === '/'.$develUrl.'/get_debugger';
       }
+
+      if( !$develPanel ) {
+        $setupLogs = Cogumelo::getSetupValue('logs');
+        $typeLog = empty( $setupLogs['type'] ) ? 'file' : $setupLogs['type'];
+
+        if( $typeLog !== 'disable' && !empty( $setupLogs['disableLabels'] ) && is_array( $setupLogs['disableLabels'] ) ) {
+          if( in_array( $logLabel, $setupLogs['disableLabels'] ) ) {
+            $typeLog = 'disable';
+          }
+        }
+
+        switch( $typeLog ) {
+          case 'disable':
+            break;
+
+          case 'syslog':
+            // Secure
+            $logLabel = basename( $logLabel );
+
+            $idName = empty( $setupLogs['idName'] ) ? '' : '-'.$setupLogs['idName'];
+            $logLabel = str_replace( 'cogumelo_', '', $logLabel );
+
+            $logLevel = LOG_INFO;
+            $logMsg = '['.$_SERVER['REMOTE_ADDR'] .']['.self::getUserInfo().'] '.$texto;
+            // $logMsg = '['.$_SERVER['REMOTE_ADDR'] .']['.self::getUserInfo().'] '.str_replace("\n", '\n', $texto);
+
+            switch( $logLabel ) {
+              case 'error':
+                $logLevel = LOG_ERR;
+                break;
+              case 'debug':
+                $logLevel = LOG_DEBUG;
+                break;
+              case 'debug_sql':
+                $logLevel = LOG_DEBUG;
+                break;
+              case 'cogumelo':
+                $logLevel = LOG_NOTICE;
+                break;
+            }
+
+            $logId = 'cogumelo-'.$logLabel.$idName;
+
+            openlog( $logId, LOG_ODELAY, LOG_LOCAL0 );
+            syslog( $logLevel, $logMsg );
+            closelog();
+            break;
+
+          default:
+            // Secure
+            $logLabel = basename( $logLabel );
+
+            $msg = '['.date('y-m-d H:i:s',time()).'] ['.$_SERVER['REMOTE_ADDR'] .'] '.
+              '[Session '.self::getUserInfo().'] '.str_replace("\n", '\n', $texto)."\n";
+
+            if( !empty( $setupLogs['path'] ) ) {
+              $fileLog = $setupLogs['path'].'/'.$logLabel.'.log';
+            }
+            else {
+              $fileLog = Cogumelo::getSetupValue('setup:appBasePath').'/log/'.$logLabel.'.log';
+            }
+
+            error_log( $msg, 3, $fileLog );
+            break;
+        }
+      } // if( !$develPanel )
     }
   }
 
-  public static function disableLogs() {
+  public static function disableLogs( $disable = true ) {
     global $COGUMELO_DISABLE_LOGS;
-    $COGUMELO_DISABLE_LOGS = true;
+    $COGUMELO_DISABLE_LOGS = $disable;
   }
 
   // set an string with user information
