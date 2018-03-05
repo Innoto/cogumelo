@@ -54,62 +54,45 @@ class LessController {
   public function getLessVarsFromSetup() {
     $lessVars = array();
 
-    $data = array( 'publicConf' => array() );
-    $publicConf = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:less:globalVars' );
+    $lessData = [];
+
+    $lessPC = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:less' );
+
+    $publicConf = !empty( $lessPC['globalVars'] ) ? $lessPC['globalVars'] : false;
     if( $publicConf && is_array( $publicConf ) && count( $publicConf ) > 0 ) {
       foreach( $publicConf as $globalKey ) {
         if( isset( $GLOBALS[ $globalKey ] ) ) {
           $lessValue = $this->valueToLess( $GLOBALS[ $globalKey ] );
           if( $lessValue !== null ) {
-            $data['publicConf'][ $globalKey ] = $lessValue;
+            $lessData[ $globalKey ] = $lessValue;
           }
         }
       }
     }
-    $setupFields = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:less:setupFields' );
-    if( $setupFields && is_array( $setupFields ) && count( $setupFields ) > 0 ) {
-      foreach( $setupFields as $setupField ) {
+
+    $publicConf = !empty( $lessPC['setupFields'] ) ? $lessPC['setupFields'] : false;
+    if( $publicConf && is_array( $publicConf ) && count( $publicConf ) > 0 ) {
+      foreach( $publicConf as $setupField ) {
         $lessValue = $this->valueToLess( Cogumelo::getSetupValue( $setupField ) );
         if( $lessValue !== null ) {
-          $data['publicConf'][ strtr( $setupField, ':', '_' ) ] = $lessValue;
+          $lessData[ strtr( $setupField, ':', '_' ) ] = $lessValue;
         }
       }
     }
-    $publicConf = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:less:vars' );
+
+    $publicConf = !empty( $lessPC['vars'] ) ? $lessPC['vars'] : false;
     if( $publicConf && is_array( $publicConf ) && count( $publicConf ) > 0 ) {
       foreach( $publicConf as $name => $value ) {
         $lessValue = $this->valueToLess( $value );
         if( $lessValue !== null ) {
-          $data['publicConf'][ $name ] = $lessValue;
+          $lessData[ $name ] = $lessValue;
         }
       }
     }
-    foreach( $data['publicConf'] as $key => $value ) {
+
+    foreach( $lessData as $key => $value ) {
       $lessVars[ 'cogumelo_publicConf_'.$key ] = $value;
     }
-
-
-
-    // global $MEDIASERVER_LESS_GLOBALS, $MEDIASERVER_LESS_CONSTANTS;
-    // if( is_array( $MEDIASERVER_LESS_GLOBALS ) && count( $MEDIASERVER_LESS_GLOBALS ) > 0 ) {
-    //   foreach( $MEDIASERVER_LESS_GLOBALS as $globalKey ) {
-    //     if( isset( $GLOBALS[ $globalKey ] ) ) {
-    //       $lessValue = $this->valueToLess( $GLOBALS[ $globalKey ] );
-    //       if( $lessValue !== null ) {
-    //         $lessVars[ 'GLOBAL_'.$globalKey ] = $lessValue;
-    //       }
-    //     }
-    //   }
-    // }
-    // if( is_array( $MEDIASERVER_LESS_CONSTANTS ) && count( $MEDIASERVER_LESS_CONSTANTS ) > 0 ) {
-    //   foreach( $MEDIASERVER_LESS_CONSTANTS as $name => $value ) {
-    //     //$lessContent .= '@'.$name.' : "'.$value.'";'."\n";
-    //     $lessValue = $this->valueToLess( $value );
-    //     if( $lessValue !== null ) {
-    //       $lessVars[ $name ] = $lessValue;
-    //     }
-    //   }
-    // }
 
     return ( count( $lessVars ) > 0 ) ? $lessVars : false;
   }
@@ -150,7 +133,7 @@ class LessController {
         if( !$arrAssoc ) { // No conocemos como crear arrays asociativos en Less
           foreach( $value as $valueKey => $valueData ) {
             if( is_array( $valueData ) ) { // No conocemos como crear arrays anidados en Less
-              Cogumelo::debug( 'LessController->valueToLess: No conocemos como crear arrays asociativos en Less' );
+              // Cogumelo::debug( 'LessController->valueToLess: No conocemos como crear arrays asociativos en Less' );
               $arrResult = null;
               break;
             }
@@ -164,7 +147,7 @@ class LessController {
         }
         else {
           $arrResult = null;
-          Cogumelo::debug( 'LessController->valueToLess: No conocemos como crear arrays asociativos en Less' );
+          // Cogumelo::debug( 'LessController->valueToLess: No conocemos como crear arrays asociativos en Less' );
         }
 
         if( $arrResult !== null ) {
@@ -188,8 +171,9 @@ class LessController {
     }
 
     if( $lessValue === null ) {
-      Cogumelo::debug( 'LessController->valueToLess: No hemos convertido este valor de tipo '.gettype( $value ) );
+      Cogumelo::debug( __METHOD__.' - Unsupported type '.gettype( $value ) );
     }
+
     return $lessValue;
   }
 
