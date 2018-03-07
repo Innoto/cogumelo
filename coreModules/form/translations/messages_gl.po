@@ -77,12 +77,21 @@ msgstr "Non é unha url de Youtube"
 msgid "Can not be a url"
 msgstr "Non pode ser una URL"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:378
-msgid ""
-"Password must contain 8 ~ 16 characters and must contain at least one "
-"capital letter, one singular letter, one numeric character and one special "
-"character (!@-_,./?)."
-msgstr "O contrasinal debe conter 8 ~ 16 caracteres e polo menos unha letra mayúscula, unha letra minúscula, un caracter numérico e un caracter especial (!@-_,./?)."
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "Password must contain 8 ~ 16 characters and must contain "
+msgstr "O contrasinal debe conter 8 ~ 16 caracteres e "
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "at least one capital letter, "
+msgstr "polo menos unha letra maiúscula, "
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "one singular letter, one numeric character "
+msgstr "unha letra minúscula, un caracter numérico "
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "and one special character (!@-,./?)."
+msgstr "e un caracter especial (!@-,./?)."
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:159
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:318

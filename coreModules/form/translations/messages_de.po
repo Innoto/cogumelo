@@ -77,12 +77,22 @@ msgstr ""
 msgid "Can not be a url"
 msgstr ""
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:378
-msgid ""
-"Password must contain 8 ~ 16 characters and must contain at least one "
-"capital letter, one singular letter, one numeric character and one special "
-"character (!@-_,./?)."
-msgstr "Das Passwort muss 8 ~ 16 Zeichen und mindestens einem Großbuchstaben, einem Kleinbuchstaben, einer Zahl und einem Sonderzeichen bestehen (!@-_,./?)."
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "Password must contain 8 ~ 16 characters and must contain "
+msgstr "Das Passwort muss 8 ~ 16 Zeichen und "
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "at least one capital letter, "
+msgstr "mindestens einem Großbuchstaben, "
+
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "one singular letter, one numeric character "
+msgstr "einem Kleinbuchstaben, einer Zahl "
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "and one special character (!@-,./?)."
+msgstr "und einem Sonderzeichen bestehen (!@-,./?)."
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:159
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:318

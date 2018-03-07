@@ -365,7 +365,7 @@ $.validator.addMethod(
     var valid = /[A-Z]/.exec(value) && /[a-z]/.exec(value) && /[0-9]/.exec(value) && /\W/.exec(value) && /^.{8,16}$/.exec(value);
     return valid;
   },
-  $.validator.format( __('Password must contain 8 ~ 16 characters and must contain at least one capital letter, one singular letter, one numeric character and one special character (!@-,./?).'))
+  $.validator.format( __('Password must contain 8 ~ 16 characters and must contain ') + __('at least one capital letter, ') + __('one singular letter, one numeric character ') + __('and one special character (!@-,./?).'))
 );
 
 

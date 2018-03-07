@@ -77,11 +77,20 @@ msgstr ""
 msgid "Can not be a url"
 msgstr ""
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:378
-msgid ""
-"Password must contain 8 ~ 16 characters and must contain at least one "
-"capital letter, one singular letter, one numeric character and one special "
-"character (!@-_,./?)."
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "Password must contain 8 ~ 16 characters and must contain "
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "at least one capital letter, "
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "one singular letter, one numeric character "
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "and one special character (!@-,./?)."
 msgstr ""
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:159
@@ -160,4 +169,43 @@ msgstr ""
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1034
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:978
 msgid "Download"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid ""
+"Password must contain 8 ~ 16 characters and must contain at least one "
+"capital letter, "
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid ""
+"one singular letter, one numeric character and one special character (!"
+"@-,./?)."
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "Password must contain 8 ~ 16 characters and must contain at least one "
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid ""
+"capital letter, one singular letter, one numeric character and one special "
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "character (!@-,./?)."
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid ""
+"Password must contain 8 ~ 16 characters and must contain at least one "
+"capital letter, one singular letter, one numeric character and one special "
+"character (!@-,./?)."
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:378
+msgid ""
+"Password must contain 8 ~ 16 characters and must contain at least one "
+"capital letter, one singular letter, one numeric character and one special "
+"character (!@-_,./?)."
 msgstr ""
