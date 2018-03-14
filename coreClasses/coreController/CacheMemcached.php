@@ -33,11 +33,6 @@ class CacheMemcached {
       // }
 
 
-
-
-
-
-
       if( $status ) {
         if( !empty( $this->cacheSetup['subPrefix'] ) ) {
           $this->keyPrefix .= '_'.$this->cacheSetup['subPrefix'];
