@@ -11,7 +11,7 @@ class common extends Module {
   public $dependences = array(
    array(
      "id" =>"less",
-     "params" => array("less"),
+     "params" => array("less#v2.7.3"),
      "installer" => "bower",
      "includes" => array()
    ),
