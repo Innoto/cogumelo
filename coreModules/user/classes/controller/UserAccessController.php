@@ -28,7 +28,7 @@ class UserAccessController {
     $result = $usermodel->authenticateUser( $login, $password );
 
     if( $result['status'] === true ){
-      $this->sessioncontrol->setUser($logeduser['userdata']);
+      $this->sessioncontrol->setUser($result['userdata']);
       Cogumelo::log( 'userLogin: Accepted User authentication: user '.$login.' is logged', 'UserLog' );
     }
     else {
