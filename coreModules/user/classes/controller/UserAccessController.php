@@ -23,14 +23,13 @@ class UserAccessController {
   // Login an Admin User
   //
   public function userLogin( $login, $password ) {
-    $result = false;
 
     $usermodel = new UserModel();
+    $result = $usermodel->authenticateUser( $login, $password );
 
-    if( $logeduser = $usermodel->authenticateUser( $login, $password ) ) {
-      $this->sessioncontrol->setUser($logeduser);
+    if( $result['status'] === true ){
+      $this->sessioncontrol->setUser($logeduser['userdata']);
       Cogumelo::log( 'userLogin: Accepted User authentication: user '.$login.' is logged', 'UserLog' );
-      $result = true;
     }
     else {
       Cogumelo::log( 'userLogin: Failed User authentication: user '.$login, 'UserLog' );
@@ -43,13 +42,14 @@ class UserAccessController {
   //
   // Login an Admin User
   //
+
   public function userAutoLogin( $login ) {
     $result = false;
 
     $usermodel= new UserModel();
 
     if( $logeduser = $usermodel->authenticateUserOnlyLogin( $login ) ) {
-      $this->sessioncontrol->setUser( $logeduser );
+      $this->sessioncontrol->setUser( $logeduser['userdata'] );
       Cogumelo::log( 'userAutoLogin: Accepted User authentication: user '.$login.' is logged', 'UserLog' );
       $result = true;
     }
@@ -60,6 +60,7 @@ class UserAccessController {
 
     return $result;
   }
+
 
   //
   // Logout a User

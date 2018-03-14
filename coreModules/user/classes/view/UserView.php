@@ -139,8 +139,17 @@ class UserView extends View {
       $userAccessControl = new UserAccessController();
       $res = $userAccessControl->userLogin($valuesArray['userLogin'], $valuesArray['userPassword']);
 
-      if(!$res){
-        $form->addFormError('El login y/o contraseña son erróneos');
+      if($res['status'] !== true) {
+        switch ($res['advancedstatus']) {
+          case LOGIN_FAILED:
+          case LOGIN_USERUNKOWN:
+          case LOGIN_USERDISABLED:
+            $form->addFormError('El login y/o contraseña son erróneos');
+            break;
+          case LOGIN_BAN:
+            $form->addFormError('Demasiados intentos de acceso. Vuelve a intentarlo más tarde.');
+            break;
+        }
       }
     }
 
