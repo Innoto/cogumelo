@@ -91,6 +91,7 @@ class FormController implements Serializable {
    * @param string $action Action del formulario
    */
   public function __construct( $name = false, $action = false ) {
+    // Cogumelo::debug(__METHOD__);
     $this->setTokenId( 'new'.$name.$action );
     if( $name !== false ) {
       $this->setName( $name );
@@ -107,7 +108,19 @@ class FormController implements Serializable {
     if( is_array( $langsConf ) ) {
       $this->langAvailable = array_keys( $langsConf );
     }
+
+    Cogumelo::debug(__METHOD__.' - '.$this->getTokenId());
   }
+
+
+  /**
+   * Destructor. Realizamos limpieza 
+   */
+  // function __destruct() {
+  //   Cogumelo::debug(__METHOD__.' - '.$this->getTokenId());
+  //   error_log(__METHOD__.' - '.$this->getTokenId());
+  // }
+
 
   /**
    * Clone. Actualiza el TokenId si se clona el objeto
@@ -116,8 +129,10 @@ class FormController implements Serializable {
     $this->setTokenId( 'clone'.$this->getName().$this->getAction() );
   }
 
+
   public function reset( $name = false, $action = false ) {
-    Cogumelo::debug('FormController: NOTICE: form->reset()' );
+    Cogumelo::debug(__METHOD__.' - '.$this->getTokenId());
+
     $formSessionId = 'CGFSI_'.$this->getTokenId();
     unset( $_SESSION[ $formSessionId ] );
 
@@ -137,14 +152,32 @@ class FormController implements Serializable {
     $this->groups = [];
     $this->messages = [];
 
-    $this->setTokenId( 'new'.$name.$action );
-    if( $name !== false ) {
-      $this->setName( $name );
-    }
-    if( $action !== false ) {
-      $this->setAction( $action );
+    if( $name !== false && $action !== false ) {
+      $this->setTokenId( 'new'.$name.$action );
+      if( $name !== false ) {
+        $this->setName( $name );
+      }
+      if( $action !== false ) {
+        $this->setAction( $action );
+      }
     }
   }
+
+
+  /*
+   * Elimina todos los formularios de la actual session
+   */
+  public function removeAllFormsInSession() {
+    Cogumelo::debug(__METHOD__);
+
+    $formSessionId = 'CGFSI_';
+    foreach( array_keys( $_SESSION ) as $keySession ) {
+      if( strpos( $keySession, $formSessionId ) === 0 ) {
+        unset( $_SESSION[ $keySession ] );
+      }
+    }
+  }
+
 
   /**
     Crea el TokenId único del formulario. NO es el id del FORM.
@@ -269,7 +302,19 @@ class FormController implements Serializable {
     @return string
    */
   public function serialize() {
-    $data = array();
+    $data = [];
+
+    /*
+     * NO se guardan en session los valores de campos de ciertos tipos
+     */
+    $fieldsInfo = [];
+    foreach( $this->fields as $fieldKey => $fieldData ) {
+      if( isset( $fieldData['value'] ) && in_array( $fieldData['type'], ['password', 'text', 'textarea'] ) ) {
+        // Cogumelo::debug(__METHOD__.' - '.$fieldData['type'] );
+        unset( $fieldData['value'] );
+      }
+      $fieldsInfo[ $fieldKey ] = $fieldData;
+    }
 
     $data[ 'name' ] = $this->name;
     $data[ 'id' ] = $this->id;
@@ -282,7 +327,7 @@ class FormController implements Serializable {
     $data[ 'keepAlive' ] = $this->keepAlive;
     $data[ 'enterSubmit' ] = $this->enterSubmit;
     $data[ 'formMarginTop' ] = $this->formMarginTop;
-    $data[ 'fields' ] = $this->fields;
+    $data[ 'fields' ] = $fieldsInfo;
     $data[ 'rules' ] = $this->rules;
     $data[ 'groups' ] = $this->groups;
     $data[ 'messages' ] = $this->messages;
