@@ -308,8 +308,10 @@ class FormController implements Serializable {
      * NO se guardan en session los valores de campos de ciertos tipos
      */
     $fieldsInfo = [];
+    $noSaveTypes = ['password', 'text', 'textarea'];
     foreach( $this->fields as $fieldKey => $fieldData ) {
-      if( isset( $fieldData['value'] ) && in_array( $fieldData['type'], ['password', 'text', 'textarea'] ) ) {
+      $fieldType = !empty( $fieldData['type'] ) ? $fieldData['type'] : 'text';
+      if( isset( $fieldData['value'] ) && in_array( $fieldType, $noSaveTypes ) ) {
         // Cogumelo::debug(__METHOD__.' - '.$fieldData['type'] );
         unset( $fieldData['value'] );
       }

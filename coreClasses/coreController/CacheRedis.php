@@ -35,7 +35,7 @@ class CacheRedis {
       }
 
       if( $status && !empty( $this->cacheSetup['auth'] ) ) {
-        $status = $this->auth( $this->cacheSetup['auth'] );
+        $status = $this->cacheCtrl->auth( $this->cacheSetup['auth'] );
       }
 
       if( $status ) {
