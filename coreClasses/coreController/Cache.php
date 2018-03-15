@@ -5,31 +5,32 @@
  * Cache Class
  *
  * This class encapsulates the memcached library
- *
- * @author: pablinhob
  */
 
 
 class Cache {
 
-  var $mc = false;
-  var $keyPrefix = 'Cogumelo:';
+  private $cacheCtrl = null;
 
 
   public function __construct() {
-    if( class_exists('Memcached') ) {
-      $this->mc = new Memcached();
+    $cacheSetup = Cogumelo::getSetupValue('cogumelo:cache');
 
-      $hostArray = Cogumelo::getSetupValue( 'memcached:hostArray' );
-      if( $hostArray ) {
-        foreach( $hostArray as $host ) {
-          $this->mc->addServer( $host['host'], $host['port'] );
-        }
-      }
+    if( !$this->cacheCtrl && !empty( $cacheSetup['redis'] ) ) {
+      Cogumelo::load('coreController/CacheRedis.php');
+      $this->cacheCtrl = new CacheRedis( $cacheSetup['redis'] );
+    }
 
-      $dbName = Cogumelo::getSetupValue('db:name');
-      if( $dbName ) {
-        $this->keyPrefix = 'Cogumelo:' . $dbName . ':';
+    if( !$this->cacheCtrl && !empty( $cacheSetup['memcached'] ) ) {
+      Cogumelo::load('coreController/CacheMemcached.php');
+      $this->cacheCtrl = new CacheMemcached( $cacheSetup['memcached'] );
+    }
+
+    if( !$this->cacheCtrl ) {
+      $memcachedSetup = Cogumelo::getSetupValue('memcached');
+      if( !empty( $memcachedSetup ) ) {
+        Cogumelo::load('coreController/CacheMemcached.php');
+        $this->cacheCtrl = new CacheMemcached( $memcachedSetup );
       }
     }
   }
@@ -42,17 +43,8 @@ class Cache {
   public function getCache( $key ) {
     $result = null;
 
-    if( $this->mc ) {
-      $key = $this->keyPrefix . $key;
-
-      $result = $this->mc->get( $key );
-      if( $this->mc->getResultCode() !== Memcached::RES_SUCCESS ) {
-        $result = null;
-        Cogumelo::log( __METHOD__.' - key: '.$key.' FAIL!!!', 'cache' );
-      }
-      else {
-        Cogumelo::log( __METHOD__.' - key: '.$key.' Atopado :)', 'cache' );
-      }
+    if( $this->cacheCtrl ) {
+      $result = $this->cacheCtrl->getCache( $key );
     }
 
     return $result;
@@ -66,24 +58,11 @@ class Cache {
    * @param mixed $data Content to save
    * @param mixed $expirationTime Expiration time. (default or fail: use setup value)
    */
-  public function setCache( $key, $data, $expirationTime = false ){
+  public function setCache( $key, $data, $expirationTime = false ) {
     $result = null;
 
-    if( $this->mc ) {
-      $key = $this->keyPrefix . $key;
-
-      if( empty( $expirationTime ) || !is_numeric( $expirationTime ) ) {
-        $expirationTime = Cogumelo::getSetupValue( 'memcached:expirationTime' );
-      }
-      else {
-        $expirationTime = intval( $expirationTime );
-      }
-
-      Cogumelo::log( __METHOD__.' - key: '.$key.' exp: '.$expirationTime, 'cache' );
-
-      if( $this->mc->set( $key, $data, $expirationTime ) ) {
-        $result = true;
-      }
+    if( $this->cacheCtrl ) {
+      $result = $this->cacheCtrl->setCache( $key, $data, $expirationTime );
     }
 
     return $result;
@@ -91,14 +70,13 @@ class Cache {
 
 
   /**
-   * Borra todos los contenidos
+   * Borra todos nuestros contenidos cache
    */
   public function flush() {
-    Cogumelo::log( __METHOD__, 'cache' );
     $result = null;
 
-    if( $this->mc && $this->mc->flush() ) {
-      $result = true;
+    if( $this->cacheCtrl ) {
+      $result = $this->cacheCtrl->flush();
     }
 
     return $result;
