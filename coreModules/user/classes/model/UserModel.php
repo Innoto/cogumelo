@@ -2,6 +2,11 @@
 Cogumelo::load('coreModel/VO.php');
 Cogumelo::load('coreModel/Model.php');
 
+define('LOGIN_FAILED', 0);
+define('LOGIN_OK', 1);
+define('LOGIN_BAN', 2);
+define('LOGIN_USERDISABLED', 3);
+define('LOGIN_USERUNKOWN', 4);
 
 
 class UserModel extends Model
@@ -70,10 +75,25 @@ class UserModel extends Model
     'hashVerifyUser'=> array(
       'type' => 'VARCHAR',
       'size' => '255'
+    ),
+    'loginTimeBan' => array(
+      'type' => 'DATETIME'
+    ),
+    'loginFailAttempts'=> array(
+      'type' => 'INT',
+      'size' => '1'
     )
   );
 
   var $deploySQL = array(
+    array(
+      'version' => 'user#3',
+      'sql'=> '
+        ALTER TABLE user_user
+        ADD COLUMN loginFailAttempts INT DEFAULT 0,
+        ADD COLUMN loginTimeBan DATETIME;
+      '
+    ),
     array(
       'version' => 'user#1.9',
       'sql'=> '
@@ -144,19 +164,62 @@ class UserModel extends Model
     $this->setter('password', password_hash($password, PASSWORD_BCRYPT));
   }
 
-
   public function authenticateUser( $login, $password ) {
     $userO = $this->listItems( array('filters' => array('login' => $login), 'affectsDependences' => array( 'UserPermissionModel') ))->fetch();
+    $data = [];
     if( $userO ){
-	    //$data = (($userO->getter('password') == sha1($password)) && ($userO->getter('active') == 1)) ? true : false;
-      $data = ( password_verify($password, $userO->getter('password') ) && ($userO->getter('active') == 1)) ? true : false;
+      $loginTimeBan = $userO->getter('loginTimeBan');
+      $confTimeBan = 15; //minutes banned
+      $diffTimeBan = (time()-strtotime($loginTimeBan))/60;
+
+      if(!empty($loginTimeBan)){
+        if( $diffTimeBan < $confTimeBan ){
+          $data = [
+            'status' => false,
+            'advancedstatus' => LOGIN_BAN,
+            'restTimeBan' => $diffTimeBan
+          ];
+        }else{
+          $userO->setter('loginTimeBan', NULL);
+          $userO->setter('loginFailAttempts', 0);
+          $userO->save();
+        }
+      }
+
+      if(empty($data)){
+        if(!password_verify($password, $userO->getter('password'))){
+          $this->userLoginFailed($userO);
+          $data = [
+            'status' => false,
+            'advancedstatus' => LOGIN_FAILED,
+            'restLoginAttempts' => (5 - $userO->getter('loginFailAttempts'))
+          ];
+        }
+      }
+
+      if(empty($data)){
+        if($userO->getter('active') !== 1){
+          $data = [
+            'status' => false,
+            'advancedstatus' => LOGIN_DISABLED
+          ];
+        }
+      }
     }
     else{
-      $data = false;
+      $data = [
+        'status' => false,
+        'advancedstatus' => LOGIN_USERUNKOWN
+      ];
     }
 
-    if($data) {
-      $data = $this->loginIsOk($userO);
+    if(empty($data)) {
+
+      $data = [
+        'status' => true,
+        'advancedstatus' => LOGIN_OK,
+        'userdata' => $this->loginIsOk($userO)
+      ];
     }
     else {
       Cogumelo::log("authenticateUser FAILED with login=".$login.". User NOT authenticated", "UserLog");
@@ -167,12 +230,29 @@ class UserModel extends Model
   public function authenticateUserOnlyLogin( $login ) {
     $userO = $this->listItems( array('filters' => array('login' => $login), 'affectsDependences' => array( 'UserPermissionModel') ))->fetch();
     if($userO) {
-      $data = $this->loginIsOk($userO);
+
+      $data = [
+        'status' => true,
+        'advancedstatus' => LOGIN_OK,
+        'userdata' => $this->loginIsOk($userO)
+      ];
+
     }
     else {
       Cogumelo::log("authenticateUser FAILED with login=".$login.". User NOT authenticated", "UserLog");
     }
     return $data;
+  }
+
+  public function userLoginFailed($userO){
+    $loginFailAttempts = $userO->getter('loginFailAttempts');
+    $loginFailAttempts++;
+    if($loginFailAttempts > 4){
+      $loginFailAttempts = 0;
+      $userO->setter('loginTimeBan', date("Y-m-d H:i:s"));
+    }
+    $userO->setter('loginFailAttempts', $loginFailAttempts);
+    $userO->save();
   }
 
   public function loginIsOk( $userO ) {
@@ -196,7 +276,6 @@ class UserModel extends Model
 
     return $data;
   }
-
 
   public function updatePassword( $id, $password ) {
     $data = $this->data->updatePassword($id, $password);
