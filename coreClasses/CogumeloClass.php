@@ -346,7 +346,17 @@ class CogumeloClass extends Singleton {
             // Secure
             $logLabel = basename( $logLabel );
 
-            $idName = empty( $setupLogs['idName'] ) ? '' : '-'.$setupLogs['idName'];
+            $idName = '';
+            if( !empty( $setupLogs['idName'] ) ) {
+              $idName = '-'.$setupLogs['idName'];
+            }
+            elseif( $prjIdName=Cogumelo::getSetupValue('project:idName') ) {
+              $idName = '-'.$prjIdName;
+            }
+            elseif( $dbName=Cogumelo::getSetupValue('db:name') ) {
+              $idName = '-'.$dbName;
+            }
+
             $logLabel = str_replace( 'cogumelo_', '', $logLabel );
 
             $logLevel = LOG_INFO;
