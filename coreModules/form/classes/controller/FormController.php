@@ -1065,14 +1065,17 @@ class FormController implements Serializable {
     @return array
    */
   public function getValuesArray() {
-    $fieldsValuesArray = array();
+    $fieldsValuesArray = [];
     $fieldsNamesArray = $this->getFieldsNamesArray();
     foreach( $fieldsNamesArray as $fieldName ) {
       if( $this->getFieldInternal( $fieldName, 'groupCloneRoot' ) !== true &&
         $this->getFieldInternal( $fieldName, 'groupElemRemoved' ) !== true )
       {
         // Procesamos los campos que no son raiz de campos agrupados
-        $fieldsValuesArray[ $fieldName ] = $this->getFieldValue( $fieldName );
+        if( isset( $this->fields[ $fieldName ]['value'] ) ) {
+          $fieldsValuesArray[ $fieldName ] = $this->fields[ $fieldName ]['value'];
+        }
+        // $fieldsValuesArray[ $fieldName ] = $this->getFieldValue( $fieldName );
 
         // error_log('FormController: '. $fieldName .' === '. print_r( $fieldsValuesArray[ $fieldName ], true ) );
       }
