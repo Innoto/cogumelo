@@ -46,6 +46,8 @@ class FormController implements Serializable {
   private $groups = [];
   private $messages = [];
 
+  private $noSaveTypes = ['password', 'text', 'textarea'];
+
   // POST submit
   private $postData = null;
   private $postValues = null;
@@ -308,10 +310,9 @@ class FormController implements Serializable {
      * NO se guardan en session los valores de campos de ciertos tipos
      */
     $fieldsInfo = [];
-    $noSaveTypes = ['password', 'text', 'textarea'];
     foreach( $this->fields as $fieldKey => $fieldData ) {
       $fieldType = !empty( $fieldData['type'] ) ? $fieldData['type'] : 'text';
-      if( isset( $fieldData['value'] ) && in_array( $fieldType, $noSaveTypes ) ) {
+      if( isset( $fieldData['value'] ) && in_array( $fieldType, $this->noSaveTypes ) ) {
         // Cogumelo::debug(__METHOD__.' - '.$fieldData['type'] );
         unset( $fieldData['value'] );
       }
@@ -383,7 +384,15 @@ class FormController implements Serializable {
     if( isset( $_SESSION[ $formSessionId ] ) ) {
       $data = unserialize( $_SESSION[ $formSessionId ] );
       if( isset( $this->fields[ $fieldName ] ) ) {
-        $data[ 'fields' ][ $fieldName ] = $this->fields[ $fieldName ];
+        $fieldData = $this->fields[ $fieldName ];
+
+        $fieldType = !empty( $fieldData['type'] ) ? $fieldData['type'] : 'text';
+        if( isset( $fieldData['value'] ) && in_array( $fieldType, $this->noSaveTypes ) ) {
+          // Cogumelo::debug(__METHOD__.' - '.$fieldData['type'] );
+          unset( $fieldData['value'] );
+        }
+
+        $data[ 'fields' ][ $fieldName ] = $fieldData;
       }
       else {
         if( isset( $data[ 'fields' ][ $fieldName ] ) ) {
@@ -523,74 +532,86 @@ class FormController implements Serializable {
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
       // error_log('FormController: Load field '.$fieldName.' value '.print_r( $formPost[ $fieldName ][ 'value' ], true ) );
 
-      if( isset( $formPost[ $fieldName ][ 'dataInfo' ] ) ) {
-        // error_log('FormController: DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
-        // $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
-        $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
-        foreach( $formPost[ $fieldName ][ 'dataInfo' ] as $key => $value ) {
-          // error_log('FormController: '. "setFieldParam: $fieldName, data-$key, $value )" );
-          // $this->setFieldParam( $fieldName, 'data-'.$key, $value );
-          $this->setFieldParam( $fieldName, $key, $value );
-        }
-      }
-      if( isset( $formPost[ $fieldName ][ 'dataMultiInfo' ] ) ) {
-        $this->setFieldParam( $fieldName, 'dataMultiInfo', $formPost[ $fieldName ][ 'dataMultiInfo' ] );
-      }
+      if( isset( $formPost[ $fieldName ] ) ) {
+        $fieldType = $this->getFieldType( $fieldName );
 
-      /*
-        {
-          "value":["67","69","71"],
-          "dataMultiInfo":{
-            "67":{"data-order":"1","data-term-icon":"","data-term-idname":"eduTIC"},
-            "69":{"data-order":"2","data-term-icon":"","data-term-idname":"flipped","data-term-parent":"68"},
-            "71":{"data-order":"3","data-term-icon":"","data-term-idname":"gamificacion","data-term-parent":"68"}
+        // Controlamos que no aparezcan datos para campos reservados
+        if( 'reserved' !== $fieldType ) {
+          if( isset( $formPost[ $fieldName ][ 'dataInfo' ] ) ) {
+            // error_log('FormController: DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
+            // $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
+            $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
+            foreach( $formPost[ $fieldName ][ 'dataInfo' ] as $key => $value ) {
+              // error_log('FormController: '. "setFieldParam: $fieldName, data-$key, $value )" );
+              // $this->setFieldParam( $fieldName, 'data-'.$key, $value );
+              $this->setFieldParam( $fieldName, $key, $value );
+            }
           }
-        },
-        {
-          "value":false,
-          "dataInfo":{"data-switchery":"true"}
-        }
-      */
+          if( isset( $formPost[ $fieldName ][ 'dataMultiInfo' ] ) ) {
+            $this->setFieldParam( $fieldName, 'dataMultiInfo', $formPost[ $fieldName ][ 'dataMultiInfo' ] );
+          }
 
-      if( $this->getFieldType( $fieldName ) !== 'file' ) {
-        if( isset( $formPost[ $fieldName ][ 'value' ] ) ) {
-          $this->setFieldValue( $fieldName, $formPost[ $fieldName ][ 'value' ] );
-        }
-      }
-      else {
-        if( !$this->isEmptyFieldValue( $fieldName ) ) {
-          $fileFieldValue = $this->getFieldValue( $fieldName );
-
-          // error_log( 'FormController::loadPostValues FILE: '.print_r( $fileFieldValue, true ) );
-
-          switch( $fileFieldValue['status'] ) {
-            case 'LOAD':
-            case 'REPLACE':
-              $fileFieldValue['validate'] = $fileFieldValue['temp'];
-              break;
-            case 'EXIST':
-              $fileFieldValue['validate'] = $fileFieldValue['prev'];
-              break;
-            case 'GROUP':
-              if( count( $fileFieldValue['multiple'] ) ) {
-                foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
-                  switch( $fileData['status'] ) {
-                    case 'LOAD':
-                    case 'REPLACE':
-                      $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['temp'];
-                      break;
-                    case 'EXIST':
-                      $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
-                      break;
-                  }
-                  Cogumelo::debug('FormController: FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
-                }
+          /*
+            {
+              "value":["67","69","71"],
+              "dataMultiInfo":{
+                "67":{"data-order":"1","data-term-icon":"","data-term-idname":"eduTIC"},
+                "69":{"data-order":"2","data-term-icon":"","data-term-idname":"flipped","data-term-parent":"68"},
+                "71":{"data-order":"3","data-term-icon":"","data-term-idname":"gamificacion","data-term-parent":"68"}
               }
-              break;
+            },
+            {
+              "value":false,
+              "dataInfo":{"data-switchery":"true"}
+            }
+          */
+
+          if( $fieldType !== 'file' ) {
+            if( isset( $formPost[ $fieldName ][ 'value' ] ) ) {
+              $this->setFieldValue( $fieldName, $formPost[ $fieldName ][ 'value' ] );
+            }
           }
-          $this->setFieldValue( $fieldName, $fileFieldValue );
+          else {
+            if( !$this->isEmptyFieldValue( $fieldName ) ) {
+              $fileFieldValue = $this->getFieldValue( $fieldName );
+
+              // error_log( 'FormController::loadPostValues FILE: '.print_r( $fileFieldValue, true ) );
+
+              switch( $fileFieldValue['status'] ) {
+                case 'LOAD':
+                case 'REPLACE':
+                  $fileFieldValue['validate'] = $fileFieldValue['temp'];
+                  break;
+                case 'EXIST':
+                  $fileFieldValue['validate'] = $fileFieldValue['prev'];
+                  break;
+                case 'GROUP':
+                  if( count( $fileFieldValue['multiple'] ) ) {
+                    foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
+                      switch( $fileData['status'] ) {
+                        case 'LOAD':
+                        case 'REPLACE':
+                          $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['temp'];
+                          break;
+                        case 'EXIST':
+                          $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
+                          break;
+                      }
+                      Cogumelo::debug('FormController: FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
+                    }
+                  }
+                  break;
+              }
+              $this->setFieldValue( $fieldName, $fileFieldValue );
+            }
+          } // if( $this->getFieldType( $fieldName ) !== 'file' )
         }
-      }
+        else {
+          Cogumelo::error( __METHOD__ . 'Intento de manipulacion de datos: '.$fieldName.' RV' );
+          error_log( __METHOD__ . 'Intento de manipulacion de datos: '.$fieldName.' RV' );
+          $this->addFormError( __('Intento de manipulacion del formulario').' (RV)' );
+        }
+      } // if( isset( $formPost[ $fieldName ] ) )
     }
   }
 
@@ -1076,7 +1097,6 @@ class FormController implements Serializable {
           $fieldsValuesArray[ $fieldName ] = $this->fields[ $fieldName ]['value'];
         }
         // $fieldsValuesArray[ $fieldName ] = $this->getFieldValue( $fieldName );
-
         // error_log('FormController: '. $fieldName .' === '. print_r( $fieldsValuesArray[ $fieldName ], true ) );
       }
       else {
