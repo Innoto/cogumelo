@@ -85,18 +85,19 @@ else {
 
 function rmdirRec( $dir, $removeContainer = true ) {
   // error_log( "rmdirRec( $dir )" );
+
+  $dir = rtrim( $dir, '/' );
   if( is_dir( $dir ) ) {
     $dirElements = scandir( $dir );
-    if( is_array( $dirElements ) && count( $dirElements ) > 0 ) {
+    if( !empty( $dirElements ) ) {
       foreach( $dirElements as $object ) {
         if( $object !== '.' && $object !== '..' ) {
-          if( is_link( $dir.'/'.$object ) ) {
-            unlink( $dir.'/'.$object );
-          }
-          elseif( is_dir( $dir.'/'.$object ) ) {
+          if( is_dir( $dir.'/'.$object ) ) {
+
             rmdirRec( $dir.'/'.$object );
           }
           else {
+
             unlink( $dir.'/'.$object );
           }
         }
@@ -104,7 +105,12 @@ function rmdirRec( $dir, $removeContainer = true ) {
     }
     reset( $dirElements );
     if( $removeContainer ) {
-      rmdir( $dir );
+      if( !is_link( $dir ) ) {
+        rmdir( $dir );
+      }
+      else {
+        unlink( $dir );
+      }
     }
   }
 }
