@@ -1,5 +1,6 @@
 <?php
 
+
 /*
 
 Este script se lanza desde un php en el servidor web que prepara el entorno con la infomacion necesaria
