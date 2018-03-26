@@ -144,10 +144,10 @@ class UserView extends View {
           case LOGIN_FAILED:
           case LOGIN_USERUNKOWN:
           case LOGIN_USERDISABLED:
-            $form->addFormError('El login y/o contraseña son erróneos');
+            $form->addFormError(__('El login y/o contraseña son erróneos'));
             break;
           case LOGIN_BAN:
-            $form->addFormError('Demasiados intentos de acceso. Vuelve a intentarlo más tarde.');
+            $form->addFormError(__('Demasiados intentos de acceso. Vuelve a intentarlo más tarde.'));
             break;
         }
       }

@@ -37,6 +37,14 @@ msgstr "Contrasinal"
 msgid "Sign in"
 msgstr "Acceder"
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:147
+msgid "El login y/o contraseña son erróneos"
+msgstr "O nome de usuario e/ou o contrasinal son erróneos"
+
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:150
+msgid "Demasiados intentos de acceso. Vuelve a intentarlo más tarde."
+msgstr "Demasiados intentos de acceso. Volve a intentalo máis tarde."
+
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:212
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:213
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:203
