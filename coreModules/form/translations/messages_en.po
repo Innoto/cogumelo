@@ -209,3 +209,7 @@ msgid ""
 "capital letter, one singular letter, one numeric character and one special "
 "character (!@-_,./?)."
 msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:612
+msgid "Intento de manipulacion del formulario"
+msgstr ""

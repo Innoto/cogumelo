@@ -172,3 +172,7 @@ msgstr "Descartar"
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1034
 msgid "Download"
 msgstr "Descargar"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:612
+msgid "Intento de manipulacion del formulario"
+msgstr ""

@@ -7,7 +7,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Language: \n"
+"Language: :\n"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:7
 msgid "A positive or negative decimal number please (Ej. 123,25)"
@@ -93,7 +93,6 @@ msgstr "une minuscule, un caractère numérique "
 msgid "and one special character (!@-,./?)."
 msgstr "et un caractère spécial (!@-,./?)."
 
-
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:159
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:318
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:159
@@ -170,4 +169,8 @@ msgstr ""
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1034
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:978
 msgid "Download"
+msgstr ""
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:612
+msgid "Intento de manipulacion del formulario"
 msgstr ""
