@@ -266,7 +266,19 @@ function setValidateForm( idForm, rules, messages ) {
 
   // Cargamos el fichero del idioma del entorno
   if( cogumelo.publicConf.C_LANG !== 'en' ) {
-    basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+
+    switch( cogumelo.publicConf.C_LANG ) {
+      case "pt":
+          basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
+          break;
+      case "br":
+          basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
+          break;
+      default:
+          basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+    }
+    
+    //basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
   }
 
   // console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );

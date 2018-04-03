@@ -1456,7 +1456,19 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
 // Cargamos el fichero del idioma de sesion para jQuery Validator
 if( cogumelo.publicConf.C_LANG !== 'en' ) {
-  basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+
+  switch( cogumelo.publicConf.C_LANG ) {
+    case "pt":
+        basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
+        break;
+    case "br":
+        basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
+        break;
+    default:
+        basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+  }
+
+  //basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
 }
 
 
