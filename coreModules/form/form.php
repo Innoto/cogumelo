@@ -29,9 +29,16 @@ class form extends Module {
     ],
     [
       'id' =>'grapesjs',
-      'params' => [ 'grapesjs#v0.12.50' ],
+      'params' => [ 'grapesjs#v0.14.6' ],
       'installer' => 'bower',
       'includes' => [ 'dist/grapes.min.js', 'dist/css/grapes.min.css' ],
+      'autoinclude' => false
+    ],
+    [
+      'id' =>'grapesjsPresetWebpage',
+      'params' => [ 'grapesjs-preset-webpage' ],
+      'installer' => 'manual',
+      'includes' => [ 'dist/grapesjs-preset-webpage.min.js', 'dist/grapesjs-preset-webpage.min.css' ],
       'autoinclude' => false
     ],
   ];

@@ -488,16 +488,23 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
           $el = $(this).closest('.cgmMForm-wrap').find('textarea');
 
-          htmlEditContent = '<div id="editorGrapesJSContent">' + $el.text() + '</div>';
+          textareaHtml = $el.text();
+          if( textareaHtml.indexOf('<div class="htmlEditorBig">') > -1 ) {
+            textareaHtml = textareaHtml.replace( "\n<div class=\"htmlEditorBig\">\n", '' );
+            textareaHtml = textareaHtml.replace( "\n</div><!-- /htmlEditorBig -->\n", '' );
+          }
+          textareaHtml = textareaHtml.replace( /\.htmlEditorBig /gi, '' );
+
+          htmlEditContent = '<div id="editorGrapesJSContent">' + textareaHtml + '</div>';
 
           $editorWrap = $('#editorGrapesJSWrapper');
           if( !$editorWrap.length ) {
-            $('body').prepend('<div id="editorGrapesJSWrapper"></div>')
+            $('body').prepend('<div id="editorGrapesJSWrapper"></div>');
             $editorWrap = $('#editorGrapesJSWrapper');
           }
 
           close = '<p class="editorGrapesJSClose" style="text-align: center;" '+
-            'data-form="'+$el.attr('form')+'" data-field="'+$el.attr('name')+'">Close</p>'
+            'data-form="'+$el.attr('form')+'" data-field="'+$el.attr('name')+'">Close</p>';
 
           $('#wrapper').hide();
           $editorWrap.html( close+"\n"+htmlEditContent );
@@ -505,7 +512,24 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           $('#editorGrapesJSWrapper .editorGrapesJSClose').on( 'click', function() {
             console.log( 'Cerrar', this );
             $ev = $(this);
-            newContent = "<style>\n"+formGrapesJS.getCss()+"</style>\n"+formGrapesJS.getHtml();
+            gjsCss = formGrapesJS.getCss();
+
+            // gjsCss = gjsCss.replace( / *body *{ *margin: *0; *} */gi, '' );
+            // gjsCss = gjsCss.replace( / *body *{ *margin-top: *0px; *margin-right: *0px; *margin-bottom: *0px; *margin-left: *0px; *} */gi, '' );
+
+            // body { pasa a ser .htmlEditorBig body { 
+            gjsCss = gjsCss.replace( /( *body *{)/gi, ' .htmlEditorBig body {' );
+            // .cell { pasa a ser .htmlEditorBig .cell {
+            gjsCss = gjsCss.replace( /( *\.cell *{)/gi, ' .htmlEditorBig .cell {' );
+            // .row { pasa a ser .htmlEditorBig .row {
+            gjsCss = gjsCss.replace( /( *\.row *{)/gi, ' .htmlEditorBig .row {' );
+            // * { pasa a ser .htmlEditorBig * {
+            gjsCss = gjsCss.replace( /( *\* *{)/gi, ' .htmlEditorBig * {' );
+
+            // Separamos por }
+            gjsCss = gjsCss.replace( /} */gi, "}\n" );
+            gjsCss = gjsCss.trim();
+            newContent = "<style>"+gjsCss+"</style>\n<div class=\"htmlEditorBig\">\n"+formGrapesJS.getHtml()+"\n</div><!-- /htmlEditorBig -->\n";
             formGrapesJS = false;
 
             $('#editorGrapesJSWrapper').html('');
@@ -535,6 +559,11 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           formGrapesJS = grapesjs.init({
             fromElement: true,
             container : '#editorGrapesJSContent',
+
+            plugins: ['gjs-preset-webpage'],
+            pluginsOpts: {
+              'gjs-preset-webpage': {/* ...options */}
+            },
 
             // plugins: ['gjs-blocks-flexbox'],
             // pluginsOpts: {
