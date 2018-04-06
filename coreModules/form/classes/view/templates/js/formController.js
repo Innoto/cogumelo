@@ -489,10 +489,11 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           $el = $(this).closest('.cgmMForm-wrap').find('textarea');
 
           textareaHtml = $el.text();
-          if( textareaHtml.indexOf('<div class="htmlEditorBig">') > -1 ) {
+          if( textareaHtml.indexOf('htmlEditorBig') > -1 ) {
             textareaHtml = textareaHtml.replace( "\n<div class=\"htmlEditorBig\">\n", '' );
             textareaHtml = textareaHtml.replace( "\n</div><!-- /htmlEditorBig -->\n", '' );
           }
+          textareaHtml = textareaHtml.replace( /<!-- cssReset -->.*?<!-- \/cssReset -->\n/gi, '' );
           textareaHtml = textareaHtml.replace( /\.htmlEditorBig /gi, '' );
 
           htmlEditContent = '<div id="editorGrapesJSContent">' + textareaHtml + '</div>';
@@ -512,12 +513,12 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           $('#editorGrapesJSWrapper .editorGrapesJSClose').on( 'click', function() {
             console.log( 'Cerrar', this );
             $ev = $(this);
-            gjsCss = formGrapesJS.getCss();
+            var gjsCss = formGrapesJS.getCss();
 
             // gjsCss = gjsCss.replace( / *body *{ *margin: *0; *} */gi, '' );
             // gjsCss = gjsCss.replace( / *body *{ *margin-top: *0px; *margin-right: *0px; *margin-bottom: *0px; *margin-left: *0px; *} */gi, '' );
 
-            // body { pasa a ser .htmlEditorBig body { 
+            // body { pasa a ser .htmlEditorBig body {
             gjsCss = gjsCss.replace( /( *body *{)/gi, ' .htmlEditorBig body {' );
             // .cell { pasa a ser .htmlEditorBig .cell {
             gjsCss = gjsCss.replace( /( *\.cell *{)/gi, ' .htmlEditorBig .cell {' );
@@ -529,7 +530,14 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
             // Separamos por }
             gjsCss = gjsCss.replace( /} */gi, "}\n" );
             gjsCss = gjsCss.trim();
-            newContent = "<style>"+gjsCss+"</style>\n<div class=\"htmlEditorBig\">\n"+formGrapesJS.getHtml()+"\n</div><!-- /htmlEditorBig -->\n";
+
+            var gjsCssReset = '<!-- cssReset --><style>.htmlEditorBig .row{margin-right:0;margin-left:0;}'+
+              '.htmlEditorBig .row:before,.htmlEditorBig .row:after{display:none;content:normal;}'+
+              '.htmlEditorBig .row:after{clear:none;}</style><!-- /cssReset -->';
+
+            var gjsHtml = "<div class=\"htmlEditorBig\">\n"+formGrapesJS.getHtml()+"\n</div><!-- /htmlEditorBig -->";
+
+            var newContent = gjsCssReset+"\n<style>"+gjsCss+"</style>\n"+gjsHtml+"\n";
             formGrapesJS = false;
 
             $('#editorGrapesJSWrapper').html('');
