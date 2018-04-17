@@ -68,7 +68,7 @@ class CacheUtilsController {
         );
 
         // DIST modules
-        if( COGUMELO_DIST_LOCATION != false ) {
+        if( defined('COGUMELO_DIST_LOCATION') && COGUMELO_DIST_LOCATION !== false ) {
           self::copyLessTmpdir(
             COGUMELO_DIST_LOCATION.'/distModules/',
             $moduleName.'/'.$cacheableFolder,
@@ -166,7 +166,7 @@ class CacheUtilsController {
       );
 
       // DIST modules
-      if( COGUMELO_DIST_LOCATION != false ) {
+      if( defined('COGUMELO_DIST_LOCATION') && COGUMELO_DIST_LOCATION !== false ) {
         self::cacheFolder(
           COGUMELO_DIST_LOCATION.'/distModules/'.$moduleName.'/'.$cacheableFolder,
           $moduleName

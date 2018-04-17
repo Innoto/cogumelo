@@ -38,8 +38,12 @@ class VOUtils {
     }
     else {
       $voarray = self::mergeVOs($voarray, APP_BASE_PATH.'/modules/'.$modulename.'/classes/model/', $modulename );
-      // modules into DIST
-      $voarray = self::mergeVOs($voarray, COGUMELO_DIST_LOCATION.'/distModules/'.$modulename.'/classes/model/', $modulename );
+
+      if( defined('COGUMELO_DIST_LOCATION') && COGUMELO_DIST_LOCATION !== false ) {
+        // modules into DIST
+        $voarray = self::mergeVOs($voarray, COGUMELO_DIST_LOCATION.'/distModules/'.$modulename.'/classes/model/', $modulename );
+      }
+      
       // modules into COGUMELO
       $voarray = self::mergeVOs($voarray, COGUMELO_LOCATION.'/coreModules/'.$modulename.'/classes/model/', $modulename );
     }
