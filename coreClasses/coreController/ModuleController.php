@@ -112,7 +112,7 @@ class ModuleController
           $retPath = APP_BASE_PATH.'/modules/'.$module.'/'.$file_relative_path;
         }
         // DIST modules
-        else if( COGUMELO_DIST_LOCATION !== false && file_exists( COGUMELO_DIST_LOCATION.'/distModules/'.$module.'/'.$file_relative_path ) ) {
+        else if( defined('COGUMELO_DIST_LOCATION') && COGUMELO_DIST_LOCATION !== false && file_exists( COGUMELO_DIST_LOCATION.'/distModules/'.$module.'/'.$file_relative_path ) ) {
           $retPath = COGUMELO_DIST_LOCATION.'/distModules/'.$module.'/'.$file_relative_path;
         }
         // CORE modules

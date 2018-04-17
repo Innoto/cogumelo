@@ -11,6 +11,7 @@ class i18nScriptController {
   var $dir_path;
   var $dir_modules_c;
   var $dir_modules;
+  var $dir_modules_dist = false;
   var $textdomain;
   var $modules;
   var $lc_1;
@@ -25,7 +26,9 @@ class i18nScriptController {
     $this->dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
     $this->dir_modules = APP_BASE_PATH.'/modules/';
     $this->dir_main = APP_BASE_PATH.'/classes/view/';
-    $this->dir_modules_dist = COGUMELO_DIST_LOCATION.'/distModules/';
+    if( defined('COGUMELO_DIST_LOCATION') && COGUMELO_DIST_LOCATION !== false ) {
+      $this->dir_modules_dist = COGUMELO_DIST_LOCATION.'/distModules/';
+    }
     $this->textdomain = 'messages';
     $this->lang = Cogumelo::getSetupValue( 'lang:available' );
 
@@ -69,7 +72,7 @@ class i18nScriptController {
       }
     }
     //geozzy distModules
-   if ($dh = opendir($this->dir_modules_dist)) {
+   if( $this->dir_modules_dist && ($dh = opendir($this->dir_modules_dist))) {
       while (($module = readdir($dh)) !== false) {
         if (is_dir($this->dir_modules_dist . $module) && $module!="." && $module!=".."){
           $this->getModulePo($this->dir_modules_dist.$module);
@@ -318,16 +321,16 @@ class i18nScriptController {
   * Combine all modules PO's in only one for each system folder
   **/
   function getSystemPo($system){
-    if($system == 'cogumelo'){
+    if( $system == 'cogumelo' ) {
       $path = $this->dir_modules_c;
     }
-    if($system == 'geozzy'){
+    if( $system === 'geozzy' && $this->dir_modules_dist ) {
       $path = $this->dir_modules_dist;
     }
-    if($system == 'moduleApp'){
+    if( $system == 'moduleApp' ) {
       $path = $this->dir_modules;
     }
-    if ($dh = opendir($path)) {
+    if( $dh = opendir($path) ) {
       $all = array();
       foreach($this->dir_lc as $l => $lang){
         $all[$l] = '';
@@ -421,10 +424,12 @@ class i18nScriptController {
         exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$cogumelo_name);
       }
 
-      $a_geozzy_parts = explode($this->dir_modules_dist,$a);
-      if(count($a_geozzy_parts)>1){
-        $geozzy_name = str_replace('/','_',$a_geozzy_parts[1]);
-        exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$geozzy_name);
+      if( $this->dir_modules_dist ) {
+        $a_geozzy_parts = explode($this->dir_modules_dist,$a);
+        if(count($a_geozzy_parts)>1){
+          $geozzy_name = str_replace('/','_',$a_geozzy_parts[1]);
+          exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$geozzy_name);
+        }
       }
     }
     foreach( $this->lang as $l => $lang ) {
@@ -529,7 +534,7 @@ class i18nScriptController {
         }
       }
     }
-    if ($dh = opendir($this->dir_modules_dist)) {
+    if( $this->dir_modules_dist && ($dh = opendir($this->dir_modules_dist)) ) {
       while (($module = readdir($dh)) !== false) {
         if($this->dir_modules_dist.$module!='.' && $this->dir_modules_c.$module!='..'){
           exec('rm '.$this->dir_modules_dist.$module.'/translations/*.po');
