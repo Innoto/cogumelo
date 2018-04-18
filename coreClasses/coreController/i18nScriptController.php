@@ -26,7 +26,7 @@ class i18nScriptController {
     $this->dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
     $this->dir_modules = APP_BASE_PATH.'/modules/';
     $this->dir_main = APP_BASE_PATH.'/classes/view/';
-    if( defined('COGUMELO_DIST_LOCATION') && COGUMELO_DIST_LOCATION !== false ) {
+    if( defined('COGUMELO_DIST_LOCATION') && COGUMELO_DIST_LOCATION !== false && is_dir( COGUMELO_DIST_LOCATION.'/distModules/' ) ) {
       $this->dir_modules_dist = COGUMELO_DIST_LOCATION.'/distModules/';
     }
     $this->textdomain = 'messages';
@@ -320,7 +320,9 @@ class i18nScriptController {
   /*
   * Combine all modules PO's in only one for each system folder
   **/
-  function getSystemPo($system){
+  function getSystemPo( $system ) {
+    $path = false;
+
     if( $system == 'cogumelo' ) {
       $path = $this->dir_modules_c;
     }
@@ -330,7 +332,8 @@ class i18nScriptController {
     if( $system == 'moduleApp' ) {
       $path = $this->dir_modules;
     }
-    if( $dh = opendir($path) ) {
+
+    if( !empty( $path ) && $dh = opendir( $path ) ) {
       $all = array();
       foreach($this->dir_lc as $l => $lang){
         $all[$l] = '';
@@ -489,7 +492,9 @@ class i18nScriptController {
 
   public function c_i18n_precompile() {
     $this->getSystemPo('cogumelo');
-    $this->getSystemPo('geozzy');
+    if( $this->dir_modules_dist ) {
+      $this->getSystemPo('geozzy');
+    }
     $this->getSystemPo('moduleApp');
   }
 
@@ -499,18 +504,23 @@ class i18nScriptController {
     exec('chmod 700 '.$this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh');
     foreach ($this->dir_lc as $l){
       // We merge cogumelo geozzy and app po to have only one final PO
-      exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$l.'/'.$this->textdomain.'_geozzy.po '.$l.'/'.$this->textdomain.'_moduleApp.po');
+      $poDistr = ( $this->dir_modules_dist ) ? $l.'/'.$this->textdomain.'_geozzy.po' : '';
+      exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$poDistr.' '.$l.'/'.$this->textdomain.'_moduleApp.po');
 
       // We compile the resultant PO and generate a json for client side
       exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
       exec('php '.$this->dir_modules_c.'/i18nServer/classes/po2json.php -i '.$l.'/'.$this->textdomain.'.po -o '.$l.'/translation.json');
     }
-    /* Borramos os ficheiros temporales para evitar confusións;
-    poderían deixarse para ver os PO de sistema xenerados e o da APP e modificar algunha cadea aí directamente en caso de ser necesario */
+
+    /* Borramos os ficheiros temporales para evitar confusións. Poderían deixarse para ver os PO de sistema
+     * xenerados e o da APP e modificar algunha cadea aí directamente en caso de ser necesario
+     */
     foreach ($this->dir_lc as $l){
       //exec('rm '.$l.'/'.$this->textdomain.'.po');
       exec('rm '.$l.'/'.$this->textdomain.'_cogumelo.po');
-      exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
+      if( $this->dir_modules_dist ) {
+        exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
+      }
       exec('rm '.$l.'/'.$this->textdomain.'_moduleApp.po');
     }
   }
