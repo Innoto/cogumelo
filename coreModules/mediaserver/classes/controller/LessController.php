@@ -18,6 +18,8 @@ class LessController {
    * @return boolean
    */
   public function compile( $lessFilePath, $resultFilePath, $moduleName ) {
+    // error_log( __METHOD__.' lessPath:'.$lessFilePath.', resPath:'.$resultFilePath.', module: '.$moduleName );
+
     $ret = true;
 
     if( $this->less === false ) {

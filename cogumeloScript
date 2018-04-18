@@ -117,8 +117,8 @@ if( $argc > 1 ) {
       break;
 
     case 'precompileTranslations':
-        actionPrecompileTranslations();
-        break;
+      actionPrecompileTranslations();
+      break;
 
     case 'compileTranslations':
       actionCompileTranslations();
@@ -277,14 +277,18 @@ function actionRotateLogs() {
 
 
 function actionGenerateClientCaches() {
-  $ctx = stream_context_create(array('http'=>
-      array(
-          'timeout' => 1200,  //1200 Seconds is 20 Minutes
-      )
-  ));
 
+
+  // require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
+  // mediaserver::autoIncludes();
+  // CacheUtilsController::generateAllCaches();
+
+
+  $ctx = stream_context_create( ['http'=> ['timeout' => 1200 ] ] ); //1200 Seconds is 20 Minutes
   echo("Calling ".Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches ... If you have any problem in less compilation, execute this url in browser');
   file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches', false, $ctx);
+
+
   echo "\nClient caches generated\n\n";
 }
 

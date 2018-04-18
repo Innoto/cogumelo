@@ -20,9 +20,9 @@ class CacheUtilsController {
     if( count($tmpLessFiles) > 0 ){
       foreach( $tmpLessFiles as $lessFilePath ) {
 
-        $path = str_replace($tmpLessDir, '' , $lessFilePath );
+        $path = str_replace( $tmpLessDir, '', $lessFilePath );
 
-        if( mb_substr( $path , 0,7) === 'classes' ) {
+        if( mb_substr( $path , 0, 7 ) === 'classes' ) {
           $moduleName = false;
           $relativeFilePath = str_replace('classes/view/templates/', '', $path);
         }
@@ -33,14 +33,12 @@ class CacheUtilsController {
           $relativeFilePath = str_replace($moduleName.'/classes/view/templates/', '', $path);
         }
 
-        $mediaserverControl->compileAndCacheLess( $relativeFilePath  , $moduleName);
-
+        $mediaserverControl->compileAndCacheLess( $relativeFilePath, $moduleName );
       }
     }
 
     // remove tmp less dir
     self::removeLessTmpdir();
-
   }
 
   // crea estructura con todos os arquivos LESS para a súa futura compilación
@@ -54,7 +52,7 @@ class CacheUtilsController {
     else {
       $destino = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).'/lesstmp/'.self::generateLessTmpdirName().'/';
 
-      mkdir( $destino, 0777, true );
+      mkdir( $destino, 0750, true );
 
       $cacheableFolder = 'classes/view/templates/';
 
@@ -106,12 +104,11 @@ class CacheUtilsController {
 
     foreach ( $fileList as $filePath ) {
       $relativeFilePath = mb_substr( $filePath, mb_strlen($origDir) );
-      if(!file_exists( dirname($destDir.$relativeFilePath) )){
-        mkdir( dirname($destDir.$relativeFilePath ), 0744, true );
+      if( !file_exists( dirname($destDir.$relativeFilePath) ) ) {
+        mkdir( dirname($destDir.$relativeFilePath ), 0750, true );
       }
       copy( $filePath, $destDir.$relativeFilePath );
     }
-
   }
 
   public static function removeLessTmpdir( $dir = false ) {
@@ -185,7 +182,6 @@ class CacheUtilsController {
 
     // all less files
     self::generateAllLessCaches();
-
   }
 
   public static function cacheFolder( $folder, $moduleName = false ) {

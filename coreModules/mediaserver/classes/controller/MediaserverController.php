@@ -18,6 +18,8 @@ class MediaserverController {
 
 
   public function cacheContent( $path, $module, $doNotRedirect = false ) {
+    // error_log( __METHOD__.' $path:'.$path.', $module: '.$module );
+
     $parsedUrl = parse_url($path);
     $this->urlPath = $parsedUrl['path'];
     $this->moduleName = $module;
@@ -49,6 +51,8 @@ class MediaserverController {
 
 
   public function compileAndCacheLess( $path, $module ) {
+    // error_log( __METHOD__.' $path:'.$path.', $module: '.$module );
+
     $parsedUrl = parse_url($path);
     $this->urlPath = $parsedUrl['path'];
     $this->moduleName = $module;
@@ -123,6 +127,8 @@ class MediaserverController {
     $lessControl = new LessController();
     $tmp_cache = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ) .'/'. $this->modulePath . $this->urlPath.'.css';
     $final_cache = WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) .'/'. $this->modulePath . $this->urlPath.'.css' ;
+
+    // error_log( __METHOD__.' $tmp_cache:'.$tmp_cache.', $final_cache: '.$final_cache );
 
     // create tmp folder
     $this->createDirPath( $tmp_cache );
