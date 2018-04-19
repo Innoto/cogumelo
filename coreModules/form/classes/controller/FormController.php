@@ -2235,10 +2235,10 @@ class FormController implements Serializable {
       $attribs .= isset( $field['size'] ) ? ' size="'.$field['size'].'"' : '';
       $attribs .= isset( $field['cols'] ) ? ' cols="'.$field['cols'].'"' : '';
       $attribs .= isset( $field['rows'] ) ? ' rows="'.$field['rows'].'"' : '';
-      $attribs .= isset( $field['multiple'] ) ? ' multiple="multiple"' : '';
-      $attribs .= isset( $field['readonly'] ) ? ' readonly="readonly"' : '';
-      $attribs .= isset( $field['disabled'] ) ? ' disabled="disabled"' : '';
-      $attribs .= isset( $field['hidden'] ) ? ' hidden="hidden"' : '';
+      $attribs .= !empty( $field['multiple'] ) ? ' multiple="multiple"' : '';
+      $attribs .= !empty( $field['readonly'] ) ? ' readonly="readonly"' : '';
+      $attribs .= !empty( $field['disabled'] ) ? ' disabled="disabled"' : '';
+      $attribs .= !empty( $field['hidden'] ) ? ' hidden="hidden"' : '';
       $attribs .= !empty( $field['htmlEditor'] ) ? ' contenteditable="true"' : '';
 
       $r = $this->getValidationRules( $fieldName );
