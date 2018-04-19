@@ -138,9 +138,9 @@ if( $argc > 1 ) {
       echo "\n --- Flush DONE\n";
       break;
 
-    case 'rotateLogs':
-      actionRotateLogs();
-      break;
+    // case 'rotateLogs':
+    //   actionRotateLogs();
+    //   break;
 
     case 'generateClientCaches':
       actionGenerateClientCaches();
@@ -289,10 +289,10 @@ function actionFlush() {
 }
 
 
-function actionRotateLogs() {
-  echo file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=rotate_logs' );
-  echo "\nRotate Logs done!\n\n";
-}
+// function actionRotateLogs() {
+//   echo file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=rotate_logs' );
+//   echo "\nRotate Logs done!\n\n";
+// }
 
 
 function actionGenerateClientCaches() {
