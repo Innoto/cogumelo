@@ -32,12 +32,15 @@ class LessController {
     // set includes dir
     $this->less->setImportDir( $lessTmpDir );
 
+
     // set less variables (Defined in setup)
     $this->less->setVariables( $this->getLessVarsFromSetup() ) ;
 
     if( $this->minimify ) {
       $this->less->setFormatter('compressed');
     }
+
+    $_SERVER['DOCUMENT_ROOT'] =getcwd().'/httpdocs';
 
     try {
       $this->less->checkedCompile( $lessTmpDir.$moduleName.'/classes/view/templates/'.$lessFilePath, $resultFilePath );
