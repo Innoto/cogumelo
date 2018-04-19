@@ -2,6 +2,7 @@
 
 require_once( COGUMELO_LOCATION.'/coreClasses/CogumeloClass.php' );
 require_once( APP_BASE_PATH.'/Cogumelo.php' );
+
 global $COGUMELO_IS_EXECUTING_FROM_SCRIPT;
 $COGUMELO_IS_EXECUTING_FROM_SCRIPT=true;
 
@@ -9,18 +10,18 @@ global $_C;
 $_C =Cogumelo::get();
 
 //
-//  CARGO MÓDULO DEVEL E O DEVELDBCONTROLLER, QUE É ONDE ESTÁN OS MÉTODOS QUE NOS INTERESAN
+// Load the necessary modules
 //
-require_once(ModuleController::getRealFilePath('devel.php', 'devel'));
-require_once(ModuleController::getRealFilePath('classes/controller/DevelDBController.php', 'devel'));
-require_once(ModuleController::getRealFilePath('classes/controller/CacheUtilsController.php', 'mediaserver'));
+require_once( ModuleController::getRealFilePath('devel.php', 'devel') );
+require_once( ModuleController::getRealFilePath('classes/controller/DevelDBController.php', 'devel') );
+require_once( ModuleController::getRealFilePath('classes/controller/CacheUtilsController.php', 'mediaserver') );
 Cogumelo::load('coreController/ModuleController.php');
 
-//
-//  UTILIZO A CLASE COMO FARÍA DENDE UN VIEW NORMAL
-//
-//$develdbcontrol = new DevelDBController();
-//var_dump( $develdbcontrol->getTablesSQL() ); // este método, por exemplo, devolvenos todo o  SQL xerado para os VO's do proxecto
+
+if( empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
+  $_SERVER['DOCUMENT_ROOT'] = ( defined( WEB_BASE_PATH ) ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
+  echo( "\nSet SERVER[DOCUMENT_ROOT] = ".$_SERVER['DOCUMENT_ROOT']."\n" );
+}
 
 
 if( $argc > 1 ) {
@@ -265,7 +266,25 @@ function flushAll() {
 
 
 function actionFlush() {
+
+  // Def: app/tmp/templates_c
+  rmdirRec( Cogumelo::getSetupValue('smarty:compilePath'), false );
+  // Def: httpdocs/cgmlImg
+  rmdirRec( Cogumelo::getSetupValue('mod:filedata:cachePath'), false );
+  // Def: httpdocs/mediaCache
+  rmdirRec( Cogumelo::getSetupValue('mod:mediaserver:tmpCachePath'), false );
+  echo ' - Cogumelo File cache flush: Done'."\n";
+
+
+  require_once( COGUMELO_LOCATION.'/coreClasses/coreController/Cache.php' );
+  $cacheCtrl = new Cache();
+  $cacheCtrl->flush();
+  echo ' - Cogumelo Memory Cache flush: Done'."\n";
+
+
+  echo ' - Cogumelo PHP cache flush...'."\n";
   echo file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=flush' );
+
   echo "\nCogumelo caches deleted!\n\n";
 }
 
@@ -279,14 +298,14 @@ function actionRotateLogs() {
 function actionGenerateClientCaches() {
 
 
-  // require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
-  // mediaserver::autoIncludes();
-  // CacheUtilsController::generateAllCaches();
+  require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
+  mediaserver::autoIncludes();
+  CacheUtilsController::generateAllCaches();
 
 
-  $ctx = stream_context_create( ['http'=> ['timeout' => 1200 ] ] ); //1200 Seconds is 20 Minutes
-  echo("Calling ".Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches ... If you have any problem in less compilation, execute this url in browser');
-  file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches', false, $ctx);
+  // $ctx = stream_context_create( ['http'=> ['timeout' => 1200 ] ] ); //1200 Seconds is 20 Minutes
+  // echo("Calling ".Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches ... If you have any problem in less compilation, execute this url in browser');
+  // file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches', false, $ctx);
 
 
   echo "\nClient caches generated\n\n";
@@ -329,7 +348,7 @@ function makeAppPaths() {
     Cogumelo::getSetupValue( 'smarty:configPath' ), Cogumelo::getSetupValue( 'smarty:compilePath' ),
     Cogumelo::getSetupValue( 'smarty:cachePath' ), Cogumelo::getSetupValue( 'smarty:tmpPath' ),
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ),
-    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ),
+    // WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ),
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ),
     Cogumelo::getSetupValue( 'logs:path' ),
     Cogumelo::getSetupValue( 'session:savePath' ),
@@ -363,7 +382,7 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
     Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
+    // WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
     Cogumelo::getSetupValue( 'logs:path' ).' '.
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
@@ -380,7 +399,7 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
     Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
+    // WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
     Cogumelo::getSetupValue( 'logs:path' ).' '.
     Cogumelo::getSetupValue( 'session:savePath' ).' '.
@@ -497,3 +516,38 @@ function getPassword( $stars = false ) {
   // Return the password
   return $password;
 }
+
+
+function rmdirRec( $dir, $removeContainer = true ) {
+  // error_log( "rmdirRec( $dir )" );
+
+  $dir = rtrim( $dir, '/' );
+  if( !empty( $dir ) && strpos( $dir, PRJ_BASE_PATH ) === 0 && is_dir( $dir ) ) {
+    $dirElements = scandir( $dir );
+    if( !empty( $dirElements ) ) {
+      foreach( $dirElements as $object ) {
+        if( $object !== '.' && $object !== '..' ) {
+          if( is_dir( $dir.'/'.$object ) ) {
+
+            rmdirRec( $dir.'/'.$object );
+          }
+          else {
+
+            unlink( $dir.'/'.$object );
+          }
+        }
+      }
+    }
+    reset( $dirElements );
+    if( $removeContainer ) {
+      if( !is_link( $dir ) ) {
+        rmdir( $dir );
+      }
+      else {
+        unlink( $dir );
+      }
+    }
+  }
+}
+
+

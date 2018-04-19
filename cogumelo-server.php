@@ -49,30 +49,30 @@ if( $_SERVER['REMOTE_ADDR'] !== 'local_shell' && isset( $_SERVER['REMOTE_ADDR'] 
       break;
     case 'flush':
 
-      // Def: templates_c
-      rmdirRec( Cogumelo::getSetupValue('smarty:compilePath'), false );
-      // Def: cgmlImg
-      rmdirRec( Cogumelo::getSetupValue('mod:filedata:cachePath'), false );
-      // Def: mediaCache
-      rmdirRec( Cogumelo::getSetupValue('mod:mediaserver:tmpCachePath'), false );
-      echo ' - Cogumelo File cache flush'."\n";
+      // // Def: templates_c
+      // rmdirRec( Cogumelo::getSetupValue('smarty:compilePath'), false );
+      // // Def: cgmlImg
+      // rmdirRec( Cogumelo::getSetupValue('mod:filedata:cachePath'), false );
+      // // Def: mediaCache
+      // rmdirRec( Cogumelo::getSetupValue('mod:mediaserver:tmpCachePath'), false );
+      // echo ' - Cogumelo File cache flush'."\n";
+
+      // $cacheCtrl = new Cache();
+      // $cacheCtrl->flush();
+      // echo ' - Cogumelo Memory Cache flush'."\n";
 
       if( function_exists('opcache_reset') ) {
         $opcacheReset = opcache_reset(); // ( ($opcacheReset) ? 'OK' : 'FAIL'
-        echo ' - Cogumelo PHP cache flush'."\n";
+        echo ' - Cogumelo PHP cache flush: Done'."\n";
       }
-
-      $cacheCtrl = new Cache();
-      $cacheCtrl->flush();
-      echo ' - Cogumelo Memory Cache flush'."\n";
 
       break;
 
     case 'client_caches':
-      Cogumelo::load( 'coreController/ModuleController.php' );
-      require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
-      mediaserver::autoIncludes();
-      CacheUtilsController::generateAllCaches();
+      // Cogumelo::load( 'coreController/ModuleController.php' );
+      // require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
+      // mediaserver::autoIncludes();
+      // CacheUtilsController::generateAllCaches();
       break;
 
   } // switch
@@ -88,7 +88,7 @@ function rmdirRec( $dir, $removeContainer = true ) {
   // error_log( "rmdirRec( $dir )" );
 
   $dir = rtrim( $dir, '/' );
-  if( is_dir( $dir ) ) {
+  if( !empty( $dir ) && strpos( $dir, PRJ_BASE_PATH ) === 0 && is_dir( $dir ) ) {
     $dirElements = scandir( $dir );
     if( !empty( $dirElements ) ) {
       foreach( $dirElements as $object ) {
