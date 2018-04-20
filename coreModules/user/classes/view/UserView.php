@@ -144,12 +144,16 @@ class UserView extends View {
           case LOGIN_FAILED:
           case LOGIN_USERUNKOWN:
           case LOGIN_USERDISABLED:
+            Cogumelo::log( 'LOGIN: Intento fallido con usuario: '.$valuesArray['userLogin'], 'UserLog' );
             $form->addFormError(__('El login y/o contraseña son erróneos'));
             break;
           case LOGIN_BAN:
             $form->addFormError(__('Demasiados intentos de acceso. Vuelve a intentarlo más tarde.'));
             break;
         }
+      }
+      else{
+        Cogumelo::log( 'LOGIN: OK, usuario: '.$valuesArray['userLogin'], 'UserLog' );
       }
     }
 
