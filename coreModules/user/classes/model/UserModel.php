@@ -265,6 +265,7 @@ class UserModel extends Model
         $uPermArray[] = $uPerm->getter('permission');
       }
     }
+    $userO->setter('loginFailAttempts', 0);
     $userO->setter('timeLastLogin' , date("Y-m-d H:i:s", time()));
     $userO->save();
     $data = array();
