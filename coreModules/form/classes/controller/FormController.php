@@ -2292,7 +2292,7 @@ class FormController implements Serializable {
                     'option data-order="'.$dataOrder.'" value="'.htmlspecialchars( $val ).'" selected="selected"',
                     $html['options'][$val]['input'] );
                   $dataOrder++;
-                  if( !isset( $field['multiple'] ) ) {
+                  if( empty( $field['multiple'] ) ) {
                     break; // Si no es multiple, solo puede tener 1 valor
                   }
                 }
@@ -2445,7 +2445,7 @@ class FormController implements Serializable {
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
       if( $this->getFieldParam( $fieldName, 'type' ) === 'file' && $this->getFieldParam( $fieldName, 'multiple' ) ) {
         $value = $this->getFieldValue( $fieldName );
-        if( isset( $value['multiple'] ) ) {
+        if( !empty( $value['multiple'] ) ) {
           $jsFileGroups[ $value['idGroup'] ] = [];
           foreach( $value['multiple'] as $fileInfo ) {
             $jsFileGroups[ $value['idGroup'] ][] = $fileInfo['prev'];
@@ -2954,7 +2954,7 @@ class FormController implements Serializable {
       $fieldValues = $this->getFieldValue( $fieldName );
 
       // Hay que tener cuidado con ciertos fieldValues con estructura de array pero que son un único elemento
-      if( $fieldType === 'file' && ( isset( $fieldValues['status'] ) || isset( $fieldValues['multiple'] ) ) ) {
+      if( $fieldType === 'file' && ( isset( $fieldValues['status'] ) || !empty( $fieldValues['multiple'] ) ) ) {
         $fieldValues = array( $fieldValues );
       }
 
