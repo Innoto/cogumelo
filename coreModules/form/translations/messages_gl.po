@@ -134,6 +134,7 @@ msgstr ""
 "versións recentes..."
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:719
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:771
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:734
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:719
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:524
@@ -142,6 +143,7 @@ msgid "There are errors in the form"
 msgstr "Hai erros no formulario"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:720
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:772
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:735
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:720
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:525
@@ -150,6 +152,7 @@ msgid "Warning"
 msgstr "Atención"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:858
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:910
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:873
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:858
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:683
@@ -158,6 +161,7 @@ msgid "Error loading file"
 msgstr "Erro cargando arquivo"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:1124
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1176
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1139
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1124
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:960
@@ -166,6 +170,7 @@ msgid "Discard"
 msgstr "Descartar"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:1142
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1194
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1157
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1142
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:978

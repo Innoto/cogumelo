@@ -10,12 +10,14 @@ msgstr ""
 "Language: \n"
 
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:72
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:249
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:245
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:236
 msgid "Nickname"
 msgstr ""
 
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:74
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:226
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:222
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:213
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:71
@@ -33,14 +35,18 @@ msgstr ""
 msgid "Sign in"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:148
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:147
 msgid "El login y/o contraseña son erróneos"
 msgstr "Login et/ou mot de passe erronées"
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:151
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:150
 msgid "Demasiados intentos de acceso. Vuelve a intentarlo más tarde."
 msgstr "Trop de tentatives d'accès. Réessayez plus tard."
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:216
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:217
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:212
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:213
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:203
@@ -50,42 +56,50 @@ msgstr "Trop de tentatives d'accès. Réessayez plus tard."
 msgid "Upload a file"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:222
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:218
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:209
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:204
 msgid "Login"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:230
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:226
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:217
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:212
 msgid "Repeat email"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:234
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:230
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:221
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:216
 msgid "Name"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:237
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:233
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:224
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:219
 msgid "Surname"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:240
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:236
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:227
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:222
 msgid "Active"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:243
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:239
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:230
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:225
 msgid "Description"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:260
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:318
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:256
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:314
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:247
@@ -96,6 +110,8 @@ msgstr ""
 msgid "New password"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:261
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:319
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:257
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:315
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:248
@@ -106,6 +122,7 @@ msgstr ""
 msgid "Repeat password"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:313
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:309
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:300
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:296
@@ -113,6 +130,7 @@ msgstr ""
 msgid "Password changed successfully."
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:317
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:313
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:304
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:300
@@ -120,6 +138,8 @@ msgstr ""
 msgid "Old password"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:321
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:391
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:317
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:387
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:308
@@ -131,6 +151,7 @@ msgstr ""
 msgid "Save"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:387
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:383
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:374
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:366
@@ -138,6 +159,8 @@ msgstr ""
 msgid "Select the roles for this user"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:534
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:541
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:530
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:537
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:521
@@ -149,6 +172,8 @@ msgstr ""
 msgid "The email specified field already in use"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:551
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:558
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:547
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:554
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:538
@@ -158,6 +183,7 @@ msgstr ""
 msgid "The login specified field already in use"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:579
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:575
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:566
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:558
@@ -167,6 +193,7 @@ msgid ""
 "them again."
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:716
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:712
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:703
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:695
@@ -174,6 +201,7 @@ msgstr ""
 msgid "Unknow user"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:719
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:715
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:706
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:698
@@ -181,6 +209,7 @@ msgstr ""
 msgid "The old password does not match."
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:765
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:761
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:752
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:744
@@ -188,6 +217,7 @@ msgstr ""
 msgid "User Error unidentified"
 msgstr ""
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:779
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:775
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:766
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:758
