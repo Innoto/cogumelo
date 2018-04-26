@@ -573,6 +573,13 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
               'gjs-preset-webpage': {/* ...options */}
             },
 
+            assetManager: {
+              // Upload endpoint, set `false` to disable upload, default `false`
+              upload: '/filedata/sendFormGrapesJSFile',
+              // The name used in POST to pass uploaded files, default: `'files'`
+              uploadName: 'formGrapesJSFile',
+            },
+
             // plugins: ['gjs-blocks-flexbox'],
             // pluginsOpts: {
             //   'gjs-blocks-flexbox': {
