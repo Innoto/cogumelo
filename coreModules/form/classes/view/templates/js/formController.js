@@ -573,6 +573,10 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
               'gjs-preset-webpage': {/* ...options */}
             },
 
+            storageManager: {
+              autoload: 0,
+            },
+
             assetManager: {
               // Upload endpoint, set `false` to disable upload, default `false`
               upload: '/filedata/sendFormGrapesJSFile',
