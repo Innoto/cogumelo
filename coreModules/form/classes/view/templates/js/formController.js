@@ -578,8 +578,11 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
             },
 
             assetManager: {
+              // formGrapesJS.AssetManager.add('/mediaCache/img/portada.jpg')
+              assets: ['/cgmlformpublic/ancares_crop.jpg'],
+
               // Upload endpoint, set `false` to disable upload, default `false`
-              upload: '/filedata/sendFormGrapesJSFile',
+              upload: '/admin/sendFormGrapesJSFile',
               // The name used in POST to pass uploaded files, default: `'files'`
               uploadName: 'formGrapesJSFile',
             },
