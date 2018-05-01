@@ -80,6 +80,8 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   cogumelo.formControllerInfo.setFormInfo( that.idForm, 'controller', that );
 
 
+  that.grapesJSFiles = ['/cgmlformpublic/ancares_crop.jpg'];
+
 
   that.setValidateForm = function setValidateForm( rules, messages ) {
 
@@ -579,12 +581,12 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
             assetManager: {
               // formGrapesJS.AssetManager.add('/mediaCache/img/portada.jpg')
-              assets: ['/cgmlformpublic/ancares_crop.jpg'],
+              assets: that.grapesJSFiles,
 
               // Upload endpoint, set `false` to disable upload, default `false`
-              upload: '/admin/sendFormGrapesJSFile',
+              upload: '/admin/grapesJSFileUpload',
               // The name used in POST to pass uploaded files, default: `'files'`
-              uploadName: 'formGrapesJSFile',
+              uploadName: 'grapesJSFilesUpload',
             },
 
             // plugins: ['gjs-blocks-flexbox'],
