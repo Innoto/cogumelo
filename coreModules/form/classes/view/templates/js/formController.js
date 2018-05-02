@@ -486,7 +486,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
         );
         $ta.css({ height: 0, border: 0, padding: 0, margin: 0 });
 
-        $(' <button class="btn btnGoToEditorBig">'+__('Open editor')+' <i class="fa fa-external-link" aria-hidden="true"></i></button>').insertAfter( $fieldWrap.find('label') );
+        $fieldWrap.find('label').append(' <button class="btn btnGoToEditorBig">'+__('Open editor')+' <i class="fa fa-external-link" aria-hidden="true"></i></button>');
         $fieldWrap.find('.btnGoToEditorBig').css({
           'background': '#5AB780',
           'color': '#ffffff'
