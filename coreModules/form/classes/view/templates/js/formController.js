@@ -60,6 +60,10 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
   that.fileGroup = [];
 
+
+  that.grapesJSFiles = [];
+
+
   that.langAvailableIds = ( typeof( cogumelo.publicConf.langAvailableIds ) === 'object' ) ? cogumelo.publicConf.langAvailableIds : [''];
   that.langDefault = cogumelo.publicConf.langDefault;
   that.langSession = cogumelo.publicConf.C_LANG;
@@ -78,9 +82,6 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
   // Save this controller instance
   cogumelo.formControllerInfo.setFormInfo( that.idForm, 'controller', that );
-
-
-  that.grapesJSFiles = ['/cgmlformpublic/ancares_crop.jpg'];
 
 
   that.setValidateForm = function setValidateForm( rules, messages ) {
@@ -612,7 +613,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
             // },
           });
 
-
+          that.updateImages2HtmlEditorBig( formGrapesJS );
 
           // console.log( "formGrapesJS = grapesjs.init({ height: '"+(window.innerHeight*0.7)+"px', fromElement: true, container : '#editorGrapesJSContent' });");
 
@@ -621,6 +622,22 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     );
   }; // that.activateHtmlEditorBig
 
+  that.updateImages2HtmlEditorBig = function updateImages2HtmlEditorBig( objGrapesJS ) {
+    console.log( '* updateImages2HtmlEditorBig: ', that.idForm );
+
+    $.ajax({
+      url: '/admin/grapesJSFileList', type: 'POST',
+      //Options to tell jQuery not to process data or worry about content-type.
+      cache: false, contentType: false, processData: false,
+      success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
+        if( $jsonData.length > 0 ) {
+          $.each( $jsonData, function( i, elem ) {
+            objGrapesJS.AssetManager.add( elem );
+          });
+        }
+      },
+    });
+  }; // that.updateImages2HtmlEditorBig
 
   that.switchFormLang = function switchFormLang( lang ) {
     console.log( '* switchFormLang: ',that.idForm,lang );
