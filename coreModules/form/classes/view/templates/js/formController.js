@@ -483,7 +483,12 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
         );
         $ta.css({ height: 0, border: 0, padding: 0, margin: 0 });
 
-        $fieldWrap.find('label').on( 'click',function() {
+        $(' <button class="btn btnGoToEditorBig">'+__('Open editor')+' <i class="fa fa-external-link" aria-hidden="true"></i></button>').insertAfter( $fieldWrap.find('label') );
+        $fieldWrap.find('.btnGoToEditorBig').css({
+          'background': '#5AB780',
+          'color': '#ffffff'
+        });
+        $fieldWrap.find('.btnGoToEditorBig').on( 'click',function() {
           console.log( 'Abrir', this );
 
           $el = $(this).closest('.cgmMForm-wrap').find('textarea');
@@ -504,8 +509,11 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
             $editorWrap = $('#editorGrapesJSWrapper');
           }
 
-          close = '<p class="editorGrapesJSClose" style="text-align: center;" '+
-            'data-form="'+$el.attr('form')+'" data-field="'+$el.attr('name')+'">Close</p>';
+          close = ''+
+          '<div class="wrapperGrapesButtonClose" style="text-align:center;">'+
+            '<button class="btn editorGrapesJSClose" style="margin:4px 0;background:#5AB780;color:#ffffff;"'+
+              'data-form="'+$el.attr('form')+'" data-field="'+$el.attr('name')+'">'+__('Close')+'</button>'+
+          '</div>';
 
           $('#wrapper').hide();
           $editorWrap.html( close+"\n"+htmlEditContent );
@@ -567,6 +575,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           formGrapesJS = grapesjs.init({
             fromElement: true,
             container : '#editorGrapesJSContent',
+            height: 'calc(100vh - 40px)',
 
             plugins: ['gjs-preset-webpage'],
             pluginsOpts: {
