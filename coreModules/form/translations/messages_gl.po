@@ -191,7 +191,7 @@ msgstr "e un caracter especial (!@-,./?)."
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:489
 msgid "Open editor"
-msgstr "Abrir edidor"
+msgstr "Abrir editor"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:518
 msgid "Close"
