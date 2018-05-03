@@ -575,7 +575,8 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
 
           // /vendor/bower/grapesjs-blocks-flexbox-master/dist/grapesjs-blocks-flexbox.min.js
-          formGrapesJS = grapesjs.init({
+
+          var gJSInit = {
             fromElement: true,
             container : '#editorGrapesJSContent',
             height: 'calc(100vh - 40px)',
@@ -587,16 +588,6 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
             storageManager: {
               autoload: 0,
-            },
-
-            assetManager: {
-              // formGrapesJS.AssetManager.add('/mediaCache/img/portada.jpg')
-              assets: that.grapesJSFiles,
-
-              // Upload endpoint, set `false` to disable upload, default `false`
-              upload: '/admin/grapesJSFileUpload',
-              // The name used in POST to pass uploaded files, default: `'files'`
-              uploadName: 'grapesJSFilesUpload',
             },
 
             // plugins: ['gjs-blocks-flexbox'],
@@ -611,7 +602,20 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
             //     id: 'commands',
             //   }],
             // },
-          });
+          };
+
+          if( typeof cogumelo.publicConf.mod_filedata_filePublicGrapesUpload === 'string' ) {
+            gJSInit.assetManager = {
+              // formGrapesJS.AssetManager.add('/mediaCache/img/portada.jpg')
+              assets: that.grapesJSFiles,
+              // Upload endpoint, set `false` to disable upload, default `false`
+              upload: cogumelo.publicConf.mod_filedata_filePublicGrapesUpload,
+              // The name used in POST to pass uploaded files, default: `'files'`
+              uploadName: 'grapesJSFilesUpload',
+            };
+          }
+
+          formGrapesJS = grapesjs.init( gJSInit );
 
           that.updateImages2HtmlEditorBig( formGrapesJS );
 
@@ -625,16 +629,19 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   that.updateImages2HtmlEditorBig = function updateImages2HtmlEditorBig( objGrapesJS ) {
     console.log( '* updateImages2HtmlEditorBig: ', that.idForm );
 
-    $.ajax({
-      url: '/admin/grapesJSFileList', type: 'POST',
-      //Options to tell jQuery not to process data or worry about content-type.
-      cache: false, contentType: false, processData: false,
-      success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-        if( $jsonData.length > 0 ) {
-          objGrapesJS.AssetManager.add( $jsonData );
-        }
-      },
-    });
+    if( typeof cogumelo.publicConf.mod_filedata_filePublicListJson === 'string' ) {
+      $.ajax({
+        url: cogumelo.publicConf.mod_filedata_filePublicListJson,
+        type: 'POST',
+        //Options to tell jQuery not to process data or worry about content-type.
+        cache: false, contentType: false, processData: false,
+        success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
+          if( $jsonData.length > 0 ) {
+            objGrapesJS.AssetManager.add( $jsonData );
+          }
+        },
+      });
+    }
   }; // that.updateImages2HtmlEditorBig
 
   that.switchFormLang = function switchFormLang( lang ) {
