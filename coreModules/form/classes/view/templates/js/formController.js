@@ -631,9 +631,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       cache: false, contentType: false, processData: false,
       success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
         if( $jsonData.length > 0 ) {
-          $.each( $jsonData, function( i, elem ) {
-            objGrapesJS.AssetManager.add( elem );
-          });
+          objGrapesJS.AssetManager.add( $jsonData );
         }
       },
     });
