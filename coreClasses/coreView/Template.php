@@ -572,10 +572,10 @@ class Template extends Smarty {
       $clientIncludes .= 'basket.require('. "\n";
       $clientIncludes .= $this->getClientScriptHtml() ;
       if( !$this->cgmMediaserverCompileLess){
-        $clientIncludes .= ').then(function () {  });'."\n\n";
+        $clientIncludes .= ').then(function () { console.log(\'JS files already loaded\'); });'."\n\n";
       }
       else {
-        $clientIncludes .= ').then(function () { $.holdReady( false ); });'."\n\n";
+        $clientIncludes .= ').then(function () { console.log(\'JS files already loaded\');$.holdReady( false ); });'."\n\n";
       }
       $clientIncludes .= "</script>\n\n\n";
 
