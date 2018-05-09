@@ -583,7 +583,9 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
             plugins: ['gjs-preset-webpage'],
             pluginsOpts: {
-              'gjs-preset-webpage': {/* ...options */}
+              'gjs-preset-webpage': {
+                blocksBasicOpts: { flexGrid: 1 }
+              }
             },
 
             storageManager: {
