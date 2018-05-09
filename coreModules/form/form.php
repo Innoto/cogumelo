@@ -29,7 +29,7 @@ class form extends Module {
     ],
     [
       'id' =>'grapesjs',
-      'params' => [ 'grapesjs#v0.14.6' ],
+      'params' => [ 'grapesjs#v0.14.15' ],
       'installer' => 'bower',
       'includes' => [ 'dist/grapes.min.js', 'dist/css/grapes.min.css' ],
       'autoinclude' => false
