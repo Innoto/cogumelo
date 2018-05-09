@@ -5,7 +5,10 @@ require_once( COGUMELO_LOCATION.'/coreClasses/coreController/ModuleController.ph
 require_once( COGUMELO_LOCATION.'/coreClasses/coreController/DependencesController.php' );
 require_once( COGUMELO_LOCATION.'/coreClasses/coreController/I18n.php' );
 require_once( COGUMELO_LOCATION.'/coreClasses/coreController/SetupMethods.php' );
-require_once( COGUMELO_LOCATION.'/coreModules/cogumeloSession/classes/controller/CogumeloSessionController.php' );
+
+// require_once( COGUMELO_LOCATION.'/coreModules/cogumeloSession/classes/controller/CogumeloSessionController.php' );
+
+
 
 class CogumeloClass extends Singleton {
 
@@ -100,6 +103,13 @@ class CogumeloClass extends Singleton {
   public function __construct() {
     $this->setTimezones();
 
+    // CogumeloSession controller
+    $cogumeloSessionControllerClassFile = Cogumelo::getSetupValue( 'cogumeloSessionController:classFile' );
+    if( empty( $cogumeloSessionControllerClassFile ) || !file_exists( $cogumeloSessionControllerClassFile ) ) {
+      $cogumeloSessionControllerClassFile = COGUMELO_LOCATION.
+        '/coreModules/cogumeloSession/classes/controller/CogumeloSessionController.php';
+    }
+    require_once( $cogumeloSessionControllerClassFile );
     $sessionCtrl = new CogumeloSessionController();
     $sessionCtrl->prepareTokenSessionEnvironment();
 
