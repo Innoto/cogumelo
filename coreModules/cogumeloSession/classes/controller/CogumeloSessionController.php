@@ -16,6 +16,7 @@ class CogumeloSessionController {
    * Constructor. Crea el TokenSessionID o lo carga del entorno y lo asigna a $C_SESSION_ID.
    */
   public function __construct() {
+    // error_log( __METHOD__ );
 
     // $sessionSavePath = session_save_path();
     // if( !is_dir ( $sessionSavePath ) ) {
@@ -31,6 +32,8 @@ class CogumeloSessionController {
 
 
   public function prepareTokenSessionEnvironment() {
+    // error_log( __METHOD__ );
+
     $tkSID = false;
     $remoteAddr = false;
 
@@ -116,11 +119,11 @@ class CogumeloSessionController {
     global $C_SESSION_ID;
     $C_SESSION_ID = $this->getTokenSessionID();
 
-    // error_log( '...' );
-    // error_log( 'prepareTokenSessionEnvironment FIN' );
-    // error_log( '$_COOKIE = '.json_encode($_COOKIE) );
-    // error_log( '$_SESSION = '.json_encode($_SESSION) );
-    // error_log( '...' );
+
+    // error_log( __METHOD__.' $_SESSION = '.json_encode($_SESSION) );
+
+    error_log( __METHOD__.' tokenSessionID = '.$this->tokenSessionID );
+
 
     return $tkSID;
   }
@@ -133,6 +136,8 @@ class CogumeloSessionController {
    * @return string
    */
   public function getTokenSessionName() {
+    // error_log( __METHOD__ );
+
     return $this->tokenSessionName;
   }
 
@@ -142,6 +147,8 @@ class CogumeloSessionController {
    * @return string
    */
   public function getTokenSessionID() {
+    // error_log( __METHOD__ );
+
     return $this->tokenSessionID;
   }
 

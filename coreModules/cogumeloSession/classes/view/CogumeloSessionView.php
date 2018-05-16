@@ -14,6 +14,8 @@ class CogumeloSessionView extends View {
   private $controller = false;
 
   public function __construct( $base_dir = false ) {
+    // error_log( __METHOD__ );
+
     parent::__construct( $base_dir );
 
     $this->controller = new CogumeloSessionController();
@@ -31,12 +33,16 @@ class CogumeloSessionView extends View {
 
 
   public function jsonTokenSession() {
+
     $info = array(
       'TokenSessionName' => session_name(),
       'TokenSessionID' => $this->controller->getTokenSessionID(),
       'SendOptions' => [ 'POST', 'COOKIE', 'HEADER' ]
     );
     // phpinfo();
+
+    error_log( __METHOD__.' tokenSessionID = '.$info['TokenSessionID'] );
+
     $this->sendJsonResponse( $info );
   }
 

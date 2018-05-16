@@ -15,6 +15,8 @@ class cogumeloSession extends Module {
 
 
   public function __construct() {
-    $this->addUrlPatterns( '#^cgml-session.json#', 'view:CogumeloSessionView::jsonTokenSession' );
+    // error_log(__METHOD__ );
+
+    $this->addUrlPatterns( '#^cgml-session.json$#', 'view:CogumeloSessionView::jsonTokenSession' );
   }
 }
