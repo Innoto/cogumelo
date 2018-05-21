@@ -371,8 +371,13 @@ class FormConnectorFiles {
       }
     } // if( isset( ... ) )
     else { // no parece haber fichero
-      $form->addFieldRuleError( $post['fieldName'], 'cogumelo',
-        'No han llegado los datos o lo ha hecho con errores. ISSET' );
+      if( isset( $post['fieldName'] ) ) {
+        $form->addFieldRuleError( $post['fieldName'], 'cogumelo',
+          'No han llegado los datos o lo ha hecho con errores. ISSET' );
+      }
+      else {
+        $form->addFormError( 'No han llegado los datos o lo ha hecho con errores. (ISSET2)', 'formError' );
+      }
     }
 
 
