@@ -242,7 +242,7 @@ class FormConnectorFiles {
 
 
   public function deleteFormFile( $post ) {
-    Cogumelo::debug('FormConnector: deleteFormFile ' );
+    Cogumelo::debug(__METHOD__);
 
     $form = new FormController();
 
