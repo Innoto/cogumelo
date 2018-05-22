@@ -740,6 +740,7 @@ class UserView extends View {
       $user = new UserModel( $valuesArray );
       $user->setPassword( $password );
       $user->setter( 'hashUnknownPass', NULL );
+      $user->setter( 'loginTimeBan', NULL );
       error_log( '(Notice) OK, URL de recuperacion de contraseña. Login:'.$user->getter('login').' Email:'.$user->getter('email') );
       $user->save();
     }
