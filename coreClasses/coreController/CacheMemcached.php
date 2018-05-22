@@ -124,8 +124,7 @@ class CacheMemcached {
 
       $allKeys = $this->cacheCtrl->getAllKeys();
       if( $this->cacheCtrl->getResultCode() === Memcached::RES_SUCCESS ) {
-        //$cacheKeys = !empty( $allKeys ) ? array_filter( $allKeys, $this->isCacheKey ) : false;
-        $cacheKeys = false;
+        $cacheKeys = !empty( $allKeys ) ? array_filter( $allKeys, $this->isCacheKey ) : false;
         if( !empty( $cacheKeys ) ) {
           // Cogumelo::log( __METHOD__.' - cacheKeys: '.json_encode( $cacheKeys ), 'cache' );
           $this->cacheCtrl->deleteMulti( $cacheKeys );
