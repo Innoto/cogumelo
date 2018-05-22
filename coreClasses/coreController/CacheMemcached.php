@@ -25,7 +25,7 @@ class CacheMemcached {
     if( !empty( $this->cacheSetup['hostArray'] ) && class_exists('Memcached') ) {
       $this->cacheCtrl = new Memcached();
 
-      
+
       $status = $this->cacheCtrl->addServers( $this->cacheSetup['hostArray'] );
       // $status = false;
       // foreach( $this->cacheSetup['hostArray'] as $host ) {
@@ -124,7 +124,8 @@ class CacheMemcached {
 
       $allKeys = $this->cacheCtrl->getAllKeys();
       if( $this->cacheCtrl->getResultCode() === Memcached::RES_SUCCESS ) {
-        $cacheKeys = !empty( $allKeys ) ? array_filter( $allKeys, $this->isCacheKey ) : false;
+        //$cacheKeys = !empty( $allKeys ) ? array_filter( $allKeys, $this->isCacheKey ) : false;
+        $cacheKeys = false;
         if( !empty( $cacheKeys ) ) {
           // Cogumelo::log( __METHOD__.' - cacheKeys: '.json_encode( $cacheKeys ), 'cache' );
           $this->cacheCtrl->deleteMulti( $cacheKeys );
