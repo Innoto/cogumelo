@@ -47,6 +47,7 @@ class form extends Module {
   public $includesCommon = [
     'controller/FormController.php',
     'controller/FormValidators.php',
+    'view/FormConnectorFiles.php',
     // 'js/jquery.cogumeloFormController.js', // js controller V1
     'js/formController.js', // js controller V2
     'js/jquery.serializeFormToObject.js',
