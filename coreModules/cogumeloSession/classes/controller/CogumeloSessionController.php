@@ -121,8 +121,7 @@ class CogumeloSessionController {
 
 
     // error_log( __METHOD__.' $_SESSION = '.json_encode($_SESSION) );
-
-    error_log( __METHOD__.' tokenSessionID = '.$this->tokenSessionID );
+    // error_log( __METHOD__.' tokenSessionID = '.$this->tokenSessionID );
 
 
     return $tkSID;
