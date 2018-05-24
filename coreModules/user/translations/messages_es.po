@@ -237,6 +237,7 @@ msgstr "Usuario desconocido"
 msgid "The old password does not match."
 msgstr "La contraseña vieja no coincide"
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:768
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:765
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:761
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:752
@@ -246,6 +247,7 @@ msgstr "La contraseña vieja no coincide"
 msgid "User Error unidentified"
 msgstr "Error de usuario no identificado"
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:782
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:779
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:775
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:766
