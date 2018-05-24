@@ -303,6 +303,9 @@ class Template extends Smarty {
         $html .= '  '.$coma.str_replace('\\/', '/', json_encode( $includeLog ) ) . "\n";
         $coma = ',';
       }
+
+      $include['url'] .= '?'.md5(date("ymd")); // forzar caché do navegador para ese día
+
       $html .= '  '.$coma.str_replace('\\/', '/', json_encode( $include ) ) . "\n";
       $coma=',';
     }

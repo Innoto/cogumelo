@@ -117,25 +117,35 @@ class CacheMemcached {
    * Borra todos nuestros contenidos cache
    */
   public function flush() {
-    Cogumelo::log( __METHOD__, 'cache' );
+    Cogumelo::log(__METHOD__, 'cache' );
     $result = null;
 
     if( $this->cacheCtrl ) {
 
-      $allKeys = $this->cacheCtrl->getAllKeys();
-      if( $this->cacheCtrl->getResultCode() === Memcached::RES_SUCCESS ) {
-        $cacheKeys = !empty( $allKeys ) ? array_filter( $allKeys, $this->isCacheKey ) : false;
-        if( !empty( $cacheKeys ) ) {
-          // Cogumelo::log( __METHOD__.' - cacheKeys: '.json_encode( $cacheKeys ), 'cache' );
-          $this->cacheCtrl->deleteMulti( $cacheKeys );
-        }
-      }
-      else {
-        // Si no es posible el borrado parcial se realiza un borrado total
-        $this->cacheCtrl->flush();
-      }
+      // $allKeys = $this->cacheCtrl->getAllKeys();
+      // if( $this->cacheCtrl->getResultCode() === Memcached::RES_SUCCESS ) {
+      //   Cogumelo::log(__METHOD__.' F1', 'cache' );
+      //   $cacheKeys = !empty( $allKeys ) ? array_filter( $allKeys, $this->isCacheKey ) : false;
+      //   if( !empty( $cacheKeys ) ) {
+      //     // Cogumelo::log( __METHOD__.' - cacheKeys: '.json_encode( $cacheKeys ), 'cache' );
+      //     $this->cacheCtrl->deleteMulti( $cacheKeys );
+      //   }
+      // }
+      // else {
+      //   Cogumelo::log(__METHOD__.' F2', 'cache' );
+      //   // Si no es posible el borrado parcial se realiza un borrado total
+      //   $this->cacheCtrl->flush();
+      // }
+
+
+      // TODO: TEMPORAL !!!
+      Cogumelo::log(__METHOD__.' F2 TEMPORAL ! ! !', 'cache' );
+      // Si no es posible el borrado parcial se realiza un borrado total
+      $this->cacheCtrl->flush();
+
 
       if( $this->cacheCtrl->getResultCode() === Memcached::RES_SUCCESS ) {
+        Cogumelo::log(__METHOD__.' F3', 'cache' );
         $result = true;
       }
     }
@@ -144,6 +154,8 @@ class CacheMemcached {
   }
 
   private function isCacheKey( $keyName ) {
+    Cogumelo::log(__METHOD__.' Key:'.$keyName, 'cache' );
+
     return( strpos( $keyName, $this->keyPrefix .':') === 0 );
   }
 }
