@@ -24,7 +24,7 @@ class MysqlDBUtils
       if( $ret['type'] == 'POINT') {
         //$ret['data'] = array_map( 'floatval', explode(' ', $matches[2]));
         foreach( explode(' ', $matches[2]) as $val ) {
-          $ret[ 'data' ][] = ''.$val.'';
+          $ret[ 'data' ][] = ''.number_format((float)$val, 4, '.', '').'';
         }
       }
       else if( $ret['type'] == 'POLYGON' ) {
