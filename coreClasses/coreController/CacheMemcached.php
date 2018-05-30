@@ -125,9 +125,10 @@ class CacheMemcached {
       // $allKeys = $this->cacheCtrl->getAllKeys();
       // if( $this->cacheCtrl->getResultCode() === Memcached::RES_SUCCESS ) {
       //   Cogumelo::log(__METHOD__.' F1', 'cache' );
-      //   $cacheKeys = !empty( $allKeys ) ? array_filter( $allKeys, $this->isCacheKey ) : false;
+      //   $cacheKeys = !empty( $allKeys ) ? array_filter( $allKeys, "SELF::isCacheKey" ) : false;
       //   if( !empty( $cacheKeys ) ) {
       //     // Cogumelo::log( __METHOD__.' - cacheKeys: '.json_encode( $cacheKeys ), 'cache' );
+      //     Cogumelo::log(__METHOD__.' F1 Keys: '.json_encode($cacheKeys), 'cache' );
       //     $this->cacheCtrl->deleteMulti( $cacheKeys );
       //   }
       // }
@@ -154,7 +155,7 @@ class CacheMemcached {
   }
 
   private function isCacheKey( $keyName ) {
-    Cogumelo::log(__METHOD__.' Key:'.$keyName, 'cache' );
+    // Cogumelo::log(__METHOD__.' Key:'.$keyName, 'cache' );
 
     return( strpos( $keyName, $this->keyPrefix .':') === 0 );
   }
