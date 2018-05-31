@@ -25,7 +25,7 @@ class FiledataModel extends Model {
     ),
     'type'=> array(
       'type' => 'VARCHAR',
-      'size' => 60
+      'size' => 250
     ),
     'size'=> array(
       'type' => 'BIGINT'
@@ -59,6 +59,13 @@ class FiledataModel extends Model {
 
 
   var $deploySQL = array(
+    array(
+      'version' => 'filedata#2',
+      'sql'=> '
+        ALTER TABLE filedata_filedata
+        MODIFY COLUMN `type` VARCHAR(250) NULL DEFAULT NULL;
+      '
+    ),
     array(
       'version' => 'filedata#1.11',
       'sql'=> '
