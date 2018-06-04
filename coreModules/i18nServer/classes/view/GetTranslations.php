@@ -29,7 +29,7 @@ class GetTranslations extends View
 
     if (file_exists($json_path)){
       header('Content-Type: application/javascript');
-      $json = file_get_contents($json_path);
+      $json = str_replace("'", '&#039;', file_get_contents($json_path) );
       $res = 'var jsonTraduccions='.$json.';
         function __(cadea){
           var res = cadea;
