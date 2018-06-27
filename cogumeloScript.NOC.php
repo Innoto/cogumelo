@@ -1,4 +1,15 @@
 <?php
+/**
+ * PHPMD: Suppress all warnings from these rules.
+ * @SuppressWarnings(PHPMD.Superglobals)
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ **/
 
 require_once( COGUMELO_LOCATION.'/coreClasses/CogumeloClass.php' );
 require_once( APP_BASE_PATH.'/Cogumelo.php' );
@@ -411,12 +422,12 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
     Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
   ;
-  echo( "\n  - Facer $fai\n" );
-  exec( $fai );
+  echo( "\n  - NON Facer $fai\n" );
+  // exec( $fai );
 
   $fai = 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH.' '.APP_BASE_PATH;
-  echo( "\n  - Facer $fai\n" );
-  exec( $fai );
+  echo( "\n  - NON Facer $fai\n" );
+  // exec( $fai );
 
   // Path que necesitan escritura Apache
   $fai = 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
@@ -432,11 +443,11 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '.
     Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
   ;
-  echo( "\n  - Facer $fai\n" );
-  exec( $fai );
+  echo( "\n  - NON Facer $fai\n" );
+  // exec( $fai );
 
   // session:savePath tiene que mantener el usuario y grupo
-  $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
+  // $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
   if( !empty($sessionSavePath) ) {
     $fai = 'chgrp -R www-data '.$sessionSavePath;
     echo( "\n  - Facer $fai\n" );
@@ -447,7 +458,7 @@ function setPermissions( $devel = false ) {
   }
 
   // Solo usuario administrador
-  $backupPath = Cogumelo::getSetupValue( 'script:backupPath' );
+  // $backupPath = Cogumelo::getSetupValue( 'script:backupPath' );
   if( !empty($backupPath) ) {
     $fai = 'chmod -R go-rwx '.$backupPath;
     echo( "\n  - Facer $fai\n" );
