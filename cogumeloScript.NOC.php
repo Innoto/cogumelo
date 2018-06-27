@@ -46,15 +46,19 @@ if( $argc > 1 ) {
       setPermissionsDevel();
       break;
 
+    case 'makeAppPaths': // Prepare folders
+      makeAppPaths();
+      break;
+
     case 'generateModel':
-      setPermissionsDevel();
+      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
       createRelSchemes();
       generateModel();
       flushAll();
       break;
 
     case 'deploy':
-      setPermissionsDevel();
+      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
       createRelSchemes();
       deploy();
       flushAll();
@@ -192,12 +196,12 @@ function printOptions(){
   echo "\n
  + Permissions and dependences
     * flush                   Remove temporary files
-    * generateClientCaches    Cache all js, css, compiled less and other client files
-    * setPermissions          Set the files/folders permission
-    * setPermissionsDevel     Set the files/folders permission
+      * setPermissions(Devel) Set the files/folders permission
+        * makeAppPaths        Prepare folders
+      * generateClientCaches  Cache all js, css, compiled less and other client files
     * installDependences      Exec prepareDependences and then exec updateDependences
-      * prepareDependences      Generate JSON's dependences
-      * updateDependences       Install all modules dependencies
+      * prepareDependences    Generate JSON's dependences
+      * updateDependences     Install all modules dependencies
 
 
  + Database
@@ -272,8 +276,8 @@ function createRelSchemes() {
 }
 
 function flushAll() {
-  echo "\n --- setPermissionsDevel:\n";
-  setPermissionsDevel();
+  echo "\n --- setPermissions:\n";
+  ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
 
   echo "\n --- actionFlush:\n";
   actionFlush();
@@ -289,8 +293,8 @@ function flushAll() {
     echo "\nPasamos porque no estamos en PRODUCTION MODE\n";
   }
 
-  echo "\n --- setPermissionsDevel:\n";
-  setPermissionsDevel();
+  echo "\n --- setPermissions:\n";
+  ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
 }
 
 
@@ -422,12 +426,25 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
     Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
   ;
-  echo( "\n  - NON Facer $fai\n" );
-  // exec( $fai );
+  echo( "\n  - Facer $fai\n" );
+  if( IS_DEVEL_ENV ) {
+    exec( 'sudo '.$fai );
+  }
+  else {
+    // exec( 'sudo '.$fai );
+    echo( "NON se executa!!!\n" );
+  }
+
 
   $fai = 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH.' '.APP_BASE_PATH;
-  echo( "\n  - NON Facer $fai\n" );
-  // exec( $fai );
+  echo( "\n  - Facer $fai\n" );
+  if( IS_DEVEL_ENV ) {
+    exec( 'sudo '.$fai );
+  }
+  else {
+    // exec( 'sudo '.$fai );
+    echo( "NON se executa!!!\n" );
+  }
 
   // Path que necesitan escritura Apache
   $fai = 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
@@ -443,8 +460,14 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '.
     Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
   ;
-  echo( "\n  - NON Facer $fai\n" );
-  // exec( $fai );
+  echo( "\n  - Facer $fai\n" );
+  if( IS_DEVEL_ENV ) {
+    exec( 'sudo '.$fai );
+  }
+  else {
+    // exec( 'sudo '.$fai );
+    echo( "NON se executa!!!\n" );
+  }
 
   // session:savePath tiene que mantener el usuario y grupo
   // $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
