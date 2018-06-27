@@ -20,7 +20,17 @@ error_reporting( -1 );
  * Gestión de formularios. Campos, Validaciones, Html, Ficheros, ...
  *
  * @package Module Form
- */
+ *
+ * PHPMD: Suppress all warnings from these rules.
+ * @SuppressWarnings(PHPMD.Superglobals)
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ **/
 class FormController implements Serializable {
 
   public $cssPrefix = false; // Prefijo para marcar las clases CSS creadas automaticamente

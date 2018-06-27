@@ -8,6 +8,16 @@ form::autoIncludes();
  * Gestión de ficheros en formularios. Subir o borrar ficheros en campos de formulario.
  *
  * @package Module Form
+ *
+ * PHPMD: Suppress all warnings from these rules.
+ * @SuppressWarnings(PHPMD.Superglobals)
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  **/
 class FormConnector extends View {
 
