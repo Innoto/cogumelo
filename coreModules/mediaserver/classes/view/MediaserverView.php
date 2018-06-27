@@ -23,11 +23,12 @@ class MediaserverView extends View {
 
   // load media from app
   public function application( $url_path = '' ) {
-    if($url_path == '' ) {
-      Cogumelo::error('Mediaserver receives empty request');
-      RequestController::redirect(SITE_URL_CURRENT.'/404');
-    }
-    $this->mediaserverControl->serveContent($url_path[1]);
+
+
+    preg_match('#(.*)#', $url_path[1], $result);
+    $filePath = explode('?', $result[1]);
+
+    $this->mediaserverControl->servecontent($filePath[0]);
     CacheUtilsController::removeLessTmpdir();
   }
 
