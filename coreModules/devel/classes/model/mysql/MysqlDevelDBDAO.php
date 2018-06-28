@@ -94,6 +94,10 @@ class MysqlDevelDBDAO extends MysqlDAO {
     return $this->aditionalExec($connection, 'DESCRIBE `'.$vo_obj::$tableName.'`;', false);
   }
 
+  public function checkSQLTableExist( $connection, $tableName ) {
+    return $this->aditionalExec($connection, 'DESCRIBE `'.$tableName.'`;', false);
+  }
+
   public function dropTable( $connection, $vo_name, $noExecute = true  ) {
     $ret = false;
 

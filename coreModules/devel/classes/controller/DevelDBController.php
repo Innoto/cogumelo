@@ -308,6 +308,7 @@ class  DevelDBController {
 
       if( $filters['onlyRC'] == true  ){
         foreach( $vo->deploySQL as $deployElement) {
+          $deployElement['sqlTableName'] = $vo::$tableName;
 
           // RC
           if( isset($deployElement['executeOnGenerateModelToo']) && $deployElement['executeOnGenerateModelToo']=== true ) {
@@ -324,6 +325,9 @@ class  DevelDBController {
       }
       else {
         foreach( $vo->deploySQL as $deployElement ) {
+
+          $deployElement['sqlTableName'] = $vo::$tableName;
+
           if( isset($deployElement['version'])) {
             $deployElement['version'] = $this->getOnlyVersionFromVersionString( $deployElement['version'] );
           }
@@ -421,11 +425,20 @@ class  DevelDBController {
     if( sizeof($deployArrays)>0 ) {
       foreach ( $deployArrays as $deploy ) {
 
+
         $exec = $this->data->aditionalExec( $deploy['sql'], $this->noExecute  );
 
 
+        $sqlTableExist = true;
+        if( isset( $deploy['sqlTableName']) ) {
+          $sqlTableExist = $this->data->checkSQLTableExist( $deploy['sqlTableName'] );
 
-        if( $exec !== COGUMELO_ERROR ) {
+          if( $sqlTableExist != true) {
+            echo "\n Table ".$deploy['sqlTableName']." not exist in ".$deploy['voName'];
+          }
+        }
+
+        if( $exec !== COGUMELO_ERROR && $sqlTableExist === true ) {
           //  update model version
 
           if( isset($deploy['executeOnGenerateModelToo']) && $deploy['executeOnGenerateModelToo']=== true ) {
