@@ -34,7 +34,10 @@ class CacheUtilsController {
         }
 
 
-        if( preg_match('#\/master(.*).less#', $relativeFilePath) > 0 ){
+        if(
+           preg_match('#\/master(.*).less#', $relativeFilePath) > 0 ||
+           preg_match('#\/primary(.*).less#', $relativeFilePath) > 0
+         ){
           $mediaserverControl->compileAndCacheLess( $relativeFilePath, $moduleName );
           //echo "\n\n-----".$relativeFilePath;
         }
