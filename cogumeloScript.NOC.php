@@ -419,7 +419,6 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
     Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    // WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
     Cogumelo::getSetupValue( 'logs:path' ).' '.
     Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
@@ -448,17 +447,24 @@ function setPermissions( $devel = false ) {
 
   // Path que necesitan escritura Apache
   $fai = 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
+    // Smarty
     Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
     Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
+
+    // Cogumelo mediaserver
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    // WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).' '.
     WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
+
+    // Form y Filedata
+    Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '. // cgmlImg
+    Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '. // formFiles
+    Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '. // tmp formFiles
+
+    // Varios
     Cogumelo::getSetupValue( 'logs:path' ).' '.
     // Cogumelo::getSetupValue( 'session:savePath' ).' '.
-    Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
-    Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
-    Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '.
-    Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
+    // Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
+    ''
   ;
   echo( "\n  - Facer $fai\n" );
   if( IS_DEVEL_ENV ) {
