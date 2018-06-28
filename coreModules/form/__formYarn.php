@@ -53,7 +53,7 @@ class form extends Module {
     'js/jquery.serializeFormToObject.js',
     'js/formValidators.js',
     'js/formValidatorsExtender.js',
-    'styles/form.less'
+    'styles/masterForm.less'
   ];
 
 
