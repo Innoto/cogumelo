@@ -33,7 +33,16 @@ class CacheUtilsController {
           $relativeFilePath = str_replace($moduleName.'/classes/view/templates/', '', $path);
         }
 
-        $mediaserverControl->compileAndCacheLess( $relativeFilePath, $moduleName );
+
+        if(
+           preg_match('#\/master(.*).less#', $relativeFilePath) > 0 ||
+           preg_match('#\/primary(.*).less#', $relativeFilePath) > 0
+         ){
+          $mediaserverControl->compileAndCacheLess( $relativeFilePath, $moduleName );
+          //echo "\n\n-----".$relativeFilePath;
+        }
+
+
       }
     }
 

@@ -25,7 +25,7 @@ class common extends Module {
   );
 
   public $includesCommon = array(
-    'styles/common.less',
+    //'styles/common.less',
     'js/clientMsg.js'
   );
 
