@@ -131,6 +131,22 @@ class Model extends VO {
     eval('if( isset( '.get_called_class().'::$extraFilters) ) {$extraFilters = '.get_called_class().'::$extraFilters;}');
 
 
+        // process multilang filters (definied as 'filtername{multilang}')
+        foreach($extraFilters as $extraFilterK => $extraFilter) {
+          if( preg_match( '#(.*)\{multilang\}#', $extraFilterK, $m )) {
+
+            $or = '';
+            $mfStr = ' (';
+            foreach( array_keys( Cogumelo::getSetupValue( 'lang:available')) as $lang ){
+              eval( '$mfStr = $mfStr.$or."'.$extraFilter.'";' );
+              $or = ' OR ';
+            }
+            $extraFilters[ $m[1] ] = $mfStr.') ';
+
+            unset($extraFilters[$extraFilterK]);
+          }
+        }
+
     foreach( $cols as $colK => $colD ) {
       $type = $colD['type'];
 
