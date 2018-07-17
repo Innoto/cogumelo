@@ -75,8 +75,18 @@ class CogumeloSessionController {
 
       if( $tkSID ) {
         session_id( $tkSID );
-        session_start();
-        if( isset( $_SESSION[ 'cogumeloSessionNew' ] ) ) {
+
+        $sessionOk = false;
+        try {
+          $sessionOk = session_start();
+        }
+        catch( Exception $e ) {
+          $sessionOk = false;
+          error_log( __METHOD__.' CATCH: Session not started. ' . $e->getMessage() );
+        }
+
+        if( $sessionOk && isset( $_SESSION[ 'cogumeloSessionNew' ] ) ) {
+          error_log( __METHOD__.' Session OK' );
           $this->tokenSessionID = session_id();
           $_SESSION[ 'cogumeloSessionNew' ] = false;
           $_SESSION[ 'cogumeloSessionTimePrev' ] = ( $_SESSION[ 'cogumeloSessionTimeLast' ] ) ?
