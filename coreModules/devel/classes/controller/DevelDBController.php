@@ -245,10 +245,8 @@ class  DevelDBController {
     $modelReg = new ModelRegisterModel();
 
     $v = $modelReg->listItems( ['filters'=>['searchByName'=> $voClass ] ]);
-    if( $regInfo=$v->fetch() ) {
-
-        $ret = $regInfo->getter('deployVersion');
-
+    if( is_object( $v ) && ( $regInfo=$v->fetch() ) ) {
+      $ret = $regInfo->getter('deployVersion');
     }
 
     return $ret;
@@ -260,10 +258,8 @@ class  DevelDBController {
     $modelReg = new ModelRegisterModel();
 
     $v = $modelReg->listItems( ['filters'=>['searchByName'=> $voClass ] ]);
-    if( $regInfo=$v->fetch() ) {
-
-        $ret = $regInfo->getter('executedRcDeploy');
-
+    if( is_object( $v ) && ( $regInfo=$v->fetch() ) ) {
+      $ret = $regInfo->getter('executedRcDeploy');
     }
 
     return $ret;
