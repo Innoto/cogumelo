@@ -453,6 +453,13 @@ class Template extends Smarty {
     return( $this->exec( true ) );
   }
 
+  /*
+  public function __toString() {
+
+    return( $this->exec( true ) );
+  }
+  */
+
   /**
    Crea el resultado Minimizado a partir de los datos y plantillas indicados
    *
