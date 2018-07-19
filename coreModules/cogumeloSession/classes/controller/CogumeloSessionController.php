@@ -82,11 +82,13 @@ class CogumeloSessionController {
         }
         catch( Exception $e ) {
           $sessionOk = false;
-          error_log( __METHOD__.' CATCH: Session not started. ' . $e->getMessage() );
+          $msg = __METHOD__.' CATCH: Session not started. ' . $e->getMessage();
+          Cogumelo::log( $msg );
+          Cogumelo::debug( $msg );
         }
 
         if( $sessionOk && isset( $_SESSION[ 'cogumeloSessionNew' ] ) ) {
-          error_log( __METHOD__.' Session OK' );
+          Cogumelo::debug( __METHOD__.' Session OK' );
           $this->tokenSessionID = session_id();
           $_SESSION[ 'cogumeloSessionNew' ] = false;
           $_SESSION[ 'cogumeloSessionTimePrev' ] = ( $_SESSION[ 'cogumeloSessionTimeLast' ] ) ?
