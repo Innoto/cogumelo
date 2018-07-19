@@ -65,6 +65,12 @@ if( $argc > 1 ) {
       break;
 
 
+    case 'createRelSchemes':
+      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+      createRelSchemes();
+      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+      break;
+
     case 'createDB': // create database
       doBackup(
         Cogumelo::getSetupValue('db:name'),
@@ -210,6 +216,7 @@ function printOptions(){
     * generateModel           Initialize database
 
     * deploy                  Deploy
+      * createRelSchemes      Create JSON Model Rel Schemes
 
     * resetModules
       - resetModuleVersions
@@ -253,7 +260,6 @@ function deploy() {
 }
 
 function createRelSchemes() {
-
   echo "\nCreating relationship schemes\n";
 
   global $C_ENABLED_MODULES;
@@ -263,15 +269,6 @@ function createRelSchemes() {
   }
 
   Cogumelo::load('coreModel/VOUtils.php');
-
-  $dir = APP_TMP_PATH.'/modelRelationship';
-
-  if( !is_dir( $dir ) ) {
-    if( !mkdir( $dir, 0777, true ) ) {
-      echo 'ERROR: Imposible crear el directorio: '.$dir."\n";
-    }
-  }
-
   VOUtils::createModelRelTreeFiles();
 }
 

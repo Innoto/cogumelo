@@ -351,11 +351,20 @@ class VOUtils {
 
       eval( '$mrel = new '.ucfirst( $dbEngine ).'DAORelationship();' );
 
+      $setupDir = Cogumelo::getSetupValue('cogumelo:modelRelationshipPath');
+      $dirRelationship = empty( $setupDir ) ? APP_TMP_PATH.'/modelRelationship' : $setupDir;
+
+      if( !is_dir( $dirRelationship ) ) {
+        if( !mkdir( $dirRelationship, 0750, true ) ) {
+          echo 'ERROR: Imposible crear el directorio: '.$dirRelationship."\n";
+        }
+      }
+
       foreach( self::listVOs() as $voName => $vo ) {
-        $relVO = self::getVORelationship($voName);
+        $relVO = self::getVORelationship( $voName );
         //var_dump($relVO);
-        $relVO['index'] = self::relIndex($relVO);
-        file_put_contents( APP_TMP_PATH.'/modelRelationship/'.$voName.'.json' , json_encode(  $relVO  ) );
+        $relVO['index'] = self::relIndex( $relVO );
+        file_put_contents( $dirRelationship.'/'.$voName.'.json', json_encode( $relVO ) );
       }
     }
   }
@@ -427,11 +436,14 @@ class VOUtils {
       $ret = clone $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
     }
     else {
-      if(file_exists( APP_TMP_PATH.'/modelRelationship/'.$nameVO.'.json' )){
+      $setupDir = Cogumelo::getSetupValue('cogumelo:modelRelationshipPath');
+      $dirRelationship = empty( $setupDir ) ? APP_TMP_PATH.'/modelRelationship' : $setupDir;
+
+      if( file_exists( $dirRelationship.'/'.$nameVO.'.json' ) ) {
         $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ] = json_decode(
-                      file_get_contents(APP_TMP_PATH.'/modelRelationship/'.$nameVO.'.json')
-                );
-          $ret = clone $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
+          file_get_contents( $dirRelationship.'/'.$nameVO.'.json' )
+        );
+        $ret = clone $COGUMELO_RELATIONSHIP_MODEL[ $nameVO ];
       }
     }
 
