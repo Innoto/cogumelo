@@ -318,7 +318,7 @@ function actionFlush() {
     echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush' );
   }
   else {
-    echo('Descartado.');
+    echo "Descartado.\n";
   }
 
   echo "\nCogumelo caches deleted!\n\n";
