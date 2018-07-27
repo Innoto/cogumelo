@@ -504,7 +504,7 @@ function setPermissions( $devel = false ) {
     exec( $fai );
   }
 
-  echo "Permissions ready!\n";
+  echo( "setPermissions ".($devel ? 'DEVEL' : '')."DONE.\n" );
 }
 
 function setPermissionsDevel() {
