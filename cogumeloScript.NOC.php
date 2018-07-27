@@ -31,8 +31,8 @@ Cogumelo::load('coreController/ModuleController.php');
 
 if( empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
   $_SERVER['DOCUMENT_ROOT'] = ( defined( WEB_BASE_PATH ) ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
-  echo( "\nSet SERVER[DOCUMENT_ROOT] = ".$_SERVER['DOCUMENT_ROOT']."\n" );
 }
+echo( 'SERVER[DOCUMENT_ROOT] = '.$_SERVER['DOCUMENT_ROOT']."\n" );
 
 
 if( $argc > 1 ) {
@@ -373,8 +373,11 @@ function createDB(){
 
 
 function makeAppPaths() {
-  global $lc;
-  $md = array( APP_TMP_PATH,
+  echo "makeAppPaths\n";
+
+  // global $lc;
+  
+  $dirList = array( APP_TMP_PATH,
     Cogumelo::getSetupValue( 'smarty:configPath' ), Cogumelo::getSetupValue( 'smarty:compilePath' ),
     Cogumelo::getSetupValue( 'smarty:cachePath' ), Cogumelo::getSetupValue( 'smarty:tmpPath' ),
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ),
@@ -390,18 +393,19 @@ function makeAppPaths() {
   );
 
   foreach( Cogumelo::getSetupValue( 'lang:available' ) as $lang ) {
-    $md[] = Cogumelo::getSetupValue( 'i18n:localePath' ).'/'.$lang['i18n'].'/LC_MESSAGES';
+    $dirList[] = Cogumelo::getSetupValue( 'i18n:localePath' ).'/'.$lang['i18n'].'/LC_MESSAGES';
   }
 
-  echo "\n\nMKDIR\n".json_encode($md)."\n\n";
+  // echo "\n\nMKDIR\n".json_encode($dirList)."\n\n";
 
-  foreach( $md as $dir ) {
+  foreach( $dirList as $dir ) {
     if( $dir && $dir !== '' && !is_dir( $dir ) ) {
       if( !mkdir( $dir, 0750, true ) ) {
         echo 'ERROR: Imposible crear el dirirectorio: '.$dir."\n";
       }
     }
   }
+  echo "makeAppPaths DONE.\n";
 }
 
 function setPermissions( $devel = false ) {
@@ -422,24 +426,26 @@ function setPermissions( $devel = false ) {
     Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
     Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
   ;
-  echo( "\n  - Facer $fai\n" );
+  // echo( "\n  - Facer $fai\n" );
   if( IS_DEVEL_ENV ) {
+    echo( " - Executamos chgrp general \n" );
     exec( 'sudo '.$fai );
   }
   else {
     // exec( 'sudo '.$fai );
-    echo( "NON se executa!!!\n" );
+    echo( " - NON se executa chgrp general \n" );
   }
 
 
   $fai = 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH.' '.APP_BASE_PATH;
-  echo( "\n  - Facer $fai\n" );
+  // echo( "\n  - Facer $fai\n" );
   if( IS_DEVEL_ENV ) {
+    echo( " - Executamos chmod WEB_BASE_PATH APP_BASE_PATH\n" );
     exec( 'sudo '.$fai );
   }
   else {
     // exec( 'sudo '.$fai );
-    echo( "NON se executa!!!\n" );
+    echo( " - NON se executa chmod WEB_BASE_PATH APP_BASE_PATH\n" );
   }
 
   // Path que necesitan escritura Apache
@@ -463,13 +469,14 @@ function setPermissions( $devel = false ) {
     // Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
     ''
   ;
-  echo( "\n  - Facer $fai\n" );
+  // echo( "\n  - Facer $fai\n" );
   if( IS_DEVEL_ENV ) {
+    echo( " - Executamos chmod APP_TMP_PATH\n" );
     exec( 'sudo '.$fai );
   }
   else {
     // exec( 'sudo '.$fai );
-    echo( "NON se executa!!!\n" );
+    echo( " - NON se executa chmod APP_TMP_PATH\n" );
   }
 
   // session:savePath tiene que mantener el usuario y grupo
