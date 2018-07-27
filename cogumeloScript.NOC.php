@@ -533,6 +533,9 @@ function doBackup( $dbName, $user, $passwd, $file, $dbHost ) {
 }
 
 function restoreDB( $dbName, $user, $passwd, $file, $dbHost ) {
+
+  doBackup( $dbName, $user, $passwd, false, $dbHost );
+
   $dir = Cogumelo::getSetupValue( 'script:backupPath' );
 
   if( empty( $dbHost ) ) {
