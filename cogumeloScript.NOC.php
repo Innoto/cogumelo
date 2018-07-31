@@ -312,13 +312,13 @@ function actionFlush() {
   echo ' - Cogumelo Memory Cache flush: Done'."\n";
 
 
-  echo ' - Cogumelo PHP cache flush...'."\n";
   $scriptCogumeloServerUrl = Cogumelo::getSetupValue( 'script:cogumeloServerUrl' );
   if( !empty( $scriptCogumeloServerUrl ) ) {
+    echo ' - Cogumelo PHP cache flush...'."\n";
     echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush' );
   }
   else {
-    echo "Descartado.\n";
+    echo ' - Cogumelo PHP cache flush... Descartado.'."\n";
   }
 
   echo "\nCogumelo caches deleted!\n\n";
