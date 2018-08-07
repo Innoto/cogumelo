@@ -50,8 +50,18 @@ if( $argc > 1 ) {
       makeAppPaths();
       break;
 
+
+    case 'createDB': // create database
+      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+      backupDB();
+
+      createDB();
+      break;
+
     case 'generateModel':
       ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+
+      backupDB();
       createRelSchemes();
       generateModel();
       flushAll();
@@ -59,6 +69,8 @@ if( $argc > 1 ) {
 
     case 'deploy':
       ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+
+      backupDB();
       createRelSchemes();
       deploy();
       flushAll();
@@ -71,46 +83,27 @@ if( $argc > 1 ) {
       ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
       break;
 
-    case 'createDB': // create database
-      doBackup(
-        Cogumelo::getSetupValue('db:name'),
-        Cogumelo::getSetupValue('db:user'),
-        Cogumelo::getSetupValue('db:password'),
-        false,
-        Cogumelo::getSetupValue('db:hostname')
-      );
-      createDB();
-      break;
-
 
     case 'bckDB': // do the backup of the db
     case 'backupDB': // do the backup of the db
-      $file = ( $argc > 2 ) ? $argv[2].'.sql' : false;
+      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
 
-      doBackup(
-        Cogumelo::getSetupValue('db:name'),
-        Cogumelo::getSetupValue('db:user'),
-        Cogumelo::getSetupValue('db:password'),
-        $file,
-        Cogumelo::getSetupValue('db:hostname')
-      );
+      $file = ( $argc > 2 ) ? $argv[2].'.sql' : false;
+      backupDB( $file );
       break;
 
     case 'restoreDB': // restore the backup of a given db
       if( $argc > 2 ) {
-        $file = $argv[2];//name of the backup file
-        restoreDB(
-          Cogumelo::getSetupValue('db:name'),
-          Cogumelo::getSetupValue('db:user'),
-          Cogumelo::getSetupValue('db:password'),
-          $file,
-          Cogumelo::getSetupValue('db:hostname')
-        );
+        backupDB();
+
+        $file = $argv[2]; //name of the backup file
+        restoreDB( $file );
       }
       else {
         echo "You must specify the file to restore\n";
       }
       break;
+
 
     case 'prepareDependences':
       Cogumelo::load('coreController/DependencesController.php');
@@ -133,6 +126,7 @@ if( $argc > 1 ) {
       $dependencesControl = new DependencesController();
       $dependencesControl->installDependences();
       break;
+
 
     case 'generateFrameworkTranslations':
       Cogumelo::load('coreController/i18nScriptController.php');
@@ -170,6 +164,7 @@ if( $argc > 1 ) {
       $i18nscriptController->c_i18n_json();
       echo "The files.json are ready to be used!\n";
       break;
+
 
     /* We execute this two actions from web as we need to operate with the apache permissions*/
     case 'flush': // delete temporary files
@@ -512,6 +507,16 @@ function setPermissionsDevel() {
 }
 
 
+function backupDB( $file = false ) {
+  doBackup(
+    Cogumelo::getSetupValue('db:name'),
+    Cogumelo::getSetupValue('db:user'),
+    Cogumelo::getSetupValue('db:password'),
+    $file,
+    Cogumelo::getSetupValue('db:hostname')
+  );
+}
+
 function doBackup( $dbName, $user, $passwd, $file, $dbHost ) {
   if( empty( $file ) ) {
     $file = date('Ymd-His').'-'.$dbName.'.sql';
@@ -532,7 +537,13 @@ function doBackup( $dbName, $user, $passwd, $file, $dbHost ) {
   echo "\nYour db was successfully saved!\n";
 }
 
-function restoreDB( $dbName, $user, $passwd, $file, $dbHost ) {
+
+function restoreDB( $file = false ) {
+
+  $dbHost = Cogumelo::getSetupValue('db:hostname');
+  $dbName = Cogumelo::getSetupValue('db:name');
+  $user = Cogumelo::getSetupValue('db:user');
+  $passwd = Cogumelo::getSetupValue('db:password');
 
   doBackup( $dbName, $user, $passwd, false, $dbHost );
 
