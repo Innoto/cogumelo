@@ -308,7 +308,9 @@ class CogumeloClass extends Singleton {
   //  LOGS
   //
   public static function error( $description ) {
-    if( Cogumelo::getSetupValue( 'logs:error' ) === true ) {
+    global $COGUMELO_IS_EXECUTING_FROM_SCRIPT;
+
+    if( Cogumelo::getSetupValue( 'logs:error' ) === true  ||  $COGUMELO_IS_EXECUTING_FROM_SCRIPT == true ) {
       echo '<br>Cogumelo error: '.$description."\n";
     }
 

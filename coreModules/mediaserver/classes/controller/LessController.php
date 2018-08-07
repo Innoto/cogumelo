@@ -102,6 +102,9 @@ class LessController {
       $lessVars[ 'cogumelo_publicConf_'.$key ] = $value;
     }
 
+    //$lessVars[ 'cogumelo_media_app' ] = Cogumelo::getSetupValue( 'setup:appBasePath' ).'/classes/view/templates';
+    $lessVars['cogumelo_app_templates'] = $this->valueToLess( Cogumelo::getSetupValue( 'setup:appBasePath' ).'/classes/view/templates' );
+
     return ( count( $lessVars ) > 0 ) ? $lessVars : false;
   }
 
