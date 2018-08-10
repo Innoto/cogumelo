@@ -310,7 +310,15 @@ function actionFlush() {
   $scriptCogumeloServerUrl = Cogumelo::getSetupValue( 'script:cogumeloServerUrl' );
   if( !empty( $scriptCogumeloServerUrl ) ) {
     echo ' - Cogumelo PHP cache flush...'."\n";
-    echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush' );
+
+    // TODO: EVITAMOS CONTROLES HTTPS
+    $contextOptions = stream_context_create( [
+      "ssl" => [
+        "verify_peer" => false,
+        "verify_peer_name" => false,
+      ],
+    ] );
+    echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush', false, $contextOptions );
   }
   else {
     echo ' - Cogumelo PHP cache flush... Descartado.'."\n";
