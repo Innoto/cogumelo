@@ -18,6 +18,7 @@ class XlsExportTableController extends ExportTableController {
   function data($tableControl, $dataDAOResult) {
 
     echo "<html>\n";
+    echo "<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>";
     echo "<body>\n";
     echo "<table class='table table-striped'>\n";
     echo "<tbody>\n";
@@ -26,7 +27,7 @@ class XlsExportTableController extends ExportTableController {
     // excell HEADER
     echo "<tr>\n";
     echo "<th>\n";
-    echo utf8_decode(implode("</th>\n<th>", array_merge($tableControl->colsIntoArray(), $tableControl->colsToExportIntoArray()) ));
+    echo (implode("</th>\n<th>", array_merge($tableControl->colsIntoArray(), $tableControl->colsToExportIntoArray()) ));
     echo "</th>\n";
     echo "</tr>\n";
 
@@ -113,7 +114,7 @@ class XlsExportTableController extends ExportTableController {
         unset($row['rowReferenceKey']);
 
 
-        echo utf8_decode("<tr><td>".implode("</td><td>", $row)."</td></tr>\n");
+        echo ("<tr><td>".implode("</td><td>", $row)."</td></tr>\n");
         //echo "".implode(",", $row)."\n";
 
       }
