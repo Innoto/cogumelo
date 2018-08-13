@@ -19,7 +19,7 @@ Cogumelo::load('coreController/ModuleController.php');
 
 
 if( empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
-  $_SERVER['DOCUMENT_ROOT'] = ( defined( WEB_BASE_PATH ) ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
+  $_SERVER['DOCUMENT_ROOT'] = ( defined( 'WEB_BASE_PATH' ) ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
   echo( "\nSet SERVER[DOCUMENT_ROOT] = ".$_SERVER['DOCUMENT_ROOT']."\n" );
 }
 
@@ -553,5 +553,3 @@ function rmdirRec( $dir, $removeContainer = true ) {
     }
   }
 }
-
-
