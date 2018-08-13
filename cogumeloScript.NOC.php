@@ -30,7 +30,7 @@ Cogumelo::load('coreController/ModuleController.php');
 
 
 if( empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
-  $_SERVER['DOCUMENT_ROOT'] = ( defined( WEB_BASE_PATH ) ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
+  $_SERVER['DOCUMENT_ROOT'] = ( defined('WEB_BASE_PATH') ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
 }
 echo( 'SERVER[DOCUMENT_ROOT] = '.$_SERVER['DOCUMENT_ROOT']."\n" );
 
@@ -298,13 +298,13 @@ function actionFlush() {
   rmdirRec( Cogumelo::getSetupValue('mod:filedata:cachePath'), false );
   // Def: httpdocs/mediaCache
   rmdirRec( Cogumelo::getSetupValue('mod:mediaserver:tmpCachePath'), false );
-  echo ' - Cogumelo File cache flush: Done'."\n";
+  echo ' - Cogumelo File cache flush DONE'."\n";
 
 
   require_once( COGUMELO_LOCATION.'/coreClasses/coreController/Cache.php' );
   $cacheCtrl = new Cache();
   $cacheCtrl->flush();
-  echo ' - Cogumelo Memory Cache flush: Done'."\n";
+  echo ' - Cogumelo Memory Cache flush DONE'."\n";
 
 
   $scriptCogumeloServerUrl = Cogumelo::getSetupValue( 'script:cogumeloServerUrl' );
@@ -321,7 +321,7 @@ function actionFlush() {
     echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush', false, $contextOptions );
   }
   else {
-    echo ' - Cogumelo PHP cache flush... Descartado.'."\n";
+    echo ' - Cogumelo PHP cache flush DESCARTADO.'."\n";
   }
 
   echo "\nCogumelo caches deleted!\n\n";
@@ -330,7 +330,7 @@ function actionFlush() {
 
 // function actionRotateLogs() {
 //   echo file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=rotate_logs' );
-//   echo "\nRotate Logs done!\n\n";
+//   echo "\nRotate Logs DONE!\n\n";
 // }
 
 
@@ -507,7 +507,7 @@ function setPermissions( $devel = false ) {
     exec( $fai );
   }
 
-  echo( "setPermissions ".($devel ? 'DEVEL' : '')."DONE.\n" );
+  echo( "setPermissions ".($devel ? 'DEVEL' : '')." DONE.\n" );
 }
 
 function setPermissionsDevel() {
