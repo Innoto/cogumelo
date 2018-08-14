@@ -405,6 +405,11 @@ function makeAppPaths() {
     $dirList[] = Cogumelo::getSetupValue( 'i18n:localePath' ).'/'.$lang['i18n'].'/LC_MESSAGES';
   }
 
+  $sessionSavePath = Cogumelo::getSetupValue('session:savePath');
+  if( !empty( $sessionSavePath ) ) {
+    $dirList[] = $sessionSavePath;
+  }
+
   // echo "\n\nMKDIR\n".json_encode($dirList)."\n\n";
 
   foreach( $dirList as $dir ) {
@@ -424,19 +429,20 @@ function setPermissions( $devel = false ) {
 
   echo( "setPermissions ".($devel ? 'DEVEL' : '')."\n" );
 
-  $fai = 'chgrp -R www-data '.
-    WEB_BASE_PATH.' '.APP_BASE_PATH.' '.APP_TMP_PATH.' '.
-    Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
-    Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
-    Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
-    Cogumelo::getSetupValue( 'logs:path' ).' '.
-    Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
-    Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
-    Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
-  ;
-  // echo( "\n  - Facer $fai\n" );
   if( IS_DEVEL_ENV ) {
+    $dirsString =
+      WEB_BASE_PATH.' '.APP_BASE_PATH.' '.APP_TMP_PATH.' '.
+      Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
+      Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
+      Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
+      WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
+      Cogumelo::getSetupValue( 'logs:path' ).' '.
+      Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
+      Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
+      Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
+    ;
+
+    $fai = 'chgrp -R www-data '.$dirsString;
     echo( " - Executamos chgrp general \n" );
     exec( 'sudo '.$fai );
   }
@@ -446,9 +452,8 @@ function setPermissions( $devel = false ) {
   }
 
 
-  $fai = 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH.' '.APP_BASE_PATH;
-  // echo( "\n  - Facer $fai\n" );
   if( IS_DEVEL_ENV ) {
+    $fai = 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH.' '.APP_BASE_PATH;
     echo( " - Executamos chmod WEB_BASE_PATH APP_BASE_PATH\n" );
     exec( 'sudo '.$fai );
   }
@@ -457,39 +462,38 @@ function setPermissions( $devel = false ) {
     echo( " - NON se executa chmod WEB_BASE_PATH APP_BASE_PATH\n" );
   }
 
-  // Path que necesitan escritura Apache
-  $fai = 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
-    // Smarty
-    Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
-    Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
 
-    // Cogumelo mediaserver
-    Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
-
-    // Form y Filedata
-    Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '. // cgmlImg
-    Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '. // formFiles
-    Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '. // tmp formFiles
-
-    // Varios
-    Cogumelo::getSetupValue( 'logs:path' ).' '.
-    // Cogumelo::getSetupValue( 'session:savePath' ).' '.
-    // Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
-    ''
-  ;
-  // echo( "\n  - Facer $fai\n" );
   if( IS_DEVEL_ENV ) {
+    // Path que necesitan escritura Apache
+    $fai = 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
+      // Smarty
+      Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
+      Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
+
+      // Cogumelo mediaserver
+      Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
+      WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
+
+      // Form y Filedata
+      Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '. // cgmlImg
+      Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '. // formFiles
+      Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '. // tmp formFiles
+
+      // Varios
+      Cogumelo::getSetupValue( 'logs:path' ).' '.
+      // Cogumelo::getSetupValue( 'session:savePath' ).' '.
+      // Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
+      ''
+    ;
     echo( " - Executamos chmod APP_TMP_PATH\n" );
     exec( 'sudo '.$fai );
   }
   else {
-    // exec( 'sudo '.$fai );
     echo( " - NON se executa chmod APP_TMP_PATH\n" );
   }
 
   // session:savePath tiene que mantener el usuario y grupo
-  // $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
+  $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
   if( !empty($sessionSavePath) ) {
     $fai = 'chgrp -R www-data '.$sessionSavePath;
     echo( "\n  - Facer $fai\n" );
@@ -500,7 +504,7 @@ function setPermissions( $devel = false ) {
   }
 
   // Solo usuario administrador
-  // $backupPath = Cogumelo::getSetupValue( 'script:backupPath' );
+  $backupPath = Cogumelo::getSetupValue( 'script:backupPath' );
   if( !empty($backupPath) ) {
     $fai = 'chmod -R go-rwx '.$backupPath;
     echo( "\n  - Facer $fai\n" );
