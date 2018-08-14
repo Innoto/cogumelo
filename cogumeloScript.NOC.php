@@ -18,7 +18,7 @@ global $COGUMELO_IS_EXECUTING_FROM_SCRIPT;
 $COGUMELO_IS_EXECUTING_FROM_SCRIPT=true;
 
 global $_C;
-$_C =Cogumelo::get();
+$_C = Cogumelo::get();
 
 //
 // Load the necessary modules
@@ -492,23 +492,29 @@ function setPermissions( $devel = false ) {
     echo( " - NON se executa chmod APP_TMP_PATH\n" );
   }
 
-  // session:savePath tiene que mantener el usuario y grupo
-  $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
-  if( !empty($sessionSavePath) ) {
-    $fai = 'chgrp -R www-data '.$sessionSavePath;
-    echo( "\n  - Facer $fai\n" );
-    exec( $fai );
-    $fai = 'chmod -R ug+rwX'.$extPerms.' '.$sessionSavePath;
-    echo( "\n  - Facer $fai\n" );
-    exec( $fai );
-  }
+  if( IS_DEVEL_ENV ) {
+    echo( " - Preparando [session:savePath] e [script:backupPath]\n" );
+    // session:savePath tiene que mantener el usuario y grupo
+    $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
+    if( !empty($sessionSavePath) ) {
+      $fai = 'sudo chgrp -R www-data '.$sessionSavePath;
+      echo( "  - Executamos $fai\n" );
+      exec( $fai );
+      $fai = 'sudo chmod -R ug+rwX'.$extPerms.' '.$sessionSavePath;
+      echo( "  - Executamos $fai\n" );
+      exec( $fai );
+    }
 
-  // Solo usuario administrador
-  $backupPath = Cogumelo::getSetupValue( 'script:backupPath' );
-  if( !empty($backupPath) ) {
-    $fai = 'chmod -R go-rwx '.$backupPath;
-    echo( "\n  - Facer $fai\n" );
-    exec( $fai );
+    // Solo usuario administrador
+    $backupPath = Cogumelo::getSetupValue( 'script:backupPath' );
+    if( !empty($backupPath) ) {
+      $fai = 'sudo chmod -R go-rwx '.$backupPath;
+      echo( "  - Executamos $fai\n" );
+      exec( $fai );
+    }
+  }
+  else {
+    echo( " - NON se preparan [session:savePath] e [script:backupPath]\n" );
   }
 
   echo( "setPermissions ".($devel ? 'DEVEL' : '')." DONE.\n" );
