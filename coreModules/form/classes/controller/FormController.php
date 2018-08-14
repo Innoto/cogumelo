@@ -624,19 +624,104 @@ class FormController implements Serializable {
       } // if( isset( $formPost[ $fieldName ] ) )
     }
   }
-
   /**
-   * Carga los valores del VO
-   *
-   * @param VO $dataVO Datos cargados por el programa
-   */
-  public function loadVOValues( $dataVO ) {
-    if( gettype( $dataVO ) == 'object' ) {
-      $dataArray = array();
-      foreach( $dataVO->getKeys() as $keyVO ) {
-        $dataArray[ $keyVO ] = $dataVO->getter( $keyVO );
+   * Carga los valores de los input del navegador
+   * @param array $formPost Datos enviados por el navegador convertidos a array
+   **/
+  public function loadPostValuesV2( $formPost, $acceptReserved = false ) {
+    // $this->postValues = $formPost;
+
+    if( $this->captchaEnable() ) {
+      $fieldName = 'g-recaptcha-response';
+      if( isset( $formPost[ $fieldName ][ 'value' ] ) ) {
+        $this->captchaResponse = $formPost[ $fieldName ][ 'value' ];
       }
-      $this->loadArrayValues( $dataArray );
+    }
+
+    // Importando los datos del form e integrando los datos de ficheros subidos
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+      // error_log('FormController: Load field '.$fieldName.' value '.print_r( $formPost[ $fieldName ][ 'value' ], true ) );
+
+      if( isset( $formPost[ $fieldName ] ) ) {
+        $fieldType = $this->getFieldType( $fieldName );
+
+        // Controlamos que no aparezcan datos para campos reservados
+        if( $acceptReserved || 'reserved' !== $fieldType ) {
+          if( isset( $formPost[ $fieldName ][ 'dataInfo' ] ) ) {
+            // error_log('FormController: DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
+            // $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
+            $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
+            foreach( $formPost[ $fieldName ][ 'dataInfo' ] as $key => $value ) {
+              // error_log('FormController: '. "setFieldParam: $fieldName, data-$key, $value )" );
+              // $this->setFieldParam( $fieldName, 'data-'.$key, $value );
+              $this->setFieldParam( $fieldName, $key, $value );
+            }
+          }
+          if( isset( $formPost[ $fieldName ][ 'dataMultiInfo' ] ) ) {
+            $this->setFieldParam( $fieldName, 'dataMultiInfo', $formPost[ $fieldName ][ 'dataMultiInfo' ] );
+          }
+
+          /*
+            {
+              "value":["67","69","71"],
+              "dataMultiInfo":{
+                "67":{"data-order":"1","data-term-icon":"","data-term-idname":"eduTIC"},
+                "69":{"data-order":"2","data-term-icon":"","data-term-idname":"flipped","data-term-parent":"68"},
+                "71":{"data-order":"3","data-term-icon":"","data-term-idname":"gamificacion","data-term-parent":"68"}
+              }
+            },
+            {
+              "value":false,
+              "dataInfo":{"data-switchery":"true"}
+            }
+          */
+
+          if( $fieldType !== 'file' ) {
+            if( isset( $formPost[ $fieldName ][ 'value' ] ) ) {
+              $this->setFieldValue( $fieldName, $formPost[ $fieldName ][ 'value' ] );
+            }
+          }
+          // else {
+          //   if( !$this->isEmptyFieldValue( $fieldName ) ) {
+          //     $fileFieldValue = $this->getFieldValue( $fieldName );
+
+          //     // error_log( 'FormController::loadPostValues FILE: '.print_r( $fileFieldValue, true ) );
+
+          //     switch( $fileFieldValue['status'] ) {
+          //       case 'LOAD':
+          //       case 'REPLACE':
+          //         $fileFieldValue['validate'] = $fileFieldValue['temp'];
+          //         break;
+          //       case 'EXIST':
+          //         $fileFieldValue['validate'] = $fileFieldValue['prev'];
+          //         break;
+          //       case 'GROUP':
+          //         if( count( $fileFieldValue['multiple'] ) ) {
+          //           foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
+          //             switch( $fileData['status'] ) {
+          //               case 'LOAD':
+          //               case 'REPLACE':
+          //                 $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['temp'];
+          //                 break;
+          //               case 'EXIST':
+          //                 $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
+          //                 break;
+          //             }
+          //             Cogumelo::debug('FormController: FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
+          //           }
+          //         }
+          //         break;
+          //     }
+          //     $this->setFieldValue( $fieldName, $fileFieldValue );
+          //   }
+          // } // if( $this->getFieldType( $fieldName ) !== 'file' )
+        }
+        else {
+          Cogumelo::error( __METHOD__ . 'Intento de manipulacion de datos: '.$fieldName.' RV' );
+          error_log( __METHOD__ . 'Intento de manipulacion de datos: '.$fieldName.' RV' );
+          $this->addFormError( __('Intento de manipulacion del formulario').' (RV)' );
+        }
+      } // if( isset( $formPost[ $fieldName ] ) )
     }
   }
 
@@ -656,6 +741,99 @@ class FormController implements Serializable {
       }
     }
   }
+
+  /**
+   * Carga los valores desde un array en el que coincidan la clave con un campo
+   *
+   * @param array $dataArray Datos preparados para añadir al formulario
+   */
+  public function loadArrayValuesV2( $dataArray, $acceptReserved = false ) {
+    // error_log('FormController: loadArrayValues: ' . print_r( $dataArray, true ) );
+
+    if( !empty( $dataArray ) && is_array( $dataArray ) ) {
+
+      if( $this->captchaEnable() ) {
+        $fieldName = 'g-recaptcha-response';
+        if( isset( $dataArray[ $fieldName ] ) ) {
+          $this->captchaResponse = $dataArray[ $fieldName ];
+        }
+      }
+
+      // Importando los datos del form e integrando los datos de ficheros subidos
+      foreach( $this->getFieldsNamesArray() as $fieldName ) {
+        // error_log('FormController: Load field '.$fieldName.' value '.print_r( $dataArray[ $fieldName ], true ) );
+
+        if( isset( $dataArray[ $fieldName ] ) ) {
+          $fieldType = $this->getFieldType( $fieldName );
+
+          // Controlamos que no aparezcan datos para campos reservados
+          if( 'reserved' !== $fieldType ) {
+            if( $fieldType !== 'file' ) {
+              if( isset( $dataArray[ $fieldName ] ) ) {
+                $this->setFieldValue( $fieldName, $dataArray[ $fieldName ] );
+              }
+            }
+            else {
+              if( !$this->isEmptyFieldValue( $fieldName ) ) {
+                $fileFieldValue = $this->getFieldValue( $fieldName );
+
+                // error_log( 'FormController::loadPostValues FILE: '.print_r( $fileFieldValue, true ) );
+
+                switch( $fileFieldValue['status'] ) {
+                  case 'LOAD':
+                  case 'REPLACE':
+                    $fileFieldValue['validate'] = $fileFieldValue['temp'];
+                    break;
+                  case 'EXIST':
+                    $fileFieldValue['validate'] = $fileFieldValue['prev'];
+                    break;
+                  case 'GROUP':
+                    if( count( $fileFieldValue['multiple'] ) ) {
+                      foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
+                        switch( $fileData['status'] ) {
+                          case 'LOAD':
+                          case 'REPLACE':
+                            $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['temp'];
+                            break;
+                          case 'EXIST':
+                            $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
+                            break;
+                        }
+                        Cogumelo::debug('FormController: FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
+                      }
+                    }
+                    break;
+                }
+                $this->setFieldValue( $fieldName, $fileFieldValue );
+              }
+            } // if( $this->getFieldType( $fieldName ) !== 'file' )
+          }
+          else {
+            Cogumelo::error( __METHOD__ . 'Intento de manipulacion de datos: '.$fieldName.' RV' );
+            error_log( __METHOD__ . 'Intento de manipulacion de datos: '.$fieldName.' RV' );
+            $this->addFormError( __('Intento de manipulacion del formulario').' (RV)' );
+          }
+        } // if( isset( $dataArray[ $fieldName ] ) )
+      } // foreach
+    }
+  }
+
+  /**
+   * Carga los valores del VO
+   *
+   * @param VO $dataVO Datos cargados por el programa
+   */
+  public function loadVOValues( $dataVO ) {
+    if( gettype( $dataVO ) == 'object' ) {
+      $dataArray = array();
+      foreach( $dataVO->getKeys() as $keyVO ) {
+        $dataArray[ $keyVO ] = $dataVO->getter( $keyVO );
+      }
+      $this->loadArrayValues( $dataArray );
+    }
+  }
+
+
 
   /**
     Define un campo del formulario y, opcionalmente, con sus parametros

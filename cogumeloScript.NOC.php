@@ -426,6 +426,7 @@ function setPermissions( $devel = false ) {
   makeAppPaths();
 
   $extPerms = $devel ? ',ugo+rX' : '';
+  $sudo = 'sudo ';
 
   echo( "setPermissions ".($devel ? 'DEVEL' : '')."\n" );
 
@@ -444,7 +445,7 @@ function setPermissions( $devel = false ) {
 
     $fai = 'chgrp -R www-data '.$dirsString;
     echo( " - Executamos chgrp general \n" );
-    exec( 'sudo '.$fai );
+    exec( $sudo.$fai );
   }
   else {
     // exec( 'sudo '.$fai );
@@ -455,7 +456,7 @@ function setPermissions( $devel = false ) {
   if( IS_DEVEL_ENV ) {
     $fai = 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH.' '.APP_BASE_PATH;
     echo( " - Executamos chmod WEB_BASE_PATH APP_BASE_PATH\n" );
-    exec( 'sudo '.$fai );
+    exec( $sudo.$fai );
   }
   else {
     // exec( 'sudo '.$fai );
@@ -486,7 +487,7 @@ function setPermissions( $devel = false ) {
       ''
     ;
     echo( " - Executamos chmod APP_TMP_PATH\n" );
-    exec( 'sudo '.$fai );
+    exec( $sudo.$fai );
   }
   else {
     echo( " - NON se executa chmod APP_TMP_PATH\n" );
@@ -497,20 +498,20 @@ function setPermissions( $devel = false ) {
     // session:savePath tiene que mantener el usuario y grupo
     $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
     if( !empty($sessionSavePath) ) {
-      $fai = 'sudo chgrp -R www-data '.$sessionSavePath;
+      $fai = 'chgrp -R www-data '.$sessionSavePath;
       echo( "  - Executamos $fai\n" );
-      exec( $fai );
-      $fai = 'sudo chmod -R ug+rwX'.$extPerms.' '.$sessionSavePath;
+      exec( $sudo.$fai );
+      $fai = 'chmod -R ug+rwX'.$extPerms.' '.$sessionSavePath;
       echo( "  - Executamos $fai\n" );
-      exec( $fai );
+      exec( $sudo.$fai );
     }
 
     // Solo usuario administrador
     $backupPath = Cogumelo::getSetupValue( 'script:backupPath' );
     if( !empty($backupPath) ) {
-      $fai = 'sudo chmod -R go-rwx '.$backupPath;
+      $fai = 'chmod -R go-rwx '.$backupPath;
       echo( "  - Executamos $fai\n" );
-      exec( $fai );
+      exec( $sudo.$fai );
     }
   }
   else {
