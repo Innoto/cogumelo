@@ -1200,6 +1200,10 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       fileInfo.tnProfile = $fileField.attr('data-tnProfile');
     }
 
+    if( !fileInfo.hasOwnProperty('fileSrcTn') && $fileField.attr('data-tnSrc') ) {
+      fileInfo.fileSrcTn = $fileField.attr('data-tnSrc');
+    }
+
     $filesWrap.append( that.fileBox( fieldName, fileInfo, that.deleteFormFileEvent ) );
     $fileFieldWrap.append( $filesWrap );
 
@@ -1263,7 +1267,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     if( fileInfo.fileSrcTn ) {
       tnSrc = fileInfo.fileSrcTn;
     }
-    if( fileInfo.id !== false && fileInfo.type && fileInfo.type.indexOf( 'image' ) === 0 ) {
+    else if( fileInfo.id !== false && fileInfo.type && fileInfo.type.indexOf( 'image' ) === 0 ) {
       var tnProfile = 'modFormTn';
       if( fileInfo.hasOwnProperty('tnProfile') ) {
         tnProfile = fileInfo.tnProfile;
