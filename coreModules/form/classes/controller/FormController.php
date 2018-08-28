@@ -59,8 +59,8 @@ class FormController implements Serializable {
   private $noSaveTypes = ['password', 'text', 'textarea'];
 
   // POST submit
-  private $postData = null;
-  private $postValues = null;
+  // private $postData = null;
+  // private $postValues = null;
   private $validationObj = null;
   private $fieldErrors = [];
   private $formErrors = [];
@@ -126,7 +126,7 @@ class FormController implements Serializable {
 
 
   /**
-   * Destructor. Realizamos limpieza 
+   * Destructor. Realizamos limpieza
    */
   // function __destruct() {
   //   Cogumelo::debug(__METHOD__.' - '.$this->getTokenId());
@@ -3142,6 +3142,102 @@ class FormController implements Serializable {
     // error_log('FormController: '. "addGroupRuleError: $groupName, $ruleName, $msgError " );
     $this->fieldErrors[ $groupName ][ $ruleName ] = $msgError;
   }
+
+  /**
+   * Añade un array de errores en bruto al formulario
+   *
+   * @param array $errorsArray Errores
+   */
+  public function addFormErrorsRaw( $errorsArray ) {
+    if( !empty( $errorsArray ) && is_array( $errorsArray ) ) {
+      foreach( $errorsArray as $error ) {
+        $this->formErrors[] = $error;
+      }
+    }
+  }
+
+  /**
+   * Establece un array de errores en bruto al formulario
+   *
+   * @param array $errorsArray Errores
+   */
+  public function setFormErrorsRaw( $errorsArray ) {
+    if( is_array( $errorsArray ) ) {
+      $this->formErrors = $errorsArray;
+    }
+  }
+
+
+  /**
+   * Añade un array de errores en bruto al formulario
+   *
+   * @param array $errorsArray Errores
+   */
+  public function addFieldsErrorsRaw( $errorsArray ) {
+    if( !empty( $errorsArray ) && is_array( $errorsArray ) ) {
+      foreach( $errorsArray as $error ) {
+        $this->fieldErrors[] = $error;
+      }
+    }
+  }
+
+  /**
+   * Establece un array de errores en bruto al formulario
+   *
+   * @param array $errorsArray Errores
+   */
+  public function setFieldsErrorsRaw( $errorsArray ) {
+    if( is_array( $errorsArray ) ) {
+      $this->fieldErrors = $errorsArray;
+    }
+  }
+
+
+  /**
+   * Establece un array de errores en bruto al formulario
+   *
+   * @param array $errorsArray Errores
+   */
+  public function addJsErrorsRaw( $jvErrors ) {
+    if( is_array( $jvErrors ) ) {
+      $this->formErrors = [];
+      $this->fieldErrors = [];
+
+      foreach( $jvErrors as $err ) {
+        if( empty( $err['fieldName'] ) ) {
+          // Form errors
+          $this->formErrors[] = $err['JVshowErrors'];
+        }
+        else {
+          // Field errors
+          $this->fieldErrors[ $err['fieldName'] ][ $err['ruleName'] ] = $err['JVshowErrors'][ $err['fieldName'] ];
+        }
+      }
+    }
+  }
+  // foreach( $this->fieldErrors as $fieldName => $fieldRules ) {
+  //   foreach( $fieldRules as $ruleName => $msgRuleError ) {
+  //     $ruleParams = false;
+  //     if( isset( $this->rules[ $fieldName ][ $ruleName ] ) ) {
+  //       $ruleParams = $this->rules[ $fieldName ][ $ruleName ];
+  //     }
+  //     $jvErrors[] = [
+  //       'fieldName' => $fieldName,
+  //       'ruleName' => $ruleName,
+  //       'ruleParams' => $ruleParams,
+  //       'JVshowErrors' => [ $fieldName => $msgRuleError ]
+  //     ];
+  //   }
+  // }
+  // foreach( $this->formErrors as $formError ) {
+  //   // Errores globales (no referidos a un field determinado)
+  //   $jvErrors[] = [
+  //     'fieldName' => false,
+  //     'JVshowErrors' => $formError
+  //   ];
+  // }
+
+
 
   /**
    * Obtiene la lista de errores en el formulario (Globales)
