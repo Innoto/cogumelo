@@ -29,7 +29,7 @@ class i18nScriptController {
 
   public function __construct() {
 
-    global $C_ENABLED_MODULES;
+    // global $C_ENABLED_MODULES;
 
     $this->dir_path = cogumelo::getSetupValue( 'i18n:localePath' );
     $this->dir_modules_c = COGUMELO_LOCATION.'/coreModules/';
@@ -192,7 +192,7 @@ class i18nScriptController {
   * Generate translations file PO for a given module
   **/
   public function getModulePo($module){
-    $path = $module;
+    // $path = $module;
     $files = CacheUtilsController::listFolderFiles($module, array('php','js','tpl'), false);
     $filesModule = array();
     foreach($files as $file){
