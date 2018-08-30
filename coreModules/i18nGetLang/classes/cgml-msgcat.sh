@@ -8,8 +8,11 @@ FIN=$1
 FROM=$0.tmp.from
 MIX=$0.tmp.mix
 
-rm $MIX
-touch $MIX
+
+# rm $MIX
+# touch $MIX
+truncate --size 0 $MIX
+
 
 for PO in "${@:2}"
 do
