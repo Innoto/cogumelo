@@ -36,6 +36,14 @@ class i18nScriptController {
       $this->lang[$l] = $lang['i18n'];
       $this->dir_lc[$l] = $this->dir_path.'/'.$lang['i18n'].'/LC_MESSAGES';
     }
+
+
+
+    $this->script_msgcat = $this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh';
+    if( !is_executable ( $this->script_msgcat ) ) {
+      exec( 'chmod 700 '.$this->script_msgcat );
+    }
+
   }
 
   /**
@@ -212,43 +220,42 @@ class i18nScriptController {
 
   }
 
-  /*
-  * Merge POs generated form each type of file in one and clean temp
-  **/
+  /**
+   * Merge POs generated form each type of file in one and clean temp
+   */
   function updateModulePo($module){
     $module = $module.'/translations';
 
-    exec('chmod 700 '.$this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh');
     foreach( $this->lang as $l => $lang ) {
       if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_prev.po') && file_exists($module.'/'.$this->textdomain.'_'.$l.'_tpl.po')){
-        exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_prev.po '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po');
+        exec( $this->script_msgcat.' '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_prev.po '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po');
       }
       else{
         if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_prev.po')){
-          exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_prev.po');
+          exec( $this->script_msgcat.' '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_prev.po');
         }
         else{
            if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_tpl.po')){
              if($this->checkModuleTranslations($module, $l)){
-               exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po');
+               exec( $this->script_msgcat.' '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po');
              }
              else{
-               exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po');
+               exec( $this->script_msgcat.' '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po');
              }
            }
          }
       }
       if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_js.po')){
         if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_tmp.po')){
-          exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_js.po');
+          exec( $this->script_msgcat.' '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po '.$module.'/'.$this->textdomain.'_'.$l.'_js.po');
         }
         else{
-          exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_js.po');
+          exec( $this->script_msgcat.' '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_js.po');
         }
       }
       else{
         if(file_exists($module.'/'.$this->textdomain.'_'.$l.'_tmp.po')){
-          exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po');
+          exec( $this->script_msgcat.' '.$module.'/'.$this->textdomain.'_'.$l.'.po '.$module.'/'.$this->textdomain.'_'.$l.'_tmp.po');
         }
       }
 
@@ -278,23 +285,23 @@ class i18nScriptController {
     // Now we have to combine the po's we got in one for each language
     foreach( $this->dir_lc as $l ) {
       if(file_exists($l.'/'.$this->textdomain.'_prev.po') && file_exists($l.'/'.$this->textdomain.'_tpl.po')){
-        exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'_tmp.po '.$l.'/'.$this->textdomain.'_prev.po '.$l.'/'.$this->textdomain.'_tpl.po');
+        exec( $this->script_msgcat.' '.$l.'/'.$this->textdomain.'_tmp.po '.$l.'/'.$this->textdomain.'_prev.po '.$l.'/'.$this->textdomain.'_tpl.po');
       }
       else{
         if(file_exists($l.'/'.$this->textdomain.'_prev.po')){
-          exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'_tmp.po '.$l.'/'.$this->textdomain.'_prev.po');
+          exec( $this->script_msgcat.' '.$l.'/'.$this->textdomain.'_tmp.po '.$l.'/'.$this->textdomain.'_prev.po');
         }
         else{
           if(file_exists($l.'/'.$this->textdomain.'_tpl.po')){
-            exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'_tmp.po '.$l.'/'.$this->textdomain.'_tpl.po');
+            exec( $this->script_msgcat.' '.$l.'/'.$this->textdomain.'_tmp.po '.$l.'/'.$this->textdomain.'_tpl.po');
           }
         }
       }
       if(file_exists($l.'/'.$this->textdomain.'_js.po')){
-        exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_tmp.po '.$l.'/'.$this->textdomain.'_js.po');
+        exec( $this->script_msgcat.' '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_tmp.po '.$l.'/'.$this->textdomain.'_js.po');
       }
       else{
-        exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_tmp.po');
+        exec( $this->script_msgcat.' '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_tmp.po');
       }
 
       //Delete all the tmp files created
@@ -352,9 +359,9 @@ class i18nScriptController {
           }
         }
       }
-      exec('chmod 700 '.$this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh');
+
       foreach($this->dir_lc as $l=>$lang){
-        exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$path.$this->textdomain.'_'.$system.'_'.$l.'.po '.$all[$l]);
+        exec( $this->script_msgcat.' '.$path.$this->textdomain.'_'.$system.'_'.$l.'.po '.$all[$l]);
         exec('cp '.$path.'/'.$this->textdomain.'_'.$system.'_'.$l.'.po '.$lang.'/'.$this->textdomain.'_'.$system.'.po');
         exec('rm '.$path.'/'.$this->textdomain.'_'.$system.'_'.$l.'.po');
       }
@@ -501,11 +508,11 @@ class i18nScriptController {
   /**
     * Mix system and app POS in one and compile it: translations will be ready for use now    */
   public function c_i18n_compile() {
-    exec('chmod 700 '.$this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh');
+
     foreach ($this->dir_lc as $l){
       // We merge cogumelo geozzy and app po to have only one final PO
       $poDistr = ( $this->dir_modules_dist ) ? $l.'/'.$this->textdomain.'_geozzy.po' : '';
-      exec($this->dir_modules_c.'i18nGetLang/classes/cgml-msgcat.sh '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$poDistr.' '.$l.'/'.$this->textdomain.'_moduleApp.po');
+      exec( $this->script_msgcat.' '.$l.'/'.$this->textdomain.'.po '.$l.'/'.$this->textdomain.'_app.po '.$l.'/'.$this->textdomain.'_cogumelo.po '.$poDistr.' '.$l.'/'.$this->textdomain.'_moduleApp.po');
 
       // We compile the resultant PO and generate a json for client side
       exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
