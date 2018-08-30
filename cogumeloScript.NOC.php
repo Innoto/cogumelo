@@ -94,7 +94,7 @@ if( $argc > 1 ) {
 
     case 'restoreDB': // restore the backup of a given db
       if( $argc > 2 ) {
-        backupDB();
+        // backupDB();
 
         $file = $argv[2]; //name of the backup file
         restoreDB( $file );
@@ -216,7 +216,7 @@ function printOptions(){
     * resetModules
       - resetModuleVersions
 
-    * bckDB                   Do a DB backup (optional arg: filename)
+    * backupDB                Do a DB backup (optional arg: filename)
     * restoreDB               Restore a database
 
  + Internationalization
@@ -385,7 +385,7 @@ function makeAppPaths() {
   echo "makeAppPaths\n";
 
   // global $lc;
-  
+
   $dirList = array( APP_TMP_PATH,
     Cogumelo::getSetupValue( 'smarty:configPath' ), Cogumelo::getSetupValue( 'smarty:compilePath' ),
     Cogumelo::getSetupValue( 'smarty:cachePath' ), Cogumelo::getSetupValue( 'smarty:tmpPath' ),
