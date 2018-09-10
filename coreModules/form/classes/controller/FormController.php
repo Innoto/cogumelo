@@ -865,14 +865,9 @@ class FormController implements Serializable {
         }
         break;
       case 'file':
-        $maxFileSize = $this->phpIni2Bytes( ini_get('upload_max_filesize') );
-        if( ini_get('post_max_size') != '0' ) {
-          $maxFileSize = min( $maxFileSize, $this->phpIni2Bytes( ini_get('post_max_size') ) );
-        }
-        if( ini_get('memory_limit') != '-1' ) {
-          $maxFileSize = min( $maxFileSize, $this->phpIni2Bytes( ini_get('memory_limit') ) );
-        }
-        $this->setValidationRule( $this->fields[$fieldName]['name'], 'maxfilesize', $maxFileSize );
+        $maxFileSizePHP = $this->phpMaxFileSize();
+
+        $this->setValidationRule( $this->fields[$fieldName]['name'], 'maxfilesize', $maxFileSizePHP );
         break;
     }
   } // function setField
@@ -1979,11 +1974,29 @@ class FormController implements Serializable {
 
 
 
+  /**
+   * Convierte el tamaño de memoria de formato php.ini a bytes
+   * @param string $size Tamaño de la memoria configurada en php.ini
+   * @return integer
+   */
+  private function phpMaxFileSize() {
+    $maxFileSizePHP = $this->phpIni2Bytes( ini_get('upload_max_filesize') );
+
+    if( ini_get('post_max_size') != '0' ) {
+      $maxFileSizePHP = min( $maxFileSizePHP, $this->phpIni2Bytes( ini_get('post_max_size') ) );
+    }
+
+    if( ini_get('memory_limit') != '-1' ) {
+      $maxFileSizePHP = min( $maxFileSizePHP, $this->phpIni2Bytes( ini_get('memory_limit') ) );
+    }
+
+    return $maxFileSizePHP;
+  }
 
   /**
-    Convierte el tamaño de memoria de formato php.ini a bytes
-    @param string $size Tamaño de la memoria configurada en php.ini
-    @return integer
+   * Convierte el tamaño de memoria de formato php.ini a bytes
+   * @param string $size Tamaño de la memoria configurada en php.ini
+   * @return integer
    */
   private function phpIni2Bytes( $size ) {
     if( preg_match( '/([\d\.]+)([KMG])/i', $size, $match ) ) {
@@ -2855,9 +2868,19 @@ class FormController implements Serializable {
    */
   public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
     if( isset( $this->fields[ $fieldName ] ) ) {
+
       if( $ruleName === 'required' && $this->getFieldType( $fieldName ) === 'file' ) {
         $ruleName === 'fileRequired';
       }
+
+      if( $ruleName === 'maxfilesize' ) {
+        $maxFileSizePHP = $this->phpMaxFileSize();
+
+        if( empty($ruleParams) || $ruleParams > $maxFileSizePHP ) {
+          $ruleParams = $maxFileSizePHP;
+        }
+      }
+
       $this->rules[ $fieldName ][ $ruleName ] = $ruleParams;
       $this->updateFieldRulesToSession( $fieldName );
     }
