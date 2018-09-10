@@ -35,7 +35,10 @@ class FormConnector extends View {
   }
 
 
+  // addUrlPatterns( '#^cgml-form-command$#', 'view:FormConnector::execCommand' );
   public function execCommand() {
+    // error_log(__METHOD__);
+
     if( isset( $_POST['execute'] ) ) {
       switch( $_POST['execute'] ) {
         case 'keepAlive':
@@ -58,11 +61,26 @@ class FormConnector extends View {
   }
 
 
+
+  // addUrlPatterns( '#^cgml-form-file-upload$#', 'view:FormConnector::fileUpload' );
+  public function fileUpload() {
+    // error_log(__METHOD__);
+
+    $formCnxFiles = new FormConnectorFiles();
+    if( isset( $_POST['execute'] ) && $_POST['execute'] === 'delete' ) {
+      $formCnxFiles->deleteFormFile( $_POST );
+    }
+    else {
+      $formCnxFiles->uploadFormFile( $_POST, $_FILES );
+    }
+  }
+
+
+
   public function keepAlive() {
     cogumelo::debug('FormConnector: (Notice) FormConnector::keepAlive' );
 
     $form = new FormController();
-    $error = false;
 
     if( isset( $_POST['cgIntFrmId'] ) && $form->loadFromSession( $_POST['cgIntFrmId'] ) ) {
       $form->saveToSession();
@@ -79,18 +97,6 @@ class FormConnector extends View {
     $form->sendJsonResponse( $moreInfo );
   }
 
-
-
-  // addUrlPatterns( '#^cgml-form-file-upload$#', 'view:FormConnector::fileUpload' );
-  public function fileUpload() {
-    $formCnxFiles = new FormConnectorFiles();
-    if( isset( $_POST['execute'] ) && $_POST['execute'] === 'delete' ) {
-      $formCnxFiles->deleteFormFile( $_POST );
-    }
-    else {
-      $formCnxFiles->uploadFormFile( $_POST, $_FILES );
-    }
-  }
 
 
 
@@ -208,16 +214,18 @@ class FormConnector extends View {
 
 
 
+  // addUrlPatterns( '#^cgml-form-htmleditor-config.js#', 'view:FormConnector::customCkeditorConfig' );
   /**
    * Configuracion propia de CKEditor
    */
   public function customCkeditorConfig() {
+    // error_log(__METHOD__);
+
     $fileInfo = ModuleController::getRealFilePath( 'classes/view/templates/js/ckeditor-config.js', 'form' );
 
     header( 'Content-Type: application/javascript; charset=utf-8' );
     header( 'Content-Length: ' . filesize( $fileInfo ) );
     readfile( $fileInfo );
-    // exit;
   } // function customCkeditorConfig() {
 
 } // class FormConnector extends View

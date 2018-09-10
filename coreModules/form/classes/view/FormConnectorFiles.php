@@ -20,19 +20,17 @@
  **/
 class FormConnectorFiles {
 
-
-
   public function uploadFormFile( $post, $phpFiles ) {
     Cogumelo::debug(__METHOD__);
-
-    $form = new FormController();
-    // $error = false;
-
-    $idForm = isset( $post['idForm'] ) ? $post['idForm'] : false;
-    $moreInfo = [ 'idForm' => $idForm ];
+    // error_log(__METHOD__);
 
     // error_log('FormConnector: FILES:' ); error_log( print_r( $phpFiles, true ) );
     // error_log('FormConnector: POST:' ); error_log( print_r( $post, true ) );
+
+    $form = new FormController();
+
+    $idForm = isset( $post['idForm'] ) ? $post['idForm'] : false;
+    $moreInfo = [ 'idForm' => $idForm ];
 
     if( isset( $post['cgIntFrmId'], $post['fieldName'], $phpFiles['ajaxFileUpload'] ) ) {
 
@@ -45,6 +43,7 @@ class FormConnectorFiles {
 
 
       Cogumelo::debug(__METHOD__.': FILES:'.$phpFiles['ajaxFileUpload']['name'] );
+      // error_log(__METHOD__.': FILES:'.$phpFiles['ajaxFileUpload']['name'] );
       $fileTmpLoc   = $phpFiles['ajaxFileUpload']['tmp_name']; // File in the PHP tmp folder
       $fileName     = $phpFiles['ajaxFileUpload']['name'];     // The file name
       $fileType     = $phpFiles['ajaxFileUpload']['type'];     // The type of file it is
@@ -92,6 +91,7 @@ class FormConnectorFiles {
 
         // Recuperamos formObj y validamos el fichero temporal
         if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' ) {
+          // error_log(__METHOD__.' FORM CARGADO');
 
           $idForm = $form->getId();
 
@@ -188,6 +188,7 @@ class FormConnectorFiles {
 
               if( !$form->existErrors() ) {
                 Cogumelo::debug('FormConnector: FU: OK con el ficheiro subido... Se persiste...' );
+                error_log(__METHOD__.' OK con el ficheiro subido... Se persiste...');
                 // error_log('FormConnector: GUARDAMOS File Field: '.print_r($fileFieldValuePrev,true) );
                 $form->setFieldValue( $fieldName, $fileFieldValuePrev );
                 // Persistimos formObj para cuando se envíe el formulario completo
@@ -195,6 +196,7 @@ class FormConnectorFiles {
               }
               else {
                 Cogumelo::debug('FormConnector: FU: Como ha fallado, eliminamos: ' . $tmpCgmlFileLocation );
+                error_log(__METHOD__.' Como ha fallado, eliminamos: ' . $tmpCgmlFileLocation );
                 unlink( $tmpCgmlFileLocation );
               }
             } // else - if( !$tmpCgmlFileLocation )
@@ -245,6 +247,16 @@ class FormConnectorFiles {
       }
     }
 
+
+
+
+
+
+
+
+
+
+
     // Notificamos el resultado al UI
     $form->sendJsonResponse( $moreInfo );
   } // function uploadFormFile() {
@@ -253,12 +265,12 @@ class FormConnectorFiles {
 
   public function deleteFormFile( $post ) {
     Cogumelo::debug(__METHOD__);
-
-    $form = new FormController();
-
+    // error_log(__METHOD__);
 
     // error_log('FormConnector: POST:' );
     // error_log('FormConnector: '. print_r( $post, true ) );
+
+    $form = new FormController();
 
     $idForm = isset( $post['idForm'] ) ? $post['idForm'] : false;
     $moreInfo = [ 'idForm' => $idForm ];
@@ -336,15 +348,14 @@ class FormConnectorFiles {
               // error_log('FormConnector: FDelete: Intentando borrar con status erroneo: ' . $fieldPrev['status'] );
 
               $form->addFieldRuleError( $fieldName, 'cogumelo',
-                'Intento de sobreescribir un fichero existente' );
+                'Intento de sobreescribir un fichero existente (STB)' );
               break;
           }
         }
         else {
           error_log('FormConnector: FDelete: Error intentando eliminar un fichero sin estado.' );
-
           $form->addFieldRuleError( $fieldName, 'cogumelo',
-            'Intento de borrar un fichero inexistente' );
+            'Intento de borrar un fichero inexistente (STN)' );
         }
 
         if( !$form->existErrors() ) {
@@ -377,18 +388,27 @@ class FormConnectorFiles {
       } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
       else {
         $form->addFieldRuleError( $fieldName, 'cogumelo',
-          'Los datos del fichero no han llegado bien al servidor. FORM' );
+          'Los datos del fichero no han llegado bien al servidor. (FRM)' );
       }
     } // if( isset( ... ) )
     else { // no parece haber fichero
       if( isset( $post['fieldName'] ) ) {
         $form->addFieldRuleError( $post['fieldName'], 'cogumelo',
-          'No han llegado los datos o lo ha hecho con errores. ISSET' );
+          'No han llegado los datos o lo ha hecho con errores. (ISE)' );
       }
       else {
-        $form->addFormError( 'No han llegado los datos o lo ha hecho con errores. (ISSET2)', 'formError' );
+        $form->addFormError( 'No han llegado los datos o lo ha hecho con errores. (ISE2)', 'formError' );
       }
     }
+
+
+
+
+
+
+
+
+
 
 
     // Notificamos el resultado al UI
