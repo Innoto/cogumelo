@@ -221,7 +221,7 @@ class FiledataController {
 
     $filedataObj = $this->createNewFile( $filedataInfo );
 
-    $idGroup = ( $idGroup ) ? $idGroup : 0;
+    $idGroup = !empty( $idGroup ) ? $idGroup : 0;
     $fileGroupData = [ 'idGroup' => $idGroup, 'filedataId' => $filedataObj->getter('id') ];
 
     $fileGroupObj = new FilegroupModel( $fileGroupData );
@@ -314,7 +314,12 @@ class FiledataController {
       if( file_exists( $this->filesAppPath.$relativeDestPath.'/'.$secureFileName ) ){
         Cogumelo::debug( __METHOD__.' - (Notice) createFile - COLISION: '.$this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
         $filePathInfo = pathinfo( $secureFileName );
-        $secureFileName = $filePathInfo['filename'] .'_fdmi'. $filedataObj->getter('id') .'.'. $filePathInfo['extension'];
+        if(!empty($filePathInfo['extension'])){
+          $secureFileName = $filePathInfo['filename'] .'_fdmi'. $filedataObj->getter('id') .'.'. $filePathInfo['extension'];
+        }
+        else{
+          $secureFileName = $filePathInfo['filename'] .'_fdmi'. $filedataObj->getter('id');
+        }
       }
 
       if( !is_dir( $this->filesAppPath.$relativeDestPath ) ) {
