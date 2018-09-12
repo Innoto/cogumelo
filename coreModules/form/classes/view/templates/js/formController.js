@@ -267,21 +267,41 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     console.log( '* formDoneOk',that.idForm, response );
 
     var successActions = response.success;
-    if( successActions.onSubmitOk ) {
-      eval( successActions.onSubmitOk+'( that.idForm );' );
-    }
-    if( successActions.jsEval ) {
-      eval( successActions.jsEval );
-    }
+
     if( successActions.notify ) {
       cogumelo.clientMsg.notify(
         successActions.notify,
         { notifyType: 'success', size: 'normal', 'title': __('Success') }
       );
     }
+
+    // Forzamos una parada hasta cerrar el "accept"
     if( successActions.accept ) {
-      cogumelo.clientMsg.alert( successActions.accept );
-      // alert( successActions.accept );
+      // cogumelo.clientMsg.alert( successActions.accept );
+      msgOptions = new Object({
+        closed: function() {
+          that.formDoneOkPhase2( form, response );
+        }
+      });
+      cogumelo.clientMsg.alert( successActions.accept, msgOptions );
+    }
+    else {
+      that.formDoneOkPhase2( form, response );
+    }
+
+    // that.formDoneOkPhase2( form, response );
+    // alert( 'Form Submit OK' );
+  }; // that.formDoneOk
+
+  that.formDoneOkPhase2 = function formDoneOkPhase2( form, response ) {
+    console.log( '* formDoneOkPhase2',that.idForm, response );
+
+    var successActions = response.success;
+    if( successActions.onSubmitOk ) {
+      eval( successActions.onSubmitOk+'( that.idForm );' );
+    }
+    if( successActions.jsEval ) {
+      eval( successActions.jsEval );
     }
     if( successActions.redirect ) {
       // Usando replace no permite volver a la pagina del form
@@ -295,7 +315,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       console.log( 'IMPORTANTE: En resetForm falta borrar los campos FILE porque no lo hace el reset!!!' );
     }
     // alert( 'Form Submit OK' );
-  }; // that.formDoneOk
+  }; // that.formDoneOkPhase2
 
   that.formDoneError = function formDoneError( form, response ) {
     console.log( '* formDoneError',that.idForm, response );
