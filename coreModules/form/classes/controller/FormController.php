@@ -59,8 +59,8 @@ class FormController implements Serializable {
   private $noSaveTypes = ['password', 'text', 'textarea'];
 
   // POST submit
-  private $postData = null;
-  private $postValues = null;
+  // private $postData = null;
+  // private $postValues = null;
   private $validationObj = null;
   private $fieldErrors = [];
   private $formErrors = [];
@@ -126,7 +126,7 @@ class FormController implements Serializable {
 
 
   /**
-   * Destructor. Realizamos limpieza 
+   * Destructor. Realizamos limpieza
    */
   // function __destruct() {
   //   Cogumelo::debug(__METHOD__.' - '.$this->getTokenId());
@@ -624,19 +624,104 @@ class FormController implements Serializable {
       } // if( isset( $formPost[ $fieldName ] ) )
     }
   }
-
   /**
-   * Carga los valores del VO
-   *
-   * @param VO $dataVO Datos cargados por el programa
-   */
-  public function loadVOValues( $dataVO ) {
-    if( gettype( $dataVO ) == 'object' ) {
-      $dataArray = array();
-      foreach( $dataVO->getKeys() as $keyVO ) {
-        $dataArray[ $keyVO ] = $dataVO->getter( $keyVO );
+   * Carga los valores de los input del navegador
+   * @param array $formPost Datos enviados por el navegador convertidos a array
+   **/
+  public function loadPostValuesV2( $formPost, $acceptReserved = false ) {
+    // $this->postValues = $formPost;
+
+    if( $this->captchaEnable() ) {
+      $fieldName = 'g-recaptcha-response';
+      if( isset( $formPost[ $fieldName ][ 'value' ] ) ) {
+        $this->captchaResponse = $formPost[ $fieldName ][ 'value' ];
       }
-      $this->loadArrayValues( $dataArray );
+    }
+
+    // Importando los datos del form e integrando los datos de ficheros subidos
+    foreach( $this->getFieldsNamesArray() as $fieldName ) {
+      // error_log('FormController: Load field '.$fieldName.' value '.print_r( $formPost[ $fieldName ][ 'value' ], true ) );
+
+      if( isset( $formPost[ $fieldName ] ) ) {
+        $fieldType = $this->getFieldType( $fieldName );
+
+        // Controlamos que no aparezcan datos para campos reservados
+        if( $acceptReserved || 'reserved' !== $fieldType ) {
+          if( isset( $formPost[ $fieldName ][ 'dataInfo' ] ) ) {
+            // error_log('FormController: DATA-VALUES: '.$fieldName.' '.print_r( $formPost[ $fieldName ][ 'dataInfo' ], true ) );
+            // $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
+            $this->setFieldParam( $fieldName, 'dataInfo', $formPost[ $fieldName ][ 'dataInfo' ] );
+            foreach( $formPost[ $fieldName ][ 'dataInfo' ] as $key => $value ) {
+              // error_log('FormController: '. "setFieldParam: $fieldName, data-$key, $value )" );
+              // $this->setFieldParam( $fieldName, 'data-'.$key, $value );
+              $this->setFieldParam( $fieldName, $key, $value );
+            }
+          }
+          if( isset( $formPost[ $fieldName ][ 'dataMultiInfo' ] ) ) {
+            $this->setFieldParam( $fieldName, 'dataMultiInfo', $formPost[ $fieldName ][ 'dataMultiInfo' ] );
+          }
+
+          /*
+            {
+              "value":["67","69","71"],
+              "dataMultiInfo":{
+                "67":{"data-order":"1","data-term-icon":"","data-term-idname":"eduTIC"},
+                "69":{"data-order":"2","data-term-icon":"","data-term-idname":"flipped","data-term-parent":"68"},
+                "71":{"data-order":"3","data-term-icon":"","data-term-idname":"gamificacion","data-term-parent":"68"}
+              }
+            },
+            {
+              "value":false,
+              "dataInfo":{"data-switchery":"true"}
+            }
+          */
+
+          if( $fieldType !== 'file' ) {
+            if( isset( $formPost[ $fieldName ][ 'value' ] ) ) {
+              $this->setFieldValue( $fieldName, $formPost[ $fieldName ][ 'value' ] );
+            }
+          }
+          // else {
+          //   if( !$this->isEmptyFieldValue( $fieldName ) ) {
+          //     $fileFieldValue = $this->getFieldValue( $fieldName );
+
+          //     // error_log( 'FormController::loadPostValues FILE: '.print_r( $fileFieldValue, true ) );
+
+          //     switch( $fileFieldValue['status'] ) {
+          //       case 'LOAD':
+          //       case 'REPLACE':
+          //         $fileFieldValue['validate'] = $fileFieldValue['temp'];
+          //         break;
+          //       case 'EXIST':
+          //         $fileFieldValue['validate'] = $fileFieldValue['prev'];
+          //         break;
+          //       case 'GROUP':
+          //         if( count( $fileFieldValue['multiple'] ) ) {
+          //           foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
+          //             switch( $fileData['status'] ) {
+          //               case 'LOAD':
+          //               case 'REPLACE':
+          //                 $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['temp'];
+          //                 break;
+          //               case 'EXIST':
+          //                 $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
+          //                 break;
+          //             }
+          //             Cogumelo::debug('FormController: FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
+          //           }
+          //         }
+          //         break;
+          //     }
+          //     $this->setFieldValue( $fieldName, $fileFieldValue );
+          //   }
+          // } // if( $this->getFieldType( $fieldName ) !== 'file' )
+        }
+        else {
+          Cogumelo::error( __METHOD__ . 'Intento de manipulacion de datos: '.$fieldName.' RV' );
+          error_log( __METHOD__ . 'Intento de manipulacion de datos: '.$fieldName.' RV' );
+          $this->addFormError( __('Intento de manipulacion del formulario').' (RV)' );
+        }
+      } // if( isset( $formPost[ $fieldName ] ) )
     }
   }
 
@@ -656,6 +741,99 @@ class FormController implements Serializable {
       }
     }
   }
+
+  /**
+   * Carga los valores desde un array en el que coincidan la clave con un campo
+   *
+   * @param array $dataArray Datos preparados para añadir al formulario
+   */
+  public function loadArrayValuesV2( $dataArray, $acceptReserved = false ) {
+    // error_log('FormController: loadArrayValues: ' . print_r( $dataArray, true ) );
+
+    if( !empty( $dataArray ) && is_array( $dataArray ) ) {
+
+      if( $this->captchaEnable() ) {
+        $fieldName = 'g-recaptcha-response';
+        if( isset( $dataArray[ $fieldName ] ) ) {
+          $this->captchaResponse = $dataArray[ $fieldName ];
+        }
+      }
+
+      // Importando los datos del form e integrando los datos de ficheros subidos
+      foreach( $this->getFieldsNamesArray() as $fieldName ) {
+        // error_log('FormController: Load field '.$fieldName.' value '.print_r( $dataArray[ $fieldName ], true ) );
+
+        if( isset( $dataArray[ $fieldName ] ) ) {
+          $fieldType = $this->getFieldType( $fieldName );
+
+          // Controlamos que no aparezcan datos para campos reservados
+          if( 'reserved' !== $fieldType ) {
+            if( $fieldType !== 'file' ) {
+              if( isset( $dataArray[ $fieldName ] ) ) {
+                $this->setFieldValue( $fieldName, $dataArray[ $fieldName ] );
+              }
+            }
+            else {
+              if( !$this->isEmptyFieldValue( $fieldName ) ) {
+                $fileFieldValue = $this->getFieldValue( $fieldName );
+
+                // error_log( 'FormController::loadPostValues FILE: '.print_r( $fileFieldValue, true ) );
+
+                switch( $fileFieldValue['status'] ) {
+                  case 'LOAD':
+                  case 'REPLACE':
+                    $fileFieldValue['validate'] = $fileFieldValue['temp'];
+                    break;
+                  case 'EXIST':
+                    $fileFieldValue['validate'] = $fileFieldValue['prev'];
+                    break;
+                  case 'GROUP':
+                    if( count( $fileFieldValue['multiple'] ) ) {
+                      foreach( $fileFieldValue['multiple'] as $fileKey => $fileData ) {
+                        switch( $fileData['status'] ) {
+                          case 'LOAD':
+                          case 'REPLACE':
+                            $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['temp'];
+                            break;
+                          case 'EXIST':
+                            $fileFieldValue['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
+                            break;
+                        }
+                        Cogumelo::debug('FormController: FE fileData temp name: '.json_encode( $fileFieldValue['multiple'][ $fileKey ] ) );
+                      }
+                    }
+                    break;
+                }
+                $this->setFieldValue( $fieldName, $fileFieldValue );
+              }
+            } // if( $this->getFieldType( $fieldName ) !== 'file' )
+          }
+          else {
+            Cogumelo::error( __METHOD__ . 'Intento de manipulacion de datos: '.$fieldName.' RV' );
+            error_log( __METHOD__ . 'Intento de manipulacion de datos: '.$fieldName.' RV' );
+            $this->addFormError( __('Intento de manipulacion del formulario').' (RV)' );
+          }
+        } // if( isset( $dataArray[ $fieldName ] ) )
+      } // foreach
+    }
+  }
+
+  /**
+   * Carga los valores del VO
+   *
+   * @param VO $dataVO Datos cargados por el programa
+   */
+  public function loadVOValues( $dataVO ) {
+    if( gettype( $dataVO ) == 'object' ) {
+      $dataArray = array();
+      foreach( $dataVO->getKeys() as $keyVO ) {
+        $dataArray[ $keyVO ] = $dataVO->getter( $keyVO );
+      }
+      $this->loadArrayValues( $dataArray );
+    }
+  }
+
+
 
   /**
     Define un campo del formulario y, opcionalmente, con sus parametros
@@ -687,14 +865,9 @@ class FormController implements Serializable {
         }
         break;
       case 'file':
-        $maxFileSize = $this->phpIni2Bytes( ini_get('upload_max_filesize') );
-        if( ini_get('post_max_size') != '0' ) {
-          $maxFileSize = min( $maxFileSize, $this->phpIni2Bytes( ini_get('post_max_size') ) );
-        }
-        if( ini_get('memory_limit') != '-1' ) {
-          $maxFileSize = min( $maxFileSize, $this->phpIni2Bytes( ini_get('memory_limit') ) );
-        }
-        $this->setValidationRule( $this->fields[$fieldName]['name'], 'maxfilesize', $maxFileSize );
+        $maxFileSizePHP = $this->phpMaxFileSize();
+
+        $this->setValidationRule( $this->fields[$fieldName]['name'], 'maxfilesize', $maxFileSizePHP );
         break;
     }
   } // function setField
@@ -1801,11 +1974,29 @@ class FormController implements Serializable {
 
 
 
+  /**
+   * Convierte el tamaño de memoria de formato php.ini a bytes
+   * @param string $size Tamaño de la memoria configurada en php.ini
+   * @return integer
+   */
+  private function phpMaxFileSize() {
+    $maxFileSizePHP = $this->phpIni2Bytes( ini_get('upload_max_filesize') );
+
+    if( ini_get('post_max_size') != '0' ) {
+      $maxFileSizePHP = min( $maxFileSizePHP, $this->phpIni2Bytes( ini_get('post_max_size') ) );
+    }
+
+    if( ini_get('memory_limit') != '-1' ) {
+      $maxFileSizePHP = min( $maxFileSizePHP, $this->phpIni2Bytes( ini_get('memory_limit') ) );
+    }
+
+    return $maxFileSizePHP;
+  }
 
   /**
-    Convierte el tamaño de memoria de formato php.ini a bytes
-    @param string $size Tamaño de la memoria configurada en php.ini
-    @return integer
+   * Convierte el tamaño de memoria de formato php.ini a bytes
+   * @param string $size Tamaño de la memoria configurada en php.ini
+   * @return integer
    */
   private function phpIni2Bytes( $size ) {
     if( preg_match( '/([\d\.]+)([KMG])/i', $size, $match ) ) {
@@ -2677,9 +2868,19 @@ class FormController implements Serializable {
    */
   public function setValidationRule( $fieldName, $ruleName, $ruleParams = true ) {
     if( isset( $this->fields[ $fieldName ] ) ) {
+
       if( $ruleName === 'required' && $this->getFieldType( $fieldName ) === 'file' ) {
         $ruleName === 'fileRequired';
       }
+
+      if( $ruleName === 'maxfilesize' ) {
+        $maxFileSizePHP = $this->phpMaxFileSize();
+
+        if( empty($ruleParams) || $ruleParams > $maxFileSizePHP ) {
+          $ruleParams = $maxFileSizePHP;
+        }
+      }
+
       $this->rules[ $fieldName ][ $ruleName ] = $ruleParams;
       $this->updateFieldRulesToSession( $fieldName );
     }
@@ -2964,6 +3165,102 @@ class FormController implements Serializable {
     // error_log('FormController: '. "addGroupRuleError: $groupName, $ruleName, $msgError " );
     $this->fieldErrors[ $groupName ][ $ruleName ] = $msgError;
   }
+
+  /**
+   * Añade un array de errores en bruto al formulario
+   *
+   * @param array $errorsArray Errores
+   */
+  public function addFormErrorsRaw( $errorsArray ) {
+    if( !empty( $errorsArray ) && is_array( $errorsArray ) ) {
+      foreach( $errorsArray as $error ) {
+        $this->formErrors[] = $error;
+      }
+    }
+  }
+
+  /**
+   * Establece un array de errores en bruto al formulario
+   *
+   * @param array $errorsArray Errores
+   */
+  public function setFormErrorsRaw( $errorsArray ) {
+    if( is_array( $errorsArray ) ) {
+      $this->formErrors = $errorsArray;
+    }
+  }
+
+
+  /**
+   * Añade un array de errores en bruto al formulario
+   *
+   * @param array $errorsArray Errores
+   */
+  public function addFieldsErrorsRaw( $errorsArray ) {
+    if( !empty( $errorsArray ) && is_array( $errorsArray ) ) {
+      foreach( $errorsArray as $error ) {
+        $this->fieldErrors[] = $error;
+      }
+    }
+  }
+
+  /**
+   * Establece un array de errores en bruto al formulario
+   *
+   * @param array $errorsArray Errores
+   */
+  public function setFieldsErrorsRaw( $errorsArray ) {
+    if( is_array( $errorsArray ) ) {
+      $this->fieldErrors = $errorsArray;
+    }
+  }
+
+
+  /**
+   * Establece un array de errores en bruto al formulario
+   *
+   * @param array $errorsArray Errores
+   */
+  public function addJsErrorsRaw( $jvErrors ) {
+    if( is_array( $jvErrors ) ) {
+      $this->formErrors = [];
+      $this->fieldErrors = [];
+
+      foreach( $jvErrors as $err ) {
+        if( empty( $err['fieldName'] ) ) {
+          // Form errors
+          $this->formErrors[] = $err['JVshowErrors'];
+        }
+        else {
+          // Field errors
+          $this->fieldErrors[ $err['fieldName'] ][ $err['ruleName'] ] = $err['JVshowErrors'][ $err['fieldName'] ];
+        }
+      }
+    }
+  }
+  // foreach( $this->fieldErrors as $fieldName => $fieldRules ) {
+  //   foreach( $fieldRules as $ruleName => $msgRuleError ) {
+  //     $ruleParams = false;
+  //     if( isset( $this->rules[ $fieldName ][ $ruleName ] ) ) {
+  //       $ruleParams = $this->rules[ $fieldName ][ $ruleName ];
+  //     }
+  //     $jvErrors[] = [
+  //       'fieldName' => $fieldName,
+  //       'ruleName' => $ruleName,
+  //       'ruleParams' => $ruleParams,
+  //       'JVshowErrors' => [ $fieldName => $msgRuleError ]
+  //     ];
+  //   }
+  // }
+  // foreach( $this->formErrors as $formError ) {
+  //   // Errores globales (no referidos a un field determinado)
+  //   $jvErrors[] = [
+  //     'fieldName' => false,
+  //     'JVshowErrors' => $formError
+  //   ];
+  // }
+
+
 
   /**
    * Obtiene la lista de errores en el formulario (Globales)

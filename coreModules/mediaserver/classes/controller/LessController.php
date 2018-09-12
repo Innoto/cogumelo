@@ -21,11 +21,11 @@ class LessController {
     // error_log( __METHOD__.' lessPath:'.$lessFilePath.', resPath:'.$resultFilePath.', module: '.$moduleName );
 
     $ret = true;
-
+/*
     if( empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
       $_SERVER['DOCUMENT_ROOT'] = ( defined( WEB_BASE_PATH ) ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
       error_log( __METHOD__.' Set $_SERVER[DOCUMENT_ROOT] = '.$_SERVER['DOCUMENT_ROOT'] );
-    }
+    }*/
 
     if( $this->less === false ) {
       $this->less = new lessc();
@@ -101,6 +101,9 @@ class LessController {
     foreach( $lessData as $key => $value ) {
       $lessVars[ 'cogumelo_publicConf_'.$key ] = $value;
     }
+
+    //$lessVars[ 'cogumelo_media_app' ] = Cogumelo::getSetupValue( 'setup:appBasePath' ).'/classes/view/templates';
+    $lessVars['cogumelo_app_templates'] = $this->valueToLess( Cogumelo::getSetupValue( 'setup:appBasePath' ).'/classes/view/templates' );
 
     return ( count( $lessVars ) > 0 ) ? $lessVars : false;
   }

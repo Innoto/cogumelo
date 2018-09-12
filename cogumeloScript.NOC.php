@@ -18,7 +18,7 @@ global $COGUMELO_IS_EXECUTING_FROM_SCRIPT;
 $COGUMELO_IS_EXECUTING_FROM_SCRIPT=true;
 
 global $_C;
-$_C =Cogumelo::get();
+$_C = Cogumelo::get();
 
 //
 // Load the necessary modules
@@ -30,7 +30,7 @@ Cogumelo::load('coreController/ModuleController.php');
 
 
 if( empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
-  $_SERVER['DOCUMENT_ROOT'] = ( defined( WEB_BASE_PATH ) ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
+  $_SERVER['DOCUMENT_ROOT'] = ( defined('WEB_BASE_PATH') ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
 }
 echo( 'SERVER[DOCUMENT_ROOT] = '.$_SERVER['DOCUMENT_ROOT']."\n" );
 
@@ -50,8 +50,18 @@ if( $argc > 1 ) {
       makeAppPaths();
       break;
 
+
+    case 'createDB': // create database
+      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+      backupDB();
+
+      createDB();
+      break;
+
     case 'generateModel':
       ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+
+      backupDB();
       createRelSchemes();
       generateModel();
       flushAll();
@@ -59,6 +69,8 @@ if( $argc > 1 ) {
 
     case 'deploy':
       ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+
+      backupDB();
       createRelSchemes();
       deploy();
       flushAll();
@@ -71,46 +83,27 @@ if( $argc > 1 ) {
       ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
       break;
 
-    case 'createDB': // create database
-      doBackup(
-        Cogumelo::getSetupValue('db:name'),
-        Cogumelo::getSetupValue('db:user'),
-        Cogumelo::getSetupValue('db:password'),
-        false,
-        Cogumelo::getSetupValue('db:hostname')
-      );
-      createDB();
-      break;
-
 
     case 'bckDB': // do the backup of the db
     case 'backupDB': // do the backup of the db
-      $file = ( $argc > 2 ) ? $argv[2].'.sql' : false;
+      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
 
-      doBackup(
-        Cogumelo::getSetupValue('db:name'),
-        Cogumelo::getSetupValue('db:user'),
-        Cogumelo::getSetupValue('db:password'),
-        $file,
-        Cogumelo::getSetupValue('db:hostname')
-      );
+      $file = ( $argc > 2 ) ? $argv[2].'.sql' : false;
+      backupDB( $file );
       break;
 
     case 'restoreDB': // restore the backup of a given db
       if( $argc > 2 ) {
-        $file = $argv[2];//name of the backup file
-        restoreDB(
-          Cogumelo::getSetupValue('db:name'),
-          Cogumelo::getSetupValue('db:user'),
-          Cogumelo::getSetupValue('db:password'),
-          $file,
-          Cogumelo::getSetupValue('db:hostname')
-        );
+        // backupDB();
+
+        $file = $argv[2]; //name of the backup file
+        restoreDB( $file );
       }
       else {
         echo "You must specify the file to restore\n";
       }
       break;
+
 
     case 'prepareDependences':
       Cogumelo::load('coreController/DependencesController.php');
@@ -133,6 +126,7 @@ if( $argc > 1 ) {
       $dependencesControl = new DependencesController();
       $dependencesControl->installDependences();
       break;
+
 
     case 'generateFrameworkTranslations':
       Cogumelo::load('coreController/i18nScriptController.php');
@@ -170,6 +164,7 @@ if( $argc > 1 ) {
       $i18nscriptController->c_i18n_json();
       echo "The files.json are ready to be used!\n";
       break;
+
 
     /* We execute this two actions from web as we need to operate with the apache permissions*/
     case 'flush': // delete temporary files
@@ -221,7 +216,7 @@ function printOptions(){
     * resetModules
       - resetModuleVersions
 
-    * bckDB                   Do a DB backup (optional arg: filename)
+    * backupDB                Do a DB backup (optional arg: filename)
     * restoreDB               Restore a database
 
  + Internationalization
@@ -303,22 +298,30 @@ function actionFlush() {
   rmdirRec( Cogumelo::getSetupValue('mod:filedata:cachePath'), false );
   // Def: httpdocs/mediaCache
   rmdirRec( Cogumelo::getSetupValue('mod:mediaserver:tmpCachePath'), false );
-  echo ' - Cogumelo File cache flush: Done'."\n";
+  echo ' - Cogumelo File cache flush DONE'."\n";
 
 
   require_once( COGUMELO_LOCATION.'/coreClasses/coreController/Cache.php' );
   $cacheCtrl = new Cache();
   $cacheCtrl->flush();
-  echo ' - Cogumelo Memory Cache flush: Done'."\n";
+  echo ' - Cogumelo Memory Cache flush DONE'."\n";
 
 
-  echo ' - Cogumelo PHP cache flush...'."\n";
   $scriptCogumeloServerUrl = Cogumelo::getSetupValue( 'script:cogumeloServerUrl' );
   if( !empty( $scriptCogumeloServerUrl ) ) {
-    echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush' );
+    echo ' - Cogumelo PHP cache flush...'."\n";
+
+    // TODO: EVITAMOS CONTROLES HTTPS
+    $contextOptions = stream_context_create( [
+      "ssl" => [
+        "verify_peer" => false,
+        "verify_peer_name" => false,
+      ],
+    ] );
+    echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush', false, $contextOptions );
   }
   else {
-    echo "Descartado.\n";
+    echo ' - Cogumelo PHP cache flush DESCARTADO.'."\n";
   }
 
   echo "\nCogumelo caches deleted!\n\n";
@@ -327,7 +330,7 @@ function actionFlush() {
 
 // function actionRotateLogs() {
 //   echo file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=rotate_logs' );
-//   echo "\nRotate Logs done!\n\n";
+//   echo "\nRotate Logs DONE!\n\n";
 // }
 
 
@@ -382,7 +385,7 @@ function makeAppPaths() {
   echo "makeAppPaths\n";
 
   // global $lc;
-  
+
   $dirList = array( APP_TMP_PATH,
     Cogumelo::getSetupValue( 'smarty:configPath' ), Cogumelo::getSetupValue( 'smarty:compilePath' ),
     Cogumelo::getSetupValue( 'smarty:cachePath' ), Cogumelo::getSetupValue( 'smarty:tmpPath' ),
@@ -402,6 +405,11 @@ function makeAppPaths() {
     $dirList[] = Cogumelo::getSetupValue( 'i18n:localePath' ).'/'.$lang['i18n'].'/LC_MESSAGES';
   }
 
+  $sessionSavePath = Cogumelo::getSetupValue('session:savePath');
+  if( !empty( $sessionSavePath ) ) {
+    $dirList[] = $sessionSavePath;
+  }
+
   // echo "\n\nMKDIR\n".json_encode($dirList)."\n\n";
 
   foreach( $dirList as $dir ) {
@@ -418,24 +426,26 @@ function setPermissions( $devel = false ) {
   makeAppPaths();
 
   $extPerms = $devel ? ',ugo+rX' : '';
+  $sudo = 'sudo ';
 
   echo( "setPermissions ".($devel ? 'DEVEL' : '')."\n" );
 
-  $fai = 'chgrp -R www-data '.
-    WEB_BASE_PATH.' '.APP_BASE_PATH.' '.APP_TMP_PATH.' '.
-    Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
-    Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
-    Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
-    Cogumelo::getSetupValue( 'logs:path' ).' '.
-    Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
-    Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
-    Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
-  ;
-  // echo( "\n  - Facer $fai\n" );
   if( IS_DEVEL_ENV ) {
+    $dirsString =
+      WEB_BASE_PATH.' '.APP_BASE_PATH.' '.APP_TMP_PATH.' '.
+      Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
+      Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
+      Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
+      WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
+      Cogumelo::getSetupValue( 'logs:path' ).' '.
+      Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '.
+      Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '.
+      Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
+    ;
+
+    $fai = 'chgrp -R www-data '.$dirsString;
     echo( " - Executamos chgrp general \n" );
-    exec( 'sudo '.$fai );
+    exec( $sudo.$fai );
   }
   else {
     // exec( 'sudo '.$fai );
@@ -443,74 +453,88 @@ function setPermissions( $devel = false ) {
   }
 
 
-  $fai = 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH.' '.APP_BASE_PATH;
-  // echo( "\n  - Facer $fai\n" );
   if( IS_DEVEL_ENV ) {
+    $fai = 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH.' '.APP_BASE_PATH;
     echo( " - Executamos chmod WEB_BASE_PATH APP_BASE_PATH\n" );
-    exec( 'sudo '.$fai );
+    exec( $sudo.$fai );
   }
   else {
     // exec( 'sudo '.$fai );
     echo( " - NON se executa chmod WEB_BASE_PATH APP_BASE_PATH\n" );
   }
 
-  // Path que necesitan escritura Apache
-  $fai = 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
-    // Smarty
-    Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
-    Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
 
-    // Cogumelo mediaserver
-    Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
-    WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
-
-    // Form y Filedata
-    Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '. // cgmlImg
-    Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '. // formFiles
-    Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '. // tmp formFiles
-
-    // Varios
-    Cogumelo::getSetupValue( 'logs:path' ).' '.
-    // Cogumelo::getSetupValue( 'session:savePath' ).' '.
-    // Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
-    ''
-  ;
-  // echo( "\n  - Facer $fai\n" );
   if( IS_DEVEL_ENV ) {
+    // Path que necesitan escritura Apache
+    $fai = 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
+      // Smarty
+      Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
+      Cogumelo::getSetupValue( 'smarty:cachePath' ).' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).' '.
+
+      // Cogumelo mediaserver
+      Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).' '.
+      WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).' '.
+
+      // Form y Filedata
+      Cogumelo::getSetupValue( 'mod:filedata:cachePath' ).' '. // cgmlImg
+      Cogumelo::getSetupValue( 'mod:filedata:filePath' ).' '. // formFiles
+      Cogumelo::getSetupValue( 'mod:form:tmpPath' ).' '. // tmp formFiles
+
+      // Varios
+      Cogumelo::getSetupValue( 'logs:path' ).' '.
+      // Cogumelo::getSetupValue( 'session:savePath' ).' '.
+      // Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
+      ''
+    ;
     echo( " - Executamos chmod APP_TMP_PATH\n" );
-    exec( 'sudo '.$fai );
+    exec( $sudo.$fai );
   }
   else {
-    // exec( 'sudo '.$fai );
     echo( " - NON se executa chmod APP_TMP_PATH\n" );
   }
 
-  // session:savePath tiene que mantener el usuario y grupo
-  // $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
-  if( !empty($sessionSavePath) ) {
-    $fai = 'chgrp -R www-data '.$sessionSavePath;
-    echo( "\n  - Facer $fai\n" );
-    exec( $fai );
-    $fai = 'chmod -R ug+rwX'.$extPerms.' '.$sessionSavePath;
-    echo( "\n  - Facer $fai\n" );
-    exec( $fai );
+  if( IS_DEVEL_ENV ) {
+    echo( " - Preparando [session:savePath] e [script:backupPath]\n" );
+    // session:savePath tiene que mantener el usuario y grupo
+    $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
+    if( !empty($sessionSavePath) ) {
+      $fai = 'chgrp -R www-data '.$sessionSavePath;
+      echo( "  - Executamos $fai\n" );
+      exec( $sudo.$fai );
+      $fai = 'chmod -R ug+rwX'.$extPerms.' '.$sessionSavePath;
+      echo( "  - Executamos $fai\n" );
+      exec( $sudo.$fai );
+    }
+
+    // Solo usuario administrador
+    $backupPath = Cogumelo::getSetupValue( 'script:backupPath' );
+    if( !empty($backupPath) ) {
+      $fai = 'chmod -R go-rwx '.$backupPath;
+      echo( "  - Executamos $fai\n" );
+      exec( $sudo.$fai );
+    }
+  }
+  else {
+    echo( " - NON se preparan [session:savePath] e [script:backupPath]\n" );
   }
 
-  // Solo usuario administrador
-  // $backupPath = Cogumelo::getSetupValue( 'script:backupPath' );
-  if( !empty($backupPath) ) {
-    $fai = 'chmod -R go-rwx '.$backupPath;
-    echo( "\n  - Facer $fai\n" );
-    exec( $fai );
-  }
-
-  echo( "setPermissions ".($devel ? 'DEVEL' : '')."DONE.\n" );
+  echo( "setPermissions ".($devel ? 'DEVEL' : '')." DONE.\n" );
 }
 
 function setPermissionsDevel() {
   setPermissions( true );
 }
 
+
+function backupDB( $file = false ) {
+  doBackup(
+    Cogumelo::getSetupValue('db:name'),
+    Cogumelo::getSetupValue('db:user'),
+    Cogumelo::getSetupValue('db:password'),
+    $file,
+    Cogumelo::getSetupValue('db:hostname')
+  );
+}
 
 function doBackup( $dbName, $user, $passwd, $file, $dbHost ) {
   if( empty( $file ) ) {
@@ -532,7 +556,13 @@ function doBackup( $dbName, $user, $passwd, $file, $dbHost ) {
   echo "\nYour db was successfully saved!\n";
 }
 
-function restoreDB( $dbName, $user, $passwd, $file, $dbHost ) {
+
+function restoreDB( $file = false ) {
+
+  $dbHost = Cogumelo::getSetupValue('db:hostname');
+  $dbName = Cogumelo::getSetupValue('db:name');
+  $user = Cogumelo::getSetupValue('db:user');
+  $passwd = Cogumelo::getSetupValue('db:password');
 
   doBackup( $dbName, $user, $passwd, false, $dbHost );
 

@@ -19,7 +19,7 @@ Cogumelo::load('coreController/ModuleController.php');
 
 
 if( empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
-  $_SERVER['DOCUMENT_ROOT'] = ( defined( WEB_BASE_PATH ) ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
+  $_SERVER['DOCUMENT_ROOT'] = ( defined( 'WEB_BASE_PATH' ) ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
   echo( "\nSet SERVER[DOCUMENT_ROOT] = ".$_SERVER['DOCUMENT_ROOT']."\n" );
 }
 
@@ -272,13 +272,21 @@ function actionFlush() {
   echo ' - Cogumelo Memory Cache flush: Done'."\n";
 
 
-  echo ' - Cogumelo PHP cache flush...'."\n";
   $scriptCogumeloServerUrl = Cogumelo::getSetupValue( 'script:cogumeloServerUrl' );
   if( !empty( $scriptCogumeloServerUrl ) ) {
-    echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush' );
+    echo ' - Cogumelo PHP cache flush...'."\n";
+
+    // TODO: EVITAMOS CONTROLES HTTPS
+    $contextOptions = stream_context_create( [
+      "ssl" => [
+        "verify_peer" => false,
+        "verify_peer_name" => false,
+      ],
+    ] );
+    echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush', false, $contextOptions );
   }
   else {
-    echo "Descartado.\n";
+    echo ' - Cogumelo PHP cache flush... Descartado.'."\n";
   }
 
   echo "\nCogumelo caches deleted!\n\n";
@@ -545,5 +553,3 @@ function rmdirRec( $dir, $removeContainer = true ) {
     }
   }
 }
-
-
