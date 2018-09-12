@@ -117,7 +117,7 @@ class FormConnector extends View {
     if( isset( $_POST['cgIntFrmId'], $_POST['idForm'], $_POST['groupName'] ) ) {
 
       $cgIntFrmId = $_POST['cgIntFrmId'];
-      $idForm     = $_POST['idForm'];
+      // $idForm     = $_POST['idForm'];
       $groupName  = $_POST['groupName'];
 
       // Recuperamos formObj y validamos el grupo
@@ -175,7 +175,7 @@ class FormConnector extends View {
 
     if( isset( $_POST['idForm'], $_POST['cgIntFrmId'], $_POST['groupName'], $_POST['groupIdElem'] ) ) {
 
-      $idForm     = $_POST['idForm'];
+      // $idForm     = $_POST['idForm'];
       $cgIntFrmId = $_POST['cgIntFrmId'];
       $groupName  = $_POST['groupName'];
       $groupIdElem  = $_POST['groupIdElem'];
