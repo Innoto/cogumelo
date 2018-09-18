@@ -22,7 +22,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.extraFilters = false;
   that.tableData = false;
   that.currentPage = 1;
-
+  that.selectAllPagesValue = false;
   // search and filters
   that.search = false;
 
@@ -37,6 +37,8 @@ function cogumeloTable( tableId, tableUrl ) {
   that.pagersTotal = $('.'+tableId+'.tableContainer .tablePaginator .tablePage .totalPages');
   that.pagersCurrent = $('.'+tableId+'.tableContainer .tablePaginator .tablePage input');
   that.headTableCheckBoxQstr = '.'+tableId+'.tableContainer .tableClass .headCheckBox';
+  that.selectAllPages = '.'+tableId+'.tableContainer .tableClass .selectAllPages';
+  that.dropSelectAll = '.'+tableId+'.tableContainer .tableClass .dropSelectAll';
   that.allTableCheckBoxesQstr = '.'+tableId+'.tableContainer .tableClass .eachRowCheckBox';
   that.searchForm = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form');
   that.searchInput = $('.'+tableId+'.tableContainer .tableSearchFilters .tableSearch form input');
@@ -133,7 +135,7 @@ function cogumeloTable( tableId, tableUrl ) {
         action: action,
         search: that.search,
         clientCurrentPage: that.currentPage,
-
+        selectAllPages: that.selectAllPagesValue
       },
       success: function(tableData) {
         that.tableData = tableData;
@@ -370,9 +372,14 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.setHeaders = function() {
 
+    var checkBoxSelected = '';
+    if(that.selectAllPagesValue == true){
+      checkBoxSelected = ' checked ';
+    }
+
     var orderUpImg = '<img src="'+cogumelo.publicConf.media+'/module/table/img/up.png">';
     var orderDownImg = '<img src="'+cogumelo.publicConf.media+'/module/table/img/down.png">';
-    var h = '<th><div class="selectAll"><input class="headCheckBox" type="checkbox"></div></th>';
+    var h = '<th><div class="selectAllPages" style="display:none">'+__('Select all pages')+'</div><div class="selectAll"><input class="headCheckBox" type="checkbox" '+checkBoxSelected+'><i class="dropSelectAll fa fa-align-left"></div></th>';
 
 
     $.each(that.tableData.colsDef, function(i,e)  {
@@ -408,7 +415,28 @@ function cogumeloTable( tableId, tableUrl ) {
 
     // select/unselect all checkbox
     $(that.headTableCheckBoxQstr).on("change", function(el) {
-      $(that.allTableCheckBoxesQstr).prop('checked', $(el.target).prop('checked') );;
+
+      if($(that.allTableCheckBoxesQstr).prop('checked') === true ) {
+        that.selectAllPagesValue = false;
+        that.load();
+      }
+      $(that.allTableCheckBoxesQstr).prop('checked', $(el.target).prop('checked') );
+    });
+
+
+    $(that.dropSelectAll).on("click", function(el) {
+      $(that.selectAllPages).show();
+    });
+
+    $(that.selectAllPages).on("click", function(el) {
+      that.actionSelectAllPages();
+    });
+
+    $(document).on('click', function(el){
+      if(!$(el.target).hasClass('dropSelectAll')) {
+        $(that.selectAllPages).hide();
+      }
+
     });
 
     // click event table headers
@@ -436,6 +464,16 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
   }
+
+
+  that.actionSelectAllPages = function() {
+    that.selectAllPagesValue = true;
+    console.log();
+    //$(that.headTableCheckBoxQstr).attr('checked', true);
+    that.load();
+
+  },
+
 
   that.setSearchValue = function(  ) {
     var searchString = this.tableData.search;
@@ -518,8 +556,15 @@ function cogumeloTable( tableId, tableUrl ) {
       if(evenClass == '') { evenClass='even'; } else { evenClass=''; }
 
       tUrl = row.tableUrlString;
+
+
+      var blockSelectedDisabled = '';
+      if( that.selectAllPagesValue == true ){
+        blockSelectedDisabled = ' checked disabled ';
+      }
+
       trows += '<tr class="' + evenClass + '">';
-      trows += '<td> <input class="eachRowCheckBox" rowReferenceKey="'+row.rowReferenceKey+'" type="checkbox"> </td>';
+      trows += '<td> <input '+blockSelectedDisabled+' class="eachRowCheckBox"  rowReferenceKey="'+row.rowReferenceKey+'" type="checkbox"> </td>';
 
       $.each( row, function( i, e ){
 
