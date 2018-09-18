@@ -1316,8 +1316,25 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     $fileBoxElem.append( $fileBoxMenu );
 
+    funcExtender = that.getFunctionExtender('fileBox');
+    if( funcExtender ) {
+      $fileBoxElem = funcExtender( fieldName, fileInfo, deleteFunc, $fileBoxElem );
+    }
+
     return $fileBoxElem;
   }; // that.fileBox
+
+  that.getFunctionExtender = function getFunctionExtender( funcName ) {
+    funcExtender = null;
+
+    eval(
+      'if( typeof cogumelo.formExtender_'+that.idForm+'_'+funcName+' === "function" ) { '+
+        'funcExtender = cogumelo.formExtender_'+that.idForm+'_'+funcName+'; '+
+      '}'
+    );
+
+    return funcExtender;
+  };
 
   that.fileFieldToInput = function fileFieldToInput( fieldName ) {
     console.log( '* fileFieldToInput: ', that.idForm, fieldName );
