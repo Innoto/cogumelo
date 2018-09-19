@@ -34,6 +34,7 @@ class TableController{
   var $actions = false;
   var $tabs = false;
   var $searchId = 'tableSearch';
+  var $selectAllPages = false;
   var $currentTab = null;
   var $filters = array();
   var $defaultFilters = array();
@@ -49,6 +50,8 @@ class TableController{
   */
   function __construct($model, $useSessions = false)
   {
+
+
     $this->exports = array(
         '0'=> array('name'=>__('Export'), 'controller'=>''),
         'csv' => array('name'=>'Csv', 'controller'=>'CsvExportTableController'),
@@ -92,10 +95,11 @@ class TableController{
       }
     }
 
-
+    if( isset($this->RAWClientData['selectAllPages']) &&  $this->RAWClientData['selectAllPages'] == 'true' ) {
+      $this->selectAllPages = true;
+    }
 
     $this->clientData['order'] = $this->RAWClientData['order'];
-
 
     // set tabs
     if( $this->RAWClientData['tab'] !== "" ) {
@@ -556,8 +560,7 @@ class TableController{
         }
       }
     }
-    //var_dump($ordArray);
-    //exit;
+
     return $ordArray;
   }
 
@@ -650,8 +653,17 @@ class TableController{
   * @return void
   */
   function execJsonTable() {
-    // if is executing a action ( like delete or update) and have permissions to do it
 
+    // doing a query to the controller
+    $p = array(
+        'filters' =>  $this->getFilters(),
+        'range' => $this->clientData['range'],
+        'order' => $this->orderIntoArray(),
+        'affectsDependences' => $this->affectsDependences , //array('ResourceTopicModel'),
+        'joinType' => $this->joinType
+    );
+
+    // if is executing a action ( like delete or update) and have permissions to do it
     if(
       $this->clientData['action']['action'] != 'list' &&
       $this->clientData['action']['action'] != 'count'  &&
@@ -662,19 +674,28 @@ class TableController{
       eval( '$refVO = new '.$this->model->getVOClassName().'();');
       $primaryKey = $refVO->getFirstPrimarykeyId();
 
-      foreach( $this->clientData['action']['keys'] as $rowId) {
-        eval( '$this->model->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
+      // action aplyed to all pages or selected Ids
+      if( $this->selectAllPages == true ) { // all pages
+        $pB = $p;
+        unset($pB['range']);
+        eval('$listaAction = $this->model->'. $this->controllerMethodAlias['list'].'( $pB );');
+        if($listaAction != false) {
+
+          while( $rowVO = $listaAction->fetch() ) {
+            $rowId = $rowVO->getter('id');
+            eval( '$this->model->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
+          }
+        }
       }
+      else {
+        foreach( $this->clientData['action']['keys'] as $rowId) {
+          eval( '$this->model->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
+        }
+      }
+
     }
 
-    // doing a query to the controller
-    $p = array(
-        'filters' =>  $this->getFilters(),
-        'range' => $this->clientData['range'],
-        'order' => $this->orderIntoArray(),
-        'affectsDependences' => $this->affectsDependences , //array('ResourceTopicModel'),
-        'joinType' => $this->joinType
-    );
+
 
     //var_dump($p);
 
