@@ -662,8 +662,15 @@ function cogumeloTable( tableId, tableUrl ) {
 
     if( act != '0' && selectedRows.length > 0 ){
 
+      if( this.selectAllPagesValue == true ){
+        var numberStrForAction = that.tableData.totalRows;
+      }
+      else {
+        var numberStrForAction = selectedRows.length;
+      }
+
       cogumelo.clientMsg.confirm(
-        __('Apply action "') + that.actionSelect.find('option:selected').html() + __('" on ') + selectedRows.length+ ' ' +__('elements'),
+        __('Apply action "') + that.actionSelect.find('option:selected').html() + __('" on ') +  numberStrForAction+ ' ' +__('elements'),
         function( accion ) {
           if( accion === true) {
             that.load( {action: act, keys: selectedRows}, resExt );
