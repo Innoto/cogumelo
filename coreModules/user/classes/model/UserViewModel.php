@@ -91,6 +91,7 @@ class UserViewModel extends Model {
 
   static $extraFilters = [
     'idIn' => ' user_user_view.id IN (?) ',
+    'roleFilter' => 'FIND_IN_SET(?, user_user_view.role) ',
   ];
 
   var $notCreateDBTable = true;
@@ -123,5 +124,14 @@ class UserViewModel extends Model {
       '
     ]
   ];
+
+  public function deleteUser( $userId ) {
+   return (new UserModel(['id' => $userId]))->delete();
+  }
+  public function userUpdateActive( $data ){
+    $user = new UserModel(['id' => $data['userId']]);
+    $user->setter('active', $data['value']);
+    $user->save();
+  }
 
 }
