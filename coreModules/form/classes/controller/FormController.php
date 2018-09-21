@@ -30,6 +30,7 @@ error_reporting( -1 );
  * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  * @SuppressWarnings(PHPMD.NPathComplexity)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.LongVariable)
  **/
 class FormController implements Serializable {
 
@@ -1262,6 +1263,23 @@ class FormController implements Serializable {
   public function getFieldsNamesArray() {
 
     return array_keys( $this->fields );
+  }
+
+  /**
+    * Recupera los nombres de los campos de tipo 'file'
+    *
+    * @return TYPE
+   */
+  public function getFileFieldsNamesArray() {
+    $fileFieldsNames = false;
+
+    foreach( $this->fields as $fileFieldName => $fileFieldInfo ) {
+      if( $fileFieldInfo['type'] === 'file' ) {
+        $fileFieldsNames[] = $fileFieldName;
+      }
+    }
+
+    return $fileFieldsNames;
   }
 
   /**
