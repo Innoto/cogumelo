@@ -4,7 +4,7 @@ $.validator.addMethod(
   function( value, element ) {
     return ( value==='' && this.optional( element ) ) || /^-?\d+(,\d+)?$/.test( value );
   },
-  __("A positive or negative decimal number please (Ej. 123,25)")
+  $.validator.format( __("A positive or negative decimal number please (Ej. 123,25)") )
 );
 
 $.validator.addMethod(
@@ -13,8 +13,7 @@ $.validator.addMethod(
     regexPatt=new RegExp('^-?\\d+(,\\d{0,'+param+'})?$');
     return ( value==='' && this.optional( element ) ) || regexPatt.test( value );
   },
-
-  $.validator.format(__("A positive or negative number with {0} decimal, separated with comma"))
+  $.validator.format( __("A positive or negative number with {0} decimal, separated with comma") )
 );
 
 $.validator.addMethod(
@@ -24,7 +23,7 @@ $.validator.addMethod(
     var par = parseFloat( ( typeof param === 'string' ) ? param.replace(',','.') : param );
     return ( ( value==='' && this.optional( element ) ) || ( val >= par ) );
   },
-  __("Please enter a value greater than or equal to {0}.")
+  $.validator.format( __("Please enter a value greater than or equal to {0}.") )
 );
 
 $.validator.addMethod(
@@ -34,7 +33,7 @@ $.validator.addMethod(
     var par = parseFloat( ( typeof param === 'string' ) ? param.replace(',','.') : param );
     return ( ( value==='' && this.optional( element ) ) || ( val <= par ) );
   },
-  __("Please enter a value less than or equal to {0}.")
+  $.validator.format( __("Please enter a value less than or equal to {0}.") )
 );
 
 
@@ -94,7 +93,7 @@ $.validator.addMethod(
 
     return result;
   },
-  $.validator.format( __('The NIE format is not CNNNNNNNC' ))
+  $.validator.format( __('The NIE format is not CNNNNNNNC') )
 );
 
 $.validator.addMethod(
@@ -132,7 +131,7 @@ $.validator.addMethod(
 
     return result;
   },
-  $.validator.format( __('The NIF format is not CNNNNNNNC' ))
+  $.validator.format( __('The NIF format is not CNNNNNNNC') )
 );
 
 
@@ -142,7 +141,7 @@ $.validator.addMethod(
   function( value, element, param ) {
     return ( value==='' && this.optional( element ) ) || value.search( param ) !== -1;
   },
-  $.validator.format(__("Please enter a valid value"))
+  $.validator.format( __("Please enter a valid value") )
 );
 
 
@@ -164,7 +163,7 @@ $.validator.addMethod(
     }
     return ( (value===undefined || value===false || value===null) && this.optional( element ) );
   },
-  $.validator.format(__("Please enter a valid value"))
+  $.validator.format( __("Please enter a valid value") )
 );
 
 
@@ -188,7 +187,7 @@ $.validator.addMethod(
 
     return ( valueResponse || ((value===undefined || value===false || value===null) && this.optional( element )) );
   },
-  $.validator.format(__("Please enter a valid value"))
+  $.validator.format( __("Please enter a valid value") )
 );
 
 
@@ -198,7 +197,7 @@ $.validator.addMethod(
     valid = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4}$)/.exec(value);
     return valid;
   },
-  $.validator.format(__("The date format is not DD-MM-YYYY"))
+  $.validator.format( __("The date format is not DD-MM-YYYY") )
 );
 
 
@@ -209,7 +208,7 @@ $.validator.addMethod(
     valid = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(value);
     return ( value==='' && this.optional( element ) ) || valid;
   },
-  $.validator.format(__("The date format is not YYYY-MM-DD hh:mm:ss"))
+  $.validator.format( __("The date format is not YYYY-MM-DD hh:mm:ss") )
 );
 
 
@@ -228,9 +227,8 @@ $.validator.addMethod(
       paramDateTime = new Date(paramDateTimeArray[1], paramDateTimeArray[2], paramDateTimeArray[3], paramDateTimeArray[4], paramDateTimeArray[5], paramDateTimeArray[6]);
 
     return (valueDateTime.getTime() > paramDateTime.getTime());
-
   },
-  $.validator.format(__("The date entered is too old (> {0})"))
+  $.validator.format( __("The date entered is too old ( > {0})") )
 );
 
 
@@ -249,7 +247,7 @@ $.validator.addMethod(
 
     return (valueDateTime.getTime() < paramDateTime.getTime());
   },
-  $.validator.format(__("The date entered must be oldest (> {0})"))
+  $.validator.format( __("The date entered must be oldest ( < {0})") )
 );
 
 
@@ -269,9 +267,8 @@ $.validator.addMethod(
       paramDate = new Date(paramDateArray[1], paramDateArray[2], paramDateArray[3]);
 
     return (valueDate.getTime() > paramDate.getTime());
-
   },
-  $.validator.format(__("The date entered is too old (> {0})"))
+  $.validator.format( __("The date entered is too old ( > {0})") )
 );
 
 
@@ -290,14 +287,14 @@ $.validator.addMethod(
 
     return (valueDate.getTime() < paramDate.getTime());
   },
-  $.validator.format(__("The date entered must be oldest (> {0})"))
+  $.validator.format( __("The date entered must be oldest ( < {0})") )
 );
 
 
 
 $.validator.addMethod(
   "timeMin",
-  function( value, element, param) {
+  function( value, element, param ) {
 
     var valueTimeArray = /^(\d{1,2}):(\d{2}):(\d{2})$/.exec(value);
     var paramTimeArray = /^(\d{1,2}):(\d{2}):(\d{2})$/.exec(param);
@@ -312,7 +309,7 @@ $.validator.addMethod(
 
     return (valueTimeSeconds > paramTimeSeconds);
   },
-  $.validator.format(__("The time entered is too old (> {0})"))
+  $.validator.format( __("The time entered is too old ( > {0})") )
 );
 
 
@@ -333,7 +330,7 @@ $.validator.addMethod(
 
     return (valueTimeSeconds < paramTimeSeconds);
   },
-  $.validator.format(__("The time entered must be oldest (> {0})"))
+  $.validator.format( __("The time entered must be oldest ( < {0})") )
 );
 
 
@@ -345,7 +342,7 @@ $.validator.addMethod(
 
     return ( value==='' && this.optional( element ) ) || valueUrlYoutube;
   },
-  $.validator.format(__("The url is not a Youtube url."))
+  $.validator.format( __("The url is not a Youtube url.") )
 );
 
 $.validator.addMethod(
@@ -354,9 +351,8 @@ $.validator.addMethod(
 
     var valueUrl = /^(https?|s?ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i.test(value);
     return !valueUrl;
-
   },
-  $.validator.format(__("Can not be a url"))
+  $.validator.format( __("Can not be a url") )
 );
 
 $.validator.addMethod(
@@ -365,7 +361,7 @@ $.validator.addMethod(
     var valid = /[A-Z]/.exec(value) && /[a-z]/.exec(value) && /[0-9]/.exec(value) && /\W/.exec(value) && /^.{8,16}$/.exec(value);
     return ( value==='' && this.optional( element ) ) || valid;
   },
-  $.validator.format( __('Password must contain 8 ~ 16 characters and must contain ') + __('at least one capital letter, ') + __('one singular letter, one numeric character ') + __('and one special character (!@-,./?).'))
+  $.validator.format( __('Password must contain 8 ~ 16 characters and must contain ') + __('at least one capital letter, ') + __('one singular letter, one numeric character ') + __('and one special character (!@-,./?).') )
 );
 
 
@@ -386,7 +382,7 @@ $.validator.addMethod(
 // Accept a value from a file input based on a required mimetype
 $.validator.addMethod(
   "accept",
-  function(value, element, param) {
+  function( value, element, param ) {
     console.log( ' * * * formValidators::accept ', value, $( element ), param );
 
     var valueResponse = true;
@@ -417,7 +413,7 @@ $.validator.addMethod(
 
     return valueResponse;
   },
-  $.validator.format("Please enter a value with a valid mimetype.")
+  $.validator.format( __("Please enter a value with a valid mimetype.") )
 );
 
 
@@ -427,7 +423,7 @@ $.validator.addMethod(
 // Older "accept" file extension method. Old docs: http://docs.jquery.com/Plugins/Validation/Methods/accept
 $.validator.addMethod(
   "extension",
-  function(value, element, param) {
+  function( value, element, param ) {
     console.log( ' * * * formValidators::extension ', $( element ), param );
 
     var valueResponse = true;
@@ -447,43 +443,14 @@ $.validator.addMethod(
 
     return valueResponse;
   },
-  $.validator.format("Please enter a value with a valid extension.")
-);
-
-
-// Accept a value from a file input based on size
-$.validator.addMethod(
-  "maxfilesize",
-  function(value, element, param) {
-    console.log( ' * * * formValidators::maxfilesize ', $( element ), param );
-
-    var valueResponse = true;
-
-    // Element is optional
-    // if( this.optional(element) ) { return true; }
-
-    var validateFiles = $( element ).data('validateFiles');
-    if( validateFiles && validateFiles.length > 0 ) {
-      console.log( ' * * * formValidators::maxfilesize validateFiles=', validateFiles, validateFiles.length );
-      for( i = 0; i < validateFiles.length; i++ ) {
-        if( validateFiles[i].size > param ) {
-          valueResponse = false;
-          break;
-        }
-      }
-    }
-
-
-    return valueResponse;
-  },
-  $.validator.format("Please enter a file with a valid size (<{0} Bytes).")
+  $.validator.format( __("Please enter a value with a valid extension.") )
 );
 
 
 // Accept a value from a file input based on size
 $.validator.addMethod(
   "minfilesize",
-  function(value, element, param) {
+  function( value, element, param ) {
     console.log( ' * * * formValidators::maxfilesize ', $( element ), param );
 
     var valueResponse = true;
@@ -507,56 +474,43 @@ $.validator.addMethod(
 
     return valueResponse;
   },
-  $.validator.format("Please enter a file with a valid size (>{0} Bytes).")
+  $.validator.format( __("Please enter a file with a valid size ( > {0} Bytes).") )
 );
 
 
-// Accept a value from a file input
+// Accept a value from a file input based on size
 $.validator.addMethod(
-  "multipleMax",
-  function(value, element, param) {
-    var valueResponse = false;
+  "maxfilesize",
+  function( value, element, param ) {
+    console.log( ' * * * formValidators::maxfilesize ', $( element ), param );
 
-    console.log( ' * * * formValidators::multipleMax ', $( element ), param );
-    var $fileField = $( element );
-    var groupFiles = false;
-    var groupId = $fileField.attr('data-fm_group_id');
+    var valueResponse = true;
 
-    if( groupId ) {
-      var idForm = $fileField.attr('form');
-      var formCtlr = cogumelo.formControllerInfo.getFormInfo( idForm, 'controller' );
-      // console.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
+    // Element is optional
+    // if( this.optional(element) ) { return true; }
 
-      if( formCtlr && typeof formCtlr.fileGroup[ groupId ] !== 'undefined' ) {
-        groupFiles = formCtlr.fileGroup[ groupId ];
+    var validateFiles = $( element ).data('validateFiles');
+    if( validateFiles && validateFiles.length > 0 ) {
+      console.log( ' * * * formValidators::maxfilesize validateFiles=', validateFiles, validateFiles.length );
+      for( i = 0; i < validateFiles.length; i++ ) {
+        if( validateFiles[i].size > param ) {
+          valueResponse = false;
+          break;
+        }
       }
-    }
-    // console.log( ' * * * formValidators::multipleMax IDs', groupId, groupFiles, groupFiles.length );
-
-    var validateFiles = $fileField.data('validateFiles');
-    // console.log( ' * * * formValidators::multipleMax validateFiles=', validateFiles, validateFiles.length );
-
-    var countFiles = ( validateFiles ) ? validateFiles.length : 0;
-    if( groupFiles ) {
-      countFiles += groupFiles.length;
-    }
-    // console.log( ' * * * formValidators::multipleMax countFiles=', countFiles );
-
-    if( countFiles <= param ) {
-      valueResponse = true;
     }
 
 
     return valueResponse;
   },
-  $.validator.format("Demasiados ficheros. (Límite: {0} ficheros).")
+  $.validator.format( __("Please enter a file with a valid size ( < {0} Bytes).") )
 );
 
 
 // Accept a value from a file input
 $.validator.addMethod(
   "multipleMin",
-  function(value, element, param) {
+  function( value, element, param ) {
     var valueResponse = false;
 
     console.log( ' * * * formValidators::multipleMin ', $( element ), param );
@@ -591,7 +545,49 @@ $.validator.addMethod(
 
     return valueResponse;
   },
-  $.validator.format("Pocos ficheros. (Límite: {0} ficheros).")
+  $.validator.format( __("Pocos ficheros. (Límite: {0} ficheros).") )
+);
+
+
+// Accept a value from a file input
+$.validator.addMethod(
+  "multipleMax",
+  function( value, element, param ) {
+    var valueResponse = false;
+
+    console.log( ' * * * formValidators::multipleMax ', $( element ), param );
+    var $fileField = $( element );
+    var groupFiles = false;
+    var groupId = $fileField.attr('data-fm_group_id');
+
+    if( groupId ) {
+      var idForm = $fileField.attr('form');
+      var formCtlr = cogumelo.formControllerInfo.getFormInfo( idForm, 'controller' );
+      // console.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
+
+      if( formCtlr && typeof formCtlr.fileGroup[ groupId ] !== 'undefined' ) {
+        groupFiles = formCtlr.fileGroup[ groupId ];
+      }
+    }
+    // console.log( ' * * * formValidators::multipleMax IDs', groupId, groupFiles, groupFiles.length );
+
+    var validateFiles = $fileField.data('validateFiles');
+    // console.log( ' * * * formValidators::multipleMax validateFiles=', validateFiles, validateFiles.length );
+
+    var countFiles = ( validateFiles ) ? validateFiles.length : 0;
+    if( groupFiles ) {
+      countFiles += groupFiles.length;
+    }
+    // console.log( ' * * * formValidators::multipleMax countFiles=', countFiles );
+
+    if( countFiles <= param ) {
+      valueResponse = true;
+    }
+
+
+    return valueResponse;
+  },
+  $.validator.format( __("Demasiados ficheros. (Límite: {0} ficheros).") )
 );
 
 
@@ -633,7 +629,7 @@ $.validator.addMethod(
 
     return valueResponse;
   },
-  $.validator.format("Este campo es obligatorio.")
+  $.validator.format( __("Este campo es obligatorio.") )
 );
 // // http://jqueryvalidation.org/required-method/
 // required: function( value, element, param ) {
