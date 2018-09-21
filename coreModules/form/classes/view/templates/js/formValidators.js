@@ -545,7 +545,7 @@ $.validator.addMethod(
 
     return valueResponse;
   },
-  $.validator.format( __("Pocos ficheros. (Límite: {0} ficheros).") )
+  $.validator.format( __("Few files. (Limit: {0} files).") )
 );
 
 
@@ -587,7 +587,7 @@ $.validator.addMethod(
 
     return valueResponse;
   },
-  $.validator.format( __("Demasiados ficheros. (Límite: {0} ficheros).") )
+  $.validator.format( __("Too many files. (Limit: {0} files).") )
 );
 
 
@@ -629,7 +629,7 @@ $.validator.addMethod(
 
     return valueResponse;
   },
-  $.validator.format( __("Este campo es obligatorio.") )
+  $.validator.format( __("This field is required.") )
 );
 // // http://jqueryvalidation.org/required-method/
 // required: function( value, element, param ) {
