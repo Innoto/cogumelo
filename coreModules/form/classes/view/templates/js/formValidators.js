@@ -56,7 +56,8 @@ $.validator.addMethod(
       }
     }
 
-    return result;
+    // return result;
+    return ( value==='' && this.optional( element ) ) || result;
   },
   $.validator.format( __('The DNI format is not NNNNNNNNC') )
 );
@@ -91,7 +92,8 @@ $.validator.addMethod(
       }
     }
 
-    return result;
+    // return result;
+    return ( value==='' && this.optional( element ) ) || result;
   },
   $.validator.format( __('The NIE format is not CNNNNNNNC') )
 );
@@ -129,9 +131,59 @@ $.validator.addMethod(
       }
     }
 
-    return result;
+    // return result;
+    return ( value==='' && this.optional( element ) ) || result;
   },
   $.validator.format( __('The NIF format is not CNNNNNNNC') )
+);
+
+
+
+$.validator.addMethod(
+  "dniOrNie",
+  function( value, element ) {
+    var result = false;
+
+    var dniPatt = /^([0-9]{8})([A-Z])$/i;
+    var dniMatch = dniPatt.exec( value );
+    if( dniMatch ) {
+      var dniNumero = dniMatch[1];
+      var dniLetra  = dniMatch[2].toUpperCase();
+
+      if( dniLetra === 'TRWAGMYFPDXBNJZSQVHLCKE'.substr( dniNumero%23, 1 ) ) {
+        result = true;
+      }
+    }
+
+    var niePatt = /^([XYZ]?)([0-9]{7})([A-Z])$/i;
+    var nieMatch = niePatt.exec( value );
+    if( nieMatch ) {
+      var nieLetra1 = nieMatch[1].toUpperCase();
+      var nieNumero = nieMatch[2];
+      var nieLetra2 = nieMatch[3].toUpperCase();
+
+      // Ajustes NIE
+      switch( nieLetra1 ) {
+        case 'X':
+          nieNumero = '0'+nieNumero;
+        break;
+        case 'Y':
+          nieNumero = '1'+nieNumero;
+        break;
+        case 'Z':
+          nieNumero = '2'+nieNumero;
+        break;
+      }
+
+      if( nieLetra2 === 'TRWAGMYFPDXBNJZSQVHLCKE'.substr( nieNumero%23, 1 ) ) {
+        result = true;
+      }
+    }
+
+    // return result;
+    return ( value==='' && this.optional( element ) ) || result;
+  },
+  $.validator.format( __('The format is not DNI: NNNNNNNNC or NIE: CNNNNNNNC') )
 );
 
 
@@ -195,7 +247,8 @@ $.validator.addMethod(
   "dateUE",
   function( value, element ) {
     valid = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4}$)/.exec(value);
-    return valid;
+    // return valid;
+    return ( value==='' && this.optional( element ) ) || valid;
   },
   $.validator.format( __("The date format is not DD-MM-YYYY") )
 );
