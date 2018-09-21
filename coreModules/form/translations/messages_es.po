@@ -9,10 +9,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:162
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:321
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:159
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:318
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:162
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:341
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:321
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:159
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:318
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:153
@@ -20,31 +21,35 @@ msgstr ""
 msgid "Confirm"
 msgstr "Confirmar"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:279
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:276
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:274
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:279
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:276
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:258
 msgid "Success"
 msgstr "Hecho"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:311
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:308
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:331
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:311
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:308
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:436
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:290
 msgid "Form session expired. Reload"
 msgstr "Sesión de formulario caducada. Recarga"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:315
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:312
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:335
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:315
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:312
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:437
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:294
 msgid "Reload to get valid From?"
 msgstr "Recargar para tener un formulario válido"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:389
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:386
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:409
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:389
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:386
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/pre/fc.js:184
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:368
@@ -55,16 +60,9 @@ msgstr ""
 "Tu navegador no tiene soporte HTML5 para enviar ficheros. Actualiza a "
 "versiones recientes..."
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:489
-msgid "Open editor"
-msgstr "Abrir editor"
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:518
-msgid "Close"
-msgstr "Cerrar"
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:820
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:719
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:840
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:820
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:813
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:771
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:734
@@ -74,8 +72,9 @@ msgstr "Cerrar"
 msgid "There are errors in the form"
 msgstr "Hay errores en el formulario"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:821
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:720
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:841
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:821
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:814
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:772
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:735
@@ -85,8 +84,9 @@ msgstr "Hay errores en el formulario"
 msgid "Warning"
 msgstr "Atención"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:959
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:858
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:978
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:959
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:952
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:910
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:873
@@ -96,8 +96,9 @@ msgstr "Atención"
 msgid "Error loading file"
 msgstr "Error cargando fichero"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1225
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:1124
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1248
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1225
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1218
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1176
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1139
@@ -107,8 +108,9 @@ msgstr "Error cargando fichero"
 msgid "Discard"
 msgstr "Descartar"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1243
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:1142
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1266
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1243
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1236
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1194
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1157
@@ -122,21 +124,138 @@ msgstr "Descargar"
 msgid "A positive or negative decimal number please (Ej. 123,25)"
 msgstr "Un número decimal positivo o negativo, por favor (Ej. 123,25)"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:16
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:17
 msgid "A positive or negative number with {0} decimal, separated with comma"
 msgstr "Un número positivo o negativo con {0} decimales, separados por comas"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:26
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:27
 msgid "Please enter a value greater than or equal to {0}."
 msgstr "Por favor, introduce un valor mayor o igual a {0}"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:36
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:37
 msgid "Please enter a value less than or equal to {0}."
 msgstr "Por favor, introduce un valor menor o igual a {0}"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:61
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:62
 msgid "The DNI format is not NNNNNNNNC"
 msgstr "El formato del DNI debe ser NNNNNNNNC"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:96
+msgid "The NIE format is not CNNNNNNNC"
+msgstr "El formato NIE no es CNNNNNNNC"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:134
+msgid "The NIF format is not CNNNNNNNC"
+msgstr "El formato NIF no es CNNNNNNNC"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:144
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:166
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:190
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:145
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:167
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:191
+msgid "Please enter a valid value"
+msgstr "Por favor, introduce un valor válido"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:200
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:201
+msgid "The date format is not DD-MM-YYYY"
+msgstr "El formato de la fecha debe ser DD-MM-YYYY"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:211
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:212
+msgid "The date format is not YYYY-MM-DD hh:mm:ss"
+msgstr "El formato de la fecha es YYYY-MM-DD hh:mm:ss"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:231
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:271
+msgid "The date entered is too old ( > {0})"
+msgstr "La fecha ingresada es demasiada antigua ( > {0})"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:250
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:290
+msgid "The date entered must be oldest ( < {0})"
+msgstr "La fecha ingresada debe ser más antigua ( < {0})"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:312
+msgid "The time entered is too old ( > {0})"
+msgstr "La hora ingresada es demasiada antigua ( > {0})"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:333
+msgid "The time entered must be oldest ( < {0})"
+msgstr "La hora ingresada debe ser más antigua ( < {0})"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:345
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:348
+msgid "The url is not a Youtube url."
+msgstr "No es una url de Youtube"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:355
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:359
+msgid "Can not be a url"
+msgstr "No puede ser una URL"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:364
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "Password must contain 8 ~ 16 characters and must contain "
+msgstr "La contraseña debe contener entre 8 ~ 16 caracteres y "
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:364
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "at least one capital letter, "
+msgstr "al menos una letra mayúscula, "
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:364
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "one singular letter, one numeric character "
+msgstr "una letra minúscula, un caracter numérico "
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:364
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
+msgid "and one special character (!@-,./?)."
+msgstr "y un caracter especial (!@-,./?)."
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:416
+msgid "Please enter a value with a valid mimetype."
+msgstr "Por favor ingrese un valor con un tipo mime válido"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:446
+msgid "Please enter a value with a valid extension."
+msgstr "Por favor ingrese un valor con una extensión válida"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:477
+msgid "Please enter a file with a valid size ( > {0} Bytes)."
+msgstr "Por favor ingrese un archivo con un tamaño válido ( > {0} Bytes)."
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:506
+msgid "Please enter a file with a valid size ( < {0} Bytes)."
+msgstr "Por favor ingrese un archivo con un tamaño válido ( < {0} Bytes)."
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:548
+msgid "Few files. (Limit: {0} files)."
+msgstr "Pocos ficheros. (Límite: {0} ficheros)."
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:590
+msgid "Too many files. (Limit: {0} files)."
+msgstr "Demasiados ficheros. (Límite: {0} ficheros)."
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:632
+msgid "This field is required."
+msgstr "Este campo es obligatorio."
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:509
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:489
+msgid "Open editor"
+msgstr "Abrir editor"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:538
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:518
+msgid "Close"
+msgstr "Cerrar"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:97
 msgid "The NIE format is not CNNNNNNNC'"
@@ -145,20 +264,6 @@ msgstr "El formato del NIE debe ser CNNNNNNNN"
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:135
 msgid "The NIF format is not CNNNNNNNC'"
 msgstr "El formato del NIF debe ser CNNNNNNNC"
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:145
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:167
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:191
-msgid "Please enter a valid value"
-msgstr "Por favor, introduce un valor válido"
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:201
-msgid "The date format is not DD-MM-YYYY"
-msgstr "El formato de la fecha debe ser DD-MM-YYYY"
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:212
-msgid "The date format is not YYYY-MM-DD hh:mm:ss"
-msgstr "El formato de la fecha es YYYY-MM-DD hh:mm:ss"
 
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:233
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:274
@@ -178,30 +283,9 @@ msgstr "La fecha introducida es demasiado antigua (> {0})"
 msgid "The time entered must be oldest (> {0})"
 msgstr "La fecha introducida debe ser más antigua (> {0})"
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:348
-msgid "The url is not a Youtube url."
-msgstr "No es una url de Youtube"
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:359
-msgid "Can not be a url"
-msgstr "No puede ser una URL"
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
-msgid "Password must contain 8 ~ 16 characters and must contain "
-msgstr "La contraseña debe contener entre 8 ~ 16 caracteres y "
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
-msgid "at least one capital letter, "
-msgstr "al menos una letra mayúscula, "
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
-msgid "one singular letter, one numeric character "
-msgstr "una letra minúscula, un caracter numérico "
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:368
-msgid "and one special character (!@-,./?)."
-msgstr "y un caracter especial (!@-,./?)."
-
 #: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:612
+#: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:623
+#: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:723
+#: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:815
 msgid "Intento de manipulacion del formulario"
 msgstr ""
