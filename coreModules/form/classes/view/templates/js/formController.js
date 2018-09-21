@@ -956,17 +956,16 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       },
       */
       success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-        console.log( 'Executando fileSendOk...', $jsonData );
+        console.log( 'Executando successHandler...', $jsonData );
 
         var fieldName = $jsonData.moreInfo.fieldName;
         $( '.'+fieldName+'-info[data-form_id="'+that.idForm+'"] .wrap .progressBar' ).hide();
 
+        var $fileField = $( 'input[name="' + fieldName + '"][form="'+that.idForm+'"]' );
+        var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+        $fileFieldWrap.find('.fileFieldDropZone .upload, .fileFieldDropZone .spinner').toggle();
+
         if( $jsonData.result === 'ok' ) {
-
-          var $fileField = $( 'input[name="' + fieldName + '"][form="'+that.idForm+'"]' );
-          var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
-          $fileFieldWrap.find('.fileFieldDropZone .upload, .fileFieldDropZone .spinner').toggle();
-
           that.fileSendOk( fieldName, formFileObj, $jsonData.moreInfo );
 
           var successActions = $jsonData.success;
@@ -1586,13 +1585,13 @@ if( cogumelo.publicConf.C_LANG !== 'en' ) {
 
   switch( cogumelo.publicConf.C_LANG ) {
     case "pt":
-        basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
-        break;
+      basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
+      break;
     case "br":
-        basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
-        break;
+      basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
+      break;
     default:
-        basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+      basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
   }
 
   //basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
