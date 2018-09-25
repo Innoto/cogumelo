@@ -75,17 +75,31 @@ class UserViewModel extends Model {
     'hashVerifyUser' => [
       'type' => 'VARCHAR',
       'size' => '255'
+    ],
+    'loginTimeBan' => [
+      'type' => 'DATETIME'
+    ],
+    'loginFailAttempts'=> [
+      'type' => 'INT',
+      'size' => '1'
+    ],
+    'role'=> [
+      'type' => 'VARCHAR',
+      'size' => '255'
     ]
   ];
 
   static $extraFilters = [
     'idIn' => ' user_user_view.id IN (?) ',
+    'find' => "UPPER(surname)  LIKE CONCAT('%',UPPER(?),'%') OR login LIKE CONCAT('%', UPPER(?), '%')",
+    'tableSearch' => " ( UPPER( name ) LIKE CONCAT( '%', UPPER(?), '%' ) OR UPPER( surname ) LIKE CONCAT( '%', UPPER(?), '%' ) OR UPPER( login ) LIKE CONCAT( '%', UPPER(?), '%' ) OR id = ? )",
+    'roleFilter' => 'FIND_IN_SET(?, user_user_view.role) ',
   ];
 
   var $notCreateDBTable = true;
   var $deploySQL = [
     [
-      'version' => 'user#2',
+      'version' => 'user#6',
       'executeOnGenerateModelToo' => true,
       'sql'=> '
         DROP VIEW IF EXISTS user_user_view;
@@ -95,13 +109,31 @@ class UserViewModel extends Model {
             {multilang:u.description_$lang,}
             u.active, u.verified, u.timeLastLogin,
             u.avatar, fd.name AS avatarName, fd.aKey AS avatarAKey,
-            u.timeCreateUser, u.timeLastUpdate, u.hashUnknownPass, u.hashVerifyUser
+            u.timeCreateUser, u.timeLastUpdate, u.hashUnknownPass, u.hashVerifyUser,
+            u.loginTimeBan, u.loginFailAttempts,
+            group_concat(
+              ifnull(r.name, 0)
+            ) AS role
           FROM
-            user_user u LEFT JOIN filedata_filedata AS fd ON u.avatar = fd.id
+            user_user u
+            LEFT JOIN filedata_filedata AS fd ON u.avatar = fd.id
+            LEFT JOIN user_userRole AS ur
+            ON ur.user = u.id
+            LEFT JOIN user_role AS r
+            ON r.id = ur.role
           GROUP BY
             u.id
       '
     ]
   ];
+
+  public function deleteUser( $userId ) {
+   return (new UserModel(['id' => $userId]))->delete();
+  }
+  public function userUpdateActive( $data ){
+    $user = new UserModel(['id' => $data['userId']]);
+    $user->setter('active', $data['value']);
+    $user->save();
+  }
 
 }

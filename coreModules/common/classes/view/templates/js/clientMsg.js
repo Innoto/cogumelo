@@ -75,7 +75,11 @@ cogumelo.clientMsgClass = function( options ) {
     var result = false;
 
     var alertType = 'info';
-    var msgOptions = $.extend( true, {}, that.msgDefOptions, fnOptions );
+
+    var butOptions = new Object({
+      buttons: { ok: { text: __("OK") } }
+    });
+    var msgOptions = $.extend( true, {}, that.msgDefOptions, butOptions, fnOptions );
 
     if( typeof msgOptions.alertType === 'string' ) {
       alertType = msgOptions.alertType;
@@ -96,7 +100,10 @@ cogumelo.clientMsgClass = function( options ) {
   that.confirm = function( msg, fnResult, fnOptions ) {
     var result = false;
 
-    var msgOptions = $.extend( true, {}, that.msgDefOptions, fnOptions );
+    var butOptions = new Object({
+      buttons: { yes: { text: __("Yes") }, no: { text: __("No") } }
+    });
+    var msgOptions = $.extend( true, {}, that.msgDefOptions, butOptions, fnOptions );
 
     msgOptions.msg = msg;
 
@@ -125,7 +132,11 @@ cogumelo.clientMsgClass = function( options ) {
     var result = false;
 
     var promptType = 'text';
-    var msgOptions = $.extend( true, {}, that.msgDefOptions, fnOptions );
+
+    var butOptions = new Object({
+      buttons: { ok: { text: __("OK") }, cancel: { text: __("Cancel") } }
+    });
+    var msgOptions = $.extend( true, {}, that.msgDefOptions, butOptions, fnOptions );
 
     if( typeof msgOptions.promptType === 'string' ) {
       promptType = msgOptions.promptType;

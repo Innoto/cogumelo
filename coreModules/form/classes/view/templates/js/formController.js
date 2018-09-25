@@ -233,7 +233,6 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     console.log( 'submitAction', that.submitActionName, that.submitActionValue );
     serializeFormObj[that.submitActionName]['value'] = that.submitActionValue;
 
-
     $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
     $( form ).find( '.submitRun' ).show();
 
@@ -260,6 +259,12 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     that.submitActionName = false;
     that.submitActionValue = false;
+
+
+    funcExtender = that.getFunctionExtender('sendValidatedForm');
+    if( funcExtender ) {
+      $fileBoxElem = funcExtender( that.idForm );
+    }
   }; // that.sendValidatedForm
 
 
@@ -291,6 +296,12 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     // that.formDoneOkPhase2( form, response );
     // alert( 'Form Submit OK' );
+
+
+    funcExtender = that.getFunctionExtender('formDoneOk');
+    if( funcExtender ) {
+      $fileBoxElem = funcExtender( that.idForm );
+    }
   }; // that.formDoneOk
 
   that.formDoneOkPhase2 = function formDoneOkPhase2( form, response ) {
@@ -315,6 +326,12 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       console.log( 'IMPORTANTE: En resetForm falta borrar los campos FILE porque no lo hace el reset!!!' );
     }
     // alert( 'Form Submit OK' );
+
+
+    funcExtender = that.getFunctionExtender('formDoneOkPhase2');
+    if( funcExtender ) {
+      $fileBoxElem = funcExtender( that.idForm );
+    }
   }; // that.formDoneOkPhase2
 
   that.formDoneError = function formDoneError( form, response ) {
@@ -373,6 +390,12 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     // if( response.formError !== '' ) that.validateObj.showErrors( {'submit': response.formError} );
     // console.log( 'formDoneError (FIN)' );
+
+
+    funcExtender = that.getFunctionExtender('formDoneError');
+    if( funcExtender ) {
+      $fileBoxElem = funcExtender( that.idForm );
+    }
   }; // that.formDoneError
 
 
@@ -956,17 +979,16 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       },
       */
       success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-        console.log( 'Executando fileSendOk...', $jsonData );
+        console.log( 'Executando successHandler...', $jsonData );
 
         var fieldName = $jsonData.moreInfo.fieldName;
         $( '.'+fieldName+'-info[data-form_id="'+that.idForm+'"] .wrap .progressBar' ).hide();
 
+        var $fileField = $( 'input[name="' + fieldName + '"][form="'+that.idForm+'"]' );
+        var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
+        $fileFieldWrap.find('.fileFieldDropZone .upload, .fileFieldDropZone .spinner').toggle();
+
         if( $jsonData.result === 'ok' ) {
-
-          var $fileField = $( 'input[name="' + fieldName + '"][form="'+that.idForm+'"]' );
-          var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
-          $fileFieldWrap.find('.fileFieldDropZone .upload, .fileFieldDropZone .spinner').toggle();
-
           that.fileSendOk( fieldName, formFileObj, $jsonData.moreInfo );
 
           var successActions = $jsonData.success;
@@ -1324,18 +1346,6 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     return $fileBoxElem;
   }; // that.fileBox
 
-  that.getFunctionExtender = function getFunctionExtender( funcName ) {
-    funcExtender = null;
-
-    eval(
-      'if( typeof cogumelo.formExtender_'+that.idForm+'_'+funcName+' === "function" ) { '+
-        'funcExtender = cogumelo.formExtender_'+that.idForm+'_'+funcName+'; '+
-      '}'
-    );
-
-    return funcExtender;
-  };
-
   that.fileFieldToInput = function fileFieldToInput( fieldName ) {
     console.log( '* fileFieldToInput: ', that.idForm, fieldName );
 
@@ -1577,6 +1587,20 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     });
   }; // that.removeGroupElement
 
+
+
+
+  that.getFunctionExtender = function getFunctionExtender( funcName ) {
+    funcExtender = null;
+
+    eval(
+      'if( typeof cogumelo.formExtender_'+that.idForm+'_'+funcName+' === "function" ) { '+
+        'funcExtender = cogumelo.formExtender_'+that.idForm+'_'+funcName+'; '+
+      '}'
+    );
+
+    return funcExtender;
+  };
 }; // cogumelo.formControllerClass
 
 
@@ -1586,13 +1610,13 @@ if( cogumelo.publicConf.C_LANG !== 'en' ) {
 
   switch( cogumelo.publicConf.C_LANG ) {
     case "pt":
-        basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
-        break;
+      basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
+      break;
     case "br":
-        basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
-        break;
+      basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
+      break;
     default:
-        basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+      basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
   }
 
   //basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );

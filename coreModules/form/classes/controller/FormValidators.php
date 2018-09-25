@@ -275,6 +275,36 @@ class FormValidators extends FormValidatorsExtender {
   }
 
 
+  public function val_dniOrNie( $value ) {
+    $result = false;
+
+    if( preg_match('/^([0-9]{8})([A-Z])$/i', $value, $match ) ) {
+      $numero   = $match[1];
+      $letraDni = mb_strtoupper( $match[2] );
+
+      if( $letraDni === mb_substr( 'TRWAGMYFPDXBNJZSQVHLCKE', $numero%23, 1 ) ) {
+        $result = true;
+      }
+    }
+
+    if( preg_match('/^([XYZ]?)([0-9]{7})([A-Z])$/i', $value, $match ) ) {
+      $letraNie = mb_strtoupper( $match[1] );
+      $numero   = $match[2];
+      $letraDni = mb_strtoupper( $match[3] );
+
+      // Ajustes NIE
+      $numero = strtr( $letraNie, 'XYZ', '012' ).$numero;
+
+      if( $letraDni === mb_substr( 'TRWAGMYFPDXBNJZSQVHLCKE', $numero%23, 1 ) ) {
+        $result = true;
+      }
+    }
+
+    return $result;
+  }
+
+
+
 
   // http://jqueryvalidation.org/minlength-method/
   public function val_minlength( $value, $param ) {
