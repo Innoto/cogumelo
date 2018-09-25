@@ -602,7 +602,7 @@ class Template extends Smarty {
           ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
           '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
           '<script type="text/javascript"> if(typeof less.pageLoadFinished != "undefined"){ '.
-            ' less.pageLoadFinished.then( function() { $.holdReady( false );} ) }</script>'."\n";
+            ' less.pageLoadFinished.then( function() { setTimeout(function(){$.holdReady( false );}, 100);} ) }</script>'."\n";
       }
 
 
