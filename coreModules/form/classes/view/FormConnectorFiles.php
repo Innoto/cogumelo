@@ -312,12 +312,19 @@ class FormConnectorFiles {
           $fileGroup = $fieldPrev['idGroup'];
         }
 
-        if( isset( $fich['fileTempId'] ) && $fich['fileTempId'] !== false ) {
+        // error_log(__METHOD__ .' fileTempId '. json_encode($fich['fileTempId']) );
+
+        // if( !empty( $fich['fileTempId'] ) ) {
+        // if( isset( $fich['fileTempId'] ) && $fich['fileTempId'] !== false ) {
+        if( isset( $fich['fileTempId'] ) && $fich['fileTempId'] !== false && $fich['fileTempId'] !== '' ) {
           $multipleIndex = $fich['fileTempId'];
         }
         else {
           $multipleIndex = 'FID_'.$fich['fileId'];
         }
+
+        // error_log(__METHOD__ .' MULTIPLE '. $multipleIndex );
+        // error_log(__METHOD__ .' MULTIPLE '. print_r($fieldPrev['multiple'],true) );
 
         if( isset( $fieldPrev['multiple'][ $multipleIndex ] ) ) {
           $fieldPrev = $fieldPrev['multiple'][ $multipleIndex ];
