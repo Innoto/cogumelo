@@ -902,7 +902,17 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     if( that.checkInputFileField( formFileObjs, fieldName ) ) {
       for( var i = 0, formFileObj; (formFileObj = formFileObjs[i]); i++ ) {
+        console.log('processFilesInputFileField '+i);
         that.uploadFile( formFileObj, fieldName );
+
+        ////////////////////////////////////////////////////////////
+        //
+        // TODO: TEMPORAL. BLOQUEO CARGA MULTIPLE SIMULTANEA
+        // 
+        ////////////////////////////////////////////////////////////
+        console.log('processFilesInputFileField BLOQUEO');
+        break;
+        ////////////////////////////////////////////////////////////
       }
     }
   }; // that.processFilesInputFileField
