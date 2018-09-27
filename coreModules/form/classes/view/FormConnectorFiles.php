@@ -312,7 +312,7 @@ class FormConnectorFiles {
           $fileGroup = $fieldPrev['idGroup'];
         }
 
-        if( !empty( $fich['fileTempId'] ) ) {
+        if( isset( $fich['fileTempId'] ) && $fich['fileTempId'] !== false ) {
           $multipleIndex = $fich['fileTempId'];
         }
         else {
