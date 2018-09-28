@@ -25,7 +25,7 @@ msgstr ""
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:72
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:204
 msgid "Email"
-msgstr "Correo-e"
+msgstr "Email"
 
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:77
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:72
@@ -233,6 +233,7 @@ msgstr "Usuario descoñecido"
 msgid "The old password does not match."
 msgstr "O contrasinal vello non coincide"
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:768
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:765
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:761
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:752
@@ -242,6 +243,7 @@ msgstr "O contrasinal vello non coincide"
 msgid "User Error unidentified"
 msgstr "Error de autentificación do usuario"
 
+#: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:782
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:779
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:775
 #: /home/proxectos/cogumelo/coreModules/user/classes/view/UserView.php:766

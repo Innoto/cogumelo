@@ -12,3 +12,20 @@ msgstr ""
 #: /home/proxectos/cogumelo/coreModules/common/classes/view/templates/js/clientMsg.js:15
 msgid "Information"
 msgstr "Información"
+
+#: /home/proxectos/cogumelo/coreModules/common/classes/view/templates/js/clientMsg.js:80
+#: /home/proxectos/cogumelo/coreModules/common/classes/view/templates/js/clientMsg.js:137
+msgid "OK"
+msgstr "Vale"
+
+#: /home/proxectos/cogumelo/coreModules/common/classes/view/templates/js/clientMsg.js:104
+msgid "Yes"
+msgstr "Si"
+
+#: /home/proxectos/cogumelo/coreModules/common/classes/view/templates/js/clientMsg.js:104
+msgid "No"
+msgstr "Non"
+
+#: /home/proxectos/cogumelo/coreModules/common/classes/view/templates/js/clientMsg.js:137
+msgid "Cancel"
+msgstr "Cancelar"
