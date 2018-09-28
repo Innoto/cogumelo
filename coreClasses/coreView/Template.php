@@ -235,8 +235,8 @@ class Template extends Smarty {
         $base_path = $this->cgmMediaserverHost.$mediaPath.'/';
         break;
       case 'vendor':
-      case 'vendor/bower':
       case 'vendor/yarn':
+      case 'vendor/bower':
       case 'vendor/composer':
       case 'vendor/manual':
         $base_path = $this->cgmMediaserverHost.$module.'/';
@@ -533,8 +533,8 @@ class Template extends Smarty {
 
       $mainClientIncludes = "\n";
       // Basic includes and includers
-      $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/bower/jquery/dist/jquery.min.js"></script>' . "\n";
-      $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/bower/bootstrap/dist/js/bootstrap.min.js"></script>' . "\n";
+      $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/yarn/jquery/dist/jquery.min.js"></script>' . "\n";
+      $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/yarn/bootstrap/dist/js/bootstrap.min.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://rsvpjs-builds.s3.amazonaws.com/rsvp-latest.min.js"></script>' . "\n";
       //$clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
@@ -600,7 +600,7 @@ class Template extends Smarty {
         $clientIncludesStyles .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
           ' globalVars: { '.$lessGlobalVarsJs.' }, render: function(){}, '.
           ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
-          '<script type="text/javascript" src="/vendor/bower/less/dist/less.min.js"></script>'."\n".
+          '<script type="text/javascript" src="/vendor/yarn/less/dist/less.min.js"></script>'."\n".
           '<script type="text/javascript"> if(typeof less.pageLoadFinished != "undefined"){ '.
             ' less.pageLoadFinished.then( function() { setTimeout(function(){$.holdReady( false );}, 100);} ) }</script>'."\n";
       }

@@ -11,14 +11,14 @@ class common extends Module {
   public $dependences = array(
    array(
      "id" =>"less",
-     "params" => array("less#v2.7.3"),
-     "installer" => "bower",
+     "params" => array("less"),
+     "installer" => "yarn",
      "includes" => array()
    ),
    array(
      'id' =>'lobibox',
      'params' => [ 'lobibox' ],
-     'installer' => 'bower',
+     'installer' => 'yarn',
      'includes' => [ 'dist/css/lobibox.min.css', 'dist/js/lobibox.min.js' ]
    )
 

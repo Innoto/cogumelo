@@ -12,8 +12,8 @@ class table extends Module
 
    array(
      "id" =>"jquery.download",
-     "params" => array("jquery.fileDownload#1.4.2"),
-     "installer" => "bower",
+     "params" => array("jquery-file-download@1.4.6"),
+     "installer" => "yarn",
      "includes" => array("src/Scripts/jquery.fileDownload.js")
    )
 

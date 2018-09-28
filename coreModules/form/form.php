@@ -8,11 +8,12 @@ class form extends Module {
   public $name = 'form';
   public $version = 1.0;
   public $dependences = [
+
     [
       'id' => 'jquery-validation',
-      'params' => [ 'jquery-validate#1.14' ],
-      'installer' => 'bower',
-      'includes' => [ 'dist/jquery.validate.min.js', 'dist/additional-methods.min.js' ]
+      'params' => array( 'jquery-validation@1.14.0' ),
+      'installer' => 'yarn',
+      'includes' => array( 'dist/jquery.validate.js', 'dist/additional-methods.js' )
     ],
     [
       'id' =>'ckEditorFix',
@@ -20,17 +21,24 @@ class form extends Module {
       'installer' => 'manual',
       'includes' => [ 'ckEditorFix.js' ],
     ],
-    [
+    /*[
       'id' =>'ckeditor',
       'params' => [ 'ckeditor#full/stable' ],
       'installer' => 'bower',
       'includes' => [ 'ckeditor.js' ],
       'autoinclude' => false
+    ],*/
+    [
+      'id' =>'ckeditor',
+      'params' => [ 'ckeditor' ],
+      'installer' => 'yarn',
+      'includes' => [ 'ckeditor.js' ],
+      'autoinclude' => false
     ],
     [
       'id' =>'grapesjs',
-      'params' => [ 'grapesjs#v0.14.15' ],
-      'installer' => 'bower',
+      'params' => [ 'grapesjs@0.14.15' ],
+      'installer' => 'yarn',
       'includes' => [ 'dist/grapes.min.js', 'dist/css/grapes.min.css' ],
       'autoinclude' => false
     ],
