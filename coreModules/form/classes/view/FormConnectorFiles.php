@@ -227,7 +227,7 @@ class FormConnectorFiles {
 
       if( !$form->existErrors() ) {
         Cogumelo::debug('FormConnector: FU: OK con el ficheiro subido... Se persiste...' );
-        error_log(__METHOD__.' OK con el ficheiro subido... Se persiste...');
+        // error_log(__METHOD__.' OK con el ficheiro subido... Se persiste...');
         // error_log('FormConnector: GUARDAMOS File Field: '.print_r($fileFieldValuePrev,true) );
         $form->setFieldValue( $fieldName, $fileFieldValuePrev );
         // Persistimos formObj para cuando se envíe el formulario completo
@@ -312,12 +312,19 @@ class FormConnectorFiles {
           $fileGroup = $fieldPrev['idGroup'];
         }
 
-        if( !empty( $fich['fileTempId'] ) ) {
+        // error_log(__METHOD__ .' fileTempId '. json_encode($fich['fileTempId']) );
+
+        // if( !empty( $fich['fileTempId'] ) ) {
+        // if( isset( $fich['fileTempId'] ) && $fich['fileTempId'] !== false ) {
+        if( isset( $fich['fileTempId'] ) && $fich['fileTempId'] !== false && $fich['fileTempId'] !== '' ) {
           $multipleIndex = $fich['fileTempId'];
         }
         else {
           $multipleIndex = 'FID_'.$fich['fileId'];
         }
+
+        // error_log(__METHOD__ .' MULTIPLE '. $multipleIndex );
+        // error_log(__METHOD__ .' MULTIPLE '. print_r($fieldPrev['multiple'],true) );
 
         if( isset( $fieldPrev['multiple'][ $multipleIndex ] ) ) {
           $fieldPrev = $fieldPrev['multiple'][ $multipleIndex ];
@@ -332,7 +339,7 @@ class FormConnectorFiles {
 
 
       if( isset( $fieldPrev['status'] ) && $fieldPrev['status'] !== false ) {
-        error_log('FormConnector: FDelete: STATUS: ' . $fieldPrev['status'] );
+        // error_log('FormConnector: FDelete: STATUS: ' . $fieldPrev['status'] );
 
         switch( $fieldPrev['status'] ) {
           case 'LOAD':
@@ -351,13 +358,13 @@ class FormConnectorFiles {
             $fieldPrev['temp'] = null;
             break;
           default:
-            error_log('FormConnector: FDelete: Intentando borrar con status erroneo: ' . $fieldPrev['status'] );
+            error_log('FormConnector: FDelete: Error intentando borrar con status erroneo: (STB) '.$fieldName.' '.$fieldPrev['status'] );
             $form->addFieldRuleError( $fieldName, 'cogumelo', 'Intento de sobreescribir un fichero existente (STB)' );
             break;
         }
       }
       else {
-        error_log('FormConnector: FDelete: Error intentando eliminar un fichero sin estado.' );
+        error_log('FormConnector: FDelete: Error intentando eliminar un fichero sin estado: (STN) '.$fieldName );
         $form->addFieldRuleError( $fieldName, 'cogumelo', 'Intento de borrar un fichero inexistente (STN)' );
       }
 
@@ -381,10 +388,11 @@ class FormConnectorFiles {
         $form->saveToSession();
       }
       else {
-        error_log('FormConnector: FDelete: El borrado ha fallado. Se mantiene el estado.' );
+        error_log('FormConnector: FDelete: Error, el borrado ha fallado. Se mantiene el estado: '.$fieldName );
       }
     } // if( $form->loadFromSession( $cgIntFrmId ) && $form->getFieldType( $fieldName ) === 'file' )
     else {
+      error_log('FormConnector: FDelete: Error, intento de borrado incorrecto: (FRM) '.$fieldName );
       $form->addFieldRuleError( $fieldName, 'cogumelo', 'Intento de borrado incorrecto. (FRM)' );
     }
   }
