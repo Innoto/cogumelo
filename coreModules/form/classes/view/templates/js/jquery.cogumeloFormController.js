@@ -269,16 +269,16 @@ function setValidateForm( idForm, rules, messages ) {
 
     switch( cogumelo.publicConf.C_LANG ) {
       case "pt":
-          basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
+          basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
           break;
       case "br":
-          basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
+          basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
           break;
       default:
-          basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+          basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
     }
 
-    //basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+    //basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
   }
 
   // console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );

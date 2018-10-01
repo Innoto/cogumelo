@@ -617,7 +617,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           // $('.modalEditorGrapesJS .modal-dialog').css( 'width', '80%' ).html(htmlEditContent);
 
 
-          // /vendor/bower/grapesjs-blocks-flexbox-master/dist/grapesjs-blocks-flexbox.min.js
+          // /vendor/yarn/grapesjs-blocks-flexbox-master/dist/grapesjs-blocks-flexbox.min.js
 
           var gJSInit = {
             fromElement: true,
@@ -908,7 +908,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
         ////////////////////////////////////////////////////////////
         //
         // TODO: TEMPORAL. BLOQUEO CARGA MULTIPLE SIMULTANEA
-        // 
+        //
         ////////////////////////////////////////////////////////////
         console.log('processFilesInputFileField BLOQUEO');
         break;
@@ -1620,16 +1620,16 @@ if( cogumelo.publicConf.C_LANG !== 'en' ) {
 
   switch( cogumelo.publicConf.C_LANG ) {
     case "pt":
-      basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
+      basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
       break;
     case "br":
-      basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
+      basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
       break;
     default:
-      basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+      basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
   }
 
-  //basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
+  //basket.require( { url: '/vendor/yarn/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
 }
 
 
