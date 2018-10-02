@@ -682,7 +682,11 @@ class FiledataImagesController {
 
         $cacheRouteInfo = pathinfo( $imgInfo['route'] );
         Cogumelo::debug( __METHOD__.' NO Cache - rmdirRec unlink '.$cacheRouteInfo['dirname'].'/' );
-        $this->rmdirRec( $cacheRouteInfo['dirname'].'/' );        
+
+
+        // $this->rmdirRec( $cacheRouteInfo['dirname'].'/' );
+
+
       }
 
       $result = true;
