@@ -11,7 +11,7 @@ class devel extends Module {
   // BOWER
   array(
     'id' => 'jquery',
-    'params' => array('jquery@2.2'),
+    'params' => array('jquery@3.3'),
     'installer' => 'yarn',
     "includes" => array("dist/jquery.min.js")
   ),
