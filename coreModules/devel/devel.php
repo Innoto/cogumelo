@@ -16,8 +16,13 @@ class devel extends Module {
     "includes" => array("dist/jquery.min.js")
   ),
   array(
+   "id" => "popper.js",
+   "params" => array("popper.js@^1.14.3"),
+   "installer" => "yarn"
+  ),
+  array(
    "id" => "bootstrap",
-   "params" => array("bootstrap@3.3"),
+   "params" => array("bootstrap@4"),
    "installer" => "yarn",
    "includes" => array("dist/js/bootstrap.min.js")
   ),
