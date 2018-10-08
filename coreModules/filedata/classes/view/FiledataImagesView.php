@@ -4,6 +4,17 @@ filedata::autoIncludes();
 filedata::load('controller/FiledataImagesController.php');
 
 
+/**
+ * PHPMD: Suppress all warnings from these rules.
+ * @SuppressWarnings(PHPMD.Superglobals)
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ */
 class FiledataImagesView extends View {
 
 
@@ -66,7 +77,10 @@ class FiledataImagesView extends View {
       if( !$this->disableRawUrlProfile || $fileName === $fileInfo['name'] ) {
         if( !$this->verifyAKeyUrl || $aKey === $fileInfo['aKey'] ) {
           if( $fileInfo['validatedAccess'] ) {
-            $imgInfo = [ 'type' => $fileInfo['type'] ];
+            $imgInfo = [
+              'fileId' => $fileId,
+              'type' => $fileInfo['type']
+            ];
 
             if( isset( $urlParams['profile']  ) ) {
               $urlParams['profile'] = mb_substr( mb_strrchr( $urlParams['profile'], '/' ), 1 );
