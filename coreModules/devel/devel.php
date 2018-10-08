@@ -61,7 +61,7 @@ class devel extends Module {
    'controller/DevelDBController.php',
    'controller/UrlListController.php',
    'js/devel.js',
-   'styles/masterDevel.less',
+   'styles/masterDevel.scss',
    'js/drawERD.js'
  );
 

@@ -19,7 +19,7 @@ class baseModuleView extends View
 
   function inicio() {
     $this->template->setTpl("example.tpl", 'baseModule');
-    $this->template->addClientStyles("styles/example.less", 'baseModule');
+    $this->template->addClientStyles("styles/example.scss", 'baseModule');
     $this->template->exec();
   }
 }

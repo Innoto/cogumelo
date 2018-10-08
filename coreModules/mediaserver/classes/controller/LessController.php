@@ -64,7 +64,7 @@ class LessController {
 
     $lessData = [];
 
-    $lessPC = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:less' );
+    $lessPC = Cogumelo::getSetupValue( 'mod:mediaserver:publicConf:scss' );
 
     $publicConf = !empty( $lessPC['globalVars'] ) ? $lessPC['globalVars'] : false;
     if( $publicConf && is_array( $publicConf ) && count( $publicConf ) > 0 ) {
@@ -114,7 +114,7 @@ class LessController {
 
     if( $lessVars = $this->getLessVarsFromSetup() ) {
       foreach( $lessVars as $name => $lessValue ) {
-        $lessContent .= '@'.$name.' : '.$lessValue.';'."\n";
+        $lessContent .= '$'.$name.' : '.$lessValue.';'."\n";
       }
     }
 

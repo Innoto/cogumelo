@@ -1,27 +1,27 @@
 
-@import "/common/classes/view/templates/styles/commonIncludes.less"; // Modify this for custom colors, font-sizes, etc
+//@import "/common/classes/view/templates/styles/commonIncludes.less"; // Modify this for custom colors, font-sizes, etc
 
 
 // Tables
 // -------------------------
-@tableBackground:                   #eeeeee; // overall background-color
-@tableBackgroundEven:               #f8f8f8; // for striping
-@tableBackgroundTh:                 #ffffff;
-@tableBackgroundHover:              #CCCCCC; // for hover
-@tableBorder:                       #ddd; // table and cell border
-@tableFontColor:                    #545454;
-@tableFontSize:                     14px;
+$tableBackground:                   #eeeeee; // overall background-color
+$tableBackgroundEven:               #f8f8f8; // for striping
+$tableBackgroundTh:                 #ffffff;
+$tableBackgroundHover:              #CCCCCC; // for hover
+$tableBorder:                       #ddd; // table and cell border
+$tableFontColor:                    #545454;
+$tableFontSize:                     14px;
 
-@buttonSearchBck: #5AB780;
-@buttonSearchBck_hover: #3F9864;
-@buttonClearSearchBck: #e16a4e;
-@buttonSearchColor: #fff;
+$buttonSearchBck: #5AB780;
+$buttonSearchBck_hover: #3F9864;
+$buttonClearSearchBck: #e16a4e;
+$buttonSearchColor: #fff;
 
-@buttonMoreFiltersBck: #7fb1c7;
-@buttonMoreFiltersBck_hover: #528Ba4;
-@buttonMoreFiltersColor: #fff;
+$buttonMoreFiltersBck: #7fb1c7;
+$buttonMoreFiltersBck_hover: #528Ba4;
+$buttonMoreFiltersColor: #fff;
 
-@borderOptions: 1px solid black;
+$borderOptions: 1px solid black;
 
 
 
@@ -48,7 +48,7 @@
       button.clear{
         width: 30px;
         max-width: 120px;
-        .btnFormat(@buttonClearSearchBck, @buttonSearchColor);
+        @include btnFormat($buttonClearSearchBck, $buttonSearchColor);
       }
 
       button{
@@ -57,7 +57,7 @@
         margin-bottom: 0px;
         width: 25%;
         max-width: 120px;
-        .btnFormat(@buttonSearchBck, @buttonSearchColor);
+        @include btnFormat($buttonSearchBck, $buttonSearchColor);
       }
     }
     .tableFilters{
@@ -71,7 +71,7 @@
       }
 
       button{
-        .btnFormat(@buttonMoreFiltersBck, @buttonMoreFiltersColor);
+        @include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
 
       }
     }
@@ -98,7 +98,7 @@
       }
 
       button{
-        .btnFormat(@buttonMoreFiltersBck, @buttonMoreFiltersColor);
+        @include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
       }
       img{ float: right; cursor: pointer; }
     }
@@ -108,7 +108,7 @@
     background: #E4E4E4;
     button{
       float: right;
-      .btnFormat(@buttonMoreFiltersBck, @buttonMoreFiltersColor);
+      @include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
     }
   }
   .tableActions{
@@ -128,7 +128,7 @@
       height: 30px;
       margin: 0px 2px;
       float:left;
-      border: @borderOptions;
+      border: $borderOptions;
       cursor: pointer;
     }
 
@@ -168,7 +168,7 @@
   .tablePreviousPage{
     margin: 0px 2px;
     float:left;
-    border: @borderOptions;
+    border: $borderOptions;
     cursor: pointer;
   }
 }
@@ -177,22 +177,22 @@
 // TABLE
 // --
 table.tableClass{
-  border: 1px solid @tableBorder;
-  background: @tableBackground;
+  border: 1px solid $tableBorder;
+  background: $tableBackground;
   padding: 5px;
-  color:@tableFontColor;
+  color:$tableFontColor;
   width: 100%;
   margin: 10px 0px;
-  font-size: @tableFontSize;
+  font-size: $tableFontSize;
   tr{
     &:first-child{
-      border-bottom: 1px solid @tableBorder;
+      border-bottom: 1px solid $tableBorder;
     }
     &.even{
-      background: @tableBackgroundEven;
+      background: $tableBackgroundEven;
     }
     &:hover{
-      background: @tableBackgroundHover;
+      background: $tableBackgroundHover;
     }
   }
   td, th{
@@ -200,7 +200,7 @@ table.tableClass{
     padding: 10px;
   }
   th{
-    background: @tableBackgroundTh;
+    background: $tableBackgroundTh;
     text-transform: uppercase;
     height: 20px;
     line-height: 20px;
@@ -214,16 +214,16 @@ table.tableClass{
       margin-top:20px;
 
       position:absolute;
-      border:1px solid @tableBorder;
+      border:1px solid $tableBorder;
       padding:10px;
-      background-color: @tableBackgroundTh;
+      background-color: $tableBackgroundTh;
       &:hover {
-        background-color: @tableBackgroundHover;
+        background-color: $tableBackgroundHover;
       }
     }
     .selectAll {
       width:50px;
-      border:1px solid @tableBorder;
+      border:1px solid $tableBorder;
       padding:2px;
       padding-top:1px;
       border-radius: 5px;

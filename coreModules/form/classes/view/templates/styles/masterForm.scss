@@ -1,25 +1,25 @@
 
-@import "/common/classes/view/templates/styles/commonIncludes.less"; // Modify this for custom colors, font-sizes, etc
+//@import "/common/classes/view/templates/styles/commonIncludes.scss"; // Modify this for custom colors, font-sizes, etc
 
 //
 // Variables
 // ------------------------------
-@MOD_FORM_CSS_PRE: 'cgmMForm';
-@formErrorColor: #e16a4e;
-@formErrorFontColor: #ffffff;
-@formErrorBckColor: @formErrorColor;
-@labelHeight: @inputHeight;
+$MOD_FORM_CSS_PRE: 'cgmMForm';
+$formErrorColor: #e16a4e;
+$formErrorFontColor: #ffffff;
+$formErrorBckColor: $formErrorColor;
+$labelHeight: $inputHeight;
 
-@formIconDiscard: #C44527;
-@formIconDownload: #5AB780;
-// @formIconDownload: #3F9864;
-@formIconDownloadDisabled: #dddddd;
+$formIconDiscard: #C44527;
+$formIconDownload: #5AB780;
+// $formIconDownload: #3F9864;
+$formIconDownloadDisabled: #dddddd;
 
 //
 // form error style
 //
 
-@import "/form/classes/view/templates/styles/formExtender.less";
+@import "/form/classes/view/templates/styles/formExtender.scss";
 
 
 
@@ -27,14 +27,14 @@
 
 input[type="text"], input[type="password"] {
   &.formError {
-    border-color: @formErrorColor;
+    border-color: $formErrorColor;
   }
 }
 
 label {
   &.formError {
-    background: @formErrorBckColor;
-    color: @formErrorFontColor;
+    background: $formErrorBckColor;
+    color: $formErrorFontColor;
     display: inline-block;
     margin-left: 10px;
     padding: 6px;
@@ -45,7 +45,7 @@ label {
 
 input[type="radiobutton"], input[type="checkbox"], textarea, select {
   &.formError {
-    .box-shadow(1px 0 2px 0 @formErrorColor);
+    .box-shadow(1px 0 2px 0 $formErrorColor);
   }
 }
 
@@ -121,13 +121,13 @@ input[type="radiobutton"], input[type="checkbox"], textarea, select {
           cursor: pointer;
         }
         .formFileDelete {
-          color: @formIconDiscard;
+          color: $formIconDiscard;
         }
         .formFileDownload {
-          color: @formIconDownload;
+          color: $formIconDownload;
           &.disabled {
             cursor: initial;
-            color: @formIconDownloadDisabled;
+            color: $formIconDownloadDisabled;
           }
         }
       }
