@@ -75,7 +75,7 @@ class XlsExportTableController extends ExportTableController {
             }
           }
           else {
-            $row[$colDefKey] = $rowVO->getter($colDefKey);
+            $row[$colDefKey] = strip_tags($rowVO->getter($colDefKey));
           }
 
         }
