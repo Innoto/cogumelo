@@ -357,7 +357,7 @@ class Template extends Smarty {
     $html = '';
 
     if( $this->cgmMediaserverCompileLess == false ) {
-      $src = $this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/lessConfConstants.less';
+      $src = $this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/lessConfConstants.scss';
       //$itemsToInclude[$src] =  array('src'=> $src, 'rel' => "stylesheet/less" , 'type'=> 'text/css', 'onlyOnce' => true );
       $itemsToInclude[$src] =  "<link href='".$src."' rel='stylesheet/less' type='text/css' >";
     }
