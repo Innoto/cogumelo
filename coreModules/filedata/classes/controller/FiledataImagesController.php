@@ -1,6 +1,17 @@
 <?php
 
 
+/**
+ * PHPMD: Suppress all warnings from these rules.
+ * @SuppressWarnings(PHPMD.Superglobals)
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ */
 class FiledataImagesController {
 
 
@@ -643,7 +654,8 @@ class FiledataImagesController {
 
 
   public function sendImage( $imgInfo ) {
-    // error_log( 'FiledataImagesController: sendImage '. print_r( $imgInfo, true ) );
+    // error_log( __METHOD__.' '.print_r( $imgInfo, true ) );
+    Cogumelo::debug( __METHOD__.' '.print_r( $imgInfo, true ) );
 
     $result = false;
 
@@ -678,15 +690,23 @@ class FiledataImagesController {
       // TODO: Revisar
       if( isset( $this->profile['cache'] ) && !$this->profile['cache'] ) {
         // Cogumelo::debug( __METHOD__.' - unlink '.$imgInfo['route'] );
-        // unlink( $imgInfo['route'] );
 
-        $cacheRouteInfo = pathinfo( $imgInfo['route'] );
-        Cogumelo::debug( __METHOD__.' NO Cache - rmdirRec unlink '.$cacheRouteInfo['dirname'].'/' );
+        $info = pathinfo( $imgInfo['route'] );
+        $cacheDir = $info['dirname'].'/';
 
-
-        // $this->rmdirRec( $cacheRouteInfo['dirname'].'/' );
-
-
+        if( !empty( $this->filesCachePath ) && strpos( $cacheDir, $this->filesCachePath ) !== false ) {
+          Cogumelo::debug( __METHOD__.' NO Cache - rmdirRec unlink '.$cacheDir );
+          $this->rmdirRec( $cacheDir );
+        }
+        else {
+          Cogumelo::debug( __METHOD__.' ERROR: PELIGRO!!! Intento de borrado de ficheros fuera de "cachePath"' );
+          Cogumelo::error( __METHOD__.' ERROR: PELIGRO!!! Intento de borrado de ficheros fuera de "cachePath"' );
+          Cogumelo::error( __METHOD__.' filesCachePath '.$this->filesCachePath );
+          Cogumelo::error( __METHOD__.' cacheDir '.$cacheDir );
+          error_log( __METHOD__.' ERROR: PELIGRO!!! Intento de borrado de ficheros fuera de "cachePath"' );
+          error_log( __METHOD__.' filesCachePath '.$this->filesCachePath );
+          error_log( __METHOD__.' cacheDir '.$cacheDir );
+        }
       }
 
       $result = true;
