@@ -22,11 +22,18 @@ class mediaserver extends Module {
       'installer' => 'composer',
       'includes' => array('src/CssMin.php')
     ),
-    array(
+/*    array(
       'id' => 'lessmin',
       'params' => array('oyejorge/less.php', '1.7.0.13'),
       'installer' => 'composer',
       'includes' => array('lessc.inc.php')
+    )*/
+
+    array(
+      'id' => 'scssphp',
+      'params' => array('leafo/scssphp', '0.7.6'),
+      'installer' => 'composer',
+      'includes' => array('scss.inc.php')
     )
   );
 

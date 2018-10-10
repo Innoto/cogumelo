@@ -61,13 +61,6 @@ class CogumeloClass extends Singleton {
        'includes' => array()
      ),
 
-    array(
-      'id' => 'sass.link',
-      'params' => array('sass.link'),
-      'installer' => 'manual',
-      'includes' => array()
-    ),
-
      array(
       "id" => "bootstrap",
       "params" => array("bootstrap@4"),

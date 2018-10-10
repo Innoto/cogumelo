@@ -615,7 +615,7 @@ class Template extends Smarty {
 
       // Mezclamos Script y Styles
       $clientIncludes .= $clientIncludesStyles;
-      $clientIncludes .= '<script src="/vendor/manual/sass.link/sass.link.src.js"></script>';
+      //$clientIncludes .= '<script src="/vendor/manual/sass.link/sass.link.src.js"></script>';
 
 
       $this->assign( 'client_includes_only_scripts', $clientIncludesScript );
