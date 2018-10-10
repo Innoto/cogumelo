@@ -55,12 +55,12 @@ class MediaserverView extends View {
   // for less client includes
   public function onClientLess( $request ) {
     if( $request[1] == false ) {
-      $this->mediaserverControl->serveContent($request[2].'.less');
+      $this->mediaserverControl->serveContent($request[2].'.scss');
     }
     else {
       $moduleName = mb_substr( $request[1], 0, mb_strlen( $request[1] )-1 );
 
-      $this->mediaserverControl->serveContent($request[2].'.less', $moduleName);
+      $this->mediaserverControl->serveContent($request[2].'.scss', $moduleName);
     }
   }
 

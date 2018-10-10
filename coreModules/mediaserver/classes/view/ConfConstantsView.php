@@ -14,7 +14,7 @@ class ConfConstantsView {
 
     $lessContent = $lessController->getLessFromSetup();
 
-    header('Content-Type: text/less');
+    header('Content-Type: text/scss');
     echo $lessContent;
   }
 

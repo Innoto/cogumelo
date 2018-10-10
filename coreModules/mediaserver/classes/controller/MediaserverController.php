@@ -59,7 +59,7 @@ class MediaserverController {
     $this->realFilePath = ModuleController::getRealFilePath('classes/view/templates/'.$this->urlPath, $this->moduleName);
     $this->modulePath = ( $this->moduleName )? '/module/'.$this->moduleName.'/' : '' ;
 
-    if( mb_substr($this->urlPath, -5) === '.less' ) {
+    if( mb_substr($this->urlPath, -5) === '.scss' ) {
       $this->compileAndMoveLessFile( $this->minimify );
     }
   }
@@ -182,9 +182,9 @@ class MediaserverController {
         header('Content-Type: text/css');
         readfile( WEB_BASE_PATH.'/'.  Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath  );
       }
-      else if( mb_substr($this->urlPath , -5) == '.less' ) {
+      else if( mb_substr($this->urlPath , -5) == '.scss' ) {
         // less file without compilation
-        header('Content-Type: text');
+        header('Content-Type: text/scss');
         readfile( WEB_BASE_PATH.'/'.  Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath  );
       }
       else {

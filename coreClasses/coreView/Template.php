@@ -246,29 +246,34 @@ class Template extends Smarty {
         break;
     }
 
-    if( !$this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.less' ) {
-      $file_rel = "stylesheet/less";
+    if( !$this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.scss' ) {
+      $type = "text/scss";
     }
     else {
-      $file_rel = "stylesheet";
+      $type = "text/css";
     }
 
 
-    if( $this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.less' ) {
+    if( $this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.scss' ) {
       $lessCompiledExtension = '.css';
+      $rel = 'stylesheet';
     }
     else {
       $lessCompiledExtension  = '';
+      $rel = 'sass';
     }
 
     $includeObj = array(
-      'rel' => $file_rel,
-      'type' => "text/css",
-      'src' => $base_path.$file_path . $lessCompiledExtension
+      'rel' => $rel,
+      'type' => $type,
+      //'src' => str_replace("media","mediaCache",$base_path.$file_path.$lessCompiledExtension)
+      'src' => $base_path.$file_path.$lessCompiledExtension
     );
 
 
     $includeRef = $base_path.$file_path.$lessCompiledExtension;
+
+    //$includeRef = str_replace("media","mediaCache",$base_path.$file_path.$lessCompiledExtension);
 
 
     if( $is_autoinclude ) {
@@ -359,7 +364,7 @@ class Template extends Smarty {
     if( $this->cgmMediaserverCompileLess == false ) {
       $src = $this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/lessConfConstants.scss';
       //$itemsToInclude[$src] =  array('src'=> $src, 'rel' => "stylesheet/less" , 'type'=> 'text/css', 'onlyOnce' => true );
-      $itemsToInclude[$src] =  "<link href='".$src."' rel='stylesheet/less' type='text/css' >";
+      $itemsToInclude[$src] =  "<link href='".$src."' type='text/scss' >";
     }
 
     $itemsToInclude = array_merge( $itemsToInclude, $this->getClientStylesArray( $ignoreAutoincludes ) );
@@ -540,18 +545,19 @@ class Template extends Smarty {
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
 
+
       $mainClientIncludes .= '<script src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
     //  $mainClientIncludes .= $this->getClientStylesHtml();
 
-
+/*
       $lessController = new LessController();
       $lessGlobalVars = $lessController->getLessVarsFromSetup();
       $lessGlobalVarsJs = '';
       foreach( $lessGlobalVars as $key => $value ) {
         $lessGlobalVarsJs .= ' '.$key.': "'.$value.'",';
       }
-      $lessGlobalVarsJs = rtrim( $lessGlobalVarsJs, ', ' );
+      $lessGlobalVarsJs = rtrim( $lessGlobalVarsJs, ', ' );*/
 
 
       $clientIncludes = "\n";
@@ -589,7 +595,6 @@ class Template extends Smarty {
       }
       $clientIncludes .= "</script>\n\n\n";
 
-
       // Hasta ahora era Script
       $clientIncludesScript = $clientIncludes;
 
@@ -597,17 +602,20 @@ class Template extends Smarty {
       // Ahora vamos con Styles
       $clientIncludesStyles = "\n" . $this->getClientStylesHtml();
       if( !$this->cgmMediaserverCompileLess ) {
+      /*
         $clientIncludesStyles .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
           ' globalVars: { '.$lessGlobalVarsJs.' }, render: function(){}, '.
           ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
           '<script type="text/javascript" src="/vendor/yarn/less/dist/less.min.js"></script>'."\n".
           '<script type="text/javascript"> if(typeof less.pageLoadFinished != "undefined"){ '.
             ' less.pageLoadFinished.then( function() { setTimeout(function(){$.holdReady( false );}, 100);} ) }</script>'."\n";
+      */
       }
 
 
       // Mezclamos Script y Styles
       $clientIncludes .= $clientIncludesStyles;
+      $clientIncludes .= '<script src="/vendor/manual/sass.link/sass.link.src.js"></script>';
 
 
       $this->assign( 'client_includes_only_scripts', $clientIncludesScript );

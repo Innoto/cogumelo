@@ -44,7 +44,7 @@ class mediaserver extends Module {
     $this->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).'/lessConfConstants.scss#', 'view:ConfConstantsView::less' );
     $this->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).'/module(.*)#', 'view:MediaserverView::module' );
     $this->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).'(/.*)#', 'view:MediaserverView::application' );
-    $this->addUrlPatterns( '#(.+\/)?classes/view/templates/(.+)\.less$#', 'view:MediaserverView::onClientLess');
+    $this->addUrlPatterns( '#(.+\/)?classes/view/templates/(.+)\.scss$#', 'view:MediaserverView::onClientLess');
 
   }
 
