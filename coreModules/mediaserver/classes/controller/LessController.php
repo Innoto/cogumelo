@@ -1,5 +1,5 @@
 <?php
-
+use Leafo\ScssPhp\Compiler;
 
 class LessController {
 
@@ -17,38 +17,37 @@ class LessController {
    *
    * @return boolean
    */
-  public function compile( $lessFilePath, $resultFilePath, $moduleName ) {
+  public function compile( $lessFilePath, $resultFilePath, $moduleName, $lessTmpDir ) {
     // error_log( __METHOD__.' lessPath:'.$lessFilePath.', resPath:'.$resultFilePath.', module: '.$moduleName );
 
     $ret = true;
-/*
-    if( empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
-      $_SERVER['DOCUMENT_ROOT'] = ( defined( WEB_BASE_PATH ) ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
-      error_log( __METHOD__.' Set $_SERVER[DOCUMENT_ROOT] = '.$_SERVER['DOCUMENT_ROOT'] );
-    }*/
 
+/*
     if( $this->less === false ) {
       $this->less = new lessc();
     }
+*/
+    if( $this->less === false ) {
+      $this->less = new Compiler();
+    }
 
-    // generate less caches
-    $lessTmpDir = CacheUtilsController::prepareLessTmpdir();
 
     // set includes dir
-    $this->less->setImportDir( $lessTmpDir );
-
-
+    //$this->less->setImportDir( $lessTmpDir );
+    $this->less->setImportPaths( $lessTmpDir );
+//echo $lessTmpDir."\n";
     // set less variables (Defined in setup)
-    $this->less->setVariables( $this->getLessVarsFromSetup() ) ;
+    //$this->less->setVariables( $this->getLessVarsFromSetup() ) ;
 
     if( $this->minimify ) {
-      $this->less->setFormatter('compressed');
+      //$this->less->setFormatter('compressed');
     }
 
     try {
-      $this->less->checkedCompile( $lessTmpDir.$moduleName.'/classes/view/templates/'.$lessFilePath, $resultFilePath );
+      //$this->less->checkedCompile( $lessTmpDir.$moduleName.'/classes/view/templates/'.$lessFilePath, $resultFilePath );
+      file_put_contents($resultFilePath, $this->less->compile('@import "'.'/classes/view/templates/'.$lessFilePath.'";'));
     } catch (Exception $ex) {
-      Cogumelo::error( "less.php fatal error compiling ".basename($lessFilePath).": ".$ex->getMessage() );
+      Cogumelo::error( "ScssPhp\Compile fatal error compiling ".basename($lessFilePath).": ".$ex->getMessage() );
       $ret = false;
     }
 

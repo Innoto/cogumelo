@@ -15,7 +15,7 @@ class CacheUtilsController {
     $tmpLessDir = self::prepareLessTmpdir();
 
     // list, compile and cache files
-    $tmpLessFiles = self::listFolderFiles( $tmpLessDir , array('less'),  false);
+    $tmpLessFiles = self::listFolderFiles( $tmpLessDir , array('scss'),  false);
 
     if( count($tmpLessFiles) > 0 ){
       foreach( $tmpLessFiles as $lessFilePath ) {
@@ -35,9 +35,10 @@ class CacheUtilsController {
 
 
         if(
-           preg_match('#\/master(.*).less#', $relativeFilePath) > 0 ||
-           preg_match('#\/primary(.*).less#', $relativeFilePath) > 0
+           preg_match('#\/master(.*).scss#', $relativeFilePath) > 0 ||
+           preg_match('#\/primary(.*).scss#', $relativeFilePath) > 0
          ){
+
           $mediaserverControl->compileAndCacheLess( $relativeFilePath, $moduleName );
           //echo "\n\n-----".$relativeFilePath;
         }
@@ -99,6 +100,13 @@ class CacheUtilsController {
         $destino
       );
 
+      // solo vendor
+      self::copyLessTmpdir(
+        PRJ_BASE_PATH.'/httpdocs/',
+        'vendor/',
+        $destino
+      );
+
       $CACHE_UTILS_LESS_TMPDIR = $destino;
     }
 
@@ -108,7 +116,7 @@ class CacheUtilsController {
 
   public static function copyLessTmpdir( $origDir, $filePath, $destDir ) {
 
-    $includeFiles = array('less');
+    $includeFiles = array('scss');
     $fileList = self::listFolderFiles( $origDir.$filePath , $includeFiles, false );
 
     foreach ( $fileList as $filePath ) {
@@ -196,7 +204,7 @@ class CacheUtilsController {
   public static function cacheFolder( $folder, $moduleName = false ) {
     $mediaserverControl = new MediaserverController();
 
-    $fileList = self::listFolderFiles( $folder , array('php', 'tpl', 'less'), true );
+    $fileList = self::listFolderFiles( $folder , array('php', 'tpl', 'scss'), true );
 
     if( count( $fileList ) > 0 ) {
       foreach ( $fileList as $filePath ) {

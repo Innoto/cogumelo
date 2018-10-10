@@ -137,7 +137,10 @@ class MediaserverController {
       $lessControl->setMinimify( true );
     }
 
-    if( $lessControl->compile( $this->urlPath, $tmp_cache, $this->moduleName ) ) {
+    // generate less caches
+    $lessTmpDir = CacheUtilsController::prepareLessTmpdir();
+
+    if( $lessControl->compile( $this->urlPath, $tmp_cache, $this->moduleName,  $lessTmpDir) ) {
       // create final folder
       $this->createDirPath( $final_cache );
 
