@@ -1,4 +1,9 @@
 <?php
+
+
+// declare(strict_types=1);
+
+
 /**
  * PHPMD: Suppress all warnings from these rules.
  * @SuppressWarnings(PHPMD.Superglobals)
@@ -427,10 +432,11 @@ function setPermissions( $devel = false ) {
 
   $extPerms = $devel ? ',ugo+rX' : '';
   $sudo = 'sudo ';
+  $sudoAllowed = Cogumelo::getSetupValue('script:sudoAllowed');
 
   echo( "setPermissions ".($devel ? 'DEVEL' : '')."\n" );
 
-  if( IS_DEVEL_ENV ) {
+  if( IS_DEVEL_ENV || $sudoAllowed ) {
     $dirsString =
       WEB_BASE_PATH.' '.APP_BASE_PATH.' '.APP_TMP_PATH.' '.
       Cogumelo::getSetupValue( 'smarty:configPath' ).' '.Cogumelo::getSetupValue( 'smarty:compilePath' ).' '.
@@ -448,23 +454,21 @@ function setPermissions( $devel = false ) {
     exec( $sudo.$fai );
   }
   else {
-    // exec( 'sudo '.$fai );
     echo( " - NON se executa chgrp general \n" );
   }
 
 
-  if( IS_DEVEL_ENV ) {
+  if( IS_DEVEL_ENV || $sudoAllowed ) {
     $fai = 'chmod -R go-rwx,g+rX'.$extPerms.' '.WEB_BASE_PATH.' '.APP_BASE_PATH;
     echo( " - Executamos chmod WEB_BASE_PATH APP_BASE_PATH\n" );
     exec( $sudo.$fai );
   }
   else {
-    // exec( 'sudo '.$fai );
     echo( " - NON se executa chmod WEB_BASE_PATH APP_BASE_PATH\n" );
   }
 
 
-  if( IS_DEVEL_ENV ) {
+  if( IS_DEVEL_ENV || $sudoAllowed ) {
     // Path que necesitan escritura Apache
     $fai = 'chmod -R ug+rwX'.$extPerms.' '.APP_TMP_PATH.' '.
       // Smarty
@@ -493,7 +497,7 @@ function setPermissions( $devel = false ) {
     echo( " - NON se executa chmod APP_TMP_PATH\n" );
   }
 
-  if( IS_DEVEL_ENV ) {
+  if( IS_DEVEL_ENV || $sudoAllowed ) {
     echo( " - Preparando [session:savePath] e [script:backupPath]\n" );
     // session:savePath tiene que mantener el usuario y grupo
     $sessionSavePath = Cogumelo::getSetupValue( 'session:savePath' );
