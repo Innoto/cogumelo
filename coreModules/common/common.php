@@ -9,12 +9,12 @@ class common extends Module {
   public $autoIncludeAlways = true;
 
   public $dependences = array(
-   array(
+   /*array(
      "id" =>"less",
      "params" => array("less"),
      "installer" => "yarn",
      "includes" => array()
-   ),
+   ),*/
    array(
      'id' =>'lobibox',
      'params' => [ 'lobibox' ],
