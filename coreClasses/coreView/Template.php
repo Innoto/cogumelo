@@ -1,7 +1,7 @@
 <?php
 
 Cogumelo::load('coreController/ModuleController.php');
-mediaserver::load('controller/LessController.php');
+
 
 //
 //  Template Class (Extends smarty library)
@@ -246,41 +246,28 @@ class Template extends Smarty {
         break;
     }
 
-    if( !$this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.scss' ) {
-      $type = "text/scss";
-    }
-    else {
-      $type = "text/css";
-    }
 
 
     if( $this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.scss' ) {
-      $lessCompiledExtension = '.css';
-      $rel = 'stylesheet';
+      $scssCompiledExtension = '.css';
     }
     else {
-      $lessCompiledExtension  = '';
-      $rel = 'sass';
+      $scssCompiledExtension  = '';
     }
 
     $includeObj = array(
-      'rel' => $rel,
-      'type' => $type,
-      //'src' => str_replace("media","mediaCache",$base_path.$file_path.$lessCompiledExtension)
-      'src' => $base_path.$file_path.$lessCompiledExtension
+      'rel' => 'stylesheet',
+      'type' => 'text/css',
+      'src' => $base_path.$file_path.$scssCompiledExtension
     );
-
-
-    $includeRef = $base_path.$file_path.$lessCompiledExtension;
-
-    //$includeRef = str_replace("media","mediaCache",$base_path.$file_path.$lessCompiledExtension);
+    $includeRef = $base_path.$file_path.$scssCompiledExtension;
 
 
     if( $is_autoinclude ) {
-        $this->css_autoincludes[$includeRef] = $includeObj;
+      $this->css_autoincludes[$includeRef] = $includeObj;
     }
     else {
-        $this->css_includes[$includeRef] = $includeObj;
+      $this->css_includes[$includeRef] = $includeObj;
     }
   }
 
@@ -360,12 +347,6 @@ class Template extends Smarty {
   public function getClientStylesHtml( $ignoreAutoincludes = false ) {
     $itemsToInclude = array();
     $html = '';
-
-    if( $this->cgmMediaserverCompileLess == false ) {
-      $src = $this->cgmMediaserverHost.$this->cgmMediaserverUrlDir.'/lessConfConstants.scss';
-      //$itemsToInclude[$src] =  array('src'=> $src, 'rel' => "stylesheet/less" , 'type'=> 'text/css', 'onlyOnce' => true );
-      $itemsToInclude[$src] =  "<link href='".$src."' type='text/scss' >";
-    }
 
     $itemsToInclude = array_merge( $itemsToInclude, $this->getClientStylesArray( $ignoreAutoincludes ) );
 
@@ -544,20 +525,10 @@ class Template extends Smarty {
       //$clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
-
-
       $mainClientIncludes .= '<script src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
     //  $mainClientIncludes .= $this->getClientStylesHtml();
 
-/*
-      $lessController = new LessController();
-      $lessGlobalVars = $lessController->getLessVarsFromSetup();
-      $lessGlobalVarsJs = '';
-      foreach( $lessGlobalVars as $key => $value ) {
-        $lessGlobalVarsJs .= ' '.$key.': "'.$value.'",';
-      }
-      $lessGlobalVarsJs = rtrim( $lessGlobalVarsJs, ', ' );*/
 
 
       $clientIncludes = "\n";
@@ -601,17 +572,6 @@ class Template extends Smarty {
 
       // Ahora vamos con Styles
       $clientIncludesStyles = "\n" . $this->getClientStylesHtml();
-      if( !$this->cgmMediaserverCompileLess ) {
-      /*
-        $clientIncludesStyles .= '<script>less = { env: "development", async: false, fileAsync: false, poll: 1000, '.
-          ' globalVars: { '.$lessGlobalVarsJs.' }, render: function(){}, '.
-          ' functions: { }, dumpLineNumbers: "all", relativeUrls: true, errorReporting: "console" }; </script>'."\n".
-          '<script type="text/javascript" src="/vendor/yarn/less/dist/less.min.js"></script>'."\n".
-          '<script type="text/javascript"> if(typeof less.pageLoadFinished != "undefined"){ '.
-            ' less.pageLoadFinished.then( function() { setTimeout(function(){$.holdReady( false );}, 100);} ) }</script>'."\n";
-      */
-      }
-
 
       // Mezclamos Script y Styles
       $clientIncludes .= $clientIncludesStyles;
@@ -620,14 +580,9 @@ class Template extends Smarty {
 
       $this->assign( 'client_includes_only_scripts', $clientIncludesScript );
       $this->assign( 'client_includes_only_styles', $clientIncludesStyles );
-
-
       $this->assign( 'client_includes', $clientIncludes );
       $this->assign( 'main_client_includes', $mainClientIncludes );
-      /*
-      $this->assign('js_includes', $jsConfInclude . $this->lessClientCompiler() . $this->getClientScriptHtml() );
-      $this->assign('css_includes', $lessConfInclude . $this->getClientStylesHtml() );
-      */
+
 
       foreach( $this->fragments as $fragmentName => $fragmentObjects ) {
         $htmlFragment = '';
