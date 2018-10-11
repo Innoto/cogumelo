@@ -22,13 +22,6 @@ class mediaserver extends Module {
       'installer' => 'composer',
       'includes' => array('src/CssMin.php')
     ),
-/*    array(
-      'id' => 'lessmin',
-      'params' => array('oyejorge/less.php', '1.7.0.13'),
-      'installer' => 'composer',
-      'includes' => array('lessc.inc.php')
-    )*/
-
     array(
       'id' => 'scssphp',
       'params' => array('leafo/scssphp', '0.7.6'),
@@ -48,11 +41,8 @@ class mediaserver extends Module {
     $this->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ).'/jsConfConstants.js#', 'view:ConfConstantsView::javascript' );
     $this->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).'/jsConfConstants.js#', 'view:ConfConstantsView::javascript' );
     $this->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).'/jsLog.js#', 'view:ConfConstantsView::jslog' );
-    $this->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).'/lessConfConstants.scss#', 'view:ConfConstantsView::less' );
     $this->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).'/module(.*)#', 'view:MediaserverView::module' );
     $this->addUrlPatterns( '#^'.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).'(/.*)#', 'view:MediaserverView::application' );
-    $this->addUrlPatterns( '#(.+\/)?classes/view/templates/(.+)\.scss$#', 'view:MediaserverView::onClientLess');
-
   }
 
 }

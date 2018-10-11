@@ -9,16 +9,6 @@ class ConfConstantsView {
   }
 
 
-  public function less() {
-    $lessController = new LessController();
-
-    $lessContent = $lessController->getLessFromSetup();
-
-    header('Content-Type: text/scss');
-    echo $lessContent;
-  }
-
-
   /**
    * Construimos dinamicamente el contenido de jsConfConstants.js con la información solicitada
    **/
