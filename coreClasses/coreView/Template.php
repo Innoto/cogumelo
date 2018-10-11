@@ -226,9 +226,7 @@ class Template extends Smarty {
    **/
   public function addClientStyles( $file_path, $module = false, $is_autoinclude = false ) {
 
-    $mediaPath = ( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) )
-      ? $this->cgmMediaserverUrlDir
-      : $this->cgmMediaUrlDir;
+    $mediaPath = Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' );
 
     switch( $module ) {
       case false:
@@ -558,12 +556,7 @@ class Template extends Smarty {
       }
       $clientIncludes .= 'basket.require('. "\n";
       $clientIncludes .= $this->getClientScriptHtml() ;
-      if( !$this->cgmMediaserverCompileLess){
-        $clientIncludes .= ').then(function () { console.log(\'JS files already loaded\'); });'."\n\n";
-      }
-      else {
-        $clientIncludes .= ').then(function () { console.log(\'JS files already loaded\');$.holdReady( false ); });'."\n\n";
-      }
+      $clientIncludes .= ').then(function () { console.log(\'JS files already loaded\');$.holdReady( false ); });'."\n\n";
       $clientIncludes .= "</script>\n\n\n";
 
       // Hasta ahora era Script
