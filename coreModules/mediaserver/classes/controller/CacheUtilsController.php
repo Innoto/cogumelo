@@ -49,6 +49,7 @@ class CacheUtilsController {
 
     // remove tmp scss dir
     self::removeScssTmpdir();
+    echo "...";
   }
 
   // crea estructura con todos os arquivos LESS para a súa futura compilación
@@ -56,59 +57,56 @@ class CacheUtilsController {
     global $CACHE_UTILS_LESS_TMPDIR;
     global $C_ENABLED_MODULES;
 
-    if( $CACHE_UTILS_LESS_TMPDIR ) {
-      $destino = $CACHE_UTILS_LESS_TMPDIR;
-    }
-    else {
-      $destino = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).'/scsstmp/'.self::generateScssTmpdirName().'/';
 
-      mkdir( $destino, 0750, true );
+    $destino = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).'/scsstmp/'.self::generateScssTmpdirName().'/';
 
-      $cacheableFolder = 'classes/view/templates/';
+    mkdir( $destino, 0750, true );
 
-      foreach( $C_ENABLED_MODULES as $moduleName ){
+    $cacheableFolder = 'classes/view/templates/';
 
-        // cogumelo modules
+    foreach( $C_ENABLED_MODULES as $moduleName ){
+
+      // cogumelo modules
+      self::copyScssTmpdir(
+        COGUMELO_LOCATION.'/coreModules/',
+        $moduleName.'/'.$cacheableFolder,
+        $destino
+      );
+
+      // DIST modules
+      if( defined('COGUMELO_DIST_LOCATION') && COGUMELO_DIST_LOCATION !== false ) {
         self::copyScssTmpdir(
-          COGUMELO_LOCATION.'/coreModules/',
+          COGUMELO_DIST_LOCATION.'/distModules/',
           $moduleName.'/'.$cacheableFolder,
           $destino
         );
-
-        // DIST modules
-        if( defined('COGUMELO_DIST_LOCATION') && COGUMELO_DIST_LOCATION !== false ) {
-          self::copyScssTmpdir(
-            COGUMELO_DIST_LOCATION.'/distModules/',
-            $moduleName.'/'.$cacheableFolder,
-            $destino
-          );
-        }
-
-        // app modules
-        self::copyScssTmpdir(
-          APP_BASE_PATH.'/modules/',
-          $moduleName.'/'.$cacheableFolder,
-          $destino
-        );
-
       }
 
-      // app files
+      // app modules
       self::copyScssTmpdir(
-        APP_BASE_PATH.'/',
-        $cacheableFolder,
+        APP_BASE_PATH.'/modules/',
+        $moduleName.'/'.$cacheableFolder,
         $destino
       );
 
-      // solo vendor
-      self::copyScssTmpdir(
-        PRJ_BASE_PATH.'/httpdocs/',
-        'vendor/',
-        $destino
-      );
-
-      $CACHE_UTILS_LESS_TMPDIR = $destino;
     }
+
+    // app files
+    self::copyScssTmpdir(
+      APP_BASE_PATH.'/',
+      $cacheableFolder,
+      $destino
+    );
+
+    // solo vendor
+    self::copyScssTmpdir(
+      PRJ_BASE_PATH.'/httpdocs/',
+      'vendor/',
+      $destino
+    );
+
+    $CACHE_UTILS_LESS_TMPDIR = $destino;
+
 
     return $destino;
   }
@@ -135,11 +133,13 @@ class CacheUtilsController {
       if( !$dir ) {
         $dir = $CACHE_UTILS_LESS_TMPDIR;
       }
-      $files = array_diff(scandir($dir), array('.','..'));
-      foreach( $files as $file ) {
-        (is_dir("$dir/$file")) ? self::removeScssTmpdir("$dir/$file") : unlink("$dir/$file");
+      if( is_dir($dir) ) {
+        $files = array_diff(scandir($dir), array('.','..'));
+        foreach( $files as $file ) {
+          (is_dir("$dir/$file")) ? self::removeScssTmpdir("$dir/$file") : unlink("$dir/$file");
+        }
+        rmdir($dir);
       }
-      rmdir($dir);
     }
   }
 

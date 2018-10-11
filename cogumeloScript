@@ -146,6 +146,11 @@ if( $argc > 1 ) {
       actionGenerateClientCaches();
       break;
 
+    case 'loopCompileScss':
+      loopCompileScss();
+      break;
+
+
     default:
       echo "Invalid parameter;try:";
       printOptions();
@@ -164,6 +169,7 @@ function printOptions(){
  + Permissions and dependences
     * flush                   Remove temporary files
     * generateClientCaches    Cache all js, css, compiled less and other client files
+    * loopCompileScss         Continuous scss compilation
     * setPermissions          Set the files/folders permission
     * setPermissionsDevel     Set the files/folders permission
     * installDependences      Exec prepareDependences and then exec updateDependences
@@ -313,6 +319,17 @@ function actionGenerateClientCaches() {
 
 
   echo "\nClient caches generated\n\n";
+}
+
+
+function loopCompileScss() {
+  while(1) {
+    system('clear');
+    require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
+    mediaserver::autoIncludes();
+    CacheUtilsController::generateAllScssCaches();
+    sleep(3);
+  }
 }
 
 
