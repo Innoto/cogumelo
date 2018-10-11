@@ -420,7 +420,7 @@ Class DependencesController {
 
     if( $includeFile != '' ) {
       // css or less file
-      if( mb_substr($includeFile, -4) == '.css' || mb_substr($includeFile, -5) == '.less') {
+      if( mb_substr($includeFile, -4) == '.css' || mb_substr($includeFile, -5) == '.scss') {
         $type = 'styles';
       }
       // javascript file
