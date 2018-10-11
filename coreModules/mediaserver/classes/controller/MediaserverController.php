@@ -50,7 +50,7 @@ class MediaserverController {
   }
 
 
-  public function compileAndCacheScss( $path, $module ) {
+  public function compileAndCacheScss( $path, $module, $tmpFolder ) {
     // error_log( __METHOD__.' $path:'.$path.', $module: '.$module );
 
     $parsedUrl = parse_url($path);
@@ -60,7 +60,7 @@ class MediaserverController {
     $this->modulePath = ( $this->moduleName )? '/module/'.$this->moduleName.'/' : '' ;
 
     if( mb_substr($this->urlPath, -5) === '.scss' ) {
-      $this->compileAndMoveScssFile( $this->minimify );
+      $this->compileAndMoveScssFile( $tmpFolder, $this->minimify );
     }
   }
 
@@ -122,7 +122,7 @@ class MediaserverController {
   * Compile and move compiled scss to final path
   * @var boolean $minimify: if we want to minimify result
   */
-  public function compileAndMoveScssFile( $minimify = false ) {
+  public function compileAndMoveScssFile( $scssTmpDir ,  $minimify = false ) {
 
     $scssControl = new ScssController();
     $tmp_cache = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ) .'/'. $this->modulePath . $this->urlPath.'.css';
@@ -138,7 +138,7 @@ class MediaserverController {
     }
 
     // generate scss caches
-    $scssTmpDir = CacheUtilsController::prepareScssTmpdir();
+    //$scssTmpDir = CacheUtilsController::prepareScssTmpdir();
 
     if( $scssControl->compile( $this->urlPath, $tmp_cache, $this->moduleName,  $scssTmpDir) ) {
       // create final folder

@@ -248,7 +248,7 @@ class Template extends Smarty {
 
 
 
-    if( $this->cgmMediaserverCompileLess && mb_substr($file_path, -5) == '.scss' ) {
+    if( mb_substr($file_path, -5) == '.scss' ) {
       $scssCompiledExtension = '.css';
     }
     else {

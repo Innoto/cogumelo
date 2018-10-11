@@ -327,7 +327,8 @@ function loopCompileScss() {
     system('clear');
     require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
     mediaserver::autoIncludes();
-    CacheUtilsController::generateAllScssCaches();
+    CacheUtilsController::generateAllCaches();
+    //CacheUtilsController::generateAllScssCaches();
     sleep(3);
   }
 }

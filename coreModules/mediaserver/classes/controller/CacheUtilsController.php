@@ -39,7 +39,7 @@ class CacheUtilsController {
            preg_match('#\/primary(.*).scss#', $relativeFilePath) > 0
          ){
 
-          $mediaserverControl->compileAndCacheScss( $relativeFilePath, $moduleName );
+          $mediaserverControl->compileAndCacheScss( $relativeFilePath, $moduleName, $tmpScssDir );
           //echo "\n\n-----".$relativeFilePath;
         }
 
@@ -48,13 +48,12 @@ class CacheUtilsController {
     }
 
     // remove tmp scss dir
-    self::removeScssTmpdir();
+    self::removeScssTmpdir($tmpScssDir);
     echo "...";
   }
 
   // crea estructura con todos os arquivos LESS para a súa futura compilación
   public static function prepareScssTmpdir() {
-    global $CACHE_UTILS_LESS_TMPDIR;
     global $C_ENABLED_MODULES;
 
 
@@ -105,7 +104,6 @@ class CacheUtilsController {
       $destino
     );
 
-    $CACHE_UTILS_LESS_TMPDIR = $destino;
 
 
     return $destino;
@@ -127,20 +125,16 @@ class CacheUtilsController {
   }
 
   public static function removeScssTmpdir( $dir = false ) {
-    global $CACHE_UTILS_LESS_TMPDIR;
 
-    if( $CACHE_UTILS_LESS_TMPDIR ) {
-      if( !$dir ) {
-        $dir = $CACHE_UTILS_LESS_TMPDIR;
+
+    if( is_dir($dir) ) {
+      $files = array_diff(scandir($dir), array('.','..'));
+      foreach( $files as $file ) {
+        (is_dir("$dir/$file")) ? self::removeScssTmpdir("$dir/$file") : unlink("$dir/$file");
       }
-      if( is_dir($dir) ) {
-        $files = array_diff(scandir($dir), array('.','..'));
-        foreach( $files as $file ) {
-          (is_dir("$dir/$file")) ? self::removeScssTmpdir("$dir/$file") : unlink("$dir/$file");
-        }
-        rmdir($dir);
-      }
+      rmdir($dir);
     }
+
   }
 
 
