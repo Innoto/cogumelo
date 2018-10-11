@@ -42,7 +42,7 @@ class MediaserverView extends View {
 
     if( $result != array() ) {
       $this->mediaserverControl->servecontent($filePath[0], $result[1]);
-      CacheUtilsController::removeLessTmpdir();
+      //CacheUtilsController::removeLessTmpdir();
     }
     else {
       Cogumelo::error('Mediaserver module receives empty request');
