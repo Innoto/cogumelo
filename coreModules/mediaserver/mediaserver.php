@@ -40,7 +40,7 @@ class mediaserver extends Module {
   public $includesCommon = array(
     'controller/MediaserverController.php',
     'controller/CacheUtilsController.php',
-    'controller/LessController.php'
+    'controller/ScssController.php'
   );
 
 

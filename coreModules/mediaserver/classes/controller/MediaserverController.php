@@ -50,7 +50,7 @@ class MediaserverController {
   }
 
 
-  public function compileAndCacheLess( $path, $module ) {
+  public function compileAndCacheScss( $path, $module ) {
     // error_log( __METHOD__.' $path:'.$path.', $module: '.$module );
 
     $parsedUrl = parse_url($path);
@@ -60,7 +60,7 @@ class MediaserverController {
     $this->modulePath = ( $this->moduleName )? '/module/'.$this->moduleName.'/' : '' ;
 
     if( mb_substr($this->urlPath, -5) === '.scss' ) {
-      $this->compileAndMoveLessFile( $this->minimify );
+      $this->compileAndMoveScssFile( $this->minimify );
     }
   }
 
@@ -119,12 +119,12 @@ class MediaserverController {
 
 
   /*
-  * Compile and move compiled less to final path
+  * Compile and move compiled scss to final path
   * @var boolean $minimify: if we want to minimify result
   */
-  public function compileAndMoveLessFile( $minimify = false ) {
+  public function compileAndMoveScssFile( $minimify = false ) {
 
-    $lessControl = new LessController();
+    $scssControl = new ScssController();
     $tmp_cache = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ) .'/'. $this->modulePath . $this->urlPath.'.css';
     $final_cache = WEB_BASE_PATH.'/'.Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) .'/'. $this->modulePath . $this->urlPath.'.css' ;
 
@@ -134,13 +134,13 @@ class MediaserverController {
     $this->createDirPath( $tmp_cache );
 
     if( $minimify ) {
-      $lessControl->setMinimify( true );
+      $scssControl->setMinimify( true );
     }
 
-    // generate less caches
-    $lessTmpDir = CacheUtilsController::prepareLessTmpdir();
+    // generate scss caches
+    $scssTmpDir = CacheUtilsController::prepareScssTmpdir();
 
-    if( $lessControl->compile( $this->urlPath, $tmp_cache, $this->moduleName,  $lessTmpDir) ) {
+    if( $scssControl->compile( $this->urlPath, $tmp_cache, $this->moduleName,  $scssTmpDir) ) {
       // create final folder
       $this->createDirPath( $final_cache );
 
@@ -186,7 +186,7 @@ class MediaserverController {
         readfile( WEB_BASE_PATH.'/'.  Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath  );
       }
       else if( mb_substr($this->urlPath , -5) == '.scss' ) {
-        // less file without compilation
+        // scss file without compilation
         header('Content-Type: text/scss');
         readfile( WEB_BASE_PATH.'/'.  Cogumelo::getSetupValue( 'mod:mediaserver:cachePath' ) . $this->modulePath . $this->urlPath  );
       }

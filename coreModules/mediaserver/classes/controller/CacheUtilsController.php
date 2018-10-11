@@ -7,20 +7,20 @@ class CacheUtilsController {
   //  LESS METHODS
   //
 
-  public static function generateAllLessCaches() {
+  public static function generateAllScssCaches() {
 
     $mediaserverControl = new MediaserverController();
 
-    // tmp less dir
-    $tmpLessDir = self::prepareLessTmpdir();
+    // tmp scss dir
+    $tmpScssDir = self::prepareScssTmpdir();
 
     // list, compile and cache files
-    $tmpLessFiles = self::listFolderFiles( $tmpLessDir , array('scss'),  false);
+    $tmpScssFiles = self::listFolderFiles( $tmpScssDir , array('scss'),  false);
 
-    if( count($tmpLessFiles) > 0 ){
-      foreach( $tmpLessFiles as $lessFilePath ) {
+    if( count($tmpScssFiles) > 0 ){
+      foreach( $tmpScssFiles as $scssFilePath ) {
 
-        $path = str_replace( $tmpLessDir, '', $lessFilePath );
+        $path = str_replace( $tmpScssDir, '', $scssFilePath );
 
         if( mb_substr( $path , 0, 7 ) === 'classes' ) {
           $moduleName = false;
@@ -39,7 +39,7 @@ class CacheUtilsController {
            preg_match('#\/primary(.*).scss#', $relativeFilePath) > 0
          ){
 
-          $mediaserverControl->compileAndCacheLess( $relativeFilePath, $moduleName );
+          $mediaserverControl->compileAndCacheScss( $relativeFilePath, $moduleName );
           //echo "\n\n-----".$relativeFilePath;
         }
 
@@ -47,12 +47,12 @@ class CacheUtilsController {
       }
     }
 
-    // remove tmp less dir
-    self::removeLessTmpdir();
+    // remove tmp scss dir
+    self::removeScssTmpdir();
   }
 
   // crea estructura con todos os arquivos LESS para a súa futura compilación
-  public static function prepareLessTmpdir() {
+  public static function prepareScssTmpdir() {
     global $CACHE_UTILS_LESS_TMPDIR;
     global $C_ENABLED_MODULES;
 
@@ -60,7 +60,7 @@ class CacheUtilsController {
       $destino = $CACHE_UTILS_LESS_TMPDIR;
     }
     else {
-      $destino = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).'/lesstmp/'.self::generateLessTmpdirName().'/';
+      $destino = Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ).'/scsstmp/'.self::generateScssTmpdirName().'/';
 
       mkdir( $destino, 0750, true );
 
@@ -69,7 +69,7 @@ class CacheUtilsController {
       foreach( $C_ENABLED_MODULES as $moduleName ){
 
         // cogumelo modules
-        self::copyLessTmpdir(
+        self::copyScssTmpdir(
           COGUMELO_LOCATION.'/coreModules/',
           $moduleName.'/'.$cacheableFolder,
           $destino
@@ -77,7 +77,7 @@ class CacheUtilsController {
 
         // DIST modules
         if( defined('COGUMELO_DIST_LOCATION') && COGUMELO_DIST_LOCATION !== false ) {
-          self::copyLessTmpdir(
+          self::copyScssTmpdir(
             COGUMELO_DIST_LOCATION.'/distModules/',
             $moduleName.'/'.$cacheableFolder,
             $destino
@@ -85,7 +85,7 @@ class CacheUtilsController {
         }
 
         // app modules
-        self::copyLessTmpdir(
+        self::copyScssTmpdir(
           APP_BASE_PATH.'/modules/',
           $moduleName.'/'.$cacheableFolder,
           $destino
@@ -94,14 +94,14 @@ class CacheUtilsController {
       }
 
       // app files
-      self::copyLessTmpdir(
+      self::copyScssTmpdir(
         APP_BASE_PATH.'/',
         $cacheableFolder,
         $destino
       );
 
       // solo vendor
-      self::copyLessTmpdir(
+      self::copyScssTmpdir(
         PRJ_BASE_PATH.'/httpdocs/',
         'vendor/',
         $destino
@@ -114,7 +114,7 @@ class CacheUtilsController {
   }
 
 
-  public static function copyLessTmpdir( $origDir, $filePath, $destDir ) {
+  public static function copyScssTmpdir( $origDir, $filePath, $destDir ) {
 
     $includeFiles = array('scss');
     $fileList = self::listFolderFiles( $origDir.$filePath , $includeFiles, false );
@@ -128,7 +128,7 @@ class CacheUtilsController {
     }
   }
 
-  public static function removeLessTmpdir( $dir = false ) {
+  public static function removeScssTmpdir( $dir = false ) {
     global $CACHE_UTILS_LESS_TMPDIR;
 
     if( $CACHE_UTILS_LESS_TMPDIR ) {
@@ -137,14 +137,14 @@ class CacheUtilsController {
       }
       $files = array_diff(scandir($dir), array('.','..'));
       foreach( $files as $file ) {
-        (is_dir("$dir/$file")) ? self::removeLessTmpdir("$dir/$file") : unlink("$dir/$file");
+        (is_dir("$dir/$file")) ? self::removeScssTmpdir("$dir/$file") : unlink("$dir/$file");
       }
       rmdir($dir);
     }
   }
 
 
-  public static function generateLessTmpdirName() {
+  public static function generateScssTmpdirName() {
     $length = 5;
     $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
     $randomString = '';
@@ -153,7 +153,7 @@ class CacheUtilsController {
     }
 
     if( file_exists( $randomString ) ){
-      $randomString = self::generateLessTmpdirName();
+      $randomString = self::generateScssTmpdirName();
     }
 
     return $randomString;
@@ -197,8 +197,8 @@ class CacheUtilsController {
     // app files
     self::cacheFolder( APP_BASE_PATH.'/'.$cacheableFolder );
 
-    // all less files
-    self::generateAllLessCaches();
+    // all scss files
+    self::generateAllScssCaches();
   }
 
   public static function cacheFolder( $folder, $moduleName = false ) {
