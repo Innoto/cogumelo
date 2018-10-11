@@ -45,11 +45,11 @@ class ScssController {
 
       $InitialScssToCompile =
         $this->getScssFromSetup() .
-        $this->scss->compile('@import "'.'/classes/view/templates/'.$scssFilePath.'";');
+        '@import "'.'/classes/view/templates/'.$scssFilePath.'";';
 
       file_put_contents(
         $resultFilePath,
-        $InitialScssToCompile
+        $this->scss->compile($InitialScssToCompile)
       );
     } catch (Exception $ex) {
       Cogumelo::error( "ScssPhp\Compile error: ".basename($scssFilePath).": ".$ex->getMessage() );

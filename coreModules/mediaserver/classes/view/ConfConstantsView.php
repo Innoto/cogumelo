@@ -1,6 +1,4 @@
 <?php
-mediaserver::load('controller/LessController.php');
-
 
 class ConfConstantsView {
 
