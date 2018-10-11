@@ -121,6 +121,8 @@ class CacheUtilsController {
         mkdir( dirname($destDir.$relativeFilePath ), 0750, true );
       }
       copy( $filePath, $destDir.$relativeFilePath );
+      /*echo "\n".$filePath;
+      echo "\n ----- ".$destDir.$relativeFilePath;*/
     }
   }
 

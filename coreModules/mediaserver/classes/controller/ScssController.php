@@ -43,9 +43,18 @@ class ScssController {
     try {
       //$this->scss->checkedCompile( $scssTmpDir.$moduleName.'/classes/view/templates/'.$scssFilePath, $resultFilePath );
 
+      if( $moduleName ) {
+        $m = '/'.$moduleName;
+      }
+      else {
+        $m = '';
+      }
+
+//echo "\n".'@import "'.$m.'/classes/view/templates/'.$scssFilePath.'";';
+
       $InitialScssToCompile =
         $this->getScssFromSetup() .
-        '@import "'.'/classes/view/templates/'.$scssFilePath.'";';
+        '@import "'.$m.'/classes/view/templates/'.$scssFilePath.'";';
 
       file_put_contents(
         $resultFilePath,
