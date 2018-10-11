@@ -147,6 +147,7 @@ if( $argc > 1 ) {
       break;
 
     case 'loopCompileScss':
+      setPermissions();
       loopCompileScss();
       break;
 
