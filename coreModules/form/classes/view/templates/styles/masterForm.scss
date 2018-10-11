@@ -8,7 +8,7 @@ $MOD_FORM_CSS_PRE: 'cgmMForm';
 $formErrorColor: #e16a4e;
 $formErrorFontColor: #ffffff;
 $formErrorBckColor: $formErrorColor;
-$labelHeight: $inputHeight;
+//$labelHeight: $inputHeight;
 
 $formIconDiscard: #C44527;
 $formIconDownload: #5AB780;
@@ -39,13 +39,13 @@ label {
     margin-left: 10px;
     padding: 6px;
     font-size: 12px;
-    .border-radius(5px);
+    @import border-radius(5px) !optional;
   }
 }
 
 input[type="radiobutton"], input[type="checkbox"], textarea, select {
   &.formError {
-    .box-shadow(1px 0 2px 0 $formErrorColor);
+    @import box-shadow(1px 0 2px 0 $formErrorColor) !optional;
   }
 }
 

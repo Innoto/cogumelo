@@ -48,7 +48,7 @@ $borderOptions: 1px solid black;
       button.clear{
         width: 30px;
         max-width: 120px;
-        @include btnFormat($buttonClearSearchBck, $buttonSearchColor);
+        //@include btnFormat($buttonClearSearchBck, $buttonSearchColor);
       }
 
       button{
@@ -57,7 +57,7 @@ $borderOptions: 1px solid black;
         margin-bottom: 0px;
         width: 25%;
         max-width: 120px;
-        @include btnFormat($buttonSearchBck, $buttonSearchColor);
+        //@include btnFormat($buttonSearchBck, $buttonSearchColor);
       }
     }
     .tableFilters{
@@ -71,7 +71,7 @@ $borderOptions: 1px solid black;
       }
 
       button{
-        @include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
+        //@include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
 
       }
     }
@@ -98,7 +98,7 @@ $borderOptions: 1px solid black;
       }
 
       button{
-        @include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
+        //@include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
       }
       img{ float: right; cursor: pointer; }
     }
@@ -108,7 +108,7 @@ $borderOptions: 1px solid black;
     background: #E4E4E4;
     button{
       float: right;
-      @include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
+      //@include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
     }
   }
   .tableActions{
