@@ -29,7 +29,6 @@ class MediaserverView extends View {
     $filePath = explode('?', $result[1]);
 
     $this->mediaserverControl->servecontent($filePath[0]);
-    CacheUtilsController::removeLessTmpdir();
   }
 
   //load media from a module
