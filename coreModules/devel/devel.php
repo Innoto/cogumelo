@@ -17,7 +17,7 @@ class devel extends Module {
   ),
   array(
    "id" => "popper.js",
-   "params" => array("popper.js@^1.14.3"),
+   "params" => array("popper.js"),
    "installer" => "yarn"
   ),
   array(

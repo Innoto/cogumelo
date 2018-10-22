@@ -62,6 +62,11 @@ class CogumeloClass extends Singleton {
      ),
 
      array(
+      "id" => "popper.js",
+      "params" => array("popper.js"),
+      "installer" => "yarn"
+     ),
+     array(
       "id" => "bootstrap",
       "params" => array("bootstrap@4"),
       "installer" => "yarn"
