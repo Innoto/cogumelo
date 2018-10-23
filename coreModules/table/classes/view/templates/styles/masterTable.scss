@@ -23,7 +23,28 @@ $buttonMoreFiltersColor: #fff;
 
 $borderOptions: 1px solid black;
 
+//
+// Buttons, inputs and form elements
+// --------------------------------------------------
+@mixin btnFormat($background:$buttonClearSearchBck, $color:$buttonSearchColor) {
+  display: inline-block;
+  padding: 1px 10px;
+  font-size: $tableFontSize;
+  vertical-align: middle;
+  border: 0;
+  background: $background;
+  color: $color;
+  font-family: 'Share Tech Mono', sans-serif;
+  font-weight: 550;
+  text-align: center;
+  cursor: pointer;
+  // @extend box-shadow( inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05) );
 
+  &:hover{
+    color: $color + #222222;
+    background: $background + #222222;
+  }
+}
 
 .tableHeaderContainer{
   .tableSearchFilters{
@@ -48,7 +69,7 @@ $borderOptions: 1px solid black;
       button.clear{
         width: 30px;
         max-width: 120px;
-        //@include btnFormat($buttonClearSearchBck, $buttonSearchColor);
+        @include btnFormat($buttonClearSearchBck, $buttonSearchColor);
       }
 
       button{
@@ -57,7 +78,7 @@ $borderOptions: 1px solid black;
         margin-bottom: 0px;
         width: 25%;
         max-width: 120px;
-        //@include btnFormat($buttonSearchBck, $buttonSearchColor);
+        @include btnFormat($buttonSearchBck, $buttonSearchColor);
       }
     }
     .tableFilters{
@@ -71,8 +92,7 @@ $borderOptions: 1px solid black;
       }
 
       button{
-        //@include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
-
+        @include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
       }
     }
   }
@@ -98,7 +118,7 @@ $borderOptions: 1px solid black;
       }
 
       button{
-        //@include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
+        @include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
       }
       img{ float: right; cursor: pointer; }
     }
@@ -108,7 +128,7 @@ $borderOptions: 1px solid black;
     background: #E4E4E4;
     button{
       float: right;
-      //@include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
+      @include btnFormat($buttonMoreFiltersBck, $buttonMoreFiltersColor);
     }
   }
   .tableActions{
