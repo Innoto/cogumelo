@@ -981,7 +981,7 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
     .attr( { 'data-form_id': idForm, 'data-fieldname': fieldName, 'data-file_id': fileInfo.id } );
 
   // Element to send delete order
-  var $deleteButton = $( '<i>' ).addClass( 'formFileDelete fa fa-times-circle' )
+  var $deleteButton = $( '<i>' ).addClass( 'formFileDelete fas fa-times-circle fa-fw' )
     .attr( { 'data-fieldname': fieldName, 'data-form_id': idForm, 'title': __('Discard')+' '+ fileInfo.name } )
     .on( 'click', deleteFunc );
   if( fileInfo.id !== false ) {
@@ -1000,10 +1000,10 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
   var $downloadButton = null;
   if( fileInfo.id !== false ) {
     $downloadButton = $( '<a class="formFileDownload" href="/cgmlformfilewd/'+fileInfo.id+'-a'+fileInfo.aKey+
-      '/'+fileInfo.name+'" target="_blank"><i class="fa fa-arrow-circle-down" title="'+__('Download')+' '+fileInfo.name+'"></i></a>' );
+      '/'+fileInfo.name+'" target="_blank"><i class="fas fa-arrow-circle-down fa-fw" title="'+__('Download')+' '+fileInfo.name+'"></i></a>' );
   }
   else {
-    $downloadButton = $( '<i class="formFileDownload disabled fa fa-arrow-circle-down"></i>' );
+    $downloadButton = $( '<i class="formFileDownload disabled fas fa-arrow-circle-down fa-fw"></i>' );
   }
   $fileBoxMenu.append(
     $('<div>').addClass('icons download').append(
@@ -1147,8 +1147,8 @@ function createFileFieldDropZone( idForm, fieldName ) {
 
   $fileFieldDropZone.append(
     '<div class="internal">'+
-    '<i class="upload fa fa-cloud-upload" style="font-size:100px; color:#7fb1c7;"></i>'+
-    '<i class="spinner fa fa-spinner fa-pulse fa-fw" style="font-size:80px; color:#7fb1c7; margin-bottom: 20px; display:none"></i>'+
+    '<i class="upload fas fa-cloud-upload-alt fa-fw" style="font-size:100px; color:#7fb1c7;"></i>'+
+    '<i class="spinner fas fa-spinner fa-pulse fa-fw" style="font-size:80px; color:#7fb1c7; margin-bottom: 20px; display:none"></i>'+
     '<br><span class="cgmMForm-button-js">' + $buttonText + '</span>'+
     // '<br><div id="list"><p>Avisos:</p></div>'+
     // '<br><input type="button" class="cgmMForm-field" value="' + $buttonText + '">'+
@@ -1429,7 +1429,7 @@ function createSwitchFormLang( idForm ) {
       htmlLangSwitch += '<li class="langSwitch-'+lang+'" data-lang="'+lang+'">'+lang;
     });
     htmlLangSwitch += '</ul>';
-    htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-globe fa-fw"></i></span>';
+    htmlLangSwitch += '<span class="langSwitchIcon"><i class="fas fa-globe-americas fa-fw"></i></span>';
     htmlLangSwitch += '</div>';
 
     $langSwitch = $( htmlLangSwitch );

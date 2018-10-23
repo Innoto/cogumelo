@@ -379,7 +379,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
     var orderUpImg = '<img src="'+cogumelo.publicConf.media+'/module/table/img/up.png">';
     var orderDownImg = '<img src="'+cogumelo.publicConf.media+'/module/table/img/down.png">';
-    var h = '<th><div class="selectAllPages" style="display:none">'+__('Select all pages')+'</div><div class="selectAll"><input class="headCheckBox" type="checkbox" '+checkBoxSelected+'><i class="dropSelectAll fa fa-align-left"></div></th>';
+    var h = '<th><div class="selectAllPages" style="display:none">'+__('Select all pages')+'</div><div class="selectAll"><input class="headCheckBox" type="checkbox" '+checkBoxSelected+'><i class="dropSelectAll fas fa-align-left fa-fw"></div></th>';
 
 
     $.each(that.tableData.colsDef, function(i,e)  {
