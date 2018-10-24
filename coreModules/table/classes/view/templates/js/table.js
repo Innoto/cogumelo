@@ -693,7 +693,10 @@ function cogumeloTable( tableId, tableUrl ) {
   that.actionSearch = function( searchText ) {
     if( searchText != '' ) {
       that.search = searchText;
-      that.setPager(1);
+
+      // that.setPager(1);
+      that.currentPage = 1;
+
       that.load();
       that.interfaceAction('search');
     }
@@ -703,7 +706,10 @@ function cogumeloTable( tableId, tableUrl ) {
   that.searchClear = function() {
     that.searchInput.val('');
     that.search = false;
-    that.setPager(1);
+
+    // that.setPager(1);
+    that.currentPage = 1;
+
     that.load();
     that.interfaceAction('unsearch');
   }
