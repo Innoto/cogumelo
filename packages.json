@@ -1,0 +1,11 @@
+{
+  "name": "cogumelo",
+  "version": "2.0",
+  "description": "Cogumelo",
+  "repository": {
+    "url": "https://github.com/Innoto/cogumelo.git",
+    "type": "git"
+  },
+  "author": "Innoto",
+  "license": "GPL-3.0-or-later"
+}
