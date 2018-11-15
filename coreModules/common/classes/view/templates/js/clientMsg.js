@@ -23,6 +23,7 @@ cogumelo.clientMsgClass = function( options ) {
     buttonsAlign: 'center',             // Position where buttons should be aligned
     closeOnEsc: true,                   // Close messagebox on Esc press
     delayToRemove: 200,                 // Time after which lobibox will be removed after remove call. (This option is for hide animation to finish)
+    iconSource: 'fontAwesome',          // "bootstrap" or "fontAwesome" the library which will be used for icons
   });
   that.msgDefOptions = $.extend( true, {}, msgBaseOpts, options );
 
@@ -45,6 +46,7 @@ cogumelo.clientMsgClass = function( options ) {
     rounded: false,             // Whether to make notification corners rounded
     messageHeight: 60,          // Notification message maximum height. This is not for notification itself, this is for .lobibox-notify-msg
     pauseDelayOnHover: true,    // When you mouse over on notification, delay will be paused, only if continueDelayOnInactiveTab is false.
+    iconSource: 'fontAwesome',  // "bootstrap" or "fontAwesome" the library which will be used for icons
   });
   that.notifyDefOptions = $.extend( true, {}, notifyBaseOpts, options );
 
