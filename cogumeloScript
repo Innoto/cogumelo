@@ -185,9 +185,6 @@ function printOptions(){
 
     * deploy                  Deploy
 
-    * resetModules
-      - resetModuleVersions
-
     * bckDB                   Do a DB backup (optional arg: filename)
     * restoreDB               Restore a database
 
