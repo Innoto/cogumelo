@@ -31,7 +31,7 @@ class CogumeloClass extends Singleton {
   static $mainDependences = array(
      array(
        'id' => 'phpmailer',
-       'params' => array( 'phpmailer/phpmailer', '5.2.14' ),
+       'params' => array( 'phpmailer/phpmailer', '5.2.26' ),
        'installer' => 'composer',
        'includes' => array('PHPMailerAutoload.php')
        // 'includes' => array('class.phpmailer.php')
@@ -50,7 +50,7 @@ class CogumeloClass extends Singleton {
      ),
      array(
        'id' => 'smarty',
-       'params' => array('smarty/smarty', '3.1.18'),
+       'params' => array('smarty/smarty', '3.1.33'),
        'installer' => 'composer',
        'includes' => array('libs/Smarty.class.php')
      ),
