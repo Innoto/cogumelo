@@ -1,13 +1,25 @@
 <?php
 
+
 global $COGUMELO_RELATIONSHIP_MODEL;
 $COGUMELO_RELATIONSHIP_MODEL = array();
 
+
 /**
-* Utils for VO objects and relationship
-*
-* @package Cogumelo Model
-*/
+ * Utils for VO objects and relationship
+ *
+ * @package Cogumelo Model
+ *
+ * PHPMD: Suppress all warnings from these rules.
+ * @SuppressWarnings(PHPMD.Superglobals)
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ */
 class VOUtils {
 
 
@@ -43,7 +55,7 @@ class VOUtils {
         // modules into DIST
         $voarray = self::mergeVOs($voarray, COGUMELO_DIST_LOCATION.'/distModules/'.$modulename.'/classes/model/', $modulename );
       }
-      
+
       // modules into COGUMELO
       $voarray = self::mergeVOs($voarray, COGUMELO_LOCATION.'/coreModules/'.$modulename.'/classes/model/', $modulename );
     }
@@ -398,8 +410,9 @@ class VOUtils {
     if($voRel) {
       $relKeys = array();
 
-      if( count($voRel->relationship) > 0 ) {
-        foreach( $voRel->relationship as $voName => $rel ) {
+      $relationship = (array) $voRel->relationship;
+      if( count( $relationship ) > 0 ) {
+        foreach( $relationship as $voName => $rel ) {
           if( $tableAsKey ){
             $relKeys[$rel->parentId."_".$rel->table] =  $rel->vo ;
           }
@@ -463,24 +476,13 @@ class VOUtils {
 
 
 
+    $currentRel = (array) $relObj->relationship;
 
-    if( is_array( $resolveDependences ) && count( $relObj->relationship ) > 0 ) {
+    if( is_array( $resolveDependences ) && count( $currentRel ) > 0 ) {
 
       $relationshipArray = array();
-      $currentRel = (array) $relObj->relationship;
       foreach( $currentRel as $rok => $ro ) {
-
-        global $subCONTAMIERDA;
-        if(!$subCONTAMIERDA)  {
-          $subCONTAMIERDA = 1 ;
-        }
-        else{
-          $subCONTAMIERDA++;
-        }
-
-
         if( in_array( preg_replace('/(.*)\./' ,'', $rok ), $resolveDependences ) ) {
-
           $relationshipArray[$rok] = self::limitRelObj( $ro, $resolveDependences );
         }
       }
@@ -563,24 +565,15 @@ class VOUtils {
   public static function searchVOinRelObj( $voName, $dataKey, $relObj ) {
     $relObjSon = -1;
 
+    $relationship = (array) $relObj->relationship;
 
-
-
-
-    if( count( $relObj->relationship ) > 0 ) {
-      foreach( $relObj->relationship as $candidate ) {
-
+    if( count( $relationship ) > 0 ) {
+      foreach( $relationship as $candidate ) {
         if( $candidate->vo == $voName ){
-
-
-          //var_dump($dataKey);
-          //var_dump($candidate->parentId.'_'.$candidate->table);
-
           if( $candidate->parentId.'_'.$candidate->table == $dataKey ) {
             $relObjSon = $candidate;
             break;
           }
-
         }
       }
     }
