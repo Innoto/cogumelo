@@ -26,6 +26,7 @@ class devel extends Module {
    "installer" => "yarn",
    "includes" => array("dist/js/bootstrap.min.js")
   ),
+  /*
   array(
     "id" =>"d3",
     "params" => array("d3@3.5.17"),
@@ -38,15 +39,15 @@ class devel extends Module {
     "installer" => "yarn",
     "includes" => array("WebCola/cola.v3.min.js")
   ),
+  */
 
   // COMPOSER
-  array(
+  /*array(
     "id" => "kint",
-    //"params" => array("raveren/kint","1.0.*@dev"),
     "params" => array("kint-php/kint","1.0.*@dev"),
     "installer" => "composer",
     "includes" => array("Kint.class.php")
-  ),
+  ),*/
   array(
     "id" => "sqlFormatter",
     "params" => array("jdorn/sql-formatter", "1.3.*@dev"),

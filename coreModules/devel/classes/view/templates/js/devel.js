@@ -1,14 +1,14 @@
 
 $(document).ready(function(){
-  readLogs();
-  autoLoadDebugger();
-  drawERScheme();
-  botonBinds();
+  //readLogs();
+  //autoLoadDebugger();
+  //drawERScheme();
+  //botonBinds();
   $('#dbsql_link a').trigger('click');
 });
 
 
-function readLogs(){
+/*function readLogs(){
   setInterval(function(){
     $.ajax({
       type: "GET",
@@ -27,16 +27,16 @@ function readLogs(){
     });
   },5000);
 
-}
+}*/
 
 
-function autoLoadDebugger(){
+/*function autoLoadDebugger(){
   setInterval(function(){
     loadDebugger();
   }, 10000);
-}
+}*/
 
-function loadDebugger(){
+/*function loadDebugger(){
   $.ajax({
     type: "POST",
     url: "/devel/get_debugger",
@@ -49,36 +49,28 @@ function loadDebugger(){
   }).fail(function(e){
     console.log("fallo ou baleiro");
   });
-}
+}*/
 
 
-function botonBinds(){
+/*function botonBinds(){
   $('.refreshDebugger').on('click', function(){
     loadDebugger();
   });
   $('.clearDebugger').on('click', function(){
     $('.debugItemsContainer').html('');
   });
-}
+}*/
 
 
 
-
+/*
 function drawERScheme() {
-
-
-
-
   var diagramDataObj = {nodes:[],links:[]};
-
   //links:[{source:12, target:10}];
-
-
   var newErData = [];
 
   $.each(erData, function(i,e) {
     newErData.push(e);
-
   });
 
   erData = newErData;
@@ -99,8 +91,6 @@ function drawERScheme() {
           relTo = i3;
         }
       });
-
-
       //console.log( dat.indexOf( e2.name ) );
       diagramDataObj.links.push( { source: i, target:relTo } );
     });
@@ -116,12 +106,10 @@ function drawERScheme() {
 
   });
 
-
-
-
   drawERD(
     '#svgDiv',
     diagramDataObj,
         cola
     );
 }
+*/

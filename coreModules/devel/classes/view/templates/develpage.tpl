@@ -52,9 +52,7 @@
   <ul id="options_header_menu">
     <li id ="dbsql_link"><a onclick="hideContainer(); $('#dbsql_container').show();"  href="#dbsql">[Database]</a></li>
     <li id ="urls_link"><a onclick="hideContainer(); $('#urls_container').show();" href="#urls">[URLs]</a></li>
-    <li id ="infosetup_link"><a onclick="hideContainer(); $('#infosetup_container').show();" href="#infosetup">[Evironment]</a></li>
-    <li id ="deBugs_link"><a onclick="hideContainer(); $('#debug_container').show();" href="#deBugs">[deBugs]</a></li>
-    <li id ="logs_link"><a onclick="hideContainer(); $('#logs_tabs').show();" href="#logs">[Logs]</a></li>
+    <li id ="phpinfo_link"><a href="/devel/phpinfo">[PHPINFO]</a></li>
   </ul>
 </div>
 <div id="main">
@@ -75,7 +73,7 @@
   </div>
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
-  <div id="debug_container" class="container" style="display:none;">
+  {*<div id="debug_container" class="container" style="display:none;">
     <ul class="debugOptionsContainer withoutDecoration clearfix">
       <li><button class="buttonGrey buttonFormat clearDebugger">Limpar debugger</button></li>
       <li><button class="buttonGrey buttonFormat refreshDebugger">Refrescar debugger</button></li>
@@ -83,21 +81,17 @@
     </ul>
     <div class="debugItemsContainer"></div>
 
-  </div>
-  <!-- ****************************************************************************************************************  -->
-  <!-- ****************************************************************************************************************  -->
-  <div id="infosetup_container" class="container" style="display:none;">
-    {$infoConf}
-  </div>
+  </div>*}
+
   <!-- ****************************************************************************************************************  -->
   <!-- ****************************************************************************************************************  -->
   <div id="dbsql_container" class="container" style="display:none;">
 
-    <fieldset class="erDiagram">
+    {*<fieldset class="erDiagram">
       <legend>Relationship</legend>
       <div class="legend"></div>
       <div id="svgDiv"></div>
-    </fieldset>
+    </fieldset>*}
     <fieldset>
       <legend>Generate Model SQL: This code will executed in generateModel action </legend>
       <div class="infoSQL">{foreach $data_sql as $item}{$item}{/foreach}</div>

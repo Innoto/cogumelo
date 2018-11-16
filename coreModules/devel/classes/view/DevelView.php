@@ -40,7 +40,6 @@ class DevelView extends View
   public function main( $url_path = '' ) {
     $this->template->setTpl('develpage.tpl', 'devel');
 
-    $this->logs();
     $this->infoSetup();
     $this->DBSQL();
     $this->deploySQL();
@@ -49,24 +48,6 @@ class DevelView extends View
     $this->template->exec();
   }
 
-
-  //
-  // actions Logs
-  //
-  public function logs() {
-    $list_file_logs_path = glob( Cogumelo::getSetupValue( 'logs:path' ).'/*.log' );
-    $list_file_logs = str_replace( Cogumelo::getSetupValue( 'logs:path' ).'/', '', $list_file_logs_path );
-    $list_file_logs = str_replace( '.log', '', $list_file_logs );
-    $this->template->assign( 'list_file_logs' , $list_file_logs );
-  }
-
-  //LLamada a Ajax para buscar mas lineas
-  public function read_logs() {
-    $readerlogcontrol = new LogReaderController();
-    $content_logs = $readerlogcontrol->read_logs();
-    header("Content-Type: application/json"); //return only JSON data
-    echo json_encode($content_logs);
-  }
 
   public function DBSQL() {
 
@@ -129,6 +110,7 @@ class DevelView extends View
   }
 
   public function get_debugger() {
+    /*
     $temp_debugs = Cogumelo::objDebugPull();
     $result_debugs = array();
     header("Content-Type: application/json"); //return only JSON data
@@ -149,6 +131,7 @@ class DevelView extends View
       }
       echo json_encode($result_debugs);
     }
+    */
   }
 
   public function develPhpInfo() {
@@ -172,27 +155,4 @@ class DevelView extends View
     }
   }
 
-
-
-  public function develPorto() {
-
-    header("Content-Type: text/plain");
-    echo "Porto\n\n";
-
-    /*
-      $rTypeIdName = $this->getRTypeIdName( $rTypeId );
-      if( class_exists( $rTypeIdName ) ) {
-        // error_log( "GeozzyResourceView: getRTypeCtrl = $rTypeIdName" );
-        $rTypeIdName::autoIncludes();
-        $rTypeCtrlClassName = $rTypeIdName.'Controller';
-        $this->rTypeCtrl = new $rTypeCtrlClassName( $this );
-      }
-
-      $rTypeModel = new ResourcetypeModel();
-      $rTypeList = $rTypeModel->listItems( array( 'filters' => array( 'id' => $rTypeId ) ) );
-      if( $rTypeInfo = $rTypeList->fetch() ) {
-        $rTypeIdName = $rTypeInfo->getter( 'idName' );
-      }
-    */
-  }
 }

@@ -19,8 +19,6 @@ class develWebPanel extends Module {
       }
 
       $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'$#', 'view:DevelView::main' );
-      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'/read_logs$#', 'view:DevelView::read_logs' );
-      $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'/get_debugger#', 'view:DevelView::get_debugger' );
       $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'/get_sql_tables$#', 'view:DevelView::get_sql_tables' );
       $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'/phpinfo$#', 'view:DevelView::develPhpInfo' );
       $COGUMELO_INSTANCED_MODULES['devel']->addUrlPatterns( '#^'.$develUrl.'/phpinfo[/\#\?]+.*#', 'view:DevelView::develPhpInfo' );
