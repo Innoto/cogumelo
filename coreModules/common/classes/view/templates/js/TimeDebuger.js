@@ -14,12 +14,12 @@ TimeDebuger = function( opts ) {
   that.reset = function(){
     if(that.options.debug == true)
       that.debug_started_at = that.getdate();
-  }
+  };
 
   that.separator = function(){
     if(that.options.debug == true)
       $(that.debug_clusteringTimes).prepend("<br>");
-  }
+  };
 
   that.log = function(desc) {
     var that = this;
@@ -34,23 +34,23 @@ TimeDebuger = function( opts ) {
       $(that.debug_clusteringTimes).prepend( instanceName + "<b>"+desc+": </b>"+ that.checktime()+"ms<br>");
       that.reset();
     }
-  }
+  };
 
   that.debug_set_initial_time = function() {
     var that = this;
     if(that.options.debug == true){
       that.reset();
     }
-  }
+  };
 
   that.getdate = function() {
     return new Date().getTime() ;
-  }
+  };
 
   that.checktime = function() {
     var that = this;
     return that.getdate() - that.debug_started_at;
-  }
+  };
 
 
 
@@ -111,4 +111,4 @@ TimeDebuger = function( opts ) {
 
 
   that.debug_set_initial_time();
-}
+};

@@ -54,7 +54,7 @@ class CogumeloSessionView extends View {
       url: '/cgml-session.json', type: 'GET',
       data: formData, cache: false, contentType: false, processData: false,
       success: function setStatusSuccess( $jsonData, $textStatus, $jqXHR ) {
-        console.log( 'jsonData: ', $jsonData );
+        cogumelo.log( 'jsonData: ', $jsonData );
       }
     });
 
@@ -68,7 +68,7 @@ class CogumeloSessionView extends View {
       url: 'http://galiciaagochada/api/core/userlogin', type: 'POST',
       data: formData, cache: false, contentType: false, processData: false,
       success: function setStatusSuccess( $jsonData, $textStatus, $jqXHR ) {
-        console.log( 'jsonData: ', $jsonData );
+        cogumelo.log( 'jsonData: ', $jsonData );
       }
     });
 
@@ -79,7 +79,7 @@ class CogumeloSessionView extends View {
       headers: {'X-CGMLTOKENSESSID': 'fkvf8lohog874797vkcfs3vq16'},
       cache: false, contentType: false, processData: false,
       success: function setStatusSuccess( $jsonData, $textStatus, $jqXHR ) {
-        console.log( 'jsonData: ', $jsonData );
+        cogumelo.log( 'jsonData: ', $jsonData );
       }
     });
 
@@ -91,7 +91,7 @@ class CogumeloSessionView extends View {
       url: 'http://galiciaagochada/api/core/userlogout', type: 'POST',
       data: formData, cache: false, contentType: false, processData: false,
       success: function setStatusSuccess( $jsonData, $textStatus, $jqXHR ) {
-        console.log( 'jsonData: ', $jsonData );
+        cogumelo.log( 'jsonData: ', $jsonData );
       }
     });
   */

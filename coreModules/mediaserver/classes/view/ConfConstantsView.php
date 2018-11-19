@@ -141,6 +141,6 @@ class ConfConstantsView {
 
   function jslog(){
     header('Content-Type: application/javascript');
-    echo "console.log('Loading:".$_GET['ref']."');";
+    echo "cogumelo.log('Loading:".$_GET['ref']."');";
   }
 }

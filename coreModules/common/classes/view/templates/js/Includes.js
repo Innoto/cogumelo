@@ -70,7 +70,7 @@ if( typeof cogumelo.includes == "undefined"  ) {
         }
       }
       else {
-        console.log('Library lready loaded:', e.src)
+        cogumelo.log('Library lready loaded:', e.src);
       }
     });
 
@@ -82,5 +82,5 @@ if( typeof cogumelo.includes == "undefined"  ) {
     if(typeof less !== "undefined"){
       less.refresh();
     }
-  }
+  };
 }
