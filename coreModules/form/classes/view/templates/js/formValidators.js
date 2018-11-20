@@ -257,7 +257,7 @@ $.validator.addMethod(
 $.validator.addMethod(
   "dateTime",
   function( value, element ) {
-    // console.log( 'dateTime', value, element );
+    // cogumelo.log( 'dateTime', value, element );
     valid = /^(\d{4})-(\d{1,2})-(\d{1,2}) (\d{1,2}):(\d{2}):(\d{2})$/.exec(value);
     return ( value==='' && this.optional( element ) ) || valid;
   },
@@ -436,33 +436,33 @@ $.validator.addMethod(
 $.validator.addMethod(
   "accept",
   function( value, element, param ) {
-    console.log( ' * * * formValidators::accept ', value, $( element ), param );
+    cogumelo.log( ' * * * formValidators::accept ', value, $( element ), param );
 
     var valueResponse = true;
 
     var validateFiles = $( element ).data('validateFiles');
     if( validateFiles && validateFiles.length > 0 ) {
-      console.log( ' * * * formValidators::accept validateFiles=', validateFiles );
+      cogumelo.log( ' * * * formValidators::accept validateFiles=', validateFiles );
 
       // Split mime on commas in case we have multiple types we can accept
       var typeParam = ( typeof param === 'string' ) ? param.replace( /\s/g, '' ).replace( /,/g, '|' ) : 'image/*';
       // If we are using a wildcard, make it regex friendly
       typeParam = typeParam.replace(/\*/g, '.*');
 
-      console.log( ' * * * formValidators::accept typeParam : '+typeParam );
+      cogumelo.log( ' * * * formValidators::accept typeParam : '+typeParam );
 
       var i;
       for( i = 0; i < validateFiles.length; i++ ) {
-        console.log( ' * * * formValidators::accept test elem.'+i+' : '+validateFiles[i].type);
+        cogumelo.log( ' * * * formValidators::accept test elem.'+i+' : '+validateFiles[i].type);
         if( !validateFiles[i].type.match( new RegExp( '\\.?(' + typeParam + ')$', 'i' ) ) ) {
           valueResponse = false;
-          console.log( ' * * * formValidators::accept FAIL elem.'+i+' : '+validateFiles[i].type+' !== '+typeParam);
+          cogumelo.log( ' * * * formValidators::accept FAIL elem.'+i+' : '+validateFiles[i].type+' !== '+typeParam);
           break;
         }
       }
     }
 
-    console.log( ' * * * formValidators::accept RESULTADO: ', valueResponse );
+    cogumelo.log( ' * * * formValidators::accept RESULTADO: ', valueResponse );
 
     return valueResponse;
   },
@@ -477,13 +477,13 @@ $.validator.addMethod(
 $.validator.addMethod(
   "extension",
   function( value, element, param ) {
-    console.log( ' * * * formValidators::extension ', $( element ), param );
+    cogumelo.log( ' * * * formValidators::extension ', $( element ), param );
 
     var valueResponse = true;
 
     var validateFiles = $( element ).data('validateFiles');
     if( validateFiles && validateFiles.length > 0 ) {
-      console.log( ' * * * formValidators::extension validateFiles=', validateFiles );
+      cogumelo.log( ' * * * formValidators::extension validateFiles=', validateFiles );
       param = ( typeof param === 'string' ) ? param.replace( /,/g, '|' ) : 'png|jpe?g|gif';
       var i;
       for( i = 0; i < validateFiles.length; i++ ) {
@@ -504,7 +504,7 @@ $.validator.addMethod(
 $.validator.addMethod(
   "minfilesize",
   function( value, element, param ) {
-    console.log( ' * * * formValidators::maxfilesize ', $( element ), param );
+    cogumelo.log( ' * * * formValidators::maxfilesize ', $( element ), param );
 
     var valueResponse = true;
 
@@ -515,7 +515,7 @@ $.validator.addMethod(
 
     // if( $(element).attr("type") === "file" && element.files && element.files.length > 0 ) {
     if( validateFiles && validateFiles.length > 0 ) {
-      console.log( ' * * * formValidators::maxfilesize validateFiles=', validateFiles, validateFiles.length );
+      cogumelo.log( ' * * * formValidators::maxfilesize validateFiles=', validateFiles, validateFiles.length );
       for( i = 0; i < validateFiles.length; i++ ) {
         if( validateFiles[i].size < param ) {
           valueResponse = false;
@@ -535,7 +535,7 @@ $.validator.addMethod(
 $.validator.addMethod(
   "maxfilesize",
   function( value, element, param ) {
-    console.log( ' * * * formValidators::maxfilesize ', $( element ), param );
+    cogumelo.log( ' * * * formValidators::maxfilesize ', $( element ), param );
 
     var valueResponse = true;
 
@@ -544,7 +544,7 @@ $.validator.addMethod(
 
     var validateFiles = $( element ).data('validateFiles');
     if( validateFiles && validateFiles.length > 0 ) {
-      console.log( ' * * * formValidators::maxfilesize validateFiles=', validateFiles, validateFiles.length );
+      cogumelo.log( ' * * * formValidators::maxfilesize validateFiles=', validateFiles, validateFiles.length );
       for( i = 0; i < validateFiles.length; i++ ) {
         if( validateFiles[i].size > param ) {
           valueResponse = false;
@@ -566,7 +566,7 @@ $.validator.addMethod(
   function( value, element, param ) {
     var valueResponse = false;
 
-    console.log( ' * * * formValidators::multipleMin ', $( element ), param );
+    cogumelo.log( ' * * * formValidators::multipleMin ', $( element ), param );
     var $fileField = $( element );
     var groupFiles = false;
     var groupId = $fileField.attr('data-fm_group_id');
@@ -574,22 +574,22 @@ $.validator.addMethod(
     if( groupId ) {
       var idForm = $fileField.attr('form');
       var formCtlr = cogumelo.formControllerInfo.getFormInfo( idForm, 'controller' );
-      // console.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
+      // cogumelo.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
 
       if( formCtlr && typeof formCtlr.fileGroup[ groupId ] !== 'undefined' ) {
         groupFiles = formCtlr.fileGroup[ groupId ];
       }
     }
-    // console.log( ' * * * formValidators::multipleMin IDs', groupId, groupFiles, groupFiles.length );
+    // cogumelo.log( ' * * * formValidators::multipleMin IDs', groupId, groupFiles, groupFiles.length );
 
     var validateFiles = $fileField.data('validateFiles');
-    // console.log( ' * * * formValidators::multipleMin validateFiles=', validateFiles, validateFiles.length );
+    // cogumelo.log( ' * * * formValidators::multipleMin validateFiles=', validateFiles, validateFiles.length );
 
     var countFiles = ( validateFiles ) ? validateFiles.length : 0;
     if( groupFiles ) {
       countFiles += groupFiles.length;
     }
-    // console.log( ' * * * formValidators::multipleMin countFiles=', countFiles );
+    // cogumelo.log( ' * * * formValidators::multipleMin countFiles=', countFiles );
 
     if( countFiles >= param ) {
       valueResponse = true;
@@ -608,7 +608,7 @@ $.validator.addMethod(
   function( value, element, param ) {
     var valueResponse = false;
 
-    console.log( ' * * * formValidators::multipleMax ', $( element ), param );
+    cogumelo.log( ' * * * formValidators::multipleMax ', $( element ), param );
     var $fileField = $( element );
     var groupFiles = false;
     var groupId = $fileField.attr('data-fm_group_id');
@@ -616,22 +616,22 @@ $.validator.addMethod(
     if( groupId ) {
       var idForm = $fileField.attr('form');
       var formCtlr = cogumelo.formControllerInfo.getFormInfo( idForm, 'controller' );
-      // console.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
+      // cogumelo.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
 
       if( formCtlr && typeof formCtlr.fileGroup[ groupId ] !== 'undefined' ) {
         groupFiles = formCtlr.fileGroup[ groupId ];
       }
     }
-    // console.log( ' * * * formValidators::multipleMax IDs', groupId, groupFiles, groupFiles.length );
+    // cogumelo.log( ' * * * formValidators::multipleMax IDs', groupId, groupFiles, groupFiles.length );
 
     var validateFiles = $fileField.data('validateFiles');
-    // console.log( ' * * * formValidators::multipleMax validateFiles=', validateFiles, validateFiles.length );
+    // cogumelo.log( ' * * * formValidators::multipleMax validateFiles=', validateFiles, validateFiles.length );
 
     var countFiles = ( validateFiles ) ? validateFiles.length : 0;
     if( groupFiles ) {
       countFiles += groupFiles.length;
     }
-    // console.log( ' * * * formValidators::multipleMax countFiles=', countFiles );
+    // cogumelo.log( ' * * * formValidators::multipleMax countFiles=', countFiles );
 
     if( countFiles <= param ) {
       valueResponse = true;
@@ -650,7 +650,7 @@ $.validator.addMethod(
   function( value, element ) {
     var valueResponse = false;
 
-    console.log( ' * * * formValidators::fileRequired ', $( element ) );
+    cogumelo.log( ' * * * formValidators::fileRequired ', $( element ) );
     var $fileField = $( element );
     var groupFiles = false;
     var groupId = $fileField.attr('data-fm_group_id');
@@ -658,22 +658,22 @@ $.validator.addMethod(
     if( groupId ) {
       var idForm = $fileField.attr('form');
       var formCtlr = cogumelo.formControllerInfo.getFormInfo( idForm, 'controller' );
-      // console.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
+      // cogumelo.log( ' * * * formValidators::multipleMax Form ', idForm, formCtlr );
 
       if( formCtlr && typeof formCtlr.fileGroup[ groupId ] !== 'undefined' ) {
         groupFiles = formCtlr.fileGroup[ groupId ];
       }
     }
-    // console.log( ' * * * formValidators::multipleMin IDs', groupId, groupFiles, groupFiles.length );
+    // cogumelo.log( ' * * * formValidators::multipleMin IDs', groupId, groupFiles, groupFiles.length );
 
     var validateFiles = $fileField.data('validateFiles');
-    // console.log( ' * * * formValidators::multipleMin validateFiles=', validateFiles, validateFiles.length );
+    // cogumelo.log( ' * * * formValidators::multipleMin validateFiles=', validateFiles, validateFiles.length );
 
     var countFiles = ( validateFiles ) ? validateFiles.length : 0;
     if( groupFiles ) {
       countFiles += groupFiles.length;
     }
-    console.log( ' * * * formValidators::fileRequired countFiles=', countFiles );
+    cogumelo.log( ' * * * formValidators::fileRequired countFiles=', countFiles );
 
     if( countFiles > 0 ) {
       valueResponse = true;

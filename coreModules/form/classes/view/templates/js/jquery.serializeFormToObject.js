@@ -46,7 +46,7 @@ $.fn.serializeFormToObject = function () {
         }
         // Order select values
         if( elem.multiple === true && $elem.hasClass( 'cgmMForm-order' ) && ser[ elem.name ].value.push ) { // Array de options
-          console.log( 'Ordenando '+ elem.name, ser[ elem.name ] );
+          cogumelo.log( 'Ordenando '+ elem.name, ser[ elem.name ] );
           ser[ elem.name ].value = $elem.find( 'option' ).filter( ':selected').toArray()
             .sort( function( a, b ) { return( parseInt( $( a ).data( 'order' ) ) - parseInt( $( b ).data( 'order' ) ) ); } )
             .map( function( e ) { return( e.value ); } );
@@ -67,7 +67,7 @@ $.fn.serializeFormToObject = function () {
               dataMultiInfo[ this.value ] = dataInfo;
             }
           } );
-          console.log(dataMultiInfo.elements);
+          cogumelo.log(dataMultiInfo.elements);
           if( !jQuery.isEmptyObject( dataMultiInfo ) ) {
             ser[ elem.name ].dataMultiInfo = dataMultiInfo;
           }
@@ -94,8 +94,6 @@ $.fn.serializeFormToObject = function () {
   );
 
 
-  console.log( 'serializeFormToObject: ', ser );
+  cogumelo.log( 'serializeFormToObject: ', ser );
   return ser;
 };
-
-

@@ -1,4 +1,4 @@
-console.log('Core form ckeditor-config.js');
+cogumelo.log('Core form ckeditor-config.js');
 
 CKEDITOR.editorConfig = function( config ) {
   // http://docs.ckeditor.com/#!/api/CKEDITOR.config
