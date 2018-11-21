@@ -107,13 +107,13 @@ cogumelo.clientMsgClass = function( options ) {
 
     msgOptions.msg = msg;
 
-    // cogumelo.clientMsg.confirm('OKI', function(val){ console.log('fnResult:', val); } );
+    // cogumelo.clientMsg.confirm('OKI', function(val){ cogumelo.log('fnResult:', val); } );
 
     if( typeof fnResult === 'function' ) {
       msgOptions.callback = function( $this, button, ev ) {
-        console.log( 'callback:', $this, button, ev );
+        cogumelo.log( 'callback:', $this, button, ev );
         var val = ( button === 'yes' );
-        console.log( 'VALOR:', val );
+        cogumelo.log( 'VALOR:', val );
         fnResult( val );
       };
     }
@@ -147,16 +147,16 @@ cogumelo.clientMsgClass = function( options ) {
 
     msgOptions.msg = msg;
 
-    // cogumelo.clientMsg.prompt( 'OKI', function(val){ console.log('fnResult:', val); } );
+    // cogumelo.clientMsg.prompt( 'OKI', function(val){ cogumelo.log('fnResult:', val); } );
 
     if( typeof fnResult === 'function' ) {
       msgOptions.callback = function( $this, button, ev ) {
-        console.log( 'callback:', $this, button, ev );
+        cogumelo.log( 'callback:', $this, button, ev );
         var val = null;
         if( button === 'ok' ) {
           val = $this.getValue();
         }
-        console.log( 'VALOR:', val );
+        cogumelo.log( 'VALOR:', val );
         fnResult( val );
       };
     }
@@ -177,11 +177,11 @@ cogumelo.clientMsgClass = function( options ) {
 
     msgOptions.content = msg;
 
-    // cogumelo.clientMsg.confirm('OKI', function(val){ console.log('fnResult:', val); } );
+    // cogumelo.clientMsg.confirm('OKI', function(val){ cogumelo.log('fnResult:', val); } );
 
     if( typeof fnResult === 'function' ) {
       msgOptions.beforeClose = function( $this, button, ev ) {
-        console.log( 'beforeClose:', $this, button, ev );
+        cogumelo.log( 'beforeClose:', $this, button, ev );
 
         fnResult( button );
       };

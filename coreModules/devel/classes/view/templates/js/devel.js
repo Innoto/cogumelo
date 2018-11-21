@@ -23,7 +23,7 @@ function readLogs(){
         $("#"+val.log_name).find("div.cll_container").animate({ color : 'green'}, 15000).removeClass('cll_container');
       });
     }).fail(function(e){
-      console.log("Ajax no finish data load");
+      cogumelo.log("Ajax no finish data load");
     });
   },5000);
 
@@ -47,7 +47,7 @@ function loadDebugger(){
       $('.debugItemsContainer').append('<div class="headerDebugItem"><h3>'+val.comment+'</h3><span>'+val.date+'</span></div><div class="debugItemContainer">'+val.debuging+'</div>');
     });
   }).fail(function(e){
-    console.log("fallo ou baleiro");
+    cogumelo.log("fallo ou baleiro");
   });
 }
 
@@ -101,7 +101,7 @@ function drawERScheme() {
       });
 
 
-      //console.log( dat.indexOf( e2.name ) );
+      //cogumelo.log( dat.indexOf( e2.name ) );
       diagramDataObj.links.push( { source: i, target:relTo } );
     });
 

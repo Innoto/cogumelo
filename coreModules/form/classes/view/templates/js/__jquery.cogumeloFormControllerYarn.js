@@ -71,18 +71,18 @@ function getFormInfo( idForm, key ) {
 
 
 function formKeepAlive() {
-  // console.log( 'keepAlive' );
+  // cogumelo.log( 'keepAlive' );
   formIds = getForms();
-  // console.log( 'keepAlive formIds --- ',formIds );
+  // cogumelo.log( 'keepAlive formIds --- ',formIds );
   $.each( formIds, function( i, idForm ){
-    // console.log( 'keepAlive idForm --- ',idForm );
+    // cogumelo.log( 'keepAlive idForm --- ',idForm );
     formKeepAliveById( idForm );
   });
 }
 
 
 function formKeepAliveById( idForm ) {
-  // console.log( 'formKeepAliveById '+idForm );
+  // cogumelo.log( 'formKeepAliveById '+idForm );
 
   var cgIntFrmId = $( '#' + idForm ).attr( 'data-token_id' );
 
@@ -91,19 +91,19 @@ function formKeepAliveById( idForm ) {
   formData.append( 'idForm', idForm );
   formData.append( 'cgIntFrmId', cgIntFrmId );
 
-  // console.log( 'formData --- ', formData );
+  // cogumelo.log( 'formData --- ', formData );
 
   $.ajax({
     url: '/cgml-form-command', type: 'POST',
     data: formData, cache: false, contentType: false, processData: false,
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-      // console.log( 'formKeepAliveById $jsonData --- ', $jsonData );
+      // cogumelo.log( 'formKeepAliveById $jsonData --- ', $jsonData );
       var idForm = ($jsonData.moreInfo.idForm) ? $jsonData.moreInfo.idForm : false;
       if( $jsonData.result === 'ok' ) {
-        // console.log( 'formKeepAliveById OK --- ',idForm );
+        // cogumelo.log( 'formKeepAliveById OK --- ',idForm );
       }
       else {
-        // console.log( 'formKeepAliveById ERROR',$jsonData );
+        // cogumelo.log( 'formKeepAliveById ERROR',$jsonData );
       }
     }
   });
@@ -115,11 +115,11 @@ function formKeepAliveById( idForm ) {
 
 
 function createFilesTitleField( idForm ) {
-  // console.log( 'createFilesTitleField( '+idForm+' )' );
+  // cogumelo.log( 'createFilesTitleField( '+idForm+' )' );
 
   var $inputFileFields = $( 'input:file[form="'+idForm+'"]' ).not( '[multiple]' );
   $inputFileFields.after( function() {
-    // console.log( 'createFilesTitleField after ', this );
+    // cogumelo.log( 'createFilesTitleField after ', this );
 
     var fileField = this;
     var langs = ( typeof( cogumelo.publicConf.langAvailableIds ) === 'object' ) ? cogumelo.publicConf.langAvailableIds : [''];
@@ -137,7 +137,7 @@ function createFilesTitleField( idForm ) {
         'data-ffid="'+idForm+'" data-ffname="'+fileField.name+'" data-ffdata="'+filefielddata+'" '+
         'class="noValidate cgmMForm-field cgmMForm-field-titleFileField'+classLang+'" type="text">'+"\n"+
         '</div>'+"\n";
-      // console.log( 'createFilesTitleField each lang '+lang );
+      // cogumelo.log( 'createFilesTitleField each lang '+lang );
     });
 
     html += '</div>'+"\n";
@@ -146,7 +146,7 @@ function createFilesTitleField( idForm ) {
   });
 
   $( 'input.cgmMForm-field-titleFileField' ).on( 'change', function() {
-    // console.log( 'titleFileField change en ', this );
+    // cogumelo.log( 'titleFileField change en ', this );
     var $titleFileField = $( this );
     var $titleData = $titleFileField.data();
     var $fileField = $( 'input[form="'+$titleData.ffid+'"][name="'+$titleData.ffname+'"]' );
@@ -157,7 +157,7 @@ function createFilesTitleField( idForm ) {
 }
 
 function hideFileTitleField( idForm, fieldName ) {
-  // console.log( 'hideFileTitleField( '+idForm+', '+fieldName+' )' );
+  // cogumelo.log( 'hideFileTitleField( '+idForm+', '+fieldName+' )' );
 
   var $fileField = $( 'input[form="'+idForm+'"][name="'+fieldName+'"]' );
   // Clear data-fm_title
@@ -176,7 +176,7 @@ function hideFileTitleField( idForm, fieldName ) {
 
 
 function bindForm( idForm ) {
-  // console.log( 'bindForm( '+idForm+' )' );
+  // cogumelo.log( 'bindForm( '+idForm+' )' );
   var $inputFileFields = $( 'input:file[form="'+idForm+'"]' );
   if( $inputFileFields.length ) {
     if( !window.File ) {
@@ -202,7 +202,7 @@ function bindForm( idForm ) {
 
 
 function unbindForm( idForm ) {
-  // console.log( 'unbindForm( '+idForm+' )' );
+  // cogumelo.log( 'unbindForm( '+idForm+' )' );
   $( 'input:file[form="'+idForm+'"]' ).off( 'change' );
   $( '.addGroupElement[data-form_id="'+idForm+'"]' ).off( 'click' );
   $( '.removeGroupElement[data-form_id="'+idForm+'"]' ).off( 'click' );
@@ -213,13 +213,13 @@ function unbindForm( idForm ) {
 */
 
 function setSubmitElement( evnt ) {
-  // console.log( 'setSubmitElement: ', evnt );
+  // cogumelo.log( 'setSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).attr('data-submit-element-name', $elem.attr('name') );
 }
 
 function unsetSubmitElement( evnt ) {
-  // console.log( 'unsetSubmitElement: ', evnt );
+  // cogumelo.log( 'unsetSubmitElement: ', evnt );
   $elem = $( evnt.target );
   $( '#'+$elem.attr('form') ).removeAttr('data-submit-element-name');
 }
@@ -235,7 +235,7 @@ function setValidateForm( idForm, rules, messages ) {
 
   $.validator.setDefaults({
     errorPlacement: function( error, element ) {
-      console.log( 'JQV errorPlacement:', error, element );
+      cogumelo.log( 'JQV errorPlacement:', error, element );
       var $msgContainer = $( '#JQVMC-'+$( error[0] ).attr('id')+', .JQVMC-'+$( error[0] ).attr('id') );
       if( $msgContainer.length > 0 ) {
         $msgContainer.append( error );
@@ -245,13 +245,13 @@ function setValidateForm( idForm, rules, messages ) {
       }
     },
     showErrors: function( errorMap, errorList ) {
-      // console.log( 'JQV showErrors:', errorMap, errorList );
+      // cogumelo.log( 'JQV showErrors:', errorMap, errorList );
 
       // Lanzamos el metodo original
       this.defaultShowErrors();
     },
     invalidHandler: function( evnt, validator ) {
-      console.log( 'JQV invalidHandler:', evnt, validator );
+      cogumelo.log( 'JQV invalidHandler:', evnt, validator );
       if( validator.numberOfInvalids() ) {
         failFields = new Object({});
         jQuery.each( validator.errorList, function( index, value ) {
@@ -277,11 +277,11 @@ function setValidateForm( idForm, rules, messages ) {
       default:
           basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
     }
-    
+
     //basket.require( { url: '/vendor/yarn/jquery-validation/dist/localization/messages_'+cogumelo.publicConf.C_LANG+'.js' } );
   }
 
-  // console.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
+  // cogumelo.log( 'setValidateForm VALIDATE: ', $( '#'+idForm ) );
   var $validateForm = $( '#'+idForm ).validate({
     // debug: true,
     errorClass: 'formError',
@@ -294,7 +294,7 @@ function setValidateForm( idForm, rules, messages ) {
       $form = $( form );
       var submitElementName = $form.attr('data-submit-element-name');
       $form.removeAttr('data-submit-element-name');
-      // console.log( 'submitElementName: '+submitElementName );
+      // cogumelo.log( 'submitElementName: '+submitElementName );
 
       if( submitElementName ) {
         // Se ha pulsado en alguno de los elementos de submit
@@ -311,7 +311,7 @@ function setValidateForm( idForm, rules, messages ) {
       }
       else {
         // Se ha lanzado sin pulsar en alguno de los elementos de submit
-        console.log('Cogumelo Form: Not submit element');
+        cogumelo.log('Cogumelo Form: Not submit element');
       }
 
       return false; // required to block normal submit since you used ajax
@@ -321,24 +321,24 @@ function setValidateForm( idForm, rules, messages ) {
   // JQUERY VALIDATE HACK !!! (Start)
   //
   $validateForm.findByName = function( name ) {
-    // console.log( 'JQV cgmlHACK findByName: ', name );
+    // cogumelo.log( 'JQV cgmlHACK findByName: ', name );
     var $form = $( this.currentForm );
     var $elem = $form.find( '[name="' + name + '"]' );
     if( $elem.length !== 1 ) {
       $elem = $( '[form="'+$form[0].id+'"][name="'+name+'"]' );
     }
-    // console.log( 'JQV cgmlHACK findByName ret: ', $elem );
+    // cogumelo.log( 'JQV cgmlHACK findByName ret: ', $elem );
     return $elem;
   };
   $validateForm.idOrName = function( element ) {
-    // console.log( 'JQV cgmlHACK idOrName: ', name );
+    // cogumelo.log( 'JQV cgmlHACK idOrName: ', name );
     var resp = this.groups[ element.name ] || ( this.checkable( element ) ? element.name : element.id || element.name );
-    // console.log( 'JQV cgmlHACK idOrName ret: ', resp );
+    // cogumelo.log( 'JQV cgmlHACK idOrName ret: ', resp );
     return resp;
   };
   // $validateForm.hideTheseReal = $validateForm.hideThese;
   // $validateForm.hideThese = function( errors ) {
-  //   // console.log( 'JQV cgmlHACK hideThese: ', errors );
+  //   // cogumelo.log( 'JQV cgmlHACK hideThese: ', errors );
   //   // errors.not( this.containers ).text( "" );
   //   // this.addWrapper( errors ).hide();
   //   $validateForm.hideTheseReal( errors );
@@ -347,7 +347,7 @@ function setValidateForm( idForm, rules, messages ) {
   // JQUERY VALIDATE HACK !!! (End)
   //
 
-  // console.log( 'VALIDATE PREPARADO: ', $validateForm );
+  // cogumelo.log( 'VALIDATE PREPARADO: ', $validateForm );
 
 
   // Bind file fields and group actions...
@@ -370,7 +370,7 @@ function setValidateForm( idForm, rules, messages ) {
 } // function setValidateForm( idForm, rules, messages )
 
 function sendValidatedForm( form ) {
-  // console.log( 'Executando sendValidatedForm...' );
+  // cogumelo.log( 'Executando sendValidatedForm...' );
 
   $( form ).find( '[type="submit"]' ).attr('disabled', 'disabled');
   $( form ).find( '.submitRun' ).show();
@@ -382,15 +382,15 @@ function sendValidatedForm( form ) {
     dataType : 'json'
   } )
   .done( function ( response ) {
-    // console.log( 'Executando validate.submitHandler.done...' );
-    // console.log( response );
+    // cogumelo.log( 'Executando validate.submitHandler.done...' );
+    // cogumelo.log( response );
     if( response.result === 'ok' ) {
       // alert( 'Form Submit OK' );
-      // console.log( 'Form Done: OK' );
+      // cogumelo.log( 'Form Done: OK' );
       formDoneOk( form, response );
     }
     else {
-      // console.log( 'Form Done: ERROR',response );
+      // cogumelo.log( 'Form Done: ERROR',response );
       formDoneError( form, response );
     }
     $( form ).find( '[type="submit"]' ).removeAttr('disabled');
@@ -399,8 +399,8 @@ function sendValidatedForm( form ) {
 }
 
 function formDoneOk( form, response ) {
-  // console.log( 'formDoneOk' );
-  // console.log( response );
+  // cogumelo.log( 'formDoneOk' );
+  // cogumelo.log( response );
 
   // var $validateForm = getFormInfo( $( form ).attr( 'id' ), 'validateForm' );
   var idForm = $( form ).attr( 'id' );
@@ -435,15 +435,15 @@ function formDoneOk( form, response ) {
   }
   if( successActions.resetForm ) {
     $( form )[0].reset();
-    console.log( 'IMPORTANTE: En resetForm falta borrar los campos FILE porque no lo hace el reset!!!' );
+    cogumelo.log( 'IMPORTANTE: En resetForm falta borrar los campos FILE porque no lo hace el reset!!!' );
   }
   // alert( 'Form Submit OK' );
 }
 
 
 function formDoneError( form, response ) {
-  // console.log( 'formDoneError' );
-  // console.log( response );
+  // cogumelo.log( 'formDoneError' );
+  // cogumelo.log( response );
 
   var idForm = $( form ).attr( 'id' );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
@@ -455,7 +455,7 @@ function formDoneError( form, response ) {
 
   if( response.result === 'errorSession' ) {
     // No se ha podido recuperar el form en el servidor porque ha caducado
-    // console.log( 'formDoneError: errorSession' );
+    // cogumelo.log( 'formDoneError: errorSession' );
     showErrorsValidateForm( $( form ), __('Form session expired. Reload'), 'formError' );
     if( confirm( __('Reload to get valid From?') ) ) {
       window.location.reload();
@@ -464,7 +464,7 @@ function formDoneError( form, response ) {
 
   for( var i in response.jvErrors ) {
     var errObj = response.jvErrors[i];
-    // console.log( errObj );
+    // cogumelo.log( errObj );
 
     if( errObj.fieldName !== false ) {
       if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
@@ -474,11 +474,11 @@ function formDoneError( form, response ) {
         }
         errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
       }
-      console.log( 'showErrors ('+ errObj.fieldName +'): ', errObj.JVshowErrors );
+      cogumelo.log( 'showErrors ('+ errObj.fieldName +'): ', errObj.JVshowErrors );
       $validateForm.showErrors( errObj.JVshowErrors );
     }
     else {
-      console.log( 'showErrors: ', errObj.JVshowErrors );
+      cogumelo.log( 'showErrors: ', errObj.JVshowErrors );
       showErrorsValidateForm( $( form ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
     }
   } // for(var i in response.jvErrors)
@@ -489,7 +489,7 @@ function formDoneError( form, response ) {
 
 
   // if( response.formError !== '' ) $validateForm.showErrors( {'submit': response.formError} );
-  // console.log( 'formDoneError (FIN)' );
+  // cogumelo.log( 'formDoneError (FIN)' );
 }
 
 
@@ -499,7 +499,7 @@ function formDoneError( form, response ) {
 
 
 function reprocessFormErrors( idForm, failFields ) {
-  // console.log( 'reprocessFormErrors', idForm );
+  // cogumelo.log( 'reprocessFormErrors', idForm );
   var topErrScroll = 999999;
   var numErrors = 0;
   var formMarginTop = getFormInfo( idForm, 'marginTop' );
@@ -507,7 +507,7 @@ function reprocessFormErrors( idForm, failFields ) {
   if( typeof failFields === 'undefined' ) {
     failFields = $( '.formError[form="' + idForm + '"]' );
   }
-  // console.log( 'reprocessFormErrors failFields', failFields );
+  // cogumelo.log( 'reprocessFormErrors failFields', failFields );
 
   // $( '.formError[form="' + idForm + '"]' ).each( function() {
   jQuery.each( failFields, function( index, value ) {
@@ -516,11 +516,11 @@ function reprocessFormErrors( idForm, failFields ) {
     $wrap = $( '.cgmMForm-wrap.cgmMForm-field-'+$field.attr('name') );
     if( $wrap.length > 0 ) {
       topElem = $wrap.offset().top;
-      // console.log( 'reprocessFormErrors WRAP ', topElem, $field.attr('name') );
+      // cogumelo.log( 'reprocessFormErrors WRAP ', topElem, $field.attr('name') );
     }
     else {
       topElem = $field.offset().top;
-      // console.log( 'reprocessFormErrors FIELD ', topElem, $field.attr('name') );
+      // cogumelo.log( 'reprocessFormErrors FIELD ', topElem, $field.attr('name') );
     }
 
     if( topElem && topErrScroll > topElem ) {
@@ -533,7 +533,7 @@ function reprocessFormErrors( idForm, failFields ) {
     if( formMarginTop !== null && formMarginTop !== undefined ) {
       topErrScroll -= formMarginTop;
     }
-    // console.log( 'JQV topErrScroll:', formMarginTop, topErrScroll );
+    // cogumelo.log( 'JQV topErrScroll:', formMarginTop, topErrScroll );
     $( 'html, body' ).animate( { scrollTop: topErrScroll }, 500 );
   }
 
@@ -542,7 +542,7 @@ function reprocessFormErrors( idForm, failFields ) {
 
 
 function notifyFormErrors( idForm, numErrors ) {
-  console.log( 'There are errors in the form', numErrors );
+  cogumelo.log( 'There are errors in the form', numErrors );
 
   if( typeof cogumelo !== 'undefined' && typeof cogumelo.clientMsg !== 'undefined' && typeof cogumelo.clientMsg.notify !== 'undefined' ) {
     cogumelo.clientMsg.notify(
@@ -561,7 +561,7 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
 
   // Replantear!!!
 
-  // console.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
+  // cogumelo.log( 'showErrorsValidateForm: '+msgClass+' , '+msgText );
   var msgLabel = '<label class="formError" form="'+$form.attr( 'id' )+'">'+msgText+'</label>';
   var $msgContainer = false;
   if( msgClass !== false ) {
@@ -583,7 +583,7 @@ function showErrorsValidateForm( $form, msgText, msgClass ) {
 
 // Evento de fichero en campo input
 function inputFileFieldChange( evnt ) {
-  // console.log('inputFileFieldChange:', evnt);
+  // cogumelo.log('inputFileFieldChange:', evnt);
   $fileField = $( evnt.target );
   // processFilesInputFileField( evnt.target.files, evnt.target.form.id, evnt.target.name );
   processFilesInputFileField( evnt.target.files, $fileField.attr('form'), evnt.target.name );
@@ -591,7 +591,7 @@ function inputFileFieldChange( evnt ) {
 
 
 function processFilesInputFileField( formFileObjs, idForm, fieldName ) {
-  // console.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
+  // cogumelo.log( 'processFilesInputFileField(): ', formFileObjs, idForm, fieldName );
 
   var valid = checkInputFileField( formFileObjs, idForm, fieldName );
 
@@ -608,9 +608,9 @@ function processFilesInputFileField( formFileObjs, idForm, fieldName ) {
 
 
 function checkInputFileField( formFileObjs, idForm, fieldName ) {
-  // console.log( 'checkInputFileField(): ' );
-  // console.log( formFileObjs );
-  // console.log( fieldName );
+  // cogumelo.log( 'checkInputFileField(): ' );
+  // cogumelo.log( formFileObjs );
+  // cogumelo.log( fieldName );
   var $validateForm = getFormInfo( idForm, 'validateForm' );
 
   var $fileField = $( 'input[name="' + fieldName + '"][form="' + idForm + '"]' );
@@ -625,7 +625,7 @@ function checkInputFileField( formFileObjs, idForm, fieldName ) {
 
 
 function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
-  // console.log( 'uploadFile(): ', formFileObj );
+  // cogumelo.log( 'uploadFile(): ', formFileObj );
 
   var formData = new FormData();
   formData.append( 'idForm', idForm );
@@ -683,8 +683,8 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
     },
     */
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
-      // console.log( 'Executando fileSendOk...' );
-      // console.log( $jsonData );
+      // cogumelo.log( 'Executando fileSendOk...' );
+      // cogumelo.log( $jsonData );
 
       var idForm = $jsonData.moreInfo.idForm;
       var fieldName = $jsonData.moreInfo.fieldName;
@@ -704,15 +704,15 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
         }
       }
       else {
-        // console.log( 'uploadFile ERROR' );
+        // cogumelo.log( 'uploadFile ERROR' );
         $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .wrap .status' ).html( __('Error loading file') );
 
         var $validateForm = getFormInfo( idForm, 'validateForm' );
-        // console.log( 'uploadFile ERROR', $validateForm );
+        // cogumelo.log( 'uploadFile ERROR', $validateForm );
 
         for(var i in $jsonData.jvErrors) {
           var errObj = $jsonData.jvErrors[i];
-          // console.log( 'uploadFile ERROR', errObj );
+          // cogumelo.log( 'uploadFile ERROR', errObj );
 
           if( errObj.fieldName !== false ) {
             if( errObj.JVshowErrors[ errObj.fieldName ] === false ) {
@@ -722,11 +722,11 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
               }
               errObj.JVshowErrors[ errObj.fieldName ] = $defMess;
             }
-            // console.log( errObj.JVshowErrors );
+            // cogumelo.log( errObj.JVshowErrors );
             $validateForm.showErrors( errObj.JVshowErrors );
           }
           else {
-            // console.log( errObj.JVshowErrors );
+            // cogumelo.log( errObj.JVshowErrors );
             showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
           }
         }
@@ -734,7 +734,7 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
       }
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
-      console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
+      cogumelo.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
       $( '.'+fieldName+'-info[data-form_id="'+idForm+'"] .status' ).html( 'Upload Failed (' + $textStatus + ')' );
     }
   });
@@ -742,7 +742,7 @@ function uploadFile( formFileObj, idForm, fieldName, cgIntFrmId ) {
 
 
 function deleteFormFileEvent( evnt ) {
-  // console.log( 'deleteFormFileEvent: ', evnt );
+  // cogumelo.log( 'deleteFormFileEvent: ', evnt );
   var $fileField = $( evnt.target );
   var idForm = $fileField.attr( 'data-form_id' );
   var fieldName = $fileField.attr( 'data-fieldname' );
@@ -755,7 +755,7 @@ function deleteFormFileEvent( evnt ) {
 
 
 function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
-  // console.log( 'deleteFormFile: ', cgIntFrmId, idForm, fieldName, fileId, fileTempId );
+  // cogumelo.log( 'deleteFormFile: ', cgIntFrmId, idForm, fieldName, fileId, fileTempId );
   var formData = new FormData();
   formData.append( 'execute', 'delete' );
   formData.append( 'cgIntFrmId', cgIntFrmId );
@@ -773,8 +773,8 @@ function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
     cache: false, contentType: false, processData: false
   } )
   .done( function ( response ) {
-    // console.log( 'Executando deleteFormFile.done...' );
-    // console.log( response );
+    // cogumelo.log( 'Executando deleteFormFile.done...' );
+    // cogumelo.log( response );
     if( response.result === 'ok' ) {
 
       fileDeleteOk( idForm, fieldName, fileId, fileTempId );
@@ -786,10 +786,10 @@ function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
       }
     }
     else {
-      console.log( 'deleteFormFile.done...ERROR', response );
+      cogumelo.log( 'deleteFormFile.done...ERROR', response );
       for(var i in response.jvErrors) {
         var errObj = response.jvErrors[i];
-        // console.log( errObj );
+        // cogumelo.log( errObj );
 
         if( errObj.fieldName !== false ) {
 
@@ -797,7 +797,7 @@ function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
 
         }
         else {
-          // console.log( errObj.JVshowErrors );
+          // cogumelo.log( errObj.JVshowErrors );
           showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors.msgText, errObj.JVshowErrors.msgClass );
         }
 
@@ -808,13 +808,13 @@ function deleteFormFile( cgIntFrmId, idForm, fieldName, fileId, fileTempId ) {
 
 
 function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
-  // console.log( 'fileFieldGroupAddElem: ', idForm, fieldName, fileInfo );
+  // cogumelo.log( 'fileFieldGroupAddElem: ', idForm, fieldName, fileInfo );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = [];
 
-  // console.log( 'groupId antes: ',groupId );
-  // console.log( 'groupFiles antes: ',groupFiles );
+  // cogumelo.log( 'groupId antes: ',groupId );
+  // cogumelo.log( 'groupFiles antes: ',groupFiles );
 
   if( groupId ) {
     groupFiles = cogumelo.formController.fileGroup[ groupId ];
@@ -825,25 +825,25 @@ function fileFieldGroupAddElem( idForm, fieldName, fileInfo ) {
     $fileField.attr( 'data-fm_group_id', groupId );
   }
 
-  // console.log( 'groupId: ',groupId );
-  // console.log( 'groupFiles: ',groupFiles );
+  // cogumelo.log( 'groupId: ',groupId );
+  // cogumelo.log( 'groupFiles: ',groupFiles );
 
   groupFiles.push( fileInfo );
 
-  // console.log( 'groupFiles despois: ',groupFiles );
+  // cogumelo.log( 'groupFiles despois: ',groupFiles );
   cogumelo.formController.fileGroup[ groupId ] = groupFiles;
 
   fileFieldGroupWidget( idForm, fieldName );
 }
 
 function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
-  // console.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileId, fileTempId );
+  // cogumelo.log( 'fileFieldGroupRemoveElem: ', idForm, fieldName, fileId, fileTempId );
   var $fileField = $( 'input[name="'+fieldName+'"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = cogumelo.formController.fileGroup[ groupId ];
 
   var newGroupFiles = jQuery.grep( groupFiles, function( elem ) {
-    // console.log('grep: ',elem);
+    // cogumelo.log('grep: ',elem);
     return (
       ( fileId !== false && elem.id != fileId ) ||
       ( fileTempId !== false && ( !elem.hasOwnProperty('tempId') || elem.tempId != fileTempId ) )
@@ -859,7 +859,7 @@ function fileFieldGroupRemoveElem( idForm, fieldName, fileId, fileTempId ) {
 
 
 function fileSendOk( idForm, fieldName, formFileObj, moreInfo ) {
-  // console.log( 'fileSendOk: ',idForm,fieldName,formFileObj,moreInfo );
+  // cogumelo.log( 'fileSendOk: ',idForm,fieldName,formFileObj,moreInfo );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
 
   var fileInfo = {
@@ -887,7 +887,7 @@ function fileSendOk( idForm, fieldName, formFileObj, moreInfo ) {
 }
 
 function fileDeleteOk( idForm, fieldName, fileId, fileTempId ) {
-  // console.log( 'fileDeleteOk: ', idForm, fieldName, fileId, fileTempId );
+  // cogumelo.log( 'fileDeleteOk: ', idForm, fieldName, fileId, fileTempId );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
 
   if( $fileField.attr('multiple') ) {
@@ -901,13 +901,13 @@ function fileDeleteOk( idForm, fieldName, fileId, fileTempId ) {
 
 
 function fileFieldGroupWidget( idForm, fieldName ) {
-  // console.log( 'fileFieldGroupWidget: ', idForm, fieldName );
+  // cogumelo.log( 'fileFieldGroupWidget: ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var groupId = $fileField.attr('data-fm_group_id');
   var groupFiles = [];
 
-  // console.log( 'groupId antes: ',groupId );
-  // console.log( 'groupFiles antes: ',groupFiles );
+  // cogumelo.log( 'groupId antes: ',groupId );
+  // cogumelo.log( 'groupFiles antes: ',groupFiles );
 
   if( groupId ) {
     groupFiles = cogumelo.formController.fileGroup[ groupId ];
@@ -932,7 +932,7 @@ function fileFieldGroupWidget( idForm, fieldName ) {
   }
 
   $.each( groupFiles, function(){
-    // console.log('Añadimos esto a fileBoxWrap;', this, $filesWrap);
+    // cogumelo.log('Añadimos esto a fileBoxWrap;', this, $filesWrap);
     $filesWrap.append( fileBox( idForm, fieldName, this, deleteFormFileEvent )
      .css( {'float': 'left', 'width': '23%', 'margin': '1%' } ) );
   } );
@@ -940,7 +940,7 @@ function fileFieldGroupWidget( idForm, fieldName ) {
 
 
 function fileFieldToOk( idForm, fieldName, fileInfo ) {
-  // console.log( 'fileFieldToOk: ', idForm, fieldName, fileInfo );
+  // cogumelo.log( 'fileFieldToOk: ', idForm, fieldName, fileInfo );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
@@ -967,7 +967,7 @@ function fileFieldToOk( idForm, fieldName, fileInfo ) {
 
 
 function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
-  // console.log( 'fileBox: ', idForm, fieldName, fileInfo );
+  // cogumelo.log( 'fileBox: ', idForm, fieldName, fileInfo );
 
   var $fileBoxElem = $( '<div>' ).addClass( 'cgmMForm-fileBoxElem fileFieldInfo fileUploadOK formFileDelete' )
     .attr( { 'data-form_id': idForm, 'data-fieldname': fieldName, 'data-file_id': fileInfo.id } );
@@ -1064,32 +1064,32 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
 
 /*
   function loadImageTn( idForm, fieldName, fileInfo, $fileBoxElem ) {
-    console.log( 'loadImageTn(): ', idForm, fieldName, fileInfo, $fileBoxElem );
+    cogumelo.log( 'loadImageTn(): ', idForm, fieldName, fileInfo, $fileBoxElem );
 
     var fileObj = fileInfo.hasOwnProperty('formFileObj') ? fileInfo.formFileObj : false;
 
     if( fileObj && fileObj.type.match('image.*') && fileObj.size < 2000000 ) {
-      // console.log( 'loadImageTn: Preparo FileReader' );
+      // cogumelo.log( 'loadImageTn: Preparo FileReader' );
       var imageReader = new FileReader();
       imageReader.onload = (
         function cargado( fileLoaded ) {
-          // console.log( 'loadImageTn: cargado ', fileLoaded );
+          // cogumelo.log( 'loadImageTn: cargado ', fileLoaded );
           return(
             function procesando( evnt ) {
               $tnImage = false;
               tnClass = $fileBoxElem.find('.tnImage').attr('data-tnClass');
-              // console.log( 'tnClass: ', tnClass );
+              // cogumelo.log( 'tnClass: ', tnClass );
 
               if( tnClass ) {
                 $newFileBoxElem = $('.cgmMForm-fileBoxElem[data-form_id="'+idForm+'"][data-fieldname="'+fieldName+'"]');
-                // console.log( 'tnImage newFileBoxElem: ', $newFileBoxElem,idForm,fieldName );
+                // cogumelo.log( 'tnImage newFileBoxElem: ', $newFileBoxElem,idForm,fieldName );
                 if( $newFileBoxElem.length ) {
                   $tnImage = $newFileBoxElem.find( 'img.tnImage.'+tnClass );
-                  // console.log( 'tnImage ANTES: ', $tnImage );
+                  // cogumelo.log( 'tnImage ANTES: ', $tnImage );
                 }
               }
               if( $tnImage ) {
-                // console.log( 'tnImage CAMBIANDO SRC ', $tnImage.attr('src'), evnt.target.result );
+                // cogumelo.log( 'tnImage CAMBIANDO SRC ', $tnImage.attr('src'), evnt.target.result );
                 $tnImage.attr( 'src', evnt.target.result );
               }
             }
@@ -1098,7 +1098,7 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
       )( fileObj );
 
       // Read in the image file as a data URL.
-      console.log( 'loadImageTn: readAsDataURL ',fileObj );
+      cogumelo.log( 'loadImageTn: readAsDataURL ',fileObj );
       imageReader.readAsDataURL( fileObj );
     }
   } // function loadImageTn( fileObj, $fileBoxElem )
@@ -1106,11 +1106,11 @@ function fileBox( idForm, fieldName, fileInfo, deleteFunc ) {
 
 
 function fileFieldToInput( idForm, fieldName ) {
-  // console.log( 'fileFieldToInput(): ', idForm, fieldName );
+  // cogumelo.log( 'fileFieldToInput(): ', idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
 
-  // console.log( $fileField );
+  // cogumelo.log( $fileField );
 
   // $fileFieldWrap.find( '.fileUploadOK' ).remove();
   $fileFieldWrap.find( '.cgmMForm-fileBoxWrap' ).remove();
@@ -1128,7 +1128,7 @@ function fileFieldToInput( idForm, fieldName ) {
 
 
 function createFileFieldDropZone( idForm, fieldName ) {
-  // console.log( 'createFileFieldDropZone: ', idForm, fieldName );
+  // cogumelo.log( 'createFileFieldDropZone: ', idForm, fieldName );
 
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
@@ -1136,7 +1136,7 @@ function createFileFieldDropZone( idForm, fieldName ) {
 
   $buttonText = ( $fileDefLabel.length > 0 ) ? $fileDefLabel.html() : 'Upload file';
 
-  // console.log( 'Preparando DropZone #fileFieldDropZone_' + idForm + '_' + fieldName );
+  // cogumelo.log( 'Preparando DropZone #fileFieldDropZone_' + idForm + '_' + fieldName );
   var $fileFieldDropZone = $( '<div>' ).addClass( 'fileFieldDropZone fileFieldDropZoneWait' )
     .attr( {
       'id': 'fileFieldDropZone_' + idForm + '_' + fieldName,
@@ -1178,7 +1178,7 @@ function createFileFieldDropZone( idForm, fieldName ) {
 
   // Setup the fileFieldDropZone listeners.
   //$fileFieldDropZoneElem = $( '.fileFieldDropZone' );
-  // console.log( 'fileFieldDropZoneElem: ', $fileFieldWrap.find( '.fileFieldDropZone' ) );
+  // cogumelo.log( 'fileFieldDropZoneElem: ', $fileFieldWrap.find( '.fileFieldDropZone' ) );
 
   var fileFieldDropZoneElem = document.getElementById( 'fileFieldDropZone_' + idForm + '_' + fieldName );
   fileFieldDropZoneElem.addEventListener( 'drop', fileFieldDropZoneDrop, false);
@@ -1186,7 +1186,7 @@ function createFileFieldDropZone( idForm, fieldName ) {
 }
 
 function removeFileFieldDropZone( idForm, fieldName ) {
-  // console.log( 'removeFileFieldDropZone: ', idForm, fieldName );
+  // cogumelo.log( 'removeFileFieldDropZone: ', idForm, fieldName );
 
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
   var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
@@ -1195,20 +1195,20 @@ function removeFileFieldDropZone( idForm, fieldName ) {
 }
 
 function fileFieldDropZoneDrop( evnt ) {
-  // console.log( 'fileFieldDropZoneDrop() ', evnt );
+  // cogumelo.log( 'fileFieldDropZoneDrop() ', evnt );
 
   evnt.stopPropagation();
   evnt.preventDefault();
 
   var files = evnt.dataTransfer.files; // FileList object.
-  // console.log( 'fileFieldDropZoneDrop files: ', files );
+  // cogumelo.log( 'fileFieldDropZoneDrop files: ', files );
 
   var $fileFieldDropZone = $( evnt.target ).closest( '.fileFieldDropZone' );
   var idForm = $fileFieldDropZone.data( 'form_id' );
   var fieldName = $fileFieldDropZone.data( 'fieldname' );
-  // console.log( 'fileFieldDropZoneDrop fileFieldDropZone: ', $fileFieldDropZone, idForm, fieldName );
+  // cogumelo.log( 'fileFieldDropZoneDrop fileFieldDropZone: ', $fileFieldDropZone, idForm, fieldName );
   var $fileField = $( 'input[name="' + fieldName + '"][form="'+idForm+'"]' );
-  // console.log( 'fileFieldDropZoneDrop fileField: ', $fileField );
+  // cogumelo.log( 'fileFieldDropZoneDrop fileField: ', $fileField );
 
   // $fileField.data( 'dropfiles', false );
 
@@ -1219,7 +1219,7 @@ function fileFieldDropZoneDrop( evnt ) {
 }
 
 function fileFieldDropZoneDragOver( evnt ) {
-  // console.log( 'fileFieldDropZoneDragOver event: ', evnt );
+  // cogumelo.log( 'fileFieldDropZoneDragOver event: ', evnt );
 
   evnt.stopPropagation();
   evnt.preventDefault();
@@ -1235,8 +1235,8 @@ function fileFieldDropZoneDragOver( evnt ) {
 */
 
 function addGroupElement( evnt ) {
-  // console.log( 'addGroupElement:' );
-  // console.log( evnt );
+  // cogumelo.log( 'addGroupElement:' );
+  // cogumelo.log( evnt );
 
   var myForm = evnt.target.closest("form");
   var idForm = $( myForm ).attr('id');
@@ -1250,9 +1250,9 @@ function addGroupElement( evnt ) {
   formData.append( 'cgIntFrmId', cgIntFrmId );
   formData.append( 'groupName', groupName );
 
-  // console.log( idForm );
-  // console.log( cgIntFrmId );
-  // console.log( groupName );
+  // cogumelo.log( idForm );
+  // cogumelo.log( cgIntFrmId );
+  // cogumelo.log( groupName );
 
   // Desactivamos los bins del form durante el proceso
   unbindForm( idForm );
@@ -1266,8 +1266,8 @@ function addGroupElement( evnt ) {
     // Custom XMLHttpRequest
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
 
-      // console.log( 'getGroupElement success:' );
-      // console.log( $jsonData );
+      // cogumelo.log( 'getGroupElement success:' );
+      // cogumelo.log( $jsonData );
 
       var idForm = $jsonData.moreInfo.idForm;
       var groupName = $jsonData.moreInfo.groupName;
@@ -1275,37 +1275,37 @@ function addGroupElement( evnt ) {
       $( '#' + idForm + ' .JQVMC-group-' + groupName + ' .formError' ).remove();
 
       if( $jsonData.result === 'ok' ) {
-        // console.log( 'getGroupElement OK' );
-        // console.log( 'idForm: ' + idForm + ' groupName: ' + groupName );
+        // cogumelo.log( 'getGroupElement OK' );
+        // cogumelo.log( 'idForm: ' + idForm + ' groupName: ' + groupName );
 
         $( $jsonData.moreInfo.htmlGroupElement ).insertBefore(
           '#' + idForm + ' .cgmMForm-group-' + groupName + ' .addGroupElement'
         );
 
         $.each( $jsonData.moreInfo.validationRules, function( fieldName, fieldRules ) {
-          // console.log( 'fieldName: ' + fieldName + ' fieldRules: ', fieldRules );
-          // console.log( 'ELEM: #' + idForm + ' .cgmMForm-field.cgmMForm-field-' + fieldName );
+          // cogumelo.log( 'fieldName: ' + fieldName + ' fieldRules: ', fieldRules );
+          // cogumelo.log( 'ELEM: #' + idForm + ' .cgmMForm-field.cgmMForm-field-' + fieldName );
           $( '#' + idForm + ' .cgmMForm-field.cgmMForm-field-' + fieldName ).rules( 'add', fieldRules );
         });
 
-        // console.log( 'getGroupElement OK Fin' );
+        // cogumelo.log( 'getGroupElement OK Fin' );
       }
       else {
-        // console.log( 'getGroupElement ERROR' );
+        // cogumelo.log( 'getGroupElement ERROR' );
         var $validateForm = getFormInfo( idForm, 'validateForm' );
-        // console.log( $validateForm );
+        // cogumelo.log( $validateForm );
         var errObj = $jsonData.jvErrors[0];
-        // console.log( errObj.JVshowErrors );
+        // cogumelo.log( errObj.JVshowErrors );
         showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors[0], 'group-' + groupName );
       }
 
       // Activamos los bins del form despues del proceso
       bindForm( idForm );
 
-      // console.log( 'getGroupElement success: Fin' );
+      // cogumelo.log( 'getGroupElement success: Fin' );
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
-      // console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
+      // cogumelo.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
       $( '#status' ).html( 'ERROR: (' + $textStatus + ')' );
 
       // Activamos los bins del form despues del proceso
@@ -1316,18 +1316,18 @@ function addGroupElement( evnt ) {
 
 
 function removeGroupElement( evnt ) {
-  // console.log( 'removeGroupElement:' );
-  // console.log( evnt );
+  // cogumelo.log( 'removeGroupElement:' );
+  // cogumelo.log( evnt );
 
   var myForm = evnt.target.closest("form");
   var idForm = $( myForm ).attr('id');
   var cgIntFrmId = $( myForm ).attr('data-token_id');
   var groupName = $( evnt.target ).attr('groupName');
   var groupIdElem = $( evnt.target ).attr('groupIdElem');
-  // console.log( idForm );
-  // console.log( cgIntFrmId );
-  // console.log( groupName );
-  // console.log( groupIdElem );
+  // cogumelo.log( idForm );
+  // cogumelo.log( cgIntFrmId );
+  // cogumelo.log( groupName );
+  // cogumelo.log( groupIdElem );
 
   var formData = new FormData();
   formData.append( 'execute', 'removeGroupElement' );
@@ -1348,8 +1348,8 @@ function removeGroupElement( evnt ) {
     // Custom XMLHttpRequest
     success: function successHandler( $jsonData, $textStatus, $jqXHR ) {
 
-      // console.log( 'removeGroupElement success:' );
-      // console.log( $jsonData );
+      // cogumelo.log( 'removeGroupElement success:' );
+      // cogumelo.log( $jsonData );
 
       var idForm = $jsonData.moreInfo.idForm;
       var groupName = $jsonData.moreInfo.groupName;
@@ -1357,27 +1357,27 @@ function removeGroupElement( evnt ) {
       $( '#' + idForm + ' .JQVMC-group-' + groupName + ' .formError' ).remove();
 
       if( $jsonData.result === 'ok' ) {
-        // console.log( 'removeGroupElement OK' );
-        // console.log( idForm, groupName, $jsonData.moreInfo.groupIdElem );
-        // console.log( '#' + idForm + ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem );
+        // cogumelo.log( 'removeGroupElement OK' );
+        // cogumelo.log( idForm, groupName, $jsonData.moreInfo.groupIdElem );
+        // cogumelo.log( '#' + idForm + ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem );
         $( '#' + idForm + ' .cgmMForm-groupElem_C_' + $jsonData.moreInfo.groupIdElem ).remove();
       }
       else {
-        // console.log( 'removeGroupElement ERROR' );
+        // cogumelo.log( 'removeGroupElement ERROR' );
         var $validateForm = getFormInfo( idForm, 'validateForm' );
-        // console.log( $validateForm );
+        // cogumelo.log( $validateForm );
         var errObj = $jsonData.jvErrors[0];
-        // console.log( errObj.JVshowErrors );
+        // cogumelo.log( errObj.JVshowErrors );
         showErrorsValidateForm( $( '#'+idForm ), errObj.JVshowErrors[0], 'group-' + groupName );
       }
 
       // Activamos los bins del form despues del proceso
       bindForm( idForm );
 
-      // console.log( 'removeGroupElement success: Fin' );
+      // cogumelo.log( 'removeGroupElement success: Fin' );
     },
     error: function errorHandler( $jqXHR, $textStatus, $errorThrown ) { // textStatus: timeout, error, abort, or parsererror
-      // console.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
+      // cogumelo.log( 'uploadFile errorHandler', $jqXHR, $textStatus, $errorThrown );
       $( '#status' ).html( 'ERROR: (' + $textStatus + ')' );
 
       // Activamos los bins del form despues del proceso
@@ -1389,8 +1389,8 @@ function removeGroupElement( evnt ) {
 
 
 function activateHtmlEditor( idForm ) {
-  // console.log( 'activateHtmlEditor: ' + idForm );
-  // console.log( idForm );
+  // cogumelo.log( 'activateHtmlEditor: ' + idForm );
+  // cogumelo.log( idForm );
 
   $( 'textarea.cgmMForm-htmlEditor[form="'+idForm+'"]' ).each(
     function( index ) {
@@ -1406,7 +1406,7 @@ function activateHtmlEditor( idForm ) {
 
 
 function switchFormLang( idForm, lang ) {
-  // console.log( 'switchFormLang: '+lang );
+  // cogumelo.log( 'switchFormLang: '+lang );
   cogumelo.formController.langForm = lang;
   $( '[form="'+idForm+'"].js-tr, [data-form_id="'+idForm+'"].js-tr, '+
     ' .cgmMForm-fileFields-'+idForm+' input.js-tr' )
@@ -1419,7 +1419,7 @@ function switchFormLang( idForm, lang ) {
 }
 
 function createSwitchFormLang( idForm ) {
-  // console.log( 'createSwitchFormLang' );
+  // cogumelo.log( 'createSwitchFormLang' );
 
   if( typeof cogumelo.publicConf.langAvailableIds === 'object' && cogumelo.publicConf.langAvailableIds.length > 1 ) {
     var htmlLangSwitch = '';

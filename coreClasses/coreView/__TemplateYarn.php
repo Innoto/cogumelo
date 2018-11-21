@@ -555,7 +555,7 @@ class Template extends Smarty {
 
       $clientIncludes .= "  if( cogumeloLocalStorageLastUpdate ) {\n";
       $clientIncludes .= "    if( (currentTimestamp-cogumeloLocalStorageLastUpdate) > localStorageMaxTime ){\n";
-      $clientIncludes .= "      localStorage.clear(); console.log('Cogumelo: Cleaning Localstorage data')\n";
+      $clientIncludes .= "      localStorage.clear(); cogumelo.log('Cogumelo: Cleaning Localstorage data')\n";
       $clientIncludes .= "      localStorage.setItem('cogumeloLocalStorageLastUpdate', currentTimestamp );\n";
       $clientIncludes .= "    }\n";
       $clientIncludes .= "  }\n";

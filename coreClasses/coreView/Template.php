@@ -565,7 +565,7 @@ class Template extends Smarty {
 
       $clientIncludes .= "  if( cogumeloLocalStorageLastUpdate ) {\n";
       $clientIncludes .= "    if( (currentTimestamp-cogumeloLocalStorageLastUpdate) > localStorageMaxTime ){\n";
-      $clientIncludes .= "      localStorage.clear(); console.log('Cogumelo: Cleaning Localstorage data')\n";
+      $clientIncludes .= "      localStorage.clear(); cogumelo.log('Cogumelo: Cleaning Localstorage data')\n";
       $clientIncludes .= "      localStorage.setItem('cogumeloLocalStorageLastUpdate', currentTimestamp );\n";
       $clientIncludes .= "    }\n";
       $clientIncludes .= "  }\n";
@@ -582,10 +582,10 @@ class Template extends Smarty {
       $clientIncludes .= 'basket.require('. "\n";
       $clientIncludes .= $this->getClientScriptHtml() ;
       if( !$this->cgmMediaserverCompileLess){
-        $clientIncludes .= ').then(function () { console.log(\'JS files already loaded\'); });'."\n\n";
+        $clientIncludes .= ').then(function () { cogumelo.log(\'JS files already loaded\'); });'."\n\n";
       }
       else {
-        $clientIncludes .= ').then(function () { console.log(\'JS files already loaded\');$.holdReady( false ); });'."\n\n";
+        $clientIncludes .= ').then(function () { cogumelo.log(\'JS files already loaded\');$.holdReady( false ); });'."\n\n";
       }
       $clientIncludes .= "</script>\n\n\n";
 

@@ -81,7 +81,7 @@ function cogumeloTable( tableId, tableUrl ) {
         break;
       case "search":
         that.searchClearButton.show();
-        break
+        break;
       case "unsearch":
         that.searchClearButton.hide();
         break;
@@ -98,7 +98,7 @@ function cogumeloTable( tableId, tableUrl ) {
         that.resumeFilters.hide();
       break;
     }
-  }
+  };
 
 
 
@@ -177,11 +177,11 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
 
-  }
+  };
 
   that.clearData = function() {
     that.tableContent.html('');
-  }
+  };
 
   that.initTabValues = function() {
 
@@ -205,7 +205,7 @@ function cogumeloTable( tableId, tableUrl ) {
       }
 
     }
-  }
+  };
 
   that.setExtraFilters = function() {
 
@@ -214,7 +214,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
     $.each( that.tableData.extraFilters , function(i, e){
       var opts = '';
-      //console.log(e);
+      //cogumelo.log(e);
 
 
       $.each( e.options , function(i2,e2) {
@@ -245,19 +245,19 @@ function cogumeloTable( tableId, tableUrl ) {
     that.filtersContent.find('select, input').unbind("change");
     that.filtersContent.find('select, input').on("change", that.getFilterValues );
 
-  }
+  };
 
   that.getFilterValues = function() {
     that.extraFilters  = {};
     that.filtersContent.find('select, input').each( function(i,e) {
-      //console.log( $(e).attr('data-filter-id'), $(e).val() )
+      //cogumelo.log( $(e).attr('data-filter-id'), $(e).val() );
 //      eval('that.extraFilters.' + $(e).attr('data-filter-id') + ' = "' + $(e).val() + '"' );
 
       eval( "that.extraFilters['" + $(e).attr('data-filter-id') + "'] = '" + $(e).val() + "'");
     });
 
     that.setPager(1);
-  }
+  };
 
   that.showFiltersResume = function() {
 
@@ -271,7 +271,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
 
-      //console.log( i, title , e );
+      //cogumelo.log( i, title , e );
       var valueString = e;
 
 
@@ -282,7 +282,7 @@ function cogumeloTable( tableId, tableUrl ) {
         }
       });
 
-      if(e != '*') {console.log('filtro',filter)
+      if(e != '*') {cogumelo.log('filtro',filter);
         resumeString += coma + ' (<b>' + filter.title + '</b>: '+valueString+')';
       }
       coma = ',';
@@ -294,7 +294,7 @@ function cogumeloTable( tableId, tableUrl ) {
       that.resumeFilters.show();
     }
 
-  }
+  };
 
   that.setActionValues = function() {
 
@@ -309,7 +309,7 @@ function cogumeloTable( tableId, tableUrl ) {
       }
     });
 
-  }
+  };
 
   that.setExportValues = function() {
 
@@ -319,7 +319,7 @@ function cogumeloTable( tableId, tableUrl ) {
       that.exportSelect.append('<option value='+i+'> ' + e.name + '</option>');
     });
 
-  }
+  };
 
   that.initOrderValues = function() {
 
@@ -330,7 +330,7 @@ function cogumeloTable( tableId, tableUrl ) {
       });
 
     }
-  }
+  };
 
   that.getOrderValue = function( ordIndex ) {
 
@@ -342,7 +342,7 @@ function cogumeloTable( tableId, tableUrl ) {
       });
 
     return ret;
-  }
+  };
 
   that.setOrderValue = function( ordIndex ) {
 
@@ -367,7 +367,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
     that.order = ordArray;
     that.load();
-  }
+  };
 
 
   that.setHeaders = function() {
@@ -463,12 +463,12 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
 
-  }
+  };
 
 
   that.actionSelectAllPages = function() {
     that.selectAllPagesValue = true;
-    console.log();
+    cogumelo.log();
     //$(that.headTableCheckBoxQstr).attr('checked', true);
     that.load();
 
@@ -482,7 +482,7 @@ function cogumeloTable( tableId, tableUrl ) {
       $(that.searchInput.val(searchString)) ;
       that.search = searchString;
     }
-  }
+  };
 
   that.rememberPage = function(page) {
     that.pagersCurrent.val( page );
@@ -493,7 +493,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
 
-  }
+  };
 
 
   that.setPager = function( page ) {
@@ -544,7 +544,7 @@ function cogumeloTable( tableId, tableUrl ) {
     }
 
 
-  }
+  };
 
 
 
@@ -588,9 +588,9 @@ function cogumeloTable( tableId, tableUrl ) {
     // uncheck head checkbox when change any row
     $(that.allTableCheckBoxesQstr).unbind('change');
     $(that.allTableCheckBoxesQstr).on('change', function( chClick ){
-      $(that.headTableCheckBoxQstr).prop('checked', false)
+      $(that.headTableCheckBoxQstr).prop('checked', false);
     });
-  }
+  };
 
   that.actionExport = function() {
 
@@ -614,7 +614,7 @@ function cogumeloTable( tableId, tableUrl ) {
         },
         function(result){
           //var binUrl = retData.url;
-          //console.log(retData);
+          //cogumelo.log(retData);
 
           var blob=new Blob([result]);
 
@@ -640,9 +640,9 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
 
-      that.exportSelect.val('0')
+      that.exportSelect.val('0');
     }
-  }
+  };
 
   that.actionOnSelectedRows = function(actExt, resExt ) {
 
@@ -686,7 +686,7 @@ function cogumeloTable( tableId, tableUrl ) {
       that.load();
     }
 
-  }
+  };
 
 
 
@@ -700,7 +700,7 @@ function cogumeloTable( tableId, tableUrl ) {
       that.load();
       that.interfaceAction('search');
     }
-  }
+  };
 
 
   that.searchClear = function() {
@@ -712,7 +712,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
     that.load();
     that.interfaceAction('unsearch');
-  }
+  };
 
   // EVENTS
 
@@ -740,7 +740,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
   // Export select
   that.exportSelect.on("change", function( ){
-    that.actionExport()
+    that.actionExport();
   });
 
   // tabs change

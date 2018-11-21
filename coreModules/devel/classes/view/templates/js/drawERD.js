@@ -4,7 +4,7 @@ function drawERD(  svgDiv,  graphData, cola) {
 
    var width = 800,
       height =  20 * graphData.nodes.length + 25*graphData.links.length ;
-console.log(d3)
+cogumelo.log(d3);
     var color = d3.scale.category20();
 
     var cola = cola.d3adaptor()
@@ -19,7 +19,7 @@ console.log(d3)
     graph = graphData;
 
     // packing respects node width and height
-    graph.nodes.forEach(function (v) { v.width = 15, v.height = 15 })
+    graph.nodes.forEach(function (v) { v.width = 15, v.height = 15 });
 
     cola
         .nodes(graph.nodes)
@@ -36,8 +36,8 @@ console.log(d3)
         .data(graph.nodes)
       .enter().append("circle")
         .attr("class", "node")
-        .attr("r", function (d) { return 1.5 * d.elements})
-        .style("fill", function (d) { return d.color})
+        .attr("r", function (d) { return 1.5 * d.elements;})
+        .style("fill", function (d) { return d.color;})
         .call(cola.drag);
 
     node.append("title")
