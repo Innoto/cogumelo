@@ -2182,8 +2182,12 @@ class FormController implements Serializable {
       $tmpLocationCgml = $tmpCgmlFormPath .'/'. $secureName;
 
       $sep = '-';
+      $pathInfo = pathinfo( $secureName );
+      $secName = $pathInfo['filename'];
+      $secExt = empty( $pathInfo['extension'] ) ? '' : '.'.$pathInfo['extension'];
       while ( file_exists( $tmpLocationCgml ) ) {
-        $tmpLocationCgml = $tmpCgmlFormPath .'/'. uniqid() .$sep. $secureName;
+        $tmpLocationCgml = $tmpCgmlFormPath .'/'. $secName . $sep .'CF_'. substr( uniqid(), 6 ) . $secExt;
+        // $tmpLocationCgml = $tmpCgmlFormPath .'/'. uniqid() .$sep. $secureName;
         $sep.='-';
       }
 
