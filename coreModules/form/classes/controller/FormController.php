@@ -2837,7 +2837,7 @@ class FormController implements Serializable {
     $html .= '<!-- Cogumelo module form ' . $this->getName() . ' -->' . "\n";
     $html .= '<'.'script>'."\n\n";
     $html .= '$( document ).ready( function() {'."\n\n";
-    $html .= '  console.log( "* PREPARANDO validateForm de '.$this->id.'" );'."\n\n";
+    $html .= '  cogumelo.log( "* PREPARANDO validateForm de '.$this->id.'" );'."\n\n";
 
     $html .= '  var $formCtrl = new cogumelo.formControllerClass( "'.$this->id.'", '.$formOptions.' );'."\n\n";
 
@@ -2849,7 +2849,7 @@ class FormController implements Serializable {
     }
 
     $html .= '  var $validateForm = $formCtrl.setValidateForm( '.$scRules.', '.$scMsgs.' );'."\n\n";
-    $html .= '  console.log( "* NEW validateForm: ", $formCtrl, $validateForm );'."\n\n";
+    $html .= '  cogumelo.log( "* NEW validateForm: ", $formCtrl, $validateForm );'."\n\n";
 
     foreach( $this->getFieldsNamesArray() as $fieldName ) {
       if( $this->getFieldType( $fieldName ) === 'file' ) {
