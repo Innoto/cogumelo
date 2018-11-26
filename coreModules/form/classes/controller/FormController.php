@@ -2170,8 +2170,7 @@ class FormController implements Serializable {
       preg_replace( '/[^0-9a-z_\.-]/i', '_', $this->getTokenId() ).
       '-'.$fieldName;
     if( !is_dir( $tmpCgmlFormPath ) ) {
-
-      if( !mkdir( $tmpCgmlFormPath, 0777, true ) ) {
+      if( !mkdir( $tmpCgmlFormPath, 0770, true ) ) {
         $error = 'tmpPhpFile2tmpFormFile: Imposible crear el dir. necesario: '.$tmpCgmlFormPath;
         error_log('FormController: '.$error);
       }
@@ -2181,6 +2180,12 @@ class FormController implements Serializable {
       $secureName = $this->secureFileName( $fileName );
 
       $tmpLocationCgml = $tmpCgmlFormPath .'/'. $secureName;
+
+      $sep = '-';
+      while ( file_exists( $tmpLocationCgml ) ) {
+        $tmpLocationCgml = $tmpCgmlFormPath .'/'. uniqid() .$sep. $secureName;
+        $sep.='-';
+      }
 
       if( !move_uploaded_file( $fileTmpLoc, $tmpLocationCgml ) ) {
         $error = 'tmpPhpFile2tmpFormFile: Fallo de move_uploaded_file pasando ('.$fileTmpLoc.') a ('.$tmpLocationCgml.')';
