@@ -476,7 +476,7 @@ class VOUtils {
 
 
 
-    $currentRel = (array) $relObj->relationship;
+    $currentRel = empty($relObj->relationship) ? [] : (array) $relObj->relationship;
 
     if( is_array( $resolveDependences ) && count( $currentRel ) > 0 ) {
 
@@ -565,7 +565,7 @@ class VOUtils {
   public static function searchVOinRelObj( $voName, $dataKey, $relObj ) {
     $relObjSon = -1;
 
-    $relationship = (array) $relObj->relationship;
+    $relationship = empty($relObj->relationship) ? [] : (array) $relObj->relationship;
 
     if( count( $relationship ) > 0 ) {
       foreach( $relationship as $candidate ) {
