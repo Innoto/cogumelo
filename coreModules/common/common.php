@@ -26,8 +26,7 @@ class common extends Module {
 
   public $includesCommon = array(
     //'styles/common.less',
-    'js/clientMsg.js',
-    'js/cogumeloLog.js'
+    'js/clientMsg.js'
   );
 
 
