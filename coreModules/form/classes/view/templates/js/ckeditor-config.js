@@ -18,7 +18,8 @@ CKEDITOR.editorConfig = function( config ) {
     { name: 'document', groups: [ 'mode', 'document', 'doctools' ] }
   ];
 
-  config.removeButtons = 'Save,NewPage,Preview,Print,Templates,Cut,Copy,Redo,Undo,Find,Replace,SelectAll,Scayt,Form,HiddenField,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,Strike,Subscript,Superscript,CopyFormatting,Blockquote,BidiLtr,BidiRtl,Language,Flash,Smiley,SpecialChar,PageBreak,Styles,Format,Font,FontSize,TextColor,BGColor,About,Paste,PasteText,PasteFromWord,CreateDiv,HorizontalRule';
+  // config.removeButtons = 'Save,NewPage,Preview,Print,Templates,Cut,Copy,Redo,Undo,Find,Replace,SelectAll,Scayt,Form,HiddenField,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,Strike,Subscript,Superscript,CopyFormatting,Blockquote,BidiLtr,BidiRtl,Language,Flash,Smiley,SpecialChar,PageBreak,Styles,Format,Font,FontSize,TextColor,BGColor,About,Paste,PasteText,PasteFromWord,CreateDiv,HorizontalRule';
+  config.removeButtons = 'Save,NewPage,Preview,Print,Templates,Cut,Copy,Redo,Undo,Find,Replace,SelectAll,Scayt,Form,HiddenField,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,Strike,Subscript,Superscript,CopyFormatting,BidiLtr,BidiRtl,Language,Flash,Smiley,SpecialChar,PageBreak,Styles,Format,Font,FontSize,TextColor,BGColor,About,Paste,PasteText,PasteFromWord,CreateDiv,HorizontalRule';
   config.removeDialogTabs = 'image:advanced;link:advanced;iframe:advanced';
   config.removePlugins = 'elementspath, autogrow';
 
