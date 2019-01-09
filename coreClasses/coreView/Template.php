@@ -524,7 +524,7 @@ class Template extends Smarty {
       //$clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
-      $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.Cogumelo::getSetupValue( 'mod:mediaserver:path' ).'/module/common/js/cogumeloLog.js"></script>' . "\n";      
+      $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.Cogumelo::getSetupValue( 'publicConf:vars:mediaJs' ).'/module/common/js/cogumeloLog.js"></script>' . "\n";      
       $mainClientIncludes .= '<script src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
     //  $mainClientIncludes .= $this->getClientStylesHtml();
