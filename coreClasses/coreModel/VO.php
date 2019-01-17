@@ -274,40 +274,37 @@ Class VO
 
 
   private function transformSetterValue( $setterkey, $val ) {
+    $value = $val;
 
-    if( isset($this::$cols[$setterkey]) && isset($this::$cols[$setterkey]['type']) ) {
-      $dataType = $this::$cols[$setterkey]['type'];
+    if( $value !== null ) {
+      // Solo se hace CAST si no es NULL
 
+      if( isset($this::$cols[$setterkey]) && isset($this::$cols[$setterkey]['type']) ) {
+        $dataType = $this::$cols[$setterkey]['type'];
+      }
+      else {
+        $dataType = false;
+      }
+
+      switch ( $dataType ) {
+        case 'BOOLEAN':
+        case 'TINYINT':
+        case 'SMALLINT':
+        case 'INT':
+        case 'BIGINT':
+          $value = (int) $val;
+          break;
+        case 'FLOAT':
+          $value = (float) $val;
+          break;
+        case 'CHAR':
+        case 'VARCHAR':
+        case 'TEXT':
+        case 'LONGTEXT':
+          $value = (string) $val;
+          break;
+      }
     }
-    else {
-      $dataType = false;
-    }
-
-
-
-    switch ( $dataType ) {
-      case 'BOOLEAN':
-      case 'TINYINT':
-      case 'SMALLINT':
-      case 'INT':
-      case 'BIGINT':
-        $value = (int) $val;
-        break;
-      case 'FLOAT':
-        $value = (float) $val;
-        break;
-      case 'CHAR':
-      case 'VARCHAR':
-      case 'TEXT':
-      case 'LONGTEXT':
-        $value = (string) $val;
-        break;
-      default:
-        $value = $val;
-        break;
-
-    }
-
 
     return $value;
   }
