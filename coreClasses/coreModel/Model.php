@@ -28,7 +28,7 @@ class Model extends VO {
     $this->setData( $datarray, $otherRelObj );
 
     if($this->customFacade) {
-      $this->dataFacade = new $customFacade();
+      $this->dataFacade = new $this->customFacade();
     }
     if( $this->customDAO ) {
       $this->dataFacade = new Facade( false,  $this->customDAO, $this->moduleDAO);
