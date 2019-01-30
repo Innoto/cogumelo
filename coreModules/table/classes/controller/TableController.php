@@ -21,6 +21,7 @@ class TableController{
   var $colsClasses = array();
   var $sessionMaxLife = 1800;
 
+  var $cache = false;
 
   var $eachRowUrl = '';
   var $newItemUrl = '';
@@ -162,6 +163,10 @@ class TableController{
 
   function setModel( $model ) {
     $this->model = $model;
+  }
+
+  function setCache( $cacheParam = true ) {
+    $this->cache = $cacheParam;
   }
 
   function setRowsEachPage( $rowsEachPage ) {
@@ -660,7 +665,8 @@ class TableController{
         'range' => $this->clientData['range'],
         'order' => $this->orderIntoArray(),
         'affectsDependences' => $this->affectsDependences , //array('ResourceTopicModel'),
-        'joinType' => $this->joinType
+        'joinType' => $this->joinType,
+        'cache' => $this->cache
     );
 
     // if is executing a action ( like delete or update) and have permissions to do it
