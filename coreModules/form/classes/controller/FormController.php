@@ -607,7 +607,7 @@ class FormController implements Serializable {
             },
             {
               "value":false,
-              "dataInfo":{"data-switchery":"true"}
+              "dataInfo":{"data-algo":"true"}
             }
           */
 
@@ -710,7 +710,7 @@ class FormController implements Serializable {
     //       // },
     //       // {
     //       //   "value":false,
-    //       //   "dataInfo":{"data-switchery":"true"}
+    //       //   "dataInfo":{"data-algo":"true"}
     //       // }
 
 

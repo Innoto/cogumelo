@@ -730,7 +730,7 @@ class TableController{
     echo '"previousPostData":'. json_encode($this->RAWClientData) .',';
     $coma = '';
     echo '"table" : [';
-    if($lista != false) {
+    if( is_object( $lista ) ) {
       while( $rowVO = $lista->fetch() ) {
 
         echo $coma;
