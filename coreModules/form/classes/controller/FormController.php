@@ -2690,9 +2690,12 @@ class FormController implements Serializable {
                 $html['options'][$val]['input'] = '<input name="'.$fieldName.'"'.
                   ' value="'.htmlspecialchars( $infoArray['value'] ).'"'.
                   ' type="'.$field['type'].'"'.$attribs;
-                foreach( $infoArray as $dataKey => $dataValue ) {
-                  if( mb_strpos( $dataKey, 'data-' ) === 0 ) {
-                    $html['options'][$val]['input'] .= ' '.$dataKey.'="'.$dataValue.'"';
+                foreach( $infoArray as $infoKey => $infoValue ) {
+                  if( mb_strpos( $infoKey, 'data-' ) === 0 ) {
+                    $html['options'][$val]['input'] .= ' '.$infoKey.'="'.$infoValue.'"';
+                  }
+                  if( in_array( $infoKey, ['disabled', 'readonly'] ) ) {
+                    $html['options'][$val]['input'] .= ' '.$infoKey.'="'.$infoValue.'"';
                   }
                 }
                 $html['options'][$val]['input'] .= '>';
