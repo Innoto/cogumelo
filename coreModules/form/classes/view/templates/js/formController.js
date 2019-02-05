@@ -1297,9 +1297,9 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       $downloadButton = $( '<a class="formFileDownload" href="/cgmlformfilewd/'+fileInfo.id+'-a'+fileInfo.aKey+
         '/'+fileInfo.name+'" target="_blank"><i class="fa fa-arrow-circle-down" title="'+__('Download')+' '+fileInfo.name+'"></i></a>' );
     }
-    else {
-      $downloadButton = $( '<i class="formFileDownload disabled fa fa-arrow-circle-down"></i>' );
-    }
+    // else {
+    //   $downloadButton = $( '<i class="formFileDownload disabled fa fa-arrow-circle-down"></i>' );
+    // }
     $fileBoxMenu.append(
       $('<div>').addClass('icons download').append(
         $downloadButton
