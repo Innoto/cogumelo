@@ -10,7 +10,7 @@ cogumelo.formControllerInfo = cogumelo.formControllerInfo || new Object({
   formsInfo: {}, // GLOBAL: cogumelo.formControllerClass.formsInfo
 
   setFormInfo: function setFormInfo( idForm, key, value ) {
-    cogumelo.log( '* setFormInfo( ',idForm, key, value );
+    cogumelo.log( '* setFormInfo( ', idForm, key, value );
 
     if( typeof cogumelo.formControllerInfo.formsInfo[idForm] === 'undefined' ) {
       cogumelo.formControllerInfo.formsInfo[idForm] = { idForm: idForm };
@@ -20,7 +20,7 @@ cogumelo.formControllerInfo = cogumelo.formControllerInfo || new Object({
   },
 
   getFormInfo: function getFormInfo( idForm, key ) {
-    cogumelo.log( '* getFormInfo( ',idForm, key );
+    cogumelo.log( '* getFormInfo( ', idForm, key );
     var result = null;
 
     // var index = getFormInfoIndex( idForm );
@@ -74,7 +74,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     keepAliveTime: 0, // minutos
     marginTop: 150, // Default marginTop (scroll functions)
     htmlEditor: false,
-    enterSubmit: false, // Submit on Enter
+    enterSubmit: false // Submit on Enter
   });
 
   that.formOpts = $.extend( true, {}, that.formDefOpts, options );
@@ -108,7 +108,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       invalidHandler: function( evnt, validator ) {
         cogumelo.log( '* JQV invalidHandler:', that.idForm, evnt, validator );
         if( validator.numberOfInvalids() ) {
-          failFields = new Object({});
+          var failFields = new Object({});
           jQuery.each( validator.errorList, function( index, value ) {
             failFields[index] = value.element;
           });
@@ -124,8 +124,8 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       messages: messages,
       submitHandler: function ( form, evnt ) {
         // Controlamos que el submit se realice desde un elemento de submit
-        $form = $( form );
-        $submitElement = false;
+        // var $form = $( form );
+        var $submitElement = false;
 
         if( that.submitElementName ) {
           // Se ha pulsado en alguno de los elementos de submit
@@ -226,7 +226,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   that.sendValidatedForm = function sendValidatedForm( form ) {
     cogumelo.log( '* Executando sendValidatedForm...', that.idForm );
 
-    serializeFormObj = $( form ).serializeFormToObject();
+    var serializeFormObj = $( form ).serializeFormToObject();
     formProbas = serializeFormObj;
 
     cogumelo.log( 'serializeFormObj', serializeFormObj );
@@ -241,8 +241,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       data: JSON.stringify( serializeFormObj ),
       type: 'POST', url: $( form ).attr( 'data-form-action' ),
       dataType : 'json'
-    } )
-    .done( function ( response ) {
+    } ).done( function ( response ) {
       cogumelo.log( '* Executando validate.submitHandler.done...', response );
       if( response.result === 'ok' ) {
         // alert( 'Form Submit OK' );
@@ -250,7 +249,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
         that.formDoneOk( form, response );
       }
       else {
-        cogumelo.log( '* Form Done: ERROR',response );
+        cogumelo.log( '* Form Done: ERROR', response );
         that.formDoneError( form, response );
       }
       $( form ).find( '[type="submit"]' ).removeAttr('disabled');
@@ -261,15 +260,15 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     that.submitActionValue = false;
 
 
-    funcExtender = that.getFunctionExtender('sendValidatedForm');
+    var funcExtender = that.getFunctionExtender('sendValidatedForm');
     if( funcExtender ) {
-      $fileBoxElem = funcExtender( that.idForm );
+      funcExtender( that.idForm );
     }
   }; // that.sendValidatedForm
 
 
   that.formDoneOk = function formDoneOk( form, response ) {
-    cogumelo.log( '* formDoneOk',that.idForm, response );
+    cogumelo.log( '* formDoneOk', that.idForm, response );
 
     var successActions = response.success;
 
@@ -283,7 +282,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     // Forzamos una parada hasta cerrar el "accept"
     if( successActions.accept ) {
       // cogumelo.clientMsg.alert( successActions.accept );
-      msgOptions = new Object({
+      var msgOptions = new Object({
         closed: function() {
           that.formDoneOkPhase2( form, response );
         }
@@ -298,14 +297,14 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     // alert( 'Form Submit OK' );
 
 
-    funcExtender = that.getFunctionExtender('formDoneOk');
+    var funcExtender = that.getFunctionExtender('formDoneOk');
     if( funcExtender ) {
-      $fileBoxElem = funcExtender( that.idForm );
+      funcExtender( that.idForm );
     }
   }; // that.formDoneOk
 
   that.formDoneOkPhase2 = function formDoneOkPhase2( form, response ) {
-    cogumelo.log( '* formDoneOkPhase2',that.idForm, response );
+    cogumelo.log( '* formDoneOkPhase2', that.idForm, response );
 
     var successActions = response.success;
     if( successActions.onSubmitOk ) {
@@ -328,14 +327,14 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     // alert( 'Form Submit OK' );
 
 
-    funcExtender = that.getFunctionExtender('formDoneOkPhase2');
+    var funcExtender = that.getFunctionExtender('formDoneOkPhase2');
     if( funcExtender ) {
-      $fileBoxElem = funcExtender( that.idForm );
+      funcExtender( that.idForm );
     }
   }; // that.formDoneOkPhase2
 
   that.formDoneError = function formDoneError( form, response ) {
-    cogumelo.log( '* formDoneError',that.idForm, response );
+    cogumelo.log( '* formDoneError', that.idForm, response );
 
     var successActions = response.success;
     if ( successActions.onSubmitError ) {
@@ -392,9 +391,9 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     // cogumelo.log( 'formDoneError (FIN)' );
 
 
-    funcExtender = that.getFunctionExtender('formDoneError');
+    var funcExtender = that.getFunctionExtender('formDoneError');
     if( funcExtender ) {
-      $fileBoxElem = funcExtender( that.idForm );
+      funcExtender( that.idForm );
     }
   }; // that.formDoneError
 
@@ -402,7 +401,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   that.mixEvents = function mixEvents() {
     cogumelo.log( '* mixEvents '+that.idForm );
 
-    $formSubmitFields = $( '[form="'+that.idForm+'"][type="submit"]' );
+    var $formSubmitFields = $( '[form="'+that.idForm+'"][type="submit"]' );
     $formSubmitFields.on({
       'mouseenter' : that.setSubmitElement,
       'focusin'    : that.setSubmitElement,
@@ -459,7 +458,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
   that.setSubmitElement = function setSubmitElement( evnt ) {
     cogumelo.log( '* setSubmitElement: ', that.idForm, $( evnt.target ).attr('name') );
-    $elem = $( evnt.target );
+    var $elem = $( evnt.target );
     // $( '#'+$elem.attr('form') ).attr('data-submit-element-name', $elem.attr('name') );
     that.submitElementName = $elem.attr('name');
   }; // that.setSubmitElement
@@ -491,10 +490,10 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
         cogumelo.log( '* formKeepAlive $jsonData --- ', $jsonData );
         // var idForm = ($jsonData.moreInfo.idForm) ? $jsonData.moreInfo.idForm : false;
         if( $jsonData.result === 'ok' ) {
-          cogumelo.log( '* formKeepAlive OK --- ',that.idForm );
+          cogumelo.log( '* formKeepAlive OK --- ', that.idForm );
         }
         else {
-          cogumelo.log( '* formKeepAlive ERROR',$jsonData );
+          cogumelo.log( '* formKeepAlive ERROR', $jsonData );
         }
       }
     });
@@ -521,8 +520,8 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     $( 'textarea.cgmMForm-htmlEditorBig[form="'+that.idForm+'"]' ).each(
       function( index ) {
         // var textarea = this;
-        $fieldWrap = $(this).closest('.cgmMForm-wrap');
-        $ta = $fieldWrap.find('textarea');
+        var $fieldWrap = $(this).closest('.cgmMForm-wrap');
+        var $ta = $fieldWrap.find('textarea');
         $fieldWrap.append(
           '<div class="fieldGrapesJSContent" style="border: 1px solid #CECECE;padding: 5px;height: 200px;overflow: auto;">'+
           $ta.text() + '</div>'
@@ -534,12 +533,12 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           'background': '#5AB780',
           'color': '#ffffff'
         });
-        $fieldWrap.find('.btnGoToEditorBig').on( 'click',function() {
+        $fieldWrap.find('.btnGoToEditorBig').on( 'click', function() {
           cogumelo.log( 'Abrir', this );
 
-          $el = $(this).closest('.cgmMForm-wrap').find('textarea');
+          var $el = $(this).closest('.cgmMForm-wrap').find('textarea');
 
-          textareaHtml = $el.text();
+          var textareaHtml = $el.text();
           if( textareaHtml.indexOf('htmlEditorBig') > -1 ) {
             textareaHtml = textareaHtml.replace( "\n<div class=\"htmlEditorBig\">\n", '' );
             textareaHtml = textareaHtml.replace( "\n</div><!-- /htmlEditorBig -->\n", '' );
@@ -547,15 +546,15 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           textareaHtml = textareaHtml.replace( /<!-- cssReset -->.*?<!-- \/cssReset -->\n/gi, '' );
           textareaHtml = textareaHtml.replace( /\.htmlEditorBig /gi, '' );
 
-          htmlEditContent = '<div id="editorGrapesJSContent">' + textareaHtml + '</div>';
+          var htmlEditContent = '<div id="editorGrapesJSContent">' + textareaHtml + '</div>';
 
-          $editorWrap = $('#editorGrapesJSWrapper');
+          var $editorWrap = $('#editorGrapesJSWrapper');
           if( !$editorWrap.length ) {
             $('body').prepend('<div id="editorGrapesJSWrapper"></div>');
             $editorWrap = $('#editorGrapesJSWrapper');
           }
 
-          close = ''+
+          var close = ''+
           '<div class="wrapperGrapesButtonClose" style="text-align:center;">'+
             '<button class="btn editorGrapesJSClose" style="margin:4px 0;background:#5AB780;color:#ffffff;"'+
               'data-form="'+$el.attr('form')+'" data-field="'+$el.attr('name')+'">'+__('Close')+'</button>'+
@@ -566,7 +565,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
           $('#editorGrapesJSWrapper .editorGrapesJSClose').on( 'click', function() {
             cogumelo.log( 'Cerrar', this );
-            $ev = $(this);
+            var $ev = $(this);
             var gjsCss = formGrapesJS.getCss();
 
             // gjsCss = gjsCss.replace( / *body *{ *margin: *0; *} */gi, '' );
@@ -632,8 +631,8 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
             },
 
             storageManager: {
-              autoload: 0,
-            },
+              autoload: 0
+            }
 
             // plugins: ['gjs-blocks-flexbox'],
             // pluginsOpts: {
@@ -656,7 +655,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
               // Upload endpoint, set `false` to disable upload, default `false`
               upload: cogumelo.publicConf.mod_filedata_filePublicGrapesUpload,
               // The name used in POST to pass uploaded files, default: `'files'`
-              uploadName: 'grapesJSFilesUpload',
+              uploadName: 'grapesJSFilesUpload'
             };
           }
 
@@ -684,13 +683,13 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
           if( $jsonData.length > 0 ) {
             objGrapesJS.AssetManager.add( $jsonData );
           }
-        },
+        }
       });
     }
   }; // that.updateImages2HtmlEditorBig
 
   that.switchFormLang = function switchFormLang( lang ) {
-    cogumelo.log( '* switchFormLang: ',that.idForm,lang );
+    cogumelo.log( '* switchFormLang: ', that.idForm, lang );
 
     that.langSwitchActive = lang;
     $( '[form="'+that.idForm+'"].js-tr-sw, [data-form_id="'+that.idForm+'"].js-tr-sw, '+
@@ -704,7 +703,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   }; // that.switchFormLang
 
   that.createSwitchFormLang = function createSwitchFormLang() {
-    cogumelo.log( '* createSwitchFormLang',that.idForm );
+    cogumelo.log( '* createSwitchFormLang', that.idForm );
 
     var htmlLangSwitch = '';
     htmlLangSwitch += '<div class="langSwitch-wrap">';
@@ -716,30 +715,30 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     htmlLangSwitch += '<span class="langSwitchIcon"><i class="fa fa-globe fa-fw"></i></span>';
     htmlLangSwitch += '</div>';
 
-    $langSwitch = $( htmlLangSwitch );
+    var $langSwitch = $( htmlLangSwitch );
     $( '[form="'+that.idForm+'"].cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault + ':not("input:file")' ).each(function(){
       var field = $( this );
       var fieldName = field.attr( 'name' );
-      field.parent().before( $langSwitch.clone().addClass("langSwitch-" + fieldName) );
+      field.parent().before( $langSwitch.clone().addClass('langSwitch-' + fieldName) );
     });
 
     $( '.cgmMForm-fileFields-'+that.idForm+' .cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault + ':not("input:file")' ).each(function(){
       var field = $( this );
       var fieldName = field.attr( 'name' );
-      field.parent().before( $langSwitch.clone().addClass("langSwitch-" + fieldName) );
+      field.parent().before( $langSwitch.clone().addClass('langSwitch-' + fieldName) );
     });
 
-    $langSwitchFile = $( htmlLangSwitch ).addClass('langSwitch-file');
+    var $langSwitchFile = $( htmlLangSwitch ).addClass('langSwitch-file');
     $( '[type=file][form="'+that.idForm+'"].cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault ).each(function(){
       var field = $( this );
       var fieldName = field.attr( 'name' );
-      field.parent().before( $langSwitchFile.clone().addClass("langSwitch-" + fieldName) );
+      field.parent().before( $langSwitchFile.clone().addClass('langSwitch-' + fieldName) );
     });
 
     $( '[type=file].cgmMForm-fileFields-'+that.idForm+' .cgmMForm-field.js-tr-sw.js-tr-' + that.langDefault ).each(function(){
       var field = $( this );
       var fieldName = field.attr( 'name' );
-      field.parent().before( $langSwitchFile.clone().addClass("langSwitch-" + fieldName) );
+      field.parent().before( $langSwitchFile.clone().addClass('langSwitch-' + fieldName) );
     });
 
 
@@ -755,7 +754,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
 
   that.createFilesTitleField = function createFilesTitleField() {
-    cogumelo.log( '* createFilesTitleField',that.idForm );
+    cogumelo.log( '* createFilesTitleField', that.idForm );
 
     var $inputFileFields = $( 'input:file[form="'+that.idForm+'"]' ).not( '[multiple]' );
     $inputFileFields.after( function() {
@@ -796,7 +795,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
   }; // that.createFilesTitleField
 
   that.hideFileTitleField = function hideFileTitleField( fieldName ) {
-    cogumelo.log( '* hideFileTitleField ',that.idForm, fieldName );
+    cogumelo.log( '* hideFileTitleField ', that.idForm, fieldName );
 
     var $fileField = $( 'input[form="'+that.idForm+'"][name="'+fieldName+'"]' );
     // Clear data-fm_title
@@ -828,8 +827,9 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     // $( '.formError[form="' + that.idForm + '"]' ).each( function() {
     jQuery.each( failFields, function( index, value ) {
       numErrors++;
-      $field = $( value );
-      $wrap = $( '.cgmMForm-wrap.cgmMForm-field-'+$field.attr('name') );
+      var topElem = false;
+      var $field = $( value );
+      var $wrap = $( '.cgmMForm-wrap.cgmMForm-field-'+$field.attr('name') );
       if( $wrap.length > 0 ) {
         topElem = $wrap.offset().top;
         // cogumelo.log( 'reprocessFormErrors WRAP ', topElem, $field.attr('name') );
@@ -845,7 +845,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     });
 
 
-    if( topErrScroll != 999999 ) {
+    if( topErrScroll !== 999999 ) {
       if( formMarginTop !== null && formMarginTop !== undefined ) {
         topErrScroll -= formMarginTop;
       }
@@ -1068,8 +1068,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       data: formData,
       //Options to tell jQuery not to process data or worry about content-type.
       cache: false, contentType: false, processData: false
-    } )
-    .done( function ( response ) {
+    }).done( function ( response ) {
       // cogumelo.log( 'Executando deleteFormFile.done...' );
       // cogumelo.log( response );
       if( response.result === 'ok' ) {
@@ -1163,7 +1162,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       'tempId': moreInfo.tempId,
       'name': moreInfo.fileName,
       'type': moreInfo.fileType,
-      'size': moreInfo.fileSize,
+      'size': moreInfo.fileSize
     };
 
     var tnProfile = $fileField.attr('data-tnProfile');
@@ -1228,7 +1227,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     $.each( groupFiles, function(){
       // cogumelo.log('Añadimos esto a fileBoxWrap;', this, $filesWrap);
       $filesWrap.append( that.fileBox( fieldName, this, that.deleteFormFileEvent )
-       .css( {'float': 'left', 'width': '23%', 'margin': '1%' } ) );
+        .css( {'float': 'left', 'width': '23%', 'margin': '1%' } ) );
     } );
   }; // that.fileFieldGroupWidget
 
@@ -1348,7 +1347,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     $fileBoxElem.append( $fileBoxMenu );
 
-    funcExtender = that.getFunctionExtender('fileBox');
+    var funcExtender = that.getFunctionExtender('fileBox');
     if( funcExtender ) {
       $fileBoxElem = funcExtender( fieldName, fileInfo, deleteFunc, $fileBoxElem );
     }
@@ -1385,7 +1384,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     var $fileFieldWrap = $fileField.closest( '.cgmMForm-wrap.cgmMForm-field-' + fieldName );
     var $fileDefLabel = $fileFieldWrap.find( 'label' );
 
-    $buttonText = ( $fileDefLabel.length > 0 ) ? $fileDefLabel.html() : 'Upload file';
+    var $buttonText = ( $fileDefLabel.length > 0 ) ? $fileDefLabel.html() : 'Upload file';
 
     // cogumelo.log( 'Preparando DropZone #fileFieldDropZone_' + that.idForm + '_' + fieldName );
     var $fileFieldDropZone = $( '<div>' ).addClass( 'fileFieldDropZone fileFieldDropZoneWait' )
@@ -1601,7 +1600,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
 
   that.getFunctionExtender = function getFunctionExtender( funcName ) {
-    funcExtender = null;
+    var funcExtender = null;
 
     eval(
       'if( typeof cogumelo.formExtender_'+that.idForm+'_'+funcName+' === "function" ) { '+
@@ -1619,10 +1618,10 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 if( cogumelo.publicConf.C_LANG !== 'en' ) {
 
   switch( cogumelo.publicConf.C_LANG ) {
-    case "pt":
+    case 'pt':
       basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_PT.js' } );
       break;
-    case "br":
+    case 'br':
       basket.require( { url: '/vendor/bower/jquery-validation/src/localization/messages_'+cogumelo.publicConf.C_LANG+'_BR.js' } );
       break;
     default:
