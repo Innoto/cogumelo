@@ -3273,11 +3273,47 @@ class FormController implements Serializable {
         $fieldValues = array( $fieldValues );
       }
 
+      $fieldValuesCount = count( $fieldValues );
+
+      if( $fieldType === 'checkbox' || $fieldType === 'select' ) {
+        // Para estos tipos verificamos estos casos antes: minlength, maxlength
+        $ruleName = 'minlength';
+        if( !empty( $fieldRules[ $ruleName ] ) ) {
+          $ruleParams = $fieldRules[ $ruleName ];
+          if( $fieldValuesCount < $ruleParams ) {
+            error_log('FormController: ERROR: evaluateRule( '.$fieldName.', '.$fieldValuesCount.', '.
+              $ruleName.', '.$ruleParams.' ) Prev' );
+            $this->addFieldRuleError( $fieldName, $ruleName );
+            $fieldValidated = false;
+          }
+        }
+
+        $ruleName = 'maxlength';
+        if( !empty( $fieldRules[ $ruleName ] ) ) {
+          $ruleParams = $fieldRules[ $ruleName ];
+          if( $fieldValuesCount > $ruleParams ) {
+            error_log('FormController: ERROR: evaluateRule( '.$fieldName.', '.$fieldValuesCount.', '.
+              $ruleName.', '.$ruleParams.' ) Prev' );
+            $this->addFieldRuleError( $fieldName, $ruleName );
+            $fieldValidated = false;
+          }
+        }
+      }
+
       foreach( $fieldValues as $value ) {
         $fieldValidateValue = true;
         if( !empty( $fieldRules ) ) {
           foreach( $fieldRules as $ruleName => $ruleParams ) {
             // error_log('FormController: evaluateRule( '.$fieldName.', '.print_r( $value, true ).', '.$ruleName.', '.print_r( $ruleParams, true ) .' )' );
+
+            if( ( $fieldType === 'checkbox' || $fieldType === 'select' ) &&
+              ( $ruleName === 'minlength' || $ruleName === 'maxlength' ) )
+            {
+              // Ignoramos este control en este punto porque se verifica antes
+              // error_log('FormController: ERROR: evaluateRule( '.$fieldName.', , '.
+              //   $ruleName.', '.$ruleParams.' ) SALTADO' );
+              continue;
+            }
 
             if( $ruleName === 'equalTo' ) {
               $fieldRuleValidate = ( $value === $this->getFieldValue( str_replace('#', '', $ruleParams )) );
