@@ -195,7 +195,9 @@ class FormValidators extends FormValidatorsExtender {
   }
 
 
-
+  public function val_movilEsp( $value ) {
+    return preg_match( '/^6\d{8}$/', $value ) === 1;
+  }
 
 
   public function val_digits( $value ) {

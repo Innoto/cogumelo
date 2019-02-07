@@ -38,6 +38,15 @@ $.validator.addMethod(
 
 
 
+$.validator.addMethod(
+  "movilEsp",
+  function( value, element ) {
+    regexPatt=new RegExp('^6\\d{8}?$');
+    return ( value==='' && this.optional( element ) ) || regexPatt.test( value );
+  },
+  $.validator.format( __("Please enter a valid mobile phone number.") )
+);
+
 
 
 $.validator.addMethod(
