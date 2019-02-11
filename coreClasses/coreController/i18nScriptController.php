@@ -193,57 +193,59 @@ class i18nScriptController {
   **/
   public function getAppModulePo($modulePath){
 
-    $module = $this->dir_modules.$modulePath;
-    $files = CacheUtilsController::listFolderFiles($module, array('php','js','tpl'), false);
-
-    $filesModule = array();
-    foreach($files as $file){
-      echo 'FILE: '."\n";
-      echo $file."\n";
-      if(strpos($file,'php')){
-        $filesModule['php'][] = $file->getRealPath();
+    $module = false;
+    if(is_dir($this->dir_modules.$modulePath)){ // app module
+      $module = $this->dir_modules.$modulePath;
+    }
+    else{
+      if(is_dir($this->dir_modules_dist.$modulePath)){ // geozzy module
+        $module = $this->dir_modules_dist.$modulePath;
       }
-      if(strpos($file,'js')){
-        $filesModule['js'][] = $file->getRealPath();
+      else{
+        if(is_dir($this->dir_modules_c.$modulePath)){ // cogumelo module
+          $module = $this->dir_modules_c.$modulePath;
+        }
+        else{
+          echo "No module coincidence! Try again.\n";
+          return false;
+        }
       }
-      if(strpos($file,'tpl')){
-        $filesModule['tpl'][] = $file->getRealPath();
-      }
+    }
 
+    if($module){
+      $files = CacheUtilsController::listFolderFiles($module, array('php','js','tpl'), false);
 
-      /*switch($parts[1]){
-        case 'php':
+      $filesModule = array();
+      foreach($files as $file){
+        if(strpos($file,'php')){
           $filesModule['php'][] = $file->getRealPath();
-          break;
-        case 'js':
+        }
+        if(strpos($file,'js')){
           $filesModule['js'][] = $file->getRealPath();
-          break;
-        case 'tpl':
+        }
+        if(strpos($file,'tpl')){
           $filesModule['tpl'][] = $file->getRealPath();
-          break;
-      }*/
-    }
+        }
+      }
 
-    /************************** PHP *******************************/
-    if (array_key_exists('php', $filesModule)){
-      echo 'PHP'."\n";
-      $this->generateModulePo($module, $filesModule['php'], 'php');
-    }
+      /************************** PHP *******************************/
+      if (array_key_exists('php', $filesModule)){
+        $this->generateModulePo($module, $filesModule['php'], 'php');
+      }
 
-    /************************** JS *******************************/
-    if (array_key_exists('js', $filesModule)){
-      echo 'JS'."\n";
-      $this->generateModulePo($module, $filesModule['js'], 'js');
-    }
+      /************************** JS *******************************/
+      if (array_key_exists('js', $filesModule)){
+        $this->generateModulePo($module, $filesModule['js'], 'js');
+      }
 
-    /**************************** TPL ********************************/
-    if (array_key_exists('tpl', $filesModule)){
-      echo 'TPL'."\n";
-      $this->generateModuleTplPo($module, $filesModule['tpl']);
+      /**************************** TPL ********************************/
+      if (array_key_exists('tpl', $filesModule)){
+        $this->generateModuleTplPo($module, $filesModule['tpl']);
+      }
+      // Now we have to combine each type PO's in one for each language
+      $this->updateModulePo($module);
+      return true;
     }
-    // Now we have to combine each type PO's in one for each language
-    $this->updateModulePo($module);
-
   }
 
   /*
@@ -442,7 +444,6 @@ class i18nScriptController {
   * Extract strings from system to translate of a type (PHP, JS)and put them into an specific translations file PO
   **/
   function generateModulePo($module, $files, $type){
-echo 'llega';
     if(is_dir($module.'/translations')){
       $module = $module.'/translations';
     }
@@ -450,8 +451,6 @@ echo 'llega';
       exec('mkdir '.$module.'/translations');
       $module = $module.'/translations';
     }
-    echo $module;
-
 
     foreach( $this->lang as $l => $lang) {
       $oldFile = $module.'/'.$this->textdomain.'_'.$l.'.po';
@@ -464,7 +463,6 @@ echo 'llega';
           $extractor = 'Gettext\Extractors\JsCode';
           $newFile = $module.'/'.$this->textdomain.'_'.$l.'_js.po';
       }
-      echo $newFile;
       if ($this->checkModuleTranslations($module, $l)){ //merge
         //Scan the php code to find the latest gettext entries
         $entries = $extractor::fromFile($files);

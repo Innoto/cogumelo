@@ -153,8 +153,10 @@ if( $argc > 1 ) {
         Cogumelo::load('coreController/i18nScriptController.php');
         $i18nscriptController = new i18nScriptController();
         if( $argc > 2 ) {
-          $i18nscriptController->getAppModulePo($argv[2]);
-          echo "The module.po are ready to be edited!\n";
+          $res = $i18nscriptController->getAppModulePo($argv[2]);
+          if($res){
+            echo "The module.po are ready to be edited!\n";
+          }
         }else{
           echo "You must specify the module\n";
         }
@@ -238,6 +240,7 @@ function printOptions(){
  + Internationalization
     * generateFrameworkTranslations    Update text to translate in cogumelo and geozzy modules
     * generateAppTranslations    Get text to translate in the app
+    * generateModuleTranslations    Get text to translate for a given module
     * precompileTranslations     Generate the intermediate POs(geozzy, cogumelo and app)
     * compileTranslations     Mix geozzy, cogumelo and app POS in one and compile it to get the translations ready
   \n\n";
