@@ -149,6 +149,17 @@ if( $argc > 1 ) {
       echo "The files.po are ready to be edited!\n";
       break;
 
+    case 'generateModuleTranslations':
+        Cogumelo::load('coreController/i18nScriptController.php');
+        $i18nscriptController = new i18nScriptController();
+        if( $argc > 2 ) {
+          $i18nscriptController->getAppModulePo($argv[2]);
+          echo "The module.po are ready to be edited!\n";
+        }else{
+          echo "You must specify the module\n";
+        }
+        break;
+
     case 'removeAllTranslations':
       Cogumelo::load('coreController/i18nScriptController.php');
       $i18nscriptController = new i18nScriptController();
@@ -682,5 +693,3 @@ function rmdirRec( $dir, $removeContainer = true ) {
     }
   }
 }
-
-

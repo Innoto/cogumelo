@@ -191,11 +191,72 @@ class i18nScriptController {
   /*
   * Generate translations file PO for a given module
   **/
-  public function getModulePo($module){
-    // $path = $module;
+  public function getAppModulePo($modulePath){
+
+    $module = $this->dir_modules.$modulePath;
     $files = CacheUtilsController::listFolderFiles($module, array('php','js','tpl'), false);
+
     $filesModule = array();
     foreach($files as $file){
+      echo 'FILE: '."\n";
+      echo $file."\n";
+      if(strpos($file,'php')){
+        $filesModule['php'][] = $file->getRealPath();
+      }
+      if(strpos($file,'js')){
+        $filesModule['js'][] = $file->getRealPath();
+      }
+      if(strpos($file,'tpl')){
+        $filesModule['tpl'][] = $file->getRealPath();
+      }
+
+
+      /*switch($parts[1]){
+        case 'php':
+          $filesModule['php'][] = $file->getRealPath();
+          break;
+        case 'js':
+          $filesModule['js'][] = $file->getRealPath();
+          break;
+        case 'tpl':
+          $filesModule['tpl'][] = $file->getRealPath();
+          break;
+      }*/
+    }
+
+    /************************** PHP *******************************/
+    if (array_key_exists('php', $filesModule)){
+      echo 'PHP'."\n";
+      $this->generateModulePo($module, $filesModule['php'], 'php');
+    }
+
+    /************************** JS *******************************/
+    if (array_key_exists('js', $filesModule)){
+      echo 'JS'."\n";
+      $this->generateModulePo($module, $filesModule['js'], 'js');
+    }
+
+    /**************************** TPL ********************************/
+    if (array_key_exists('tpl', $filesModule)){
+      echo 'TPL'."\n";
+      $this->generateModuleTplPo($module, $filesModule['tpl']);
+    }
+    // Now we have to combine each type PO's in one for each language
+    $this->updateModulePo($module);
+
+  }
+
+  /*
+  * Generate translations file PO for a given module
+  **/
+  public function getModulePo($module){
+    // $path = $module;
+
+    $files = CacheUtilsController::listFolderFiles($module, array('php','js','tpl'), false);
+
+    $filesModule = array();
+    foreach($files as $file){
+
       $parts = explode('.',$file);
       switch($parts[1]){
         case 'php':
@@ -381,6 +442,7 @@ class i18nScriptController {
   * Extract strings from system to translate of a type (PHP, JS)and put them into an specific translations file PO
   **/
   function generateModulePo($module, $files, $type){
+echo 'llega';
     if(is_dir($module.'/translations')){
       $module = $module.'/translations';
     }
@@ -388,6 +450,9 @@ class i18nScriptController {
       exec('mkdir '.$module.'/translations');
       $module = $module.'/translations';
     }
+    echo $module;
+
+
     foreach( $this->lang as $l => $lang) {
       $oldFile = $module.'/'.$this->textdomain.'_'.$l.'.po';
       switch($type){
@@ -399,6 +464,7 @@ class i18nScriptController {
           $extractor = 'Gettext\Extractors\JsCode';
           $newFile = $module.'/'.$this->textdomain.'_'.$l.'_js.po';
       }
+      echo $newFile;
       if ($this->checkModuleTranslations($module, $l)){ //merge
         //Scan the php code to find the latest gettext entries
         $entries = $extractor::fromFile($files);
