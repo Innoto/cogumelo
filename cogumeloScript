@@ -111,6 +111,19 @@ if( $argc > 1 ) {
       echo "The files.po are ready to be edited!\n";
       break;
 
+    case 'generateModuleTranslations':
+      Cogumelo::load('coreController/i18nScriptController.php');
+      $i18nscriptController = new i18nScriptController();
+      if( $argc > 2 ) {
+        $res = $i18nscriptController->getAppModulePo($argv[2]);
+        if($res){
+          echo "The module.po are ready to be edited!\n";
+        }
+      }else{
+        echo "You must specify the module\n";
+      }
+      break;
+
     case 'removeAllTranslations':
       Cogumelo::load('coreController/i18nScriptController.php');
       $i18nscriptController = new i18nScriptController();
@@ -189,10 +202,12 @@ function printOptions(){
     * restoreDB               Restore a database
 
  + Internationalization
-    * generateFrameworkTranslations    Update text to translate in cogumelo and geozzy modules
-    * generateAppTranslations    Get text to translate in the app
-    * precompileTranslations     Generate the intermediate POs(geozzy, cogumelo and app)
-    * compileTranslations     Mix geozzy, cogumelo and app POS in one and compile it to get the translations ready
+  * generateFrameworkTranslations    Update text to translate in cogumelo and geozzy modules
+   * generateAppTranslations    Get text to translate in the app
+   * generateModuleTranslations    Get text to translate for a given module. Need to hand mix
+   * precompileTranslations     Generate the intermediate POs(geozzy, cogumelo and app -> for testing!)
+   * compileTranslations     Mix geozzy, cogumelo and app POS in one and compile it to get the translations the first time
+   * recompileTranslations     Just make the modified PO compilation to get the MO file
   \n\n";
 }
 
@@ -207,9 +222,17 @@ function actionCompileTranslations() {
   Cogumelo::load('coreController/i18nScriptController.php');
   $i18nscriptController = new i18nScriptController();
   /*$i18nscriptController->setEnviroment();*/
+  $i18nscriptController->c_i18n_precompile();
   $i18nscriptController->c_i18n_compile();
   /* generate json for js */
   $i18nscriptController->c_i18n_json();
+  echo "\nThe files.mo are ready to be used!\n\n";
+}
+
+function actionRecompileTranslations() {
+  Cogumelo::load('coreController/i18nScriptController.php');
+  $i18nscriptController = new i18nScriptController();
+  $i18nscriptController->c_i18n_recompile();
   echo "\nThe files.mo are ready to be used!\n\n";
 }
 

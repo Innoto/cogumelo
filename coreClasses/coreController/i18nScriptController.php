@@ -191,11 +191,74 @@ class i18nScriptController {
   /*
   * Generate translations file PO for a given module
   **/
+  public function getAppModulePo($modulePath){
+
+    $module = false;
+    if(is_dir($this->dir_modules.$modulePath)){ // app module
+      $module = $this->dir_modules.$modulePath;
+    }
+    else{
+      if(is_dir($this->dir_modules_dist.$modulePath)){ // geozzy module
+        $module = $this->dir_modules_dist.$modulePath;
+      }
+      else{
+        if(is_dir($this->dir_modules_c.$modulePath)){ // cogumelo module
+          $module = $this->dir_modules_c.$modulePath;
+        }
+        else{
+          echo "No module coincidence! Try again.\n";
+          return false;
+        }
+      }
+    }
+
+    if($module){
+      $files = CacheUtilsController::listFolderFiles($module, array('php','js','tpl'), false);
+
+      $filesModule = array();
+      foreach($files as $file){
+        if(strpos($file,'php')){
+          $filesModule['php'][] = $file->getRealPath();
+        }
+        if(strpos($file,'js')){
+          $filesModule['js'][] = $file->getRealPath();
+        }
+        if(strpos($file,'tpl')){
+          $filesModule['tpl'][] = $file->getRealPath();
+        }
+      }
+
+      /************************** PHP *******************************/
+      if (array_key_exists('php', $filesModule)){
+        $this->generateModulePo($module, $filesModule['php'], 'php');
+      }
+
+      /************************** JS *******************************/
+      if (array_key_exists('js', $filesModule)){
+        $this->generateModulePo($module, $filesModule['js'], 'js');
+      }
+
+      /**************************** TPL ********************************/
+      if (array_key_exists('tpl', $filesModule)){
+        $this->generateModuleTplPo($module, $filesModule['tpl']);
+      }
+      // Now we have to combine each type PO's in one for each language
+      $this->updateModulePo($module);
+      return true;
+    }
+  }
+
+  /*
+  * Generate translations file PO for a given module
+  **/
   public function getModulePo($module){
     // $path = $module;
+
     $files = CacheUtilsController::listFolderFiles($module, array('php','js','tpl'), false);
+
     $filesModule = array();
     foreach($files as $file){
+
       $parts = explode('.',$file);
       switch($parts[1]){
         case 'php':
@@ -388,6 +451,7 @@ class i18nScriptController {
       exec('mkdir '.$module.'/translations');
       $module = $module.'/translations';
     }
+
     foreach( $this->lang as $l => $lang) {
       $oldFile = $module.'/'.$this->textdomain.'_'.$l.'.po';
       switch($type){
@@ -538,8 +602,19 @@ class i18nScriptController {
         exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
       }
       exec('rm '.$l.'/'.$this->textdomain.'_moduleApp.po');
+      exec('rm '.$l.'/'.$this->textdomain.'_app.po');
     }
   }
+
+  public function c_i18n_recompile() {
+
+    foreach ($this->dir_lc as $l){
+      // We compile the resultant PO and generate a json for client side
+      exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
+      exec('php '.$this->dir_modules_c.'/i18nServer/classes/po2json.php -i '.$l.'/'.$this->textdomain.'.po -o '.$l.'/translation.json');
+    }
+  }
+
 
   /**
     * Translate files.po into .json to be used in client: not in use today
