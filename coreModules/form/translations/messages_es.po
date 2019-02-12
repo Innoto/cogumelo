@@ -9,9 +9,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language: \n"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:162
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:358
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:159
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:318
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:162
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:341
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:321
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:159
@@ -21,14 +22,15 @@ msgstr ""
 msgid "Confirm"
 msgstr "Confirmar"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:279
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:276
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:274
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:279
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:276
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:258
 msgid "Success"
 msgstr "Hecho"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:348
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:308
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:331
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:311
@@ -38,6 +40,7 @@ msgstr "Hecho"
 msgid "Form session expired. Reload"
 msgstr "Sesión de formulario caducada. Recarga"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:352
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:312
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:335
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:315
@@ -47,6 +50,7 @@ msgstr "Sesión de formulario caducada. Recarga"
 msgid "Reload to get valid From?"
 msgstr "Recargar para tener un formulario válido"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:432
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:386
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:409
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:389
@@ -60,6 +64,19 @@ msgstr ""
 "Tu navegador no tiene soporte HTML5 para enviar ficheros. Actualiza a "
 "versiones recientes..."
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:532
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:509
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:489
+msgid "Open editor"
+msgstr "Abrir editor"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:561
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:538
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:518
+msgid "Close"
+msgstr "Cerrar"
+
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:863
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:719
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:840
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:820
@@ -72,6 +89,7 @@ msgstr ""
 msgid "There are errors in the form"
 msgstr "Hay errores en el formulario"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:864
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:720
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:841
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:821
@@ -84,6 +102,7 @@ msgstr "Hay errores en el formulario"
 msgid "Warning"
 msgstr "Atención"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1011
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:858
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:978
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:959
@@ -96,6 +115,7 @@ msgstr "Atención"
 msgid "Error loading file"
 msgstr "Error cargando fichero"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1281
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:1124
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1248
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1225
@@ -108,6 +128,7 @@ msgstr "Error cargando fichero"
 msgid "Discard"
 msgstr "Descartar"
 
+#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1299
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/__formControllerYarn.js:1142
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1266
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:1243
@@ -277,16 +298,6 @@ msgstr "Demasiados ficheros. (Límite: {0} ficheros)."
 msgid "This field is required."
 msgstr "Este campo es obligatorio."
 
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:509
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:489
-msgid "Open editor"
-msgstr "Abrir editor"
-
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:538
-#: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formController.js:518
-msgid "Close"
-msgstr "Cerrar"
-
 #: /home/proxectos/cogumelo/coreModules/form/classes/view/templates/js/formValidators.js:97
 msgid "The NIE format is not CNNNNNNNC'"
 msgstr "El formato del NIE debe ser CNNNNNNNN"
@@ -317,5 +328,7 @@ msgstr "La fecha introducida debe ser más antigua (> {0})"
 #: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:623
 #: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:723
 #: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:815
+#: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:657
+#: /home/proxectos/cogumelo/coreModules/form/classes/controller/FormController.php:854
 msgid "Intento de manipulacion del formulario"
 msgstr ""

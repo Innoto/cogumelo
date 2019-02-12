@@ -62,10 +62,12 @@ msgstr "de"
 
 #: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:53
 #: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:56
+#: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:57
 msgid "Export"
 msgstr "Exportar"
 
 #: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:57
 #: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:60
+#: /home/proxectos/cogumelo/coreModules/table/classes/controller/TableController.php:61
 msgid "Actions"
 msgstr "Accións"
