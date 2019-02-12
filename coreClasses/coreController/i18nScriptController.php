@@ -602,8 +602,19 @@ class i18nScriptController {
         exec('rm '.$l.'/'.$this->textdomain.'_geozzy.po');
       }
       exec('rm '.$l.'/'.$this->textdomain.'_moduleApp.po');
+      exec('rm '.$l.'/'.$this->textdomain.'_app.po');
     }
   }
+
+  public function c_i18n_recompile() {
+
+    foreach ($this->dir_lc as $l){
+      // We compile the resultant PO and generate a json for client side
+      exec('msgfmt -c -v -o '.$l.'/'.$this->textdomain.'.mo '.$l.'/'.$this->textdomain.'.po');
+      exec('php '.$this->dir_modules_c.'/i18nServer/classes/po2json.php -i '.$l.'/'.$this->textdomain.'.po -o '.$l.'/translation.json');
+    }
+  }
+
 
   /**
     * Translate files.po into .json to be used in client: not in use today
