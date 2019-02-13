@@ -138,6 +138,10 @@ if( $argc > 1 ) {
       actionCompileTranslations();
       break;
 
+    case 'recompileTranslations':
+      actionRecompileTranslations();
+      break;
+
     case 'jsonTranslations':
       Cogumelo::load('coreController/i18nScriptController.php');
       $i18nscriptController = new i18nScriptController();
