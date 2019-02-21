@@ -294,7 +294,7 @@ class Template extends Smarty {
         $coma = ',';
       }
 
-      $include['url'] .= '?'.md5(date("ymd")); // forzar caché do navegador para ese día
+      $include['url'] .= '?'.$this->getAnticacheParameter(); // forzar caché do navegador para ese día
 
       $html .= '  '.$coma.str_replace('\\/', '/', json_encode( $include ) ) . "\n";
       $coma=',';
@@ -369,13 +369,13 @@ class Template extends Smarty {
     if( !$ignoreAutoincludes ) {
       foreach( $this->css_autoincludes as $includeKey => $include ) {
         //$itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
-        $itemsToInclude[ $includeKey ] = "<link href='".$include['src']."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
+        $itemsToInclude[ $includeKey ] = "<link href='".$include['src'].'?'.$this->getAnticacheParameter()."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
       }
     }
 
     foreach( $this->css_includes as $includeKey => $include ) {
       //$itemsToInclude[$includeKey] = array('src'=> $include['src'], 'rel' => $include['rel'] , 'type'=> $include['type'] );
-      $itemsToInclude[ $includeKey ] = "<link href='".$include['src']."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
+      $itemsToInclude[ $includeKey ] = "<link href='".$include['src'].'?'.$this->getAnticacheParameter()."' type='". $include['type'] ."' rel='". $include['rel'] ."' >";
     }
 
     // Carga recursivamente los estilos de los fragmentos
@@ -524,7 +524,7 @@ class Template extends Smarty {
       //$clientIncludes .= '<script src="http://addyosmani.com/basket.js/dist/basket.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/rsvp/rsvp-3.2.1.min.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$this->cgmMediaserverHost.'vendor/manual/basket/basket-v0.5.2.min.js"></script>' . "\n";
-      $mainClientIncludes .= '<script src="'.Cogumelo::getSetupValue( 'publicConf:vars:mediaJs' ).'/module/common/js/cogumeloLog.js"></script>' . "\n";      
+      $mainClientIncludes .= '<script src="'.Cogumelo::getSetupValue( 'publicConf:vars:mediaJs' ).'/module/common/js/cogumeloLog.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$langUrl.'/media/jsConfConstants.js"></script>' . "\n";
       $mainClientIncludes .= '<script src="'.$langUrl.'/jsTranslations/getJson.js"></script>' . "\n";
     //  $mainClientIncludes .= $this->getClientStylesHtml();
@@ -680,4 +680,16 @@ class Template extends Smarty {
   public function execBlock() {
     $this->execFragment();
   }
+
+
+  function getAnticacheParameter() {
+    $param = md5(date("ymd"));
+
+    if (Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false ) {
+      $param = md5(date("ymdGis"));
+    }
+
+    return $param;
+  }
+
 }
