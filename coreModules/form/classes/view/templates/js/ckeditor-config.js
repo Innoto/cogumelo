@@ -19,7 +19,7 @@ CKEDITOR.editorConfig = function( config ) {
   ];
 
   // config.removeButtons = 'Save,NewPage,Preview,Print,Templates,Cut,Copy,Redo,Undo,Find,Replace,SelectAll,Scayt,Form,HiddenField,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,Strike,Subscript,Superscript,CopyFormatting,Blockquote,BidiLtr,BidiRtl,Language,Flash,Smiley,SpecialChar,PageBreak,Styles,Format,Font,FontSize,TextColor,BGColor,About,Paste,PasteText,PasteFromWord,CreateDiv,HorizontalRule';
-  config.removeButtons = 'Save,NewPage,Preview,Print,Templates,Cut,Copy,Redo,Undo,Find,Replace,SelectAll,Scayt,Form,HiddenField,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,Strike,Subscript,Superscript,CopyFormatting,BidiLtr,BidiRtl,Language,Flash,Smiley,SpecialChar,PageBreak,Styles,Format,Font,FontSize,TextColor,BGColor,About,Paste,PasteText,PasteFromWord,CreateDiv,HorizontalRule';
+  config.removeButtons = 'Save,NewPage,Preview,Print,Templates,Cut,Copy,Redo,Undo,Find,Replace,SelectAll,Scayt,Form,HiddenField,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,Strike,Subscript,Superscript,CopyFormatting,BidiLtr,BidiRtl,Language,Flash,Smiley,SpecialChar,PageBreak,Styles,Format,Font,TextColor,BGColor,About,Paste,PasteText,PasteFromWord,CreateDiv,HorizontalRule';
   config.removeDialogTabs = 'image:advanced;link:advanced;iframe:advanced';
   config.removePlugins = 'elementspath, autogrow';
 
@@ -27,7 +27,7 @@ CKEDITOR.editorConfig = function( config ) {
   config.format_tags = 'p;h1;h2;h3;h4;h5;pre';
 
   // Se debe añadir extraPlugins (You need the Justify plugin since CKEditor 4)
-  config.extraPlugins = 'justify,showblocks';
+  config.extraPlugins = 'justify,showblocks,font';
 
   config.height = '150';
 };
