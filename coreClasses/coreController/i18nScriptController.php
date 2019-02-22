@@ -494,12 +494,18 @@ class i18nScriptController {
     }
     $smartygettext = Cogumelo::getSetupValue( 'dependences:manualPath' ).'/smarty-gettext/tsmarty2c.php';
     exec( 'chmod 700 '.$smartygettext );
-    // copiamos os ficheiros nun dir temporal
+    // Se hai arquivos temporais, borrámolos
+    if(count(scandir(Cogumelo::getSetupValue( 'smarty:tmpPath' )))>2){
+      exec('rm '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/*');
+    }
 
+    // copiamos os ficheiros nun dir temporal
     foreach ($filesTpl as $a){
       $a_parts = explode(APP_BASE_PATH,$a);
       $name = str_replace('/','_',$a_parts[1]);
-      exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$name);
+      if($name){
+        exec('cp '.$a.' '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/'.$name);
+      }
 
       $a_cogumelo_parts = explode($this->dir_modules_c,$a);
       if(count($a_cogumelo_parts)>1){
