@@ -26,6 +26,9 @@ CKEDITOR.editorConfig = function( config ) {
   // Set the most common block elements.
   config.format_tags = 'p;h1;h2;h3;h4;h5;pre';
 
+  // Se debe añadir extraPlugins (You need the Justify plugin since CKEditor 4)
+  config.extraPlugins = 'justify,showblocks';
+
   config.height = '150';
 };
 
