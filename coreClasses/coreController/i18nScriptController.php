@@ -486,21 +486,31 @@ class i18nScriptController {
   function generateModuleTplPo($module,$filesTpl){
 
     if(is_dir($module.'/translations')){
-      $module = $module.'/translations';
+      $moduleTranslations = $module.'/translations';
     }
     else{
       exec('mkdir '.$module.'/translations');
-      $module = $module.'/translations';
+      $moduleTranslations = $module.'/translations';
     }
     $smartygettext = Cogumelo::getSetupValue( 'dependences:manualPath' ).'/smarty-gettext/tsmarty2c.php';
     exec( 'chmod 700 '.$smartygettext );
+
+    foreach( $this->lang as $l => $lang ) {
+      exec($smartygettext.' -o '.$moduleTranslations.'/'.$this->textdomain.'_'.$l.'_tpl.po '.$module);
+    }
+
+    // Adaptamos código para que no aparezcan los nombres de los proyectos
+
+    /*
     // Se hai arquivos temporais, borrámolos
     if(count(scandir(Cogumelo::getSetupValue( 'smarty:tmpPath' )))>2){
       exec('rm '.Cogumelo::getSetupValue( 'smarty:tmpPath' ).'/*');
     }
 
     // copiamos os ficheiros nun dir temporal
+
     foreach ($filesTpl as $a){
+      echo $a."\n";
       $a_parts = explode(APP_BASE_PATH,$a);
       $name = str_replace('/','_',$a_parts[1]);
       if($name){
@@ -521,9 +531,11 @@ class i18nScriptController {
         }
       }
     }
+
     foreach( $this->lang as $l => $lang ) {
       exec($smartygettext.' -o '.$module.'/'.$this->textdomain.'_'.$l.'_tpl.po '.Cogumelo::getSetupValue( 'smarty:tmpPath' ));
     }
+    */
   }
 
 
