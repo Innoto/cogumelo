@@ -291,13 +291,17 @@ class MysqlDAO extends DAO {
       $this->execSQL($connectionControl,'SET group_concat_max_len='.Cogumelo::getSetupValue( 'db:mysqlGroupconcatMaxLen' ).';');
     }
 
-    $strSQL = "SELECT ".
-      $this->getKeysToString($VO, $fields, $resolveDependences ) .
-      " FROM `" .
-      $VO::$tableName ."` " .
-      $joins.
-      $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
 
+    $strSQL = $VO->customSelectListItems( $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR );
+
+    if( $strSQL == False ) {
+      $strSQL = "SELECT ".
+        $this->getKeysToString($VO, $fields, $resolveDependences ) .
+        " FROM `" .
+        $VO::$tableName ."` " .
+        $joins.
+        $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
+    }
 
     //exit;
     //var_dump($joinWhereArrays);
@@ -399,7 +403,13 @@ class MysqlDAO extends DAO {
     // where string and vars
     $whereArray = $this->getFilters($filters);
     // SQL Query
+
+
+    $strSQL = $VO->customSelectListCount( $whereArray['string'] );
+
+    if( $strSQL == False ) {
     $strSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
+    }
 
 
     if( $cacheParam ) {

@@ -728,4 +728,18 @@ Class VO
     }
   }
 
+
+  /**
+   * Cursom select string for listIttems
+   *
+   * @return string SQL query
+   */
+  function customSelectListItems( $strExtraSQL ) {
+    return false;
+  }
+
+  function customSelectListCount( $strExtraSQL ) {
+    return false;
+  }
+
 }
