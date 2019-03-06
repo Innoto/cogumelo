@@ -734,11 +734,11 @@ Class VO
    *
    * @return string SQL query
    */
-  function customSelectListItems( $strExtraSQL ) {
+  function customSelectListItems( $extraArrayParam ) {
     return false;
   }
 
-  function customSelectListCount( $strExtraSQL ) {
+  function customSelectListCount( $extraArrayParam ) {
     return false;
   }
 

@@ -292,7 +292,24 @@ class MysqlDAO extends DAO {
     }
 
 
-    $strSQL = $VO->customSelectListItems( $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR );
+    $extraArrayParam = [
+      'strSQL'=>  $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR,
+      'strWhereOrderBy' =>  $whereArray['string'],
+      'strOrderBy' => $orderSTR,
+      'strRange' => $rangeSTR,
+      'strGroupBy' => $groupBySTR,
+      'allParams'=> [
+        'filters' => $filters,
+        'range' => $range,
+        'order'=> $order,
+        'fields' => $fields,
+        'joinType' => $joinType,
+        'resolveDependences' => $resolveDependences,
+        'groupBy' => $groupBy
+      ]
+    ];
+
+    $strSQL = $VO->customSelectListItems( $extraArrayParam );
 
     if( $strSQL == False ) {
       $strSQL = "SELECT ".
@@ -405,10 +422,18 @@ class MysqlDAO extends DAO {
     // SQL Query
 
 
-    $strSQL = $VO->customSelectListCount( $whereArray['string'] );
+    $extraArrayParam = [
+      'strSQL'=>  $whereArray['string'],
+      'strWhereOrderBy' =>  $whereArray['string'],
+      'allParams'=> [
+        'filters' => $filters
+      ]
+    ];
+
+    $strSQL = $VO->customSelectListCount( $extraArrayParam );
 
     if( $strSQL == False ) {
-    $strSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
+      $strSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
     }
 
 
