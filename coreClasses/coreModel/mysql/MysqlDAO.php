@@ -319,6 +319,9 @@ class MysqlDAO extends DAO {
         $joins.
         $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
     }
+    else {
+      $strSQL = DevelDBController::renderRichSql( $strSQL );
+    }
 
     //exit;
     //var_dump($joinWhereArrays);

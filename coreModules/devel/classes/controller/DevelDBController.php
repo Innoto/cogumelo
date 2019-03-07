@@ -313,7 +313,7 @@ class  DevelDBController {
               $deployElement['version'] = $this->getOnlyVersionFromVersionString( $deployElement['version'] );
             }
 
-            $deployElement['sql'] = $this->renderRichSql( $deployElement['sql'] );
+            $deployElement['sql'] = self::renderRichSql( $deployElement['sql'] );
             $deployElement['voName'] = $voKey;
             array_push( $deploys, $deployElement );
           }
@@ -576,7 +576,7 @@ class  DevelDBController {
   }
 
 
-  public function renderRichSql( $sql ) {
+  static function renderRichSql( $sql ) {
 
 
     // Multilang expression
