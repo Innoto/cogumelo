@@ -4,7 +4,7 @@ Cogumelo::load('coreController/Cache.php');
 Cogumelo::load('coreModel/DAO.php');
 Cogumelo::load('coreModel/mysql/MysqlDAORelationship.php');
 Cogumelo::load('coreModel/mysql/MysqlDAOResult.php');
-
+devel::load('controller/DevelDBController.php');
 
 /**
 * Mysql DAO (Abstract)
