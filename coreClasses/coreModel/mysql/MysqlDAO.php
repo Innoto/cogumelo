@@ -233,7 +233,7 @@ class MysqlDAO extends DAO {
     }
 
     return array(
-        'string' => " WHERE true".$where_str,
+        'string' => " true ".$where_str.' ',
         'values' => $val_array
       );
   }
@@ -293,8 +293,8 @@ class MysqlDAO extends DAO {
 
 
     $extraArrayParam = [
-      'strSQL'=>  $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR,
-      'strWhereOrderBy' =>  $whereArray['string'],
+      'strSQL'=>  ' WHERE '.$whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR,
+      'strWhere' =>  $whereArray['string'],
       'strOrderBy' => $orderSTR,
       'strRange' => $rangeSTR,
       'strGroupBy' => $groupBySTR,
@@ -317,7 +317,7 @@ class MysqlDAO extends DAO {
         " FROM `" .
         $VO::$tableName ."` " .
         $joins.
-        $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
+        ' WHERE '.$whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
     }
     else {
       $strSQL = DevelDBController::renderRichSql( $strSQL );
@@ -426,8 +426,8 @@ class MysqlDAO extends DAO {
 
 
     $extraArrayParam = [
-      'strSQL'=>  $whereArray['string'],
-      'strWhereOrderBy' =>  $whereArray['string'],
+      'strSQL'=>  ' WHERE ' . $whereArray['string'],
+      'strWhere' =>  $whereArray['string'],
       'allParams'=> [
         'filters' => $filters
       ]
@@ -436,7 +436,7 @@ class MysqlDAO extends DAO {
     $strSQL = $VO->customSelectListCount( $extraArrayParam );
 
     if( $strSQL == False ) {
-      $strSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
+      $strSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` WHERE ".$whereArray['string'].";";
     }
 
 
