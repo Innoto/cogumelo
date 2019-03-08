@@ -1,5 +1,6 @@
 <?php
 
+//********************************************************************************************************************************************************************************
 
 // declare(strict_types=1);
 
@@ -36,8 +37,8 @@ Cogumelo::load('coreController/ModuleController.php');
 
 if( empty( $_SERVER['DOCUMENT_ROOT'] ) ) {
   $_SERVER['DOCUMENT_ROOT'] = ( defined('WEB_BASE_PATH') ) ? WEB_BASE_PATH : getcwd().'/httpdocs';
+  echo( "\n".'Forzando SERVER[DOCUMENT_ROOT] = '.$_SERVER['DOCUMENT_ROOT']."\n" );
 }
-echo( 'SERVER[DOCUMENT_ROOT] = '.$_SERVER['DOCUMENT_ROOT']."\n" );
 
 
 if( $argc > 1 ) {
@@ -57,55 +58,83 @@ if( $argc > 1 ) {
 
 
     case 'createDB': // create database
-      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
-      backupDB();
+      if( Cogumelo::getSetupValue('db:name') ) {
+        ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+        backupDB();
 
-      createDB();
+        createDB();
+      }
+      else {
+        echo "\n\nDDBB not defined !!!\n - - -  EXIT  - - - \n\n\n";
+      }
       break;
 
     case 'generateModel':
-      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+      if( Cogumelo::getSetupValue('db:name') ) {
+        ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
 
-      backupDB();
-      createRelSchemes();
-      generateModel();
-      flushAll();
+        backupDB();
+        createRelSchemes();
+        generateModel();
+        flushAll();
+      }
+      else {
+        echo "\n\nDDBB not defined !!!\n - - -  EXIT  - - - \n\n\n";
+      }
       break;
 
     case 'deploy':
-      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+      if( Cogumelo::getSetupValue('db:name') ) {
+        ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
 
-      backupDB();
-      createRelSchemes();
-      deploy();
-      flushAll();
+        backupDB();
+        createRelSchemes();
+        deploy();
+        flushAll();
+      }
+      else {
+        echo "\n\nDDBB not defined !!!\n - - -  EXIT  - - - \n\n\n";
+      }
       break;
 
 
     case 'createRelSchemes':
-      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
-      createRelSchemes();
-      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+      if( Cogumelo::getSetupValue('db:name') ) {
+        ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+        createRelSchemes();
+        ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+      }
+      else {
+        echo "\n\nDDBB not defined !!!\n - - -  EXIT  - - - \n\n\n";
+      }
       break;
 
 
     case 'bckDB': // do the backup of the db
     case 'backupDB': // do the backup of the db
-      ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
+      if( Cogumelo::getSetupValue('db:name') ) {
+        ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
 
-      $file = ( $argc > 2 ) ? $argv[2].'.sql' : false;
-      backupDB( $file );
+        $file = ( $argc > 2 ) ? $argv[2].'.sql' : false;
+        backupDB( $file );
+      }
+      else {
+        echo "\n\nDDBB not defined !!!\n - - -  EXIT  - - - \n\n\n";
+      }
       break;
 
     case 'restoreDB': // restore the backup of a given db
-      if( $argc > 2 ) {
-        // backupDB();
-
-        $file = $argv[2]; //name of the backup file
-        restoreDB( $file );
+      if( Cogumelo::getSetupValue('db:name') ) {
+        if( $argc > 2 ) {
+          $file = $argv[2]; //name of the backup file
+          restoreDB( $file );
+        }
+        else {
+          echo "You must specify the file to restore\n";
+        }
       }
       else {
-        echo "You must specify the file to restore\n";
+        echo "\n\nDDBB not defined !!!\n - - -  EXIT  - - - \n\n\n";
       }
       break;
 
@@ -183,6 +212,10 @@ if( $argc > 1 ) {
 
     case 'generateClientCaches':
       actionGenerateClientCaches();
+      break;
+
+    case 'garbageCollection':
+      garbageCollection();
       break;
 
     default:
@@ -323,6 +356,7 @@ function actionFlush() {
         "verify_peer_name" => false,
       ],
     ] );
+    echo $scriptCogumeloServerUrl . '?q=flush';
     echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush', false, $contextOptions );
   }
   else {
@@ -436,6 +470,8 @@ function setPermissions( $devel = false ) {
 
   echo( "setPermissions ".($devel ? 'DEVEL' : '')."\n" );
 
+  $prjLivePath = Cogumelo::getSetupValue('setup:prjLivePath');
+
   if( IS_DEVEL_ENV || $sudoAllowed ) {
     $dirsString =
       WEB_BASE_PATH.' '.APP_BASE_PATH.' '.APP_TMP_PATH.' '.
@@ -449,8 +485,12 @@ function setPermissions( $devel = false ) {
       Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' )
     ;
 
-    $fai = 'chgrp -R www-data '.$dirsString;
+
     echo( " - Executamos chgrp general \n" );
+    if( $prjLivePath ) {
+      exec( $sudo.' chgrp www-data '.$prjLivePath );
+    }
+    $fai = 'chgrp -R www-data '.$dirsString;
     exec( $sudo.$fai );
   }
   else {
@@ -490,7 +530,11 @@ function setPermissions( $devel = false ) {
       // Cogumelo::getSetupValue( 'i18n:path' ).' '.Cogumelo::getSetupValue( 'i18n:localePath' ).' '.
       ''
     ;
+
     echo( " - Executamos chmod APP_TMP_PATH\n" );
+    if( $prjLivePath ) {
+      exec( $sudo.' chmod ug+rwX'.$extPerms.' '.$prjLivePath );
+    }
     exec( $sudo.$fai );
   }
   else {
@@ -592,8 +636,8 @@ function restoreDB( $file = false ) {
 /**
  * Get data from the shell.
  */
-function ReadStdin( $prompt, $valid_inputs, $default = '' ) {
-  while( !isset($input) || ( is_array($valid_inputs) && !in_array($input, $valid_inputs) ) || ( $valid_inputs === 'is_file' && !is_file($input) ) ) {
+function ReadStdin( $prompt, $validInputs, $default = '' ) {
+  while( !isset($input) || ( is_array($validInputs) && !in_array($input, $validInputs) ) || ( $validInputs === 'is_file' && !is_file($input) ) ) {
     echo $prompt;
     $input = strtolower(trim(fgets(STDIN)));
     if( empty($input) && !empty($default) ) {
@@ -683,4 +727,27 @@ function rmdirRec( $dir, $removeContainer = true ) {
   }
 }
 
+
+
+
+// garbageCollection
+function garbageCollection() {
+  echo "\n\n**********************************\n";
+  echo "**  Garbage Collection - Start  **\n";
+  echo "**********************************\n\n";
+
+  // $params = [
+  //   'verbose' => true,
+  //   'noAction' => true
+  // ];
+
+  require_once( ModuleController::getRealFilePath( 'GarbageCollection.php', 'GarbageCollection' ) );
+  GarbageCollection::load( 'controller/GarbageCollectionController.php' );
+  $garbageCollCtrl = new GarbageCollectionController();
+  $garbageCollCtrl->garbageCollection();
+
+  echo "\n\n*********************************\n";
+  echo "**  Garbage Collection - Done  **\n";
+  echo "*********************************\n\n";
+}
 
