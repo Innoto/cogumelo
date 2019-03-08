@@ -15,6 +15,7 @@ class FiledataController {
 
   // Ruta a partir de la que se crean los directorios y ficheros subidos
   var $filesAppPath = false;
+  var $filesAppPathPlain = false;
 
   public $cacheQuery = false; // false, true or time in seconds
 
@@ -51,6 +52,7 @@ class FiledataController {
   public function __construct() {
     // Cogumelo::debug( __METHOD__ );
     $this->filesAppPath = Cogumelo::getSetupValue( 'mod:filedata:filePath' );
+    $this->filesAppPathPlain = realpath( $this->filesAppPath );
 
     $cache = Cogumelo::getSetupValue('cache:Filedata');
     if( $cache !== null ) {
@@ -145,75 +147,75 @@ class FiledataController {
   } // function saveFile()
 
   /*
-  public function saveFile( $originFile, $relativeDestPath, $fileName, $originFileIsRelative = true ) {
-    // Cogumelo::debug( __METHOD__.' - ' . $originFile );
+    public function saveFile( $originFile, $relativeDestPath, $fileName, $originFileIsRelative = true ) {
+      // Cogumelo::debug( __METHOD__.' - ' . $originFile );
 
-    if( $originFileIsRelative ) {
-      $absFrom = APP_BASE_PATH. $originFile;
-    }
-    else {
-      $absFrom = $originFile;
-    }
-
-    //die($absFrom);
-    filedata::load('model/FiledataModel.php');
-    $fileDB = false;
-
-    if( file_exists($absFrom) ) {
-
-      $fileDB = new FiledataModel( array('originalName' => $fileName ) );
-
-      $fileDB->save();
-
-      //$secureFileName = $this->secureFileName( $fileName );
-
-      $secureFileName = $fileName;
-
-      if( file_exists( $relativeDestPath.'/'.$secureFileName ) ){
-        $realDestName = $fileDB->getter('id') .$secureFileName;
+      if( $originFileIsRelative ) {
+        $absFrom = APP_BASE_PATH. $originFile;
       }
       else {
-        $realDestName = $secureFileName;
+        $absFrom = $originFile;
       }
 
-      if( !is_dir($this->filesAppPath.$relativeDestPath) ) {
-        mkdir($this->filesAppPath.$relativeDestPath, 0755, true);
-      }
+      //die($absFrom);
+      filedata::load('model/FiledataModel.php');
+      $fileDB = false;
 
-      if( copy ( $absFrom, $this->filesAppPath.$relativeDestPath.'/'.$realDestName ) ) {
-        //$finfo = new finfo(FILEINFO_MIME, "/usr/share/misc/magic");
-        //$fileDB->setter('type', $finfo->file($absFrom) );
-        //finfo_close($finfo);
+      if( file_exists($absFrom) ) {
 
-        // mime type
-        $finfo = finfo_open( FILEINFO_MIME_TYPE );
-        $fileDB->setter('type', finfo_file( $finfo, $absFrom ) );
-
-
-        $fileDB->setter('size', filesize( $absFrom ) );
-        $fileDB->setter('name', $realDestName );
-        $fileDB->setter('absLocation', $relativeDestPath.'/'.$realDestName );
+        $fileDB = new FiledataModel( array('originalName' => $fileName ) );
 
         $fileDB->save();
+
+        //$secureFileName = $this->secureFileName( $fileName );
+
+        $secureFileName = $fileName;
+
+        if( file_exists( $relativeDestPath.'/'.$secureFileName ) ){
+          $realDestName = $fileDB->getter('id') .$secureFileName;
+        }
+        else {
+          $realDestName = $secureFileName;
+        }
+
+        if( !is_dir($this->filesAppPath.$relativeDestPath) ) {
+          mkdir($this->filesAppPath.$relativeDestPath, 0755, true);
+        }
+
+        if( copy ( $absFrom, $this->filesAppPath.$relativeDestPath.'/'.$realDestName ) ) {
+          //$finfo = new finfo(FILEINFO_MIME, "/usr/share/misc/magic");
+          //$fileDB->setter('type', $finfo->file($absFrom) );
+          //finfo_close($finfo);
+
+          // mime type
+          $finfo = finfo_open( FILEINFO_MIME_TYPE );
+          $fileDB->setter('type', finfo_file( $finfo, $absFrom ) );
+
+
+          $fileDB->setter('size', filesize( $absFrom ) );
+          $fileDB->setter('name', $realDestName );
+          $fileDB->setter('absLocation', $relativeDestPath.'/'.$realDestName );
+
+          $fileDB->save();
+        }
+        else {
+          Cogumelo::error( __METHOD__.' - cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$realDestName);
+          $fileDB->delete();
+        }
+
       }
       else {
-        Cogumelo::error( __METHOD__.' - cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$realDestName);
-        $fileDB->delete();
+        Cogumelo::error( __METHOD__.' - cant find the file path to save: '.$absFrom);
       }
 
-    }
-    else {
-      Cogumelo::error( __METHOD__.' - cant find the file path to save: '.$absFrom);
-    }
+      if( $fileDB && $fileDB->getter('id') ) {
+        filedata::load('controller/FiledataImagesController.php');
+        $fileImageCtrl = new FiledataImagesController();
+        $fileImageCtrl->clearCache( $fileDB->getter('id') );
+      }
 
-    if( $fileDB && $fileDB->getter('id') ) {
-      filedata::load('controller/FiledataImagesController.php');
-      $fileImageCtrl = new FiledataImagesController();
-      $fileImageCtrl->clearCache( $fileDB->getter('id') );
-    }
-
-    return $fileDB;
-  } // function saveFile()
+      return $fileDB;
+    } // function saveFile()
   */
 
 
@@ -421,16 +423,31 @@ class FiledataController {
   public function removeServerFiles( $voFile ) {
     // Cogumelo::debug( __METHOD__.' - ' . $voFile->getter('id') );
 
+    // Borramos imagenes en cache
     Cogumelo::debug( __METHOD__.' - fileImageCtrl->clearCache '.$voFile->getter('id') );
     filedata::load('controller/FiledataImagesController.php');
     $fileImageCtrl = new FiledataImagesController();
     $fileImageCtrl->clearCache( $voFile->getter('id') );
 
-    $serverFile = Cogumelo::getSetupValue( 'mod:filedata:filePath' ).$voFile->getter('absLocation');
+    // Borramos el fichero real
+    $serverFile = $this->filesAppPath.$voFile->getter('absLocation');
     Cogumelo::debug( __METHOD__.' - unlink '.$serverFile );
-    if( file_exists( $serverFile ) ) {
-      unlink( $serverFile );
+    $unlinkStatus = 'FAIL: Not filesAppPathPlain';
+    if( !empty( $this->filesAppPathPlain ) ) {
+      $serverFilePlain = realpath( $serverFile );
+      $unlinkStatus = 'FAIL: serverFilePlain='.$serverFilePlain;
+      if( !empty( $serverFilePlain ) && strpos ( $serverFilePlain, $this->filesAppPathPlain ) === 0 ) {
+        $unlinkStatus = 'FAIL: Not valid file';
+        if( file_exists( $serverFile ) && is_file( $serverFile ) ) {
+          $unlinkStatus = 'FAIL: unlink';
+          if( unlink( $serverFile ) ) {
+            $unlinkStatus = 'DONE ';
+          }
+        }
+      }
     }
+    Cogumelo::debug( __METHOD__.' - unlink '.$serverFile.' ('.$unlinkStatus.')' );
+    error_log( __METHOD__.' - BORRAR '.$serverFilePlain.' ('.$unlinkStatus.')' );
   } // function removeServerFiles( $voFile )
 
 
@@ -474,4 +491,147 @@ class FiledataController {
   } // function secureFileName()
 
 
+
+
+
+  /**
+    Busca elementos abandonados
+    @param array $params Parametros
+    @return bool
+   */
+  public function garbageCollection() {
+    Cogumelo::debug( __METHOD__ );
+    error_log( __METHOD__ );
+
+    $modelName = 'FiledataModel';
+
+    // // Importante: Precargamos los modelos
+    // VOUtils::listVOs();
+
+    require_once( ModuleController::getRealFilePath( 'GarbageCollection.php', 'GarbageCollection' ) );
+    GarbageCollection::load( 'controller/GarbageCollectionController.php' );
+    $garbageCollCtrl = new GarbageCollectionController();
+
+    $idFilesUsed = $garbageCollCtrl->listModelUsedIds( $modelName );
+
+    $diskFiles = $this->garbCollListDiskFiles();
+    $dBFiles = $this->garbCollListDBFiles();
+    // $idFilesUsed = $this->garbCollListIdFilesUsed();
+
+    $diskFilesOrphan = $diskFiles;
+    $dbFilesOrphan = $dBFiles;
+    $dbRefersOrphan = [];
+
+    foreach( $dbFilesOrphan as $objId => $objAbsLocation ) {
+      if( !isset( $idFilesUsed[ $objId ] ) ) {
+        $dbRefersOrphan[] = $objId; // Sobra por no estar referenciado
+      }
+      else {
+        $keyList = array_search( $objAbsLocation, $diskFilesOrphan, true );
+        if( $keyList !== false ) {
+          unset( $diskFilesOrphan[ $keyList ] ); // Existe en bbdd ...OK
+          unset( $dbFilesOrphan[ $objId ] ); // Existe en disco ...OK
+        }
+      }
+    }
+
+    error_log("\n\nSobran no disco por non ter Filedata ou con Filedata sen refer: ".count($diskFilesOrphan)." \n");
+    // error_log(implode( "\n", $diskFilesOrphan ));
+
+    foreach( $diskFilesOrphan as $fileOrphan ) {
+      error_log('Borrando '.$this->filesAppPath.'/'.$fileOrphan);
+
+      // unlink( $this->filesAppPath.'/'.$fileOrphan );
+
+    }
+
+    error_log("\n\nSobran na base de datos por non ter ficheiro ou refer: ".count($dbFilesOrphan)." \n");
+    error_log(implode( ', ', array_keys( $dbFilesOrphan ) ));
+
+    filedata::load('model/FiledataModel.php');
+    foreach( array_keys( $dbFilesOrphan ) as $idFiledata ) {
+      error_log('Borrando Filedata '.$idFiledata);
+      $objModel = new FiledataModel( [ 'id' => $idFiledata ] );
+
+      // $objModel->delete();
+
+    }
+
+    // error_log("\n\nSobran na base de datos por non ter refer: ".count($dbRefersOrphan)." \n");
+    // error_log(implode( ', ', $dbRefersOrphan ));
+
+    error_log("\n\nFALTAN na base de datos por ter refer e NON Filedata:\n");
+    error_log(implode( ', ', array_diff( array_keys($idFilesUsed), array_keys($dBFiles) ) ));
+
+
+    //   RESUMO:
+    // Sobran no disco por non ter Filedata: 374
+    // Sobran na base de datos por non ter ficheiro ou refer: 356
+
+
+    error_log("\n\n  RESUMO:\n");
+    error_log("Sobran no disco por non ter Filedata: ".count($diskFilesOrphan)." \n");
+    error_log("Sobran na base de datos por non ter ficheiro ou refer: ".count($dbFilesOrphan)." \n");
+  } // function garbageCollection()
+
+  private function garbCollListDBFiles() {
+    // Cogumelo::debug( __METHOD__ );
+    $dBFiles = [];
+
+    filedata::load('model/FiledataModel.php');
+    $objModel = new FiledataModel();
+    $listModel = $objModel->listItems();
+    if( is_object( $listModel ) ) {
+      while( $filedataObj = $listModel->fetch() ) {
+        $dBFiles[ $filedataObj->getter('id') ] = ltrim( $filedataObj->getter('absLocation'), '/' );
+      }
+    }
+
+    return $dBFiles;
+  }
+
+  private function garbCollListDiskFiles() {
+    // Cogumelo::debug( __METHOD__ );
+
+    $diskFiles = $this->lsDirRec( $this->filesAppPath );
+    foreach( $diskFiles as $key => $fich ) {
+      if( strpos( $fich, 'public/' ) === 0 || strpos( $fich, '/' ) === false ) {
+        unset( $diskFiles[ $key ] ); // Estos son especiales ...saltamolos
+      }
+    }
+
+    return $diskFiles;
+  }
+
+  private function lsDirRec( $dir ) {
+    // Cogumelo::debug( __METHOD__.' - '. $dir );
+
+    $list = [];
+
+    $dir = rtrim( $dir, '/' );
+    if( is_dir( $dir ) ) {
+      $dirElements = scandir( $dir );
+
+      if( !empty( $dirElements ) ) {
+        foreach( $dirElements as $dirElem ) {
+          if( $dirElem !== '.' && $dirElem !== '..' ) {
+            if( is_dir( $dir.'/'.$dirElem ) ) {
+              $listSub = $this->lsDirRec( $dir.'/'.$dirElem );
+              if( !empty( $listSub ) ) {
+                foreach( $listSub as $listSubElem ) {
+                  $list[] = $dirElem.'/'.$listSubElem;
+                }
+              }
+            }
+            else {
+              $list[] = $dirElem;
+            }
+          }
+        }
+      }
+      reset( $dirElements );
+    }
+
+    return $list;
+  }
 } // FiledataController
