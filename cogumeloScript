@@ -274,12 +274,7 @@ function flushAll() {
   // actionCompileTranslations();
 
   echo "\n --- actionGenerateClientCaches:\n";
-  if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) ) {
-    actionGenerateClientCaches();
-  }
-  else {
-    echo "\nPasamos porque no estamos en PRODUCTION MODE\n";
-  }
+  actionGenerateClientCaches();
 
   echo "\n --- setPermissionsDevel:\n";
   setPermissionsDevel();
