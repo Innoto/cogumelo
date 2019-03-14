@@ -27,7 +27,7 @@ CKEDITOR.editorConfig = function( config ) {
   config.format_tags = 'p;h1;h2;h3;h4;h5;pre';
 
   // Se debe añadir extraPlugins (You need the Justify plugin since CKEditor 4)
-  config.extraPlugins = 'justify,showblocks,font';
+  config.extraPlugins = 'justify,showblocks,font,iframe';
 
   config.height = '150';
 };
