@@ -31,13 +31,39 @@ class GarbageCollectionController {
     // Importante: Precargamos los modelos
     VOUtils::listVOs();
 
-    $this->garbageCollectionModule('filedata');
+    // $this->garbageCollectionModule('filedata');
+    // $this->garbageCollectionModule('geozzy');
 
-    $this->garbageCollectionModule('geozzy');
+    global $C_ENABLED_MODULES;
+    foreach( $C_ENABLED_MODULES as $moduleName ) {
+      $this->garbageCollectionModule( $moduleName );
+    }
 
     error_log("\n\n  RESUMO:\n\n");
     error_log("Feito.\n\n");
   } // function garbageCollection()
+
+  private function garbageCollectionModule( $moduleName ) {
+    $result = false;
+    $done = 'NO tiene';
+
+    $moduleFile = ModuleController::getRealFilePath( $moduleName.'.php', $moduleName );
+    if( !empty( $moduleFile ) ) {
+      require_once( $moduleFile );
+      if( class_exists( $moduleName ) ) {
+        $moduleObj = new $moduleName();
+        if( method_exists( $moduleObj, 'garbageCollection' ) ) {
+          error_log("Garbage Collection $moduleName - Lanzando * * * * * * * * * *\n");
+          $result = $moduleObj->garbageCollection();
+          $done = 'Realizado';
+        }
+      }
+    }
+
+    error_log("\nGarbage Collection $moduleName - $done\n");
+
+    return $result;
+  }
 
 
   public function listModelIds( $modelName ) {
@@ -106,26 +132,5 @@ class GarbageCollectionController {
     }
 
     return $relations;
-  }
-
-  private function garbageCollectionModule( $moduleName ) {
-    $result = false;
-
-    error_log("\nGarbage Collection $moduleName - Start\n");
-
-    $moduleFile = ModuleController::getRealFilePath( $moduleName.'.php', $moduleName );
-    if( !empty( $moduleFile ) ) {
-      require_once( $moduleFile );
-      if( class_exists( $moduleName ) ) {
-        $moduleObj = new $moduleName();
-        if( method_exists( $moduleObj, 'garbageCollection' ) ) {
-          $result = $moduleObj->garbageCollection();
-        }
-      }
-    }
-
-    error_log("\nGarbage Collection $moduleName - Done\n");
-
-    return $result;
   }
 } // GarbageCollectionController
