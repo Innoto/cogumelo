@@ -347,8 +347,9 @@ class FiledataController {
         $filedataObj->save();
       }
       else {
-        Cogumelo::error( __METHOD__.' - Cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
-        Cogumelo::debug( __METHOD__.' - Cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$secureFileName );
+        $msg = ' - Cant copy the file to: '. $this->filesAppPath.$relativeDestPath.'/'.$secureFileName;
+        Cogumelo::error( __METHOD__.$msg );
+        Cogumelo::debug( __METHOD__.$msg );
         $filedataObj->delete();
         $filedataObj = false;
       }
@@ -539,10 +540,9 @@ class FiledataController {
     // error_log(implode( "\n", $diskFilesOrphan ));
 
     foreach( $diskFilesOrphan as $fileOrphan ) {
-      error_log('Borrando '.$this->filesAppPath.'/'.$fileOrphan);
-
+      error_log('unlink("'.$fileOrphan.'") - non ten FiledataModel');
+      // error_log('Borrando '.$this->filesAppPath.'/'.$fileOrphan);
       // unlink( $this->filesAppPath.'/'.$fileOrphan );
-
     }
 
     error_log("\n\nSobran na base de datos por non ter ficheiro ou refer: ".count($dbFilesOrphan)." \n");
@@ -550,11 +550,9 @@ class FiledataController {
 
     filedata::load('model/FiledataModel.php');
     foreach( array_keys( $dbFilesOrphan ) as $idFiledata ) {
-      error_log('Borrando Filedata '.$idFiledata);
-      $objModel = new FiledataModel( [ 'id' => $idFiledata ] );
-
+      error_log('FiledataModel('.$idFiledata.')->delete() - non ten Pai');
+      // $objModel = new FiledataModel( [ 'id' => $idFiledata ] );
       // $objModel->delete();
-
     }
 
     // error_log("\n\nSobran na base de datos por non ter refer: ".count($dbRefersOrphan)." \n");
