@@ -1,5 +1,5 @@
 <?php
-
+use MatthiasMullie\Minify;
 
 class MediaserverController {
 
@@ -150,8 +150,19 @@ class MediaserverController {
       }
 
       // move from tmp path to final path
-      rename( $tmp_cache , $final_cache );
+      if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === true  && Cogumelo::getSetupValue( 'mod:mediaserver:minimifyFiles') === true ) {
+        $this->minifyCss( $tmp_cache , $final_cache );
+      }
+      else {
+        rename( $tmp_cache , $final_cache );
+      }
+
     }
+  }
+
+  public function minifyCss($fromPath, $toPath) {
+    $minifier = new Minify\CSS($fromPath);
+    $minifier->minify($toPath);
   }
 
 

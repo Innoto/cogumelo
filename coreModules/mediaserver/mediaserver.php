@@ -27,6 +27,22 @@ class mediaserver extends Module {
       'params' => array('leafo/scssphp', '0.7.6'),
       'installer' => 'composer',
       'includes' => array('scss.inc.php')
+    ),
+    array(
+     'id' => 'minify',
+     'params' => array('matthiasmullie/minify', '1.3.61'),
+     'installer' => 'composer',
+     'includes' => array(
+       '../minify/src/Minify.php',
+       '../minify/src/CSS.php',
+       '../minify/src/JS.php',
+       '../minify/src/Exception.php',
+       '../minify/src/Exceptions/BasicException.php',
+       '../minify/src/Exceptions/FileImportException.php',
+       '../minify/src/Exceptions/IOException.php',
+       '../path-converter/src/ConverterInterface.php',
+       '../path-converter/src/Converter.php'
+     )
     )
   );
 
