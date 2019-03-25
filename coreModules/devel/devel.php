@@ -22,7 +22,7 @@ class devel extends Module {
   ),
   array(
    "id" => "bootstrap",
-   "params" => array("bootstrap@4"),
+   "params" => array("bootstrap@4.1.3"),
    "installer" => "yarn",
    "includes" => array("dist/js/bootstrap.min.js")
   ),
