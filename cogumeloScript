@@ -338,6 +338,11 @@ function actionGenerateClientCaches() {
   // file_get_contents( Cogumelo::getSetupValue( 'script:cogumeloServerUrl' ) . '?q=client_caches', false, $ctx);
 
 
+  // update timestamp file
+  $cache_timestamp = new DateTime();
+  file_put_contents( Cogumelo::getSetupValue( 'setup:appTmpPath' ).'/CACHE_FLUSH_TIMESTAMP.php', '<?php define("CACHE_FLUSH_TIMESTAMP", '.$cache_timestamp->getTimestamp().' );');
+
+
   echo "\nClient caches generated\n\n";
 }
 

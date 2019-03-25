@@ -40,6 +40,11 @@ class Template extends Smarty {
    * @param string $baseDir
    **/
   public function __construct( $baseDir = false ) {
+
+    if( Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === true ){
+      require_once( Cogumelo::getSetupValue( 'setup:appTmpPath' ).'/CACHE_FLUSH_TIMESTAMP.php' );
+    }
+
     // Call Smarty's constructor
     $this->cgmSmartyConfigDir = Cogumelo::getSetupValue( 'smarty:configPath' );
     $this->cgmSmartyCompileDir = Cogumelo::getSetupValue( 'smarty:compilePath' );
@@ -683,10 +688,13 @@ class Template extends Smarty {
 
 
   function getAnticacheParameter() {
-    $param = md5(date("ymd"));
+
 
     if (Cogumelo::getSetupValue( 'mod:mediaserver:productionMode' ) === false ) {
       $param = md5(date("ymdGis"));
+    }
+    else {
+      $param = md5( CACHE_FLUSH_TIMESTAMP );
     }
 
     return $param;
