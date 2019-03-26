@@ -39,13 +39,13 @@ class GarbageCollectionController {
       $this->garbageCollectionModule( $moduleName );
     }
 
-    error_log("\n\n  RESUMO:\n\n");
-    error_log("Feito.\n\n");
+    // error_log("\n\n  RESUMO:\n\n");
+    error_log("\nProceso general de garbageCollection finalizado.\n");
   } // function garbageCollection()
 
   private function garbageCollectionModule( $moduleName ) {
     $result = false;
-    $done = 'NO tiene';
+    $done = false;
 
     $moduleFile = ModuleController::getRealFilePath( $moduleName.'.php', $moduleName );
     if( !empty( $moduleFile ) ) {
@@ -55,12 +55,13 @@ class GarbageCollectionController {
         if( method_exists( $moduleObj, 'garbageCollection' ) ) {
           error_log("Garbage Collection $moduleName - Lanzando * * * * * * * * * *\n");
           $result = $moduleObj->garbageCollection();
-          $done = 'Realizado';
+          $done = true;
+          error_log("\nGarbage Collection $moduleName - Finalizado\n");
         }
       }
     }
 
-    error_log("\nGarbage Collection $moduleName - $done\n");
+    // if(!$done) { error_log("\nGarbage Collection $moduleName - NO tiene\n"); }
 
     return $result;
   }
@@ -70,7 +71,7 @@ class GarbageCollectionController {
     // Cogumelo::debug( __METHOD__ );
     $modelIds = [];
 
-    error_log("\n\nBuscando todos los ID de $modelName:\n");
+    // error_log("\n\nBuscando todos los ID de $modelName:\n");
 
     $objModel = new $modelName();
     $listModel = $objModel->listItems( [ 'fields' => ['id'] ] );
@@ -89,10 +90,10 @@ class GarbageCollectionController {
 
     $relations = $this->listModelRelations( $modelName );
 
-    error_log("\n\nBuscando todas as referencias a $modelName:\n");
+    // error_log("\n\nBuscando todas as referencias a $modelName:\n");
 
     foreach( $relations['from'] as $voName => $voRelKeys ) {
-      error_log("$modelName <- $voName ( ".implode( ',', $voRelKeys )." )");
+      // error_log("$modelName <- $voName ( ".implode( ',', $voRelKeys )." )");
       $objModel = new $voName();
       $listModel = $objModel->listItems( [ 'fields' => $voRelKeys ] );
       if( is_object( $listModel ) ) {
