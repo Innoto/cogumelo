@@ -1,5 +1,22 @@
 <?php
 
+//********************************************************************************************************************************************************************************
+
+// declare(strict_types=1);
+
+
+/**
+ * PHPMD: Suppress all warnings from these rules.
+ * @SuppressWarnings(PHPMD.Superglobals)
+ * @SuppressWarnings(PHPMD.ElseExpression)
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+ * @SuppressWarnings(PHPMD.CamelCaseVariableName)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ **/
+
 require_once( COGUMELO_LOCATION.'/coreClasses/CogumeloClass.php' );
 require_once( APP_BASE_PATH.'/Cogumelo.php' );
 
@@ -7,7 +24,7 @@ global $COGUMELO_IS_EXECUTING_FROM_SCRIPT;
 $COGUMELO_IS_EXECUTING_FROM_SCRIPT=true;
 
 global $_C;
-$_C =Cogumelo::get();
+$_C = Cogumelo::get();
 
 //
 // Load the necessary modules
@@ -35,12 +52,36 @@ if( $argc > 1 ) {
       setPermissionsDevel();
       break;
 
+
+
+
+
+
+    case 'createDB': // create database
+      doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), false);
+      createDB();
+      break;
+
+
+
+
+
+
+
+
     case 'generateModel':
       setPermissionsDevel();
       createRelSchemes();
       generateModel();
       flushAll();
       break;
+
+
+
+
+
+
+
 
     case 'deploy':
       setPermissionsDevel();
@@ -50,10 +91,23 @@ if( $argc > 1 ) {
       break;
 
 
-    case 'createDB': // create database
-      doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), false);
-      createDB();
-      break;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     case 'bckDB': // do the backup of the db
@@ -62,6 +116,12 @@ if( $argc > 1 ) {
 
       doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), $file);
       break;
+
+
+
+
+
+
 
     case 'restoreDB': // restore the backup of a given db
       if( $argc > 2 ) {
@@ -72,6 +132,12 @@ if( $argc > 1 ) {
         echo "You must specify the file to restore\n";
       }
       break;
+
+
+
+
+
+
 
     case 'prepareDependences':
       Cogumelo::load('coreController/DependencesController.php');
@@ -94,6 +160,7 @@ if( $argc > 1 ) {
       $dependencesControl = new DependencesController();
       $dependencesControl->installDependences();
       break;
+
 
     case 'generateFrameworkTranslations':
       Cogumelo::load('coreController/i18nScriptController.php');
@@ -132,6 +199,7 @@ if( $argc > 1 ) {
       echo "The files.json are ready to be used!\n";
       break;
 
+
     /* We execute this two actions from web as we need to operate with the apache permissions*/
     case 'flush': // delete temporary files
       flushAll();
@@ -144,6 +212,10 @@ if( $argc > 1 ) {
 
     case 'generateClientCaches':
       actionGenerateClientCaches();
+      break;
+
+    case 'garbageCollection':
+      garbageCollection();
       break;
 
     default:
@@ -177,6 +249,7 @@ function printOptions(){
     * generateModel           Initialize database
 
     * deploy                  Deploy
+
 
     * resetModules
       - resetModuleVersions
@@ -283,6 +356,7 @@ function actionFlush() {
         "verify_peer_name" => false,
       ],
     ] );
+    echo $scriptCogumeloServerUrl . '?q=flush';
     echo file_get_contents( $scriptCogumeloServerUrl . '?q=flush', false, $contextOptions );
   }
   else {
@@ -347,8 +421,11 @@ function createDB(){
 
 
 function makeAppPaths() {
-  global $lc;
-  $md = array( APP_TMP_PATH,
+  echo "makeAppPaths\n";
+
+  // global $lc;
+
+  $dirList = array( APP_TMP_PATH,
     Cogumelo::getSetupValue( 'smarty:configPath' ), Cogumelo::getSetupValue( 'smarty:compilePath' ),
     Cogumelo::getSetupValue( 'smarty:cachePath' ), Cogumelo::getSetupValue( 'smarty:tmpPath' ),
     Cogumelo::getSetupValue( 'mod:mediaserver:tmpCachePath' ),
@@ -364,16 +441,24 @@ function makeAppPaths() {
   );
 
   foreach( Cogumelo::getSetupValue( 'lang:available' ) as $lang ) {
-    $md[] = Cogumelo::getSetupValue( 'i18n:localePath' ).'/'.$lang['i18n'].'/LC_MESSAGES';
+    $dirList[] = Cogumelo::getSetupValue( 'i18n:localePath' ).'/'.$lang['i18n'].'/LC_MESSAGES';
   }
 
-  foreach( $md as $dir ) {
+
+
+
+
+
+  // echo "\n\nMKDIR\n".json_encode($dirList)."\n\n";
+
+  foreach( $dirList as $dir ) {
     if( $dir && $dir !== '' && !is_dir( $dir ) ) {
-      if( !mkdir( $dir, 0777, true ) ) {
+      if( !mkdir( $dir, 0750, true ) ) {
         echo 'ERROR: Imposible crear el dirirectorio: '.$dir."\n";
       }
     }
   }
+  echo "makeAppPaths DONE.\n";
 }
 
 function setPermissions( $devel = false ) {
@@ -426,17 +511,92 @@ function setPermissions( $devel = false ) {
   echo "Permissions ready!\n";
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 function setPermissionsDevel() {
   setPermissions( true );
 }
 
+
+// function backupDB( $file = false ) {
+//   doBackup(
+//     Cogumelo::getSetupValue('db:name'),
+//     Cogumelo::getSetupValue('db:user'),
+//     Cogumelo::getSetupValue('db:password'),
+//     $file,
+//     Cogumelo::getSetupValue('db:hostname')
+//   );
+// }
 
 function doBackup( $db, $user, $passwd, $file ) {
   if( !$file ) {
     $file = date('Ymd-His').'-'.$db.'.sql';
   }
 
+  // if( empty( $dbHost ) ) {
+  //   $dbHost = 'localhost';
+  // }
+
   $dir = Cogumelo::getSetupValue( 'script:backupPath' );
+
+  // $cmdBackup = 'mysqldump --hex-blob --complete-insert --skip-extended-insert '.
+  //   '-h '.$dbHost.' -u '.$user.' -p'.$passwd.' '.$dbName.' > '.$dir.'/'.$file;
 
   popen( 'mysqldump --hex-blob --complete-insert --skip-extended-insert -u ' . $user . ' -p' . $passwd .' '. $db . '> ' . $dir . '/' . $file, 'r' );
   exec( 'gzip ' . $dir . '/' . $file );
@@ -444,8 +604,21 @@ function doBackup( $db, $user, $passwd, $file ) {
   echo "\nYour db was successfully saved!\n";
 }
 
+
 function restoreDB( $db, $user, $passwd, $file ) {
+
+  // $dbHost = Cogumelo::getSetupValue('db:hostname');
+  // $dbName = Cogumelo::getSetupValue('db:name');
+  // $user = Cogumelo::getSetupValue('db:user');
+  // $passwd = Cogumelo::getSetupValue('db:password');
+
+  // doBackup( $dbName, $user, $passwd, false, $dbHost );
+
   $dir = Cogumelo::getSetupValue( 'script:backupPath' );
+
+  // if( empty( $dbHost ) ) {
+  //   $dbHost = 'localhost';
+  // }
 
   // $file_parts = explode('.',$dir.$file);
   $fileExt = pathinfo( $dir.$file, PATHINFO_EXTENSION );
@@ -463,8 +636,8 @@ function restoreDB( $db, $user, $passwd, $file ) {
 /**
  * Get data from the shell.
  */
-function ReadStdin( $prompt, $valid_inputs, $default = '' ) {
-  while( !isset($input) || ( is_array($valid_inputs) && !in_array($input, $valid_inputs) ) || ( $valid_inputs === 'is_file' && !is_file($input) ) ) {
+function ReadStdin( $prompt, $validInputs, $default = '' ) {
+  while( !isset($input) || ( is_array($validInputs) && !in_array($input, $validInputs) ) || ( $validInputs === 'is_file' && !is_file($input) ) ) {
     echo $prompt;
     $input = strtolower(trim(fgets(STDIN)));
     if( empty($input) && !empty($default) ) {
@@ -553,3 +726,28 @@ function rmdirRec( $dir, $removeContainer = true ) {
     }
   }
 }
+
+
+
+
+// garbageCollection
+function garbageCollection() {
+  echo "\n\n**********************************\n";
+  echo "**  Garbage Collection - Start  **\n";
+  echo "**********************************\n\n";
+
+  // $params = [
+  //   'verbose' => true,
+  //   'noAction' => true
+  // ];
+
+  require_once( ModuleController::getRealFilePath( 'GarbageCollection.php', 'GarbageCollection' ) );
+  GarbageCollection::load( 'controller/GarbageCollectionController.php' );
+  $garbageCollCtrl = new GarbageCollectionController();
+  $garbageCollCtrl->garbageCollection();
+
+  echo "\n\n*********************************\n";
+  echo "**  Garbage Collection - Done  **\n";
+  echo "*********************************\n\n";
+}
+
