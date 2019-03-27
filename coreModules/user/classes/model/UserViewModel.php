@@ -91,8 +91,8 @@ class UserViewModel extends Model {
 
   static $extraFilters = [
     'idIn' => ' user_user_view.id IN (?) ',
-    'find' => "UPPER(surname)  LIKE CONCAT('%',UPPER(?),'%') OR login LIKE CONCAT('%', UPPER(?), '%')",
-    'tableSearch' => " ( UPPER( name ) LIKE CONCAT( '%', UPPER(?), '%' ) OR UPPER( surname ) LIKE CONCAT( '%', UPPER(?), '%' ) OR UPPER( login ) LIKE CONCAT( '%', UPPER(?), '%' ) OR id = ? )",
+    'find' => "UPPER(user_user_view.surname)  LIKE CONCAT('%',UPPER(?),'%') OR user_user_view.login LIKE CONCAT('%', UPPER(?), '%')",
+    'tableSearch' => " ( UPPER( user_user_view.name ) LIKE CONCAT( '%', UPPER(?), '%' ) OR UPPER( user_user_view.surname ) LIKE CONCAT( '%', UPPER(?), '%' ) OR UPPER( user_user_view.login ) LIKE CONCAT( '%', UPPER(?), '%' ) OR user_user_view.id = ? )",
     'roleFilter' => 'FIND_IN_SET(?, user_user_view.role) ',
   ];
 

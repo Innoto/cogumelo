@@ -27,7 +27,7 @@ class ModuleRegisterModel extends Model {
   );
 
   static $extraFilters = array(
-    'searchByName'=> ' name = ? '
+    'searchByName'=> ' module_registers.name = ? '
   );
 
   static $MigrateSQLChangeColumns = "ALTER TABLE model_registers MODIFY COLUMN firstVersion VARCHAR(100);ALTER TABLE model_registers MODIFY COLUMN deployVersion VARCHAR(100); ";

@@ -32,7 +32,7 @@ class ModelRegisterModel extends Model {
 
 
   static $extraFilters = array(
-    'searchByName'=> ' name = ? '
+    'searchByName'=> ' model_registers.name = ? '
   );
 
 
