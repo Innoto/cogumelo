@@ -99,6 +99,10 @@ class Facade
 
 
 
+
+
+
+
   /**
    * Interface for any facade method
    *
@@ -109,6 +113,8 @@ class Facade
    */
   function __call($name, $args){
 
+    $data = false;
+
     // set arguments as string
     $args_str = '';
     foreach($args as $akey =>$arg){
@@ -118,11 +124,14 @@ class Facade
 
     eval('$data = $this->dao->'.$name. '($this->connectioncontrol'. $args_str . '); ');
 
-    if($data === COGUMELO_ERROR) {
+    if( $data === COGUMELO_ERROR ) {
+      Cogumelo::error('Error in facade calling : '.$name);
+    }
+
+    if( $data === false && in_array( $name, ['listItems', 'listCount', 'create', 'update', 'save'] ) ) {
       Cogumelo::error('Error in facade calling : '.$name);
     }
 
     return $data;
   }
-
 }

@@ -162,14 +162,19 @@ class Model extends VO {
 
 
 
+
+
+
   /**
-  * Save item
-  *
-  * @param array $parameters array of filters
-  *
-  * @return object  VO
-  */
+   * Save item
+   *
+   * @param array $parameters array of filters
+   *
+   * @return object  VO
+   */
   public function save( array $parameters = array() ) {
+
+    $retObj = false;
 
     // TODO: Si hay dependencias no hace return del objeto
 
@@ -201,53 +206,65 @@ class Model extends VO {
     // Save only this Model
     else {
       Cogumelo::debug( 'Called save on '.get_called_class(). ' with "'.$this->getFirstPrimarykeyId().'" = '. $this->getter( $this->getFirstPrimarykeyId() ) );
-      $m = $this->saveOrUpdate();
+      $retObj = $this->saveOrUpdate();
 
       $filter = array( 'id' => $this->getter( $this->getFirstPrimarykeyId() ) );
-
-
-      if( $els = $this->listItems( array('filters'=>$filter) )  ){
-        if( $el = $els->fetch() ) {
-          $this->data = $el->data;
-          $m = $el;
+      if( $elList = $this->listItems( array('filters'=>$filter) )  ){
+        if( is_object( $elList ) && ( $elObj = $elList->fetch() ) ) {
+          $this->data = $elObj->data;
+          $retObj = $elObj;
         }
       }
 
-      return $m;
 
+      // Nos aseguramos de que se abandona el uso de COGUMELO_ERROR en este metodo
+      if( $retObj === COGUMELO_ERROR ) {
+        $retObj = false;
+      }
+      return $retObj;
     }
-
-
   }
 
+
   /**
-  * Save item
-  *
-  * @param object $voObj voObject
-  *
-  * @return object  VO
-  */
+   * Save item
+   *
+   * @param object $voObj voObject
+   *
+   * @return object  VO
+   */
   private function saveOrUpdate( $voObj = false ) {
+
     $retObj = false;
 
     if(!$voObj) {
       $voObj = $this;
     }
 
-
     if( $voObj->data == array() ) {
       $retObj = $this;
     }
     else
-    if( $voObj->exist() ) {
-      $retObj = $this->dataFacade->Update( $voObj );
-    }
-    else {
-      $retObj = $this->dataFacade->Create( $voObj );
-    }
+      if( $voObj->exist() ) {
+        $retObj = $this->dataFacade->update( $voObj );
+      }
+      else {
+        $retObj = $this->dataFacade->create( $voObj );
+      }
 
+
+    // Nos aseguramos de que se abandona el uso de COGUMELO_ERROR en este metodo
+    if( $retObj === COGUMELO_ERROR ) {
+      $retObj = false;
+    }
     return $retObj;
   }
+
+
+
+
+
+
 
   /**
   * Verify if VO exist in DDBB

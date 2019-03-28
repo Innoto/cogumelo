@@ -239,6 +239,11 @@ class MysqlDAO extends DAO {
   }
 
 
+
+
+
+
+
   /**
    * Generic List ittems
    *
@@ -253,6 +258,9 @@ class MysqlDAO extends DAO {
    * @return object
    */
   public function listItems( &$connectionControl, $filters, $range, $order, $fields, $joinType, $resolveDependences = false, $groupBy = false, $cacheParam = false ) {
+
+    $daoresult = false;
+
     // SQL Query
     $VO = new $this->VO();
 
@@ -326,7 +334,7 @@ class MysqlDAO extends DAO {
         }
         else{
           Cogumelo::log( __METHOD__.': Using cache: Query fail - Not Set', 'cache' );
-          $daoresult = COGUMELO_ERROR;
+          $daoresult = false;
         }
       }
     }
@@ -340,46 +348,16 @@ class MysqlDAO extends DAO {
         $daoresult = new MysqlDAOResult( $this->VO, $res);
       }
       else{
-        $daoresult = COGUMELO_ERROR;
+        $daoresult = false;
       }
     }
 
+
+    // Nos aseguramos de que se abandona el uso de COGUMELO_ERROR en este metodo
+    if( $daoresult === COGUMELO_ERROR ) {
+      $daoresult = false;
+    }
     return $daoresult;
-  }
-
-
-  /**
-   * Ket keys as string and set function AsText() to geo
-   *
-   * @return string
-   */
-  public function getKeysToString( $VO, $fields, $resolveDependences ) {
-
-    $keys = explode(', ', $VO->getKeysToString($fields, $resolveDependences ));
-    $procesedKeys = array();
-    foreach( $keys as $key ) {
-
-      $k1 = explode('.',$key);
-      if( is_array( $k1 ) ){
-        $k = end( $k1 );
-      }
-      else{
-        $k = $key;
-      }
-
-
-      if( isset($VO::$cols[$k]) && $VO::$cols[$k]['type'] == 'GEOMETRY' ) {
-        $procesedKeys[] = 'AsText('.$key.') as "'.$key.'" ';
-      }
-      else {
-        $procesedKeys[] = $key;
-      }
-    }
-
-    //echo implode(',', $procesedKeys);
-    //exit;
-
-    return implode(',', $procesedKeys);
   }
 
 
@@ -393,7 +371,8 @@ class MysqlDAO extends DAO {
    * @return integer
    */
   public function listCount( &$connectionControl, $filters, $cacheParam = false ) {
-    $retVal = null;
+
+    $retVal = false;
 
     $VO = new $this->VO();
     // where string and vars
@@ -424,7 +403,7 @@ class MysqlDAO extends DAO {
         }
         else{
           Cogumelo::log( __METHOD__.': Using cache: Query fail - Not Set', 'cache' );
-          $retVal = COGUMELO_ERROR;
+          $retVal = false;
         }
       }
     }
@@ -436,10 +415,15 @@ class MysqlDAO extends DAO {
         $retVal = $row['number_elements'];
       }
       else {
-        $retVal = COGUMELO_ERROR;
+        $retVal = false;
       }
     }
 
+
+    // Nos aseguramos de que se abandona el uso de COGUMELO_ERROR en este metodo
+    if( $retVal === COGUMELO_ERROR ) {
+      $retVal = false;
+    }
     return $retVal;
   }
 
@@ -453,6 +437,8 @@ class MysqlDAO extends DAO {
    * @return mixed
    */
   public function create( &$connectionControl, $VOobj ) {
+
+    $retVal = false;
 
     $cols = array();
     foreach( $VOobj->data as $colk => $col ) {
@@ -484,15 +470,22 @@ class MysqlDAO extends DAO {
     $strSQL = "INSERT INTO `".$VOobj::$tableName."` (".$campos.") VALUES(".mb_substr($answrs,1).");";
 
     $res = $this->execSQL($connectionControl, $strSQL, $valArray);
-    if($res != COGUMELO_ERROR) {
+    if($res !== COGUMELO_ERROR) {
       $VOobj->setter($VOobj->getFirstPrimarykeyId(), $connectionControl->db->insert_id);
-
-      return $VOobj;
+      $retVal = $VOobj;
     }
     else {
-      return COGUMELO_ERROR;
+      $retVal = false;
     }
+
+
+    // Nos aseguramos de que se abandona el uso de COGUMELO_ERROR en este metodo
+    if( $retVal === COGUMELO_ERROR ) {
+      $retVal = false;
+    }
+    return $retVal;
   }
+
 
   /**
    * Update record
@@ -503,6 +496,8 @@ class MysqlDAO extends DAO {
    * @return mixed
    */
   public function update( &$connectionControl, $VOobj ) {
+
+    $retVal = false;
 
     // primary key value
     $pkValue = $VOobj->getter( $VOobj->getFirstPrimarykeyId() );
@@ -534,13 +529,26 @@ class MysqlDAO extends DAO {
     $strSQL = "UPDATE `".$VOobj::$tableName."` SET ".mb_substr($setvalues, 1)." WHERE `".$VOobj->getFirstPrimarykeyId()."`= ?;";
 
     $res = $this->execSQL($connectionControl, $strSQL, $valArray);
-    if( $res != COGUMELO_ERROR ) {
-      return $VOobj;
+    if( $res !== COGUMELO_ERROR ) {
+      $retVal = $VOobj;
     }
     else {
-      return COGUMELO_ERROR;
+      $retVal = false;
     }
+
+
+    // Nos aseguramos de que se abandona el uso de COGUMELO_ERROR en este metodo
+    if( $retVal === COGUMELO_ERROR ) {
+      $retVal = false;
+    }
+    return $retVal;
   }
+
+
+
+
+
+
 
   /**
    * Delete from key
@@ -578,4 +586,37 @@ class MysqlDAO extends DAO {
     return $qm;
   }
 
+  /**
+   * Ket keys as string and set function AsText() to geo
+   *
+   * @return string
+   */
+  public function getKeysToString( $VO, $fields, $resolveDependences ) {
+
+    $keys = explode(', ', $VO->getKeysToString($fields, $resolveDependences ));
+    $procesedKeys = array();
+    foreach( $keys as $key ) {
+
+      $k1 = explode('.',$key);
+      if( is_array( $k1 ) ){
+        $k = end( $k1 );
+      }
+      else{
+        $k = $key;
+      }
+
+
+      if( isset($VO::$cols[$k]) && $VO::$cols[$k]['type'] == 'GEOMETRY' ) {
+        $procesedKeys[] = 'AsText('.$key.') as "'.$key.'" ';
+      }
+      else {
+        $procesedKeys[] = $key;
+      }
+    }
+
+    //echo implode(',', $procesedKeys);
+    //exit;
+
+    return implode(',', $procesedKeys);
+  }
 }
