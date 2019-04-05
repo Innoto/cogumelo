@@ -1,21 +1,15 @@
 <?php
-
 Cogumelo::load('coreController/Cache.php');
 Cogumelo::load('coreModel/DAO.php');
 Cogumelo::load('coreModel/mysql/MysqlDAORelationship.php');
 Cogumelo::load('coreModel/mysql/MysqlDAOResult.php');
-
-
 /**
 * Mysql DAO (Abstract)
 *
 * @package Cogumelo Model
 */
 class MysqlDAO extends DAO {
-
   var $VO;
-
-
   /**
    * Composes order mysql (ORDER BY) String
    *
@@ -39,19 +33,15 @@ class MysqlDAO extends DAO {
         }
         $coma=", ";
       }
-
       return $orderSTR;
     }
     else {
       return "";
     }
   }
-
-
   //
   //
   //
-
   /**
    * Execute a SQL query command
    *
@@ -65,7 +55,6 @@ class MysqlDAO extends DAO {
     Cogumelo::debugSQL($sql);
     // obtaining debug data
     $d = debug_backtrace();
-
     if(
       isset( $d[1]['class'] ) &&
       isset( $d[1]['function'] )
@@ -75,9 +64,6 @@ class MysqlDAO extends DAO {
     else {
       $caller_method = 'unknown';
     }
-
-
-
     //set prepare sql
     /*
     if( $connectionControl->stmt ) {
@@ -90,22 +76,16 @@ class MysqlDAO extends DAO {
     }
     */
     $connectionControl->stmt = $connectionControl->db->prepare( $sql );
-
     if( $connectionControl->stmt ) {  //set prepare sql
-
       $bind_vars_type = $this->getPrepareTypes($val_array);
-
       $bind_vars_str = "";
       foreach( $val_array as $ak => $vk ) {
         $bind_vars_str .= ', $val_array['.$ak.']';
       }
-
-
       // bind params
       if( $bind_vars_type !== '' ) {
         eval( '$connectionControl->stmt->bind_param("'. $bind_vars_type .'"'. $bind_vars_str .');' );
       }
-
       if($connectionControl->stmt->execute() && $connectionControl->stmt->error === '' ) {
         $ret_data = $connectionControl->stmt->get_result();
       }
@@ -118,15 +98,11 @@ class MysqlDAO extends DAO {
       Cogumelo::error( "MYSQL QUERY ERROR on ".$caller_method.": ".$connectionControl->db->error.' - '.$sql);
       $ret_data = COGUMELO_ERROR;
     }
-
     return $ret_data;
   }
-
-
   public function rawExecSQL( &$connectionControl, $sql ) {
     $ret = '';
     $connectionControl->db->multi_query( $sql );
-
     if( $connectionControl->db->error != ''){
       echo "Error executing rawExecSQL: ".$connectionControl->db->error;
       $ret =  COGUMELO_ERROR;
@@ -135,17 +111,13 @@ class MysqlDAO extends DAO {
       $ret = true;
       // Consumo los resultados sin guardarlos
       while( $connectionControl->db->more_results() ) {
-
         $connectionControl->db->next_result();
         $connectionControl->db->use_result();
       }
       $connectionControl->db->store_result();
     }
-
     return $ret;
   }
-
-
   /**
    * Get string of chars according prepare type (ex. i:integer, d:double, s:string, b:boolean)
    *
@@ -154,7 +126,6 @@ class MysqlDAO extends DAO {
    * @return string
    */
   public function getPrepareTypes( $values_array ) {
-
     $return_str = "";
     foreach( $values_array as $value ) {
       if(is_integer($value)) {
@@ -173,11 +144,8 @@ class MysqlDAO extends DAO {
         $return_str.= 's';
       }
     }
-
     return $return_str;
   }
-
-
   /**
    * Generates where clausule
    *
@@ -186,64 +154,38 @@ class MysqlDAO extends DAO {
    * @return string
    */
   public function getFilters( $filters ) {
-
     $where_str = "";
     $val_array = array();
-
-
     if($filters) {
-
       $VO = new $this->VO();
-
-
       foreach( $filters as $fkey => $filter_val ) {
-
         if( array_key_exists($fkey, $this->filters) ) {
           $fstr = " AND ".$this->filters[$fkey];
-
-
           $var_count = mb_substr_count( $fstr , '?' );
           for( $c=0; $c < $var_count; $c++ ) {
-
             if( is_array( $filter_val ) ) { // Value array for one filter
               foreach( $filter_val as $val ) {
                 $val_array[] = $val;
               }
-
-
             }
             else { // one value
               $val_array[] = $filter_val;
             }
-
           }
-
           // create n '?' separed by comma to filter by array values
           if( is_array( $filter_val ) ) {
             $to_replace = implode(',', array_fill(0, count( $filter_val ), '?') );
             $fstr = str_replace('?', $to_replace, $fstr );
           }
-
           $where_str.=$fstr;
-
         }
-
-
       }
     }
-
     return array(
         'string' => " WHERE true".$where_str,
         'values' => $val_array
       );
   }
-
-
-
-
-
-
-
   /**
    * Generic List ittems
    *
@@ -258,64 +200,44 @@ class MysqlDAO extends DAO {
    * @return object
    */
   public function listItems( &$connectionControl, $filters, $range, $order, $fields, $joinType, $resolveDependences = false, $groupBy = false, $cacheParam = false ) {
-
-    $daoresult = false;
-
     // SQL Query
     $VO = new $this->VO();
-
     // joins
     $mysqlDAORel = new MysqlDAORelationship();
     $joins = $mysqlDAORel->getVOJoins( $this->VO, $joinType , $resolveDependences, $filters);
-
     // where string for join queries
     $joinWhereArrays = $mysqlDAORel->getFilterArrays();
-
     // where string for main query
     $whereArray = $this->getFilters($filters);
-
     // merge where arrays and array values
     $allWhereArrays = $joinWhereArrays;
     $allWhereArrays[] = $whereArray;
-
-
     $allWhereARraysValues = array();
     foreach( $allWhereArrays as $wa ) {
       $allWhereARraysValues = array_merge( $allWhereARraysValues, $wa['values'] );
     }
-
-
     // order string
     $orderSTR = ($order)? $this->orderByString($order): "";
-
     // group by
     $groupBySTR = ($groupBy)?  " GROUP BY $groupBy": "";
-
     // range string
     $rangeSTR = ($range != array() && is_array($range) )? sprintf(" LIMIT %s, %s ", $range[0], $range[1]): "";
-
-
     if($resolveDependences) {
       $this->execSQL($connectionControl,'SET group_concat_max_len='.Cogumelo::getSetupValue( 'db:mysqlGroupconcatMaxLen' ).';');
     }
-
     $strSQL = "SELECT ".
       $this->getKeysToString($VO, $fields, $resolveDependences ) .
       " FROM `" .
       $VO::$tableName ."` " .
       $joins.
       $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
-
-
     //exit;
     //var_dump($joinWhereArrays);
     //exit;
-
     // if( $cacheParam && DB_ALLOW_CACHE ) {
     if( $cacheParam ) {
       $cacheCtrl = new Cache();
       $cacheKey = __METHOD__.':'. md5( $strSQL . serialize( $allWhereArrays ) );
-
       $cacheData = $cacheCtrl->getCache( $cacheKey );
       if( $cacheData !== null ) {
         // With cache, serving cache ...
@@ -325,7 +247,6 @@ class MysqlDAO extends DAO {
       else {
         // With cache, but not cached yet. Caching ...
         $res = $this->execSQL( $connectionControl, $strSQL, $allWhereARraysValues );
-
         if( $res !== COGUMELO_ERROR ) {
           Cogumelo::log( __METHOD__.': Using cache: Set with ID: '.$cacheKey, 'cache' );
           $daoresult = new MysqlDAOResult( $this->VO , $res );
@@ -334,33 +255,50 @@ class MysqlDAO extends DAO {
         }
         else{
           Cogumelo::log( __METHOD__.': Using cache: Query fail - Not Set', 'cache' );
-          $daoresult = false;
+          $daoresult = COGUMELO_ERROR;
         }
       }
     }
     else {
       Cogumelo::log( __METHOD__.': Not Using cache', 'cache' );
-
       //  Without cache!
       $res = $this->execSQL( $connectionControl, $strSQL, $allWhereARraysValues );
-
       if( $res !== COGUMELO_ERROR ) {
         $daoresult = new MysqlDAOResult( $this->VO, $res);
       }
       else{
-        $daoresult = false;
+        $daoresult = COGUMELO_ERROR;
       }
-    }
-
-
-    // Nos aseguramos de que se abandona el uso de COGUMELO_ERROR en este metodo
-    if( $daoresult === COGUMELO_ERROR ) {
-      $daoresult = false;
     }
     return $daoresult;
   }
-
-
+  /**
+   * Ket keys as string and set function AsText() to geo
+   *
+   * @return string
+   */
+  public function getKeysToString( $VO, $fields, $resolveDependences ) {
+    $keys = explode(', ', $VO->getKeysToString($fields, $resolveDependences ));
+    $procesedKeys = array();
+    foreach( $keys as $key ) {
+      $k1 = explode('.',$key);
+      if( is_array( $k1 ) ){
+        $k = end( $k1 );
+      }
+      else{
+        $k = $key;
+      }
+      if( isset($VO::$cols[$k]) && $VO::$cols[$k]['type'] == 'GEOMETRY' ) {
+        $procesedKeys[] = 'AsText('.$key.') as "'.$key.'" ';
+      }
+      else {
+        $procesedKeys[] = $key;
+      }
+    }
+    //echo implode(',', $procesedKeys);
+    //exit;
+    return implode(',', $procesedKeys);
+  }
   /**
    * Generic List Count
    *
@@ -371,20 +309,15 @@ class MysqlDAO extends DAO {
    * @return integer
    */
   public function listCount( &$connectionControl, $filters, $cacheParam = false ) {
-
-    $retVal = false;
-
+    $retVal = null;
     $VO = new $this->VO();
     // where string and vars
     $whereArray = $this->getFilters($filters);
     // SQL Query
     $strSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
-
-
     if( $cacheParam ) {
       $cacheCtrl = new Cache();
       $cacheKey = __METHOD__.':'. md5( $strSQL . serialize( $whereArray ) );
-
       $cacheData = $cacheCtrl->getCache( $cacheKey );
       if( $cacheData !== null ) {
         // With cache, serving cache ...
@@ -394,7 +327,6 @@ class MysqlDAO extends DAO {
       else {
         // With cache, but not cached yet. Caching ...
         $res = $this->execSQL( $connectionControl, $strSQL, $whereArray['values'] );
-
         if( $res !== COGUMELO_ERROR ) {
           Cogumelo::log( __METHOD__.': Using cache: Set with ID: '.$cacheKey, 'cache' );
           $row = $res->fetch_assoc();
@@ -403,7 +335,7 @@ class MysqlDAO extends DAO {
         }
         else{
           Cogumelo::log( __METHOD__.': Using cache: Query fail - Not Set', 'cache' );
-          $retVal = false;
+          $retVal = COGUMELO_ERROR;
         }
       }
     }
@@ -415,19 +347,11 @@ class MysqlDAO extends DAO {
         $retVal = $row['number_elements'];
       }
       else {
-        $retVal = false;
+        $retVal = COGUMELO_ERROR;
       }
-    }
-
-
-    // Nos aseguramos de que se abandona el uso de COGUMELO_ERROR en este metodo
-    if( $retVal === COGUMELO_ERROR ) {
-      $retVal = false;
     }
     return $retVal;
   }
-
-
   /**
    * Insert record
    *
@@ -437,56 +361,35 @@ class MysqlDAO extends DAO {
    * @return mixed
    */
   public function create( &$connectionControl, $VOobj ) {
-
-    $retVal = false;
-
     $cols = array();
     foreach( $VOobj->data as $colk => $col ) {
       if( $VOobj->getter($colk) !== null) {
         $cols[$colk] = $col;
       }
     }
-
-
     $campos = '`'.implode('`,`', array_keys($cols)) .'`';
-
-
     $valArray = array();
     $answrs = "";
     foreach( array_keys($cols) as $colName ) {
       $val = $VOobj->getter($colName);
       $valArray[] = $val;
-
-
       if( $VOobj->getter($colName) != false && isset( $VOobj::$cols[$colName] ) && $VOobj::$cols[$colName]['type'] == 'GEOMETRY' ) {
-
         $answrs .= ', GeomFromText( ? )';
       }
       else {
         $answrs .= ', ?';
       }
     }
-
     $strSQL = "INSERT INTO `".$VOobj::$tableName."` (".$campos.") VALUES(".mb_substr($answrs,1).");";
-
     $res = $this->execSQL($connectionControl, $strSQL, $valArray);
-    if($res !== COGUMELO_ERROR) {
+    if($res != COGUMELO_ERROR) {
       $VOobj->setter($VOobj->getFirstPrimarykeyId(), $connectionControl->db->insert_id);
-      $retVal = $VOobj;
+      return $VOobj;
     }
     else {
-      $retVal = false;
+      return COGUMELO_ERROR;
     }
-
-
-    // Nos aseguramos de que se abandona el uso de COGUMELO_ERROR en este metodo
-    if( $retVal === COGUMELO_ERROR ) {
-      $retVal = false;
-    }
-    return $retVal;
   }
-
-
   /**
    * Update record
    *
@@ -496,60 +399,33 @@ class MysqlDAO extends DAO {
    * @return mixed
    */
   public function update( &$connectionControl, $VOobj ) {
-
-    $retVal = false;
-
     // primary key value
     $pkValue = $VOobj->getter( $VOobj->getFirstPrimarykeyId() );
-
-
     // add getter values to values array
     $setvalues = '';
-
-
     $valArray = array();
     foreach( $VOobj->data as $colk => $col ) {
-
       if( $VOobj->getter($colk) != false && isset( $VOobj::$cols[$colk] ) && $VOobj::$cols[$colk]['type'] == 'GEOMETRY' ) {
         $setvalues .= ', '.$colk.'= GeomFromText( ? ) ';
       }
       else {
         $setvalues .= ', '.$colk.'= ? ';
       }
-
       $valArray[] = $col;//$VOobj->getter($colk);
     }
-
     //var_dump($setvalues);
     //var_dump($valArray);
-
     // add primary key value to values array
     $valArray[] = $pkValue;
-
     $strSQL = "UPDATE `".$VOobj::$tableName."` SET ".mb_substr($setvalues, 1)." WHERE `".$VOobj->getFirstPrimarykeyId()."`= ?;";
-
     $res = $this->execSQL($connectionControl, $strSQL, $valArray);
-    if( $res !== COGUMELO_ERROR ) {
-      $retVal = $VOobj;
+    if( $res != COGUMELO_ERROR ) {
+      return $VOobj;
     }
     else {
-      $retVal = false;
+      return COGUMELO_ERROR;
     }
-
-
-    // Nos aseguramos de que se abandona el uso de COGUMELO_ERROR en este metodo
-    if( $retVal === COGUMELO_ERROR ) {
-      $retVal = false;
-    }
-    return $retVal;
   }
-
-
-
-
-
-
-
   /**
    * Delete from key
    *
@@ -560,11 +436,9 @@ class MysqlDAO extends DAO {
    * @return boolean
    */
   public function deleteFromKey( &$connectionControl, $key, $value ) {
-
     $VO = new $this->VO();
     // SQL Query
     $strSQL = "DELETE FROM `" . $VO::$tableName . "` WHERE `".$key."`=? ;";
-
     $res = $this->execSQL($connectionControl, $strSQL, array($value));
     if( $res != COGUMELO_ERROR ){
       return true;
@@ -573,7 +447,6 @@ class MysqlDAO extends DAO {
       return null;
     }
   }
-
   /**
    * Return list of question marks separated by comma
    *
@@ -584,39 +457,5 @@ class MysqlDAO extends DAO {
   public function getQuestionMarks( $elements ) {
     $qm = str_repeat( '?, ', count($elements)-1 ) . '?';
     return $qm;
-  }
-
-  /**
-   * Ket keys as string and set function AsText() to geo
-   *
-   * @return string
-   */
-  public function getKeysToString( $VO, $fields, $resolveDependences ) {
-
-    $keys = explode(', ', $VO->getKeysToString($fields, $resolveDependences ));
-    $procesedKeys = array();
-    foreach( $keys as $key ) {
-
-      $k1 = explode('.',$key);
-      if( is_array( $k1 ) ){
-        $k = end( $k1 );
-      }
-      else{
-        $k = $key;
-      }
-
-
-      if( isset($VO::$cols[$k]) && $VO::$cols[$k]['type'] == 'GEOMETRY' ) {
-        $procesedKeys[] = 'AsText('.$key.') as "'.$key.'" ';
-      }
-      else {
-        $procesedKeys[] = $key;
-      }
-    }
-
-    //echo implode(',', $procesedKeys);
-    //exit;
-
-    return implode(',', $procesedKeys);
   }
 }
