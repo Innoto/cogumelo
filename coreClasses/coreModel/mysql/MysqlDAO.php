@@ -217,7 +217,7 @@ class MysqlDAO extends DAO {
     foreach( $allWhereArrays as $wa ) {
       $allWhereARraysValues = array_merge( $allWhereARraysValues, $wa['values'] );
     }
-    
+
     // order string
     $orderSTR = ($order)? $this->orderByString($order): "";
     // group by
@@ -253,7 +253,8 @@ class MysqlDAO extends DAO {
         ' WHERE '.$whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
     }
     else {
-      $strSQL = DevelDBController::renderRichSql( $strSQL );
+
+      $strSQL = (new DevelDBController())->renderRichSql( $strSQL );
     }
     //exit;
     //var_dump($joinWhereArrays);
