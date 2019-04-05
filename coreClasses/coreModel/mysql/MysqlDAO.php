@@ -3,6 +3,7 @@ Cogumelo::load('coreController/Cache.php');
 Cogumelo::load('coreModel/DAO.php');
 Cogumelo::load('coreModel/mysql/MysqlDAORelationship.php');
 Cogumelo::load('coreModel/mysql/MysqlDAOResult.php');
+devel::load('controller/DevelDBController.php');
 /**
 * Mysql DAO (Abstract)
 *
@@ -182,7 +183,7 @@ class MysqlDAO extends DAO {
       }
     }
     return array(
-        'string' => " WHERE true".$where_str,
+        'string' => " true ".$where_str.' ',
         'values' => $val_array
       );
   }
@@ -216,6 +217,7 @@ class MysqlDAO extends DAO {
     foreach( $allWhereArrays as $wa ) {
       $allWhereARraysValues = array_merge( $allWhereARraysValues, $wa['values'] );
     }
+    
     // order string
     $orderSTR = ($order)? $this->orderByString($order): "";
     // group by
@@ -225,12 +227,34 @@ class MysqlDAO extends DAO {
     if($resolveDependences) {
       $this->execSQL($connectionControl,'SET group_concat_max_len='.Cogumelo::getSetupValue( 'db:mysqlGroupconcatMaxLen' ).';');
     }
-    $strSQL = "SELECT ".
-      $this->getKeysToString($VO, $fields, $resolveDependences ) .
-      " FROM `" .
-      $VO::$tableName ."` " .
-      $joins.
-      $whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
+    $extraArrayParam = [
+      'strSQL'=>  ' WHERE '.$whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR,
+      'strWhere' =>  $whereArray['string'],
+      'strOrderBy' => $orderSTR,
+      'strRange' => $rangeSTR,
+      'strGroupBy' => $groupBySTR,
+      'allParams'=> [
+        'filters' => $filters,
+        'range' => $range,
+        'order'=> $order,
+        'fields' => $fields,
+        'joinType' => $joinType,
+        'resolveDependences' => $resolveDependences,
+        'groupBy' => $groupBy
+      ]
+    ];
+    $strSQL = $VO->customSelectListItems( $extraArrayParam );
+    if( $strSQL == False ) {
+      $strSQL = "SELECT ".
+        $this->getKeysToString($VO, $fields, $resolveDependences ) .
+        " FROM `" .
+        $VO::$tableName ."` " .
+        $joins.
+        ' WHERE '.$whereArray['string'] . $orderSTR . $rangeSTR . $groupBySTR .";";
+    }
+    else {
+      $strSQL = DevelDBController::renderRichSql( $strSQL );
+    }
     //exit;
     //var_dump($joinWhereArrays);
     //exit;
@@ -314,7 +338,17 @@ class MysqlDAO extends DAO {
     // where string and vars
     $whereArray = $this->getFilters($filters);
     // SQL Query
-    $strSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` ".$whereArray['string'].";";
+    $extraArrayParam = [
+      'strSQL'=>  ' WHERE ' . $whereArray['string'],
+      'strWhere' =>  $whereArray['string'],
+      'allParams'=> [
+        'filters' => $filters
+      ]
+    ];
+    $strSQL = $VO->customSelectListCount( $extraArrayParam );
+    if( $strSQL == False ) {
+      $strSQL = "SELECT count(*) as number_elements FROM `" . $VO::$tableName . "` WHERE ".$whereArray['string'].";";
+    }
     if( $cacheParam ) {
       $cacheCtrl = new Cache();
       $cacheKey = __METHOD__.':'. md5( $strSQL . serialize( $whereArray ) );
