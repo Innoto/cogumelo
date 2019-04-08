@@ -657,10 +657,8 @@ class TableController{
   * @return void
   */
   function clearCaches() {
-    if( $this->cache != false ){
-      $cacheCtrl = new Cache();
-      $cacheCtrl->flush();
-    }
+    $cacheCtrl = new Cache();
+    $cacheCtrl->flush();
   }
 
 
