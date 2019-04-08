@@ -654,6 +654,17 @@ class TableController{
 
 
   /**
+  * clearCaches
+  * @return void
+  */
+  function clearCaches() {
+    $cacheCtrl = new Cache();
+    $cacheCtrl->flush();
+  }
+
+
+
+  /**
   * execJsonTable table
   * @return void
   */
@@ -690,12 +701,14 @@ class TableController{
           while( $rowVO = $listaAction->fetch() ) {
             $rowId = $rowVO->getter('id');
             eval( '$this->model->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
+            $this->clearCaches();
           }
         }
       }
       else {
         foreach( $this->clientData['action']['keys'] as $rowId) {
           eval( '$this->model->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
+          $this->clearCaches();
         }
       }
 
@@ -730,7 +743,7 @@ class TableController{
     echo '"previousPostData":'. json_encode($this->RAWClientData) .',';
     $coma = '';
     echo '"table" : [';
-    if( is_object( $lista ) ) { 
+    if( is_object( $lista ) ) {
       while( $rowVO = $lista->fetch() ) {
 
         echo $coma;
