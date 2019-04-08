@@ -504,6 +504,17 @@ class FiledataController {
     Cogumelo::debug( __METHOD__ );
     error_log( __METHOD__ );
 
+
+
+    echo "\n";
+    echo "****************************\n";
+    echo "*   FILEDATA GC ABORTADO   *\n";
+    echo "****************************\n";
+    echo "\n";
+    return;
+
+
+
     $modelName = 'FiledataModel';
 
     // // Importante: Precargamos los modelos
