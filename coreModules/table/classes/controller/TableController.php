@@ -652,6 +652,17 @@ class TableController{
   }
 
 
+  /**
+  * clearCaches
+  * @return void
+  */
+  function clearCaches() {
+    if( $this->cache != false ){
+      $cacheCtrl = new Cache();
+      $cacheCtrl->flush();
+    }
+  }
+
 
   /**
   * execJsonTable table
@@ -690,12 +701,14 @@ class TableController{
           while( $rowVO = $listaAction->fetch() ) {
             $rowId = $rowVO->getter('id');
             eval( '$this->model->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
+            $this->clearCaches();
           }
         }
       }
       else {
         foreach( $this->clientData['action']['keys'] as $rowId) {
           eval( '$this->model->'.$this->actions[ $this->clientData['action']['action'] ]['actionMethod'] .';' );
+          $this->clearCaches();
         }
       }
 
