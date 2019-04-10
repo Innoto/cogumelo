@@ -53,8 +53,9 @@ class FiledataModel extends Model {
 
 
   static $extraFilters = array(
+    'idIn' => ' filedata_filedata.id IN (?) ',
     'notInId' => ' filedata_filedata.id NOT IN (?) ',
-    'idIn' => ' filedata_filedata.id IN (?) '
+    'idNotIn' => ' filedata_filedata.id NOT IN (?) ',
   );
 
 
