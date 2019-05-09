@@ -36,7 +36,7 @@ msgstr "Eroor al cargar los filtros"
 #: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:47
 #: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:55
 msgid "Clear filters"
-msgstr "Limpiar los filtros"
+msgstr "Limpiar filtros"
 
 #: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:48
 msgid "Close"
