@@ -910,8 +910,13 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
         // TODO: TEMPORAL. BLOQUEO CARGA MULTIPLE SIMULTANEA
         //
         ////////////////////////////////////////////////////////////
-        cogumelo.log('processFilesInputFileField BLOQUEO');
-        break;
+        if( typeof cogumelo.publicConf.mod_form_disableUpSim !== 'undefined' &&
+          true === cogumelo.publicConf.mod_form_disableUpSim )
+        {
+          // $conf->setSetupValue( 'publicConf:vars:mod_form_disableUpSim', true );
+          cogumelo.log('processFilesInputFileField - BLOQUEO UPLOAD SIMULTANEAS');
+          break;
+        }
         ////////////////////////////////////////////////////////////
       }
     }
