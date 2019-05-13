@@ -445,7 +445,7 @@ class TableController{
   * @return void
   */
   function setExportController($id, $name, $controller) {
-    $this->exports[$id] = array('name' => $name , 'method' => $controller);
+    $this->exports[$id] = array('name' => $name , 'controller' => $controller); 
   }
 
   /**
