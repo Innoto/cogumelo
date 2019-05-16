@@ -633,7 +633,7 @@ function cogumeloTable( tableId, tableUrl ) {
             order: that.order,
             range: currentRange,
             action: action,
-            filters: that.extraFilters,,
+            filters: that.extraFilters,
             search: that.search
           }
       });
