@@ -159,7 +159,9 @@ class MysqlDevelDBDAO extends MysqlDAO {
     foreach( $VO::$cols as $colkey => $col ) {
 
       // INDEXES
-      if( $col['type'] == 'FOREIGN' ) {
+      if(
+        $col['type'] == 'FOREIGN' ||
+        ( isset($col['index']) && $col['index'] == true )) {
         $indexes[] = $colkey;
       }
 
