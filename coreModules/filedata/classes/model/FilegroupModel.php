@@ -12,7 +12,8 @@ class FilegroupModel extends Model {
       'autoincrement' => true
     ),
     'idGroup' => array(
-      'type' => 'INT'
+      'type' => 'INT',
+      'index' => true
     ),
     'filedataId' => array(
       'type'=>'FOREIGN',
@@ -28,9 +29,24 @@ class FilegroupModel extends Model {
   ];
 
 
-  public function __construct( $datarray = array(), $otherRelObj = false ) {
+  var $deploySQL = [
+    [
+      'version' => 'filedata#3',
+      'sql'=> '
+        CREATE INDEX idx_filedata_filedatagroup_idGroup
+        ON filedata_filedatagroup (idGroup)
+        ALGORITHM DEFAULT
+        LOCK DEFAULT;
+      '
+    ],
+  ];
+
+
+
+  public function __construct( $datarray = [], $otherRelObj = false ) {
     parent::__construct( $datarray, $otherRelObj );
   }
+
 
   public function garbageCollector() {
     Cogumelo::debug( __METHOD__ );

@@ -87,7 +87,7 @@ class FiledataModel extends Model {
   );
 
 
-  public function __construct( $datarray = array(), $otherRelObj = false ) {
+  public function __construct( $datarray = [], $otherRelObj = false ) {
     parent::__construct( $datarray, $otherRelObj );
   }
 
@@ -113,7 +113,7 @@ class FiledataModel extends Model {
    *
    * @return boolean
    */
-  public function delete( array $parameters = array() ) {
+  public function delete( array $parameters = [] ) {
     Cogumelo::debug( __METHOD__ );
 
     // Eliminamos ficheros en disco
