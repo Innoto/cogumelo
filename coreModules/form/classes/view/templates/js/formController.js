@@ -877,6 +877,9 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     if( msgClass !== false ) {
       $msgContainer = $( '.JQVMC-'+msgClass );
     }
+    else {
+      $msgContainer = $( '.JQVMC-formError' );
+    }
     if( $msgContainer !== false && $msgContainer.length > 0 ) {
       $msgContainer.append( msgLabel );
     }
