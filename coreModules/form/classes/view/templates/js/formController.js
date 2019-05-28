@@ -817,7 +817,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     var topErrScroll = 999999;
     var numErrors = 0;
-    var formMarginTop = that.marginTop;
+    var formMarginTop = that.formOpts.marginTop;
 
     if( typeof failFields === 'undefined' ) {
       failFields = $( '.formError[form="' + that.idForm + '"]' );
