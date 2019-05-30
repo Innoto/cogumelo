@@ -1233,10 +1233,29 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
     }
 
     $.each( groupFiles, function(){
+
+      var tnProfile = true;
+      if( this.hasOwnProperty('tnProfile') ) {
+        tnProfile = this.tnProfile;
+      }
+      else {
+        var inputTnProfile = $( 'input[name="'+fieldName+'"][form="'+that.idForm+'"]' ).attr('data-tnProfile');
+        if( typeof inputTnProfile !== 'undefined' ) {
+          tnProfile = inputTnProfile;
+        }
+      }
+
       // cogumelo.log('Añadimos esto a fileBoxWrap;', this, $filesWrap);
-      $filesWrap.append( that.fileBox( fieldName, this, that.deleteFormFileEvent )
-        .css( {'float': 'left', 'width': '23%', 'margin': '1%' } ) );
-    } );
+      if(tnProfile){
+        $filesWrap.append( that.fileBox( fieldName, this, that.deleteFormFileEvent )
+          .css( {'float': 'left', 'width': '23%', 'margin': '1%' } ) );
+      }
+      else{
+        $filesWrap.append( that.fileBox( fieldName, this, that.deleteFormFileEvent )
+        .css( {'width': '100%', 'margin-right': '1%', 'margin-top': '1%' } ) );
+      }
+
+     } );
   }; // that.fileFieldGroupWidget
 
   that.fileFieldToOk = function fileFieldToOk( fieldName, fileInfo ) {
@@ -1314,19 +1333,17 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
       )
     );
 
-
     var fileTextInfo = fileInfo.name;
 
     $fileBoxMenu.append( '<div class="fileTextInfo" title="'+fileInfo.name+'">'+fileTextInfo+'</div>' );
 
-
-
-    var tnSrc = cogumelo.publicConf.media+'/module/form/img/file.png';
+    var tnSrc = false;
 
     if( fileInfo.fileSrcTn ) {
       tnSrc = fileInfo.fileSrcTn;
     }
     else if( fileInfo.id !== false && fileInfo.type && fileInfo.type.indexOf( 'image' ) === 0 ) {
+      tnSrc = cogumelo.publicConf.media+'/module/form/img/file.png';
       var tnProfile = 'modFormTn';
       if( fileInfo.hasOwnProperty('tnProfile') ) {
         tnProfile = fileInfo.tnProfile;
@@ -1342,18 +1359,25 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
         // tnSrc = '/cgmlImg/'+fileInfo.id+'-a'+fileInfo.aKey+'/'+tnProfile+'/'+fileInfo.name;
         tnSrc = '/cgmlImg/'+fileInfo.id+'-a'+fileInfo.aKey+'/'+tnProfile+'/'; // quito name porque puede no coincidir la extension
       }
+      else{
+        tnSrc = false;
+      }
     }
 
-    var tnClass = 'tn-';
-    tnClass += (fileInfo.id) ? fileInfo.id : 'N';
-    tnClass += '-';
-    tnClass += fileInfo.hasOwnProperty('tempId') ? fileInfo.tempId : 'N';
-    tnClass += '-id';
 
-    $fileBoxElem.append( '<img class="tnImage '+tnClass+'" data-tnClass="'+tnClass+'" '+
-      'src="'+tnSrc+'" alt="'+fileInfo.name+'" title="'+fileInfo.name+'"></img>' );
+    if(tnSrc!==false){
+      var tnClass = 'tn-';
+      tnClass += (fileInfo.id) ? fileInfo.id : 'N';
+      tnClass += '-';
+      tnClass += fileInfo.hasOwnProperty('tempId') ? fileInfo.tempId : 'N';
+      tnClass += '-id';
+
+      $fileBoxElem.append( '<img class="tnImage '+tnClass+'" data-tnClass="'+tnClass+'" '+
+        'src="'+tnSrc+'" alt="'+fileInfo.name+'" title="'+fileInfo.name+'"></img>' );
+    }
 
     $fileBoxElem.append( $fileBoxMenu );
+
 
     var funcExtender = that.getFunctionExtender('fileBox');
     if( funcExtender ) {
