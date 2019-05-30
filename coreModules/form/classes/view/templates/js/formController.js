@@ -1234,7 +1234,7 @@ cogumelo.formControllerClass = cogumelo.formControllerClass || function( idFormP
 
     $.each( groupFiles, function(){
 
-      var tnProfile = true;
+      var tnProfile = 'valor';
       if( this.hasOwnProperty('tnProfile') ) {
         tnProfile = this.tnProfile;
       }
