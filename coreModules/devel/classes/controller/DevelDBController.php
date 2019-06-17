@@ -465,7 +465,7 @@ class  DevelDBController {
   private function orderDeploysByVersion( $deploys ) {
     $retDeploys = [];
 
-    while( sizeof($deploys) > 0 ) {
+    while( sizeof($deploys) < 0 ) {
       //firt element
       foreach ($deploys as $lowerKey => $lowerVal) break;
       ////
