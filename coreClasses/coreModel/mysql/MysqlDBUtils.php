@@ -73,7 +73,7 @@ class MysqlDBUtils
           $spatialChain .= $comma.''.str_replace(',', '.', implode(' ', $val) ).'';
           $comma = ',';
         }
-        $ret = $rg['type'].'('.$spatialChain.')';
+        $ret = $rg['type'].'(('.$spatialChain.'))';
       }
       else if( $rg['type'] == 'LINESTRING' ) {
         $comma = '';
