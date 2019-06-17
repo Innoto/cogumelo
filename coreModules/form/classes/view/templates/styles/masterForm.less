@@ -12,6 +12,7 @@
 
 @formIconDiscard: #C44527;
 @formIconDownload: #5AB780;
+@formIconDownloadTmp: #9AB7C0;
 // @formIconDownload: #3F9864;
 @formIconDownloadDisabled: #dddddd;
 
@@ -125,6 +126,9 @@ input[type="radiobutton"], input[type="checkbox"], textarea, select {
         }
         .formFileDownload {
           color: @formIconDownload;
+          &.tmpFile {
+            color: @formIconDownloadTmp;
+          }
           &.disabled {
             cursor: initial;
             color: @formIconDownloadDisabled;
