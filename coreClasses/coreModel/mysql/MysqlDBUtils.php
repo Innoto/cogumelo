@@ -70,11 +70,10 @@ class MysqlDBUtils
       else if( $rg['type'] == 'POLYGON') {
         $comma = '';
         foreach ( $rg['data'] as $val ) {
-          $spatialChain .= $comma.implode(' ', $val);
-
+          $spatialChain .= $comma.''.str_replace(',', '.', implode(' ', $val) ).'';
           $comma = ',';
         }
-        $ret = $rg['type'].'(('.$spatialChain.'))';
+        $ret = $rg['type'].'('.$spatialChain.')';
       }
       else if( $rg['type'] == 'LINESTRING' ) {
         $comma = '';
