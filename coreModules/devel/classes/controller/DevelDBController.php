@@ -472,7 +472,7 @@ class  DevelDBController {
       foreach( $deploys as $dK=>$d ) {
 
         // $lowerVal['version'] lower than $d['version']
-        if( $lowerVal['version'] < $d['version'] ) {
+        if( $lowerVal['version'] > $d['version'] ) {
           $lowerKey = $dK;
           $lowerVal = $d;
         }
