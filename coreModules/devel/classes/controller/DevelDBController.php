@@ -177,8 +177,6 @@ class  DevelDBController {
         if( $this->VoIsExecutedRC( $model ) === false ) {
           echo "\n/*Getting RC deploys for'".$model."'*/";
           $moduleDeploys = array_merge($moduleDeploys, $this->VOgetDeploys( $model, ['onlyRC'=>true] ) );
-
-
         }
 
 
@@ -188,10 +186,13 @@ class  DevelDBController {
 
 
       //
-      // deploy dos modelos do módulo, en orden de versión
+      // deploy dos modelos do módulo, en orden de versión e prioridade
       //echo "\nEXEC DEPLOY CODES in module $module ";
       $deployWorks = $this->executeDeployList(
-        $this->orderDeploysByVersion( $moduleDeploys ), $module
+        $this->orderDeploysByExecOrder(
+          $this->orderDeploysByVersion( $moduleDeploys )
+        ),
+        $module
       );
 
 
@@ -313,6 +314,14 @@ class  DevelDBController {
               $deployElement['version'] = $this->getOnlyVersionFromVersionString( $deployElement['version'] );
             }
 
+            if( isset($deployElement['execOrder'])) {
+              $deployElement['execOrder'] = $deployElement['execOrder'];
+            }
+            else {
+              $deployElement['execOrder'] = false;
+            }
+
+
             $deployElement['sql'] = self::renderRichSql( $deployElement['sql'] );
             $deployElement['voName'] = $voKey;
             array_push( $deploys, $deployElement );
@@ -327,6 +336,14 @@ class  DevelDBController {
           if( isset($deployElement['version'])) {
             $deployElement['version'] = $this->getOnlyVersionFromVersionString( $deployElement['version'] );
           }
+
+          if( isset($deployElement['execOrder'])) {
+            $deployElement['execOrder'] = $deployElement['execOrder'];
+          }
+          else {
+            $deployElement['execOrder'] = false;
+          }
+
           if( isset($filters['from'])) {
             $filters['from'] =  round((float) $filters['from'],2);
           }
@@ -421,7 +438,7 @@ class  DevelDBController {
     if( sizeof($deployArrays)>0 ) {
       foreach ( $deployArrays as $deploy ) {
 
-
+var_dump($deploy['voName']);
         $exec = $this->data->aditionalExec( $deploy['sql'], $this->noExecute  );
 
 
@@ -465,14 +482,33 @@ class  DevelDBController {
   private function orderDeploysByVersion( $deploys ) {
     $retDeploys = [];
 
-    while( sizeof($deploys) < 0 ) {
+    while( sizeof($deploys) > 0 ) {
       //firt element
       foreach ($deploys as $lowerKey => $lowerVal) break;
       ////
       foreach( $deploys as $dK=>$d ) {
-
         // $lowerVal['version'] lower than $d['version']
-        if( $lowerVal['version'] < $d['version'] ) {
+        if( $lowerVal['version'] > $d['version'] ) {
+          $lowerKey = $dK;
+          $lowerVal = $d;
+        }
+      }
+
+      array_push( $retDeploys, $lowerVal );
+      unset( $deploys[$lowerKey] );
+    }
+
+
+    return $retDeploys;
+  }
+
+  private function orderDeploysByExecOrder( $deploys ) {
+    $retDeploys = [];
+
+    while( sizeof($deploys) > 0 ) {
+      foreach ($deploys as $lowerKey => $lowerVal) break;
+      foreach( $deploys as $dK=>$d ) {
+        if( $d['execOrder'] != false && $lowerVal['execOrder'] > $d['execOrder'] ) {
           $lowerKey = $dK;
           $lowerVal = $d;
         }
@@ -484,7 +520,6 @@ class  DevelDBController {
 
     return $retDeploys;
   }
-
 
 
   private function registerModelVersion( $voKey, $version, $isRCDeploy= false ) {
