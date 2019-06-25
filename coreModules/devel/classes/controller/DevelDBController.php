@@ -191,8 +191,12 @@ class  DevelDBController {
       // deploy dos modelos do módulo, en orden de versión
       //echo "\nEXEC DEPLOY CODES in module $module ";
       $deployWorks = $this->executeDeployList(
-        $this->orderDeploysByVersion( $moduleDeploys ), $module
+        $this->orderDeploysByExecOrder(
+          $this->orderDeploysByVersion( $moduleDeploys )
+        ),
+        $module
       );
+
 
 
 
@@ -313,6 +317,14 @@ class  DevelDBController {
               $deployElement['version'] = $this->getOnlyVersionFromVersionString( $deployElement['version'] );
             }
 
+            if( isset($deployElement['execOrder'])) {
+              $deployElement['execOrder'] = $deployElement['execOrder'];
+            }
+            else {
+              $deployElement['execOrder'] = false;
+            }
+
+
             $deployElement['sql'] = $this->renderRichSql( $deployElement['sql'] );
             $deployElement['voName'] = $voKey;
             array_push( $deploys, $deployElement );
@@ -327,12 +339,21 @@ class  DevelDBController {
           if( isset($deployElement['version'])) {
             $deployElement['version'] = $this->getOnlyVersionFromVersionString( $deployElement['version'] );
           }
+
+          if( isset($deployElement['execOrder'])) {
+            $deployElement['execOrder'] = $deployElement['execOrder'];
+          }
+          else {
+            $deployElement['execOrder'] = false;
+          }
+
           if( isset($filters['from'])) {
             $filters['from'] =  round((float) $filters['from'],2);
           }
           if( isset($filters['to'])) {
             $filters['to'] = (float) $filters['to'];
           }
+
 
 
 
@@ -470,14 +491,12 @@ class  DevelDBController {
       foreach ($deploys as $lowerKey => $lowerVal) break;
       ////
       foreach( $deploys as $dK=>$d ) {
-
         // $lowerVal['version'] lower than $d['version']
         if( $lowerVal['version'] > $d['version'] ) {
           $lowerKey = $dK;
           $lowerVal = $d;
         }
       }
-
       array_push( $retDeploys, $lowerVal );
       unset( $deploys[$lowerKey] );
     }
@@ -485,6 +504,22 @@ class  DevelDBController {
     return $retDeploys;
   }
 
+
+  private function orderDeploysByExecOrder( $deploys ) {
+    $retDeploys = [];
+    while( sizeof($deploys) > 0 ) {
+      foreach ($deploys as $lowerKey => $lowerVal) break;
+      foreach( $deploys as $dK=>$d ) {
+        if( $d['execOrder'] != false && $lowerVal['execOrder'] > $d['execOrder'] ) {
+          $lowerKey = $dK;
+          $lowerVal = $d;
+        }
+      }
+      array_push( $retDeploys, $lowerVal );
+      unset( $deploys[$lowerKey] );
+    }
+    return $retDeploys;
+  }
 
 
   private function registerModelVersion( $voKey, $version, $isRCDeploy= false ) {
