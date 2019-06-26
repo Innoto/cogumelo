@@ -52,22 +52,10 @@ if( $argc > 1 ) {
       setPermissionsDevel();
       break;
 
-
-
-
-
-
     case 'createDB': // create database
       doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), false);
       createDB();
       break;
-
-
-
-
-
-
-
 
     case 'generateModel':
       setPermissionsDevel();
@@ -76,13 +64,6 @@ if( $argc > 1 ) {
       flushAll();
       break;
 
-
-
-
-
-
-
-
     case 'deploy':
       setPermissionsDevel();
       createRelSchemes();
@@ -90,24 +71,9 @@ if( $argc > 1 ) {
       flushAll();
       break;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    case 'simulateDeploy':
+      simulateDeploy();
+      break;
 
 
     case 'bckDB': // do the backup of the db
@@ -116,11 +82,6 @@ if( $argc > 1 ) {
 
       doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), $file);
       break;
-
-
-
-
-
 
 
     case 'restoreDB': // restore the backup of a given db
@@ -132,11 +93,6 @@ if( $argc > 1 ) {
         echo "You must specify the file to restore\n";
       }
       break;
-
-
-
-
-
 
 
     case 'prepareDependences':
@@ -249,7 +205,7 @@ function printOptions(){
     * generateModel           Initialize database
 
     * deploy                  Deploy
-
+    * simulateDeploy          simulate deploy SQL codes
 
     * resetModules
       - resetModuleVersions
@@ -290,6 +246,15 @@ function generateModel() {
 function deploy() {
   $develdbcontrol = new DevelDBController();
   $develdbcontrol->scriptDeploy();
+}
+
+function simulateDeploy() {
+  ob_start(); // Start output buffering
+  $fvotdbcontrol = new DevelDBController();
+  $fvotdbcontrol->deploy();
+  $ret= ob_get_contents(); // Store buffer in variable
+  ob_end_clean(); // End buffering and clean up
+  var_dump( [$ret] );
 }
 
 function createRelSchemes() {
@@ -750,4 +715,3 @@ function garbageCollection() {
   echo "**  Garbage Collection - Done  **\n";
   echo "*********************************\n\n";
 }
-

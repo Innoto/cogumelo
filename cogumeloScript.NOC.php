@@ -97,6 +97,9 @@ if( $argc > 1 ) {
       }
       break;
 
+    case 'simulateDeploy':
+      simulateDeploy();
+      break;
 
     case 'createRelSchemes':
       if( Cogumelo::getSetupValue('db:name') ) {
@@ -250,7 +253,8 @@ function printOptions(){
 
     * deploy                  Deploy
       * createRelSchemes      Create JSON Model Rel Schemes
-
+    * simulateDeploy          simulate deploy SQL codes
+    
     * resetModules
       - resetModuleVersions
 
@@ -290,6 +294,15 @@ function generateModel() {
 function deploy() {
   $develdbcontrol = new DevelDBController();
   $develdbcontrol->scriptDeploy();
+}
+
+function simulateDeploy() {
+  ob_start(); // Start output buffering
+  $fvotdbcontrol = new DevelDBController();
+  $fvotdbcontrol->deploy();
+  $ret= ob_get_contents(); // Store buffer in variable
+  ob_end_clean(); // End buffering and clean up
+  var_dump( [$ret] );
 }
 
 function createRelSchemes() {
@@ -750,4 +763,3 @@ function garbageCollection() {
   echo "**  Garbage Collection - Done  **\n";
   echo "*********************************\n\n";
 }
-
