@@ -442,14 +442,11 @@ class  DevelDBController {
     if( sizeof($deployArrays)>0 ) {
       foreach ( $deployArrays as $deploy ) {
 
-
         $exec = $this->data->aditionalExec( $deploy['sql'], $this->noExecute  );
-
 
         $sqlTableExist = true;
         if( isset( $deploy['sqlTableName']) ) {
           $sqlTableExist = $this->data->checkSQLTableExist( $deploy['sqlTableName'] );
-
           if( $sqlTableExist != true) {
             echo "\n Table ".$deploy['sqlTableName']." not exist in ".$deploy['voName'];
           }
@@ -457,7 +454,6 @@ class  DevelDBController {
 
         if( $exec !== COGUMELO_ERROR && $sqlTableExist === true ) {
           //  update model version
-
           if( isset($deploy['executeOnGenerateModelToo']) && $deploy['executeOnGenerateModelToo']=== true ) {
             $isRCDeploy = true;
           }
@@ -466,16 +462,13 @@ class  DevelDBController {
           }
           // register current deploy version
           $this->registerModelVersion( $deploy['voName'] ,$deploy['version'], $isRCDeploy );
-
         }
         else {
-          echo "\n ---- Deploy FAIL in ".$deploy['voName']." - ".$deploy['version']." ---- \n";
+          echo "\n ---- Deploy FAIL in ".$deploy['voName']." - ".$deploy['version']." ---- ";
+          echo "\n SQL CODE: \n".$deploy['sql']."\n\n";
           $ret = false;
           break;
         }
-
-
-
       }
     }
 
