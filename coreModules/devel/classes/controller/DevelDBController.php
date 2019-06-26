@@ -466,6 +466,7 @@ var_dump($deploy['voName']);
         }
         else {
           echo "\n ---- Deploy FAIL in ".$deploy['voName']." - ".$deploy['version']." ---- \n";
+          echo "\n SQL CODE: \n".$deploy['sql']."\n\n";          
           $ret = false;
           break;
         }
