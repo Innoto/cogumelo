@@ -775,6 +775,36 @@ class FormController implements Serializable {
     if( isset( $dataArray ) && is_array( $dataArray ) && count( $dataArray ) > 0  ) {
       foreach( $dataArray as $fieldName => $value ) {
         if( $this->isFieldDefined( $fieldName ) ) {
+          $fieldType = $this->getFieldType( $fieldName );
+
+          if( $fieldType === 'file' && !empty($value['status']) ) {
+            switch( $value['status'] ) {
+              case 'LOAD':
+              case 'REPLACE':
+                $value['validate'] = $value['temp'];
+                break;
+              case 'EXIST':
+                $value['validate'] = $value['prev'];
+                break;
+              case 'GROUP':
+                if( count( $value['multiple'] ) > 0 ) {
+                  foreach( $value['multiple'] as $fileKey => $fileData ) {
+                    switch( $fileData['status'] ) {
+                      case 'LOAD':
+                      case 'REPLACE':
+                        $value['multiple'][ $fileKey ]['validate'] = $fileData['temp'];
+                        break;
+                      case 'EXIST':
+                        $value['multiple'][ $fileKey ]['validate'] = $fileData['prev'];
+                        break;
+                    }
+                    // Cogumelo::debug('FormController: FE fileData temp name: '.json_encode( $value['multiple'][ $fileKey ] ) );
+                  }
+                }
+                break;
+            } // switch
+          } // if( $this->getFieldType( $fieldName ) === 'file' )
+
           $this->setFieldValue( $fieldName, $value );
         }
       }
