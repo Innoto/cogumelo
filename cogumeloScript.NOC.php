@@ -76,6 +76,10 @@ if( $argc > 1 ) {
       flushAll();
       break;
 
+    case 'simulateDeploy':
+      simulateDeploy();
+      break;
+
 
     case 'createRelSchemes':
       ( IS_DEVEL_ENV ) ? setPermissionsDevel() : setPermissions();
@@ -212,6 +216,7 @@ function printOptions(){
 
     * deploy                  Deploy
       * createRelSchemes      Create JSON Model Rel Schemes
+      * simulateDeploy          simulate deploy SQL codes
 
     * resetModules
       - resetModuleVersions
@@ -252,6 +257,15 @@ function generateModel() {
 function deploy() {
   $develdbcontrol = new DevelDBController();
   $develdbcontrol->scriptDeploy();
+}
+
+function simulateDeploy() {
+  ob_start(); // Start output buffering
+  $fvotdbcontrol = new DevelDBController();
+  $fvotdbcontrol->deploy();
+  $ret= ob_get_contents(); // Store buffer in variable
+  ob_end_clean(); // End buffering and clean up
+  var_dump( [$ret] );
 }
 
 function createRelSchemes() {
@@ -678,5 +692,3 @@ function rmdirRec( $dir, $removeContainer = true ) {
     }
   }
 }
-
-

@@ -49,6 +49,9 @@ if( $argc > 1 ) {
       flushAll();
       break;
 
+    case 'simulateDeploy':
+      simulateDeploy();
+      break;
 
     case 'createDB': // create database
       doBackup(Cogumelo::getSetupValue( 'db:name' ), Cogumelo::getSetupValue( 'db:user' ), Cogumelo::getSetupValue( 'db:password' ), false);
@@ -201,6 +204,7 @@ function printOptions(){
     * generateModel           Initialize database
 
     * deploy                  Deploy
+    * simulateDeploy          simulate deploy SQL codes
 
     * bckDB                   Do a DB backup (optional arg: filename)
     * restoreDB               Restore a database
@@ -248,6 +252,17 @@ function generateModel() {
 function deploy() {
   $develdbcontrol = new DevelDBController();
   $develdbcontrol->scriptDeploy();
+}
+
+function simulateDeploy() {
+
+  ob_start(); // Start output buffering
+  $fvotdbcontrol = new DevelDBController();
+  $fvotdbcontrol->deploy();
+  $ret= ob_get_contents(); // Store buffer in variable
+  ob_end_clean(); // End buffering and clean up
+
+  var_dump( [$ret] );
 }
 
 function createRelSchemes() {

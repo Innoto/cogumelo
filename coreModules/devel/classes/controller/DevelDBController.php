@@ -37,7 +37,7 @@ class  DevelDBController {
     $this->deploy();
   }
 
-  public function scriptDeploy() {
+  public function scriptDeploy( ) {
 
     $this->setNoExecutionMode(false);
 
@@ -57,7 +57,6 @@ class  DevelDBController {
       echo "\nNow you can enjoy new deploy system\n";
     }
     else {
-
       $this->deploy();
     }
   }
@@ -438,9 +437,7 @@ class  DevelDBController {
     if( sizeof($deployArrays)>0 ) {
       foreach ( $deployArrays as $deploy ) {
 
-var_dump($deploy['voName']);
         $exec = $this->data->aditionalExec( $deploy['sql'], $this->noExecute  );
-
 
         $sqlTableExist = true;
         if( isset( $deploy['sqlTableName']) ) {
@@ -466,7 +463,7 @@ var_dump($deploy['voName']);
         }
         else {
           echo "\n ---- Deploy FAIL in ".$deploy['voName']." - ".$deploy['version']." ---- \n";
-          echo "\n SQL CODE: \n".$deploy['sql']."\n\n";          
+          echo "\n SQL CODE: \n".$deploy['sql']."\n\n";
           $ret = false;
           break;
         }
