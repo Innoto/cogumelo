@@ -350,7 +350,11 @@ Class DependencesController {
         else if( $includeElement['installer'] == 'yarn' ) {
           $installer = 'yarn';
           $paramYarn = explode('@', $includeElement['params'][0]);
-          $include_folder = $paramYarn[0];
+          if(empty($paramYarn[0])){
+            $include_folder = '@'.$paramYarn[1];
+          }else{
+            $include_folder = $paramYarn[0];
+          }
         }
         else if( $includeElement['installer'] == 'composer' ) {
           $installer = 'composer';
