@@ -363,14 +363,58 @@ function actionGenerateClientCaches() {
 
 
 function loopCompileScss() {
-  while(1) {
+
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/illuminate/support/Traits/Macroable.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/illuminate/filesystem/Filesystem.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Resource/ResourceInterface.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Resource/FileResource.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Resource/DirectoryResource.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Watcher.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Event.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Listener.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Tracker.php';
+/*
+  // Cogumelo
+  $filesCogumelo = new Illuminate\Filesystem\Filesystem;
+  $trackerCogumelo = new JasonLewis\ResourceWatcher\Tracker;
+  $watcherCogumelo = new JasonLewis\ResourceWatcher\Watcher($trackerCogumelo, $filesCogumelo);
+  $listenerCogumelo = $watcherCogumelo->watch(COGUMELO_LOCATION);
+  $listenerCogumelo->modify(function($resource, $path) {
+    compileForLoopScss($resource, $path);
+  });
+  $watcherCogumelo->start();*/
+  /*
+  // DIST
+  $filesDist = new Illuminate\Filesystem\Filesystem;
+  $trackerDist = new JasonLewis\ResourceWatcher\Tracker;
+  $watcherDist = new JasonLewis\ResourceWatcher\Watcher($trackerDist, $filesDist);
+  $listenerDist = $watcherDist->watch(COGUMELO_DIST_LOCATION);
+  $listenerDist->modify(function($resource, $path) {
+    compileForLoopScss($resource, $path);
+  });
+  $watcherDist->start();*/
+
+  // APP
+  $filesApp = new Illuminate\Filesystem\Filesystem;
+  $trackerApp = new JasonLewis\ResourceWatcher\Tracker;
+  $watcherApp = new JasonLewis\ResourceWatcher\Watcher($trackerApp, $filesApp);
+  $listenerApp = $watcherApp->watch(APP_BASE_PATH);
+  $listenerApp->modify(function($resource, $path) {
+    compileForLoopScss($resource, $path);
+  });
+  $watcherApp->start();
+}
+
+
+function compileForLoopScss( $resource, $path ) {
+  if(substr($path, -5) == '.scss' || substr($path, -4) == '.css' ) {
+    echo "{$path} change detected in styles file".PHP_EOL;
     setPermissions(true);
-    system('clear');
+    //system('clear');
     require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
     mediaserver::autoIncludes();
     CacheUtilsController::generateAllCaches();
-    //CacheUtilsController::generateAllScssCaches();
-    sleep(3);
+    echo "\nCompiler finished\n";
   }
 }
 

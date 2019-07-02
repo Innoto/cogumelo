@@ -26,6 +26,16 @@ class devel extends Module {
    "installer" => "yarn",
    "includes" => array("dist/js/bootstrap.min.js")
   ),
+
+
+
+  array(
+   'id' => 'resource-watcher',
+   'params' => array("jasonlewis/resource-watcher", "1.2.*"),
+   'installer' => 'composer',
+   'includes' => array()
+  ),
+
   /*
   array(
     "id" =>"d3",
