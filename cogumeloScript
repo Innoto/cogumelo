@@ -167,10 +167,12 @@ if( $argc > 1 ) {
       break;
 
     case 'loopCompileScss':
+      setPermissions(true);
       loopCompileScss();
       break;
 
     case 'loopCompileScssDist':
+      setPermissions(true);
       loopCompileScssDist();
       break;
 
@@ -376,16 +378,8 @@ function loopCompileScss() {
   include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Event.php';
   include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Listener.php';
   include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Tracker.php';
-/*
-  // Cogumelo
-  $filesCogumelo = new Illuminate\Filesystem\Filesystem;
-  $trackerCogumelo = new JasonLewis\ResourceWatcher\Tracker;
-  $watcherCogumelo = new JasonLewis\ResourceWatcher\Watcher($trackerCogumelo, $filesCogumelo);
-  $listenerCogumelo = $watcherCogumelo->watch(COGUMELO_LOCATION);
-  $listenerCogumelo->modify(function($resource, $path) {
-    compileForLoopScss($resource, $path);
-  });
-  $watcherCogumelo->start();*/
+  require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
+  mediaserver::autoIncludes();
 
   // APP
   $filesApp = new Illuminate\Filesystem\Filesystem;
@@ -410,6 +404,8 @@ function loopCompileScssDist() {
   include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Event.php';
   include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Listener.php';
   include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Tracker.php';
+  require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
+  mediaserver::autoIncludes();
 
   // DIST
   $filesDist = new Illuminate\Filesystem\Filesystem;
@@ -426,13 +422,11 @@ function loopCompileScssDist() {
 
 function compileForLoopScss( $resource, $path ) {
   if(substr($path, -5) == '.scss' || substr($path, -4) == '.css' ) {
-    echo "{$path} change detected in styles file".PHP_EOL;
+    echo "\n==== File update in {$path}".PHP_EOL;
     setPermissions(true);
     //system('clear');
-    require_once( ModuleController::getRealFilePath( 'mediaserver.php', 'mediaserver' ) );
-    mediaserver::autoIncludes();
     CacheUtilsController::generateAllCaches();
-    echo "\nCompiler finished\n";
+    echo "\nCompilation finished\n";
   }
 }
 
