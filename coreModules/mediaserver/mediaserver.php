@@ -43,6 +43,13 @@ class mediaserver extends Module {
        '../path-converter/src/ConverterInterface.php',
        '../path-converter/src/Converter.php'
      )
+   ),
+
+    array(
+     'id' => 'resource-watcher',
+     'params' => array("jasonlewis/resource-watcher", "1.2.*"),
+     'installer' => 'composer',
+     'includes' => array()
     )
   );
 

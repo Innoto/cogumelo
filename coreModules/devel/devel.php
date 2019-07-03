@@ -28,14 +28,6 @@ class devel extends Module {
   ),
 
 
-
-  array(
-   'id' => 'resource-watcher',
-   'params' => array("jasonlewis/resource-watcher", "1.2.*"),
-   'installer' => 'composer',
-   'includes' => array()
-  ),
-
   /*
   array(
     "id" =>"d3",

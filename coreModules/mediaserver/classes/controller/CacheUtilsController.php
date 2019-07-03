@@ -160,6 +160,9 @@ class CacheUtilsController {
   //  END LESS METHODS
   //
 
+  public static function generatePartialCacheFolders() {
+
+  }
 
 
   public static function generateAllCaches() {
