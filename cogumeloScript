@@ -167,10 +167,12 @@ if( $argc > 1 ) {
       break;
 
     case 'loopCompileScss':
-      setPermissions();
       loopCompileScss();
       break;
 
+    case 'loopCompileScssDist':
+      loopCompileScssDist();
+      break;
 
     default:
       echo "Invalid parameter;try:";
@@ -191,6 +193,7 @@ function printOptions(){
     * flush                   Remove temporary files
     * generateClientCaches    Cache all js, css, compiled less and other client files
     * loopCompileScss         Continuous scss compilation
+    * loopCompileScssDist     Continuous scss compilation of Dist modules
     * setPermissions          Set the files/folders permission
     * setPermissionsDevel     Set the files/folders permission
     * installDependences      Exec prepareDependences and then exec updateDependences
@@ -405,6 +408,31 @@ function loopCompileScss() {
   $watcherApp->start();
 }
 
+
+function loopCompileScssDist() {
+
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/illuminate/support/Traits/Macroable.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/illuminate/filesystem/Filesystem.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Resource/ResourceInterface.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Resource/FileResource.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Resource/DirectoryResource.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Watcher.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Event.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Listener.php';
+  include APP_BASE_PATH.'/../httpdocs/vendor/composer/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Tracker.php';
+
+  // DIST
+  $filesDist = new Illuminate\Filesystem\Filesystem;
+  $trackerDist = new JasonLewis\ResourceWatcher\Tracker;
+  $watcherDist = new JasonLewis\ResourceWatcher\Watcher($trackerDist, $filesDist);
+  $listenerDist = $watcherDist->watch(COGUMELO_DIST_LOCATION);
+  $listenerDist->modify(function($resource, $path) {
+    compileForLoopScss($resource, $path);
+  });
+  $watcherDist->start();
+
+
+}
 
 function compileForLoopScss( $resource, $path ) {
   if(substr($path, -5) == '.scss' || substr($path, -4) == '.css' ) {
