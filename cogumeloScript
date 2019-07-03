@@ -386,16 +386,6 @@ function loopCompileScss() {
     compileForLoopScss($resource, $path);
   });
   $watcherCogumelo->start();*/
-  /*
-  // DIST
-  $filesDist = new Illuminate\Filesystem\Filesystem;
-  $trackerDist = new JasonLewis\ResourceWatcher\Tracker;
-  $watcherDist = new JasonLewis\ResourceWatcher\Watcher($trackerDist, $filesDist);
-  $listenerDist = $watcherDist->watch(COGUMELO_DIST_LOCATION);
-  $listenerDist->modify(function($resource, $path) {
-    compileForLoopScss($resource, $path);
-  });
-  $watcherDist->start();*/
 
   // APP
   $filesApp = new Illuminate\Filesystem\Filesystem;
