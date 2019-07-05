@@ -423,7 +423,6 @@ function loopCompileScssDist() {
 function compileForLoopScss( $resource, $path ) {
   if(substr($path, -5) == '.scss' || substr($path, -4) == '.css' ) {
     echo "\n==== File update in {$path}".PHP_EOL;
-    setPermissions(true);
     //system('clear');
     CacheUtilsController::generateAllCaches();
     echo "\nCompilation finished\n";
