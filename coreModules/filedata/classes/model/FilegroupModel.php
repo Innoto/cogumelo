@@ -48,6 +48,29 @@ class FilegroupModel extends Model {
   }
 
 
+  public function getFiledataIds( $idGroups ) {
+    $filedataIds = [];
+    $filegroupList = false;
+
+    if( !empty( $idGroups ) ) {
+      if( is_array( $idGroups ) ) {
+        $filegroupList = $this->listItems( [ 'filters' => [ 'idGroupIn' => $idGroups ] ] );
+      }
+      else {
+        $filegroupList = $this->listItems( [ 'filters' => [ 'id' => $idGroups ] ] );
+      }
+
+      if( is_object( $filegroupList ) ) {
+        while( $filegroupObj = $filegroupList->fetch()  ) {
+          $filedataIds[] = $filegroupObj->getter('filedataId');
+        }
+      }
+    }
+
+    return( $filedataIds );
+  }
+
+
   public function garbageCollector() {
     Cogumelo::debug( __METHOD__ );
 
