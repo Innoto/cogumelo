@@ -128,4 +128,44 @@ class FiledataModel extends Model {
 
     return( $result === true );
   }
+
+
+  public function getFiledataIdsFromObj( $modelObj ) {
+    error_log( __METHOD__ );
+    // error_log( print_r( $modelObj::$cols, true ) );
+    $filedataIds = [];
+    $filegroupIds = [];
+
+    if( !empty( $modelObj::$cols ) ) {
+      foreach( $modelObj::$cols as $colName => $colDef ) {
+        if( !empty( $colDef['vo'] ) ) {
+          switch ($colDef['vo']) {
+            case 'FiledataModel':
+              $filedataId = $modelObj->getter($colName);
+              if( !empty( $filedataId ) ) {
+                $filedataIds[] = $filedataId;
+              }
+              break;
+            case 'FilegroupModel':
+              $filegroupId = $modelObj->getter($colName);
+              if( !empty( $filegroupId ) ) {
+                $filegroupIds[] = $filegroupId;
+              }
+              break;
+          } // switch
+        }
+      }
+    }
+
+    if( !empty( $filegroupIds ) ) {
+      $fgroupModel = new FilegroupModel();
+      $moreIds = $fgroupModel->getFiledataIds( $filegroupIds );
+      if( !empty( $moreIds ) ) {
+        // error_log( __METHOD__.' moreIds: '.print_r( $moreIds, true ) );
+        $filedataIds = array_merge( $filedataIds, $moreIds );
+      }
+    }
+
+    return( $filedataIds );
+  }
 }

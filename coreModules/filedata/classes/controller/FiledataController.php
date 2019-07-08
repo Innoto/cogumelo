@@ -430,13 +430,15 @@ class FiledataController {
     $fileImageCtrl = new FiledataImagesController();
     $fileImageCtrl->clearCache( $voFile->getter('id') );
 
+    $serverFilePlain = '';
+
     // Borramos el fichero real
     $serverFile = $this->filesAppPath.$voFile->getter('absLocation');
     Cogumelo::debug( __METHOD__.' - unlink '.$serverFile );
     $unlinkStatus = 'FAIL: Not filesAppPathPlain';
     if( !empty( $this->filesAppPathPlain ) ) {
       $serverFilePlain = realpath( $serverFile );
-      $unlinkStatus = 'FAIL: serverFilePlain='.$serverFilePlain;
+      $unlinkStatus = 'FAIL: serverFilePlain='.$serverFilePlain.' serverFile='.$serverFile;
       if( !empty( $serverFilePlain ) && strpos ( $serverFilePlain, $this->filesAppPathPlain ) === 0 ) {
         $unlinkStatus = 'FAIL: Not valid file';
         if( file_exists( $serverFile ) && is_file( $serverFile ) ) {
