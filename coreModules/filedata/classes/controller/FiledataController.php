@@ -444,7 +444,7 @@ class FiledataController {
         if( file_exists( $serverFile ) && is_file( $serverFile ) ) {
           $unlinkStatus = 'FAIL: unlink';
           if( unlink( $serverFile ) ) {
-            $unlinkStatus = 'DONE ';
+            $unlinkStatus = 'DONE';
           }
         }
       }

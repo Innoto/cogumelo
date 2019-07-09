@@ -130,11 +130,41 @@ class FiledataModel extends Model {
   }
 
 
-  public function getFiledataIdsFromObj( $modelObj ) {
+  /**
+   * Delete items by ids
+   *
+   * @param array $filedataIds array of filters
+   */
+  public function deleteById( $filedataIds ) {
+    Cogumelo::debug( __METHOD__ );
+
+    $filedataList = false;
+
+    if( !empty( $filedataIds ) ) {
+      if( is_array( $filedataIds ) ) {
+        $filedataList = $this->listItems( [ 'filters' => [ 'idIn' => $filedataIds ] ] );
+      }
+      else {
+        $filedataList = $this->listItems( [ 'filters' => [ 'id' => $filedataIds ] ] );
+      }
+
+      if( is_object( $filedataList ) ) {
+        while( $fileObj = $filedataList->fetch() ) {
+          error_log( __METHOD__.' Vamos a eliminar filedata id:'.$fileObj->getter('id').' name:'.$fileObj->getter('originalName') );
+          $fileObj->delete();
+        }
+      }
+    }
+  }
+
+
+  public function getFileIdsFromObj( $modelObj ) {
     error_log( __METHOD__ );
     // error_log( print_r( $modelObj::$cols, true ) );
-    $filedataIds = [];
-    $filegroupIds = [];
+    $ids = [
+      'FiledataModel' => [],
+      'FilegroupModel' => []
+    ];
 
     if( !empty( $modelObj::$cols ) ) {
       foreach( $modelObj::$cols as $colName => $colDef ) {
@@ -143,13 +173,13 @@ class FiledataModel extends Model {
             case 'FiledataModel':
               $filedataId = $modelObj->getter($colName);
               if( !empty( $filedataId ) ) {
-                $filedataIds[] = $filedataId;
+                $ids['FiledataModel'][] = $filedataId;
               }
               break;
             case 'FilegroupModel':
               $filegroupId = $modelObj->getter($colName);
               if( !empty( $filegroupId ) ) {
-                $filegroupIds[] = $filegroupId;
+                $ids['FilegroupModel'][] = $filegroupId;
               }
               break;
           } // switch
@@ -157,15 +187,15 @@ class FiledataModel extends Model {
       }
     }
 
-    if( !empty( $filegroupIds ) ) {
+    if( !empty( $ids['FilegroupModel'] ) ) {
       $fgroupModel = new FilegroupModel();
-      $moreIds = $fgroupModel->getFiledataIds( $filegroupIds );
+      $moreIds = $fgroupModel->getFiledataIds( $ids['FilegroupModel'] );
       if( !empty( $moreIds ) ) {
         // error_log( __METHOD__.' moreIds: '.print_r( $moreIds, true ) );
-        $filedataIds = array_merge( $filedataIds, $moreIds );
+        $ids['FiledataModel'] = array_merge( $ids['FiledataModel'], $moreIds );
       }
     }
 
-    return( $filedataIds );
+    return( $ids );
   }
 }

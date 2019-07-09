@@ -71,6 +71,33 @@ class FilegroupModel extends Model {
   }
 
 
+  /**
+   * Delete items by ids
+   *
+   * @param array $idGroups array of filters
+   */
+  public function deleteById( $idGroups ) {
+    $filegroupList = false;
+
+    if( !empty( $idGroups ) ) {
+      if( is_array( $idGroups ) ) {
+        $filegroupList = $this->listItems( [ 'filters' => [ 'idGroupIn' => $idGroups ], 'groupBy' => 'idGroup' ] );
+      }
+      else {
+        $filegroupList = $this->listItems( [ 'filters' => [ 'id' => $idGroups ], 'groupBy' => 'idGroup' ] );
+      }
+
+      // $deleted = [];
+      if( is_object( $filegroupList ) ) {
+        while( $filegroupObj = $filegroupList->fetch()  ) {
+          error_log( __METHOD__.' Vamos a eliminar idGroup:'.$filegroupObj->getter('idGroup') );
+          $filegroupObj->delete();
+        }
+      }
+    }
+  }
+
+
   public function garbageCollector() {
     Cogumelo::debug( __METHOD__ );
 
