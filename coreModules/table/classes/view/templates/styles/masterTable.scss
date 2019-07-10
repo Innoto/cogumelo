@@ -168,6 +168,21 @@ $borderOptions: 1px solid black;
   }
 }
 
+.tablePageElements {
+  float:left;
+  height: 30px;
+  vertical-align: bottom;
+  .text {
+    float:left;
+    padding-top:5px;
+    margin-left:5px;
+  }
+  input {
+    float:left;
+    width: 40px;
+  }
+}
+
 .tablePaginator{
   float:right;
   height: 30px;
@@ -287,5 +302,8 @@ table.tableClass{
   .tablePaginator{
     float:none;
     margin: 10px 0;
+  }
+  .tablePageElements {
+    display:none;
   }
 } /*767px*/

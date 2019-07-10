@@ -33,6 +33,7 @@ function cogumeloTable( tableId, tableUrl ) {
   that.resumeFilters = $('.'+tableId+'.tableContainer .tableResumeFilters');
   that.tableContent = $('.'+tableId+'.tableContainer .tableClass');
   that.tabsContent = $('.'+tableId+'.tableContainer .tableFilters select');
+  that.rowsEachPage = $('.'+tableId+'.tableContainer .tablePageElements input');
   that.totalRows = $('.'+tableId+'.tableContainer .tablePaginator  .totalRows');
   that.pagersTotal = $('.'+tableId+'.tableContainer .tablePaginator .tablePage .totalPages');
   that.pagersCurrent = $('.'+tableId+'.tableContainer .tablePaginator .tablePage input');
@@ -136,6 +137,7 @@ function cogumeloTable( tableId, tableUrl ) {
         range: currentRange,
         action: action,
         search: that.search,
+        rowsEachPage: that.tableData.rowsEachPage,
         clientCurrentPage: that.currentPage,
         selectAllPages: that.selectAllPagesValue
       },
@@ -506,6 +508,8 @@ function cogumeloTable( tableId, tableUrl ) {
     var mustReload = false;
     var maxPage = 1;
 
+    that.rowsEachPage.val(that.tableData.rowsEachPage);
+
     if( that.tableData.totalRows > that.tableData.rowsEachPage ){
       maxPage = Math.ceil( that.tableData.totalRows / that.tableData.rowsEachPage );
     }
@@ -518,6 +522,7 @@ function cogumeloTable( tableId, tableUrl ) {
         that.currentPage = page;
       }
     }
+
 
 
     that.totalRows.html( that.tableData.totalRows );
@@ -551,7 +556,10 @@ function cogumeloTable( tableId, tableUrl ) {
 
   };
 
-
+  that.setElementsEachPage = function( number ) {
+    that.tableData.rowsEachPage = number;
+    that.load();
+  };
 
   that.setRows = function(){
     var trows = '';
@@ -765,6 +773,10 @@ function cogumeloTable( tableId, tableUrl ) {
 
 
   // pager events
+  that.rowsEachPage.on("change", function( inputEachPage ){
+    that.setElementsEachPage( $(inputEachPage.target).val() );
+  });
+
   that.pagersCurrent.on("change", function( inputCurrentPage ){
     that.setPager( $(inputCurrentPage.target).val() );
   });
