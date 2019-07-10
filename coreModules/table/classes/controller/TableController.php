@@ -107,6 +107,11 @@ class TableController{
       $this->currentTab = $this->RAWClientData['tab'];
     }
 
+    // set Rows each page
+    if( isset($this->RAWClientData['rowsEachPage']) ) {
+      $this->rowsEachPage = $this->RAWClientData['rowsEachPage'];
+    } 
+
     // set ranges
     if(
       $this->RAWClientData['range'] != false &&
