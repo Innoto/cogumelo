@@ -598,6 +598,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.setElementsEachPage = function( number ) {
     that.tableData.rowsEachPage = number;
+    that.setPager(1);        
     that.load();
   };
 
@@ -756,7 +757,7 @@ function cogumeloTable( tableId, tableUrl ) {
   // pager events
   that.rowsEachPage.on("change", function( inputEachPage ){
     that.setElementsEachPage( $(inputEachPage.target).val() );
-  }); 
+  });
 
   // tabs change
   that.tabsContent.on("change", function(){
