@@ -558,6 +558,7 @@ function cogumeloTable( tableId, tableUrl ) {
 
   that.setElementsEachPage = function( number ) {
     that.tableData.rowsEachPage = number;
+    that.setPager(1);    
     that.load();
   };
 
