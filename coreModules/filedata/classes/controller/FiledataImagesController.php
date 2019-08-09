@@ -358,18 +358,18 @@ class FiledataImagesController {
 
       /*
        * ORIENTATION image
-       * "imagick::ORIENTATION_VALUE", with "VALUE" values of:
+       * "Imagick::ORIENTATION_VALUE", with "VALUE" values of:
        * UNDEFINED (0), TOPLEFT (1), TOPRIGHT (2), BOTTOMRIGHT (3), BOTTOMLEFT (4), LEFTTOP (5), RIGHTTOP (6), RIGHTBOTTOM (7), and LEFTBOTTOM (8)
        */
       $imageOrientation = $im->getImageOrientation();
       switch( $imageOrientation ) {
-        case imagick::ORIENTATION_BOTTOMRIGHT: //value (integer): 3
+        case Imagick::ORIENTATION_BOTTOMRIGHT: //value (integer): 3
           $im->rotateimage( '#fff', 180 );  //rotate 180º 
           break;
-        case imagick::ORIENTATION_RIGHTTOP: //value (integer): 6
+        case Imagick::ORIENTATION_RIGHTTOP: //value (integer): 6
           $im->rotateimage( '#fff', 90 ); //rotate 90º
           break;
-        case imagick::ORIENTATION_LEFTBOTTOM: //value (integer): 8 
+        case Imagick::ORIENTATION_LEFTBOTTOM: //value (integer): 8 
           $im->rotateimage( '#fff', 270 );  //rotate 270º
           break;
       }
