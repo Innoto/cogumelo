@@ -31,7 +31,7 @@ msgstr "Buscar"
 
 #: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:40
 msgid "Error loading filters"
-msgstr "Eroor al cargar los filtros"
+msgstr "Error al cargar los filtros"
 
 #: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:47
 #: /home/proxectos/cogumelo/coreModules/table/classes/view/TableView.php:55
